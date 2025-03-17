@@ -1,9 +1,9 @@
 :root {
-    --marian-blue: #023E8A;
-    --federal-blue: #03045E;
-    --baby-powder: #FFFDFA;
-    --azure-blue: #DFF0F6;
+    --dark-green: #0F1E23;
+    --soft-green: #173035;
+    --bright-green: #E1F6E9;
+    --mint-green: #00C887;
 
-    --md-primary-fg-color: var(--federal-blue);
-    --md-accent-fg-color: var(--marian-blue);
+    --md-primary-fg-color: var(--soft-green);
+    --md-accent-fg-color: var(--mint-green);
 }

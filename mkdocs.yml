@@ -79,6 +79,7 @@ extra:
 extra_css:
 - extras/css/mkdocstrings.css
 - extras/css/home.css
+- extras/css/colors.css
 
 # For mathjax
 extra_javascript:
