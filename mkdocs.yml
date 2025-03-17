@@ -6,7 +6,7 @@ nav:
   - Home: index.md
   - Getting started:
     - Installation: installation.md
-  - Reference: $api/qoolqit.***
+  - API Reference: $api/qoolqit.***
   - Open-source:
     - Licence (MIT-Derived): LICENSE.md
     - Contributor Agreement: CONTRIBUTOR AGREEMENT.md
