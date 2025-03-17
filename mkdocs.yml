@@ -3,8 +3,7 @@ repo_url: "https://github.com/pasqal-io/qoolqit"
 repo_name: "QoolQit"
 
 nav:
-  - Home: home.md
-  - Overview: index.md
+  - Home: index.md
   - Getting started:
     - Installation: installation.md
   - Reference: $api/qoolqit.***

@@ -1,4 +1,10 @@
-# QoolQit
+---
+template: home.html
+title: Home
+---
+
+
+<!-- # QoolQit
 
 QoolQit is a Python library designed for facilitating algorithm development in the Rydberg Analog Model.
 
@@ -13,4 +19,4 @@ QoolQit is a Python library designed for facilitating algorithm development in t
 
 The GitHub repository is open for contributions!
 
-Don't forget to read the [Contributor License Agreement](CONTRIBUTOR AGREEMENT.md).
+Don't forget to read the [Contributor License Agreement](CONTRIBUTOR AGREEMENT.md). -->
