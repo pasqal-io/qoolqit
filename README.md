@@ -1,1 +1,1 @@
-# qoolqit
+# QoolQit
