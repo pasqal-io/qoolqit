@@ -133,7 +133,7 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "Q"]
-extend-ignore = ["F841"]
+extend-ignore = ["F841", "F403"]
 isort.required-imports = ["from __future__ import annotations"]
 mccabe.max-complexity = 15
 flake8-quotes.docstring-quotes = "double"
