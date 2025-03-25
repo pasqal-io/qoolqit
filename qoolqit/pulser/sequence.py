@@ -16,15 +16,14 @@ class Sequence(_Sequence):
     channel_label = "global"
     dmm_label = "dmm_0"
 
-    def __init__(self, register: Register, device: Device):
+    def __init__(self, register: Register, device: Device, weights: dict | None = None):
         super().__init__(register, device._device)
         self.declare_channel(self.channel_label, "rydberg_global")
-        self.weights: dict | None = None
-
-    def set_weights(self, weights: dict) -> None:
         self.weights = weights
-        detuning_map = self.register.define_detuning_map(weights, self.dmm_label)
-        self.config_detuning_map(detuning_map, self.dmm_label)
+
+        if self.weights is not None:
+            detuning_map = self.register.define_detuning_map(weights, self.dmm_label)
+            self.config_detuning_map(detuning_map, self.dmm_label)
 
     def add(self, pulse: Pulse, *args: Any, **kwargs: Any) -> None:
         super().add(pulse, self.channel_label, *args, **kwargs)
@@ -32,7 +31,7 @@ class Sequence(_Sequence):
     def add_weighted_detuning(self, waveform: Waveform) -> None:
         if not self.weights:
             raise ValueError(
-                "Adding a weighted detuning requires setting the "
-                "qubit weights with the `set_weights` method."
+                "Adding a weighted detuning requires initializing the "
+                "sequence with qubit weights using the `weights` argument."
             )
         self.add_dmm_detuning(waveform, self.dmm_label)

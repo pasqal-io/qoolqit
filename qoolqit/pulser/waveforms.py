@@ -1,6 +1,58 @@
 from __future__ import annotations
 
-from pulser.waveforms import CompositeWaveform, RampWaveform
+from pulser.waveforms import BlackmanWaveform as _BlackmanWaveform
+from pulser.waveforms import CompositeWaveform as _CompositeWaveform
+from pulser.waveforms import ConstantWaveform as _ConstantWaveform
+from pulser.waveforms import CustomWaveform as _CustomWaveform
+from pulser.waveforms import InterpolatedWaveform as _InterpolatedWaveform
+from pulser.waveforms import KaiserWaveform as _KaiserWaveform
+from pulser.waveforms import RampWaveform as _RampWaveform
+from pulser.waveforms import Waveform
+
+
+class WaveformMixin(Waveform):
+    def __mul__(self, other: Waveform) -> Waveform:
+        if isinstance(other, Waveform):
+            return CompositeWaveform(self, other)
+        else:
+            raise NotImplementedError
+
+
+class CompositeWaveform(_CompositeWaveform):
+    def __mul__(self, other: Waveform) -> Waveform:
+        if isinstance(other, _CompositeWaveform):
+            return CompositeWaveform(*self.waveforms, *other.waveforms)
+        elif isinstance(other, Waveform):
+            return CompositeWaveform(*self.waveforms, other)
+        else:
+            raise NotImplementedError
+
+    def __rmul__(self, other: Waveform) -> Waveform:
+        return self.__mul__(other)
+
+
+class RampWaveform(WaveformMixin, _RampWaveform):
+    pass
+
+
+class CustomWaveform(WaveformMixin, _CustomWaveform):
+    pass
+
+
+class ConstantWaveform(WaveformMixin, _ConstantWaveform):
+    pass
+
+
+class BlackmanWaveform(WaveformMixin, _BlackmanWaveform):
+    pass
+
+
+class InterpolatedWaveform(WaveformMixin, _InterpolatedWaveform):
+    pass
+
+
+class KaiserWaveform(WaveformMixin, _KaiserWaveform):
+    pass
 
 
 class PWLWaveform(CompositeWaveform):
