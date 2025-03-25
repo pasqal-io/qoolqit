@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from pulser.pulse import Pulse
 from pulser.sequence import Sequence as _Sequence
 from pulser.waveforms import Waveform
 
 from .devices import Device
+from .pulses import Pulse
 from .register import Register
 
 
@@ -39,8 +39,7 @@ class Sequence(_Sequence):
 
     @property
     def weights(self) -> dict:
-        if self._weights is None:
-            return {q: 0.0 for q in self.register.qubits}
-        else:
-            return self.detuning_map.get_qubit_weight_map(self.register.qubits)
-
+        weight_dict: dict = {q: 0.0 for q in self.register.qubits}
+        if self._weights:
+            weight_dict = self.detuning_map.get_qubit_weight_map(self.register.qubits)
+        return weight_dict
