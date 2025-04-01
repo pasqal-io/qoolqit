@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, InitVar, asdict
+from dataclasses import InitVar, asdict, dataclass
 
 from pulser.devices import AnalogDevice as _AnalogDevice
 from pulser.devices import MockDevice as _MockDevice
@@ -24,10 +24,10 @@ class Device:
         self.max_sequence_duration: int | None = self._device.max_sequence_duration
 
     def __repr__(self) -> str:
-        return self.name
-    
+        return self.name  # type: ignore [return-value]
+
     @property
-    def specs_dict(self):
+    def specs_dict(self) -> dict:
         """Device specifications."""
         return asdict(self)
 
