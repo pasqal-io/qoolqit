@@ -87,27 +87,27 @@ class Graph(_BaseGraph):
     @classmethod
     def from_coordinates(cls, coords: list) -> Graph:  # type: ignore
         """Get a list of (x, y) tuples and initialize"""
-        pass
+        ...
 
     @classmethod
     def random(cls, n: int, p: float) -> Graph:  # type: ignore
         """ER random graph."""
-        pass
+        ...
 
     @classmethod
     def line(cls, n: int, spacing: float = 1.0) -> Graph:  # type: ignore
         """Line graph."""
-        pass
+        ...
 
     @classmethod
     def circle(cls, n: int, spacing: float = 1.0) -> Graph:  # type: ignore
         """Circle graph."""
-        pass
+        ...
 
     @classmethod
     def from_pyg(cls, data) -> Graph:  # type: ignore
         """Create a graph from a pyg data object."""
-        pass
+        ...
 
     ##################
     ### PROPERTIES ###

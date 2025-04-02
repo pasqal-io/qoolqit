@@ -15,3 +15,12 @@ class EmbeddedGraph:
 
     original: Graph
     embedded: Graph
+
+
+class EmbeddedGraph2(Graph):
+    """
+    Potentially the embedded graph can be a subclass of
+    Graph and still keep track of the original.
+    """
+
+    original: Graph
