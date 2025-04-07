@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from importlib import import_module
 
+from .graphs import *
 from .main import hello
 from .pulser import *
 
-list_of_submodules = [".pulser"]
+list_of_submodules = [".pulser", ".graphs"]
 
 __all__ = []
 for submodule in list_of_submodules:
