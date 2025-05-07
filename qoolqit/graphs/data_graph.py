@@ -31,7 +31,7 @@ class DataGraph(BaseGraph):
         return graph
 
     @classmethod
-    def circle(cls, n: int, spacing: float = 1.0) -> DataGraph:  # type: ignore
+    def circle(cls, n: int, spacing: float = 1.0) -> DataGraph:
         """Circle graph."""
         base_graph = nx.grid_2d_graph(n, 1, periodic=True)
         base_graph = nx.relabel_nodes(base_graph, {(i, 0): i for i in range(n)})
@@ -42,7 +42,7 @@ class DataGraph(BaseGraph):
         return graph
 
     @classmethod
-    def random(cls, n: int, p: float, seed: float | None = None) -> DataGraph:  # type: ignore
+    def random(cls, n: int, p: float, seed: float | None = None) -> DataGraph:
         """ER random graph."""
         base_graph = nx.erdos_renyi_graph(n, p, seed)
         graph = cls(list(base_graph.edges))
