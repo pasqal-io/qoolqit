@@ -1,30 +1,18 @@
 from __future__ import annotations
 
-from typing import Any
-
+import networkx as nx
 from numpy.typing import ArrayLike
 
 from .base_graph import BaseGraph
 
 
-class Graph(BaseGraph):
+class DataGraph(BaseGraph):
     """
     The main graph structure in QoolQit to represent data being manipulated.
-
-    Possible conventions:
-    - Each node always has a "pos" feature which is either None or a tuple (x, y).
-    - Each node and each edge always have a "weight" feature which is either None or a float.
     """
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        """
-        Some main initializer to create a basic graph
-
-        Possible options:
-        - Take in an int corresponding to the number of nodes, initialize a graph with no edges.
-        - Take in a list of tuples, initialize a graph with a list of edges
-        """
-        super().__init__(*args, **kwargs)
+    def __init__(self, edges: list | tuple | None = None) -> None:
+        super().__init__(edges)
 
         self._is_node_weighted: bool | None = None
         self._is_edge_weigthed: bool | None = None
@@ -34,29 +22,36 @@ class Graph(BaseGraph):
     ####################
 
     @classmethod
-    def from_coordinates(cls, coords: list) -> Graph:  # type: ignore
-        """Get a list of (x, y) tuples and initialize"""
-        ...
-
-    @classmethod
-    def random(cls, n: int, p: float) -> Graph:  # type: ignore
-        """ER random graph."""
-        ...
-
-    @classmethod
-    def line(cls, n: int, spacing: float = 1.0) -> Graph:  # type: ignore
+    def line(cls, n: int, spacing: float = 1.0) -> DataGraph:
         """Line graph."""
-        ...
+        coords = [(i * spacing, 0.0) for i in range(n)]
+        graph = cls.from_coordinates(coords)
+        edges = [(i - 1, i) for i in range(1, n)]
+        graph.add_edges_from(edges)
+        return graph
 
     @classmethod
-    def circle(cls, n: int, spacing: float = 1.0) -> Graph:  # type: ignore
+    def circle(cls, n: int, spacing: float = 1.0) -> DataGraph:  # type: ignore
         """Circle graph."""
-        ...
+        base_graph = nx.grid_2d_graph(n, 1, periodic=True)
+        base_graph = nx.relabel_nodes(base_graph, {(i, 0): i for i in range(n)})
+        coords = nx.circular_layout(base_graph)
+        coords = {i: tuple(c) for i, c in coords.items()}
+        graph = cls.from_coordinates(coords)
+        graph.add_edges_from(list(base_graph.edges))
+        return graph
 
     @classmethod
-    def from_pyg(cls, data) -> Graph:  # type: ignore
+    def random(cls, n: int, p: float, seed: float | None = None) -> DataGraph:  # type: ignore
+        """ER random graph."""
+        base_graph = nx.erdos_renyi_graph(n, p, seed)
+        graph = cls(list(base_graph.edges))
+        return graph
+
+    @classmethod
+    def from_pyg(cls, data) -> DataGraph:  # type: ignore
         """Create a graph from a pyg data object."""
-        ...
+        raise NotImplementedError
 
     ##################
     ### PROPERTIES ###
