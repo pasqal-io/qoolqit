@@ -50,19 +50,20 @@ class BaseGraph(nx.Graph):
 
         super().__init__(edges)
         self._coords = {i: None for i in self.nodes}
-        self._is_ud_graph: bool | None = None
-        self._set_node_pos(self._coords)
+        # self._set_node_attributes(self._coords, "pos")
+        self._ud_radius: float | None = None
 
-    def _set_node_pos(self, coords: dict) -> None:
-        """Sets the "pos" attribute in all nodes."""
-        nx.set_node_attributes(self, coords, "pos")
+    # def _set_node_attributes(self, values_dict: dict, label: str) -> None:
+    #     nx.set_node_attributes(self, values_dict, label)
+
+    # def _set_edge_attributes(self, values_dict: dict, label: str) -> None:
+    #     nx.set_edge_attributes(self, values_dict, label)
 
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
         graph = cls()
         graph.add_nodes_from(nodes)
         graph._coords = {i: None for i in graph.nodes}
-        graph._set_node_pos(graph._coords)
         return graph
 
     @classmethod
@@ -78,7 +79,6 @@ class BaseGraph(nx.Graph):
             coords_dict = _scale_coords(coords_dict, spacing)
         graph = cls.from_nodes(nodes)
         graph._coords = coords_dict
-        graph._set_node_pos(graph._coords)
         return graph
 
     @property
@@ -90,7 +90,7 @@ class BaseGraph(nx.Graph):
         return len(self.edges) > 0
 
     @property
-    def all_node_pairs(self) -> nx.EdgeView:
+    def all_node_pairs(self) -> list:
         """Return a list of all possible node pairs in the graph."""
         return _all_node_pairs(self.nodes)
 
@@ -115,22 +115,22 @@ class BaseGraph(nx.Graph):
         return _min_distance(self.coords) if self.has_coords else None
 
     @property
-    def ud_radius(self) -> float:
+    def ud_radius(self) -> float | None:
         return self._ud_radius
-    
+
     @ud_radius.setter
     def ud_radius(self, value: float) -> None:
         self._ud_radius = value
 
     @property
-    def is_ud_graph(self) -> bool:
-        """Check if graph is unit-disk."""
-        return set(self.ud_edges) == set(self.edges)
-    
-    @property
     def ud_edges(self) -> list:
         all_node_pairs = self.all_node_pairs
         return [edge for edge in all_node_pairs if self.distances[edge] <= self.ud_radius]
+
+    @property
+    def is_ud_graph(self) -> bool:
+        """Check if graph is unit-disk."""
+        return set(self.ud_edges) == set(self.edges)
 
     def draw(self, *args: Any, **kwargs: Any) -> None:
         fig, ax = plt.subplots(1, 1, dpi=200)

@@ -3,7 +3,6 @@ from __future__ import annotations
 import random
 
 import networkx as nx
-from numpy.typing import ArrayLike
 
 from .base_graph import BaseGraph
 
@@ -16,8 +15,8 @@ class DataGraph(BaseGraph):
     def __init__(self, edges: list | tuple | None = None) -> None:
         super().__init__(edges)
 
-        self._is_node_weighted: bool | None = None
-        self._is_edge_weigthed: bool | None = None
+        self._node_weights = {i: None for i in self.nodes}
+        self._edge_weights = {e: None for e in self.edges}
 
     ####################
     ### CONSTRUCTORS ###
@@ -61,7 +60,7 @@ class DataGraph(BaseGraph):
         seed: float | None = None,
     ) -> DataGraph:
         """Random unit disk graph."""
-        sigma = ((n ** 0.5) ** 0.5) / 2
+        sigma = ((n**0.5) ** 0.5) / 2
         pos = {i: (random.gauss(mu, sigma), random.gauss(mu, sigma)) for i in range(n)}
         base_graph = nx.random_geometric_graph(n, radius=radius, dim=2, pos=pos, seed=seed)
         graph = cls.from_coordinates(pos)
@@ -81,23 +80,43 @@ class DataGraph(BaseGraph):
     @property
     def node_weights(self) -> dict | None:
         """Dictionary of node weights."""
-        pass
+        return self._node_weights
+
+    @node_weights.setter
+    def node_weights(self, weights: dict) -> None:
+        if len(weights) != len(self.nodes):
+            raise ValueError("Setting weights requires one weight per node.")
+        self._node_weights = weights
 
     @property
     def edge_weights(self) -> dict | None:
         """Dictionary of edge weights."""
-        pass
+        return self._edge_weights
+
+    @edge_weights.setter
+    def edge_weights(self, weights: dict) -> None:
+        if len(weights) != len(self.edges):
+            raise ValueError("Setting weights requires one weight per edge.")
+        self._edge_weights = weights
 
     @property
-    def adjacency_matrix(self) -> ArrayLike:
-        """Return the adjacency matrix.
+    def is_node_weighted(self) -> bool:
+        return not ((None in self._node_weights.values()) or len(self._node_weights) == 0)
 
-        Options:
-        - Default to sparse or dense?
-        - Default to np.array?
+    @property
+    def is_edge_weighted(self) -> bool:
+        return not ((None in self._edge_weights.values()) or len(self._edge_weights) == 0)
 
-        """
-        pass
+    # @property
+    # def adjacency_matrix(self) -> ArrayLike:
+    #     """Return the adjacency matrix.
+
+    #     Options:
+    #     - Default to sparse or dense?
+    #     - Default to np.array?
+
+    #     """
+    #     pass
 
     ###############
     ### METHODS ###
