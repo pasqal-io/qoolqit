@@ -9,9 +9,33 @@ import networkx as nx
 from matplotlib.ticker import MultipleLocator
 
 
+def _all_node_pairs(nodes: list) -> list:
+    return list(filter(lambda x: x[0] < x[1], product(nodes, nodes)))
+
+
 def _dist(p: Iterable | None, q: Iterable | None) -> float | None:
     """Wrapper on dist that accepts None."""
     return None if p is None or q is None else dist(p, q)
+
+
+def _distances(coords: dict, edge_list: list | None) -> dict:
+    if edge_list is None:
+        edge_list = _all_node_pairs(list(coords.keys()))
+    return {edge: _dist(coords[edge[0]], coords[edge[1]]) for edge in edge_list}
+
+
+def _min_distance(coords: dict) -> float:
+    all_node_pairs = _all_node_pairs(list(coords.keys()))
+    distances = _distances(coords, all_node_pairs)
+    min_distance: float = min(distances.values())
+    return min_distance
+
+
+def _scale_coords(coords: dict, spacing: float) -> dict:
+    min_distance = _min_distance(coords)
+    scale_factor = spacing / min_distance
+    scaled_coords = {i: (c[0] * scale_factor, c[1] * scale_factor) for i, c in coords.items()}
+    return scaled_coords
 
 
 class BaseGraph(nx.Graph):
@@ -42,7 +66,7 @@ class BaseGraph(nx.Graph):
         return graph
 
     @classmethod
-    def from_coordinates(cls, coords: Collection) -> BaseGraph:
+    def from_coordinates(cls, coords: Collection, spacing: float | None = None) -> BaseGraph:
         """Get a list of (x, y) tuples and initialize."""
         if isinstance(coords, list):
             nodes = list(range(len(coords)))
@@ -50,6 +74,8 @@ class BaseGraph(nx.Graph):
         elif isinstance(coords, dict):
             nodes = list(coords.keys())
             coords_dict = coords
+        if spacing is not None:
+            coords_dict = _scale_coords(coords_dict, spacing)
         graph = cls.from_nodes(nodes)
         graph._coords = coords_dict
         graph._set_node_pos(graph._coords)
@@ -66,7 +92,7 @@ class BaseGraph(nx.Graph):
     @property
     def all_node_pairs(self) -> nx.EdgeView:
         """Return a list of all possible node pairs in the graph."""
-        return list(filter(lambda x: x[0] < x[1], product(self.nodes, self.nodes)))
+        return _all_node_pairs(self.nodes)
 
     @property
     def coords(self) -> dict:
@@ -76,20 +102,21 @@ class BaseGraph(nx.Graph):
     @property
     def distances(self) -> dict:
         """Dictionary of distances for all node pairs in the graph."""
-        if self.coords:
-            coords = self.coords
-            return {edge: _dist(coords[edge[0]], coords[edge[1]]) for edge in self.all_node_pairs}
-        else:
-            return dict()
+        return _distances(self.coords, self.all_node_pairs) if self.has_coords else dict()
 
     @property
     def edge_distances(self) -> dict:
         """Dictionary of distances for the node pairs that are connected by an edge."""
-        if self.coords and self.has_edges:
-            coords = self.coords
-            return {edge: _dist(coords[edge[0]], coords[edge[1]]) for edge in self.edges}
-        else:
-            return dict()
+        return _distances(self.coords, self.edges) if self.has_coords else dict()
+
+    @property
+    def min_distance(self) -> float | None:
+        """Return the minimum distance between two nodes in the graph."""
+        return _min_distance(self.coords) if self.has_coords else None
+
+    # @property
+    # def ud_edges(self, radius: float = 1.0) -> set:
+    #     raise NotImplementedError
 
     @property
     def is_ud_graph(self, radius: float = 1.0) -> bool:
@@ -109,10 +136,8 @@ class BaseGraph(nx.Graph):
             x_min, x_max = min(x_coords), max(x_coords)
             y_min, y_max = min(y_coords), max(y_coords)
 
-            grid_x_min = min(-1, x_min)
-            grid_x_max = max(1, x_max)
-            grid_y_min = min(-1, y_min)
-            grid_y_max = max(1, y_max)
+            grid_x_min, grid_x_max = min(-1, x_min), max(1, x_max)
+            grid_y_min, grid_y_max = min(-1, y_min), max(1, y_max)
 
             grid_scale = ceil(max(grid_x_max - grid_x_min, grid_y_max - grid_y_min))
 
@@ -122,15 +147,17 @@ class BaseGraph(nx.Graph):
             ax.set_xlim(grid_x_min - eps, grid_x_max + eps)
             ax.set_ylim(grid_y_min - eps, grid_y_max + eps)
 
-            majorLocatorX = MultipleLocator(grid_scale / 4)
-            majorLocatorY = MultipleLocator(grid_scale / 4)
+            possible_multiples = [0.2, 0.25, 0.5, 1.0, 2.0, 2.5, 5.0, 10.0]
+            grid_multiple = min(possible_multiples, key=lambda x: abs(x - grid_scale / 8))
+            majorLocatorX = MultipleLocator(grid_multiple)
+            majorLocatorY = MultipleLocator(grid_multiple)
             ax.xaxis.set_major_locator(majorLocatorX)
             ax.yaxis.set_major_locator(majorLocatorY)
 
             nx.draw_networkx(self, *args, ax=ax, pos=self.coords, **kwargs)
             ax.tick_params(axis="both", which="both", labelbottom=True, labelleft=True, labelsize=8)
         else:
-            nx.draw_networkx(self, *args, **kwargs)
+            nx.draw_networkx(self, *args, ax=ax, **kwargs)
 
     ###########################################
     ### Graph modification methods.         ###

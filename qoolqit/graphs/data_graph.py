@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import random
+
 import networkx as nx
 from numpy.typing import ArrayLike
 
@@ -37,7 +39,7 @@ class DataGraph(BaseGraph):
         base_graph = nx.relabel_nodes(base_graph, {(i, 0): i for i in range(n)})
         coords = nx.circular_layout(base_graph)
         coords = {i: tuple(c) for i, c in coords.items()}
-        graph = cls.from_coordinates(coords)
+        graph = cls.from_coordinates(coords, spacing=spacing)
         graph.add_edges_from(list(base_graph.edges))
         return graph
 
@@ -46,6 +48,22 @@ class DataGraph(BaseGraph):
         """ER random graph."""
         base_graph = nx.erdos_renyi_graph(n, p, seed)
         graph = cls(list(base_graph.edges))
+        return graph
+
+    @classmethod
+    def random_ud(
+        cls,
+        n: int,
+        radius: float = 0.5,
+        mu: float = 0.0,
+        sigma: float = 0.5,
+        seed: float | None = None,
+    ) -> DataGraph:
+        """Random unit disk graph."""
+        pos = {i: (random.gauss(mu, sigma), random.gauss(mu, sigma)) for i in range(n)}
+        base_graph = nx.random_geometric_graph(n, radius=radius, dim=2, pos=pos, seed=seed)
+        graph = cls.from_coordinates(pos)
+        graph.add_edges_from(base_graph.edges)
         return graph
 
     @classmethod
