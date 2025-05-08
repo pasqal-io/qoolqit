@@ -30,6 +30,7 @@ class DataGraph(BaseGraph):
         graph = cls.from_coordinates(coords)
         edges = [(i - 1, i) for i in range(1, n)]
         graph.add_edges_from(edges)
+        graph.ud_radius = spacing
         return graph
 
     @classmethod
@@ -41,6 +42,7 @@ class DataGraph(BaseGraph):
         coords = {i: tuple(c) for i, c in coords.items()}
         graph = cls.from_coordinates(coords, spacing=spacing)
         graph.add_edges_from(list(base_graph.edges))
+        graph.ud_radius = spacing
         return graph
 
     @classmethod
@@ -54,16 +56,17 @@ class DataGraph(BaseGraph):
     def random_ud(
         cls,
         n: int,
-        radius: float = 0.5,
+        radius: float = 1.0,
         mu: float = 0.0,
-        sigma: float = 0.5,
         seed: float | None = None,
     ) -> DataGraph:
         """Random unit disk graph."""
+        sigma = ((n ** 0.5) ** 0.5) / 2
         pos = {i: (random.gauss(mu, sigma), random.gauss(mu, sigma)) for i in range(n)}
         base_graph = nx.random_geometric_graph(n, radius=radius, dim=2, pos=pos, seed=seed)
         graph = cls.from_coordinates(pos)
         graph.add_edges_from(base_graph.edges)
+        graph.ud_radius = radius
         return graph
 
     @classmethod

@@ -114,19 +114,23 @@ class BaseGraph(nx.Graph):
         """Return the minimum distance between two nodes in the graph."""
         return _min_distance(self.coords) if self.has_coords else None
 
-    # @property
-    # def ud_edges(self, radius: float = 1.0) -> set:
-    #     raise NotImplementedError
+    @property
+    def ud_radius(self) -> float:
+        return self._ud_radius
+    
+    @ud_radius.setter
+    def ud_radius(self, value: float) -> None:
+        self._ud_radius = value
 
     @property
-    def is_ud_graph(self, radius: float = 1.0) -> bool:
+    def is_ud_graph(self) -> bool:
         """Check if graph is unit-disk."""
-        if self._is_ud_graph is None:
-            ...
-            # Check the method defined in the QEK solver
-            ...
-            self._is_ud_graph = True
-        return self._is_ud_graph
+        return set(self.ud_edges) == set(self.edges)
+    
+    @property
+    def ud_edges(self) -> list:
+        all_node_pairs = self.all_node_pairs
+        return [edge for edge in all_node_pairs if self.distances[edge] <= self.ud_radius]
 
     def draw(self, *args: Any, **kwargs: Any) -> None:
         fig, ax = plt.subplots(1, 1, dpi=200)
