@@ -9,7 +9,7 @@ import networkx as nx
 from matplotlib.ticker import MultipleLocator
 
 
-def _all_node_pairs(nodes: list) -> list:
+def _all_node_pairs(nodes: Iterable) -> list:
     return list(filter(lambda x: x[0] < x[1], product(nodes, nodes)))
 
 
@@ -50,14 +50,7 @@ class BaseGraph(nx.Graph):
 
         super().__init__(edges)
         self._coords = {i: None for i in self.nodes}
-        # self._set_node_attributes(self._coords, "pos")
         self._ud_radius: float | None = None
-
-    # def _set_node_attributes(self, values_dict: dict, label: str) -> None:
-    #     nx.set_node_attributes(self, values_dict, label)
-
-    # def _set_edge_attributes(self, values_dict: dict, label: str) -> None:
-    #     nx.set_edge_attributes(self, values_dict, label)
 
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
@@ -129,7 +122,7 @@ class BaseGraph(nx.Graph):
 
     @property
     def is_ud_graph(self) -> bool:
-        """Check if graph is unit-disk."""
+        """Check if graph is unit-disk. NEEDS TO BE MADE FASTER."""
         return set(self.ud_edges) == set(self.edges)
 
     def draw(self, *args: Any, **kwargs: Any) -> None:

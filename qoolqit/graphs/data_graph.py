@@ -3,8 +3,10 @@ from __future__ import annotations
 import random
 
 import networkx as nx
+import numpy as np
+from numpy.typing import ArrayLike
 
-from .base_graph import BaseGraph
+from .base_graph import BaseGraph, _all_node_pairs
 
 
 class DataGraph(BaseGraph):
@@ -66,6 +68,32 @@ class DataGraph(BaseGraph):
         graph = cls.from_coordinates(pos)
         graph.add_edges_from(base_graph.edges)
         graph.ud_radius = radius
+        return graph
+
+    @classmethod
+    def from_matrix(cls, data: ArrayLike) -> DataGraph:
+        """NEEDS TO BE MADE FASTER."""
+        if data.ndim != 2:
+            raise ValueError("2D Matrix required.")
+        if not np.allclose(data, data.T, rtol=1e-05, atol=1e-08):
+            raise ValueError("Matrix must be symmetric.")
+
+        diag = np.diag(data)
+        n_nodes = len(diag)
+        node_weights = {i: diag[i] for i in range(n_nodes)}
+        if np.allclose(diag, np.zeros(n_nodes), rtol=1e-05, atol=1e-08):
+            node_weights = {i: None for i in range(n_nodes)}
+        else:
+            node_weights = {i: diag[i] for i in range(n_nodes)}
+
+        all_node_pairs = _all_node_pairs(range(n_nodes))
+        edge_list = [(i, j) for i, j in zip(*data.nonzero()) if (i, j) in all_node_pairs]
+        edge_weights = {(i, j): data[i, j] for i, j in edge_list}
+
+        graph = cls.from_nodes(range(n_nodes))
+        graph.add_edges_from(edge_list)
+        graph.node_weights = node_weights
+        graph.edge_weights = edge_weights
         return graph
 
     @classmethod
