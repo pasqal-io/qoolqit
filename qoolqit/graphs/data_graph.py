@@ -6,7 +6,8 @@ import networkx as nx
 import numpy as np
 from numpy.typing import ArrayLike
 
-from .base_graph import BaseGraph, _all_node_pairs
+from .base_graph import BaseGraph
+from .utils import all_node_pairs
 
 
 class DataGraph(BaseGraph):
@@ -86,8 +87,9 @@ class DataGraph(BaseGraph):
         else:
             node_weights = {i: diag[i] for i in range(n_nodes)}
 
-        all_node_pairs = _all_node_pairs(range(n_nodes))
-        edge_list = [(i, j) for i, j in zip(*data.nonzero()) if (i, j) in all_node_pairs]
+        edge_list = [
+            (i, j) for i, j in zip(*data.nonzero()) if (i, j) in all_node_pairs(range(n_nodes))
+        ]
         edge_weights = {(i, j): data[i, j] for i, j in edge_list}
 
         graph = cls.from_nodes(range(n_nodes))

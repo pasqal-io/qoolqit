@@ -1,41 +1,13 @@
 from __future__ import annotations
 
-from itertools import product
-from math import ceil, dist
+from math import ceil
 from typing import Any, Collection, Iterable
 
 import matplotlib.pyplot as plt
 import networkx as nx
 from matplotlib.ticker import MultipleLocator
 
-
-def _all_node_pairs(nodes: Iterable) -> list:
-    return list(filter(lambda x: x[0] < x[1], product(nodes, nodes)))
-
-
-def _dist(p: Iterable | None, q: Iterable | None) -> float | None:
-    """Wrapper on dist that accepts None."""
-    return None if p is None or q is None else dist(p, q)
-
-
-def _distances(coords: dict, edge_list: list | None) -> dict:
-    if edge_list is None:
-        edge_list = _all_node_pairs(list(coords.keys()))
-    return {edge: _dist(coords[edge[0]], coords[edge[1]]) for edge in edge_list}
-
-
-def _min_distance(coords: dict) -> float:
-    all_node_pairs = _all_node_pairs(list(coords.keys()))
-    distances = _distances(coords, all_node_pairs)
-    min_distance: float = min(distances.values())
-    return min_distance
-
-
-def _scale_coords(coords: dict, spacing: float) -> dict:
-    min_distance = _min_distance(coords)
-    scale_factor = spacing / min_distance
-    scaled_coords = {i: (c[0] * scale_factor, c[1] * scale_factor) for i, c in coords.items()}
-    return scaled_coords
+from .utils import all_node_pairs, distances, min_distance, scale_coords
 
 
 class BaseGraph(nx.Graph):
@@ -48,7 +20,8 @@ class BaseGraph(nx.Graph):
         if edges and not isinstance(edges, (list, tuple, set)):
             raise TypeError("Graph must be initialized empty or with a set of edges")
 
-        super().__init__(edges)
+        super().__init__()
+        self.add_edges_from(edges)
         self._coords = {i: None for i in self.nodes}
         self._ud_radius: float | None = None
 
@@ -69,7 +42,7 @@ class BaseGraph(nx.Graph):
             nodes = list(coords.keys())
             coords_dict = coords
         if spacing is not None:
-            coords_dict = _scale_coords(coords_dict, spacing)
+            coords_dict = scale_coords(coords_dict, spacing)
         graph = cls.from_nodes(nodes)
         graph._coords = coords_dict
         return graph
@@ -85,7 +58,7 @@ class BaseGraph(nx.Graph):
     @property
     def all_node_pairs(self) -> list:
         """Return a list of all possible node pairs in the graph."""
-        return _all_node_pairs(self.nodes)
+        return all_node_pairs(self.nodes)
 
     @property
     def coords(self) -> dict:
@@ -95,17 +68,17 @@ class BaseGraph(nx.Graph):
     @property
     def distances(self) -> dict:
         """Dictionary of distances for all node pairs in the graph."""
-        return _distances(self.coords, self.all_node_pairs) if self.has_coords else dict()
+        return distances(self.coords, self.all_node_pairs) if self.has_coords else dict()
 
     @property
     def edge_distances(self) -> dict:
         """Dictionary of distances for the node pairs that are connected by an edge."""
-        return _distances(self.coords, self.edges) if self.has_coords else dict()
+        return distances(self.coords, self.edges) if self.has_coords else dict()
 
     @property
     def min_distance(self) -> float | None:
         """Return the minimum distance between two nodes in the graph."""
-        return _min_distance(self.coords) if self.has_coords else None
+        return min_distance(self.coords) if self.has_coords else None
 
     @property
     def ud_radius(self) -> float | None:
