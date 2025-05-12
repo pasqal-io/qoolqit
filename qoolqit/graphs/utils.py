@@ -32,8 +32,12 @@ def min_distance(coords: dict) -> float:
     return distance
 
 
-def scale_coords(coords: dict, spacing: float) -> dict:
+def scale_coords(coords: dict, scaling: float) -> dict:
+    scaled_coords = {i: (c[0] * scaling, c[1] * scaling) for i, c in coords.items()}
+    return scaled_coords
+
+
+def space_coords(coords: dict, spacing: float) -> dict:
     min_dist = min_distance(coords)
     scale_factor = spacing / min_dist
-    scaled_coords = {i: (c[0] * scale_factor, c[1] * scale_factor) for i, c in coords.items()}
-    return scaled_coords
+    return scale_coords(coords, scale_factor)

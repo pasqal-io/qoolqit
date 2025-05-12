@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from matplotlib.ticker import MultipleLocator
 
-from .utils import all_node_pairs, distances, min_distance, scale_coords
+from .utils import all_node_pairs, distances, min_distance, scale_coords, space_coords
 
 
 class BaseGraph(nx.Graph):
@@ -125,6 +125,23 @@ class BaseGraph(nx.Graph):
     def is_ud_graph(self) -> bool:
         """Check if graph is unit-disk."""
         return set(self.ud_edges) == self.ordered_edges
+
+    def rescale_coords(self, scaling: float) -> None:
+        """Rescale node coords by a constant factor."""
+        if not self.has_coords:
+            raise ValueError("Trying to rescale coordinates on a graph without coordinates.")
+        self._coords = scale_coords(self._coords, scaling)
+
+    def respace_coords(self, spacing: float) -> None:
+        """Respace node coords so the minimum distance is equal to a set spacing."""
+        if not self.has_coords:
+            raise ValueError("Trying to rescale coordinates on a graph without coordinates.")
+        self._coords = space_coords(self._coords, spacing)
+
+    def set_edges_ud(self) -> None:
+        """Reset graph edges to be equal to the unit-disk set of edges."""
+        self.remove_edges_from(list(self.edges))
+        self.add_edges_from(self.ud_edges)
 
     def draw(self, *args: Any, **kwargs: Any) -> None:
         fig, ax = plt.subplots(1, 1, dpi=200)
