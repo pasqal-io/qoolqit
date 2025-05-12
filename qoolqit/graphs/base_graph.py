@@ -73,15 +73,28 @@ class BaseGraph(nx.Graph):
         """Return the dictionary of node coordinates."""
         return self._coords
 
+    @coords.setter
+    def coords(self, coords: Collection) -> None:
+        if isinstance(coords, list):
+            coords_dict = {i: pos for i, pos in zip(self.nodes, coords)}
+        elif isinstance(coords, dict):
+            nodes = set(coords.keys())
+            if set(self.nodes) != nodes:
+                raise ValueError(
+                    "Set of nodes in the given dictionary does not match the graph nodes."
+                )
+            coords_dict = coords
+        self._coords = coords_dict
+
     @property
     def distances(self) -> dict:
         """Dictionary of distances for all node pairs in the graph."""
-        return distances(self.coords, self.all_node_pairs) if self.has_coords else dict()
+        return distances(self.coords, self.all_node_pairs)
 
     @property
     def edge_distances(self) -> dict:
         """Dictionary of distances for the node pairs that are connected by an edge."""
-        return distances(self.coords, self.ordered_edges) if self.has_coords else dict()
+        return distances(self.coords, self.ordered_edges)
 
     @property
     def min_distance(self) -> float | None:
@@ -97,13 +110,20 @@ class BaseGraph(nx.Graph):
         self._ud_radius = value
 
     @property
-    def ud_edges(self) -> list:
-        all_node_pairs = self.all_node_pairs
-        return [edge for edge in all_node_pairs if self.distances[edge] <= self.ud_radius]
+    def ud_edges(self) -> set:
+        if self.has_coords:
+            if not self.ud_radius:
+                raise ValueError(
+                    "Unit-disk edges requires setting the unit-disk radius. "
+                    "You can set it in the `ud_radius` property."
+                )
+            return set(e for e, d in self.distances.items() if d <= self.ud_radius)
+        else:
+            return set()
 
     @property
     def is_ud_graph(self) -> bool:
-        """Check if graph is unit-disk. NEEDS TO BE MADE FASTER."""
+        """Check if graph is unit-disk."""
         return set(self.ud_edges) == self.ordered_edges
 
     def draw(self, *args: Any, **kwargs: Any) -> None:
@@ -136,26 +156,3 @@ class BaseGraph(nx.Graph):
             ax.tick_params(axis="both", which="both", labelbottom=True, labelleft=True, labelsize=8)
         else:
             nx.draw_networkx(self, *args, ax=ax, **kwargs)
-
-    ###########################################
-    ### Graph modification methods.         ###
-    ### Need to be handled later for safety ###
-    ###########################################
-
-    # def add_edge(*args, **kwargs) -> None:
-    #     raise NotImplementedError
-
-    # def add_edges_from(self) -> None:
-    #     raise NotImplementedError
-
-    # def add_node(self) -> None:
-    #     raise NotImplementedError
-
-    # def add_nodes_from(self) -> None:
-    #     raise NotImplementedError
-
-    # def add_weighted_edges_from(self) -> None:
-    #     raise NotImplementedError
-
-    # def update(self) -> None:
-    #     raise NotImplementedError
