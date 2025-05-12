@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import random
 from typing import Collection
 
 import networkx as nx
@@ -8,7 +7,7 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from .base_graph import BaseGraph
-from .utils import all_node_pairs
+from .utils import all_node_pairs, random_coords
 
 
 class DataGraph(BaseGraph):
@@ -27,33 +26,40 @@ class DataGraph(BaseGraph):
     ####################
 
     @classmethod
-    def line(cls, n: int, spacing: float = 1.0) -> DataGraph:
+    def line(cls, n: int, spacing: float = 1.0, radius: float = 1.0) -> DataGraph:
         """Line graph."""
         coords = [(i * spacing, 0.0) for i in range(n)]
         graph = cls.from_coordinates(coords)
-        edges = [(i - 1, i) for i in range(1, n)]
+        edges = [(i, i + 1) for i in range(0, n - 1)]
         graph.add_edges_from(edges)
-        graph.ud_radius = spacing
+        graph.ud_radius = radius
+        graph._node_weights = {i: None for i in graph.nodes}
+        graph._edge_weights = {e: None for e in graph.ordered_edges}
         return graph
 
     @classmethod
-    def circle(cls, n: int, spacing: float = 1.0) -> DataGraph:
+    def circle(cls, n: int, spacing: float = 1.0, radius: float = 1.0) -> DataGraph:
         """Circle graph."""
-        base_graph = nx.grid_2d_graph(n, 1, periodic=True)
-        base_graph = nx.relabel_nodes(base_graph, {(i, 0): i for i in range(n)})
-        coords = nx.circular_layout(base_graph)
-        coords = {i: tuple(c) for i, c in coords.items()}
+
+        d_theta = (2.0 * np.pi) / n
+        r = spacing / (2.0 * np.sin(np.pi / n))
+        theta = np.linspace(0.0, 2.0 * np.pi - d_theta, n)
+        coords = [(x, y) for x, y in zip(r * np.cos(theta), r * np.sin(theta))]
+        edges = [(i, i + 1) for i in range(n - 1)] + [(n - 1, 0)]
         graph = cls.from_coordinates(coords)
-        graph.respace_coords(spacing)
-        graph.add_edges_from(list(base_graph.edges))
-        graph.ud_radius = spacing
+        graph.add_edges_from(edges)
+        graph.ud_radius = radius
+        graph._node_weights = {i: None for i in graph.nodes}
+        graph._edge_weights = {e: None for e in graph.ordered_edges}
         return graph
 
     @classmethod
-    def random(cls, n: int, p: float, seed: float | None = None) -> DataGraph:
+    def random(cls, n: int, p: float) -> DataGraph:
         """ER random graph."""
-        base_graph = nx.erdos_renyi_graph(n, p, seed)
+        base_graph = nx.erdos_renyi_graph(n, p)
         graph = cls(list(base_graph.edges))
+        graph._node_weights = {i: None for i in graph.nodes}
+        graph._edge_weights = {e: None for e in graph.ordered_edges}
         return graph
 
     @classmethod
@@ -61,16 +67,17 @@ class DataGraph(BaseGraph):
         cls,
         n: int,
         radius: float = 1.0,
-        mu: float = 0.0,
-        seed: float | None = None,
+        scale: float | None = None,
     ) -> DataGraph:
         """Random unit disk graph."""
-        sigma = ((n**0.5) ** 0.5) / 2
-        pos = {i: (random.gauss(mu, sigma), random.gauss(mu, sigma)) for i in range(n)}
-        base_graph = nx.random_geometric_graph(n, radius=radius, dim=2, pos=pos, seed=seed)
-        graph = cls.from_coordinates(pos)
-        graph.add_edges_from(base_graph.edges)
+        if scale is None:
+            scale = ((n**0.5) ** 0.5) / 2
+        coords = random_coords(n, scale)
+        graph = cls.from_coordinates(coords)
         graph.ud_radius = radius
+        graph.set_edges_ud()
+        graph._node_weights = {i: None for i in graph.nodes}
+        graph._edge_weights = {e: None for e in graph.ordered_edges}
         return graph
 
     @classmethod
@@ -110,7 +117,7 @@ class DataGraph(BaseGraph):
     ##################
 
     @property
-    def node_weights(self) -> dict | None:
+    def node_weights(self) -> dict:
         """Dictionary of node weights."""
         return self._node_weights
 
@@ -128,7 +135,7 @@ class DataGraph(BaseGraph):
         self._node_weights = weights_dict
 
     @property
-    def edge_weights(self) -> dict | None:
+    def edge_weights(self) -> dict:
         """Dictionary of edge weights."""
         return self._edge_weights
 
