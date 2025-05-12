@@ -12,5 +12,4 @@ def test_basegraph_init(n_nodes: int) -> None:
     edge_list = random_edge_list(n_nodes, n_edges)
     graph = BaseGraph(edge_list)
 
-    # FAILING BECAUSE OF STUPID NETWORKX CONVENTION
-    # assert set(graph.edges) == set(edge_list)
+    assert set(graph.ordered_edges) == set(edge_list)

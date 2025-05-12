@@ -10,8 +10,13 @@ def _dist(p: Iterable | None, q: Iterable | None) -> float | None:
     return None if p is None or q is None else dist(p, q)
 
 
-def all_node_pairs(nodes: Iterable) -> list:
-    return list(filter(lambda x: x[0] < x[1], product(nodes, nodes)))
+def all_node_pairs(nodes: Iterable, both: bool = False) -> set:
+    if not both:
+        return set(filter(lambda x: x[0] < x[1], product(nodes, nodes)))
+    else:
+        fullpairs = set(product(nodes, nodes))
+        diagonal = set((i, i) for i in nodes)
+        return fullpairs - diagonal
 
 
 def distances(coords: dict, edge_list: Iterable | None) -> dict:

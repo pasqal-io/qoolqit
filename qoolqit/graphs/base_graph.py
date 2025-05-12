@@ -15,7 +15,7 @@ class BaseGraph(nx.Graph):
     The BaseGraph in QoolQit, direclty inheriting from nx.Graph.
     """
 
-    def __init__(self, edges: list | tuple | None = None) -> None:
+    def __init__(self, edges: list | tuple | set = []) -> None:
 
         if edges and not isinstance(edges, (list, tuple, set)):
             raise TypeError("Graph must be initialized empty or with a set of edges")
@@ -48,17 +48,25 @@ class BaseGraph(nx.Graph):
         return graph
 
     @property
+    def ordered_edges(self) -> set:
+        """Edges (u, v) such that (u < v)."""
+        nx_edges = set(self.edges)
+        unordered_edges = set(filter(lambda x: x[0] > x[1], nx_edges))
+        corrected_edges = set((j, i) for (i, j) in unordered_edges)
+        return (nx_edges - unordered_edges).union(corrected_edges)
+
+    @property
+    def all_node_pairs(self) -> set:
+        """Return a list of all possible node pairs in the graph."""
+        return all_node_pairs(self.nodes)
+
+    @property
     def has_coords(self) -> bool:
         return not ((None in self._coords.values()) or len(self._coords) == 0)
 
     @property
     def has_edges(self) -> bool:
         return len(self.edges) > 0
-
-    @property
-    def all_node_pairs(self) -> list:
-        """Return a list of all possible node pairs in the graph."""
-        return all_node_pairs(self.nodes)
 
     @property
     def coords(self) -> dict:
@@ -73,7 +81,7 @@ class BaseGraph(nx.Graph):
     @property
     def edge_distances(self) -> dict:
         """Dictionary of distances for the node pairs that are connected by an edge."""
-        return distances(self.coords, self.edges) if self.has_coords else dict()
+        return distances(self.coords, self.ordered_edges) if self.has_coords else dict()
 
     @property
     def min_distance(self) -> float | None:
@@ -96,7 +104,7 @@ class BaseGraph(nx.Graph):
     @property
     def is_ud_graph(self) -> bool:
         """Check if graph is unit-disk. NEEDS TO BE MADE FASTER."""
-        return set(self.ud_edges) == set(self.edges)
+        return set(self.ud_edges) == self.ordered_edges
 
     def draw(self, *args: Any, **kwargs: Any) -> None:
         fig, ax = plt.subplots(1, 1, dpi=200)

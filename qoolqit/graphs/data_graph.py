@@ -15,11 +15,11 @@ class DataGraph(BaseGraph):
     The main graph structure in QoolQit to represent data being manipulated.
     """
 
-    def __init__(self, edges: list | tuple | None = None) -> None:
+    def __init__(self, edges: list | tuple | set = []) -> None:
         super().__init__(edges)
 
         self._node_weights = {i: None for i in self.nodes}
-        self._edge_weights = {e: None for e in self.edges}
+        self._edge_weights = {e: None for e in self.ordered_edges}
 
     ####################
     ### CONSTRUCTORS ###
