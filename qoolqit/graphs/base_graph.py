@@ -25,6 +25,10 @@ class BaseGraph(nx.Graph):
         self._coords = {i: None for i in self.nodes}
         self._ud_radius: float | None = None
 
+    ####################
+    ### CONSTRUCTORS ###
+    ####################
+
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
         graph = cls()
@@ -46,6 +50,10 @@ class BaseGraph(nx.Graph):
         graph = cls.from_nodes(nodes)
         graph._coords = coords_dict
         return graph
+
+    ##################
+    ### PROPERTIES ###
+    ##################
 
     @property
     def ordered_edges(self) -> set:
@@ -125,6 +133,10 @@ class BaseGraph(nx.Graph):
     def is_ud_graph(self) -> bool:
         """Check if graph is unit-disk."""
         return set(self.ud_edges) == self.ordered_edges
+
+    ###############
+    ### METHODS ###
+    ###############
 
     def rescale_coords(self, scaling: float) -> None:
         """Rescale node coords by a constant factor."""

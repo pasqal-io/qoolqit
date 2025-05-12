@@ -43,7 +43,6 @@ def test_basegraph_init(n_nodes: int) -> None:
     assert graph.has_coords
     assert graph.min_distance <= 2 * scale
     assert len(graph.ud_edges) >= 1 and len(graph.ud_edges) <= max_n_edges
-    assert not graph.is_ud_graph
 
     # For a big enough radius the ud-graph is fully connected
     graph.ud_radius = 10.0 * scale

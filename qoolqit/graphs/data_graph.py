@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+from typing import Collection
 
 import networkx as nx
 import numpy as np
@@ -113,10 +114,17 @@ class DataGraph(BaseGraph):
         return self._node_weights
 
     @node_weights.setter
-    def node_weights(self, weights: dict) -> None:
-        if len(weights) != len(self.nodes):
-            raise ValueError("Setting weights requires one weight per node.")
-        self._node_weights = weights
+    def node_weights(self, weights: Collection) -> None:
+        if isinstance(weights, list):
+            weights_dict = {i: w for i, w in zip(self.nodes, weights)}
+        elif isinstance(weights, dict):
+            nodes = set(weights.keys())
+            if set(self.nodes) != nodes:
+                raise ValueError(
+                    "Set of nodes in the given dictionary does not match the graph nodes."
+                )
+            weights_dict = weights
+        self._node_weights = weights_dict
 
     @property
     def edge_weights(self) -> dict | None:
@@ -124,10 +132,17 @@ class DataGraph(BaseGraph):
         return self._edge_weights
 
     @edge_weights.setter
-    def edge_weights(self, weights: dict) -> None:
-        if len(weights) != len(self.edges):
-            raise ValueError("Setting weights requires one weight per edge.")
-        self._edge_weights = weights
+    def edge_weights(self, weights: Collection) -> None:
+        if isinstance(weights, list):
+            weights_dict = {i: w for i, w in zip(self.ordered_edges, weights)}
+        elif isinstance(weights, dict):
+            edges = set(weights.keys())
+            if set(self.ordered_edges) != edges:
+                raise ValueError(
+                    "Set of edges in the given dictionary does not match the graph ordered edges."
+                )
+            weights_dict = weights
+        self._edge_weights = weights_dict
 
     @property
     def is_node_weighted(self) -> bool:
