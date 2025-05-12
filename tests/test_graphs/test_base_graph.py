@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import numpy as np
 import pytest
-from helpers import random_edge_list
+from helpers import random_coords, random_edge_list
 
 from qoolqit.graphs import BaseGraph
 
@@ -34,11 +33,10 @@ def test_basegraph_init(n_nodes: int) -> None:
     assert not graph.is_ud_graph
 
     # Now we give the graph a random set of coordinates
-    scale = ((n_nodes**0.5) ** 0.5) / 2
-    x_coords = np.random.uniform(low=-scale, high=scale, size=(actual_n_nodes,))
-    y_coords = np.random.uniform(low=-scale, high=scale, size=(actual_n_nodes,))
+    scale = ((actual_n_nodes**0.5) ** 0.5) / 2
+    coords = random_coords(actual_n_nodes, scale)
 
-    graph.coords = {i: (x, y) for i, x, y in zip(graph.nodes, x_coords, y_coords)}
+    graph.coords = {i: pos for i, pos in zip(graph.nodes, coords)}
     graph.ud_radius = 1.0
 
     assert graph.has_coords
