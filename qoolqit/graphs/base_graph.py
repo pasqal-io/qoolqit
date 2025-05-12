@@ -37,7 +37,7 @@ class BaseGraph(nx.Graph):
         return graph
 
     @classmethod
-    def from_coordinates(cls, coords: Collection, spacing: float | None = None) -> BaseGraph:
+    def from_coordinates(cls, coords: Collection) -> BaseGraph:
         """Get a list of (x, y) tuples and initialize."""
         if isinstance(coords, list):
             nodes = list(range(len(coords)))
@@ -45,8 +45,6 @@ class BaseGraph(nx.Graph):
         elif isinstance(coords, dict):
             nodes = list(coords.keys())
             coords_dict = coords
-        if spacing is not None:
-            coords_dict = scale_coords(coords_dict, spacing)
         graph = cls.from_nodes(nodes)
         graph._coords = coords_dict
         return graph

@@ -4,6 +4,8 @@ from itertools import product
 from math import dist
 from typing import Iterable
 
+import numpy as np
+
 
 def _dist(p: Iterable | None, q: Iterable | None) -> float | None:
     """Wrapper on dist that accepts None."""
@@ -41,3 +43,9 @@ def space_coords(coords: dict, spacing: float) -> dict:
     min_dist = min_distance(coords)
     scale_factor = spacing / min_dist
     return scale_coords(coords, scale_factor)
+
+
+def random_coords(n_nodes: int, scale: float = 1.0) -> list:
+    x_coords = np.random.uniform(low=-scale, high=scale, size=(n_nodes,))
+    y_coords = np.random.uniform(low=-scale, high=scale, size=(n_nodes,))
+    return [(x, y) for x, y in zip(x_coords, y_coords)]

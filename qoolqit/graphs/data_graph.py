@@ -43,7 +43,8 @@ class DataGraph(BaseGraph):
         base_graph = nx.relabel_nodes(base_graph, {(i, 0): i for i in range(n)})
         coords = nx.circular_layout(base_graph)
         coords = {i: tuple(c) for i, c in coords.items()}
-        graph = cls.from_coordinates(coords, spacing=spacing)
+        graph = cls.from_coordinates(coords)
+        graph.respace_coords(spacing)
         graph.add_edges_from(list(base_graph.edges))
         graph.ud_radius = spacing
         return graph
