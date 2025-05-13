@@ -54,7 +54,7 @@ class DataGraph(BaseGraph):
         return graph
 
     @classmethod
-    def random(cls, n: int, p: float) -> DataGraph:
+    def random_er(cls, n: int, p: float) -> DataGraph:
         """ER random graph."""
         base_graph = nx.erdos_renyi_graph(n, p)
         graph = cls(list(base_graph.edges))
