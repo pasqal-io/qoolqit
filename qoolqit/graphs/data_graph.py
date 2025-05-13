@@ -174,3 +174,8 @@ class DataGraph(BaseGraph):
     ###############
     ### METHODS ###
     ###############
+
+    def set_edges_ud(self) -> None:
+        """Reset graph edges to be equal to the unit-disk set of edges."""
+        super().set_edges_ud()
+        self._edge_weights = {e: None for e in self.ordered_edges}

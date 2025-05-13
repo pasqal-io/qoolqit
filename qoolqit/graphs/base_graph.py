@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from math import ceil
+from math import ceil, isclose
 from typing import Any, Collection, Iterable
 
 import matplotlib.pyplot as plt
@@ -8,6 +8,11 @@ import networkx as nx
 from matplotlib.ticker import MultipleLocator
 
 from .utils import all_node_pairs, distances, min_distance, scale_coords, space_coords
+
+
+def less_or_equal(a: float, b: float, rel_tol: float = 0.0, abs_tol: float = 1e-8) -> bool:
+    """Less or approximately equal."""
+    return a < b or isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol)
 
 
 class BaseGraph(nx.Graph):
@@ -123,7 +128,7 @@ class BaseGraph(nx.Graph):
                     "Unit-disk edges requires setting the unit-disk radius. "
                     "You can set it in the `ud_radius` property."
                 )
-            return set(e for e, d in self.distances.items() if d <= self.ud_radius)
+            return set(e for e, d in self.distances.items() if less_or_equal(d, self.ud_radius))
         else:
             return set()
 

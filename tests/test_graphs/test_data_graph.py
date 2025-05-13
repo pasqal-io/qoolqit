@@ -9,11 +9,11 @@ from qoolqit.graphs import DataGraph
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
 def test_datagraph_ud(n_nodes: int, graph_type: str) -> None:
     if graph_type == "circle":
-        graph = DataGraph.circle(n_nodes, spacing=1.0, radius=1.1)
+        graph = DataGraph.circle(n_nodes, spacing=1.0, radius=1.0)
     if graph_type == "line":
-        graph = DataGraph.line(n_nodes, spacing=1.0, radius=1.1)
+        graph = DataGraph.line(n_nodes, spacing=1.0, radius=1.0)
     if graph_type == "random":
-        graph = DataGraph.random_ud(n_nodes, radius=1.1)
+        graph = DataGraph.random_ud(n_nodes, radius=1.0)
 
     assert len(graph.node_weights) == graph.number_of_nodes()
     assert len(graph.edge_weights) == graph.number_of_edges()
