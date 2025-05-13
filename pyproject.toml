@@ -29,6 +29,7 @@ classifiers = [
 dependencies = [
   "pulser",
   "matplotlib",
+  "networkx",
 ]
 
 [tool.hatch.metadata]
