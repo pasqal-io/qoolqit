@@ -40,13 +40,21 @@ class DataGraph(BaseGraph):
         return graph
 
     @classmethod
-    def circle(cls, n: int, spacing: float = 1.0, ud_radius: float = 1.0) -> DataGraph:
+    def circle(
+        cls,
+        n: int,
+        spacing: float = 1.0,
+        ud_radius: float = 1.0,
+        center: tuple = (0.0, 0.0),
+    ) -> DataGraph:
         """Circle graph."""
 
         d_theta = (2.0 * np.pi) / n
         r = spacing / (2.0 * np.sin(np.pi / n))
         theta = np.linspace(0.0, 2.0 * np.pi - d_theta, n)
-        coords = [(x, y) for x, y in zip(r * np.cos(theta), r * np.sin(theta))]
+        coords = [
+            (x + center[0], y + center[1]) for x, y in zip(r * np.cos(theta), r * np.sin(theta))
+        ]
         edges = [(i, i + 1) for i in range(n - 1)] + [(n - 1, 0)]
         graph = cls.from_coordinates(coords)
         graph.add_edges_from(edges)
