@@ -18,12 +18,12 @@ def test_datagraph_unit_disk(n_nodes: int, graph_type: str) -> None:
     if graph_type == "circle":
         graph = DataGraph.circle(n_nodes, spacing=spacing, ud_radius=ud_radius)
         circle_edges = set((i, i + 1) for i in range(n_nodes - 1)).union(set([(0, n_nodes - 1)]))
-        assert graph.ordered_edges == circle_edges
+        assert graph.sorted_edges == circle_edges
         assert np.isclose(graph.min_distance, spacing)
     if graph_type == "line":
         graph = DataGraph.line(n_nodes, spacing=spacing, ud_radius=ud_radius)
         line_edges = set((i, i + 1) for i in range(n_nodes - 1))
-        assert graph.ordered_edges == line_edges
+        assert graph.sorted_edges == line_edges
         assert np.isclose(graph.min_distance, spacing)
     if graph_type == "random_ud":
         graph = DataGraph.random_ud(n_nodes, ud_radius=ud_radius)
@@ -34,16 +34,16 @@ def test_datagraph_unit_disk(n_nodes: int, graph_type: str) -> None:
     assert not graph.is_edge_weighted
     assert graph.is_ud_graph
 
-    original_edges = graph.ordered_edges
+    original_edges = graph.sorted_edges
     graph.ud_radius = 0.0
     graph.set_edges_ud()
     assert len(graph.edges) == 0
     graph.ud_radius = ud_radius
     graph.set_edges_ud()
-    assert graph.ordered_edges == original_edges
+    assert graph.sorted_edges == original_edges
 
     graph.node_weights = {i: np.random.rand() for i in graph.nodes}
-    graph.edge_weights = {e: np.random.rand() for e in graph.ordered_edges}
+    graph.edge_weights = {e: np.random.rand() for e in graph.sorted_edges}
 
     assert graph.is_node_weighted
     assert graph.is_edge_weighted
@@ -100,7 +100,7 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
     assert graph.is_edge_weighted
 
     for edge in random_edges_removal:
-        assert edge not in graph.ordered_edges
+        assert edge not in graph.sorted_edges
 
     n_edges = graph.number_of_edges()
     idx = [2 * i for i in range(n_edges)]

@@ -1,20 +1,21 @@
 from __future__ import annotations
 
-from math import ceil, isclose
-from typing import Any, Collection, Iterable
+from collections.abc import Iterable
+from math import ceil
+from typing import Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
 from matplotlib.ticker import MultipleLocator
 
-from qoolqit.utils import ATOL_32
-
-from .utils import all_node_pairs, distances, min_distance, scale_coords, space_coords
-
-
-def less_or_equal(a: float, b: float, rel_tol: float = 0.0, abs_tol: float = ATOL_32) -> bool:
-    """Less or approximately equal."""
-    return a < b or isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol)
+from .utils import (
+    all_node_pairs,
+    distances,
+    less_or_equal,
+    min_distance,
+    scale_coords,
+    space_coords,
+)
 
 
 class BaseGraph(nx.Graph):
@@ -65,8 +66,13 @@ class BaseGraph(nx.Graph):
         return graph
 
     @classmethod
-    def from_coordinates(cls, coords: Collection) -> BaseGraph:
-        """Get a list of (x, y) tuples and initialize."""
+    def from_coordinates(cls, coords: list | dict) -> BaseGraph:
+        """
+        Construct a base graph from a set of coordinates.
+
+        Arguments:
+            nodes: list or dictionary of coordinate pairs.
+        """
         if isinstance(coords, list):
             nodes = list(range(len(coords)))
             coords_dict = {i: pos for i, pos in enumerate(coords)}
@@ -83,8 +89,8 @@ class BaseGraph(nx.Graph):
     ##################
 
     @property
-    def ordered_edges(self) -> set:
-        """Edges (u, v) such that (u < v)."""
+    def sorted_edges(self) -> set:
+        """Returns the set of edges (u, v) such that (u < v)."""
         nx_edges = set(self.edges)
         unordered_edges = set(filter(lambda x: x[0] > x[1], nx_edges))
         corrected_edges = set((j, i) for (i, j) in unordered_edges)
@@ -109,7 +115,7 @@ class BaseGraph(nx.Graph):
         return self._coords
 
     @coords.setter
-    def coords(self, coords: Collection) -> None:
+    def coords(self, coords: list | dict) -> None:
         if isinstance(coords, list):
             coords_dict = {i: pos for i, pos in zip(self.nodes, coords)}
         elif isinstance(coords, dict):
@@ -129,7 +135,7 @@ class BaseGraph(nx.Graph):
     @property
     def edge_distances(self) -> dict:
         """Dictionary of distances for the node pairs that are connected by an edge."""
-        return distances(self.coords, self.ordered_edges)
+        return distances(self.coords, self.sorted_edges)
 
     @property
     def min_distance(self) -> float | None:
@@ -159,7 +165,7 @@ class BaseGraph(nx.Graph):
     @property
     def is_ud_graph(self) -> bool:
         """Check if graph is unit-disk."""
-        return set(self.ud_edges) == self.ordered_edges
+        return set(self.ud_edges) == self.sorted_edges
 
     def rescale_coords(self, scaling: float) -> None:
         """Rescale node coords by a constant factor."""

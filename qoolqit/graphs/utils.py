@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from itertools import product
-from math import dist
+from math import dist, isclose
 from typing import Iterable
 
 import numpy as np
+
+from qoolqit.utils import ATOL_32
 
 
 def _dist(p: Iterable | None, q: Iterable | None) -> float | None:
@@ -49,3 +51,8 @@ def random_coords(n_nodes: int, scale: float = 1.0) -> list:
     x_coords = np.random.uniform(low=-scale, high=scale, size=(n_nodes,))
     y_coords = np.random.uniform(low=-scale, high=scale, size=(n_nodes,))
     return [(x, y) for x, y in zip(x_coords, y_coords)]
+
+
+def less_or_equal(a: float, b: float, rel_tol: float = 0.0, abs_tol: float = ATOL_32) -> bool:
+    """Less or approximately equal."""
+    return a < b or isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol)

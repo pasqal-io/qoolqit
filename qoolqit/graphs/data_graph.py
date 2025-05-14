@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Collection
-
 import networkx as nx
 import numpy as np
 from numpy.typing import ArrayLike
@@ -21,7 +19,7 @@ class DataGraph(BaseGraph):
     def _reset_dicts(self) -> None:
         """Reset the default weight dictionaries."""
         self._node_weights = {i: None for i in self.nodes}
-        self._edge_weights = {e: None for e in self.ordered_edges}
+        self._edge_weights = {e: None for e in self.sorted_edges}
 
     ####################
     ### CONSTRUCTORS ###
@@ -131,7 +129,7 @@ class DataGraph(BaseGraph):
         return self._node_weights
 
     @node_weights.setter
-    def node_weights(self, weights: Collection) -> None:
+    def node_weights(self, weights: list | dict) -> None:
         if isinstance(weights, list):
             weights_dict = {i: w for i, w in zip(self.nodes, weights)}
         elif isinstance(weights, dict):
@@ -149,12 +147,12 @@ class DataGraph(BaseGraph):
         return self._edge_weights
 
     @edge_weights.setter
-    def edge_weights(self, weights: Collection) -> None:
+    def edge_weights(self, weights: list | dict) -> None:
         if isinstance(weights, list):
-            weights_dict = {i: w for i, w in zip(self.ordered_edges, weights)}
+            weights_dict = {i: w for i, w in zip(self.sorted_edges, weights)}
         elif isinstance(weights, dict):
             edges = set(weights.keys())
-            if set(self.ordered_edges) != edges:
+            if set(self.sorted_edges) != edges:
                 raise ValueError(
                     "Set of edges in the given dictionary does not match the graph ordered edges."
                 )
@@ -176,4 +174,4 @@ class DataGraph(BaseGraph):
     def set_edges_ud(self) -> None:
         """Reset graph edges to be equal to the unit-disk set of edges."""
         super().set_edges_ud()
-        self._edge_weights = {e: None for e in self.ordered_edges}
+        self._edge_weights = {e: None for e in self.sorted_edges}

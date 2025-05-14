@@ -21,11 +21,11 @@ def test_basegraph_init(n_nodes: int) -> None:
     max_n_edges = (1 / 2) * actual_n_nodes * (actual_n_nodes - 1)
 
     assert len(graph.edges) == n_edges
-    assert len(graph.ordered_edges) == n_edges
-    assert len(graph.ordered_edges) <= max_n_edges
+    assert len(graph.sorted_edges) == n_edges
+    assert len(graph.sorted_edges) <= max_n_edges
     assert len(graph.distances) == max_n_edges
     assert len(graph.edge_distances) == n_edges
-    assert graph.ordered_edges == set(edge_list)
+    assert graph.sorted_edges == set(edge_list)
     assert graph.has_edges
     assert not graph.has_coords
     assert graph.min_distance is None
@@ -60,7 +60,7 @@ def test_basegraph_constructors(n_nodes: int) -> None:
 
     for graph in [graph1, graph2]:
         assert len(graph.edges) == 0
-        assert len(graph.ordered_edges) == 0
+        assert len(graph.sorted_edges) == 0
         assert len(graph.edge_distances) == 0
         assert not graph.has_edges
 
