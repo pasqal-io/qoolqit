@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
+
 import networkx as nx
 import numpy as np
 from numpy.typing import ArrayLike
@@ -11,9 +13,15 @@ from .utils import random_coords
 
 
 class DataGraph(BaseGraph):
-    """The main graph structure in QoolQit to represent data being manipulated."""
+    """The main graph structure to represent problem data."""
 
-    def __init__(self, edges: list | tuple | set = []) -> None:
+    def __init__(self, edges: Iterable = []) -> None:
+        """
+        Default constructor for the BaseGraph.
+
+        Arguments:
+            edges: Iterable of edge tuples (i, j)
+        """
         super().__init__(edges)
 
     def _reset_dicts(self) -> None:
@@ -27,7 +35,13 @@ class DataGraph(BaseGraph):
 
     @classmethod
     def line(cls, n: int, spacing: float = 1.0, ud_radius: float = 1.0) -> DataGraph:
-        """Line graph."""
+        """Constructs a line graph, with the respective coordinates.
+
+        Arguments:
+            n: number of nodes.
+            spacing: distance between each node.
+            ud_radius: unit-disk radius.
+        """
         coords = [(i * spacing, 0.0) for i in range(n)]
         graph = cls.from_coordinates(coords)
         edges = [(i, i + 1) for i in range(0, n - 1)]
@@ -44,7 +58,14 @@ class DataGraph(BaseGraph):
         ud_radius: float = 1.0,
         center: tuple = (0.0, 0.0),
     ) -> DataGraph:
-        """Circle graph."""
+        """Constructs a circle graph, with the respective coordinates.
+
+        Arguments:
+            n: number of nodes.
+            spacing: distance between each node.
+            ud_radius: unit-disk radius.
+            center: point (x, y) to set as the center of the graph.
+        """
 
         d_theta = (2.0 * np.pi) / n
         r = spacing / (2.0 * np.sin(np.pi / n))
@@ -61,7 +82,12 @@ class DataGraph(BaseGraph):
 
     @classmethod
     def random_er(cls, n: int, p: float) -> DataGraph:
-        """ER random graph."""
+        """Constructs an Erdős–Rényi random graph.
+
+        Arguments:
+            n: number of nodes.
+            p: probability that any two nodes connect.
+        """
         base_graph = nx.erdos_renyi_graph(n, p)
         graph = cls(list(base_graph.edges))
         graph._reset_dicts()
@@ -72,12 +98,23 @@ class DataGraph(BaseGraph):
         cls,
         n: int,
         ud_radius: float = 1.0,
-        scale: float | None = None,
+        L: float | None = None,
     ) -> DataGraph:
-        """Random unit disk graph."""
-        if scale is None:
-            scale = ((n**0.5) ** 0.5) / 2
-        coords = random_coords(n, scale)
+        """Constructs a random unit-disk graph.
+
+        The nodes are sampled uniformly from a square of size (L x L).
+        If L is not given, it is estimated based on a rough heuristic that
+        of packing N nodes on a square of side L such that the expected
+        minimum distance is R, leading to L ~ (R / 2) * sqrt(π * n).
+
+        Arguments:
+            n: number of nodes.
+            ud_radius: radius to use for defining the unit-disk edges.
+            L: size of the square on which to sample the node coordinates.
+        """
+        if L is None:
+            L = (ud_radius / 2) * ((np.pi * n) ** 0.5)
+        coords = random_coords(n, L)
         graph = cls.from_coordinates(coords)
         graph.ud_radius = ud_radius
         graph.set_edges_ud()
@@ -86,7 +123,15 @@ class DataGraph(BaseGraph):
 
     @classmethod
     def from_matrix(cls, data: ArrayLike) -> DataGraph:
-        """NEEDS TO BE MADE FASTER."""
+        """Constructs a graph from a symmetric square matrix.
+
+        The diagonal values are set as the node weights. For each entry (i, j)
+        where M[i, j] != 0 an edge (i, j) is added to the graph and the value
+        M[i, j] is set as its weight.
+
+        Arguments:
+            data: symmetric square matrix.
+        """
         if data.ndim != 2:
             raise ValueError("2D Matrix required.")
         if not np.allclose(data, data.T, rtol=0.0, atol=ATOL_32):
@@ -125,12 +170,19 @@ class DataGraph(BaseGraph):
 
     @property
     def node_weights(self) -> dict:
-        """Dictionary of node weights."""
+        """Return the dictionary of node weights."""
         return self._node_weights
 
     @node_weights.setter
     def node_weights(self, weights: list | dict) -> None:
+        """Set the dictionary of node weights.
+
+        Arguments:
+            weights: list or dictionary of weights.
+        """
         if isinstance(weights, list):
+            if len(weights) != self.number_of_nodes():
+                raise ValueError("Size of the weights list does not match the number of nodes.")
             weights_dict = {i: w for i, w in zip(self.nodes, weights)}
         elif isinstance(weights, dict):
             nodes = set(weights.keys())
@@ -143,12 +195,19 @@ class DataGraph(BaseGraph):
 
     @property
     def edge_weights(self) -> dict:
-        """Dictionary of edge weights."""
+        """Return the dictionary of edge weights."""
         return self._edge_weights
 
     @edge_weights.setter
     def edge_weights(self, weights: list | dict) -> None:
+        """Set the dictionary of edge weights.
+
+        Arguments:
+            weights: list or dictionary of weights.
+        """
         if isinstance(weights, list):
+            if len(weights) != self.number_of_edges():
+                raise ValueError("Size of the weights list does not match the number of nodes.")
             weights_dict = {i: w for i, w in zip(self.sorted_edges, weights)}
         elif isinstance(weights, dict):
             edges = set(weights.keys())
@@ -161,10 +220,18 @@ class DataGraph(BaseGraph):
 
     @property
     def is_node_weighted(self) -> bool:
+        """Check if the graph has node weights.
+
+        Requires all nodes to have a weight.
+        """
         return not ((None in self._node_weights.values()) or len(self._node_weights) == 0)
 
     @property
     def is_edge_weighted(self) -> bool:
+        """Check if the graph has edge weights.
+
+        Requires all edges to have a weight.
+        """
         return not ((None in self._edge_weights.values()) or len(self._edge_weights) == 0)
 
     ###############
@@ -172,6 +239,6 @@ class DataGraph(BaseGraph):
     ###############
 
     def set_edges_ud(self) -> None:
-        """Reset graph edges to be equal to the unit-disk set of edges."""
+        """Reset the set of edges to be equal to the set of unit-disk edges."""
         super().set_edges_ud()
         self._edge_weights = {e: None for e in self.sorted_edges}
