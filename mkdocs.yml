@@ -5,8 +5,12 @@ repo_name: "QoolQit"
 nav:
   - Home: index.md
   - Getting started:
-    - Installation: installation.md
-  - API Reference: $api/qoolqit.***
+    - Installation: getting_started/installation.md
+  - Contents:
+    - Graphs: contents/graphs.md
+  - Tutorials:
+    - Amazing tutorial: tutorials/placeholder.md
+  - Reference: $api/qoolqit.***
   - Open-source:
     - Licence (MIT-Derived): LICENSE.md
     - Contributor Agreement: CONTRIBUTOR AGREEMENT.md
