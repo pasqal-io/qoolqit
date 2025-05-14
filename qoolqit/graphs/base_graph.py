@@ -53,8 +53,7 @@ class BaseGraph(nx.Graph):
 
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
-        """
-        Construct a base graph from a set of nodes.
+        """Construct a base graph from a set of nodes.
 
         Arguments:
             nodes: Iterable of nodes.
@@ -67,11 +66,10 @@ class BaseGraph(nx.Graph):
 
     @classmethod
     def from_coordinates(cls, coords: list | dict) -> BaseGraph:
-        """
-        Construct a base graph from a set of coordinates.
+        """Construct a base graph from a set of coordinates.
 
         Arguments:
-            nodes: list or dictionary of coordinate pairs.
+            coords: list or dictionary of coordinate pairs.
         """
         if isinstance(coords, list):
             nodes = list(range(len(coords)))
@@ -103,10 +101,15 @@ class BaseGraph(nx.Graph):
 
     @property
     def has_coords(self) -> bool:
+        """Check if the graph has coordinates.
+
+        Requires all nodes to have coordinates.
+        """
         return not ((None in self._coords.values()) or len(self._coords) == 0)
 
     @property
     def has_edges(self) -> bool:
+        """Check if the graph has edges."""
         return len(self.edges) > 0
 
     @property
@@ -116,6 +119,11 @@ class BaseGraph(nx.Graph):
 
     @coords.setter
     def coords(self, coords: list | dict) -> None:
+        """Set the dictionary of node coordinates.
+
+        Arguments:
+            coords: list or dictionary of coordinate pairs.
+        """
         if isinstance(coords, list):
             coords_dict = {i: pos for i, pos in zip(self.nodes, coords)}
         elif isinstance(coords, dict):
@@ -129,29 +137,51 @@ class BaseGraph(nx.Graph):
 
     @property
     def distances(self) -> dict:
-        """Dictionary of distances for all node pairs in the graph."""
+        """Dictionary of distances for all node pairs in the graph.
+
+        Distances are calculated directly the coordinates. If the graph has no coordinates
+        the distance will be set as None.
+        """
         return distances(self.coords, self.all_node_pairs)
 
     @property
     def edge_distances(self) -> dict:
-        """Dictionary of distances for the node pairs that are connected by an edge."""
+        """Dictionary of distances for all edges in the graph.
+
+        Distances are calculated directly the coordinates. If the graph has no coordinates
+        the distance will be set as None.
+        """
         return distances(self.coords, self.sorted_edges)
 
     @property
     def min_distance(self) -> float | None:
-        """Return the minimum distance between two nodes in the graph."""
+        """Return the distance between the two closest nodes in the graph."""
         return min_distance(self.coords) if self.has_coords else None
 
     @property
     def ud_radius(self) -> float | None:
+        """Return the unit-disk radius currently used in the graph."""
         return self._ud_radius
 
     @ud_radius.setter
-    def ud_radius(self, value: float) -> None:
-        self._ud_radius = value
+    def ud_radius(self, radius: float) -> None:
+        """Set the unit-disk radius to be used in the graph.
+
+        Arguments:
+            radius: value for the unit-disk radius.
+        """
+        self._ud_radius = radius
 
     @property
     def ud_edges(self) -> set:
+        """Return the set of unit-disk edges.
+
+        This is defined as the set of edges where the distance d[u, v] <= r, where r
+        is the ud_radius currently set in the graph. If the graph has no coordinates,
+        the set of unit-disk edges is empty. The set of unit-disk edges is computed
+        directly from all pairs of nodes in the graph, and has no direct connection with
+        the set of edges defined in the graph.
+        """
         if self.has_coords:
             if self.ud_radius is None:
                 raise ValueError(
@@ -164,27 +194,51 @@ class BaseGraph(nx.Graph):
 
     @property
     def is_ud_graph(self) -> bool:
-        """Check if graph is unit-disk."""
+        """Check if the graph is unit-disk.
+
+        The graph is considered unit-disk if the set of edges
+        is equal to its set of unit-disk edges.
+        """
         return set(self.ud_edges) == self.sorted_edges
 
+    ###############
+    ### METHODS ###
+    ###############
+
     def rescale_coords(self, scaling: float) -> None:
-        """Rescale node coords by a constant factor."""
+        """Rescales the node coordinates by a constant factor.
+
+        Arguments:
+            scaling: value to scale by.
+        """
         if not self.has_coords:
             raise ValueError("Trying to rescale coordinates on a graph without coordinates.")
         self._coords = scale_coords(self._coords, scaling)
 
     def respace_coords(self, spacing: float) -> None:
-        """Respace node coords so the minimum distance is equal to a set spacing."""
+        """Rescales the node coordinates so the minimum distance is equal to a set spacing.
+
+        Arguments:
+            spacing: value to set as the minimum distance in the graph.
+        """
         if not self.has_coords:
             raise ValueError("Trying to rescale coordinates on a graph without coordinates.")
         self._coords = space_coords(self._coords, spacing)
 
     def set_edges_ud(self) -> None:
-        """Reset graph edges to be equal to the unit-disk set of edges."""
+        """Reset the set of edges to be equal to the set of unit-disk edges."""
         self.remove_edges_from(list(self.edges))
         self.add_edges_from(self.ud_edges)
 
     def draw(self, *args: Any, **kwargs: Any) -> None:
+        """Draw the graph.
+
+        Uses the draw_networkx function from NetworkX.
+
+        Arguments:
+            *args: arguments to pass to draw_networkx.
+            **kwargs: keyword-arguments to pass to draw_networkx.
+        """
         fig, ax = plt.subplots(1, 1, dpi=200)
         ax.set_aspect("equal")
         if self.has_coords:
