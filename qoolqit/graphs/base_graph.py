@@ -7,10 +7,12 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from matplotlib.ticker import MultipleLocator
 
+from qoolqit.utils import ATOL_32
+
 from .utils import all_node_pairs, distances, min_distance, scale_coords, space_coords
 
 
-def less_or_equal(a: float, b: float, rel_tol: float = 0.0, abs_tol: float = 1e-8) -> bool:
+def less_or_equal(a: float, b: float, rel_tol: float = 0.0, abs_tol: float = ATOL_32) -> bool:
     """Less or approximately equal."""
     return a < b or isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol)
 
@@ -123,7 +125,7 @@ class BaseGraph(nx.Graph):
     @property
     def ud_edges(self) -> set:
         if self.has_coords:
-            if not self.ud_radius:
+            if self.ud_radius is None:
                 raise ValueError(
                     "Unit-disk edges requires setting the unit-disk radius. "
                     "You can set it in the `ud_radius` property."

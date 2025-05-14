@@ -6,8 +6,10 @@ import networkx as nx
 import numpy as np
 from numpy.typing import ArrayLike
 
+from qoolqit.utils import ATOL_32
+
 from .base_graph import BaseGraph
-from .utils import all_node_pairs, random_coords
+from .utils import random_coords
 
 
 class DataGraph(BaseGraph):
@@ -26,19 +28,19 @@ class DataGraph(BaseGraph):
     ####################
 
     @classmethod
-    def line(cls, n: int, spacing: float = 1.0, radius: float = 1.0) -> DataGraph:
+    def line(cls, n: int, spacing: float = 1.0, ud_radius: float = 1.0) -> DataGraph:
         """Line graph."""
         coords = [(i * spacing, 0.0) for i in range(n)]
         graph = cls.from_coordinates(coords)
         edges = [(i, i + 1) for i in range(0, n - 1)]
         graph.add_edges_from(edges)
-        graph.ud_radius = radius
+        graph.ud_radius = ud_radius
         graph._node_weights = {i: None for i in graph.nodes}
         graph._edge_weights = {e: None for e in graph.ordered_edges}
         return graph
 
     @classmethod
-    def circle(cls, n: int, spacing: float = 1.0, radius: float = 1.0) -> DataGraph:
+    def circle(cls, n: int, spacing: float = 1.0, ud_radius: float = 1.0) -> DataGraph:
         """Circle graph."""
 
         d_theta = (2.0 * np.pi) / n
@@ -48,7 +50,7 @@ class DataGraph(BaseGraph):
         edges = [(i, i + 1) for i in range(n - 1)] + [(n - 1, 0)]
         graph = cls.from_coordinates(coords)
         graph.add_edges_from(edges)
-        graph.ud_radius = radius
+        graph.ud_radius = ud_radius
         graph._node_weights = {i: None for i in graph.nodes}
         graph._edge_weights = {e: None for e in graph.ordered_edges}
         return graph
@@ -66,7 +68,7 @@ class DataGraph(BaseGraph):
     def random_ud(
         cls,
         n: int,
-        radius: float = 1.0,
+        ud_radius: float = 1.0,
         scale: float | None = None,
     ) -> DataGraph:
         """Random unit disk graph."""
@@ -74,7 +76,7 @@ class DataGraph(BaseGraph):
             scale = ((n**0.5) ** 0.5) / 2
         coords = random_coords(n, scale)
         graph = cls.from_coordinates(coords)
-        graph.ud_radius = radius
+        graph.ud_radius = ud_radius
         graph.set_edges_ud()
         graph._node_weights = {i: None for i in graph.nodes}
         graph._edge_weights = {e: None for e in graph.ordered_edges}
@@ -85,21 +87,24 @@ class DataGraph(BaseGraph):
         """NEEDS TO BE MADE FASTER."""
         if data.ndim != 2:
             raise ValueError("2D Matrix required.")
-        if not np.allclose(data, data.T, rtol=1e-05, atol=1e-08):
+        if not np.allclose(data, data.T, rtol=0.0, atol=ATOL_32):
             raise ValueError("Matrix must be symmetric.")
 
         diag = np.diag(data)
         n_nodes = len(diag)
         node_weights = {i: diag[i] for i in range(n_nodes)}
-        if np.allclose(diag, np.zeros(n_nodes), rtol=1e-05, atol=1e-08):
+        if np.allclose(diag, np.zeros(n_nodes), rtol=0.0, atol=ATOL_32):
             node_weights = {i: None for i in range(n_nodes)}
         else:
-            node_weights = {i: diag[i] for i in range(n_nodes)}
+            node_weights = {i: diag[i].item() for i in range(n_nodes)}
 
-        edge_list = [
-            (i, j) for i, j in zip(*data.nonzero()) if (i, j) in all_node_pairs(range(n_nodes))
-        ]
-        edge_weights = {(i, j): data[i, j] for i, j in edge_list}
+        data[data <= ATOL_32] = 0.0
+        non_zero = data.nonzero()
+        i_list = non_zero[0].tolist()
+        j_list = non_zero[1].tolist()
+
+        edge_list = [(i, j) for i, j in zip(i_list, j_list) if i < j]
+        edge_weights = {(i, j): data[i, j].item() for i, j in edge_list}
 
         graph = cls.from_nodes(range(n_nodes))
         graph.add_edges_from(edge_list)
