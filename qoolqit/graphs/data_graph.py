@@ -219,7 +219,7 @@ class DataGraph(BaseGraph):
         self._edge_weights = weights_dict
 
     @property
-    def is_node_weighted(self) -> bool:
+    def has_node_weights(self) -> bool:
         """Check if the graph has node weights.
 
         Requires all nodes to have a weight.
@@ -227,7 +227,7 @@ class DataGraph(BaseGraph):
         return not ((None in self._node_weights.values()) or len(self._node_weights) == 0)
 
     @property
-    def is_edge_weighted(self) -> bool:
+    def has_edge_weights(self) -> bool:
         """Check if the graph has edge weights.
 
         Requires all edges to have a weight.

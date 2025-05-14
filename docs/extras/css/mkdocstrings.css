@@ -5,6 +5,11 @@ div.doc-contents:not(.first) {
     margin-bottom: 80px;
   }
 
+/* Justified text */
+.md-content p {
+  text-align: justify;
+}
+
 /* Avoid breaking parameters name, etc. in table cells. */
 td code {
     word-break: normal !important;

@@ -230,7 +230,7 @@ class BaseGraph(nx.Graph):
         self.remove_edges_from(list(self.edges))
         self.add_edges_from(self.ud_edges)
 
-    def draw(self, *args: Any, **kwargs: Any) -> None:
+    def draw(self, return_fig: bool = False, *args: Any, **kwargs: Any) -> plt.Figure | None:
         """Draw the graph.
 
         Uses the draw_networkx function from NetworkX.
@@ -268,3 +268,5 @@ class BaseGraph(nx.Graph):
             ax.tick_params(axis="both", which="both", labelbottom=True, labelleft=True, labelsize=8)
         else:
             nx.draw_networkx(self, *args, ax=ax, **kwargs)
+
+        return fig if return_fig else None

@@ -30,8 +30,8 @@ def test_datagraph_unit_disk(n_nodes: int, graph_type: str) -> None:
 
     assert len(graph.node_weights) == graph.number_of_nodes()
     assert len(graph.edge_weights) == graph.number_of_edges()
-    assert not graph.is_node_weighted
-    assert not graph.is_edge_weighted
+    assert not graph.has_node_weights
+    assert not graph.has_edge_weights
     assert graph.is_ud_graph
 
     original_edges = graph.sorted_edges
@@ -45,8 +45,8 @@ def test_datagraph_unit_disk(n_nodes: int, graph_type: str) -> None:
     graph.node_weights = {i: np.random.rand() for i in graph.nodes}
     graph.edge_weights = {e: np.random.rand() for e in graph.sorted_edges}
 
-    assert graph.is_node_weighted
-    assert graph.is_edge_weighted
+    assert graph.has_node_weights
+    assert graph.has_edge_weights
 
 
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
@@ -54,8 +54,8 @@ def test_datagraph_random_er(n_nodes: int) -> None:
     graph = DataGraph.random_er(n_nodes, p=0.5)
     assert len(graph.node_weights) == graph.number_of_nodes()
     assert len(graph.edge_weights) == graph.number_of_edges()
-    assert not graph.is_node_weighted
-    assert not graph.is_edge_weighted
+    assert not graph.has_node_weights
+    assert not graph.has_node_weights
     assert not graph.is_ud_graph
 
 
@@ -74,8 +74,8 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
 
     assert len(graph.node_weights) == graph.number_of_nodes()
     assert len(graph.edge_weights) == graph.number_of_edges()
-    assert graph.is_node_weighted
-    assert graph.is_edge_weighted
+    assert graph.has_node_weights
+    assert graph.has_edge_weights
     assert not graph.is_ud_graph
 
     data_diag = np.diag(data)
@@ -96,8 +96,8 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
 
     graph = DataGraph.from_matrix(data)
 
-    assert not graph.is_node_weighted
-    assert graph.is_edge_weighted
+    assert not graph.has_node_weights
+    assert graph.has_edge_weights
 
     for edge in random_edges_removal:
         assert edge not in graph.sorted_edges
