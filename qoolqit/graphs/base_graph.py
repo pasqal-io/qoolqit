@@ -19,18 +19,32 @@ def less_or_equal(a: float, b: float, rel_tol: float = 0.0, abs_tol: float = ATO
 
 class BaseGraph(nx.Graph):
     """
-    The BaseGraph in QoolQit, direclty inheriting from nx.Graph.
+    The BaseGraph in QoolQit, direclty inheriting from the NetworkX Graph.
+
+    Defines basic functionalities for graphs within the Rydberg Analog, such
+    as instantiating from a set of node coordinates, directly accessing node
+    distances, and checking if the graph is unit-disk.
     """
 
-    def __init__(self, edges: list | tuple | set = []) -> None:
+    def __init__(self, edges: Iterable = []) -> None:
+        """
+        Default constructor for the BaseGraph.
 
-        if edges and not isinstance(edges, (list, tuple, set)):
-            raise TypeError("Graph must be initialized empty or with a set of edges")
+        Arguments:
+            edges: Iterable of edge tuples (i, j)
+        """
+        if edges and not isinstance(edges, Iterable):
+            raise TypeError("Input is not a valid edge list.")
 
         super().__init__()
         self.add_edges_from(edges)
         self._coords = {i: None for i in self.nodes}
         self._ud_radius: float | None = None
+        self._reset_dicts()
+
+    def _reset_dicts(self) -> None:
+        """Placeholder method to reset attribute dictionaries."""
+        pass
 
     ####################
     ### CONSTRUCTORS ###
@@ -38,9 +52,16 @@ class BaseGraph(nx.Graph):
 
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
+        """
+        Construct a base graph from a set of nodes.
+
+        Arguments:
+            nodes: Iterable of nodes.
+        """
         graph = cls()
         graph.add_nodes_from(nodes)
         graph._coords = {i: None for i in graph.nodes}
+        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -54,6 +75,7 @@ class BaseGraph(nx.Graph):
             coords_dict = coords
         graph = cls.from_nodes(nodes)
         graph._coords = coords_dict
+        graph._reset_dicts()
         return graph
 
     ##################
@@ -138,10 +160,6 @@ class BaseGraph(nx.Graph):
     def is_ud_graph(self) -> bool:
         """Check if graph is unit-disk."""
         return set(self.ud_edges) == self.ordered_edges
-
-    ###############
-    ### METHODS ###
-    ###############
 
     def rescale_coords(self, scaling: float) -> None:
         """Rescale node coords by a constant factor."""

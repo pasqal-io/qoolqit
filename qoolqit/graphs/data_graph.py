@@ -13,13 +13,13 @@ from .utils import random_coords
 
 
 class DataGraph(BaseGraph):
-    """
-    The main graph structure in QoolQit to represent data being manipulated.
-    """
+    """The main graph structure in QoolQit to represent data being manipulated."""
 
     def __init__(self, edges: list | tuple | set = []) -> None:
         super().__init__(edges)
 
+    def _reset_dicts(self) -> None:
+        """Reset the default weight dictionaries."""
         self._node_weights = {i: None for i in self.nodes}
         self._edge_weights = {e: None for e in self.ordered_edges}
 
@@ -35,8 +35,7 @@ class DataGraph(BaseGraph):
         edges = [(i, i + 1) for i in range(0, n - 1)]
         graph.add_edges_from(edges)
         graph.ud_radius = ud_radius
-        graph._node_weights = {i: None for i in graph.nodes}
-        graph._edge_weights = {e: None for e in graph.ordered_edges}
+        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -59,8 +58,7 @@ class DataGraph(BaseGraph):
         graph = cls.from_coordinates(coords)
         graph.add_edges_from(edges)
         graph.ud_radius = ud_radius
-        graph._node_weights = {i: None for i in graph.nodes}
-        graph._edge_weights = {e: None for e in graph.ordered_edges}
+        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -68,8 +66,7 @@ class DataGraph(BaseGraph):
         """ER random graph."""
         base_graph = nx.erdos_renyi_graph(n, p)
         graph = cls(list(base_graph.edges))
-        graph._node_weights = {i: None for i in graph.nodes}
-        graph._edge_weights = {e: None for e in graph.ordered_edges}
+        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -86,8 +83,7 @@ class DataGraph(BaseGraph):
         graph = cls.from_coordinates(coords)
         graph.ud_radius = ud_radius
         graph.set_edges_ud()
-        graph._node_weights = {i: None for i in graph.nodes}
-        graph._edge_weights = {e: None for e in graph.ordered_edges}
+        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -172,17 +168,6 @@ class DataGraph(BaseGraph):
     @property
     def is_edge_weighted(self) -> bool:
         return not ((None in self._edge_weights.values()) or len(self._edge_weights) == 0)
-
-    # @property
-    # def adjacency_matrix(self) -> ArrayLike:
-    #     """Return the adjacency matrix.
-
-    #     Options:
-    #     - Default to sparse or dense?
-    #     - Default to np.array?
-
-    #     """
-    #     pass
 
     ###############
     ### METHODS ###
