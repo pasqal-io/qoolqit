@@ -199,7 +199,10 @@ class BaseGraph(nx.Graph):
         The graph is considered unit-disk if the set of edges
         is equal to its set of unit-disk edges.
         """
-        return set(self.ud_edges) == self.sorted_edges
+        if self.has_coords:
+            return set(self.ud_edges) == self.sorted_edges
+        else:
+            return False
 
     ###############
     ### METHODS ###

@@ -80,8 +80,8 @@ def random_coords(n: int, L: float = 1.0) -> list:
         n: number of coordinate pairs to generate.
         L: side of the square.
     """
-    x_coords = np.random.uniform(low=-L / 2, high=L / 2, size=(n,))
-    y_coords = np.random.uniform(low=-L / 2, high=L / 2, size=(n,))
+    x_coords = np.random.uniform(low=-L / 2, high=L / 2, size=(n,)).tolist()
+    y_coords = np.random.uniform(low=-L / 2, high=L / 2, size=(n,)).tolist()
     return [(x, y) for x, y in zip(x_coords, y_coords)]
 
 
