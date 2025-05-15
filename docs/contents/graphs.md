@@ -69,7 +69,7 @@ graph.node_weights = {i: random.random() for i in graph.nodes}
 graph.edge_weights = {edge: random.random() for edge in graph.sorted_edges}
 ```
 
-If the graph does not have these attributes, the dictionaries will still be returned with `None` is place of the value.
+If the graph does not have these attributes, the dictionaries will still be returned with `None` in place of the value.
 A set of boolean properties allows quickly checking if the graph has these attributes. It only returns `True` if there is a value set for every node / edge in the graph.
 
 ```python exec="on" source="material-block" session="graphs"
