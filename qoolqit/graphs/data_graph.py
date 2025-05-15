@@ -20,7 +20,7 @@ class DataGraph(BaseGraph):
         Default constructor for the BaseGraph.
 
         Arguments:
-            edges: Iterable of edge tuples (i, j)
+            edges: set of edge tuples (i, j)
         """
         super().__init__(edges)
 
@@ -34,7 +34,7 @@ class DataGraph(BaseGraph):
     ####################
 
     @classmethod
-    def line(cls, n: int, spacing: float = 1.0, ud_radius: float = 1.0) -> DataGraph:
+    def line(cls, n: int, spacing: float = 1.0) -> DataGraph:
         """Constructs a line graph, with the respective coordinates.
 
         Arguments:
@@ -46,7 +46,6 @@ class DataGraph(BaseGraph):
         graph = cls.from_coordinates(coords)
         edges = [(i, i + 1) for i in range(0, n - 1)]
         graph.add_edges_from(edges)
-        graph.ud_radius = ud_radius
         graph._reset_dicts()
         return graph
 
@@ -55,7 +54,6 @@ class DataGraph(BaseGraph):
         cls,
         n: int,
         spacing: float = 1.0,
-        ud_radius: float = 1.0,
         center: tuple = (0.0, 0.0),
     ) -> DataGraph:
         """Constructs a circle graph, with the respective coordinates.
@@ -76,7 +74,6 @@ class DataGraph(BaseGraph):
         edges = [(i, i + 1) for i in range(n - 1)] + [(n - 1, 0)]
         graph = cls.from_coordinates(coords)
         graph.add_edges_from(edges)
-        graph.ud_radius = ud_radius
         graph._reset_dicts()
         return graph
 
@@ -116,8 +113,8 @@ class DataGraph(BaseGraph):
             L = (ud_radius / 2) * ((np.pi * n) ** 0.5)
         coords = random_coords(n, L)
         graph = cls.from_coordinates(coords)
-        graph.ud_radius = ud_radius
-        graph.set_edges_ud()
+        edges = graph.ud_edges(ud_radius)
+        graph.add_edges_from(edges)
         graph._reset_dicts()
         return graph
 
@@ -238,7 +235,7 @@ class DataGraph(BaseGraph):
     ### METHODS ###
     ###############
 
-    def set_edges_ud(self) -> None:
+    def set_ud_edges(self, radius: float) -> None:
         """Reset the set of edges to be equal to the set of unit-disk edges."""
-        super().set_edges_ud()
+        super().set_ud_edges(radius=radius)
         self._edge_weights = {e: None for e in self.sorted_edges}

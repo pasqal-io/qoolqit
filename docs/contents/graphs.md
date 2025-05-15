@@ -41,7 +41,7 @@ plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-## Convenient properties and attributes
+## Coordinates and distances
 
 One convenient property added by QoolQit is the `sorted_edges`, which guarantees that the indices in each edge tuple are always provided as $(u, v):u<v$. In this case, `graph.sorted_edges` gives a set with the same edges as above, but NetworkX does not save the order of the nodes in an undirected edge and is sometimes inconsistent about this. However, QoolQit relies on that information for some of the logic related to unit-disk graphs.
 
@@ -54,18 +54,40 @@ Another convenient property is accessing the pairs of all nodes in the graph, wh
 print(graph.all_node_pairs)
 ```
 
-In QoolQit there are three attributes that take center stage when dealing with graphs: **node coordinates**, **node weights** and **edge weights**. These are the most relevant for the Rydberg-Ising model. For that reason, they are saved as dictionaries and accessible through a dedicated property in QoolQit. The previous graph did not have any of these properties, but they can be directly set:
+In QoolQit a set of attribute that takes center stage when dealing with graphs are the **node coordinates**. These are essential for the Rydberg-Ising model as they directly translate to qubit positions that define the interaction term in the Hamiltonian. This behaviour has a close connection with the study of unit-disk graphs, where node coordinates are also essential. The coordinates can be set directly in the respective property:
+
+```python exec="on" source="material-block" result="json" session="graphs"
+# The list must have the same length as the number of nodes:
+graph.coords = [(-0.5, -0.5), (-0.5, 0.5), (0.5, 0.5), (0.5, -0.5)]
+
+print(graph.coords)
+```
+Both a dictionary or a list can be passed, which will be converted to a dictionary. Because the graph now has a set of node coordinates, we can directly access the distance between the nodes. Optionally, a set of node pairs can be given and only those distances will be computed.
+
+```python exec="on" source="material-block" result="json" session="graphs"
+print(graph.distances()) # Compute for all node pairs
+print(graph.distances(graph.sorted_edges)) # Compute only for connected nodes
+```
+
+Furthermore, when calling `graph.draw()` the coordinate information will be automatically used.
+
+```python exec="on" source="material-block" html="1" session="graphs"
+import matplotlib.pyplot as plt # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
+graph.draw()
+fig = graph.draw(return_fig = True) # markdown-exec: hide
+plt.tight_layout() # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+```
+
+## Node and edge weights
+
+Another two important attributes are **node weights** and **edge weights**:
 
 ```python exec="on" source="material-block" session="graphs"
 import random
 
-# A must have the same length as the number of nodes:
-graph.coords = [(-0.5, -0.5), (-0.5, 0.5), (0.5, 0.5), (0.5, -0.5)]
-
-# A dictionary is also accepted, in which case the keys must match the graph
 graph.node_weights = {i: random.random() for i in graph.nodes}
-
-# For edges it is expected that the (u, v) : u<v convention is kept
 graph.edge_weights = {edge: random.random() for edge in graph.sorted_edges}
 ```
 
@@ -76,15 +98,4 @@ A set of boolean properties allows quickly checking if the graph has these attri
 assert graph.has_coords
 assert graph.has_node_weights
 assert graph.has_edge_weights
-```
-
-Because the graph now has a set of node coordinates, when calling `graph.draw()` this information will be automatically used.
-
-```python exec="on" source="material-block" html="1" session="graphs"
-import matplotlib.pyplot as plt # markdown-exec: hide
-from docs.utils import fig_to_html # markdown-exec: hide
-graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
-print(fig_to_html(fig)) # markdown-exec: hide
 ```

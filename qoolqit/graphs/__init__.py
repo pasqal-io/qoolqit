@@ -5,7 +5,6 @@ from .data_graph import DataGraph
 from .utils import (
     all_node_pairs,
     distances,
-    min_distance,
     random_coords,
     scale_coords,
     space_coords,

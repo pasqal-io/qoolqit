@@ -9,37 +9,39 @@ from qoolqit.utils import ATOL_64
 
 
 @pytest.mark.parametrize("graph_type", ["circle", "line", "random_ud"])
-@pytest.mark.parametrize("n_nodes", [5, 10, 50])
+@pytest.mark.parametrize("n_nodes", [5, 10, 20, 30, 40, 50])
 def test_datagraph_unit_disk(n_nodes: int, graph_type: str) -> None:
 
     spacing = 1.0
-    ud_radius = 1.0
 
     if graph_type == "circle":
-        graph = DataGraph.circle(n_nodes, spacing=spacing, ud_radius=ud_radius)
+        graph = DataGraph.circle(n_nodes, spacing=spacing)
         circle_edges = set((i, i + 1) for i in range(n_nodes - 1)).union(set([(0, n_nodes - 1)]))
         assert graph.sorted_edges == circle_edges
-        assert np.isclose(graph.min_distance, spacing)
+        assert np.isclose(graph.min_distance(), spacing)
     if graph_type == "line":
-        graph = DataGraph.line(n_nodes, spacing=spacing, ud_radius=ud_radius)
+        graph = DataGraph.line(n_nodes, spacing=spacing)
         line_edges = set((i, i + 1) for i in range(n_nodes - 1))
         assert graph.sorted_edges == line_edges
-        assert np.isclose(graph.min_distance, spacing)
+        assert np.isclose(graph.min_distance(), spacing)
     if graph_type == "random_ud":
-        graph = DataGraph.random_ud(n_nodes, ud_radius=ud_radius)
+        graph = DataGraph.random_ud(n_nodes)
 
     assert len(graph.node_weights) == graph.number_of_nodes()
     assert len(graph.edge_weights) == graph.number_of_edges()
     assert not graph.has_node_weights
     assert not graph.has_edge_weights
-    assert graph.is_ud_graph
+    assert graph.is_ud_graph()
+
+    # Save a radius value where the graph is unit-disk
+    radius = np.random.uniform(
+        graph.max_distance(connected=True), graph.min_distance(connected=False)
+    )
 
     original_edges = graph.sorted_edges
-    graph.ud_radius = 0.0
-    graph.set_edges_ud()
-    assert len(graph.edges) == 0
-    graph.ud_radius = ud_radius
-    graph.set_edges_ud()
+    graph.set_ud_edges(radius=0.0)
+    assert len(graph.sorted_edges) == 0
+    graph.set_ud_edges(radius=radius)
     assert graph.sorted_edges == original_edges
 
     graph.node_weights = {i: np.random.rand() for i in graph.nodes}
@@ -56,7 +58,11 @@ def test_datagraph_random_er(n_nodes: int) -> None:
     assert len(graph.edge_weights) == graph.number_of_edges()
     assert not graph.has_node_weights
     assert not graph.has_node_weights
-    assert not graph.is_ud_graph
+
+    with pytest.raises(ValueError):
+        graph.distances()
+    with pytest.raises(ValueError):
+        graph.min_distance()
 
 
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
@@ -76,7 +82,6 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
     assert len(graph.edge_weights) == graph.number_of_edges()
     assert graph.has_node_weights
     assert graph.has_edge_weights
-    assert not graph.is_ud_graph
 
     data_diag = np.diag(data)
     node_weights = list(graph.node_weights.values())
@@ -87,7 +92,7 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
 
     np.fill_diagonal(data, almost_zero)
 
-    random_edges_removal = random_edge_list(n_nodes, k=4)
+    random_edges_removal = random_edge_list(range(n_nodes), k=4)
 
     i_list, j_list = zip(*random_edges_removal)
 
