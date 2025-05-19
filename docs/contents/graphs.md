@@ -194,7 +194,7 @@ assert graph.has_edge_weights
 
 Class constructors can help you create a variety of graphs. A very useful constructor is starting from a set of coordinates. By default that will create an empty set of edges, but we can use the `set_ud_edges` method to specify the edges as the unit-disk intersections.
 
-```python exec="on" source="material-block" html="1" session="graphs"
+```python exec="on" source="material-block" html="1" session="graph-constructors"
 from qoolqit import DataGraph
 import matplotlib.pyplot as plt # markdown-exec: hide
 from docs.utils import fig_to_html # markdown-exec: hide
@@ -217,7 +217,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 Some geometric graph constructors will already have coordinates by default.
 
-```python exec="on" source="material-block" html="1" session="graphs"
+```python exec="on" source="material-block" html="1" session="graph-constructors"
 from qoolqit import DataGraph
 
 # A line graph on n nodes.
@@ -237,7 +237,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 Other generic constructors are also available which have no information on node coordinates.
 
-```python exec="on" source="material-block" html="1" session="graphs"
+```python exec="on" source="material-block" html="1" session="graph-constructors"
 # An Erdős–Rényi random graph
 graph = DataGraph.random_er(n = 10, p = 0.5)
 
@@ -245,4 +245,40 @@ graph.draw()
 fig = graph.draw(return_fig = True) # markdown-exec: hide
 plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
+```
+
+### Loading from a matrix
+
+Loading a matrix into a graph is also possible as long as the matrix is symmetric. Currently, given that graphs in QoolQit are undirected and without self-loops, the convention is that the diagonal elements will be loaded as node-weights, and the off-diagonal elements will be loaded as edge-weights.
+
+```python exec="on" source="material-block" html="1" session="graph-constructors"
+import numpy as np
+
+n_nodes = 5
+data = np.random.rand(n_nodes, n_nodes)
+
+# Matrix must be symmetric
+data = data + data.T
+
+graph = DataGraph.from_matrix(data)
+
+assert graph.has_node_weights
+assert graph.has_edge_weights
+```
+
+If all values in the diagonal are 0, then no node-weights will be set. Furthermore, edges and edge-weights will only be set for non-zero off-diagonal elements.
+
+```python exec="on" source="material-block" html="1" session="graph-constructors"
+# Setting the diagonal to zero
+np.fill_diagonal(data, 0.0)
+
+# Removing the value for the pair (1, 2)
+data[1, 2] = 0.0
+data[2, 1] = 0.0
+
+graph = DataGraph.from_matrix(data)
+
+# Checking there are no node weights and the edge (1, 2) was not added
+assert not graph.has_node_weights
+assert (1, 2) not in graph.edges
 ```
