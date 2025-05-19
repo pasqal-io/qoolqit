@@ -3,8 +3,9 @@ from __future__ import annotations
 from importlib import import_module
 
 from .graphs import *
+from .pulser import *
 
-list_of_submodules = [".graphs"]
+list_of_submodules = [".graphs", ".pulser"]
 
 __all__ = []
 for submodule in list_of_submodules:
