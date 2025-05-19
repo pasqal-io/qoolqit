@@ -40,7 +40,6 @@ class DataGraph(BaseGraph):
         Arguments:
             n: number of nodes.
             spacing: distance between each node.
-            ud_radius: unit-disk radius.
         """
         coords = [(i * spacing, 0.0) for i in range(n)]
         graph = cls.from_coordinates(coords)
@@ -61,7 +60,6 @@ class DataGraph(BaseGraph):
         Arguments:
             n: number of nodes.
             spacing: distance between each node.
-            ud_radius: unit-disk radius.
             center: point (x, y) to set as the center of the graph.
         """
 
@@ -94,7 +92,7 @@ class DataGraph(BaseGraph):
     def random_ud(
         cls,
         n: int,
-        ud_radius: float = 1.0,
+        radius: float = 1.0,
         L: float | None = None,
     ) -> DataGraph:
         """Constructs a random unit-disk graph.
@@ -106,14 +104,14 @@ class DataGraph(BaseGraph):
 
         Arguments:
             n: number of nodes.
-            ud_radius: radius to use for defining the unit-disk edges.
+            radius: radius to use for defining the unit-disk edges.
             L: size of the square on which to sample the node coordinates.
         """
         if L is None:
-            L = (ud_radius / 2) * ((np.pi * n) ** 0.5)
+            L = (radius / 2) * ((np.pi * n) ** 0.5)
         coords = random_coords(n, L)
         graph = cls.from_coordinates(coords)
-        edges = graph.ud_edges(ud_radius)
+        edges = graph.ud_edges(radius)
         graph.add_edges_from(edges)
         graph._reset_dicts()
         return graph

@@ -1,11 +1,13 @@
 # Standard structure for Graphs
 
-Working with graphs is an essential part of computations with the Rydberg-Ising analog model. For that reason, QoolQit implements a specific `DataGraph` class to serve as the basis of all graph creation and manipulation. The `DataGraph` inherits from the `BaseGraph`, which sets base logic related to unit-disk graphs, but is not meant to be used directly. For many graph operations QoolQit relies on [NetworkX](https://networkx.org/), and the `BaseGraph` itself inherits from `nx.Graph`.
+Working with graphs is an essential part of computations with the Rydberg-Ising analog model. For that reason, QoolQit implements a specific `BaseGraph` class to serve as the basis of all graph creation and manipulation, and setting the logic related to unit-disk graphs. QoolQit integrates with [NetworkX](https://networkx.org/) for many operations, and the `BaseGraph` inherits from `nx.Graph`.
+
+The `BaseGraph` is meant as a base class, although currenty not abstract, and is not meant to be used directly. Instead, for data manipulation the user should rely on the `DataGraph`, which inherits from the `BaseGraph`, and defines specific constructors and extra logic to deal with node and edge weights.
 
 
 ## Basic construction
 
-The `DataGraph` is an undirected graph with no self loops. Like a `nx.Graph` it can be instantiated empty and nodes or edges added afterwords. However, currently this is not advised. Instead, the default way to instantiate a `DataGraph` should be directly with a set of edges.
+The `DataGraph` is an undirected graph with no self loops. Like a `nx.Graph` it can be instantiated empty and nodes or edges added afterwards. However, currently this is not advised. Instead, the default way to instantiate a `DataGraph` should be directly with a set of edges.
 
 ```python exec="on" source="material-block" session="graphs"
 from qoolqit import DataGraph
@@ -43,7 +45,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 ## Coordinates and distances
 
-One convenient property added by QoolQit is the `sorted_edges`, which guarantees that the indices in each edge tuple are always provided as $(u, v):u<v$. In this case, `graph.sorted_edges` gives a set with the same edges as above, but NetworkX does not save the order of the nodes in an undirected edge and is sometimes inconsistent about this. However, QoolQit relies on that information for some of the logic related to unit-disk graphs.
+One convenient property added by QoolQit is the `sorted_edges`, which guarantees that the indices in each edge tuple are always provided as $(u, v):u<v$. This condition is not guaranteed by calling the NetworkX property `graph.edges`, but is sometimes useful.
 
 ```python exec="on" source="material-block" result="json" session="graphs"
 print(graph.sorted_edges)
@@ -54,7 +56,7 @@ Another convenient property is accessing the pairs of all nodes in the graph, wh
 print(graph.all_node_pairs)
 ```
 
-In QoolQit a set of attribute that takes center stage when dealing with graphs are the **node coordinates**. These are essential for the Rydberg-Ising model as they directly translate to qubit positions that define the interaction term in the Hamiltonian. This behaviour has a close connection with the study of unit-disk graphs, where node coordinates are also essential. The coordinates can be set directly in the respective property:
+In QoolQit a set of attributes that takes center stage when dealing with graphs are the **node coordinates**. These are essential for the Rydberg-Ising model as they directly translate to qubit positions that define the interaction term in the Hamiltonian. This behaviour has a close connection with the study of unit-disk graphs, where node coordinates are also essential. The coordinates can be set directly in the respective property:
 
 ```python exec="on" source="material-block" result="json" session="graphs"
 # The list must have the same length as the number of nodes:
@@ -65,8 +67,14 @@ print(graph.coords)
 Both a dictionary or a list can be passed, which will be converted to a dictionary. Because the graph now has a set of node coordinates, we can directly access the distance between the nodes. Optionally, a set of node pairs can be given and only those distances will be computed.
 
 ```python exec="on" source="material-block" result="json" session="graphs"
-print(graph.distances()) # Compute for all node pairs
-print(graph.distances(graph.sorted_edges)) # Compute only for connected nodes
+# Compute for all node pairs
+print(graph.distances())
+
+# Compute only for connected nodes
+print(graph.distances(graph.sorted_edges))
+
+# Compute for a specific set of node pairs
+print(graph.distances([(0, 1), (0, 2)]))
 ```
 
 Furthermore, when calling `graph.draw()` the coordinate information will be automatically used.

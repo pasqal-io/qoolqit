@@ -39,7 +39,6 @@ class BaseGraph(nx.Graph):
         super().__init__()
         self.add_edges_from(edges)
         self._coords = {i: None for i in self.nodes}
-        self._ud_radius: float | None = None
         self._reset_dicts()
 
     def _reset_dicts(self) -> None:
@@ -133,70 +132,6 @@ class BaseGraph(nx.Graph):
                 )
             coords_dict = coords
         self._coords = coords_dict
-
-    # @property
-    # def distances(self) -> dict:
-    #     """Dictionary of distances for all node pairs in the graph.
-
-    #     Distances are calculated directly the coordinates. If the graph has no coordinates
-    #     the distance will be set as None.
-    #     """
-    #     return distances(self.coords, self.all_node_pairs)
-
-    # @property
-    # def edge_distances(self) -> dict:
-    #     """Dictionary of distances for all edges in the graph.
-
-    #     Distances are calculated directly the coordinates. If the graph has no coordinates
-    #     the distance will be set as None.
-    #     """
-    #     return distances(self.coords, self.sorted_edges)
-
-    # @property
-    # def ud_radius(self) -> float | None:
-    #     """Return the unit-disk radius currently used in the graph."""
-    #     return self._ud_radius
-
-    # @ud_radius.setter
-    # def ud_radius(self, radius: float) -> None:
-    #     """Set the unit-disk radius to be used in the graph.
-
-    #     Arguments:
-    #         radius: value for the unit-disk radius.
-    #     """
-    #     self._ud_radius = radius
-
-    # @property
-    # def ud_edges(self) -> set:
-    #     """Return the set of unit-disk edges.
-
-    #     This is defined as the set of edges where the distance d[u, v] <= r, where r
-    #     is the ud_radius currently set in the graph. If the graph has no coordinates,
-    #     the set of unit-disk edges is empty. The set of unit-disk edges is computed
-    #     directly from all pairs of nodes in the graph, and has no direct connection with
-    #     the set of edges defined in the graph.
-    #     """
-    #     if self.has_coords:
-    #         if self.ud_radius is None:
-    #             raise ValueError(
-    #                 "Unit-disk edges requires setting the unit-disk radius. "
-    #                 "You can set it in the `ud_radius` property."
-    #             )
-    #         return set(e for e, d in self.distances.items() if less_or_equal(d, self.ud_radius))
-    #     else:
-    #         return set()
-
-    # @property
-    # def is_ud_graph(self) -> bool:
-    #     """Check if the graph is unit-disk.
-
-    #     The graph is considered unit-disk if the set of edges
-    #     is equal to its set of unit-disk edges.
-    #     """
-    #     if self.has_coords:
-    #         return set(self.ud_edges) == self.sorted_edges
-    #     else:
-    #         return False
 
     ###############
     ### METHODS ###
