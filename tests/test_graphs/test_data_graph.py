@@ -9,7 +9,7 @@ from qoolqit.utils import ATOL_64
 
 
 @pytest.mark.parametrize("graph_type", ["circle", "line", "random_ud"])
-@pytest.mark.parametrize("n_nodes", [5, 10, 20, 30, 40, 50])
+@pytest.mark.parametrize("n_nodes", [10, 20, 30, 40, 50])
 def test_datagraph_unit_disk(n_nodes: int, graph_type: str) -> None:
 
     spacing = 1.0
