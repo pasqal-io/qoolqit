@@ -29,10 +29,20 @@ def test_basegraph_init(n_nodes: int) -> None:
 
     with pytest.raises(ValueError):
         graph.distances()
+
+    with pytest.raises(ValueError):
         graph.min_distance()
+
+    with pytest.raises(ValueError):
         graph.max_distance()
+
+    with pytest.raises(ValueError):
         graph.is_ud_graph()
+    
+    with pytest.raises(ValueError):
         graph.ud_edges(radius=1.0)
+
+    with pytest.raises(ValueError):
         graph.set_ud_edges(radius=1.0)
 
     # Now we give the graph a random set of coordinates
