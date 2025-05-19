@@ -38,7 +38,7 @@ def test_basegraph_init(n_nodes: int) -> None:
 
     with pytest.raises(ValueError):
         graph.is_ud_graph()
-    
+
     with pytest.raises(ValueError):
         graph.ud_edges(radius=1.0)
 
