@@ -33,6 +33,14 @@ class TimeFunction(ABC):
         else:
             return self._generating_function(t)
 
+    def __mul__(self, other: TimeFunction) -> SequentialTimeFunction:
+        if isinstance(other, TimeFunction):
+            if isinstance(other, SequentialTimeFunction):
+                return SequentialTimeFunction(self, *other._functions)
+            return SequentialTimeFunction(self, other)
+        else:
+            raise NotImplementedError
+
 
 class Ramp(TimeFunction):
     """
@@ -112,6 +120,14 @@ class SequentialTimeFunction(TimeFunction):
         local_t = t - self._times[idx]
         value: float = self._functions[idx](local_t)
         return value
+
+    def __mul__(self, other: TimeFunction) -> SequentialTimeFunction:
+        if isinstance(other, TimeFunction):
+            if isinstance(other, SequentialTimeFunction):
+                return SequentialTimeFunction(*self._functions, *other._functions)
+            return SequentialTimeFunction(*self._functions, other)
+        else:
+            raise NotImplementedError
 
 
 class PiecewiseLinear(SequentialTimeFunction):
