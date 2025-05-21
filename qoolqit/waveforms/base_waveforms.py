@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterable
 
 import numpy as np
 
@@ -30,11 +31,14 @@ class Waveform(ABC):
         """Evaluates the waveform function at a given time t."""
         pass
 
-    def __call__(self, t: float) -> float:
-        if t < 0.0 or t > self.duration:
-            return 0.0
+    def __single_call__(self, t: float) -> float:
+        return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
+
+    def __call__(self, t: float | Iterable) -> float | list:
+        if isinstance(t, Iterable):
+            return [self.__single_call__(ti) for ti in t]
         else:
-            return self.function(t)
+            return self.__single_call__(t)
 
     def __mul__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
