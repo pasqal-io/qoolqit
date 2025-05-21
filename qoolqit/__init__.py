@@ -4,8 +4,9 @@ from importlib import import_module
 
 from .graphs import *
 from .pulser import *
+from .waveforms import *
 
-list_of_submodules = [".graphs", ".pulser"]
+list_of_submodules = [".graphs", ".pulser", ".waveforms"]
 
 __all__ = []
 for submodule in list_of_submodules:
