@@ -127,7 +127,7 @@ Working with node coordinates and distances is an essential part of dealing with
 !!! info "Definition: Unit-Disk Graphs"
     For a set of nodes $V$, each node $i\in V$ marked by a set of coordinates $(x, y)_i$ in Euclidean space, a set of edges $E$ and a radius $R$, a Unit-Disk Graph $UDG(V, E, R)$ is such that there exists an edge $(i, j)\in E$ for two nodes $i$ and $j$ if and only if $\text{dist}(i, j) \leq R$, where $\text{dist}(i, j)$ is the Euclidean distance between the coordinates of nodes $i$ and $j$.
 
-In other words, a unit-disk graph for a radius $R$ is the graph where the set of edges corresponds to the intersections of disks of radius $R$ centered at each node position in Euclidean space.
+In other words, a unit-disk graph for a radius $R$ is the graph where the set of edges corresponds to the intersections of disks of radius $R/2$ centered at each node position in Euclidean space.
 
 For a `DataGraph` with a set of node coordinates, we can check if it is a valid unit-disk graph
 
