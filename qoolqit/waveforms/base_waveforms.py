@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
+from typing import Any
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -56,6 +58,15 @@ class Waveform(ABC):
 
     def __repr__(self) -> str:
         return self._repr_header() + self._repr_content()
+
+    def draw(
+        self, n_points: int = 500, return_fig: bool = False, **kwargs: Any
+    ) -> plt.Figure | None:
+        fig, ax = plt.subplots(1, 1, dpi=200)
+        ax.grid(True)
+        t_array = np.linspace(0.0, self.duration, n_points)
+        ax.plot(t_array, self(t_array))
+        return fig if return_fig else None
 
 
 class CompositeWaveform(Waveform):
