@@ -250,7 +250,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 ### Loading from a matrix
 
-Loading a matrix into a graph is also possible where the matrix is interpreted as the adjacency matrix of a graph.
+Loading an adjacency matrix into a graph is also possible.
 
 - Given that graphs in QoolQit are undirected, the matrix must be symmetric.
 - As in the standard adjacency matrix interpretation, off-diagonal elements are loaded as edge-weights as long as they are non-zero.
