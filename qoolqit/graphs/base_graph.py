@@ -153,7 +153,7 @@ class BaseGraph(nx.Graph):
                 raise ValueError("Trying to compute distances for an empty edge list.")
             return distances(self.coords, edge_list)
         else:
-            raise ValueError("Trying to compute distances for a graph without coordinates.")
+            raise AttributeError("Trying to compute distances for a graph without coordinates.")
 
     def min_distance(self, connected: bool | None = None) -> float:
         """Returns the minimum distance in the graph.
@@ -185,8 +185,8 @@ class BaseGraph(nx.Graph):
             distance = max(self.distances(self.all_node_pairs - self.sorted_edges).values())
         return distance
 
-    def is_ud_graph(self) -> bool:
-        """Check if the graph is unit-disk.
+    def ud_radius_range(self) -> tuple:
+        """Return the range (R_min, R_max) where the graph is unit-disk.
 
         The graph is unit-disk if the maximum distance between all connected nodes is
         smaller than the minimum distance between disconnected nodes. This means that
@@ -196,13 +196,26 @@ class BaseGraph(nx.Graph):
         """
         if self.has_coords:
             n_edges = len(self.sorted_edges)
-            if n_edges == 0 or n_edges == len(self.all_node_pairs):
-                # If the graph is fully connected or empty and has coordinates
-                return True
+            if n_edges == 0:
+                # If the graph is empty and has coordinates
+                return (0.0, self.min_distance(connected=False))
+            elif n_edges == len(self.all_node_pairs):
+                # If the graph is fully connected
+                return (self.max_distance(connected=True), float("inf"))
+            elif self.max_distance(connected=True) < self.min_distance(connected=False):
+                return (self.max_distance(connected=True), self.min_distance(connected=False))
             else:
-                return self.max_distance(connected=True) < self.min_distance(connected=False)
+                raise ValueError("Graph is not unit disk.")
         else:
-            raise ValueError("Checking if graph is unit disk is not valid without coordinates.")
+            raise AttributeError("Checking if graph is unit disk is not valid without coordinates.")
+
+    def is_ud_graph(self) -> bool:
+        """Check if the graph is unit-disk."""
+        try:
+            self.ud_radius_range()
+            return True
+        except ValueError:
+            return False
 
     def ud_edges(self, radius: float) -> set:
         """Returns the set of edges given by the intersection of circles of a given radius.
@@ -213,7 +226,7 @@ class BaseGraph(nx.Graph):
         if self.has_coords:
             return set(e for e, d in self.distances().items() if less_or_equal(d, radius))
         else:
-            raise ValueError("Getting unit disk edges is not valid without coordinates.")
+            raise AttributeError("Getting unit disk edges is not valid without coordinates.")
 
     def rescale_coords(self, scaling: float) -> None:
         """Rescales the node coordinates by a constant factor.
@@ -224,7 +237,7 @@ class BaseGraph(nx.Graph):
         if self.has_coords:
             self._coords = scale_coords(self._coords, scaling)
         else:
-            raise ValueError("Trying to rescale coordinates on a graph without coordinates.")
+            raise AttributeError("Trying to rescale coordinates on a graph without coordinates.")
 
     def respace_coords(self, spacing: float) -> None:
         """Rescales the node coordinates so the minimum distance is equal to a set spacing.
@@ -233,7 +246,7 @@ class BaseGraph(nx.Graph):
             spacing: value to set as the minimum distance in the graph.
         """
         if not self.has_coords:
-            raise ValueError("Trying to rescale coordinates on a graph without coordinates.")
+            raise AttributeError("Trying to rescale coordinates on a graph without coordinates.")
         self._coords = space_coords(self._coords, spacing)
 
     def set_ud_edges(self, radius: float) -> None:

@@ -27,22 +27,22 @@ def test_basegraph_init(n_nodes: int) -> None:
     assert graph.has_edges
     assert not graph.has_coords
 
-    with pytest.raises(ValueError):
+    with pytest.raises(AttributeError):
         graph.distances()
 
-    with pytest.raises(ValueError):
+    with pytest.raises(AttributeError):
         graph.min_distance()
 
-    with pytest.raises(ValueError):
+    with pytest.raises(AttributeError):
         graph.max_distance()
 
-    with pytest.raises(ValueError):
+    with pytest.raises(AttributeError):
         graph.is_ud_graph()
 
-    with pytest.raises(ValueError):
+    with pytest.raises(AttributeError):
         graph.ud_edges(radius=1.0)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(AttributeError):
         graph.set_ud_edges(radius=1.0)
 
     # Now we give the graph a random set of coordinates

@@ -1,13 +1,12 @@
 # Standard structure for Graphs
 
-Working with graphs is an essential part of computations with the Rydberg-Ising analog model. For that reason, QoolQit implements a specific `BaseGraph` class to serve as the basis of all graph creation and manipulation, and setting the logic related to unit-disk graphs. QoolQit integrates with [NetworkX](https://networkx.org/) for many operations, and the `BaseGraph` inherits from `nx.Graph`.
+<!-- The `BaseGraph` is meant as a base class, although currenty not abstract, and is not meant to be used directly. Instead, for data manipulation the user should rely on the `DataGraph`, which inherits from the `BaseGraph`, and defines specific constructors and extra logic to deal with node and edge weights. -->
 
-The `BaseGraph` is meant as a base class, although currenty not abstract, and is not meant to be used directly. Instead, for data manipulation the user should rely on the `DataGraph`, which inherits from the `BaseGraph`, and defines specific constructors and extra logic to deal with node and edge weights.
-
+Working with graphs is an essential part of computations with the Rydberg analog model. For that reason, QoolQit implements a specific `DataGraph` class to serve as the basis of all graph creation and manipulation, and setting the logic related to unit-disk graphs. QoolQit integrates with [NetworkX](https://networkx.org/) for many operations, and the `DataGraph` inherits from `nx.Graph`.
 
 ## Basic construction
 
-The `DataGraph` is an undirected graph with no self loops. Like a `nx.Graph` it can be instantiated empty and nodes or edges added afterwards. However, currently this is not advised. Instead, the default way to instantiate a `DataGraph` should be directly with a set of edges.
+The `DataGraph` is an undirected graph with no self loops. The default way to instantiate a `DataGraph` is with a set of edges.
 
 ```python exec="on" source="material-block" session="graphs"
 from qoolqit import DataGraph
@@ -15,6 +14,8 @@ from qoolqit import DataGraph
 edges = [(0, 1), (1, 2), (2, 3), (3, 0)]
 graph = DataGraph(edges)
 ```
+
+Later in the [graph constructors](#constructors) section we also describe how to construct graphs from sets of coordinates, or with built-in constructors.
 
 As with any NetworkX graph, the set of nodes and edges can be accessed:
 
@@ -51,12 +52,12 @@ One convenient property added by QoolQit is the `sorted_edges`, which guarantees
 print(graph.sorted_edges)
 ```
 
-Another convenient property is accessing the pairs of all nodes in the graph, which again follow the convention of $(u, v):u<v$. This is useful for the Rydberg-Ising model when dealing with unit-disk graphs.
+Another convenient property is accessing the pairs of all nodes in the graph, which again follow the convention of $(u, v):u<v$.
 ```python exec="on" source="material-block" result="json" session="graphs"
 print(graph.all_node_pairs)
 ```
 
-In QoolQit a set of attributes that takes center stage when dealing with graphs are the **node coordinates**. These are essential for the Rydberg-Ising model as they directly translate to qubit positions that define the interaction term in the Hamiltonian. This behaviour has a close connection with the study of unit-disk graphs, where node coordinates are also essential. The coordinates can be set directly in the respective property:
+In QoolQit a set of attributes that takes center stage when dealing with graphs are the **node coordinates**. These are essential for the Rydberg analog model as they directly translate to qubit positions that define the interaction term in the Hamiltonian. This behaviour has a close connection with the study of unit-disk graphs, where node coordinates are also essential. The coordinates can be set directly in the respective property:
 
 ```python exec="on" source="material-block" result="json" session="graphs"
 # The list must have the same length as the number of nodes:
@@ -126,7 +127,7 @@ Working with node coordinates and distances is an essential part of dealing with
 !!! info "Definition: Unit-Disk Graphs"
     For a set of nodes $V$, each node $i\in V$ marked by a set of coordinates $(x, y)_i$ in Euclidean space, a set of edges $E$ and a radius $R$, a Unit-Disk Graph $UDG(V, E, R)$ is such that there exists an edge $(i, j)\in E$ for two nodes $i$ and $j$ if and only if $\text{dist}(i, j) \leq R$, where $\text{dist}(i, j)$ is the Euclidean distance between the coordinates of nodes $i$ and $j$.
 
-In other words, a unit-disk graph for a radius $R$ is the graph where the set of edges corresponds to the intersections of disks of radius $R$ centered at each node position in Euclidean space.
+In other words, a unit-disk graph for a radius $R$ is the graph where the set of edges corresponds to the intersections of disks of radius $R/2$ centered at each node position in Euclidean space.
 
 For a `DataGraph` with a set of node coordinates, we can check if it is a valid unit-disk graph
 
@@ -151,20 +152,19 @@ print("Radius = 50.0: ", ud_edges) # markdown-exec: hide
 assert ud_edges == graph.all_node_pairs
 ```
 
-Now, we can randomly pick a value or $R$ matching the unit-disk condition and verify that the set of unit-disk edges exactly match the set of edges in the graph.
+Now, we can randomly pick a value or $R$ matching the unit-disk condition and verify that the set of unit-disk edges exactly match the set of edges in the graph. The possible range of values is directly available with the `ud_radius_range()` method.
 
 ```python exec="on" source="material-block" result="json" session="graphs"
-from numpy.random import uniform
+import numpy as np
 
-R = uniform(
-    low = graph.max_distance(connected = True),
-    high = graph.min_distance(connected = False)
-)
+low, high = graph.ud_radius_range()
+
+R = np.random.uniform(low, high)
 
 print(graph.ud_edges(radius = R) == graph.sorted_edges)
 ```
 
-We can also reset the set of edges on a graph to be equal to the set of unit-disk edges for a given radius with `graph.set_ud_edges(radius = R)`. For this example we will not run this line, but it could be useful when constructing graphs from sets of coordinates.
+We can also reset the set of edges on a graph to be equal to the set of unit-disk edges for a given radius with `graph.set_ud_edges(radius = R)`. For this example we will not run this line, but we show it later when constructing a graph from a set of coordinates.
 
 
 ## Node and edge weights
@@ -190,6 +190,7 @@ assert graph.has_node_weights
 assert graph.has_edge_weights
 ```
 
+<a name="constructors"></a>
 ## Graph constructors
 
 Class constructors can help you create a variety of graphs. A very useful constructor is starting from a set of coordinates. By default that will create an empty set of edges, but we can use the `set_ud_edges` method to specify the edges as the unit-disk intersections.
@@ -249,7 +250,11 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 ### Loading from a matrix
 
-Loading a matrix into a graph is also possible as long as the matrix is symmetric. Currently, given that graphs in QoolQit are undirected and without self-loops, the convention is that the diagonal elements will be loaded as node-weights, and the off-diagonal elements will be loaded as edge-weights.
+Loading an adjacency matrix into a graph is also possible.
+
+- Given that graphs in QoolQit are undirected, the matrix must be symmetric.
+- As in the standard adjacency matrix interpretation, off-diagonal elements are loaded as edge-weights as long as they are non-zero.
+- Given that QoolQit does not consider graphs with self-loops, diagonal elements are loaded as node-weights.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 import numpy as np
