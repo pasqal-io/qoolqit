@@ -34,9 +34,8 @@ def test_datagraph_unit_disk(n_nodes: int, graph_type: str) -> None:
     assert graph.is_ud_graph()
 
     # Save a radius value where the graph is unit-disk
-    radius = np.random.uniform(
-        graph.max_distance(connected=True), graph.min_distance(connected=False)
-    )
+    rmin, rmax = graph.ud_radius_range()
+    radius = np.random.uniform(rmin, rmax)
 
     original_edges = graph.sorted_edges
     graph.set_ud_edges(radius=0.0)
@@ -59,9 +58,9 @@ def test_datagraph_random_er(n_nodes: int) -> None:
     assert not graph.has_node_weights
     assert not graph.has_node_weights
 
-    with pytest.raises(ValueError):
+    with pytest.raises(AttributeError):
         graph.distances()
-    with pytest.raises(ValueError):
+    with pytest.raises(AttributeError):
         graph.min_distance()
 
 
