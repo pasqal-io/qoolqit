@@ -51,7 +51,7 @@ class Waveform(ABC):
             raise NotImplementedError
 
     def _repr_header(self) -> str:
-        return f"0 ≤ t < {float(self.duration):.3g}: "
+        return f"- 0 ≤ t < {float(self.duration):.3g}: "
 
     def _repr_content(self) -> str:
         return self.__class__.__name__ + "()"
@@ -131,13 +131,15 @@ class CompositeWaveform(Waveform):
     def _repr_header(self) -> str:
         return "Composite waveform:\n"
 
-    def __repr__(self) -> str:
-        header = self._repr_header()
+    def _repr_content(self) -> str:
         wf_strings = []
         for i, wf in enumerate(self.waveforms):
             t_str = "≤ t <" if i < self.n_waveforms - 1 else "≤ t ≤"
             interval_str = (
-                f"{float(self.times[i]):.3g} " + t_str + f" {float(self.times[i + 1]):.3g}: "
+                f"- {float(self.times[i]):.3g} " + t_str + f" {float(self.times[i + 1]):.3g}: "
             )
             wf_strings.append(interval_str + wf._repr_content())
-        return header + "\n".join(wf_strings)
+        return "\n".join(wf_strings)
+
+    def __repr__(self) -> str:
+        return self._repr_header() + self._repr_content()
