@@ -100,7 +100,7 @@ def test_basegraph_constructors(n_nodes: int) -> None:
     assert len(graph1.ud_edges(radius)) >= len(graph2.ud_edges(radius))
 
     # Respace them so the minimum distance is equal to a constant factor
-    graph1.respace_coords(spacing=radius)
+    graph1.rescale_coords(spacing=radius)
     assert np.isclose(graph1.min_distance(), radius)
 
     # Since we used the UD radius value, all edges in the UD set are
@@ -109,7 +109,7 @@ def test_basegraph_constructors(n_nodes: int) -> None:
         assert np.isclose(graph2.distances()[edge], graph2.min_distance())
 
     # Reset our changes, and rescale again
-    graph1.respace_coords(spacing=graph2.min_distance())  # type: ignore [arg-type]
+    graph1.rescale_coords(spacing=graph2.min_distance())  # type: ignore [arg-type]
     graph1.rescale_coords(scaling=0.5)
 
     # Reset edges in both graphs to be equal to their UD sets

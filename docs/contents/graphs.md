@@ -96,14 +96,15 @@ plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-Graph coordinates can be rescaled.
+Graph coordinates can be rescaled. The `rescale_coords` method only accepts a keyword argument,
+which must be either `scaling` or `spacing`.
 
 ```python exec="on" source="material-block" session="graphs"
 # Rescale coordinates by a constant factor
 graph.rescale_coords(scaling = 2.0)
 
 # Rescale coordinates by setting the minimum spacing
-graph.respace_coords(spacing = 1.0)
+graph.rescale_coords(spacing = 1.0)
 ```
 
 The minimum and maximum distance can be directly checked.
