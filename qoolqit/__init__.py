@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from importlib import import_module
 
+from .devices import *
 from .graphs import *
-from .pulser import *
+from .register import *
 from .sequence import *
-from .unit_converter import *
 from .waveforms import *
 
-list_of_submodules = [".graphs", ".pulser", ".waveforms", ".sequence", ".unit_converter"]
+list_of_submodules = [".graphs", ".sequence", ".devices", ".waveforms", ".register"]
 
 __all__ = []
 for submodule in list_of_submodules:
