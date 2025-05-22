@@ -1,0 +1,16 @@
+from qoolqit.devices import Device, MockDevice, UnitConverter
+from qoolqit.sequence import Sequence
+from qoolqit.register import Register
+
+class QuantumProgram:
+
+    def __init__(
+        self,
+        register: Register,
+        sequence: Sequence,
+        device: Device | None = None,
+    ) -> None:
+
+        self.device = MockDevice if device is None else device
+
+        self.converter = UnitConverter(device)
