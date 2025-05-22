@@ -65,7 +65,11 @@ class Waveform(ABC):
         fig, ax = plt.subplots(1, 1, dpi=200)
         ax.grid(True)
         t_array = np.linspace(0.0, self.duration, n_points)
+        y_array = self(t_array)
         ax.plot(t_array, self(t_array))
+        ax.fill_between(t_array, y_array, color="skyblue", alpha=0.4)
+        ax.set_xlabel("Time t")
+        ax.set_ylabel("Waveform")
         return fig if return_fig else None
 
 

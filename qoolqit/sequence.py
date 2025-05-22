@@ -100,19 +100,23 @@ class Sequence:
             )
         return amp_repr + "\n\n" + det_repr
 
-    def draw(
-        self, n_points: int = 500, return_fig: bool = False, **kwargs: Any
-    ) -> plt.Figure | None:
+    def draw(self, n_points: int = 500, return_fig: bool = False) -> plt.Figure | None:
         fig, ax = plt.subplots(2, 1, sharex=True, figsize=(8, 4), dpi=200)
 
         ax[0].grid(True)
         ax[0].set_ylabel("Amplitude")
         ax[1].grid(True)
         ax[1].set_ylabel("Detuning")
+        ax[1].set_xlabel("Time t")
 
         t_array = np.linspace(0.0, self.duration, n_points)
+        y_amp = self.amplitude(t_array)
+        y_det = self.detuning(t_array)
 
-        ax[0].plot(t_array, self.amplitude(t_array))
-        ax[1].plot(t_array, self.detuning(t_array))
+        ax[0].plot(t_array, y_amp, color="forestgreen")
+        ax[1].plot(t_array, y_det, color="mediumpurple")
+
+        ax[0].fill_between(t_array, y_amp, color="forestgreen", alpha=0.4)
+        ax[1].fill_between(t_array, y_det, color="mediumpurple", alpha=0.4)
 
         return None
