@@ -119,4 +119,4 @@ class Sequence:
         ax[0].fill_between(t_array, y_amp, color="forestgreen", alpha=0.4)
         ax[1].fill_between(t_array, y_det, color="mediumpurple", alpha=0.4)
 
-        return None
+        return fig if return_fig else None
