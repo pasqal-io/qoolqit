@@ -101,7 +101,7 @@ class Sequence:
         return amp_repr + "\n\n" + det_repr
 
     def draw(self, n_points: int = 500, return_fig: bool = False) -> plt.Figure | None:
-        fig, ax = plt.subplots(2, 1, sharex=True, figsize=(8, 4), dpi=200)
+        fig, ax = plt.subplots(2, 1, sharex=True, figsize=(8, 4), dpi=150)
 
         ax[0].grid(True)
         ax[0].set_ylabel("Amplitude")

@@ -62,7 +62,7 @@ class Waveform(ABC):
     def draw(
         self, n_points: int = 500, return_fig: bool = False, **kwargs: Any
     ) -> plt.Figure | None:
-        fig, ax = plt.subplots(1, 1, dpi=200)
+        fig, ax = plt.subplots(1, 1, figsize=(8, 4), dpi=150)
         ax.grid(True)
         t_array = np.linspace(0.0, self.duration, n_points)
         y_array = self(t_array)
