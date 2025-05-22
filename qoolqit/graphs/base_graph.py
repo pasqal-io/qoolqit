@@ -243,14 +243,15 @@ class BaseGraph(nx.Graph):
             spacing: value to set as the minimum distance in the graph.
         """
         if self.has_coords:
+            msg = "Please pass either a `scaling` or a `spacing` value as a keyword argument."
             if (len(args) > 0) or (scaling is None and spacing is None):
-                raise TypeError(
-                    "Please pass either a `scaling` or a `spacing` value as a keyword argument."
-                )
+                raise TypeError(msg)
             if scaling is None and spacing is not None:
                 self._coords = space_coords(self._coords, spacing)
             elif spacing is None and scaling is not None:
                 self._coords = scale_coords(self._coords, scaling)
+            else:
+                raise TypeError(msg)
         else:
             raise AttributeError("Trying to rescale coordinates on a graph without coordinates.")
 
