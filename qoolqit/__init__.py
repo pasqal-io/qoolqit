@@ -5,9 +5,10 @@ from importlib import import_module
 from .graphs import *
 from .pulser import *
 from .sequence import *
+from .unit_converter import *
 from .waveforms import *
 
-list_of_submodules = [".graphs", ".pulser", ".waveforms", ".sequence"]
+list_of_submodules = [".graphs", ".pulser", ".waveforms", ".sequence", ".unit_converter"]
 
 __all__ = []
 for submodule in list_of_submodules:

@@ -10,6 +10,8 @@ from pulser.register.base_register import QubitId
 
 from qoolqit.graphs import DataGraph
 
+__all__ = ["Register"]
+
 
 class Register(_Register):
 

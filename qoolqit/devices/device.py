@@ -23,6 +23,10 @@ class Device:
         self.min_qubit_distance: float = self._device.min_atom_distance
         self.max_sequence_duration: int | None = self._device.max_sequence_duration
 
+        self._c6 = device.interaction_coeff
+        self._max_amp = device.channels["rydberg_global"].max_amp
+        self._max_det = device.channels["rydberg_global"].max_abs_detuning
+
     def __repr__(self) -> str:
         return self.name  # type: ignore [return-value]
 
