@@ -51,7 +51,7 @@ class Waveform(ABC):
             raise NotImplementedError
 
     def _repr_header(self) -> str:
-        return f"- 0 ≤ t < {float(self.duration):.3g}: "
+        return f"0 ≤ t < {float(self.duration):.3g}: "
 
     def _repr_content(self) -> str:
         return self.__class__.__name__ + "()"
@@ -85,22 +85,18 @@ class CompositeWaveform(Waveform):
         if not waveforms:
             raise ValueError("At least one Waveform must be provided.")
 
-        self._waveforms = waveforms
-        self._durations = [wf.duration for wf in waveforms]
-        self._n_waveforms = len(self._durations)
+        self._waveforms = list(waveforms)
 
-        # Transition times between the different functions
-        self._times: list[float] = np.cumsum([0.0] + self._durations).tolist()
-
-        super().__init__(sum(self._durations))
+        super().__init__(sum(self.durations))
 
     @property
     def durations(self) -> list[float]:
-        return self._durations
+        return [wf.duration for wf in self._waveforms]
 
     @property
     def times(self) -> list[float]:
-        return self._times
+        time_array: list[float] = np.cumsum([0.0] + self.durations).tolist()
+        return time_array
 
     @property
     def waveforms(self) -> list[Waveform]:
@@ -108,27 +104,27 @@ class CompositeWaveform(Waveform):
 
     @property
     def n_waveforms(self) -> int:
-        return self._n_waveforms
+        return len(self.waveforms)
 
     def function(self, t: float) -> float:
-        idx = np.searchsorted(self._times, t, side="right") - 1
+        idx = np.searchsorted(self.times, t, side="right") - 1
         if idx == -1:
             return 0.0
         if idx == self.n_waveforms:
-            if t == self._times[-1]:
+            if t == self.times[-1]:
                 idx = idx - 1
             else:
                 return 0.0
 
-        local_t = t - self._times[idx]
-        value: float = self._waveforms[idx](local_t)
+        local_t = t - self.times[idx]
+        value: float = self.waveforms[idx](local_t)
         return value
 
     def __mul__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
             if isinstance(other, CompositeWaveform):
-                return CompositeWaveform(*self._waveforms, *other._waveforms)
-            return CompositeWaveform(*self._waveforms, other)
+                return CompositeWaveform(*self.waveforms, *other.waveforms)
+            return CompositeWaveform(*self.waveforms, other)
         else:
             raise NotImplementedError
 
@@ -140,7 +136,7 @@ class CompositeWaveform(Waveform):
         for i, wf in enumerate(self.waveforms):
             t_str = "≤ t <" if i < self.n_waveforms - 1 else "≤ t ≤"
             interval_str = (
-                f"- {float(self.times[i]):.3g} " + t_str + f" {float(self.times[i + 1]):.3g}: "
+                f"| {float(self.times[i]):.3g} " + t_str + f" {float(self.times[i + 1]):.3g}: "
             )
             wf_strings.append(interval_str + wf._repr_content())
         return "\n".join(wf_strings)

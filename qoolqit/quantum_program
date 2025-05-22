@@ -2,8 +2,9 @@ from qoolqit.devices import Device, MockDevice, UnitConverter
 from qoolqit.sequence import Sequence
 from qoolqit.register import Register
 
-class QuantumProgram:
+from pulser import Sequence
 
+class QuantumProgram:
     def __init__(
         self,
         register: Register,
@@ -11,6 +12,18 @@ class QuantumProgram:
         device: Device | None = None,
     ) -> None:
 
-        self.device = MockDevice if device is None else device
+        self._register = register
+        self._sequence = sequence
 
-        self.converter = UnitConverter(device)
+        self.device = MockDevice if device is None else device
+        self._converter = UnitConverter(self.device)
+
+        self._compiled_sequence: Sequence | None = None
+
+    @property
+    def converter(self) -> UnitConverter:
+        return self._converter
+
+    @converter.setter
+    def converter(self, converter: UnitConverter) -> None:
+        self._converter = converter
