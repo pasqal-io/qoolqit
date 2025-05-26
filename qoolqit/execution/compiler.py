@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pulser import CustomWaveform as PulserCustomWaveform
 from pulser import Pulse as PulserPulse
+from pulser import Register as PulserRegister
 from pulser import Sequence as PulserSequence
-from pulser import register as PulserRegister
 from pulser.devices._device_datacls import BaseDevice as PulserDevice
 
 from qoolqit.devices import Device
