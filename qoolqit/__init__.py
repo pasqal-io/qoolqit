@@ -3,6 +3,7 @@ from __future__ import annotations
 from importlib import import_module
 
 from .devices import *
+from .execution import *
 from .graphs import *
 from .quantum_program import *
 from .register import *
@@ -16,6 +17,7 @@ list_of_submodules = [
     ".waveforms",
     ".register",
     ".quantum_program",
+    ".execution",
 ]
 
 __all__ = []
