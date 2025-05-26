@@ -52,8 +52,8 @@ class QuantumProgram:
 
         time_array_qoolqit = [t / converter.time for t in time_array_pulser]
 
-        amp_values_qoolqit = self.sequence.amplitude(time_array_qoolqit)
-        det_values_qoolqit = self.sequence.detuning(time_array_qoolqit)
+        amp_values_qoolqit: list[float] = self.sequence.amplitude(time_array_qoolqit)  # type: ignore [assignment]
+        det_values_qoolqit: list[float] = self.sequence.detuning(time_array_qoolqit)  # type: ignore [assignment]
 
         amp_values_pulser = [amp * converter.energy for amp in amp_values_qoolqit]
         det_values_pulser = [det * converter.energy for det in det_values_qoolqit]

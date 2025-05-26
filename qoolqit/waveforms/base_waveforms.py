@@ -36,7 +36,7 @@ class Waveform(ABC):
     def __single_call__(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
 
-    def __call__(self, t: float | Iterable) -> float | list:
+    def __call__(self, t: float | Iterable) -> float | list[float]:
         if isinstance(t, Iterable):
             return [self.__single_call__(ti) for ti in t]
         else:
