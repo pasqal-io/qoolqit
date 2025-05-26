@@ -5,16 +5,6 @@ from math import pi
 
 from .device import Device
 
-__all__ = ["UnitConverter"]
-
-"""
-At the end we need to have something like.
-
-converter.time
-converter.energy
-converter.distance
-"""
-
 
 @dataclass
 class UnitConverter:
