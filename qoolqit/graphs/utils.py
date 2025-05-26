@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 from itertools import product
 from math import dist, isclose
 from typing import Iterable
@@ -62,6 +63,12 @@ def random_coords(n: int, L: float = 1.0) -> list:
     x_coords = np.random.uniform(low=-L / 2, high=L / 2, size=(n,)).tolist()
     y_coords = np.random.uniform(low=-L / 2, high=L / 2, size=(n,)).tolist()
     return [(x, y) for x, y in zip(x_coords, y_coords)]
+
+
+def random_edge_list(nodes: Iterable, k: int) -> list:
+    """Generates a random set of k edges linkings items from a set of nodes."""
+    all_edges = all_node_pairs(nodes)
+    return random.sample(tuple(all_edges), k=k)
 
 
 def less_or_equal(a: float, b: float, rel_tol: float = 0.0, abs_tol: float = ATOL_32) -> bool:

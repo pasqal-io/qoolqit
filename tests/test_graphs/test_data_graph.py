@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
-from helpers import random_edge_list
 
-from qoolqit.graphs import DataGraph
+from qoolqit.graphs import DataGraph, random_edge_list
 from qoolqit.utils import ATOL_64
 
 
