@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import InitVar, dataclass, field
 from math import pi
 
-from .device import Device
+from qoolqit.devices import Device
 
 
 @dataclass
@@ -17,6 +17,10 @@ class UnitConverter:
     energy: float = field(init=False)
     """Distance conversion factor."""
     distance: float = field(init=False)
+
+    @property
+    def factors(self) -> tuple[float, ...]:
+        return self.time, self.energy, self.distance
 
     def __post_init__(self, device: Device) -> None:
         self._device = device
