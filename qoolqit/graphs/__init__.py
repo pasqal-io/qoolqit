@@ -6,6 +6,7 @@ from .utils import (
     all_node_pairs,
     distances,
     random_coords,
+    random_edge_list,
     scale_coords,
     space_coords,
 )

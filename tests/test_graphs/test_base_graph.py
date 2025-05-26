@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
-from helpers import random_edge_list
 
-from qoolqit.graphs import BaseGraph, random_coords
+from qoolqit.graphs import BaseGraph, random_coords, random_edge_list
 
 
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
