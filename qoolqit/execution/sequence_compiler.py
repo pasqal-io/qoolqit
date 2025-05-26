@@ -51,7 +51,7 @@ class SequenceCompiler:
     def set_distance_unit(self, energy: float) -> None:
         self._converter.set_distance_unit(energy)
 
-    def compiled_sequence(self) -> PulserSequence:
+    def compile_sequence(self) -> PulserSequence:
         if self._compilation_function is None:
             raise ValueError(f"Device {self.device.name} has an unknown compilation function.")
         else:
