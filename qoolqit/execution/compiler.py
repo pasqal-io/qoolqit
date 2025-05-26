@@ -7,16 +7,18 @@ from pulser import Sequence as PulserSequence
 from pulser.devices._device_datacls import BaseDevice as PulserDevice
 
 from qoolqit.devices import Device
-from qoolqit.quantum_program import QuantumProgram
+from qoolqit.register import Register
+from qoolqit.sequence import Sequence
 
 from .convert import UnitConverter
 
 
-class Compiler:
+class SequenceCompiler:
 
-    def __init__(self, program: QuantumProgram, device: Device):
+    def __init__(self, register: Register, sequence: Sequence, device: Device):
 
-        self._program = program
+        self._register = register
+        self._sequence = sequence
         self._device = device
 
         self._target_device = device._device
@@ -31,8 +33,12 @@ class Compiler:
         return self._converter
 
     @property
-    def program(self) -> QuantumProgram:
-        return self._program
+    def register(self) -> Register:
+        return self._register
+
+    @property
+    def sequence(self) -> Sequence:
+        return self._sequence
 
     def set_energy_unit(self, energy: float) -> None:
         self._converter.set_energy_unit(energy)
@@ -44,22 +50,19 @@ class Compiler:
 
         TIME, ENERGY, DISTANCE = self.converter.factors
 
-        sequence = self.program.sequence
-        register = self.program.register
-
-        converted_duration = sequence.duration * TIME
+        converted_duration = self.sequence.duration * TIME
 
         time_array_pulser = list(range(int(converted_duration) + 1))
 
         time_array_qoolqit = [t / TIME for t in time_array_pulser]
 
-        amp_values_qoolqit = sequence.amplitude(time_array_qoolqit)
-        det_values_qoolqit = sequence.detuning(time_array_qoolqit)
+        amp_values_qoolqit = self.sequence.amplitude(time_array_qoolqit)
+        det_values_qoolqit = self.sequence.detuning(time_array_qoolqit)
 
         amp_values_pulser = [amp * ENERGY for amp in amp_values_qoolqit]  # type: ignore [union-attr]
         det_values_pulser = [det * ENERGY for det in det_values_qoolqit]  # type: ignore [union-attr]
 
-        coords_qoolqit = register.qubits
+        coords_qoolqit = self.register.qubits
         coords_pulser = {q: DISTANCE * c for q, c in coords_qoolqit.items()}
 
         pulser_device = self.target_device
