@@ -4,12 +4,11 @@ from typing import Callable
 
 from pulser import Sequence as PulserSequence
 
-from qoolqit.devices import Device
+from qoolqit.devices import Device, UnitConverter
 from qoolqit.register import Register
 from qoolqit.sequence import Sequence
 
 from .compilation_functions import compile_to_analog_device, compile_to_mock_device
-from .unit_converter import UnitConverter
 
 COMPILATION_FUNCTIONS = {
     "MockDevice": compile_to_mock_device,
