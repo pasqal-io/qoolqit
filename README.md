@@ -7,8 +7,7 @@
   </picture>
 </p>
 
-!!! warning
-    QoolQit is under heavy development, and usage before the release of v0.1.0 is not recommended!
+**WARNING:** QoolQit is under heavy development, and usage before the release of v0.1.0 is not recommended!
 
 **QoolQit** is a Python package designed for algorithm development in the Rydberg Analog Model.
 
@@ -53,7 +52,7 @@ pip install -e .
 
 For usage within a project with a corresponding `pyproject.toml` file, you can add
 
-```toml
+```sh
   "qoolqit"
 ```
 
