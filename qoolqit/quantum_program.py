@@ -40,4 +40,4 @@ class QuantumProgram:
 
     def compile_to(self, device: Device) -> None:
         compiler = SequenceCompiler(self.register, self.sequence, device)
-        self._compiled_sequence = compiler.compile()
+        self._compiled_sequence = compiler.compiled_sequence()

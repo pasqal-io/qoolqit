@@ -11,11 +11,6 @@ from pulser.devices._device_datacls import BaseDevice
 class Device:
 
     device: InitVar[BaseDevice]
-    # name: str | None = None
-    # max_n_qubits: int | None = None
-    # min_qubit_distance: float | None = None
-    # max_sequence_duration: int | None = None
-
     name: str = field(init=False)
     max_n_qubits: int = field(init=False)
     min_qubit_distance: float = field(init=False)
