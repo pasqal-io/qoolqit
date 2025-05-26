@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import InitVar, asdict, dataclass
+from dataclasses import InitVar, asdict, dataclass, field
 
 from pulser.devices import AnalogDevice as _AnalogDevice
 from pulser.devices import MockDevice as _MockDevice
@@ -11,10 +11,15 @@ from pulser.devices._device_datacls import BaseDevice
 class Device:
 
     device: InitVar[BaseDevice]
-    name: str | None = None
-    max_n_qubits: int | None = None
-    min_qubit_distance: float | None = None
-    max_sequence_duration: int | None = None
+    # name: str | None = None
+    # max_n_qubits: int | None = None
+    # min_qubit_distance: float | None = None
+    # max_sequence_duration: int | None = None
+
+    name: str = field(init=False)
+    max_n_qubits: int = field(init=False)
+    min_qubit_distance: float = field(init=False)
+    max_sequence_duration: int = field(init=False)
 
     def __post_init__(self, device: BaseDevice) -> None:
         self._device = device
@@ -28,7 +33,7 @@ class Device:
         self._max_det = device.channels["rydberg_global"].max_abs_detuning
 
     def __repr__(self) -> str:
-        return self.name  # type: ignore [return-value]
+        return self.name
 
     @property
     def specs_dict(self) -> dict:
