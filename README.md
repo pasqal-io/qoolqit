@@ -12,7 +12,7 @@ $${\color{red}\textbf{WARNING: QoolQit is under heavy development, and usage bef
 **QoolQit** is a Python package designed for algorithm development in the Rydberg Analog Model.
 
 
-**For more detailed information, [check out the documentation](https://pasqal-io.github.io/qoolqit/latest/).
+**For more detailed information, [check out the documentation](https://pasqal-io.github.io/qoolqit/latest/)**.
 
 # Installation
 
