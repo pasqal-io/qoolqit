@@ -1,6 +1,6 @@
 from __future__ import annotations
 
 from .compiler import SequenceCompiler
-from .convert import UnitConverter
+from .unit_converter import UnitConverter
 
 __all__ = ["UnitConverter"]
