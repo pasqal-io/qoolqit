@@ -69,6 +69,7 @@ class Register:
         grid_scale = ceil(max(grid_x_max - grid_x_min, grid_y_max - grid_y_min))
 
         ax.grid(True)
+        ax.set_axisbelow(True)
 
         eps = 0.05 * grid_scale
         ax.set_xlim(grid_x_min - eps, grid_x_max + eps)
@@ -81,7 +82,7 @@ class Register:
         ax.xaxis.set_major_locator(majorLocatorX)
         ax.yaxis.set_major_locator(majorLocatorY)
 
-        ax.scatter(x_coords, y_coords)
+        ax.scatter(x_coords, y_coords, s=50, color="green")
 
         ax.tick_params(axis="both", which="both", labelbottom=True, labelleft=True, labelsize=8)
 
