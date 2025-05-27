@@ -84,7 +84,7 @@ class Register:
         ax.xaxis.set_major_locator(majorLocatorX)
         ax.yaxis.set_major_locator(majorLocatorY)
 
-        ax.scatter(x_coords, y_coords, s=50, color="green")
+        ax.scatter(x_coords, y_coords, s=50, color="darkgreen")
 
         ax.tick_params(axis="both", which="both", labelbottom=True, labelleft=True, labelsize=8)
 
