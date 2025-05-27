@@ -7,22 +7,14 @@ from pulser import Sequence as PulserSequence
 from qoolqit.devices import Device
 from qoolqit.register import Register
 from qoolqit.sequence import Sequence
-from qoolqit.utils import StrEnum
 
 from .compilation_functions import compile_to_analog_device, compile_to_mock_device
+from .utils import CompilerProfile
 
 COMPILATION_FUNCTIONS = {
     "MockDevice": compile_to_mock_device,
     "AnalogDevice": compile_to_analog_device,
 }
-
-
-class CompilationProfile(StrEnum):
-    """NOT YET BEING USED."""
-
-    DEFAULT = "Default"
-    MAX_AMPLITUDE = "MaxAmplitude"
-    MAX_DURATION = "MaxDuration"
 
 
 class SequenceCompiler:
@@ -36,7 +28,7 @@ class SequenceCompiler:
 
         self._compilation_function: Callable | None = COMPILATION_FUNCTIONS.get(device.name, None)
 
-        # self._profile = CompilationProfile.DEFAULT
+        self._profile = CompilerProfile.DEFAULT
 
     @property
     def register(self) -> Register:
@@ -50,9 +42,23 @@ class SequenceCompiler:
     def device(self) -> Device:
         return self._device
 
-    # @property
-    # def profile(self) -> CompilationProfile:
-    #     return self._profile
+    @property
+    def profile(self) -> CompilerProfile:
+        return self._profile
+
+    @profile.setter
+    def profile(self, profile: CompilerProfile) -> None:
+        """Set the compiler profile.
+
+        Arguments:
+            profile: the chosen compiler profile.
+        """
+        if profile not in CompilerProfile:
+            raise TypeError(
+                "Unknown profile, please pick one from the CompilerProfile enumeration."
+            )
+        else:
+            self._profile = profile
 
     def set_time_unit(self, time: float) -> None:
         self._device.unit_converter.set_time_unit(time)
@@ -67,4 +73,9 @@ class SequenceCompiler:
         if self._compilation_function is None:
             raise ValueError(f"Device {self.device.name} has an unknown compilation function.")
         else:
-            return self._compilation_function(self.register, self.sequence, self.device)
+            return self._compilation_function(
+                self.register,
+                self.sequence,
+                self.device,
+                self.profile,
+            )
