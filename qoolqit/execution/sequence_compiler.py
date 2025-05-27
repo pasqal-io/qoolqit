@@ -4,7 +4,7 @@ from typing import Callable
 
 from pulser import Sequence as PulserSequence
 
-from qoolqit.devices import Device
+from qoolqit.devices import AvailableDevices, Device
 from qoolqit.register import Register
 from qoolqit.sequence import Sequence
 
@@ -12,13 +12,13 @@ from .compilation_functions import compile_to_analog_device, compile_to_mock_dev
 from .utils import CompilerProfile
 
 COMPILATION_FUNCTIONS = {
-    "MockDevice": compile_to_mock_device,
-    "AnalogDevice": compile_to_analog_device,
+    AvailableDevices.MOCK.value: compile_to_mock_device,
+    AvailableDevices.ANALOG.value: compile_to_analog_device,
 }
 
 SUPPORTED_PROFILES = {
-    "MockDevice": [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
-    "AnalogDevice": [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
+    AvailableDevices.MOCK.value: [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
+    AvailableDevices.ANALOG.value: [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
 }
 
 
@@ -70,13 +70,13 @@ class SequenceCompiler:
             self._profile = profile
 
     def set_time_unit(self, time: float) -> None:
-        self._device.unit_converter.set_time_unit(time)
+        self._device.set_time_unit(time)
 
     def set_energy_unit(self, energy: float) -> None:
-        self._device.unit_converter.set_energy_unit(energy)
+        self._device.set_energy_unit(energy)
 
     def set_distance_unit(self, distance: float) -> None:
-        self._device.unit_converter.set_distance_unit(distance)
+        self._device.set_distance_unit(distance)
 
     def compile_sequence(self) -> PulserSequence:
         if self._compilation_function is None:

@@ -5,7 +5,7 @@ from pulser import Pulse as PulserPulse
 from pulser import Register as PulserRegister
 from pulser import Sequence as PulserSequence
 
-from qoolqit.devices import AnalogDevice, Device, MockDevice
+from qoolqit.devices import Device
 from qoolqit.register import Register
 from qoolqit.sequence import Sequence
 
@@ -19,14 +19,14 @@ def compile_to_mock_device(
     profile: CompilerProfile,
 ) -> PulserSequence:
 
-    TARGET_DEVICE = MockDevice._device
+    TARGET_DEVICE = device._device
 
     if profile == CompilerProfile.DEFAULT:
-        TIME, ENERGY, DISTANCE = device.unit_converter.factors
+        TIME, ENERGY, DISTANCE = device.converter.factors
     if profile == CompilerProfile.MAX_DURATION:
         TIME = (device._max_duration) / sequence.duration
-        device.unit_converter.set_time_unit(TIME)
-        TIME, ENERGY, DISTANCE = device.unit_converter.factors
+        device.set_time_unit(TIME)
+        TIME, ENERGY, DISTANCE = device.converter.factors
 
     converted_duration = int(sequence.duration * TIME)
 
@@ -64,14 +64,14 @@ def compile_to_analog_device(
     profile: CompilerProfile,
 ) -> PulserSequence:
 
-    TARGET_DEVICE = AnalogDevice._device
+    TARGET_DEVICE = device._device
 
     if profile == CompilerProfile.DEFAULT:
-        TIME, ENERGY, DISTANCE = device.unit_converter.factors
+        TIME, ENERGY, DISTANCE = device.converter.factors
     if profile == CompilerProfile.MAX_DURATION:
         TIME = (device._max_duration) / sequence.duration
-        device.unit_converter.set_time_unit(TIME)
-        TIME, ENERGY, DISTANCE = device.unit_converter.factors
+        device.set_time_unit(TIME)
+        TIME, ENERGY, DISTANCE = device.converter.factors
 
     rounded_duration = int(sequence.duration * TIME)
 

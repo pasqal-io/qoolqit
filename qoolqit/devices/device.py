@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import InitVar, asdict, dataclass, field
+from abc import ABC, abstractmethod
 from math import pi
 
 from pulser.devices import AnalogDevice as _AnalogDevice
@@ -14,47 +14,59 @@ DEFAULT_ENERGY = 4.0 * pi
 DEFAULT_DISTANCE = 8.0
 
 
-@dataclass
-class Device:
+class Device(ABC):
 
-    device: InitVar[BaseDevice]
-    name: str = field(init=False)
-    max_n_qubits: int = field(init=False)
+    def __init__(self) -> None:
 
-    _converter: UnitConverter = field(init=False)
+        self._C6 = self._device.interaction_coeff
+        self._max_amp = self._device.channels["rydberg_global"].max_amp
+        self._max_det = self._device.channels["rydberg_global"].max_abs_detuning
+        self._max_duration = self._device.max_sequence_duration
 
-    # min_qubit_distance: float = field(init=False)
-    # max_sequence_duration: int = field(init=False)
+        self.set_default_converter()
 
-    def __post_init__(self, device: BaseDevice) -> None:
-        self._device = device
-        self.name: str = self._device.name
-        self.max_n_qubits: int | None = self._device.max_atom_num
+    @property
+    @abstractmethod
+    def _device(self) -> BaseDevice:
+        """Abstract property setting the Pulser device."""
+        pass
 
-        # self.min_qubit_distance: float = self._device.min_atom_distance
-        # self.max_sequence_duration: int | None = self._device.max_sequence_duration
+    @property
+    def name(self) -> str:
+        name: str = self._device.name
+        return name
 
-        self._C6 = device.interaction_coeff
-        self._max_amp = device.channels["rydberg_global"].max_amp
-        self._max_det = device.channels["rydberg_global"].max_abs_detuning
-        self._max_duration = device.max_sequence_duration
-
-        self._converter = UnitConverter.from_energy(self._C6, self._max_amp or DEFAULT_ENERGY)
+    def __post_init__(self) -> None:
+        if not isinstance(self._device, BaseDevice):
+            raise TypeError("Incorrent base device set.")
 
     def __repr__(self) -> str:
         return self.name
 
     @property
-    def unit_converter(self) -> UnitConverter:
+    def converter(self) -> UnitConverter:
         return self._converter
 
+    def set_default_converter(self) -> None:
+        self._converter = UnitConverter.from_energy(self._C6, self._max_amp or DEFAULT_ENERGY)
+
+    def set_time_unit(self, time: float) -> None:
+        self.converter.set_time_unit(time)
+
+    def set_energy_unit(self, energy: float) -> None:
+        self.converter.set_energy_unit(energy)
+
+    def set_distance_unit(self, distance: float) -> None:
+        self.converter.set_distance_unit(distance)
+
+
+class MockDevice(Device):
     @property
-    def specs_dict(self) -> dict:
-        """Device specifications."""
-        return asdict(self)
+    def _device(self) -> BaseDevice:
+        return _MockDevice
 
 
-# FIXME: THIS DOES NOT WORK
-# Mutability is a problem
-MockDevice = Device(_MockDevice)
-AnalogDevice = Device(_AnalogDevice)
+class AnalogDevice(Device):
+    @property
+    def _device(self) -> BaseDevice:
+        return _AnalogDevice
