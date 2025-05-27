@@ -7,8 +7,10 @@ ATOL_64 = 1e-14
 
 
 class CustomEnumMeta(EnumMeta):
-    def __repr__(cls):
-        members = "\n| ".join([f"{member.name} = {repr(member.value)}" for member in cls])
+    def __repr__(cls) -> str:
+        members = "\n| ".join(
+            [f"{m.name} = {repr(m.value)}" for m in cls]  # type: ignore [var-annotated]
+        )
         return f"<Enum '{cls.__name__}':\n| {members}>"
 
 

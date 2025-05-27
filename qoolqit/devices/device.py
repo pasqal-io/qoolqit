@@ -37,6 +37,7 @@ class Device:
         self._C6 = device.interaction_coeff
         self._max_amp = device.channels["rydberg_global"].max_amp
         self._max_det = device.channels["rydberg_global"].max_abs_detuning
+        self._max_duration = device.max_sequence_duration
 
         self._converter = UnitConverter.from_energy(self._C6, self._max_amp or DEFAULT_ENERGY)
 
@@ -53,5 +54,7 @@ class Device:
         return asdict(self)
 
 
+# FIXME: THIS DOES NOT WORK
+# Mutability is a problem
 MockDevice = Device(_MockDevice)
 AnalogDevice = Device(_AnalogDevice)

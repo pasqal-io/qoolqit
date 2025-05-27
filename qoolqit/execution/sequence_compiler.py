@@ -16,6 +16,11 @@ COMPILATION_FUNCTIONS = {
     "AnalogDevice": compile_to_analog_device,
 }
 
+SUPPORTED_PROFILES = {
+    "MockDevice": [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
+    "AnalogDevice": [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
+}
+
 
 class SequenceCompiler:
     def __init__(self, register: Register, sequence: Sequence, device: Device):
@@ -56,6 +61,10 @@ class SequenceCompiler:
         if profile not in CompilerProfile:
             raise TypeError(
                 "Unknown profile, please pick one from the CompilerProfile enumeration."
+            )
+        elif profile not in SUPPORTED_PROFILES[self.device.name]:
+            raise NotImplementedError(
+                f"The requested profile is not implemented for device {self.device.name}"
             )
         else:
             self._profile = profile

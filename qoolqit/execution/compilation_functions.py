@@ -23,12 +23,12 @@ def compile_to_mock_device(
 
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.unit_converter.factors
-    else:
-        raise NotImplementedError(
-            f"The requested compilation profile is not implemented for device {device.name}"
-        )
+    if profile == CompilerProfile.MAX_DURATION:
+        TIME = (device._max_duration) / sequence.duration
+        device.unit_converter.set_time_unit(TIME)
+        TIME, ENERGY, DISTANCE = device.unit_converter.factors
 
-    converted_duration = int(sequence.duration * TIME + 1)
+    converted_duration = int(sequence.duration * TIME)
 
     time_array_pulser = list(range(converted_duration))
 
@@ -68,13 +68,13 @@ def compile_to_analog_device(
 
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.unit_converter.factors
-    else:
-        raise NotImplementedError(
-            f"The requested compilation profile is not implemented for device {device.name}"
-        )
+    if profile == CompilerProfile.MAX_DURATION:
+        TIME = (device._max_duration) / sequence.duration
+        device.unit_converter.set_time_unit(TIME)
+        TIME, ENERGY, DISTANCE = device.unit_converter.factors
 
-    converted_duration = sequence.duration * TIME
-    rounded_duration = int(converted_duration) + 1
+    rounded_duration = int(sequence.duration * TIME)
+
     remainder = rounded_duration % 4
     converted_duration = rounded_duration + (4 - remainder) if remainder != 0 else rounded_duration
 
