@@ -9,9 +9,9 @@ from pulser.devices._device_datacls import BaseDevice
 
 from .unit_converter import UnitConverter
 
-DEFAULT_TIME = 80.0
-DEFAULT_ENERGY = 4.0 * pi
-DEFAULT_DISTANCE = 8.0
+UPPER_DURATION = 6000
+UPPER_AMP = 4.0 * pi
+UPPER_DET = 4.0 * pi
 
 
 class Device(ABC):
@@ -19,9 +19,9 @@ class Device(ABC):
     def __init__(self) -> None:
 
         self._C6 = self._device.interaction_coeff
-        self._max_amp = self._device.channels["rydberg_global"].max_amp
-        self._max_det = self._device.channels["rydberg_global"].max_abs_detuning
-        self._max_duration = self._device.max_sequence_duration
+        self._max_duration = self._device.max_sequence_duration or UPPER_DURATION
+        self._max_amp = self._device.channels["rydberg_global"].max_amp or UPPER_AMP
+        self._max_det = self._device.channels["rydberg_global"].max_abs_detuning or UPPER_DET
 
         self.set_default_converter()
 
@@ -48,7 +48,7 @@ class Device(ABC):
         return self._converter
 
     def set_default_converter(self) -> None:
-        self._converter = UnitConverter.from_energy(self._C6, self._max_amp or DEFAULT_ENERGY)
+        self._converter = UnitConverter.from_energy(self._C6, self._max_amp)
 
     def set_time_unit(self, time: float) -> None:
         self.converter.set_time_unit(time)

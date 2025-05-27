@@ -3,7 +3,7 @@ from __future__ import annotations
 from pulser import Sequence as PulserSequence
 
 from qoolqit.devices import Device
-from qoolqit.execution import SequenceCompiler
+from qoolqit.execution import CompilerProfile, SequenceCompiler
 from qoolqit.register import Register
 from qoolqit.sequence import Sequence
 
@@ -38,6 +38,9 @@ class QuantumProgram:
         else:
             return self._compiled_sequence
 
-    def compile_to(self, device: Device) -> None:
+    def compile_to(
+        self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT
+    ) -> None:
         compiler = SequenceCompiler(self.register, self.sequence, device)
+        compiler.profile = profile
         self._compiled_sequence = compiler.compile_sequence()
