@@ -273,7 +273,7 @@ class BaseGraph(nx.Graph):
             *args: arguments to pass to draw_networkx.
             **kwargs: keyword-arguments to pass to draw_networkx.
         """
-        fig, ax = plt.subplots(1, 1, dpi=200)
+        fig, ax = plt.subplots(1, 1, figsize=(4, 4), dpi=150)
         ax.set_aspect("equal")
         if self.has_coords:
             x_coords, y_coords = zip(*self.coords.values())
