@@ -15,6 +15,12 @@ UPPER_DET = 4.0 * pi
 
 
 class Device(ABC):
+    """Abstract base class for any Device in QoolQit.
+
+    The device in QoolQit holds a Pulser device, and all the logic is based on that.
+    Defining a new device for usage in QoolQit should be done by inheriting from this
+    and overriding the `_device` private property with the corresponding Pulser device.
+    """
 
     def __init__(self) -> None:
 
@@ -23,12 +29,18 @@ class Device(ABC):
         self._max_amp = self._device.channels["rydberg_global"].max_amp or UPPER_AMP
         self._max_det = self._device.channels["rydberg_global"].max_abs_detuning or UPPER_DET
 
-        self.set_default_converter()
+        self.reset_converter()
 
     @property
     @abstractmethod
     def _device(self) -> BaseDevice:
-        """Abstract property setting the Pulser device."""
+        """Abstract property defining the Pulser device."""
+        pass
+
+    @property
+    @abstractmethod
+    def _default_converter(self) -> UnitConverter:
+        """Abstract property defining the default unit converter."""
         pass
 
     @property
@@ -47,26 +59,42 @@ class Device(ABC):
     def converter(self) -> UnitConverter:
         return self._converter
 
-    def set_default_converter(self) -> None:
-        self._converter = UnitConverter.from_energy(self._C6, self._max_amp)
+    def reset_converter(self) -> None:
+        """Resets the unit converter to the default one."""
+        self._converter = self._default_converter
 
     def set_time_unit(self, time: float) -> None:
-        self.converter.set_time_unit(time)
+        """Changes the unit converter according to a reference time unit."""
+        self.converter.factors = self.converter.factors_from_time(time)
 
     def set_energy_unit(self, energy: float) -> None:
-        self.converter.set_energy_unit(energy)
+        """Changes the unit converter according to a reference energy unit."""
+        self.converter.factors = self.converter.factors_from_energy(energy)
 
     def set_distance_unit(self, distance: float) -> None:
-        self.converter.set_distance_unit(distance)
+        """Changes the unit converter according to a reference distance unit."""
+        self.converter.factors = self.converter.factors_from_distance(distance)
 
 
 class MockDevice(Device):
+    """An ideal device without constraints."""
+
     @property
     def _device(self) -> BaseDevice:
         return _MockDevice
 
+    @property
+    def _default_converter(self) -> UnitConverter:
+        return UnitConverter.from_energy(self._C6, self._max_amp)
+
 
 class AnalogDevice(Device):
+    """A realistic device with constraints mimicking a real QPU."""
+
     @property
     def _device(self) -> BaseDevice:
         return _AnalogDevice
+
+    @property
+    def _default_converter(self) -> UnitConverter:
+        return UnitConverter.from_energy(self._C6, self._max_amp)
