@@ -25,8 +25,7 @@ def compile_to_mock_device(
         TIME, ENERGY, DISTANCE = device.converter.factors
     if profile == CompilerProfile.MAX_DURATION:
         TIME = (device._max_duration) / sequence.duration
-        device.set_time_unit(TIME)
-        TIME, ENERGY, DISTANCE = device.converter.factors
+        TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
 
     converted_duration = int(sequence.duration * TIME)
 
@@ -70,8 +69,7 @@ def compile_to_analog_device(
         TIME, ENERGY, DISTANCE = device.converter.factors
     if profile == CompilerProfile.MAX_DURATION:
         TIME = (device._max_duration) / sequence.duration
-        device.set_time_unit(TIME)
-        TIME, ENERGY, DISTANCE = device.converter.factors
+        TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
 
     rounded_duration = int(sequence.duration * TIME)
 

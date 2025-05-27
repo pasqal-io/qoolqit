@@ -69,15 +69,6 @@ class SequenceCompiler:
         else:
             self._profile = profile
 
-    def set_time_unit(self, time: float) -> None:
-        self._device.set_time_unit(time)
-
-    def set_energy_unit(self, energy: float) -> None:
-        self._device.set_energy_unit(energy)
-
-    def set_distance_unit(self, distance: float) -> None:
-        self._device.set_distance_unit(distance)
-
     def compile_sequence(self) -> PulserSequence:
         if self._compilation_function is None:
             raise ValueError(f"Device {self.device.name} has an unknown compilation function.")

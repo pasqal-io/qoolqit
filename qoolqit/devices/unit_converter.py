@@ -72,11 +72,20 @@ class UnitConverter:
     def factors(self) -> tuple[float, ...]:
         return self.time, self.energy, self.distance
 
+    def factors_from_time(self, time: float) -> tuple[float, ...]:
+        return _factors_from_time(self.C6, time)
+
+    def factors_from_energy(self, energy: float) -> tuple[float, ...]:
+        return _factors_from_energy(self.C6, energy)
+
+    def factors_from_distance(self, distance: float) -> tuple[float, ...]:
+        return _factors_from_distance(self.C6, distance)
+
     def set_time_unit(self, time: float) -> None:
-        self.time, self.energy, self.distance = _factors_from_time(self.C6, time)
+        self.time, self.energy, self.distance = self.factors_from_time(time)
 
     def set_energy_unit(self, energy: float) -> None:
-        self.time, self.energy, self.distance = _factors_from_energy(self.C6, energy)
+        self.time, self.energy, self.distance = self.factors_from_energy(energy)
 
     def set_distance_unit(self, distance: float) -> None:
-        self.time, self.energy, self.distance = _factors_from_distance(self.C6, distance)
+        self.time, self.energy, self.distance = self.factors_from_distance(distance)
