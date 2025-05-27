@@ -4,9 +4,10 @@ from typing import Callable
 
 from pulser import Sequence as PulserSequence
 
-from qoolqit.devices import Device, UnitConverter
+from qoolqit.devices import Device
 from qoolqit.register import Register
 from qoolqit.sequence import Sequence
+from qoolqit.utils import StrEnum
 
 from .compilation_functions import compile_to_analog_device, compile_to_mock_device
 
@@ -14,6 +15,14 @@ COMPILATION_FUNCTIONS = {
     "MockDevice": compile_to_mock_device,
     "AnalogDevice": compile_to_analog_device,
 }
+
+
+class CompilationProfile(StrEnum):
+    """NOT YET BEING USED."""
+
+    DEFAULT = "Default"
+    MAX_AMPLITUDE = "MaxAmplitude"
+    MAX_DURATION = "MaxDuration"
 
 
 class SequenceCompiler:
@@ -24,9 +33,10 @@ class SequenceCompiler:
         self._device = device
 
         self._target_device = device._device
-        self._converter = UnitConverter(device)
 
         self._compilation_function: Callable | None = COMPILATION_FUNCTIONS.get(device.name, None)
+
+        # self._profile = CompilationProfile.DEFAULT
 
     @property
     def register(self) -> Register:
@@ -40,18 +50,21 @@ class SequenceCompiler:
     def device(self) -> Device:
         return self._device
 
-    @property
-    def converter(self) -> UnitConverter:
-        return self._converter
+    # @property
+    # def profile(self) -> CompilationProfile:
+    #     return self._profile
+
+    def set_time_unit(self, time: float) -> None:
+        self._device.unit_converter.set_time_unit(time)
 
     def set_energy_unit(self, energy: float) -> None:
-        self._converter.set_energy_unit(energy)
+        self._device.unit_converter.set_energy_unit(energy)
 
-    def set_distance_unit(self, energy: float) -> None:
-        self._converter.set_distance_unit(energy)
+    def set_distance_unit(self, distance: float) -> None:
+        self._device.unit_converter.set_distance_unit(distance)
 
     def compile_sequence(self) -> PulserSequence:
         if self._compilation_function is None:
             raise ValueError(f"Device {self.device.name} has an unknown compilation function.")
         else:
-            return self._compilation_function(self.register, self.sequence, self.converter)
+            return self._compilation_function(self.register, self.sequence, self.device)

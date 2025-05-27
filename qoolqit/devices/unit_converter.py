@@ -31,8 +31,8 @@ class UnitConverter:
     on the interaction coeffiecient C6. The converter checks the following invariants:
 
     Invariants:
-    1. ENERGY = 1000 / TIME ( <=> TIME * ENERGY = 1000 )
-    2. DISTANCE = (C6 / ENERGY) ^ (1/6) ( <=> DISTANCE^6 * ENERGY = C6 )
+    1. TIME * ENERGY = 1000 ( <=> TIME = 1000 / ENERGY )
+    2. DISTANCE^6 * ENERGY = C6 ( <=> ENERGY = C6 / (DISTANCE ^ 6) )
     """
 
     """Interaction coefficient."""
