@@ -46,16 +46,15 @@ class UnitConverter:
     distance: float
 
     def __post_init__(self) -> None:
-        self._validate_factors(self.time, self.energy, self.distance)
+        if not self.validate_factors(self.time, self.energy, self.distance):
+            raise ValueError(
+                "Invalid set of factors, time-energy or energy-distance invariant violated."
+            )
 
-    def _validate_factors(self, time: float, energy: float, distance: float) -> None:
+    def validate_factors(self, time: float, energy: float, distance: float) -> bool:
         time_energy_inv = time * energy
         energy_dist_inv = (distance**6) * energy
-
-        if not isclose(time_energy_inv, 1000.0):
-            raise ValueError("Invalid set of factors, time-energy invariant violated.")
-        elif not isclose(energy_dist_inv, self.C6):
-            raise ValueError("Invalid set of factors, energy-distance invariant violated.")
+        return isclose(time_energy_inv, 1000.0) and isclose(energy_dist_inv, self.C6)
 
     @classmethod
     def from_time(cls, C6: float, time: float) -> UnitConverter:
@@ -88,29 +87,22 @@ class UnitConverter:
                 "Setting the conversion factors requires 3 values passed "
                 "as a tuple `(time, energy, distance)`."
             )
-        self._validate_factors(*values)
+        if not self.validate_factors(*values):
+            raise ValueError(
+                "Invalid set of factors, time-energy or energy-distance invariant violated."
+            )
         self.time = values[0]
         self.energy = values[1]
         self.distance = values[2]
 
     def factors_from_time(self, time: float) -> tuple[float, ...]:
-        """Factors from a different reference time than the one set."""
+        """Get factors from a different reference time than the one set."""
         return _factors_from_time(self.C6, time)
 
     def factors_from_energy(self, energy: float) -> tuple[float, ...]:
-        """Factors from a different reference energy than the one set."""
+        """Get factors from a different reference energy than the one set."""
         return _factors_from_energy(self.C6, energy)
 
     def factors_from_distance(self, distance: float) -> tuple[float, ...]:
-        """Factors from a different reference energy than the one set."""
+        """Get factors from a different reference energy than the one set."""
         return _factors_from_distance(self.C6, distance)
-
-    # def set_time_unit(self, time: float) -> None:
-    #     """Set factors from a new reference time unit."""
-    #     self.time, self.energy, self.distance = self.factors_from_time(time)
-
-    # def set_energy_unit(self, energy: float) -> None:
-    #     self.time, self.energy, self.distance = self.factors_from_energy(energy)
-
-    # def set_distance_unit(self, distance: float) -> None:
-    #     self.time, self.energy, self.distance = self.factors_from_distance(distance)
