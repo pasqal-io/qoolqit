@@ -21,5 +21,5 @@ class StrEnum(str, Enum, metaclass=CustomEnumMeta):
         return ret
 
     @classmethod
-    def list(cls) -> list[str]:
-        return list(map(lambda c: c.value, cls))  # type: ignore [attr-defined]
+    def list(cls) -> list:
+        return [item for item in cls]

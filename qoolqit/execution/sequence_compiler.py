@@ -17,10 +17,12 @@ COMPILATION_FUNCTIONS = {
     AvailableDevices.TEST_ANALOG.value: compile_to_analog_device,
 }
 
+ALL_COMPILER_PROFILES: set = set(CompilerProfile.list())
+
 SUPPORTED_PROFILES = {
-    AvailableDevices.MOCK.value: [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
-    AvailableDevices.ANALOG.value: [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
-    AvailableDevices.TEST_ANALOG.value: [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
+    AvailableDevices.MOCK.value: ALL_COMPILER_PROFILES,
+    AvailableDevices.ANALOG.value: ALL_COMPILER_PROFILES,
+    AvailableDevices.TEST_ANALOG.value: ALL_COMPILER_PROFILES,
 }
 
 

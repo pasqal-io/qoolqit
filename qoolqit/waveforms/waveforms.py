@@ -9,6 +9,9 @@ class Delay(Waveform):
     def function(self, t: float) -> float:
         return 0.0
 
+    def max(self) -> float:
+        return 0.0
+
 
 class Ramp(Waveform):
     """A ramp that linearly interpolates between an initial and final value.
@@ -33,6 +36,9 @@ class Ramp(Waveform):
         fraction = t / self._duration
         return self.initial_value + fraction * (self.final_value - self.initial_value)
 
+    def max(self) -> float:
+        return max([self.initial_value, self.final_value])
+
     def _repr_content(self) -> str:
         string = str(self.initial_value) + ", " + str(self.final_value)
         return self.__class__.__name__ + "(" + string + ")"
@@ -55,6 +61,9 @@ class Constant(Waveform):
         self.value = value
 
     def function(self, t: float) -> float:
+        return self.value
+
+    def max(self) -> float:
         return self.value
 
     def _repr_content(self) -> str:

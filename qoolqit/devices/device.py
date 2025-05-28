@@ -24,6 +24,7 @@ class Device(ABC):
     def __init__(self) -> None:
 
         self._C6 = self._device.interaction_coeff
+        self._clock_period = self._device.channels["rydberg_global"].clock_period
         self._max_duration = self._device.max_sequence_duration or UPPER_DURATION
         self._max_amp = self._device.channels["rydberg_global"].max_amp or UPPER_AMP
         self._max_det = self._device.channels["rydberg_global"].max_abs_detuning or UPPER_DET
@@ -91,7 +92,6 @@ class AnalogDevice(Device):
     """A realistic device with constraints mimicking a real QPU."""
 
     def __init__(self) -> None:
-        self._clock_period = self._device.channels["rydberg_global"].clock_period
         super().__init__()
 
     @property
@@ -107,7 +107,6 @@ class TestAnalogDevice(Device):
     """A realistic device with constraints mimicking a real QPU."""
 
     def __init__(self) -> None:
-        self._clock_period = self._device.channels["rydberg_global"].clock_period
         super().__init__()
 
     @property

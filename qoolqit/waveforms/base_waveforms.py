@@ -44,6 +44,11 @@ class Waveform(ABC):
         """Evaluates the waveform function at a given time t."""
         pass
 
+    @abstractmethod
+    def max(self) -> float:
+        """Get the maximum value of the waveform."""
+        pass
+
     def __single_call__(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
 
@@ -143,6 +148,10 @@ class CompositeWaveform(Waveform):
         local_t = t - self.times[idx]
         value: float = self.waveforms[idx](local_t)
         return value
+
+    def max(self) -> float:
+        """Get the maximum value of the waveform."""
+        return max([wf.max() for wf in self.waveforms])
 
     def __mul__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):

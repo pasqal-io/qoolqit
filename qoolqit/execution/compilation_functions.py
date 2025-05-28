@@ -56,9 +56,14 @@ def compile_to_mock_device(
 
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
-    if profile == CompilerProfile.MAX_DURATION:
+    elif profile == CompilerProfile.MAX_DURATION:
         TIME = (device._max_duration) / sequence.duration
         TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
+    elif profile == CompilerProfile.MAX_AMPLITUDE:
+        ENERGY = (device._max_amp) / sequence.amplitude.max()
+        TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
+    else:
+        raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
 
     converted_duration = int(sequence.duration * TIME)
 
@@ -83,12 +88,17 @@ def compile_to_analog_device(
 
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
-    if profile == CompilerProfile.MAX_DURATION:
+    elif profile == CompilerProfile.MAX_DURATION:
         TIME = (device._max_duration) / sequence.duration
         TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
+    elif profile == CompilerProfile.MAX_AMPLITUDE:
+        ENERGY = (device._max_amp) / sequence.amplitude.max()
+        TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
+    else:
+        raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
 
     rounded_duration = int(sequence.duration * TIME)
-    cp = device._device.clock_period
+    cp = device._clock_period
     rm = rounded_duration % cp
     converted_duration = rounded_duration + (cp - rm) if rm != 0 else rounded_duration
 
