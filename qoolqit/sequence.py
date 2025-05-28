@@ -101,7 +101,6 @@ class Sequence:
                 detuning=self._detuning * other._detuning,
                 phase=self._phase,
             )
-
         else:
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
