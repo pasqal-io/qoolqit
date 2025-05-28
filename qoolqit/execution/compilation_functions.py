@@ -88,8 +88,9 @@ def compile_to_analog_device(
         TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
 
     rounded_duration = int(sequence.duration * TIME)
-    remainder = rounded_duration % 4
-    converted_duration = rounded_duration + (4 - remainder) if remainder != 0 else rounded_duration
+    cp = device._device.clock_period
+    rm = rounded_duration % cp
+    converted_duration = rounded_duration + (cp - rm) if rm != 0 else rounded_duration
 
     pulser_pulse = _build_pulse(sequence, converted_duration, TIME, ENERGY)
     pulser_register = _build_register(register, DISTANCE)

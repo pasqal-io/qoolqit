@@ -14,9 +14,9 @@ class Ramp(Waveform):
     """A ramp that linearly interpolates between an initial and final value.
 
     Arguments:
-        duration: the total duration
-        initial_value: the initial value at t = 0
-        final_value: the final value at t = duration
+        duration: the total duration.
+        initial_value: the initial value at t = 0.
+        final_value: the final value at t = duration.
     """
 
     def __init__(
@@ -42,8 +42,8 @@ class Constant(Waveform):
     """A constant waveform over a given duration.
 
     Arguments:
-        duration: the total duration
-        value: the value to take during the duration
+        duration: the total duration.
+        value: the value to take during the duration.
     """
 
     def __init__(

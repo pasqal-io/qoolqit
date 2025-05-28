@@ -14,11 +14,13 @@ from .utils import CompilerProfile
 COMPILATION_FUNCTIONS = {
     AvailableDevices.MOCK.value: compile_to_mock_device,
     AvailableDevices.ANALOG.value: compile_to_analog_device,
+    AvailableDevices.TEST_ANALOG.value: compile_to_analog_device,
 }
 
 SUPPORTED_PROFILES = {
     AvailableDevices.MOCK.value: [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
     AvailableDevices.ANALOG.value: [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
+    AvailableDevices.TEST_ANALOG.value: [CompilerProfile.DEFAULT, CompilerProfile.MAX_DURATION],
 }
 
 

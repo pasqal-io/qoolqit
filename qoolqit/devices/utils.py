@@ -7,3 +7,4 @@ class AvailableDevices(StrEnum):
 
     MOCK = "MockDevice"
     ANALOG = "AnalogDevice"
+    TEST_ANALOG = "TestAnalogDevice"

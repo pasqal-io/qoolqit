@@ -3,10 +3,9 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from math import pi
 
-from pulser.devices import AnalogDevice as _AnalogDevice
-from pulser.devices import MockDevice as _MockDevice
 from pulser.devices._device_datacls import BaseDevice
 
+from ._pulser_devices import _AnalogDevice, _MockDevice, _TestAnalogDevice
 from .unit_converter import UnitConverter
 
 UPPER_DURATION = 6000
@@ -91,9 +90,29 @@ class MockDevice(Device):
 class AnalogDevice(Device):
     """A realistic device with constraints mimicking a real QPU."""
 
+    def __init__(self) -> None:
+        self._clock_period = self._device.channels["rydberg_global"].clock_period
+        super().__init__()
+
     @property
     def _device(self) -> BaseDevice:
         return _AnalogDevice
+
+    @property
+    def _default_converter(self) -> UnitConverter:
+        return UnitConverter.from_energy(self._C6, self._max_amp)
+
+
+class TestAnalogDevice(Device):
+    """A realistic device with constraints mimicking a real QPU."""
+
+    def __init__(self) -> None:
+        self._clock_period = self._device.channels["rydberg_global"].clock_period
+        super().__init__()
+
+    @property
+    def _device(self) -> BaseDevice:
+        return _TestAnalogDevice
 
     @property
     def _default_converter(self) -> UnitConverter:
