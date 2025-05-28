@@ -39,7 +39,7 @@ class Ramp(Waveform):
 
 
 class Constant(Waveform):
-    """A constant value over a given duration over a given duration.
+    """A constant waveform over a given duration.
 
     Arguments:
         duration: the total duration
