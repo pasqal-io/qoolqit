@@ -23,7 +23,16 @@ SUPPORTED_PROFILES = {
 
 
 class SequenceCompiler:
+    """Compiles a QoolQit Register and Sequence to a Device."""
+
     def __init__(self, register: Register, sequence: Sequence, device: Device):
+        """Initializes the compiler.
+
+        Arguments:
+            register: the QoolQit Register.
+            sequence: the QoolQit Sequence.
+            device: the QoolQit Device.
+        """
 
         self._register = register
         self._sequence = sequence
@@ -32,7 +41,6 @@ class SequenceCompiler:
         self._target_device = device._device
 
         self._compilation_function: Callable | None = COMPILATION_FUNCTIONS.get(device.name, None)
-
         self._profile = CompilerProfile.DEFAULT
 
     @property
@@ -49,6 +57,7 @@ class SequenceCompiler:
 
     @property
     def profile(self) -> CompilerProfile:
+        """The compiler profile to use."""
         return self._profile
 
     @profile.setter

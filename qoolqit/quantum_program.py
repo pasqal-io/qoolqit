@@ -11,7 +11,7 @@ __all__ = ["QuantumProgram"]
 
 
 class QuantumProgram:
-    """A program applying a continuous Sequence on a Register of qubits.
+    """A program representing a Sequence acting on a Register of qubits.
 
     Arguments:
         register: the Register of qubits.
