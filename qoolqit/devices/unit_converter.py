@@ -104,5 +104,5 @@ class UnitConverter:
         return _factors_from_energy(self.C6, energy)
 
     def factors_from_distance(self, distance: float) -> tuple[float, ...]:
-        """Get factors from a different reference energy than the one set."""
+        """Get factors from a different reference distance than the one set."""
         return _factors_from_distance(self.C6, distance)
