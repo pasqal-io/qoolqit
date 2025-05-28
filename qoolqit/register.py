@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from math import ceil
-from typing import Any
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
-from pulser.register import Register as _Register
+from pulser.register import Register as PulserRegister
 
 from qoolqit.graphs import DataGraph
 
@@ -13,9 +12,15 @@ __all__ = ["Register"]
 
 
 class Register:
+    """The Register in QoolQit, representing a set of qubits with coordinates."""
 
     def __init__(self, qubits: dict) -> None:
-        self._register = _Register(qubits)
+        """Default constructor for the Register.
+
+        Arguments:
+            qubits: a dictionary of qubits and respective coordinates {q: (x, y), ...}.
+        """
+        self._register = PulserRegister(qubits)
         self._qubits: dict = self._register.qubits
 
     @classmethod
@@ -33,28 +38,32 @@ class Register:
 
     @classmethod
     def from_coordinates(cls, coords: list) -> Register:
-        pulser_register = _Register.from_coordinates(coords)
+        """Initializes a Register from a list of coordinates.
+
+        Arguments:
+            coords: a list of coordinates [(x, y), ...]
+        """
+        pulser_register = PulserRegister.from_coordinates(coords)
         return cls(pulser_register.qubits)
 
     @property
     def qubits(self) -> dict:
+        """Returns the dictionary of qubits and respective coordinates."""
         return self._qubits
 
     @property
     def n_qubits(self) -> int:
+        """Number of qubits in the Register."""
         return len(self.qubits)
 
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
 
-    def draw(self, return_fig: bool = False, *args: Any, **kwargs: Any) -> plt.Figure | None:
-        """Draw the graph.
-
-        Uses the draw_networkx function from NetworkX.
+    def draw(self, return_fig: bool = False) -> plt.Figure | None:
+        """Draw the register.
 
         Arguments:
-            *args: arguments to pass to draw_networkx.
-            **kwargs: keyword-arguments to pass to draw_networkx.
+            return_fig: boolean argument to return the plt.Figure instance.
         """
         fig, ax = plt.subplots(1, 1, figsize=(4, 4), dpi=150)
         ax.set_aspect("equal")

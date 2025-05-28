@@ -11,13 +11,27 @@ __all__ = ["Sequence"]
 
 
 class Sequence:
+    """A Sequence representing the drive Hamiltonian acting over a duration."""
+
     def __init__(
         self,
         *args: Any,
         amplitude: Waveform | None = None,
         detuning: Waveform | None = None,
         phase: float = 0.0,
+        # FIXME: Properly support changing the phase value.
+        # Probably needs to be a waveform...
     ) -> None:
+        """Default constructor for the Sequence.
+
+        Must be instantiated with keyword arguments. Accepts either an amplitude waveform,
+        a detuning waveform, or both. A phase value can also be passed.
+
+        Arguments:
+            amplitude: waveform representing Ω(t) in the drive Hamiltonian.
+            detuning: waveform representing δ(t) in the drive Hamiltonian.
+            phase: phase value ɸ for the amplitude term.
+        """
 
         if len(args) > 0:
             raise TypeError("Please pass the `amplitude` and / or `detuning` as keyword arguments.")
@@ -61,19 +75,35 @@ class Sequence:
 
     @property
     def amplitude(self) -> Waveform:
+        """The amplitude waveform in the sequence."""
         return self._amplitude_orig
 
     @property
     def detuning(self) -> Waveform:
+        """The detuning waveform in the sequence."""
         return self._detuning_orig
 
     @property
     def phase(self) -> float:
+        """The phase value in the sequence."""
         return self._phase
 
     @property
     def duration(self) -> float:
         return self._duration
+
+    def __mul__(self, other: Sequence) -> Sequence:
+        if isinstance(other, Sequence):
+            if self.phase != other.phase:
+                raise NotImplementedError("Composing sequences with different phase not supported.")
+            return Sequence(
+                amplitude=self._amplitude * other._amplitude,
+                detuning=self._detuning * other._detuning,
+                phase=self._phase,
+            )
+
+        else:
+            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
     def _amplitude_header(self) -> str:
         return "Amplitude: \n"

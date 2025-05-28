@@ -126,7 +126,7 @@ class CompositeWaveform(Waveform):
                 return CompositeWaveform(*self.waveforms, *other.waveforms)
             return CompositeWaveform(*self.waveforms, other)
         else:
-            raise NotImplementedError
+            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
     def _repr_header(self) -> str:
         return "Composite waveform:\n"
