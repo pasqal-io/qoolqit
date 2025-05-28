@@ -43,14 +43,31 @@ class QuantumProgram:
         return self._sequence
 
     @property
+    def is_compiled(self) -> bool:
+        """Check if the program has been compiled."""
+        return False if self._compiled_sequence is None else True
+
+    @property
     def compiled_sequence(self) -> PulserSequence:
         """The Pulser sequence compiled to a specific device."""
-        if self._compiled_sequence is None:
+        if not self.is_compiled:
             raise ValueError(
                 "Program has not been compiled. Please call program.compile_to(device)."
             )
         else:
             return self._compiled_sequence
+
+    def __repr__(self) -> str:
+        header = "Quantum Program:\n"
+        register = f"| {self._register.__repr__()}\n"
+        sequence = f"| Sequence(duration = {self._sequence.duration:.3g})\n"
+        if self.is_compiled:
+            compiled = f"| Compiled: {self.is_compiled}\n"
+            device = f"| Device: {self._device.__repr__()}"
+        else:
+            compiled = f"| Compiled: {self.is_compiled}"
+            device = ""
+        return header + register + sequence + compiled + device
 
     def compile_to(
         self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT

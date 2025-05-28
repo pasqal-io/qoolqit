@@ -43,7 +43,7 @@ class Register:
         Arguments:
             coords: a list of coordinates [(x, y), ...]
         """
-        pulser_register = PulserRegister.from_coordinates(coords)
+        pulser_register = PulserRegister.from_coordinates(coords, center=False)
         return cls(pulser_register.qubits)
 
     @property
@@ -72,8 +72,8 @@ class Register:
         x_min, x_max = min(x_coords), max(x_coords)
         y_min, y_max = min(y_coords), max(y_coords)
 
-        grid_x_min, grid_x_max = min(-1, x_min), max(1, x_max)
-        grid_y_min, grid_y_max = min(-1, y_min), max(1, y_max)
+        grid_x_min, grid_x_max = min(0, x_min), max(1, x_max)
+        grid_y_min, grid_y_max = min(0, y_min), max(1, y_max)
 
         grid_scale = ceil(max(grid_x_max - grid_x_min, grid_y_max - grid_y_min))
 
