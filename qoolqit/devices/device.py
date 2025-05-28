@@ -15,11 +15,11 @@ UPPER_DET = 4.0 * pi
 
 
 class Device(ABC):
-    """Abstract base class for any Device in QoolQit.
+    """Abstract base class for a Device in QoolQit.
 
     The device in QoolQit holds a Pulser device, and all the logic is based on that.
-    Defining a new device for usage in QoolQit should be done by inheriting from this
-    and overriding the `_device` private property with the corresponding Pulser device.
+    Defining a new device for usage in QoolQit should be done by inheriting from this base
+    class and overriding the `_device` private property with the corresponding Pulser device.
     """
 
     def __init__(self) -> None:

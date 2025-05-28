@@ -19,8 +19,6 @@ class Sequence:
         amplitude: Waveform | None = None,
         detuning: Waveform | None = None,
         phase: float = 0.0,
-        # FIXME: Properly support changing the phase value.
-        # Probably needs to be a waveform...
     ) -> None:
         """Default constructor for the Sequence.
 

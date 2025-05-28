@@ -31,7 +31,7 @@ class UnitConverter:
     on the interaction coeffiecient C6. The converter checks the following invariants, based on the
     units used by Pulser:
 
-    Invariants:
+    Conversion invariants:
     1. TIME * ENERGY = 1000 ( <=> TIME = 1000 / ENERGY )
     2. DISTANCE^6 * ENERGY = C6 ( <=> ENERGY = C6 / (DISTANCE ^ 6) )
     """
@@ -52,6 +52,7 @@ class UnitConverter:
             )
 
     def validate_factors(self, time: float, energy: float, distance: float) -> bool:
+        """Returns True if the conversion invariants are respected."""
         time_energy_inv = time * energy
         energy_dist_inv = (distance**6) * energy
         return isclose(time_energy_inv, 1000.0) and isclose(energy_dist_inv, self.C6)
