@@ -1,0 +1,3 @@
+# Writing a sequence of waveforms
+
+SEQUENCES
