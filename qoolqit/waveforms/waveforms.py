@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+
 from .base_waveforms import CompositeWaveform, Waveform
 
 
@@ -109,3 +111,52 @@ class PiecewiseLinear(CompositeWaveform):
 
     def _repr_header(self) -> str:
         return "Piecewise linear waveform:\n"
+
+
+class Sin(Waveform):
+    """An arbitrary sine over a given duration.
+
+    Arguments:
+        duration: the total duration.
+        amplitude: the amplitude of the sine wave.
+        omega: the frequency of the sine wave.
+        phi: the phase of the sine wave.
+        shift: the vertical shift of the sine wave.
+    """
+
+    def __init__(
+        self,
+        duration: float,
+        amplitude: float = 1.0,
+        omega: float = 1.0,
+        phi: float = 0.0,
+        shift: float = 0.0,
+    ) -> None:
+        super().__init__(duration)
+        self.amplitude = amplitude
+        self.omega = omega
+        self.phi = phi
+        self.shift = shift
+
+    def function(self, t: float) -> float:
+        return self.amplitude * math.sin(self.omega * t + self.phi) + self.shift
+
+    def max(self) -> float:
+        global_max = abs(self.amplitude) + self.shift
+        target_theta = math.pi / 2 if self.amplitude >= 0 else 3 * math.pi / 2
+        theta_at_0 = self.omega * 0 + self.phi
+        theta_at_dur = self.omega * self.duration + self.phi
+        min_theta = min(theta_at_0, theta_at_dur)
+        max_theta = max(theta_at_0, theta_at_dur)
+        k_candidate = math.ceil((min_theta - target_theta) / (2 * math.pi))
+        if target_theta + 2 * k_candidate * math.pi <= max_theta:
+            return global_max
+        else:
+            value_at_0: float = self(0.0)  # type: ignore [assignment]
+            value_at_dur: float = self(self.duration)  # type: ignore [assignment]
+            return max(value_at_0, value_at_dur)
+
+    def _repr_content(self) -> str:
+        params = [str(self.amplitude), str(self.omega), str(self.phi), str(self.shift)]
+        string = ", ".join(params)
+        return self.__class__.__name__ + "(" + string + ")"

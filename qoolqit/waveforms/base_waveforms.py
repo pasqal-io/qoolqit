@@ -57,7 +57,6 @@ class Waveform(ABC):
             value_array: list[float] | np.ndarray
             if isinstance(t, np.ndarray):
                 value_array = np.array([self.__single_call__(ti) for ti in t])
-                return
             elif isinstance(t, list):
                 value_array = [self.__single_call__(ti) for ti in t]
             else:
