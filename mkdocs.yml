@@ -14,6 +14,7 @@ nav:
       - Registers: contents/registers.md
       - Waveforms: contents/waveforms.md
       - Sequences: contents/sequences.md
+      - Devices: contents/devices.md
       - Quantum programs: contents/programs.md
   - Tutorials:
     - Amazing tutorial: tutorials/placeholder.md

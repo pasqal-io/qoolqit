@@ -1,3 +1,35 @@
 # Initializing quantum devices
 
-DEVICES
+Each `Device` in QoolQit wraps a Pulser device and defines the hardware characteristics that the program will be compiled to and later executed on.
+
+```python exec="on" source="material-block" session="devices"
+from qoolqit import MockDevice, AnalogDevice
+
+# An example of an ideal device
+device_ideal = MockDevice()
+
+# An example of a real device
+device_real = AnalogDevice()
+```
+
+Each device has a default unit converter.
+```python exec="on" source="material-block" result="json" session="devices"
+
+device_real.converter
+
+print(device_real.converter)  # markdown-exec: hide
+```
+
+Customizing the unit conversion factors is possible
+
+```python exec="on" source="material-block" result="json" session="devices"
+
+device_real.set_time_unit(1.0)
+print(device_real.converter)  # markdown-exec: hide
+
+device_real.set_energy_unit(1.0)
+print(device_real.converter)  # markdown-exec: hide
+
+device_real.set_distance_unit(1.0)
+print(device_real.converter)  # markdown-exec: hide
+```
