@@ -52,9 +52,19 @@ class Waveform(ABC):
     def __single_call__(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
 
-    def __call__(self, t: float | Iterable) -> float | list[float]:
+    def __call__(self, t: float | Iterable) -> float | list[float] | np.ndarray:
         if isinstance(t, Iterable):
-            return [self.__single_call__(ti) for ti in t]
+            value_array: list[float] | np.ndarray
+            if isinstance(t, np.ndarray):
+                value_array = np.array([self.__single_call__(ti) for ti in t])
+                return
+            elif isinstance(t, list):
+                value_array = [self.__single_call__(ti) for ti in t]
+            else:
+                raise TypeError(
+                    "Waveform array calling is supported on Python lists or NumPy arrays."
+                )
+            return value_array
         else:
             return self.__single_call__(t)
 

@@ -9,6 +9,7 @@ nav:
     - Rydberg Analog Model: getting_started/rydberg_model.md
   - Contents:
     - Graphs: contents/graphs.md
+    - Waveforms: contents/waveforms.md
   - Tutorials:
     - Amazing tutorial: tutorials/placeholder.md
   - Reference: $api/qoolqit.***
