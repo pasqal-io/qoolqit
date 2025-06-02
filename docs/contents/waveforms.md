@@ -4,6 +4,8 @@ An essential part of writing programs in the Rydberg analog model is to write th
 
 ## Base waveforms
 
+A full list of the available waveforms can be found in the [API reference](../api/qoolqit/waveforms/waveforms.md).
+
 ```python exec="on" source="material-block" result="json" session="waveforms"
 from qoolqit import Constant, Ramp, Delay
 
@@ -15,6 +17,7 @@ wf2 = Constant(1.0, 2.0)
 
 # A waveform that ramps linearly between two values
 wf3 = Ramp(1.0, -1.0, 1.0)
+
 
 print(wf1)  # markdown-exec: hide
 print(wf2)  # markdown-exec: hide
@@ -112,11 +115,14 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 ## Defining custom waveforms
 
-The waveform system of QoolQit can be easily extended by subclassing the `Waveform` class and defining some key properties and methods. To exemplify this we will create a waveform representing an arbitary sine function,
+The waveform system of QoolQit can be easily extended by subclassing the `Waveform` class and defining some key properties and methods. To exemplify this we will create a waveform representing a simple shifted sine function,
 
 $$
-    \text{Sin}(t)_{A,\omega,\phi,D} \equiv A * \sin(\omega t + \phi) + D
+    \text{Sin}(t)_{\omega, C} \equiv \sin(\omega t) + C
 $$
+
+For simplicity we consider a positive frequency
+
 
 ```python exec="on" source="material-block" session="waveforms"
 from qoolqit.waveforms import Waveform
@@ -124,49 +130,37 @@ from qoolqit.waveforms import Waveform
 import math
 
 class Sin(Waveform):
-    """An arbitrary sine over a given duration.
+    """An simple sine over a given duration.
 
     Arguments:
         duration: the total duration.
-        amplitude: the amplitude of the sine wave.
         omega: the frequency of the sine wave.
-        phi: the phase of the sine wave.
         shift: the vertical shift of the sine wave.
     """
 
     def __init__(
         self,
         duration: float,
-        amplitude: float = 1.0,
         omega: float = 1.0,
-        phi: float = 0.0,
         shift: float = 0.0,
     ) -> None:
         super().__init__(duration)
-        self.amplitude = amplitude
+        if omega <= 0.0:
+            raise ValueError("Only positive frequency allowed.")
         self.omega = omega
-        self.phi = phi
         self.shift = shift
 
     def function(self, t: float) -> float:
-        return self.amplitude * math.sin(self.omega * t + self.phi) + self.shift
+        return math.sin(self.omega * t) + self.shift
 
     def max(self) -> float:
-        global_max = abs(self.amplitude) + self.shift
-        target_theta = math.pi / 2 if self.amplitude >= 0 else 3 * math.pi / 2
-        theta_at_0 = self.omega * 0 + self.phi
-        theta_at_dur = self.omega * self.duration + self.phi
-        min_theta = min(theta_at_0, theta_at_dur)
-        max_theta = max(theta_at_0, theta_at_dur)
-        k_candidate = math.ceil((min_theta - target_angle_base) / (2 * math.pi))
-        if target_theta + 2 * k_candidate * math.pi <= max_theta:
-            return global_max
+        if self.duration >= math.pi / (2 + self.omega):
+            return 1.0 + self.shift
         else:
-            return max(self(0.0), self(self.duration))
+            return self(self.duration)
 
     def _repr_content(self) -> str:
-        params = [str(self.amplitude), str(self.omega), str(self.phi), str(self.shift)]
-        string = ", ".join(params)
+        string = ", ".join([str(self.omega), str(self.shift)])
         return self.__class__.__name__ + "(" + string + ")"
 ```
 
@@ -187,7 +181,6 @@ import math
 
 wf1 = Sin(
     duration = 1.0,
-    amplitude = 1.0,
     omega = 2.0 * math.pi,
     shift = 1.0
 )
@@ -209,6 +202,44 @@ from docs.utils import fig_to_html # markdown-exec: hide
 wf_comp.draw()
 
 fig = wf_comp.draw(return_fig = True) # markdown-exec: hide
+plt.tight_layout() # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+```
+
+Following this example, more complete `Sin` waveform is directly available in QoolQit implementing
+
+$$
+    \text{Sin}(t)_{A, \omega, \phi, C} \equiv A * \sin(\omega t + \phi) + C
+$$
+
+```python exec="on" source="material-block" result="json" session="waveforms"
+from qoolqit import Sin
+
+wf = Sin(
+    duration = 1.0,
+    amplitude = 2.0,
+    omega = 6.0,
+    phi = -5.0,
+    shift = 1.0,
+)
+
+wf.max()
+
+print(wf) # markdown-exec: hide
+
+print("Maximum value: ", wf.max()) # markdown-exec: hide
+
+
+
+```
+
+```python exec="on" source="material-block" html="1" session="waveforms"
+import matplotlib.pyplot as plt # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
+
+wf.draw()
+
+fig = wf.draw(return_fig = True) # markdown-exec: hide
 plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
