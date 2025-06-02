@@ -8,13 +8,13 @@ from qoolqit.devices import AvailableDevices, Device
 from qoolqit.register import Register
 from qoolqit.sequence import Sequence
 
-from .compilation_functions import compile_to_analog_device, compile_to_mock_device
+from .compilation_functions import basic_compilation
 from .utils import CompilerProfile
 
 COMPILATION_FUNCTIONS = {
-    AvailableDevices.MOCK.value: compile_to_mock_device,
-    AvailableDevices.ANALOG.value: compile_to_analog_device,
-    AvailableDevices.TEST_ANALOG.value: compile_to_analog_device,
+    AvailableDevices.MOCK.value: basic_compilation,
+    AvailableDevices.ANALOG.value: basic_compilation,
+    AvailableDevices.TEST_ANALOG.value: basic_compilation,
 }
 
 ALL_COMPILER_PROFILES: set = set(CompilerProfile.list())

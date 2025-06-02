@@ -45,7 +45,7 @@ def _build_pulse(
     return PulserPulse(amp_wf, det_wf, sequence.phase)
 
 
-def compile_to_mock_device(
+def basic_compilation(
     register: Register,
     sequence: Sequence,
     device: Device,
@@ -65,46 +65,17 @@ def compile_to_mock_device(
     else:
         raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
 
-    converted_duration = int(sequence.duration * TIME)
-
-    pulser_pulse = _build_pulse(sequence, converted_duration, TIME, ENERGY)
-    pulser_register = _build_register(register, DISTANCE)
-
-    pulser_sequence = PulserSequence(pulser_register, TARGET_DEVICE)
-    pulser_sequence.declare_channel("ising", "rydberg_global")
-    pulser_sequence.add(pulser_pulse, "ising")
-
-    return pulser_sequence
-
-
-def compile_to_analog_device(
-    register: Register,
-    sequence: Sequence,
-    device: Device,
-    profile: CompilerProfile,
-) -> PulserSequence:
-
-    TARGET_DEVICE = device._device
-
-    if profile == CompilerProfile.DEFAULT:
-        TIME, ENERGY, DISTANCE = device.converter.factors
-    elif profile == CompilerProfile.MAX_DURATION:
-        TIME = (device._max_duration) / sequence.duration
-        TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
-    elif profile == CompilerProfile.MAX_AMPLITUDE:
-        ENERGY = (device._max_amp) / sequence.amplitude.max()
-        TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
-    else:
-        raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
-
+    # Duration as multiple of clock period
     rounded_duration = int(sequence.duration * TIME)
     cp = device._clock_period
     rm = rounded_duration % cp
     converted_duration = rounded_duration + (cp - rm) if rm != 0 else rounded_duration
 
+    # Build pulse and register
     pulser_pulse = _build_pulse(sequence, converted_duration, TIME, ENERGY)
     pulser_register = _build_register(register, DISTANCE)
 
+    # Create sequence
     pulser_sequence = PulserSequence(pulser_register, TARGET_DEVICE)
     pulser_sequence.declare_channel("ising", "rydberg_global")
     pulser_sequence.add(pulser_pulse, "ising")
