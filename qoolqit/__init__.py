@@ -3,16 +3,16 @@ from __future__ import annotations
 from importlib import import_module
 
 from .devices import *
+from .drive import *
 from .execution import *
 from .graphs import *
 from .quantum_program import *
 from .register import *
-from .sequence import *
 from .waveforms import *
 
 list_of_submodules = [
     ".graphs",
-    ".sequence",
+    ".drive",
     ".devices",
     ".waveforms",
     ".register",
