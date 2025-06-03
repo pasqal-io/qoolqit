@@ -17,7 +17,7 @@ def _factors_from_energy(C6: float, energy: float) -> tuple[float, ...]:
 
 
 def _factors_from_distance(C6: float, distance: float) -> tuple[float, ...]:
-    energy = C6 / distance
+    energy = C6 / (distance**6)
     time = 1000.0 / energy
     return time, energy, distance
 
