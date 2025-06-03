@@ -6,8 +6,8 @@ from pulser import Register as PulserRegister
 from pulser import Sequence as PulserSequence
 
 from qoolqit.devices import Device
+from qoolqit.drive import Drive
 from qoolqit.register import Register
-from qoolqit.sequence import Sequence
 
 from .utils import CompilerProfile
 
@@ -19,10 +19,8 @@ def _build_register(register: Register, distance: float) -> PulserRegister:
     return PulserRegister(coords_pulser)
 
 
-def _build_pulse(
-    sequence: Sequence, converted_duration: int, time: float, energy: float
-) -> PulserPulse:
-    """Builds a Pulser Pulse from a QoolQit Sequence."""
+def _build_pulse(drive: Drive, converted_duration: int, time: float, energy: float) -> PulserPulse:
+    """Builds a Pulser Pulse from a QoolQit Drive."""
 
     # Converted duration is an integer value in nanoseconds
     # Pulser requires a sample value for each nanosecond.
@@ -32,8 +30,8 @@ def _build_pulse(
     time_array_qoolqit = [t / time for t in time_array_pulser]
 
     # Evaluate the waveforms at each time step
-    amp_values_qoolqit = sequence.amplitude(time_array_qoolqit)
-    det_values_qoolqit = sequence.detuning(time_array_qoolqit)
+    amp_values_qoolqit = drive.amplitude(time_array_qoolqit)
+    det_values_qoolqit = drive.detuning(time_array_qoolqit)
 
     # Convert the waveform values
     amp_values_pulser = [amp * energy for amp in amp_values_qoolqit]  # type: ignore [union-attr]
@@ -42,12 +40,12 @@ def _build_pulse(
     amp_wf = PulserCustomWaveform(amp_values_pulser)
     det_wf = PulserCustomWaveform(det_values_pulser)
 
-    return PulserPulse(amp_wf, det_wf, sequence.phase)
+    return PulserPulse(amp_wf, det_wf, drive.phase)
 
 
 def basic_compilation(
     register: Register,
-    sequence: Sequence,
+    drive: Drive,
     device: Device,
     profile: CompilerProfile,
 ) -> PulserSequence:
@@ -57,22 +55,22 @@ def basic_compilation(
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
     elif profile == CompilerProfile.MAX_DURATION:
-        TIME = (device._max_duration) / sequence.duration
+        TIME = (device._max_duration) / drive.duration
         TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
     elif profile == CompilerProfile.MAX_AMPLITUDE:
-        ENERGY = (device._max_amp) / sequence.amplitude.max()
+        ENERGY = (device._max_amp) / drive.amplitude.max()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
     else:
         raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
 
     # Duration as multiple of clock period
-    rounded_duration = int(sequence.duration * TIME)
+    rounded_duration = int(drive.duration * TIME)
     cp = device._clock_period
     rm = rounded_duration % cp
     converted_duration = rounded_duration + (cp - rm) if rm != 0 else rounded_duration
 
     # Build pulse and register
-    pulser_pulse = _build_pulse(sequence, converted_duration, TIME, ENERGY)
+    pulser_pulse = _build_pulse(drive, converted_duration, TIME, ENERGY)
     pulser_register = _build_register(register, DISTANCE)
 
     # Create sequence

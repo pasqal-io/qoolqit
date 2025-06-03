@@ -5,8 +5,8 @@ from typing import Callable
 from pulser import Sequence as PulserSequence
 
 from qoolqit.devices import AvailableDevices, Device
+from qoolqit.drive import Drive
 from qoolqit.register import Register
-from qoolqit.sequence import Sequence
 
 from .compilation_functions import basic_compilation
 from .utils import CompilerProfile
@@ -27,19 +27,19 @@ SUPPORTED_PROFILES = {
 
 
 class SequenceCompiler:
-    """Compiles a QoolQit Register and Sequence to a Device."""
+    """Compiles a QoolQit Register and Drive to a Device."""
 
-    def __init__(self, register: Register, sequence: Sequence, device: Device):
+    def __init__(self, register: Register, drive: Drive, device: Device):
         """Initializes the compiler.
 
         Arguments:
             register: the QoolQit Register.
-            sequence: the QoolQit Sequence.
+            drive: the QoolQit Drive.
             device: the QoolQit Device.
         """
 
         self._register = register
-        self._sequence = sequence
+        self._drive = drive
         self._device = device
 
         self._target_device = device._device
@@ -52,8 +52,8 @@ class SequenceCompiler:
         return self._register
 
     @property
-    def sequence(self) -> Sequence:
-        return self._sequence
+    def drive(self) -> Drive:
+        return self._drive
 
     @property
     def device(self) -> Device:
@@ -88,7 +88,7 @@ class SequenceCompiler:
         else:
             return self._compilation_function(
                 self.register,
-                self.sequence,
+                self.drive,
                 self.device,
                 self.profile,
             )

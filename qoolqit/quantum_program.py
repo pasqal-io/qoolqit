@@ -6,9 +6,9 @@ from pulser import Sequence as PulserSequence
 from pulser_simulation import QutipEmulator
 
 from qoolqit.devices import Device, MockDevice
+from qoolqit.drive import Drive
 from qoolqit.execution import CompilerProfile, SequenceCompiler
 from qoolqit.register import Register
-from qoolqit.sequence import Sequence
 
 __all__ = ["QuantumProgram"]
 
@@ -24,12 +24,12 @@ class QuantumProgram:
     def __init__(
         self,
         register: Register,
-        sequence: Sequence,
+        drive: Drive,
     ) -> None:
 
         self._register = register
-        self._sequence = sequence
-        self._compiled_sequence: Sequence | None = None
+        self._drive = drive
+        self._compiled_sequence: PulserSequence | None = None
         self._device: Device | None = None
 
     @property
@@ -38,9 +38,9 @@ class QuantumProgram:
         return self._register
 
     @property
-    def sequence(self) -> Sequence:
-        """The sequence of waveforms."""
-        return self._sequence
+    def drive(self) -> Drive:
+        """The driving waveforms."""
+        return self._drive
 
     @property
     def is_compiled(self) -> bool:
@@ -60,14 +60,14 @@ class QuantumProgram:
     def __repr__(self) -> str:
         header = "Quantum Program:\n"
         register = f"| {self._register.__repr__()}\n"
-        sequence = f"| Sequence(duration = {self._sequence.duration:.3g})\n"
+        drive = f"| Drive(duration = {self._drive.duration:.3g})\n"
         if self.is_compiled:
             compiled = f"| Compiled: {self.is_compiled}\n"
             device = f"| Device: {self._device.__repr__()}"
         else:
             compiled = f"| Compiled: {self.is_compiled}"
             device = ""
-        return header + register + sequence + compiled + device
+        return header + register + drive + compiled + device
 
     def compile_to(
         self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT
@@ -78,7 +78,7 @@ class QuantumProgram:
             device: the Device to compile to.
             profile: the compiler profile to use during compilation.
         """
-        compiler = SequenceCompiler(self.register, self.sequence, device)
+        compiler = SequenceCompiler(self.register, self.drive, device)
         compiler.profile = profile
         self._device = device
         self._compiled_sequence = compiler.compile_sequence()
@@ -90,9 +90,9 @@ class QuantumProgram:
                 "Program has not been compiled. Please call program.compile_to(device)."
             )
         elif self._device is not None:
-            modulation = not isinstance(self._device, MockDevice)
+            with_modulation = not isinstance(self._device, MockDevice)
             simulator = QutipEmulator.from_sequence(
-                self._compiled_sequence, with_modulation=modulation
+                self._compiled_sequence, with_modulation=with_modulation
             )
             result = simulator.run()
             return np.array([np.flip(result[i].state[:].flatten()) for i in range(len(result))])

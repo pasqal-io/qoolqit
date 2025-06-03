@@ -7,11 +7,11 @@ import numpy as np
 
 from qoolqit.waveforms import CompositeWaveform, Delay, Waveform
 
-__all__ = ["Sequence"]
+__all__ = ["Drive"]
 
 
-class Sequence:
-    """A Sequence representing the drive Hamiltonian acting over a duration."""
+class Drive:
+    """The drive Hamiltonian acting over a duration."""
 
     def __init__(
         self,
@@ -20,7 +20,7 @@ class Sequence:
         detuning: Waveform | None = None,
         phase: float = 0.0,
     ) -> None:
-        """Default constructor for the Sequence.
+        """Default constructor for the Drive.
 
         Must be instantiated with keyword arguments. Accepts either an amplitude waveform,
         a detuning waveform, or both. A phase value can also be passed.
@@ -73,28 +73,28 @@ class Sequence:
 
     @property
     def amplitude(self) -> Waveform:
-        """The amplitude waveform in the sequence."""
+        """The amplitude waveform in the drive."""
         return self._amplitude_orig
 
     @property
     def detuning(self) -> Waveform:
-        """The detuning waveform in the sequence."""
+        """The detuning waveform in the drive."""
         return self._detuning_orig
 
     @property
     def phase(self) -> float:
-        """The phase value in the sequence."""
+        """The phase value in the drive."""
         return self._phase
 
     @property
     def duration(self) -> float:
         return self._duration
 
-    def __mul__(self, other: Sequence) -> Sequence:
-        if isinstance(other, Sequence):
+    def __mul__(self, other: Drive) -> Drive:
+        if isinstance(other, Drive):
             if self.phase != other.phase:
-                raise NotImplementedError("Composing sequences with different phase not supported.")
-            return Sequence(
+                raise NotImplementedError("Composing drives with different phase not supported.")
+            return Drive(
                 amplitude=self._amplitude * other._amplitude,
                 detuning=self._detuning * other._detuning,
                 phase=self._phase,

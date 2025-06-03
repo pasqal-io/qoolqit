@@ -13,7 +13,7 @@ nav:
     - Writing a quantum program:
       - Registers: contents/registers.md
       - Waveforms: contents/waveforms.md
-      - Sequences: contents/sequences.md
+      - Drive Hamiltonian: contents/drives.md
       - Devices: contents/devices.md
       - Quantum programs: contents/programs.md
   - Tutorials:
