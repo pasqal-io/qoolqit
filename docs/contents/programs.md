@@ -20,15 +20,6 @@ program = QuantumProgram(register, drive)
 print(program) # markdown-exec: hide
 ```
 
-We can draw the drive to compare it with the compiled sequence later.
-```python exec="on" source="material-block" html="1" session="drives"
-import matplotlib.pyplot as plt # markdown-exec: hide
-from docs.utils import fig_to_html # markdown-exec: hide
-program.drive.draw()
-fig = program.drive.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
-print(fig_to_html(fig)) # markdown-exec: hide
-```
 At this point, the program has not been compiled to any device. As shown above, this is conveniently displayed
 when printing the program. It can also be checked through the `is_compiled` property.
 
@@ -53,6 +44,24 @@ Now that the program has been compiled, we can inspect the compiled sequence, wh
 
 ```python exec="on" source="material-block" html="1" session="drives"
 pulser_sequence = program.compiled_sequence
+```
+
+Finally, we can draw both the original program and the compiled sequence.
+
+```python exec="on" source="material-block" html="1" session="drives"
+import matplotlib.pyplot as plt # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
+program.draw()
+fig_original = program.draw(return_fig = True) # markdown-exec: hide
+plt.tight_layout() # markdown-exec: hide
+print(fig_to_html(fig_original)) # markdown-exec: hidee
+```
+
+```python exec="on" source="material-block" html="1" session="drives"
+program.draw(compiled = True)
+fig_compiled = program.draw(compiled = True, return_fig = True) # markdown-exec: hide
+plt.tight_layout() # markdown-exec: hide
+print(fig_to_html(fig_compiled)) # markdown-exec: hide
 ```
 
 ## Compiler profiles

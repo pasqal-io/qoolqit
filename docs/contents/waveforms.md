@@ -65,10 +65,10 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 ## Composite waveforms
 
-The most straightforward way to arbitrarily compose waveforms is to multiply them together. This will create a `CompositeWaveform` representing the waveforms in the order provided.
+The most straightforward way to arbitrarily compose waveforms is to use the `>>` operator. This will create a `CompositeWaveform` representing the waveforms in the order provided.
 
 ```python exec="on" source="material-block" result="json" session="waveforms"
-wf_comp = wf1 * wf2 * wf3
+wf_comp = wf2 >> wf2 >> wf3
 
 print(wf_comp)  # markdown-exec: hide
 ```
@@ -130,7 +130,7 @@ from qoolqit.waveforms import Waveform
 import math
 
 class Sin(Waveform):
-    """An simple sine over a given duration.
+    """A simple sine over a given duration.
 
     Arguments:
         duration: the total duration.
@@ -190,7 +190,7 @@ wf2 = PiecewiseLinear(
     values = [1.0, 1.0, 0.0],
 )
 
-wf_comp = wf1 * wf2
+wf_comp = wf1 >> wf2
 
 print(wf_comp)  # markdown-exec: hide
 ```

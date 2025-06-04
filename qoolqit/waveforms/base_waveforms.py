@@ -67,7 +67,10 @@ class Waveform(ABC):
         else:
             return self.__single_call__(t)
 
-    def __gt__(self, other: Waveform) -> CompositeWaveform:
+    def __rshift__(self, other: Waveform) -> CompositeWaveform:
+        return self.__rrshift__(other)
+
+    def __rrshift__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
             if isinstance(other, CompositeWaveform):
                 return CompositeWaveform(self, *other._waveforms)
@@ -95,7 +98,11 @@ class Waveform(ABC):
         ax.fill_between(t_array, y_array, color="skyblue", alpha=0.4)
         ax.set_xlabel("Time t")
         ax.set_ylabel("Waveform")
-        return fig if return_fig else None
+        if return_fig:
+            plt.close()
+            return fig
+        else:
+            return None
 
 
 class CompositeWaveform(Waveform):
@@ -162,7 +169,10 @@ class CompositeWaveform(Waveform):
         """Get the maximum value of the waveform."""
         return max([wf.max() for wf in self.waveforms])
 
-    def __gt__(self, other: Waveform) -> CompositeWaveform:
+    def __rshift__(self, other: Waveform) -> CompositeWaveform:
+        return self.__rrshift__(other)
+
+    def __rrshift__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
             if isinstance(other, CompositeWaveform):
                 return CompositeWaveform(*self.waveforms, *other.waveforms)

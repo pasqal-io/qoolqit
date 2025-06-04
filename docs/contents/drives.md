@@ -7,8 +7,8 @@ from qoolqit import Constant, Ramp
 from qoolqit import Drive
 
 # Defining two waveforms
-wf0 = Constant(0.5, 1.0) * Ramp(1.0, 0.0, 0.5)
-wf1 = Ramp(2.0, -1.0, 1.0) * Constant(1.0, 1.0)
+wf0 = Constant(0.5, 1.0) >> Ramp(1.0, 0.0, 0.5)
+wf1 = Ramp(2.0, -1.0, 1.0) >> Constant(1.0, 1.0)
 
 # Defining the drive
 drive = Drive(
@@ -17,7 +17,7 @@ drive = Drive(
 )
 
 # Expanding the drive through composition
-drive = drive * drive
+drive = drive >> drive
 
 print(drive)  # markdown-exec: hide
 ```

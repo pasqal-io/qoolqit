@@ -12,7 +12,7 @@ device_ideal = MockDevice()
 device_real = AnalogDevice()
 ```
 
-Each device has a default unit converter.
+Each device has a default unit converter. These are the factors that will be used when converting an adimensional program in the Rydberg analog model to the physical units of Pulser devices for hardware execution.
 ```python exec="on" source="material-block" result="json" session="devices"
 
 device_real.converter
@@ -24,12 +24,12 @@ Customizing the unit conversion factors is possible
 
 ```python exec="on" source="material-block" result="json" session="devices"
 
-device_real.set_time_unit(1.0)
+device_real.set_time_unit(50.0)
 print(device_real.converter)  # markdown-exec: hide
 
-device_real.set_energy_unit(1.0)
+device_real.set_energy_unit(10.0)
 print(device_real.converter)  # markdown-exec: hide
 
-device_real.set_distance_unit(1.0)
+device_real.set_distance_unit(6.0)
 print(device_real.converter)  # markdown-exec: hide
 ```

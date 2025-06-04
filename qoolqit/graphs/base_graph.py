@@ -306,4 +306,8 @@ class BaseGraph(nx.Graph):
         else:
             nx.draw_networkx(self, *args, ax=ax, **kwargs)
 
-        return fig if return_fig else None
+        if return_fig:
+            plt.close()
+            return fig
+        else:
+            return None

@@ -90,7 +90,10 @@ class Drive:
     def duration(self) -> float:
         return self._duration
 
-    def __gt__(self, other: Drive) -> Drive:
+    def __rshift__(self, other: Drive) -> Drive:
+        return self.__rrshift__(other)
+
+    def __rrshift__(self, other: Drive) -> Drive:
         if isinstance(other, Drive):
             if self.phase != other.phase:
                 raise NotImplementedError("Composing drives with different phase not supported.")
@@ -148,4 +151,8 @@ class Drive:
         ax[0].fill_between(t_array, y_amp, color="darkgreen", alpha=0.4)
         ax[1].fill_between(t_array, y_det, color="darkmagenta", alpha=0.4)
 
-        return fig if return_fig else None
+        if return_fig:
+            plt.close()
+            return fig
+        else:
+            return None

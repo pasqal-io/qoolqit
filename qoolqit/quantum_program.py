@@ -112,7 +112,11 @@ class QuantumProgram:
                     phase_modulated=False,
                 )
 
-                return fig if return_fig else None
+                if return_fig:
+                    plt.close()
+                    return fig
+                else:
+                    return None
 
     def run(self) -> ArrayLike:
         """Temporary method to run a simulation on QuTip."""

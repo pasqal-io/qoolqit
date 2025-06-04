@@ -97,4 +97,8 @@ class Register:
 
         ax.tick_params(axis="both", which="both", labelbottom=True, labelleft=True, labelsize=8)
 
-        return fig if return_fig else None
+        if return_fig:
+            plt.close()
+            return fig
+        else:
+            return None
