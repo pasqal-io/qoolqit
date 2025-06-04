@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, overload
+from typing import Any, cast, overload
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,6 +36,9 @@ class Waveform(ABC):
 
         self._duration = duration
 
+        self._max: float | None = None
+        self._min: float | None = None
+
     @property
     def duration(self) -> float:
         """Returns the duration of the waveform."""
@@ -46,6 +49,11 @@ class Waveform(ABC):
         """Evaluates the waveform function at a given time t."""
         ...
 
+    def _approximate_min_max(self) -> None:
+        t_array = np.linspace(0.0, self.duration, N_POINTS)
+        self._max = np.max(self(t_array)).item()
+        self._min = np.min(self(t_array)).item()
+
     def max(self) -> float:
         """Get the approximate maximum value of the waveform.
 
@@ -53,13 +61,22 @@ class Waveform(ABC):
         pre-defined number of points to find the maximum value in the
         duration. Custom waveforms that have an easy to compute
         maximum value should override this method.
-
-        Arguments:
-            n_points: number of points at which to sample.
         """
-        t_array = np.linspace(0.0, self.duration, N_POINTS)
-        value: float = np.max(self(t_array)).item()
-        return value
+        if self._max is None:
+            self._approximate_min_max()
+        return cast(float, self._max)
+
+    def min(self) -> float:
+        """Get the approximate minimum value of the waveform.
+
+        This is a brute-force method that samples the waveform over a
+        pre-defined number of points to find the minimum value in the
+        duration. Custom waveforms that have an easy to compute
+        maximum value should override this method.
+        """
+        if self._min is None:
+            self._approximate_min_max()
+        return cast(float, self._min)
 
     def __single_call__(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)

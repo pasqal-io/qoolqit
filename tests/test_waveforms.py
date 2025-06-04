@@ -31,6 +31,7 @@ def test_delay() -> None:
     assert wf.duration == duration
     assert wf(t_val) == 0.0
     assert wf.max() == 0.0
+    assert wf.min() == 0.0
 
 
 def test_constant() -> None:
@@ -47,6 +48,7 @@ def test_constant() -> None:
     assert wf(t_val) == value
     assert wf(duration + t_val) == 0.0
     assert wf.max() == value
+    assert wf.min() == value
 
     n_points = 10
     t_array = np.random.rand(n_points)
@@ -72,6 +74,7 @@ def test_ramp() -> None:
     value: float = wf(t_val)
     assert min_val <= value <= max_val
     assert wf.max() == max_val
+    assert wf.min() == min_val
 
 
 def test_sin() -> None:
@@ -91,8 +94,11 @@ def test_sin() -> None:
     n_points = 100
     t_array = t_array = np.random.uniform(low=-1.0, high=2.0, size=(n_points,))
     approx_max = wf.max()
+    approx_min = wf.min()
     random_samples_max = np.max(wf(t_array))
+    random_samples_min = np.min(wf(t_array))
     assert (approx_max > random_samples_max) or np.isclose(approx_max, random_samples_max)
+    assert (approx_min > random_samples_min) or np.isclose(approx_min, random_samples_min)
 
 
 @pytest.mark.parametrize("n_pieces", [3, 4, 5])
@@ -141,8 +147,11 @@ def test_waveform_composition(n_waveforms: int) -> None:
     n_points = 100
     t_array = np.random.uniform(low=-1.0, high=2.0 * duration * n_waveforms + 1.0, size=(n_points,))
     approx_max = wf.max()
+    approx_min = wf.min()
     random_samples_max = np.max(wf(t_array))
+    random_samples_min = np.min(wf(t_array))
     assert (approx_max > random_samples_max) or np.isclose(approx_max, random_samples_max)
+    assert (approx_min > random_samples_min) or np.isclose(approx_min, random_samples_min)
 
     with pytest.raises(TypeError):
         CompositeWaveform(wf, 1.0)  # type: ignore [arg-type]
