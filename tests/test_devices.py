@@ -1,37 +1,39 @@
 from __future__ import annotations
 
-import pytest
 import math
 import random
+from typing import Callable
+
+import pytest
 
 from qoolqit.devices import (
+    ALL_DEVICES,
+    AvailableDevices,
     UnitConverter,
 )
 
 
-def test_unit_converter() -> None:
+def _validate_invariants(c6: float, t: float, e: float, d: float) -> bool:
+    # Verify time-energy and energy-distance invariants
+    return math.isclose(t * e, 1000.0) and math.isclose(e * (d**6), c6)
 
+
+def test_unit_converter() -> None:
     # Some arbitrary value for the interaction coefficient
     # that would come from a real device.
     C6 = 5000.0 * random.random()
 
     with pytest.raises(ValueError):
         converter = UnitConverter(C6, random.random(), random.random(), random.random())
-    
+
     converter = UnitConverter.from_time(C6, 10.0 * random.random())
-    TIME, ENERGY, DISTANCE = converter.factors
-    assert math.isclose(TIME * ENERGY, 1000.0)  # time-energy invariant
-    assert math.isclose(ENERGY * (DISTANCE ** 6), C6)  # energy-distance invariant
+    assert _validate_invariants(C6, *converter.factors)
 
     converter = UnitConverter.from_energy(C6, 10.0 * random.random())
-    TIME, ENERGY, DISTANCE = converter.factors
-    assert math.isclose(TIME * ENERGY, 1000.0)  # time-energy invariant
-    assert math.isclose(ENERGY * (DISTANCE ** 6), C6)  # energy-distance invariant
+    assert _validate_invariants(C6, *converter.factors)
 
     converter = UnitConverter.from_distance(C6, 10.0 * random.random())
-    TIME, ENERGY, DISTANCE = converter.factors
-    assert math.isclose(TIME * ENERGY, 1000.0)  # time-energy invariant
-    assert math.isclose(ENERGY * (DISTANCE ** 6), C6)  # energy-distance invariant
+    assert _validate_invariants(C6, *converter.factors)
 
     converter.factors = converter.factors_from_time(10.0 * random.random())
     converter.factors = converter.factors_from_energy(10.0 * random.random())
@@ -44,3 +46,27 @@ def test_unit_converter() -> None:
     with pytest.raises(ValueError):
         # Factors that violate the invariants
         converter.factors = (random.random(), random.random(), random.random())
+
+
+@pytest.mark.parametrize("device_class", ALL_DEVICES)
+def test_device_init_and_units(device_class: Callable) -> None:
+    device = device_class()
+    assert device.name in AvailableDevices
+
+    TIME_ORIG, ENERGY_ORIG, DISTANCE_ORIG = device.converter.factors
+    assert _validate_invariants(device._C6, *device.converter.factors)
+
+    device.set_time_unit(10.0)
+    assert _validate_invariants(device._C6, *device.converter.factors)
+
+    device.set_energy_unit(10.0)
+    assert _validate_invariants(device._C6, *device.converter.factors)
+
+    device.set_distance_unit(10.0)
+    assert _validate_invariants(device._C6, *device.converter.factors)
+
+    device.reset_converter()
+    TIME_NEW, ENERGY_NEW, DISTANCE_NEW = device.converter.factors
+    assert TIME_ORIG == TIME_NEW
+    assert ENERGY_ORIG == ENERGY_NEW
+    assert DISTANCE_ORIG == DISTANCE_NEW

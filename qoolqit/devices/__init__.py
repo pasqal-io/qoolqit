@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .device import AnalogDevice, Device, MockDevice, TestAnalogDevice
+from .device import ALL_DEVICES, AnalogDevice, Device, MockDevice, TestAnalogDevice
 from .unit_converter import UnitConverter
 from .utils import AvailableDevices
 

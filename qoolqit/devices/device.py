@@ -116,3 +116,6 @@ class TestAnalogDevice(Device):
     @property
     def _default_converter(self) -> UnitConverter:
         return UnitConverter.from_energy(self._C6, self._max_amp)
+
+
+ALL_DEVICES = [MockDevice, AnalogDevice, TestAnalogDevice]
