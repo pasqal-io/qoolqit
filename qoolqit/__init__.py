@@ -6,7 +6,7 @@ from .devices import *
 from .drive import *
 from .execution import *
 from .graphs import *
-from .quantum_program import *
+from .program import *
 from .register import *
 from .waveforms import *
 
@@ -16,7 +16,7 @@ list_of_submodules = [
     ".devices",
     ".waveforms",
     ".register",
-    ".quantum_program",
+    ".program",
     ".execution",
 ]
 
