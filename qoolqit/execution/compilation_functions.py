@@ -34,8 +34,8 @@ def _build_pulse(drive: Drive, converted_duration: int, time: float, energy: flo
     det_values_qoolqit = drive.detuning(time_array_qoolqit)
 
     # Convert the waveform values
-    amp_values_pulser = [amp * energy for amp in amp_values_qoolqit]  # type: ignore [union-attr]
-    det_values_pulser = [det * energy for det in det_values_qoolqit]  # type: ignore [union-attr]
+    amp_values_pulser = [amp * energy for amp in amp_values_qoolqit]
+    det_values_pulser = [det * energy for det in det_values_qoolqit]
 
     amp_wf = PulserCustomWaveform(amp_values_pulser)
     det_wf = PulserCustomWaveform(det_values_pulser)

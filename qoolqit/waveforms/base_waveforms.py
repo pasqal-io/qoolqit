@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
-from typing import Any
+from collections.abc import Sequence
+from typing import Any, overload
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -65,8 +65,14 @@ class Waveform(ABC):
     def __single_call__(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
 
-    def __call__(self, t: float | Iterable) -> float | list[float] | np.ndarray:
-        if isinstance(t, Iterable):
+    @overload
+    def __call__(self, t: float) -> float: ...
+
+    @overload
+    def __call__(self, t: list | np.ndarray) -> list | np.ndarray: ...
+
+    def __call__(self, t: float | list | np.ndarray) -> float | list[float] | np.ndarray:
+        if isinstance(t, Sequence):
             value_array: list[float] | np.ndarray
             if isinstance(t, np.ndarray):
                 value_array = np.array([self.__single_call__(ti) for ti in t])
