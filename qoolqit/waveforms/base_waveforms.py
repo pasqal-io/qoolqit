@@ -7,6 +7,9 @@ from typing import Any
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Default number of points used to resolve the full waveform duration
+N_POINTS = 500
+
 
 class Waveform(ABC):
     """Base class for waveforms.
@@ -44,10 +47,20 @@ class Waveform(ABC):
         """Evaluates the waveform function at a given time t."""
         pass
 
-    @abstractmethod
     def max(self) -> float:
-        """Get the maximum value of the waveform."""
-        pass
+        """Get the approximate maximum value of the waveform.
+
+        This is a brute-force method that samples the waveform over a
+        pre-defined number of points to find the maximum value in the
+        duration. Custom waveforms that have an easy to compute
+        maximum value should override this method.
+
+        Arguments:
+            n_points: number of points at which to sample.
+        """
+        t_array = np.linspace(0.0, self.duration, N_POINTS)
+        value: float = np.max(self(t_array)).item()
+        return value
 
     def __single_call__(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
@@ -88,7 +101,7 @@ class Waveform(ABC):
         return self._repr_header() + self._repr_content()
 
     def draw(
-        self, n_points: int = 500, return_fig: bool = False, **kwargs: Any
+        self, n_points: int = N_POINTS, return_fig: bool = False, **kwargs: Any
     ) -> plt.Figure | None:
         fig, ax = plt.subplots(1, 1, figsize=(8, 4), dpi=150)
         ax.grid(True)

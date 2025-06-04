@@ -121,8 +121,6 @@ $$
     \text{Sin}(t)_{\omega, C} \equiv \sin(\omega t) + C
 $$
 
-For simplicity we consider a positive frequency
-
 
 ```python exec="on" source="material-block" session="waveforms"
 from qoolqit.waveforms import Waveform
@@ -141,23 +139,15 @@ class Sin(Waveform):
     def __init__(
         self,
         duration: float,
-        omega: float = 1.0,
+        omega: float = 2.0 * math.pi,
         shift: float = 0.0,
     ) -> None:
         super().__init__(duration)
-        if omega <= 0.0:
-            raise ValueError("Only positive frequency allowed.")
         self.omega = omega
         self.shift = shift
 
     def function(self, t: float) -> float:
         return math.sin(self.omega * t) + self.shift
-
-    def max(self) -> float:
-        if self.duration >= math.pi / (2 + self.omega):
-            return 1.0 + self.shift
-        else:
-            return self(self.duration)
 
     def _repr_content(self) -> str:
         string = ", ".join([str(self.omega), str(self.shift)])
@@ -169,8 +159,8 @@ A few things are crucial in the snippet above:
 - Keeping the `duration` argument as the first one in the `__init__`, and initializing the parent class with that value, to be consistent with other waveforms.
 - Passing every other parameter needed for the waveform in the `__init__` and saving it as an attribute.
 - Overriding the `function` abstract method, which represents the evaluation of the waveform at some time `t`.
-- Overriding the `max` abstract method, which analytically defines the maximum value the waveform can take during its duration. This information is useful when compiling waveforms to Pulser.
-- Overriding the `_repr_content` method is optional, but it ensures nice printing of the waveform with the parameters that characterize it. Otherwise, the default behaviour would be to just print the class name, `Sin()`
+- Overriding the `_repr_content` method is **optional**, but it ensures nice printing of the waveform with the parameters that characterize it. Otherwise, the default behaviour would be to just print the class name, `Sin()`
+- Overriding the `max` method is also **optional**. The intended result of `wf.max()` is to get the maximum value the waveform takes over its duration. By default, the base `Waveform` class implements a brute-force sampling method that **approximates** the maximum value. However, if this value is easy to know from the waveform parameters, the method should be overriden.
 
 To showcase the usage of the newly defined waveform, let's define a new sine waveform and compose it with a piecewise linear waveform.
 
