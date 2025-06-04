@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import matplotlib.pyplot as plt
 import numpy as np
 from numpy.typing import ArrayLike
 from pulser.sequence.sequence import Sequence as PulserSequence
@@ -82,6 +83,36 @@ class QuantumProgram:
         compiler.profile = profile
         self._device = device
         self._compiled_sequence = compiler.compile_sequence()
+
+    def draw(
+        self,
+        n_points: int = 500,
+        compiled: bool = False,
+        return_fig: bool = False,
+    ) -> plt.Figure | None:
+        if not compiled:
+            return self.drive.draw(n_points=n_points, return_fig=return_fig)
+        else:
+            if not self.is_compiled:
+                raise ValueError(
+                    "Program has not been compiled. Please call program.compile_to(device)."
+                )
+            else:
+                _, fig, _, _ = self.compiled_sequence._plot(
+                    draw_phase_area=False,
+                    draw_interp_pts=True,
+                    draw_phase_shifts=False,
+                    draw_register=False,
+                    draw_input=True,
+                    draw_modulation=True,
+                    draw_phase_curve=True,
+                    draw_detuning_maps=False,
+                    draw_qubit_amp=False,
+                    draw_qubit_det=False,
+                    phase_modulated=False,
+                )
+
+                return fig if return_fig else None
 
     def run(self) -> ArrayLike:
         """Temporary method to run a simulation on QuTip."""
