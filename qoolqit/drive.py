@@ -63,10 +63,10 @@ class Drive:
 
         if self._amplitude.duration > self._detuning.duration:
             extra_duration = self._amplitude.duration - self._detuning.duration
-            self._detuning = self._detuning * Delay(extra_duration)
+            self._detuning = CompositeWaveform(self._detuning, Delay(extra_duration))
         elif self._detuning.duration > self._amplitude.duration:
             extra_duration = self._detuning.duration - self._amplitude.duration
-            self._amplitude = self._amplitude * Delay(extra_duration)
+            self._amplitude = CompositeWaveform(self._amplitude, Delay(extra_duration))
 
         self._duration = self._amplitude.duration
         self._phase = phase
@@ -90,13 +90,13 @@ class Drive:
     def duration(self) -> float:
         return self._duration
 
-    def __mul__(self, other: Drive) -> Drive:
+    def __gt__(self, other: Drive) -> Drive:
         if isinstance(other, Drive):
             if self.phase != other.phase:
                 raise NotImplementedError("Composing drives with different phase not supported.")
             return Drive(
-                amplitude=self._amplitude * other._amplitude,
-                detuning=self._detuning * other._detuning,
+                amplitude=CompositeWaveform(self._amplitude, other._amplitude),
+                detuning=CompositeWaveform(self._detuning, other._detuning),
                 phase=self._phase,
             )
         else:

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Callable
 
-from pulser import Sequence as PulserSequence
+from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import AvailableDevices, Device
 from qoolqit.drive import Drive

@@ -4,7 +4,7 @@ from math import ceil
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
-from pulser.register import Register as PulserRegister
+from pulser.register.register import Register as PulserRegister
 
 from qoolqit.graphs import DataGraph
 

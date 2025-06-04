@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 from numpy.typing import ArrayLike
-from pulser import Sequence as PulserSequence
+from pulser.sequence.sequence import Sequence as PulserSequence
 from pulser_simulation import QutipEmulator
 
 from qoolqit.devices import Device, MockDevice

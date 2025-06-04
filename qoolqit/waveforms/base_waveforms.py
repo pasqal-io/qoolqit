@@ -67,7 +67,7 @@ class Waveform(ABC):
         else:
             return self.__single_call__(t)
 
-    def __mul__(self, other: Waveform) -> CompositeWaveform:
+    def __gt__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
             if isinstance(other, CompositeWaveform):
                 return CompositeWaveform(self, *other._waveforms)
@@ -76,7 +76,7 @@ class Waveform(ABC):
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
     def _repr_header(self) -> str:
-        return f"0 ≤ t < {float(self.duration):.3g}: "
+        return f"0 ≤ t ≤ {float(self.duration):.3g}: "
 
     def _repr_content(self) -> str:
         return self.__class__.__name__ + "()"
@@ -162,7 +162,7 @@ class CompositeWaveform(Waveform):
         """Get the maximum value of the waveform."""
         return max([wf.max() for wf in self.waveforms])
 
-    def __mul__(self, other: Waveform) -> CompositeWaveform:
+    def __gt__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
             if isinstance(other, CompositeWaveform):
                 return CompositeWaveform(*self.waveforms, *other.waveforms)
