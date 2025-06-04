@@ -51,7 +51,7 @@ def test_unit_converter() -> None:
 @pytest.mark.parametrize("device_class", ALL_DEVICES)
 def test_device_init_and_units(device_class: Callable) -> None:
     device = device_class()
-    assert device.name in AvailableDevices
+    assert device.name in AvailableDevices.list(values=True)
 
     TIME_ORIG, ENERGY_ORIG, DISTANCE_ORIG = device.converter.factors
     assert _validate_invariants(device._C6, *device.converter.factors)

@@ -21,5 +21,8 @@ class StrEnum(str, Enum, metaclass=CustomEnumMeta):
         return ret
 
     @classmethod
-    def list(cls) -> list:
-        return [item for item in cls]
+    def list(cls, values: bool = False) -> list:
+        if values:
+            return [item.value for item in cls]
+        else:
+            return [item for item in cls]
