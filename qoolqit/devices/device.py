@@ -35,13 +35,13 @@ class Device(ABC):
     @abstractmethod
     def _device(self) -> BaseDevice:
         """Abstract property defining the Pulser device."""
-        pass
+        ...
 
     @property
     @abstractmethod
     def _default_converter(self) -> UnitConverter:
         """Abstract property defining the default unit converter."""
-        pass
+        ...
 
     @property
     def name(self) -> str:
