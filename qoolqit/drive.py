@@ -41,8 +41,6 @@ class Drive:
             if arg is not None and not isinstance(arg, Waveform):
                 raise TypeError("Amplitude and detuning must be of type Waveform.")
 
-        # Ok let's try to please mypy...
-
         self._amplitude: Waveform
         self._detuning: Waveform
         self._amplitude_orig: Waveform
@@ -57,6 +55,9 @@ class Drive:
         elif isinstance(detuning, Waveform) and isinstance(amplitude, Waveform):
             self._amplitude = amplitude
             self._detuning = detuning
+
+        if self._amplitude.min() < 0.0:
+            raise ValueError("Amplitude cannot be negative.")
 
         self._amplitude_orig = self._amplitude
         self._detuning_orig = self._detuning
@@ -105,26 +106,26 @@ class Drive:
         else:
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
-    def _amplitude_header(self) -> str:
+    def __amp_header__(self) -> str:  # pragma: no cover
         return "Amplitude: \n"
 
-    def _detuning_header(self) -> str:
+    def __det_header__(self) -> str:  # pragma: no cover
         return "Detuning: \n"
 
     def __repr__(self) -> str:
         if isinstance(self.amplitude, CompositeWaveform):
-            amp_repr = self._amplitude_header() + self.amplitude.__repr_content__()
+            amp_repr = self.__amp_header__() + self.amplitude.__repr_content__()
         else:
             amp_repr = (
-                self._amplitude_header()
+                self.__amp_header__()
                 + self.amplitude.__repr_header__()
                 + self.amplitude.__repr_content__()
             )
         if isinstance(self.detuning, CompositeWaveform):
-            det_repr = self._detuning_header() + self.detuning.__repr_content__()
+            det_repr = self.__det_header__() + self.detuning.__repr_content__()
         else:
             det_repr = (
-                self._detuning_header()
+                self.__det_header__()
                 + self.detuning.__repr_header__()
                 + self.detuning.__repr_content__()
             )
