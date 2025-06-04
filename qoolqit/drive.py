@@ -113,20 +113,20 @@ class Drive:
 
     def __repr__(self) -> str:
         if isinstance(self.amplitude, CompositeWaveform):
-            amp_repr = self._amplitude_header() + self.amplitude._repr_content()
+            amp_repr = self._amplitude_header() + self.amplitude.__repr_content__()
         else:
             amp_repr = (
                 self._amplitude_header()
-                + self.amplitude._repr_header()
-                + self.amplitude._repr_content()
+                + self.amplitude.__repr_header__()
+                + self.amplitude.__repr_content__()
             )
         if isinstance(self.detuning, CompositeWaveform):
-            det_repr = self._detuning_header() + self.detuning._repr_content()
+            det_repr = self._detuning_header() + self.detuning.__repr_content__()
         else:
             det_repr = (
                 self._detuning_header()
-                + self.detuning._repr_header()
-                + self.detuning._repr_content()
+                + self.detuning.__repr_header__()
+                + self.detuning.__repr_content__()
             )
         return amp_repr + "\n\n" + det_repr
 

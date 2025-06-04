@@ -128,6 +128,14 @@ parallel = true
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+exclude_also = [
+  "def __repr__",
+  "def __repr_content__",
+  "def __repr_header__",
+  "def draw",
+  "@abstractmethod",
+  "@overload",
+]
 
 [tool.ruff]
 line-length = 100

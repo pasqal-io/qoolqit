@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections.abc import Sequence
 from typing import Any, overload
 
 import matplotlib.pyplot as plt
@@ -45,7 +44,7 @@ class Waveform(ABC):
     @abstractmethod
     def function(self, t: float) -> float:
         """Evaluates the waveform function at a given time t."""
-        pass
+        ...
 
     def max(self) -> float:
         """Get the approximate maximum value of the waveform.
@@ -72,7 +71,7 @@ class Waveform(ABC):
     def __call__(self, t: list | np.ndarray) -> list | np.ndarray: ...
 
     def __call__(self, t: float | list | np.ndarray) -> float | list[float] | np.ndarray:
-        if isinstance(t, Sequence):
+        if isinstance(t, list | np.ndarray):
             value_array: list[float] | np.ndarray
             if isinstance(t, np.ndarray):
                 value_array = np.array([self.__single_call__(ti) for ti in t])
@@ -97,14 +96,14 @@ class Waveform(ABC):
         else:
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
-    def _repr_header(self) -> str:
+    def __repr_header__(self) -> str:
         return f"0 ≤ t ≤ {float(self.duration):.3g}: "
 
-    def _repr_content(self) -> str:
+    def __repr_content__(self) -> str:
         return self.__class__.__name__ + "()"
 
     def __repr__(self) -> str:
-        return self._repr_header() + self._repr_content()
+        return self.__repr_header__() + self.__repr_content__()
 
     def draw(
         self, n_points: int = N_POINTS, return_fig: bool = False, **kwargs: Any
@@ -199,18 +198,18 @@ class CompositeWaveform(Waveform):
         else:
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
-    def _repr_header(self) -> str:
+    def __repr_header__(self) -> str:
         return "Composite waveform:\n"
 
-    def _repr_content(self) -> str:
+    def __repr_content__(self) -> str:
         wf_strings = []
         for i, wf in enumerate(self.waveforms):
             t_str = "≤ t <" if i < self.n_waveforms - 1 else "≤ t ≤"
             interval_str = (
                 f"| {float(self.times[i]):.3g} " + t_str + f" {float(self.times[i + 1]):.3g}: "
             )
-            wf_strings.append(interval_str + wf._repr_content())
+            wf_strings.append(interval_str + wf.__repr_content__())
         return "\n".join(wf_strings)
 
     def __repr__(self) -> str:
-        return self._repr_header() + self._repr_content()
+        return self.__repr_header__() + self.__repr_content__()

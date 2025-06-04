@@ -43,7 +43,7 @@ class BaseGraph(nx.Graph):
 
     def _reset_dicts(self) -> None:
         """Placeholder method to reset attribute dictionaries."""
-        pass
+        ...
 
     ####################
     ### CONSTRUCTORS ###

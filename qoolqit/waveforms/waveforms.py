@@ -41,7 +41,7 @@ class Ramp(Waveform):
     def max(self) -> float:
         return max([self.initial_value, self.final_value])
 
-    def _repr_content(self) -> str:
+    def __repr_content__(self) -> str:
         string = str(self.initial_value) + ", " + str(self.final_value)
         return self.__class__.__name__ + "(" + string + ")"
 
@@ -68,7 +68,7 @@ class Constant(Waveform):
     def max(self) -> float:
         return self.value
 
-    def _repr_content(self) -> str:
+    def __repr_content__(self) -> str:
         string = str(self.value)
         return self.__class__.__name__ + "(" + string + ")"
 
@@ -109,7 +109,7 @@ class PiecewiseLinear(CompositeWaveform):
 
         super().__init__(*wfs)
 
-    def _repr_header(self) -> str:
+    def __repr_header__(self) -> str:
         return "Piecewise linear waveform:\n"
 
 
@@ -141,7 +141,7 @@ class Sin(Waveform):
     def function(self, t: float) -> float:
         return self.amplitude * math.sin(self.omega * t + self.phi) + self.shift
 
-    def _repr_content(self) -> str:
+    def __repr_content__(self) -> str:
         params = [str(self.amplitude), str(self.omega), str(self.phi), str(self.shift)]
         string = ", ".join(params)
         return self.__class__.__name__ + "(" + string + ")"
