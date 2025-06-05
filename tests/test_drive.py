@@ -1,20 +1,24 @@
 from __future__ import annotations
 
 import random
+from typing import Callable
 
 import pytest
 
 from qoolqit.drive import Drive
-from qoolqit.waveforms import Delay, Ramp
+from qoolqit.waveforms import Delay, Waveform
 
 
-def test_drive_init_and_composition() -> None:
+@pytest.mark.repeat(3)
+def test_drive_init_and_composition(
+    random_pos_ramp: Callable[[], Waveform], random_neg_ramp: Callable[[], Waveform]
+) -> None:
 
-    duration_amp = 10.0 * random.random()
-    duration_det = 10.0 * random.random()
+    amp_wf = random_pos_ramp()
+    det_wf = random_neg_ramp()
 
-    amp_wf = Ramp(duration_amp, random.random(), random.random())
-    det_wf = Ramp(duration_det, -random.random(), random.random())
+    duration_amp = amp_wf.duration
+    duration_det = det_wf.duration
 
     with pytest.raises(TypeError):
         drive = Drive(amp_wf)
