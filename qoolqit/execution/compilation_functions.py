@@ -15,7 +15,7 @@ from .utils import CompilerProfile
 def _build_register(register: Register, distance: float) -> PulserRegister:
     """Builds a Pulser Register from a QoolQit Register."""
     coords_qoolqit = register.qubits
-    coords_pulser = {q: distance * c for q, c in coords_qoolqit.items()}
+    coords_pulser = {str(q): (distance * c[0], distance * c[1]) for q, c in coords_qoolqit.items()}
     return PulserRegister(coords_pulser)
 
 

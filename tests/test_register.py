@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import random
 
+import numpy as np
 import pytest
 
 from qoolqit.graphs import DataGraph
@@ -23,6 +24,10 @@ def test_register_from_coordinates(n_qubits: int) -> None:
     for (q1, pos1), (q2, pos2) in zip(r1.qubits.items(), r2.qubits.items()):
         assert q1 == q2
         assert tuple(pos1) == tuple(pos2)
+
+    assert r1.min_distance() == r2.min_distance()
+    assert np.allclose(list(r1.interactions().values()), list(r2.interactions().values()))
+    assert np.allclose(list(r1.distances().values()), list(r2.distances().values()))
 
 
 @pytest.mark.parametrize("n_nodes", [3, 4, 10])

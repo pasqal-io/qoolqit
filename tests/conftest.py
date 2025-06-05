@@ -6,12 +6,6 @@ from typing import Callable, Generator
 import pytest
 
 from qoolqit.drive import Drive
-from qoolqit.graphs.utils import (
-    random_coords as _random_coords,
-)
-from qoolqit.graphs.utils import (
-    space_coords as space_coords,
-)
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import Ramp, Waveform
@@ -51,26 +45,6 @@ def random_drive(
         return Drive(amplitude=wf_amp, detuning=wf_det)
 
     yield _generate_random_drive
-
-
-@pytest.fixture
-def random_coords() -> Generator[Callable[[], list]]:
-    def _generate_random_coords() -> list:
-        n = randint(2, 4)
-        return _random_coords(n, L=1.0)
-
-    yield _generate_random_coords
-
-
-@pytest.fixture
-def random_register(random_coords: Callable[[], list]) -> Generator[Callable[[], Register]]:
-    def _generate_random_register() -> Register:
-        coords = random_coords()
-        coords_dict = {i: pos for i, pos in enumerate(coords)}
-        coords_dict = space_coords(coords_dict, spacing=0.8)
-        return Register(coords_dict)
-
-    yield _generate_random_register
 
 
 @pytest.fixture

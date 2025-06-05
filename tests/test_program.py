@@ -16,11 +16,11 @@ from qoolqit.register import Register
 @pytest.mark.parametrize("device_class", ALL_DEVICES)
 def test_program_init_and_compilation(
     device_class: Callable,
-    random_register: Callable[[], Register],
+    random_linear_register: Callable[[], Register],
     random_drive: Callable[[], Drive],
 ) -> None:
 
-    register = random_register()
+    register = random_linear_register()
     drive = random_drive()
     program = QuantumProgram(register, drive)
     assert not program.is_compiled

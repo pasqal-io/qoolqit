@@ -4,9 +4,8 @@ from math import ceil
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
-from pulser.register.register import Register as PulserRegister
 
-from qoolqit.graphs import DataGraph
+from qoolqit.graphs import DataGraph, all_node_pairs, distances
 
 __all__ = ["Register"]
 
@@ -20,8 +19,13 @@ class Register:
         Arguments:
             qubits: a dictionary of qubits and respective coordinates {q: (x, y), ...}.
         """
-        self._register = PulserRegister(qubits)
-        self._qubits: dict = self._register.qubits
+        if not isinstance(qubits, dict):
+            raise TypeError(
+                "Register must be initialized with a dictionary a dictionary of "
+                "qubits and respective coordinates {q: (x, y), ...}."
+            )
+
+        self._qubits: dict = qubits
 
     @classmethod
     def from_graph(cls, graph: DataGraph) -> Register:
@@ -43,8 +47,12 @@ class Register:
         Arguments:
             coords: a list of coordinates [(x, y), ...]
         """
-        pulser_register = PulserRegister.from_coordinates(coords, center=False)
-        return cls(pulser_register.qubits)
+        if not isinstance(coords, list):
+            raise TypeError(
+                "Register must be initialized with a dictionary of qubit and coordinates."
+            )
+        coords_dict = {i: pos for i, pos in enumerate(coords)}
+        return cls(coords_dict)
 
     @property
     def qubits(self) -> dict:
@@ -55,6 +63,20 @@ class Register:
     def n_qubits(self) -> int:
         """Number of qubits in the Register."""
         return len(self.qubits)
+
+    def distances(self) -> dict:
+        """Distance between each qubit pair."""
+        pairs = all_node_pairs(list(self.qubits.keys()))
+        return distances(self.qubits, pairs)
+
+    def min_distance(self) -> float:
+        """Minimum distance between all qubit pairs."""
+        distance: float = min(self.distances().values())
+        return distance
+
+    def interactions(self) -> dict:
+        """Interaction 1/r^6 between each qubit pair."""
+        return {p: 1 / (r**6) for p, r in self.distances().items()}
 
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
