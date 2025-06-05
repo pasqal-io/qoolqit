@@ -27,6 +27,5 @@ import matplotlib.pyplot as plt # markdown-exec: hide
 from docs.utils import fig_to_html # markdown-exec: hide
 drive.draw()
 fig = drive.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```

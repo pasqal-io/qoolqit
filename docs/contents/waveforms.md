@@ -59,7 +59,6 @@ from docs.utils import fig_to_html # markdown-exec: hide
 
 wf3.draw()
 fig = wf3.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -109,7 +108,6 @@ wf_pwl = PiecewiseLinear(durations, values)
 wf_pwl.draw()
 
 fig = wf_pwl.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -192,7 +190,6 @@ from docs.utils import fig_to_html # markdown-exec: hide
 wf_comp.draw()
 
 fig = wf_comp.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -230,6 +227,5 @@ from docs.utils import fig_to_html # markdown-exec: hide
 wf.draw()
 
 fig = wf.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
