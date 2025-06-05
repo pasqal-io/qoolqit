@@ -34,6 +34,7 @@ def test_program_init_and_compilation(
     assert isinstance(program.compiled_sequence, PulserSequence)
 
 
+@pytest.mark.repeat(5)
 @pytest.mark.parametrize("device_class", ALL_DEVICES)
 @pytest.mark.parametrize("profile", CompilerProfile.list())
 def test_compiler_profiles(
