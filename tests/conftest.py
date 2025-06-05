@@ -78,7 +78,7 @@ def random_linear_register() -> Generator[Callable[[], Register]]:
     def _generate_random_register() -> Register:
         n = randint(2, 5)
         start_x = -(n - 1) / 2.0
-        coords = [(start_x + i * uniform(0.95, 1.05), 0.0) for i in range(n)]
+        coords = [(start_x + i, 0.0) for i in range(n)]
         return Register.from_coordinates(coords)
 
     yield _generate_random_register
