@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import math
 import random
 from typing import Callable
 
@@ -11,11 +10,12 @@ from qoolqit.devices import (
     AvailableDevices,
     UnitConverter,
 )
+from qoolqit.utils import ATOL_32, EQUAL
 
 
 def _validate_invariants(c6: float, t: float, e: float, d: float) -> bool:
     # Verify time-energy and energy-distance invariants
-    return math.isclose(t * e, 1000.0) and math.isclose(e * (d**6), c6)
+    return EQUAL(t * e, 1000.0, atol=ATOL_32) and EQUAL(e * (d**6), c6, atol=ATOL_32)
 
 
 def test_unit_converter() -> None:
@@ -67,6 +67,6 @@ def test_device_init_and_units(device_class: Callable) -> None:
 
     device.reset_converter()
     TIME_NEW, ENERGY_NEW, DISTANCE_NEW = device.converter.factors
-    assert TIME_ORIG == TIME_NEW
-    assert ENERGY_ORIG == ENERGY_NEW
-    assert DISTANCE_ORIG == DISTANCE_NEW
+    assert EQUAL(TIME_ORIG, TIME_NEW)
+    assert EQUAL(ENERGY_ORIG, ENERGY_NEW)
+    assert EQUAL(DISTANCE_ORIG, DISTANCE_NEW)

@@ -7,6 +7,7 @@ from pulser.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import ALL_DEVICES
 from qoolqit.drive import Drive
+from qoolqit.execution import CompilerProfile
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 
@@ -29,5 +30,18 @@ def test_program_init_and_compilation(
 
     device = device_class()
     program.compile_to(device)
+    assert program.is_compiled
+    assert isinstance(program.compiled_sequence, PulserSequence)
+
+
+@pytest.mark.parametrize("device_class", ALL_DEVICES)
+@pytest.mark.parametrize("profile", CompilerProfile.list())
+def test_compiler_profiles(
+    device_class: Callable, profile: CompilerProfile, random_program: Callable[[], QuantumProgram]
+) -> None:
+
+    program = random_program()
+    device = device_class()
+    program.compile_to(device, profile=profile)
     assert program.is_compiled
     assert isinstance(program.compiled_sequence, PulserSequence)

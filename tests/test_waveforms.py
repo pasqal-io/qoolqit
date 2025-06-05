@@ -5,6 +5,7 @@ import random
 import numpy as np
 import pytest
 
+from qoolqit.utils import EQUAL
 from qoolqit.waveforms import (
     CompositeWaveform,
     Constant,
@@ -97,8 +98,8 @@ def test_sin() -> None:
     approx_min = wf.min()
     random_samples_max = np.max(wf(t_array))
     random_samples_min = np.min(wf(t_array))
-    assert (approx_max > random_samples_max) or np.isclose(approx_max, random_samples_max)
-    assert (approx_min > random_samples_min) or np.isclose(approx_min, random_samples_min)
+    assert (approx_max > random_samples_max) or EQUAL(approx_max, random_samples_max, atol=1e-05)
+    assert (approx_min > random_samples_min) or EQUAL(approx_min, random_samples_min, atol=1e-05)
 
 
 @pytest.mark.parametrize("n_pieces", [3, 4, 5])
@@ -140,7 +141,7 @@ def test_waveform_composition(n_waveforms: int) -> None:
 
     assert isinstance(wf, CompositeWaveform)
     assert wf.n_waveforms == 2 * n_waveforms
-    assert wf.duration == 2 * n_waveforms * duration
+    assert EQUAL(wf.duration, 2 * n_waveforms * duration)
     assert len(wf.durations) == 2 * n_waveforms
     assert len(wf.times) == 2 * n_waveforms + 1
 
@@ -150,8 +151,8 @@ def test_waveform_composition(n_waveforms: int) -> None:
     approx_min = wf.min()
     random_samples_max = np.max(wf(t_array))
     random_samples_min = np.min(wf(t_array))
-    assert (approx_max > random_samples_max) or np.isclose(approx_max, random_samples_max)
-    assert (approx_min > random_samples_min) or np.isclose(approx_min, random_samples_min)
+    assert (approx_max > random_samples_max) or EQUAL(approx_max, random_samples_max, atol=1e-05)
+    assert (approx_min > random_samples_min) or EQUAL(approx_min, random_samples_min, atol=1e-05)
 
     with pytest.raises(TypeError):
         CompositeWaveform(wf, 1.0)  # type: ignore [arg-type]

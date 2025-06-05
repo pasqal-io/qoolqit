@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import math
 import random
 from typing import Callable
 
 import pytest
 
 from qoolqit.drive import Drive
+from qoolqit.utils import EQUAL
 from qoolqit.waveforms import Delay, Waveform
 
 
@@ -37,27 +39,27 @@ def test_drive_init_and_composition(
 
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
 
-    assert drive.duration == max([duration_amp, duration_det])
+    assert math.isclose(drive.duration, max([duration_amp, duration_det]))
 
     drive = drive >> drive
-    assert drive.duration == 2.0 * max([duration_amp, duration_det])
+    assert EQUAL(drive.duration, 2.0 * max([duration_amp, duration_det]))
 
     drive = drive >> drive
-    assert drive.duration == 4.0 * max([duration_amp, duration_det])
+    assert EQUAL(drive.duration, 4.0 * max([duration_amp, duration_det]))
 
     drive = Drive(amplitude=amp_wf)
     assert isinstance(drive.detuning, Delay)
-    assert drive.duration == duration_amp
+    assert EQUAL(drive.duration, duration_amp)
 
     drive = Drive(detuning=det_wf)
     assert isinstance(drive.amplitude, Delay)
-    assert drive.duration == duration_det
+    assert EQUAL(drive.duration, duration_det)
 
     phase = random.random()
     drive1 = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
     drive2 = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
     drive = drive1 >> drive2
-    assert drive.phase == phase
+    assert EQUAL(drive.phase, phase)
 
     with pytest.raises(NotImplementedError):
         drive1 = Drive(amplitude=amp_wf, detuning=det_wf, phase=1.0)

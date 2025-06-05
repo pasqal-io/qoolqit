@@ -74,11 +74,22 @@ def random_register(random_coords: Callable[[], list]) -> Generator[Callable[[],
 
 
 @pytest.fixture
+def random_linear_register() -> Generator[Callable[[], Register]]:
+    def _generate_random_register() -> Register:
+        n = randint(2, 5)
+        start_x = -(n - 1) / 2.0
+        coords = [(start_x + i * uniform(0.95, 1.05), 0.0) for i in range(n)]
+        return Register.from_coordinates(coords)
+
+    yield _generate_random_register
+
+
+@pytest.fixture
 def random_program(
-    random_register: Callable[[], Register], random_drive: Callable[[], Drive]
+    random_linear_register: Callable[[], Register], random_drive: Callable[[], Drive]
 ) -> Generator[Callable[[], QuantumProgram]]:
     def _generate_random_program() -> QuantumProgram:
-        register = random_register()
+        register = random_linear_register()
         drive = random_drive()
         return QuantumProgram(register, drive)
 
