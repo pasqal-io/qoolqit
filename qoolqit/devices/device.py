@@ -11,6 +11,7 @@ from .unit_converter import UnitConverter
 UPPER_DURATION = 6000
 UPPER_AMP = 4.0 * pi
 UPPER_DET = 4.0 * pi
+LOWER_DISTANCE = 5.0
 
 
 class Device(ABC):
@@ -28,6 +29,7 @@ class Device(ABC):
         self._max_duration = self._device.max_sequence_duration or UPPER_DURATION
         self._max_amp = self._device.channels["rydberg_global"].max_amp or UPPER_AMP
         self._max_det = self._device.channels["rydberg_global"].max_abs_detuning or UPPER_DET
+        self._min_distance = self._device.min_atom_distance or LOWER_DISTANCE
 
         self.reset_converter()
 

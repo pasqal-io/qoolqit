@@ -60,6 +60,9 @@ def basic_compilation(
     elif profile == CompilerProfile.MAX_AMPLITUDE:
         ENERGY = (device._max_amp) / drive.amplitude.max()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
+    elif profile == CompilerProfile.MIN_DISTANCE:
+        DISTANCE = (device._min_distance) / register.min_distance()
+        TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
     else:
         raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
 

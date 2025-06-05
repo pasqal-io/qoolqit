@@ -8,3 +8,4 @@ class CompilerProfile(StrEnum):
     DEFAULT = "Default"
     MAX_AMPLITUDE = "MaxAmplitude"
     MAX_DURATION = "MaxDuration"
+    MIN_DISTANCE = "MinDistance"
