@@ -2,9 +2,23 @@ from __future__ import annotations
 
 from importlib import import_module
 
+from .devices import *
+from .drive import *
+from .execution import *
 from .graphs import *
+from .program import *
+from .register import *
+from .waveforms import *
 
-list_of_submodules = [".graphs"]
+list_of_submodules = [
+    ".graphs",
+    ".drive",
+    ".devices",
+    ".waveforms",
+    ".register",
+    ".program",
+    ".execution",
+]
 
 __all__ = []
 for submodule in list_of_submodules:

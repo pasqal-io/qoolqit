@@ -43,7 +43,7 @@ class BaseGraph(nx.Graph):
 
     def _reset_dicts(self) -> None:
         """Placeholder method to reset attribute dictionaries."""
-        pass
+        ...
 
     ####################
     ### CONSTRUCTORS ###
@@ -273,7 +273,7 @@ class BaseGraph(nx.Graph):
             *args: arguments to pass to draw_networkx.
             **kwargs: keyword-arguments to pass to draw_networkx.
         """
-        fig, ax = plt.subplots(1, 1, dpi=200)
+        fig, ax = plt.subplots(1, 1, figsize=(4, 4), dpi=150)
         ax.set_aspect("equal")
         if self.has_coords:
             x_coords, y_coords = zip(*self.coords.values())
@@ -285,7 +285,10 @@ class BaseGraph(nx.Graph):
 
             grid_scale = ceil(max(grid_x_max - grid_x_min, grid_y_max - grid_y_min))
 
-            ax.grid(True)
+            ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+            ax.set_axisbelow(True)
+            ax.set_xlabel("x")
+            ax.set_ylabel("y")
 
             eps = 0.05 * grid_scale
             ax.set_xlim(grid_x_min - eps, grid_x_max + eps)
@@ -303,4 +306,8 @@ class BaseGraph(nx.Graph):
         else:
             nx.draw_networkx(self, *args, ax=ax, **kwargs)
 
-        return fig if return_fig else None
+        if return_fig:
+            plt.close()
+            return fig
+        else:
+            return None
