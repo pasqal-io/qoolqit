@@ -61,7 +61,7 @@ class QuantumProgram:
     def __repr__(self) -> str:
         header = "Quantum Program:\n"
         register = f"| {self._register.__repr__()}\n"
-        drive = f"| Drive(duration = {self._drive.duration:.3g})\n"
+        drive = f"| Drive(duration = {self._drive.duration:.3f})\n"
         if self.is_compiled:
             compiled = f"| Compiled: {self.is_compiled}\n"
             device = f"| Device: {self._device.__repr__()}"

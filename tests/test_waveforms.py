@@ -145,6 +145,13 @@ def test_waveform_composition(n_waveforms: int) -> None:
     assert len(wf.durations) == 2 * n_waveforms
     assert len(wf.times) == 2 * n_waveforms + 1
 
+    # Testing composing directly with the class
+    wf2 = CompositeWaveform(wf, wf)
+    assert wf2.n_waveforms == 2 * wf.n_waveforms
+    assert EQUAL(wf2.duration, 2 * wf.duration)
+    assert len(wf2.durations) == 2 * len(wf.durations)
+    assert len(wf2.times) == 2 * len(wf.times) - 1
+
     n_points = 100
     t_array = np.random.uniform(low=-1.0, high=2.0 * duration * n_waveforms + 1.0, size=(n_points,))
     approx_max = wf.max()

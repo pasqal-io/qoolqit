@@ -107,3 +107,11 @@ class UnitConverter:
     def factors_from_distance(self, distance: float) -> tuple[float, ...]:
         """Get factors from a different reference distance than the one set."""
         return _factors_from_distance(self.C6, distance)
+
+    def __repr__(self) -> str:
+        string = (
+            f"UnitConverter(time = {self.time:.3f}, "
+            + f"energy = {self.energy:.3f}, "
+            + f"distance = {self.distance:.3f})"
+        )
+        return string

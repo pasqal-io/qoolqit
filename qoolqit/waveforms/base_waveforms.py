@@ -130,11 +130,11 @@ class Waveform(ABC):
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
     def __repr_header__(self) -> str:
-        return f"0 ≤ t ≤ {float(self.duration):.3g}: "
+        return f"0.00 ≤ t ≤ {float(self.duration):.2f}: "
 
     def __repr_content__(self) -> str:
         if len(self.params) > 0:
-            params_list = [f"{value:.4g}" for value in self.params.values()]
+            params_list = [f"{value:.2f}" for value in self.params.values()]
             string = ", ".join(params_list)
             return self.__class__.__name__ + "(t, " + string + ")"
         else:
@@ -181,7 +181,12 @@ class CompositeWaveform(Waveform):
         if not waveforms:
             raise ValueError("At least one Waveform must be provided.")
 
-        self._waveforms = list(waveforms)
+        self._waveforms = []
+        for wf in waveforms:
+            if isinstance(wf, CompositeWaveform):
+                self._waveforms += wf.waveforms
+            else:
+                self._waveforms.append(wf)
 
         super().__init__(sum(self.durations))
 
@@ -244,7 +249,7 @@ class CompositeWaveform(Waveform):
         for i, wf in enumerate(self.waveforms):
             t_str = "≤ t <" if i < self.n_waveforms - 1 else "≤ t ≤"
             interval_str = (
-                f"| {float(self.times[i]):.3g} " + t_str + f" {float(self.times[i + 1]):.3g}: "
+                f"| {float(self.times[i]):.2f} " + t_str + f" {float(self.times[i + 1]):.2f}: "
             )
             wf_strings.append(interval_str + wf.__repr_content__())
         return "\n".join(wf_strings)
