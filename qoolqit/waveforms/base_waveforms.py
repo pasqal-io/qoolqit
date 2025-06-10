@@ -24,6 +24,8 @@ class Waveform(ABC):
     def __init__(
         self,
         duration: float,
+        *args: float,
+        **kwargs: float,
     ) -> None:
         """Initializes the Waveform.
 
@@ -34,15 +36,29 @@ class Waveform(ABC):
         if duration <= 0:
             raise ValueError("Duration needs to be a positive non-zero value.")
 
+        if len(args) > 0:
+            raise ValueError(
+                "Extra arguments need to be passed to `super().__init__` as keyword arguments"
+            )
+
         self._duration = duration
+        self._params_dict = kwargs
 
         self._max: float | None = None
         self._min: float | None = None
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     @property
     def duration(self) -> float:
         """Returns the duration of the waveform."""
         return self._duration
+
+    @property
+    def params(self) -> dict[str, float]:
+        """Dictonary of parameters used by the waveform."""
+        return self._params_dict
 
     @abstractmethod
     def function(self, t: float) -> float:
@@ -117,7 +133,9 @@ class Waveform(ABC):
         return f"0 ≤ t ≤ {float(self.duration):.3g}: "
 
     def __repr_content__(self) -> str:
-        return self.__class__.__name__ + "()"
+        params_list = [f"{value:.4g}" for value in self.params.values()]
+        string = ", ".join(params_list)
+        return self.__class__.__name__ + "(t, " + string + ")"
 
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()

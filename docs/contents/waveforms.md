@@ -140,25 +140,18 @@ class Sin(Waveform):
         omega: float = 2.0 * math.pi,
         shift: float = 0.0,
     ) -> None:
-        super().__init__(duration)
-        self.omega = omega
-        self.shift = shift
+        super().__init__(duration, omega = omega, shift = shift)
 
     def function(self, t: float) -> float:
         return math.sin(self.omega * t) + self.shift
-
-    def __repr_content__(self) -> str:
-        string = ", ".join([str(self.omega), str(self.shift)])
-        return self.__class__.__name__ + "(" + string + ")"
 ```
 
 A few things are crucial in the snippet above:
 
 - Keeping the `duration` argument as the first one in the `__init__`, and initializing the parent class with that value, to be consistent with other waveforms.
-- Passing every other parameter needed for the waveform in the `__init__` and saving it as an attribute.
+- Passing every other parameter needed for the waveform in the `__init__` and passing it as a **keyword argument** to the parent class. This will automatically create a `params` dictionary of extra parameters, and set them as attributes to be used later.
 - Overriding the `function` abstract method, which represents the evaluation of the waveform at some time `t`.
-- Overriding the `__repr_content__` method is **optional**, but it ensures nice printing of the waveform with the parameters that characterize it. Otherwise, the default behaviour would be to just print the class name, `Sin()`
-- Overriding the `max` method is also **optional**. The intended result of `wf.max()` is to get the maximum value the waveform takes over its duration. By default, the base `Waveform` class implements a brute-force sampling method that **approximates** the maximum value. However, if this value is easy to know from the waveform parameters, the method should be overriden.
+- **Optional**: overriding the `max` and `min` methods. The intended result of `wf.max()` and `wf.min()` is to get the maximum/minimum value the waveform takes over its duration. By default, the base `Waveform` class implements a brute-force sampling method that **approximates** the maximum and minimum values. However, if this value is easy to know from the waveform parameters, the method should be overriden.
 
 To showcase the usage of the newly defined waveform, let's define a new sine waveform and compose it with a piecewise linear waveform.
 
