@@ -181,7 +181,12 @@ class CompositeWaveform(Waveform):
         if not waveforms:
             raise ValueError("At least one Waveform must be provided.")
 
-        self._waveforms = list(waveforms)
+        self._waveforms = []
+        for wf in waveforms:
+            if isinstance(wf, CompositeWaveform):
+                self._waveforms += wf.waveforms
+            else:
+                self._waveforms.append(wf)
 
         super().__init__(sum(self.durations))
 
