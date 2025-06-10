@@ -133,9 +133,12 @@ class Waveform(ABC):
         return f"0 ≤ t ≤ {float(self.duration):.3g}: "
 
     def __repr_content__(self) -> str:
-        params_list = [f"{value:.4g}" for value in self.params.values()]
-        string = ", ".join(params_list)
-        return self.__class__.__name__ + "(t, " + string + ")"
+        if len(self.params) > 0:
+            params_list = [f"{value:.4g}" for value in self.params.values()]
+            string = ", ".join(params_list)
+            return self.__class__.__name__ + "(t, " + string + ")"
+        else:
+            return self.__class__.__name__ + "(t)"
 
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
