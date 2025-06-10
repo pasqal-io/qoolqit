@@ -1,6 +1,6 @@
 # Writing time-dependent functions
 
-An essential part of writing programs in the Rydberg analog model is to write the time-dependent functions representing the amplitude and detuning terms in the drive Hamiltonian. For that, QoolQit implements a set of waveforms that can directly used and composed together.
+An essential part of writing programs in the Rydberg analog model is to write the time-dependent functions representing the amplitude and detuning terms in the drive Hamiltonian. For that, QoolQit implements a set of waveforms that can be used directly and/or composed together.
 
 ## Base waveforms
 
@@ -45,8 +45,8 @@ import numpy as np
 t_array = np.linspace(0.0, 2.0, 9)
 
 wf3(t_array)
-print("t =    ", t_array) # markdown-exec: hide
-print("wf(t) =",wf3(t_array)) # markdown-exec: hide
+print("t =     ", t_array) # markdown-exec: hide
+print("wf(t) = ", wf3(t_array)) # markdown-exec: hide
 ```
 
 In the waveform above, we defined it with a duration of $1.0$, and then evaluated it over nine points from $t = 0.0$ to $t=2.0$. As you can see, all points after $t = 1.0$ evaluated to $0.0$. By default, any waveform evaluated at a time $t$ that falls outside the specified `duration` gives $0.0$.
@@ -67,12 +67,12 @@ print(fig_to_html(fig)) # markdown-exec: hide
 The most straightforward way to arbitrarily compose waveforms is to use the `>>` operator. This will create a `CompositeWaveform` representing the waveforms in the order provided.
 
 ```python exec="on" source="material-block" result="json" session="waveforms"
-wf_comp = wf2 >> wf2 >> wf3
+wf_comp = wf1 >> wf2 >> wf3
 
 print(wf_comp)  # markdown-exec: hide
 ```
 
-The code above is equivalent to calling `CompositeWaveform(wf1, wf2, wf3)`. As shown, printing the composed waveform will automatically show the individual waveforms in the composition and the times at which they are active. These are automatically calculated from the individual waveforms. A
+The code above is equivalent to calling `CompositeWaveform(wf1, wf2, wf3)`. As shown, printing the composite waveform will automatically show the individual waveforms in the composition and the times at which they are active. These are automatically calculated from the individual waveforms. A
 `CompositeWaveform` is by itself a subclass of `Waveform`, and thus the previous logic on calling it at arbitrary time values also applies.
 
 A few convenient properties are directly available in a composite waveform:

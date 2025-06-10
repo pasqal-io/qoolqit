@@ -28,7 +28,7 @@ program.is_compiled
 print(program.is_compiled) # markdown-exec: hide
 ```
 
-Now we instantiate a device and compile the program to that device.
+Now we instantiate a device and compile the program to that device. Compiling in QoolQit means to translate the adimensional values of time, energy, and distance used when defining the program in the Rydberg analog model to a specific set of values that implement the same set of instructions in a Pulser device, taking into account the Pulser units and the specific parameters of that device. More detailed information on this conversion is provided in the [Rydberg analog model page](../getting_started/rydberg_model.md).
 
 ```python exec="on" source="material-block" result="json" session="drives"
 from qoolqit import AnalogDevice
@@ -40,7 +40,7 @@ program.compile_to(device)
 print(program) # markdown-exec: hide
 ```
 
-Now that the program has been compiled, we can inspect the compiled sequence, which in instance of a Pulser `Sequence`.
+Now that the program has been compiled, we can inspect the compiled sequence, which is an instance of a Pulser `Sequence`.
 
 ```python exec="on" source="material-block" html="1" session="drives"
 pulser_sequence = program.compiled_sequence
@@ -74,7 +74,7 @@ from qoolqit import CompilerProfile
 print(CompilerProfile)
 ```
 
-By defaul `CompilerProfile.DEFAULT` is used, which directly takes the unit converter present in the device and uses it when converting the values.
+By default `CompilerProfile.DEFAULT` is used, which directly takes the unit converter present in the device and uses it when converting the values.
 
 Other compiler profiles will ignore the unit converter present in the device and utilize their own logic to determine the best possible conversion to achieve a desired compilation directive.
 
