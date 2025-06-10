@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "0.0.3"
+version = "0.0.4"
 requires-python = ">=3.10,<3.13"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
@@ -53,6 +53,7 @@ dependencies = [
   "pytest-cov",
   "pytest-xdist",
   "pytest-asyncio",
+  "pytest-repeat",
   "pytest-markdown-docs",
   "nbconvert",
   "ipykernel",
@@ -128,6 +129,14 @@ parallel = true
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+exclude_also = [
+  "def __repr__",
+  "def __repr_content__",
+  "def __repr_header__",
+  "def draw",
+  "@abstractmethod",
+  "@overload",
+]
 
 [tool.ruff]
 line-length = 100

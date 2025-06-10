@@ -40,7 +40,6 @@ pos = nx.circular_layout(graph)
 
 graph.draw(pos = pos)
 fig = graph.draw(pos = pos, return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -92,7 +91,6 @@ import matplotlib.pyplot as plt # markdown-exec: hide
 from docs.utils import fig_to_html # markdown-exec: hide
 graph.draw()
 fig = graph.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -213,7 +211,6 @@ assert len(graph.edges) > 0
 
 graph.draw()
 fig = graph.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -233,7 +230,6 @@ graph = DataGraph.random_ud(n = 10, radius = 1.0, L = 2.0)
 
 graph.draw()
 fig = graph.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -245,7 +241,6 @@ graph = DataGraph.random_er(n = 10, p = 0.5)
 
 graph.draw()
 fig = graph.draw(return_fig = True) # markdown-exec: hide
-plt.tight_layout() # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
