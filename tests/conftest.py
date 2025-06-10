@@ -28,8 +28,9 @@ def random_neg_ramp() -> Generator[Callable[[], Waveform]]:
     def _generate_random_waveform() -> Waveform:
         n = randint(2, 6)
         wf: Waveform = Ramp(uniform(0.5, 1.0), uniform(-1.0, 1.0), uniform(-1.0, 1.0))
-        for _ in range(n):
-            wf = wf >> Ramp(uniform(0.5, 1.0), uniform(-1.0, 1.0), uniform(-1.0, 1.0))
+        while wf.min() >= 0:
+            for _ in range(n):
+                wf = wf >> Ramp(uniform(0.5, 1.0), uniform(-1.0, 1.0), uniform(-1.0, 1.0))
         return wf
 
     yield _generate_random_waveform
