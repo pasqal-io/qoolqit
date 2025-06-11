@@ -103,7 +103,8 @@ class BaseGraph(nx.Graph):
 
         Requires all nodes to have coordinates.
         """
-        return not ((None in self._coords.values()) or len(self._coords) == 0)
+        is_any_coord_none = any(value is None for value in self._coords.values())
+        return not is_any_coord_none or len(self._coords) == 0
 
     @property
     def has_edges(self) -> bool:
