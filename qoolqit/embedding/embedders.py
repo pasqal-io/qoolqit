@@ -2,30 +2,36 @@ from __future__ import annotations
 
 from typing import Callable
 
-import networkx as nx
-
 from qoolqit.graphs import DataGraph
 
 from .algorithms import spring_layout_embedding
 from .base_embedder import BaseEmbedder
-from .configs import SpringLayoutConfig
+from .configs import EmbeddingConfig, SpringLayoutConfig
 
 
-class UnitDiskEmbedder(BaseEmbedder):
-    """An embedder that aims to find coordinates to a graph that has no coordinates."""
+class UnitDiskEmbedder(BaseEmbedder[DataGraph, DataGraph]):
+    """An embedder that adds coordinates to a graph that has no coordinates.
+
+    Maps a DataGraph to a DataGraph. By default, uses the spring layout algorithm
+    directly from networkx. A custom algorithm and custom configuration can be
+    set at initialization.
+    """
 
     def __init__(
-        self,
-        algorithm: Callable = spring_layout_embedding,
-        config: SpringLayoutConfig = SpringLayoutConfig(),
+        self, algorithm: Callable | None = None, config: EmbeddingConfig | None = None
     ) -> None:
+
+        if algorithm is None:
+            algorithm = spring_layout_embedding
+        if config is None:
+            config = SpringLayoutConfig()
+
         super().__init__(algorithm, config)
 
-    def validate_data(self, data: DataGraph) -> None:
-        if not isinstance(data, DataGraph):
-            raise TypeError(f"Invalid data of type {type(data)}.")
+    def validate_data(self, data: DataGraph) -> bool:
+        return isinstance(data, DataGraph)
 
-    def embed(self, data: DataGraph) -> DataGraph:
+    def _run_algorithm(self, data: DataGraph) -> DataGraph:
         graph = DataGraph(data.edges)
-        graph.coords = nx.spring_layout(data, self.config)
+        graph.coords = self.algorithm(data, **self.config.dict())
         return graph
