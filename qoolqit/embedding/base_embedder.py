@@ -2,14 +2,24 @@ from __future__ import annotations
 
 import inspect
 from abc import ABC, abstractmethod
+from dataclasses import asdict, dataclass
 from typing import Callable, Generic, TypeVar
 
 from qoolqit.graphs import DataGraph
 
-from .configs import EmbeddingConfig
-
 InDataType = TypeVar("InDataType", DataGraph, dict)
 OutDataType = TypeVar("OutDataType", DataGraph, dict)
+
+
+@dataclass
+class EmbeddingConfig(ABC):
+    """Base abstract dataclass for all embedding algorithm configurations.
+
+    Subclasses define parameters specific to their algorithms.
+    """
+
+    def dict(self) -> dict:
+        return asdict(self)
 
 
 class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
