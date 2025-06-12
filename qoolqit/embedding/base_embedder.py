@@ -7,15 +7,18 @@ from typing import Callable, Generic, TypeVar
 
 from qoolqit.graphs import DataGraph
 
-InDataType = TypeVar("InDataType", DataGraph, dict)
-OutDataType = TypeVar("OutDataType", DataGraph, dict)
+# List is a placeholder, the idea is to later extend the supported data types
+InDataType = TypeVar("InDataType", DataGraph, list)
+OutDataType = TypeVar("OutDataType", DataGraph, list)
 
 
 @dataclass
 class EmbeddingConfig(ABC):
     """Base abstract dataclass for all embedding algorithm configurations.
 
-    Subclasses define parameters specific to their algorithms.
+    Subclasses define parameters specific to their algorithms. Each config
+    should define fields that directly translate to arguments in the respective
+    embedding function it configurates.
     """
 
     def dict(self) -> dict:
@@ -23,7 +26,12 @@ class EmbeddingConfig(ABC):
 
 
 class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
-    """Abstract base class for all embedders."""
+    """Abstract base class for all embedders.
+
+    An embedder is a function that maps a InDataType to an OutDataType
+    through an embedding algorithm. Parameters of the embedding algorithm
+    can be customized through the EmbeddingConfig.
+    """
 
     def __init__(self, algorithm: Callable, config: EmbeddingConfig) -> None:
 
@@ -48,13 +56,11 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
     @property
     def info(self) -> None:
         """Prints info about the embedding algorithm."""
-        own_docstring = inspect.getdoc(self)
-        algo_docstring = inspect.getdoc(self._algorithm)
         print("-- Embedder docstring:")
-        print(own_docstring)
+        print(inspect.getdoc(self))
         print("")
         print("-- Embedding agorithm docstring:")
-        print(algo_docstring)
+        print(inspect.getdoc(self.algorithm))
 
     @abstractmethod
     def validate_data(self, data: InDataType) -> bool:
@@ -72,7 +78,7 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
         """Runs the embedding algorithm.
 
         Each embedder should write the specific steps required to go from the
-        InDataType to the OutDataType, including any intermediate or post processing.
+        InDataType to the OutDataType, including any intermediate steps or post processing.
 
         Arguments:
             data: the data to embed.
