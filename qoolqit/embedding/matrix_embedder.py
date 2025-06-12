@@ -24,7 +24,7 @@ class MatrixEmbedder(BaseEmbedder[np.ndarray, DataGraph]):
 
     def _run_algorithm(self, data: np.ndarray) -> DataGraph:
         coords = self.algorithm(data, **self.config.dict())
-        graph = DataGraph.from_coordinates(coords)
+        graph = DataGraph.from_coordinates(coords.tolist())
         return graph
 
 
