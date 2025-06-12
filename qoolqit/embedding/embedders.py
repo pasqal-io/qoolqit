@@ -4,9 +4,8 @@ from typing import Callable
 
 from qoolqit.graphs import DataGraph
 
-from .algorithms import spring_layout_embedding
-from .base_embedder import BaseEmbedder
-from .configs import EmbeddingConfig, SpringLayoutConfig
+from .algorithms import SpringLayoutConfig, spring_layout_embedding
+from .base_embedder import BaseEmbedder, EmbeddingConfig
 
 
 class UnitDiskEmbedder(BaseEmbedder[DataGraph, DataGraph]):
