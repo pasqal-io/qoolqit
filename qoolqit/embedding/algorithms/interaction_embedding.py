@@ -26,7 +26,7 @@ class InteractionEmbeddingConfig(EmbeddingConfig):
 def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: float) -> np.ndarray:
 
     def cost_function(new_coords: np.ndarray, matrix: np.ndarray) -> np.float:
-        """Cost functi."""
+        """Cost function."""
         new_coords = np.reshape(new_coords, (len(matrix), 2))
         # Cost based on minimizing the distance between the matrix and the interaction 1/r^6
         new_matrix = squareform(1.0 / pdist(new_coords) ** 6)

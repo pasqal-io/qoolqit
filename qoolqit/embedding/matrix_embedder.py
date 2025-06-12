@@ -13,9 +13,6 @@ from .base_embedder import BaseEmbedder, EmbeddingConfig
 class MatrixEmbedder(BaseEmbedder[np.ndarray, DataGraph]):
     """A family of embedders that map a matrix to a graph.
 
-    Focused on encoding a matrix in a graph, for example, by specifically setting
-    coordinates in the graph.
-
     A custom algorithm and configuration can be set at initialization.
     """
 
@@ -27,9 +24,7 @@ class MatrixEmbedder(BaseEmbedder[np.ndarray, DataGraph]):
 
     def _run_algorithm(self, data: np.ndarray) -> DataGraph:
         coords = self.algorithm(data, **self.config.dict())
-
-        graph = DataGraph(data.edges)
-        graph.coords = self.algorithm(data, **self.config.dict())
+        graph = DataGraph.from_coordinates(coords)
         return graph
 
 
