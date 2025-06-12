@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from .algorithms import spring_layout_embedding
+from .algorithms import SpringLayoutConfig
 from .base_embedder import BaseEmbedder
-from .configs import SpringLayoutConfig
-from .embedders import UnitDiskEmbedder
+from .embedders import SpringLayoutEmbedder, UnitDiskEmbedder
 
 __all__ = ["UnitDiskEmbedder", "SpringLayoutConfig"]

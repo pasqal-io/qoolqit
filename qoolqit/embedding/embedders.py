@@ -9,22 +9,16 @@ from .base_embedder import BaseEmbedder, EmbeddingConfig
 
 
 class UnitDiskEmbedder(BaseEmbedder[DataGraph, DataGraph]):
-    """An embedder that adds coordinates to a graph that has no coordinates.
+    """A family of embedders that map a DataGraph to a DataGraph.
 
-    Maps a DataGraph to a DataGraph. By default, uses the spring layout algorithm
-    directly from networkx. A custom algorithm and custom configuration can be
-    set at initialization.
+    Focused on unit-disk graph embedding, where the goal is to find a set of coordinates
+    for a graph that has no coordinates, such that the final unit-disk graph matches the
+    set of edges in the original graph.
+
+    A custom algorithm and configuration can be set at initialization.
     """
 
-    def __init__(
-        self, algorithm: Callable | None = None, config: EmbeddingConfig | None = None
-    ) -> None:
-
-        if algorithm is None:
-            algorithm = spring_layout_embedding
-        if config is None:
-            config = SpringLayoutConfig()
-
+    def __init__(self, algorithm: Callable, config: EmbeddingConfig) -> None:
         super().__init__(algorithm, config)
 
     def validate_data(self, data: DataGraph) -> bool:
@@ -36,4 +30,9 @@ class UnitDiskEmbedder(BaseEmbedder[DataGraph, DataGraph]):
         return graph
 
 
-class SpringLayoutEmbedder(UnitDiskEmbedder): ...
+class SpringLayoutEmbedder(UnitDiskEmbedder):
+    def __init__(self, config: SpringLayoutConfig | None = None):
+        algorithm = spring_layout_embedding
+        if config is None:
+            config = SpringLayoutConfig()
+        super().__init__(algorithm, config)
