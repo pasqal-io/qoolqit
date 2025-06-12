@@ -135,7 +135,7 @@ graph.is_ud_graph()
 print(graph.is_ud_graph()) # markdown-exec: hide
 ```
 
-This method checks that `graph.max_distance(connected = True)` is smaller than `graph.min_distance(connected = True)`. If this is `True`, then for every value of $R$ inside that interval the unit-disk condition is met. We can easily check this.
+This method checks that `graph.max_distance(connected = True)` is smaller than `graph.min_distance(connected = False)`. If this is `True`, then for every value of $R$ inside that interval the unit-disk condition is met. We can easily check this.
 
 First, we can check the set of edges given by the intersection of unit disks:
 
