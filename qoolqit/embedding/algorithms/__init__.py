@@ -1,3 +1,4 @@
 from __future__ import annotations
 
-from .spring_layout import SpringLayoutConfig, spring_layout_embedding
+from .interaction_embedding import InteractionEmbeddingConfig, interaction_embedding
+from .spring_layout_embedding import SpringLayoutConfig, spring_layout_embedding

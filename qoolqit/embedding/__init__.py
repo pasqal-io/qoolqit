@@ -4,4 +4,4 @@ from .algorithms import SpringLayoutConfig
 from .base_embedder import BaseEmbedder
 from .embedders import SpringLayoutEmbedder, UnitDiskEmbedder
 
-__all__ = ["UnitDiskEmbedder", "SpringLayoutConfig"]
+__all__ = ["UnitDiskEmbedder", "SpringLayoutEmbedder", "SpringLayoutConfig"]

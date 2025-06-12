@@ -9,10 +9,10 @@ from .base_embedder import BaseEmbedder, EmbeddingConfig
 
 
 class UnitDiskEmbedder(BaseEmbedder[DataGraph, DataGraph]):
-    """A family of embedders that map a DataGraph to a DataGraph.
+    """A family of embedders that map a graph to a graph.
 
     Focused on unit-disk graph embedding, where the goal is to find a set of coordinates
-    for a graph that has no coordinates, such that the final unit-disk graph matches the
+    for a graph that has no coordinates, such that the final unit-disk edges matches the
     set of edges in the original graph.
 
     A custom algorithm and configuration can be set at initialization.

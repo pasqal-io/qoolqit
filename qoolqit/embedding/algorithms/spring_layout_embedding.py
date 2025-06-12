@@ -11,8 +11,9 @@ from ..base_embedder import EmbeddingConfig
 
 @dataclass
 class SpringLayoutConfig(EmbeddingConfig):
-    """Optimal distance between nodes."""
+    """Configuration parameters for the spring-layout embedding."""
 
+    """Optimal distance between nodes."""
     k: float | None = None
 
     """Maximum number of iterations taken."""
