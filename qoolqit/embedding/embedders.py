@@ -35,3 +35,6 @@ class UnitDiskEmbedder(BaseEmbedder[DataGraph, DataGraph]):
         graph = DataGraph(data.edges)
         graph.coords = self.algorithm(data, **self.config.dict())
         return graph
+
+
+class SpringLayoutEmbedder(UnitDiskEmbedder): ...
