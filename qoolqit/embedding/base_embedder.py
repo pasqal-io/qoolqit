@@ -76,9 +76,6 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
     @property
     def info(self) -> None:
         """Prints info about the embedding algorithm."""
-        print("-- Embedder docstring:")
-        print(inspect.getdoc(self))
-        print("")
         print("-- Embedding agorithm docstring:")
         print(inspect.getdoc(self.algorithm))
 
