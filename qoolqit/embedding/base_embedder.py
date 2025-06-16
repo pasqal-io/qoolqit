@@ -51,7 +51,9 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
         algo_signature = inspect.signature(algorithm)
 
         if not isinstance(config, EmbeddingConfig):
-            raise TypeError("The config dataclass must inherit from EmbeddingConfig.")
+            raise TypeError(
+                "The config must be an instance of a dataclass inheriting from EmbeddingConfig."
+            )
 
         if not set(config.dict().keys()) <= set(algo_signature.parameters):
             raise KeyError(
@@ -76,7 +78,7 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
     @property
     def info(self) -> None:
         """Prints info about the embedding algorithm."""
-        print("-- Embedding agorithm docstring:")
+        print("-- Embedding agorithm docstring:\n")
         print(inspect.getdoc(self.algorithm))
 
     @abstractmethod

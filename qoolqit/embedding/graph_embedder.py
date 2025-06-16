@@ -26,7 +26,7 @@ class GraphToGraphEmbedder(BaseEmbedder[DataGraph, DataGraph]):
     def validate_output(self, result: DataGraph) -> None:
         if not isinstance(result, DataGraph):
             raise TypeError(
-                f"Expected embedding result to be of type DataGraph {type(result)}, "
+                f"Expected embedding result to be of type DataGraph, "
                 + f"received {type(result)} instead."
             )
 
