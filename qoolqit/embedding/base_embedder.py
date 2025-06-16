@@ -5,12 +5,8 @@ from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
 from typing import Callable, Generic, TypeVar
 
-import numpy as np
-
-from qoolqit.graphs import DataGraph
-
-InDataType = TypeVar("InDataType", DataGraph, np.ndarray)
-OutDataType = TypeVar("OutDataType", DataGraph, np.ndarray)
+InDataType = TypeVar("InDataType")
+OutDataType = TypeVar("OutDataType")
 
 
 @dataclass
