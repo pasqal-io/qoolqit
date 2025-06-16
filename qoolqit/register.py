@@ -21,7 +21,7 @@ class Register:
         """
         if not isinstance(qubits, dict):
             raise TypeError(
-                "Register must be initialized with a dictionary a dictionary of "
+                "Register must be initialized with a dictionary of "
                 "qubits and respective coordinates {q: (x, y), ...}."
             )
 
@@ -36,7 +36,10 @@ class Register:
         """
 
         if not graph.has_coords:
-            raise ValueError("Initializing a a register from a graph requires node coordinates.")
+            raise ValueError("Initializing a register from a graph requires node coordinates.")
+
+        if len(graph.nodes) == 0:
+            raise ValueError("Trying to initialize a register from an empty graph.")
 
         return cls(graph.coords)
 

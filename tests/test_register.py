@@ -46,3 +46,7 @@ def test_register_from_graph(n_nodes: int) -> None:
     with pytest.raises(ValueError):
         graph = DataGraph.random_er(n_nodes, 0.5)
         register = Register.from_graph(graph)
+
+    with pytest.raises(ValueError):
+        graph = DataGraph()
+        register = Register.from_graph(graph)

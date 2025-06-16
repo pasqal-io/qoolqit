@@ -84,8 +84,8 @@ class DataGraph(BaseGraph):
             p: probability that any two nodes connect.
         """
         base_graph = nx.erdos_renyi_graph(n, p)
-        graph = cls(list(base_graph.edges))
-        graph.add_nodes_from(base_graph)
+        graph = DataGraph.from_nodes(list(base_graph.nodes))
+        graph.add_edges_from(base_graph.edges)
         graph._reset_dicts()
         return graph
 
