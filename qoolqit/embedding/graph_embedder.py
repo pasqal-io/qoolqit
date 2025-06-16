@@ -19,15 +19,15 @@ class GraphToGraphEmbedder(BaseEmbedder[DataGraph, DataGraph]):
     def validate_input(self, data: DataGraph) -> None:
         if not isinstance(data, DataGraph):
             raise TypeError(
-                f"Data of type {type(data)} not supported. "
+                f"Embedding data of type {type(data)} not supported by this embedder. "
                 + f"{self.__class__.__name__} requires data of type DataGraph."
             )
 
     def validate_output(self, result: DataGraph) -> None:
         if not isinstance(result, DataGraph):
             raise TypeError(
-                f"Expected embedding result to be of type DataGraph, "
-                + f"received {type(result)} instead."
+                "Expected embedding result to be of type DataGraph, "
+                + f"algorithm returned {type(result)} instead."
             )
 
 
