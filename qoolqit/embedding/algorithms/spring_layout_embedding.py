@@ -13,13 +13,8 @@ from ..base_embedder import EmbeddingConfig
 class SpringLayoutConfig(EmbeddingConfig):
     """Configuration parameters for the spring-layout embedding."""
 
-    """Optimal distance between nodes."""
     k: float | None = None
-
-    """Maximum number of iterations taken."""
     iterations: int = 50
-
-    """Threshold for relative error in node position changes."""
     threshold: float = 1e-4
 
 
@@ -28,7 +23,20 @@ def spring_layout_embedding(
     k: float,
     iterations: int,
     threshold: float,
-) -> dict:
-    """Wraps the networkx spring layout algorithm."""
-    coordinates: dict = nx.spring_layout(graph, k=k, iterations=iterations, threshold=threshold)
-    return coordinates
+) -> DataGraph:
+    """Force-directed embedding, wrapping nx.spring_layout.
+
+    Generates a graph with the same nodes and edges as the original graph, but with
+    node coordinates set to be the positions given by nx.spring_layout.
+
+    Check the documentation for nx.spring_layout for more information on each parameter.
+
+    Arguments:
+        graph: the graph to embed.
+        k: optimal distance between nodes.
+        iterations: maximum number of iterations to take.
+        threshold: threshold value for relative error in node position changes.
+    """
+    output_graph = DataGraph(graph.edges)
+    output_graph.coords = nx.spring_layout(graph, k=k, iterations=iterations, threshold=threshold)
+    return output_graph

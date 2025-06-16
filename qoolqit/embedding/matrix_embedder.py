@@ -15,7 +15,7 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph]):
     A custom algorithm and configuration can be set at initialization.
     """
 
-    def validate_data(self, data: np.ndarray) -> None:
+    def validate_input(self, data: np.ndarray) -> None:
         if not isinstance(data, np.ndarray):
             raise TypeError(
                 f"Data of type {type(data)} not supported. {self.__class__.__name__} "
@@ -26,16 +26,14 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph]):
         if not np.allclose(data, data.T, rtol=0.0, atol=ATOL_32):
             raise ValueError("Data must be a symmetric matrix.")
 
-    def _run_algorithm(self, data: np.ndarray) -> DataGraph:
-        coords = self.algorithm(data, **self.config.dict())
-        graph = DataGraph.from_coordinates(coords.tolist())
-        return graph
+    def validate_output(self, result: DataGraph) -> None:
+        if not isinstance(result, DataGraph):
+            raise TypeError(
+                f"Expected embedding result to be of type DataGraph {type(result)}, "
+                + f"received {type(result)} instead."
+            )
 
 
 class InteractionEmbedder(MatrixToGraphEmbedder):
-
-    def __init__(self, config: InteractionEmbeddingConfig | None = None):
-        algorithm = interaction_embedding
-        if config is None:
-            config = InteractionEmbeddingConfig()
-        super().__init__(algorithm, config)
+    def __init__(self) -> None:
+        super().__init__(interaction_embedding, InteractionEmbeddingConfig())

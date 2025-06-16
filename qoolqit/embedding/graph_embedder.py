@@ -16,22 +16,21 @@ class GraphToGraphEmbedder(BaseEmbedder[DataGraph, DataGraph]):
     A custom algorithm and configuration can be set at initialization.
     """
 
-    def validate_data(self, data: DataGraph) -> None:
+    def validate_input(self, data: DataGraph) -> None:
         if not isinstance(data, DataGraph):
             raise TypeError(
                 f"Data of type {type(data)} not supported. "
                 + f"{self.__class__.__name__} requires data of type DataGraph."
             )
 
-    def _run_algorithm(self, data: DataGraph) -> DataGraph:
-        graph = DataGraph(data.edges)
-        graph.coords = self.algorithm(data, **self.config.dict())
-        return graph
+    def validate_output(self, result: DataGraph) -> None:
+        if not isinstance(result, DataGraph):
+            raise TypeError(
+                f"Expected embedding result to be of type DataGraph {type(result)}, "
+                + f"received {type(result)} instead."
+            )
 
 
 class SpringLayoutEmbedder(GraphToGraphEmbedder):
-    def __init__(self, config: SpringLayoutConfig | None = None):
-        algorithm = spring_layout_embedding
-        if config is None:
-            config = SpringLayoutConfig()
-        super().__init__(algorithm, config)
+    def __init__(self) -> None:
+        super().__init__(spring_layout_embedding, SpringLayoutConfig())

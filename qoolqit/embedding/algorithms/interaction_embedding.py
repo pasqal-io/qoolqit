@@ -6,6 +6,8 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.spatial.distance import pdist, squareform
 
+from qoolqit.graphs import DataGraph
+
 from ..base_embedder import EmbeddingConfig
 
 
@@ -13,17 +15,25 @@ from ..base_embedder import EmbeddingConfig
 class InteractionEmbeddingConfig(EmbeddingConfig):
     """Configuration parameters for the interaction embedding."""
 
-    """Method passed to scipy.minimize."""
     method: str = "Nelder-Mead"
-
-    """Maximum iterations passed to scipy.minimize."""
     maxiter: int = 200000
-
-    """Tolerance passed to scipy.minimize."""
     tol: float = 1e-8
 
 
 def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: float) -> np.ndarray:
+    """Matrix embedding into the interaction term of the Rydberg Analog Model.
+
+    Uses scipy.minimize to find the optimal set of node coordinates such that the
+    matrix of values 1/(r_ij)^6 approximate the off-diagonal terms of the input matrix.
+
+    Check scipy.minimize documentation for more information on each parameter.
+
+    Arguments:
+        matrix: the matrix to embed.
+        method: the method used by scipy.minimize.
+        maxiter: maximum number of iterations.
+        tol: tolerance for termination.
+    """
 
     def cost_function(new_coords: np.ndarray, matrix: np.ndarray) -> np.float:
         """Cost function."""
@@ -48,4 +58,6 @@ def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: fl
 
     coords = np.reshape(res.x, (len(matrix), 2))
 
-    return coords
+    graph = DataGraph.from_coordinates(coords.tolist())
+
+    return graph

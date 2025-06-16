@@ -36,14 +36,28 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
     """
 
     def __init__(self, algorithm: Callable, config: EmbeddingConfig) -> None:
+        """Default initializer for all embedders, taking an algorithm and a config.
+
+        An algorithm should be a standalone function that takes a piece of data of an
+        InDataType and maps it to an OutDataType. Any extra configuration parameters
+        taken as input by the algorithm function should be defined in the config dataclass,
+        inheriting from EmbeddingConfig.
+
+        Arguments:
+            algorithm: a callable to the algorithm function.
+            config: a config dataclass holding parameter values for the algorithm.
+        """
 
         algo_signature = inspect.signature(algorithm)
+
+        if not isinstance(config, EmbeddingConfig):
+            raise TypeError("The config dataclass must inherit from EmbeddingConfig.")
 
         if not set(config.dict().keys()) <= set(algo_signature.parameters):
             raise KeyError(
                 f"Config {config.__class__.__name__} is not compatible with the "
-                + f"algorithm {algorithm.__name__}, as not all fields correspond to "
-                + "keyword arguments in the algorithm function."
+                + f"algorithm {algorithm.__name__}, as not all configuration fields "
+                + "correspond to keyword arguments in the algorithm function."
             )
 
         self._algorithm = algorithm
@@ -69,7 +83,7 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
         print(inspect.getdoc(self.algorithm))
 
     @abstractmethod
-    def validate_data(self, data: InDataType) -> None:
+    def validate_input(self, data: InDataType) -> None:
         """Checks if the given data is compatible with the embedder.
 
         Each embedder should write its own data validator. If the data
@@ -86,25 +100,32 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
         ...
 
     @abstractmethod
-    def _run_algorithm(self, data: InDataType) -> OutDataType:
-        """Runs the embedding algorithm.
+    def validate_output(self, result: OutDataType) -> None:
+        """Checks if the resulting output is expected by the embedder.
 
-        Each embedder should write the specific steps required to go from the
-        InDataType to the OutDataType, including any intermediate steps or post processing.
+        Each embedder should write its own output validator. If the result
+        is not of the supported type or in the specific supported format
+        for that embedder, an error should be raised.
 
         Arguments:
-            data: the data to embed.
+            result: the output to validate.
+
+        Raises:
+            TypeError: if the output is not of the supported type.
+            SomeError: some other error if other constraints are not met.
         """
         ...
 
     def embed(self, data: InDataType) -> OutDataType:
-        """Checks if the data is valid and then runs the embedding algorithm.
+        """Validates the input, runs the embedding algorithm, and validates the output.
 
         Arguments:
             data: the data to embed.
         """
-        self.validate_data(data)
-        return self._run_algorithm(data)
+        self.validate_input(data)
+        result: OutDataType = self.algorithm(data, **self.config.dict())
+        self.validate_output(result)
+        return result
 
     def __str__(self) -> str:
         string = (
