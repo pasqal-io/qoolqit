@@ -85,6 +85,7 @@ class DataGraph(BaseGraph):
         """
         base_graph = nx.erdos_renyi_graph(n, p)
         graph = cls(list(base_graph.edges))
+        graph.add_nodes_from(base_graph)
         graph._reset_dicts()
         return graph
 

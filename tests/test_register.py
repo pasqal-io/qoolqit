@@ -43,7 +43,6 @@ def test_register_from_graph(n_nodes: int) -> None:
         assert q == v
         assert tuple(pos1) == tuple(pos2)
 
-    graph = DataGraph.random_er(n_nodes, 0.5)
-
     with pytest.raises(ValueError):
+        graph = DataGraph.random_er(n_nodes, 0.5)
         register = Register.from_graph(graph)
