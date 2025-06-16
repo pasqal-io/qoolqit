@@ -32,5 +32,7 @@ class GraphToGraphEmbedder(BaseEmbedder[DataGraph, DataGraph]):
 
 
 class SpringLayoutEmbedder(GraphToGraphEmbedder):
+    """A graph to graph embedder using the spring layout algorithm."""
+
     def __init__(self) -> None:
         super().__init__(spring_layout_embedding, SpringLayoutConfig())

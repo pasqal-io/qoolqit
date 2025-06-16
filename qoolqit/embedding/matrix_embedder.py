@@ -35,5 +35,7 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph]):
 
 
 class InteractionEmbedder(MatrixToGraphEmbedder):
+    """A matrix to graph embedder using the interaction embedding algorithm."""
+
     def __init__(self) -> None:
         super().__init__(interaction_embedding, InteractionEmbeddingConfig())
