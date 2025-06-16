@@ -9,7 +9,6 @@ import numpy as np
 
 from qoolqit.graphs import DataGraph
 
-# List is a placeholder, the idea is to later extend the supported data types
 InDataType = TypeVar("InDataType", DataGraph, np.ndarray)
 OutDataType = TypeVar("OutDataType", DataGraph, np.ndarray)
 
@@ -24,6 +23,7 @@ class EmbeddingConfig(ABC):
     """
 
     def dict(self) -> dict:
+        """Returns the dataclass as a dictionary."""
         return asdict(self)
 
 
@@ -40,7 +40,11 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
         algo_signature = inspect.signature(algorithm)
 
         if not set(config.dict().keys()) <= set(algo_signature.parameters):
-            raise KeyError("Config is not compatible with the given algorithm.")
+            raise KeyError(
+                f"Config {config.__class__.__name__} is not compatible with the "
+                + f"algorithm {algorithm.__name__}, as not all fields correspond to "
+                + "keyword arguments in the algorithm function."
+            )
 
         self._algorithm = algorithm
         self._config = config
@@ -65,13 +69,19 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
         print(inspect.getdoc(self.algorithm))
 
     @abstractmethod
-    def validate_data(self, data: InDataType) -> bool:
+    def validate_data(self, data: InDataType) -> None:
         """Checks if the given data is compatible with the embedder.
 
-        Each embedder should write its own data validator returning True / False.
+        Each embedder should write its own data validator. If the data
+        is not of the supported type or in the specific supported format
+        for that embedder, an error should be raised.
 
         Arguments:
             data: the data to validate.
+
+        Raises:
+            TypeError: if the data is not of the supported type.
+            SomeError: some other error if other constraints are not met.
         """
         ...
 
@@ -93,10 +103,8 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
         Arguments:
             data: the data to embed.
         """
-        if self.validate_data(data):
-            return self._run_algorithm(data)
-        else:
-            raise TypeError(f"Embedder does not support data of type {type(data)}.")
+        self.validate_data(data)
+        return self._run_algorithm(data)
 
     def __str__(self) -> str:
         string = (

@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-from typing import Callable
-
 from qoolqit.graphs import DataGraph
 
 from .algorithms import SpringLayoutConfig, spring_layout_embedding
-from .base_embedder import BaseEmbedder, EmbeddingConfig
+from .base_embedder import BaseEmbedder
 
 
-class UnitDiskEmbedder(BaseEmbedder[DataGraph, DataGraph]):
+class GraphToGraphEmbedder(BaseEmbedder[DataGraph, DataGraph]):
     """A family of embedders that map a graph to a graph.
 
     Focused on unit-disk graph embedding, where the goal is to find a set of coordinates
@@ -18,11 +16,12 @@ class UnitDiskEmbedder(BaseEmbedder[DataGraph, DataGraph]):
     A custom algorithm and configuration can be set at initialization.
     """
 
-    def __init__(self, algorithm: Callable, config: EmbeddingConfig) -> None:
-        super().__init__(algorithm, config)
-
-    def validate_data(self, data: DataGraph) -> bool:
-        return isinstance(data, DataGraph)
+    def validate_data(self, data: DataGraph) -> None:
+        if not isinstance(data, DataGraph):
+            raise TypeError(
+                f"Data of type {type(data)} not supported. "
+                + f"{self.__class__.__name__} requires data of type DataGraph."
+            )
 
     def _run_algorithm(self, data: DataGraph) -> DataGraph:
         graph = DataGraph(data.edges)
@@ -30,7 +29,7 @@ class UnitDiskEmbedder(BaseEmbedder[DataGraph, DataGraph]):
         return graph
 
 
-class SpringLayoutEmbedder(UnitDiskEmbedder):
+class SpringLayoutEmbedder(GraphToGraphEmbedder):
     def __init__(self, config: SpringLayoutConfig | None = None):
         algorithm = spring_layout_embedding
         if config is None:
