@@ -5,9 +5,6 @@ from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
 from typing import Callable, Generic, TypeVar
 
-InDataType = TypeVar("InDataType")
-OutDataType = TypeVar("OutDataType")
-
 
 @dataclass
 class EmbeddingConfig(ABC):
@@ -23,7 +20,12 @@ class EmbeddingConfig(ABC):
         return asdict(self)
 
 
-class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
+InDataType = TypeVar("InDataType")
+OutDataType = TypeVar("OutDataType")
+ConfigType = TypeVar("ConfigType", bound=EmbeddingConfig)
+
+
+class BaseEmbedder(ABC, Generic[InDataType, OutDataType, ConfigType]):
     """Abstract base class for all embedders.
 
     An embedder is a function that maps a InDataType to an OutDataType
@@ -31,7 +33,7 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
     can be customized through the EmbeddingConfig.
     """
 
-    def __init__(self, algorithm: Callable, config: EmbeddingConfig) -> None:
+    def __init__(self, algorithm: Callable, config: ConfigType) -> None:
         """Default initializer for all embedders, taking an algorithm and a config.
 
         An algorithm should be a standalone function that takes a piece of data of an
@@ -62,7 +64,7 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType]):
         self._config = config
 
     @property
-    def config(self) -> EmbeddingConfig:
+    def config(self) -> ConfigType:
         """Returns the config for the embedding algorithm."""
         return self._config
 

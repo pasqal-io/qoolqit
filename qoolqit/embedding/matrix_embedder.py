@@ -6,10 +6,10 @@ from qoolqit.graphs import DataGraph
 from qoolqit.utils import ATOL_32
 
 from .algorithms import InteractionEmbeddingConfig, interaction_embedding
-from .base_embedder import BaseEmbedder
+from .base_embedder import BaseEmbedder, ConfigType
 
 
-class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph]):
+class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
     """A family of embedders that map a matrix to a graph.
 
     A custom algorithm and configuration can be set at initialization.
@@ -34,7 +34,7 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph]):
             )
 
 
-class InteractionEmbedder(MatrixToGraphEmbedder):
+class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbeddingConfig]):
     """A matrix to graph embedder using the interaction embedding algorithm."""
 
     def __init__(self) -> None:

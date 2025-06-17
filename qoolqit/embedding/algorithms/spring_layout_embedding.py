@@ -37,6 +37,7 @@ def spring_layout_embedding(
         iterations: maximum number of iterations to take.
         threshold: threshold value for relative error in node position changes.
     """
-    output_graph = DataGraph(graph.edges)
+    output_graph = DataGraph.from_nodes(graph.nodes)
+    output_graph.add_edges_from(graph.edges)
     output_graph.coords = nx.spring_layout(graph, k=k, iterations=iterations, threshold=threshold)
     return output_graph

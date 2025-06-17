@@ -3,10 +3,10 @@ from __future__ import annotations
 from qoolqit.graphs import DataGraph
 
 from .algorithms import SpringLayoutConfig, spring_layout_embedding
-from .base_embedder import BaseEmbedder
+from .base_embedder import BaseEmbedder, ConfigType
 
 
-class GraphToGraphEmbedder(BaseEmbedder[DataGraph, DataGraph]):
+class GraphToGraphEmbedder(BaseEmbedder[DataGraph, DataGraph, ConfigType]):
     """A family of embedders that map a graph to a graph.
 
     Focused on unit-disk graph embedding, where the goal is to find a set of coordinates
@@ -31,7 +31,7 @@ class GraphToGraphEmbedder(BaseEmbedder[DataGraph, DataGraph]):
             )
 
 
-class SpringLayoutEmbedder(GraphToGraphEmbedder):
+class SpringLayoutEmbedder(GraphToGraphEmbedder[SpringLayoutConfig]):
     """A graph to graph embedder using the spring layout algorithm."""
 
     def __init__(self) -> None:
