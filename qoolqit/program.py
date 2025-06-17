@@ -1,14 +1,16 @@
 from __future__ import annotations
 
+from typing import Any
+
 import matplotlib.pyplot as plt
-import numpy as np
 from numpy.typing import ArrayLike
 from pulser.sequence.sequence import Sequence as PulserSequence
-from pulser_simulation import QutipEmulator
 
 from qoolqit.devices import Device, MockDevice
 from qoolqit.drive import Drive
 from qoolqit.execution import CompilerProfile, SequenceCompiler
+from qoolqit.execution.backend import Backend
+from qoolqit.execution.utils import BackendName, ResultType
 from qoolqit.register import Register
 
 __all__ = ["QuantumProgram"]
@@ -26,10 +28,14 @@ class QuantumProgram:
         self,
         register: Register,
         drive: Drive,
+        backend_name: BackendName = BackendName.QUTIP,
+        **backend_params: Any,
     ) -> None:
 
         self._register = register
         self._drive = drive
+        self._backend_name = backend_name
+        self._backend_params = backend_params
         self._compiled_sequence: PulserSequence | None = None
         self._device: Device | None = None
 
@@ -118,16 +124,31 @@ class QuantumProgram:
                 else:
                     return None
 
-    def run(self) -> ArrayLike:
-        """Temporary method to run a simulation on QuTip."""
+    def run(self, result_type: ResultType = ResultType.STATE_VECTOR, runs: int = 100) -> ArrayLike:
+        """Run the compiled sequence on selected backend."""
         if self._compiled_sequence is None:
             raise ValueError(
                 "Program has not been compiled. Please call program.compile_to(device)."
             )
         elif self._device is not None:
-            with_modulation = not isinstance(self._device, MockDevice)
-            simulator = QutipEmulator.from_sequence(
-                self._compiled_sequence, with_modulation=with_modulation
+            # initialize the backend
+            self._backend_params["with_modulation"] = not isinstance(self._device, MockDevice)
+            self._backend = Backend(
+                self._compiled_sequence, self._backend_name, result_type, **self._backend_params
             )
-            result = simulator.run()
-            return np.array([np.flip(result[i].state[:].flatten()) for i in range(len(result))])
+
+        return self._backend.run(runs)
+
+    # def run(self) -> ArrayLike:
+    #     """Temporary method to run a simulation on QuTip."""
+    #     if self._compiled_sequence is None:
+    #         raise ValueError(
+    #             "Program has not been compiled. Please call program.compile_to(device)."
+    #         )
+    #     elif self._device is not None:
+    #         with_modulation = not isinstance(self._device, MockDevice)
+    #         simulator = QutipEmulator.from_sequence(
+    #             self._compiled_sequence, with_modulation=with_modulation
+    #         )
+    #         result = simulator.run()
+    #         return np.array([np.flip(result[i].state[:].flatten()) for i in range(len(result))])
