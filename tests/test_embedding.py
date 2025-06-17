@@ -1,12 +1,19 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 import numpy as np
 import pytest
 
-from qoolqit.embedding import EmbeddingConfig, InteractionEmbedder, SpringLayoutEmbedder, GraphToGraphEmbedder, MatrixToGraphEmbedder, SpringLayoutConfig, InteractionEmbeddingConfig
+from qoolqit.embedding import (
+    EmbeddingConfig,
+    GraphToGraphEmbedder,
+    InteractionEmbedder,
+    MatrixToGraphEmbedder,
+    SpringLayoutEmbedder,
+)
 from qoolqit.graphs import DataGraph
 
-from dataclasses import dataclass
 
 @pytest.mark.parametrize("n_qubits", [3, 5, 10])
 def test_spring_layout_embedding(n_qubits: int) -> None:
@@ -76,31 +83,31 @@ def test_custom_embedders() -> None:
         param1: float = 1.0
 
     with pytest.raises(TypeError):
-        embedder = GraphToGraphEmbedder(some_embedding_algo, SomeConfig())
+        embedder = GraphToGraphEmbedder(some_embedding_algo, SomeConfig())  # type: ignore
 
     ### Config params don't match algo params
     @dataclass
-    class SomeConfig(EmbeddingConfig):
+    class SomeConfig(EmbeddingConfig):  # type: ignore
         param2: float = 1.0
 
     with pytest.raises(KeyError):
-        embedder = GraphToGraphEmbedder(some_embedding_algo, SomeConfig())
+        embedder = GraphToGraphEmbedder(some_embedding_algo, SomeConfig())  # type: ignore
 
     ### Embedding function returns unexpected data
     @dataclass
-    class SomeConfig(EmbeddingConfig):
+    class SomeConfig(EmbeddingConfig):  # type: ignore
         param1: float = 1.0
 
     def some_wrong_embedding_algo(data: DataGraph, param1: float) -> float:
         return 2.0
 
-    embedder = GraphToGraphEmbedder(some_wrong_embedding_algo, SomeConfig())
+    embedder = GraphToGraphEmbedder(some_wrong_embedding_algo, SomeConfig())  # type: ignore
 
     with pytest.raises(TypeError):
         graph = DataGraph.random_er(5, 0.5)
         embedder.embed(graph)
 
-    embedder = MatrixToGraphEmbedder(some_wrong_embedding_algo, SomeConfig())
+    embedder = MatrixToGraphEmbedder(some_wrong_embedding_algo, SomeConfig())  # type: ignore
 
     with pytest.raises(TypeError):
         matrix = np.random.rand(5, 5)

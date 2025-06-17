@@ -10,6 +10,8 @@ nav:
   - Contents:
     - Problem generation:
       - Graphs: contents/graphs.md
+    - Problem embedding:
+      - Algorithms: contents/embedding.md
     - Writing a quantum program:
       - Registers: contents/registers.md
       - Waveforms: contents/waveforms.md
