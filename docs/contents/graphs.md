@@ -123,6 +123,8 @@ graph.min_distance(connected = False)
 
 Working with node coordinates and distances is an essential part of dealing with unit-disk graphs.
 
+<a name="unit-disk"></a>
+
 !!! info "Definition: Unit-Disk Graphs"
     For a set of nodes $V$, each node $i\in V$ marked by a set of coordinates $(x, y)_i$ in Euclidean space, a set of edges $E$ and a radius $R$, a Unit-Disk Graph $UDG(V, E, R)$ is such that there exists an edge $(i, j)\in E$ for two nodes $i$ and $j$ if and only if $\text{dist}(i, j) \leq R$, where $\text{dist}(i, j)$ is the Euclidean distance between the coordinates of nodes $i$ and $j$.
 
@@ -237,7 +239,7 @@ Other generic constructors are also available which have no information on node 
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 # An Erdős–Rényi random graph
-graph = DataGraph.random_er(n = 10, p = 0.5)
+graph = DataGraph.random_er(n = 10, p = 0.5, seed = 1)
 
 graph.draw()
 fig = graph.draw(return_fig = True) # markdown-exec: hide

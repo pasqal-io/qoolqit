@@ -76,14 +76,14 @@ class DataGraph(BaseGraph):
         return graph
 
     @classmethod
-    def random_er(cls, n: int, p: float) -> DataGraph:
+    def random_er(cls, n: int, p: float, seed: int | None = None) -> DataGraph:
         """Constructs an Erdős–Rényi random graph.
 
         Arguments:
             n: number of nodes.
             p: probability that any two nodes connect.
         """
-        base_graph = nx.erdos_renyi_graph(n, p)
+        base_graph = nx.erdos_renyi_graph(n, p, seed)
         graph = DataGraph.from_nodes(list(base_graph.nodes))
         graph.add_edges_from(base_graph.edges)
         graph._reset_dicts()

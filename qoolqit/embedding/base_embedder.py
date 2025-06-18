@@ -74,10 +74,14 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType, ConfigType]):
         return self._algorithm
 
     @property
-    def info(self) -> None:
+    def info(self) -> str:
         """Prints info about the embedding algorithm."""
-        print("-- Embedding agorithm docstring:\n")
-        print(inspect.getdoc(self.algorithm))
+        header = "-- Embedding agorithm docstring:\n\n"
+        docstring: str | None = inspect.getdoc(self.algorithm)
+        if docstring is None:
+            raise ValueError("No information found for the embedding algorithm.")
+        else:
+            return header + docstring
 
     @abstractmethod
     def validate_input(self, data: InDataType) -> None:

@@ -16,13 +16,15 @@ class SpringLayoutConfig(EmbeddingConfig):
     k: float | None = None
     iterations: int = 50
     threshold: float = 1e-4
+    seed: int | None = None
 
 
 def spring_layout_embedding(
     graph: DataGraph,
-    k: float,
+    k: float | None,
     iterations: int,
     threshold: float,
+    seed: int | None,
 ) -> DataGraph:
     """Force-directed embedding, wrapping nx.spring_layout.
 
@@ -39,5 +41,7 @@ def spring_layout_embedding(
     """
     output_graph = DataGraph.from_nodes(graph.nodes)
     output_graph.add_edges_from(graph.edges)
-    output_graph.coords = nx.spring_layout(graph, k=k, iterations=iterations, threshold=threshold)
+    output_graph.coords = nx.spring_layout(
+        graph, k=k, iterations=iterations, threshold=threshold, seed=seed
+    )
     return output_graph
