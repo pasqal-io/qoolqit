@@ -90,7 +90,7 @@ embedded_graph_1.is_ud_graph()
 print(embedded_graph_1.is_ud_graph()) # markdown-exec: hide
 ```
 
-In this case the embedding was successful and we obtained a unit-disk graph. For more densely connected graphs, the spring layout algorithm struggles more with finding a unit-disk graph embedding.
+In this case the embedding was successful and we obtained a unit-disk graph. For more densely connected graphs, the spring layout algorithm tends to struggle with finding a unit-disk graph embedding, if it even exists.
 
 ```python exec="on" source="material-block" html="1" session="embedding"
 graph_2 = DataGraph.random_er(n = 7, p = 0.8, seed = 3)

@@ -1,6 +1,6 @@
 # Defining custom embedders
 
-In the [available embedders](available_embedders.md) page you saw the usage of some pre-defined embedders. The embedding module in QoolQit is designed to be flexible and extendable to various forms of embedding algorithms developed for the Rydberg analog model, with potentially different outputs and outputs, and different configuration parameters. It is structured in three levels:
+In the [available embedders](available_embedders.md) page you saw the usage of some pre-defined embedders. The embedding module in QoolQit is designed to be flexible and extendable to various forms of embedding algorithms developed for the Rydberg analog model, with potentially different inputs and outputs, and different configuration parameters. It is structured in three levels:
 
 **Level 0: Concretizing the interface**
 
@@ -13,13 +13,13 @@ The next level is to define the concrete data types involved in the mapping, thu
 - `GraphToGraphEmbedder` which concretizes the `BaseEmbedder` with a `DataGraph` input type and a `DataGraph` output type.
 - `MatrixToGraphEmbedder` which concretizes the `BaseEmbedder` with a `np.ndarray` input type and a `DataGraph` output type.
 
-In both cases, the `validate_input` and `validate_output` are overriden to check the input and output are of the correct type. In the case of the `MatrixToGraphEmbedder` conditions on the input matrix are also checked such as if the array has the right dimensions and is symmetric. Still, at this level, no speicific embedding algorithm is defined.
+In both cases, the `validate_input` and `validate_output` are overriden to check the input and output are of the correct type. In the case of the `MatrixToGraphEmbedder` conditions on the input matrix are also checked such as if the array has the right dimensions and is symmetric. Still, at this level, no specific embedding algorithm is defined.
 
 In the future, more families of embedders can be defined that may require different input and output data types.
 
 **Level 2: Concretizing the algorithms and configurations**
 
-The final level is defining concrete embedders, such as the ones we have used previously in this page. Here the requirement is to define a concrete function that maps the input to the output, along with any parameters required, and a config dataclass inheriting from `EmbeddingConfig` holding all the configuration parameters. In the exaples above, we used the `SpingLayoutEmbedder` which is a subclass of a `GraphToGraphEmbedder` and the `InteractionEmbedder` which is a subclass of the `MatrixToGraphEmbedder`.
+The final level is defining concrete embedders, such as the ones we have used in the [available embedders page](available_embedders.md). Here the requirement is to define a concrete function that maps the input to the output, along with any parameters required, and a config dataclass inheriting from `EmbeddingConfig` holding all the configuration parameters. In the previous examples, we used the `SpingLayoutEmbedder` which is a subclass of a `GraphToGraphEmbedder` and the `InteractionEmbedder` which is a subclass of the `MatrixToGraphEmbedder`.
 
 Let's exemplify the case of defining a custom embedder in the family of graph to graph embedders.
 
@@ -70,7 +70,7 @@ class MyNewEmbedder(GraphToGraphEmbedder):
 
 ## Automatic validation
 
-To define a custom embedder, the extra arguments (besides the data) the embedding function must match the fields in the configuration dataclass, otherwise an error will be raised.
+To define a custom embedder, the extra arguments in the embedding function (besides the data) must match the fields in the configuration dataclass, otherwise an error will be raised.
 
 ```python exec="on" source="material-block" result="json" session="embedding"
 def my_embedding_function(graph: DataGraph, param1: float) -> DataGraph:
@@ -86,7 +86,7 @@ except KeyError as error:
     print(error)
 ```
 
-Furthermore, because we are defining an embedder in the `GraphToGraphEmbedder` the input is always validated to being an instance of a `DataGraph`:
+Furthermore, because we are defining an embedder in the `GraphToGraphEmbedder` the input must be an instance of a `DataGraph`:
 
 ```python exec="on" source="material-block" result="json" session="embedding"
 embedder = GraphToGraphEmbedder(my_embedding_function, MyEmbeddingConfig())
@@ -98,7 +98,7 @@ except TypeError as error:
     print(error)
 ```
 
-Same thing with the output of the embedding function:
+The output of the embedding function must also be a `DataGraph`:
 
 ```python exec="on" source="material-block" result="json" session="embedding"
 def my_wrong_embedding_function(graph: DataGraph, param1: float) -> DataGraph:
