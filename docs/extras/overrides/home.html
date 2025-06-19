@@ -27,49 +27,19 @@
     </div>
 </section>
 
-<section class="main-features">
+<section class="main-content">
     <div class="md-grid md-typeset">
-        <div class="header">
+        <div class="top-summary">
             <p>A python package designed for algorithm development in the Rydberg Analog Model.</p>
         </div>
-        <!-- <div class="arch-container">
-            <div class="arch-image">
-                <img src="./extras/assets/qadence_arch.svg" draggable="false">
-            </div>
-            <div class="features">
-                <ul>
-                    <li> <p>Digital-analog programming made simple with block-based operations.</p></li>
-                    <li> <p>Arbitrary symbolic expressions built with <a href="https://www.sympy.org/en/index.html">Sympy</a> for parametric quantum programs.</p></li>
-                    <li> <p>Full automatic differentiation with <a href="https://pytorch.org/">PyTorch</a> integration.</p></li>
-                </ul>
-            </div>
-
-            ## MARKDOWN TO MAYBE ADAPT:
-
-            # QoolQit
-
-            QoolQit is a Python library designed for facilitating algorithm development in the Rydberg Analog Model.
-
-
-            ## Getting in touch
-
-            - [Pasqal Community Portal](https://community.pasqal.com/) (forums, chat, tutorials, examples, code library).
-            - [GitHub Repository](https://github.com/pasqal-io/qoolqit) (source code, issue tracker).
-            - [Professional Support](https://www.pasqal.com/contact-us/) (if you need tech support, custom licenses, a variant of this library optimized for your workload, your own QPU, remote access to a QPU, ...)
-
-            ## Contribute
-
-            The GitHub repository is open for contributions!
-
-            Don't forget to read the [Contributor License Agreement](CONTRIBUTOR AGREEMENT.md).
-
-        </div> -->
-
     </div>
 </section>
 
-
-
 {% endblock %}
-{% block content %}{% endblock %}
-{% block footer %}{% endblock %}
+
+{% block content %}
+    {{ page.content }}
+{% endblock %}
+{% block footer %}
+    {{ super() }}
+{% endblock %}
