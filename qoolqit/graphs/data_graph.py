@@ -82,6 +82,7 @@ class DataGraph(BaseGraph):
         Arguments:
             n: number of nodes.
             p: probability that any two nodes connect.
+            seed: random seed.
         """
         base_graph = nx.erdos_renyi_graph(n, p, seed)
         graph = DataGraph.from_nodes(list(base_graph.nodes))

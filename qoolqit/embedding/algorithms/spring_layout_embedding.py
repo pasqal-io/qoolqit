@@ -38,6 +38,7 @@ def spring_layout_embedding(
         k: optimal distance between nodes.
         iterations: maximum number of iterations to take.
         threshold: threshold value for relative error in node position changes.
+        sed: random seed.
     """
     output_graph = DataGraph.from_nodes(graph.nodes)
     output_graph.add_edges_from(graph.edges)
