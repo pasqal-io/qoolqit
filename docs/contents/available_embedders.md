@@ -90,7 +90,7 @@ embedded_graph_1.is_ud_graph()
 print(embedded_graph_1.is_ud_graph()) # markdown-exec: hide
 ```
 
-In this case the embedding was successful and we obtained a unit-disk graph. For more densely connected graphs, the spring layout algorithm tends to fail.
+In this case the embedding was successful and we obtained a unit-disk graph. For more densely connected graphs, the spring layout algorithm struggles more with finding a unit-disk graph embedding.
 
 ```python exec="on" source="material-block" html="1" session="embedding"
 graph_2 = DataGraph.random_er(n = 7, p = 0.8, seed = 3)
@@ -113,9 +113,9 @@ print(fig_to_html(fig2)) # markdown-exec: hide
 embedded_graph_2.is_ud_graph()
 print(embedded_graph_2.is_ud_graph()) # markdown-exec: hide
 ```
-While the algorithm converged and assigned positions to each node, the resulting embedded graph is clearly not a unit-disk graph.
+While the algorithm converged and assigned positions to each node, the resulting embedded graph fails the unit-disk graph test.
 
-However, in both cases, we have embedded the original data into an object that is compatible with the Rydberg analog model, as we can directly intantiate a register of qubits from a set of nodes with coordinates.
+However, in both cases, we have embedded the original data into a graph with coordinates, which is an object that is compatible with the Rydberg analog model. As such, we can directly intantiate a register of qubits from these graphs.
 
 ```python exec="on" source="material-block" html="1" session="embedding"
 from qoolqit import Register
