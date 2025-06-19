@@ -4,6 +4,7 @@ from importlib import import_module
 
 from .devices import *
 from .drive import *
+from .embedding import *
 from .execution import *
 from .graphs import *
 from .program import *
@@ -18,6 +19,7 @@ list_of_submodules = [
     ".register",
     ".program",
     ".execution",
+    ".embedding",
 ]
 
 __all__ = []

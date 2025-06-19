@@ -6,10 +6,10 @@ A `Register` defines the qubit resources to be used by a quantum program.
 from qoolqit import Register
 
 qubits = {
-    0: (0.0, 0.0),
-    1: (0.0, 1.0),
-    2: (1.0, 0.0),
-    3: (1.0, 1.0),
+    0: (-0.5, -0.5),
+    1: (-0.5, 0.5),
+    2: (0.5, -0.5),
+    3: (0.5, 0.5),
 }
 
 register = Register(qubits)
@@ -21,7 +21,7 @@ It can be instantiated from a list of coordinates.
 
 ```python exec="on" source="material-block" html="1" session="registers"
 
-coords = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]
+coords = [(-0.5, -0.5), (-0.5, 0.5), (0.5, -0.5), (0.5, 0.5)]
 
 register = Register.from_coordinates(coords)
 
