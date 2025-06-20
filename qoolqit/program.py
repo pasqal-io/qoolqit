@@ -1,19 +1,20 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Union
 
 import matplotlib.pyplot as plt
-from numpy.typing import ArrayLike
 from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device, MockDevice
 from qoolqit.drive import Drive
 from qoolqit.execution import CompilerProfile, SequenceCompiler
-from qoolqit.execution.backend import Backend
+from qoolqit.execution.backend import EmuMPSBackend, OutputType, QutipBackend
 from qoolqit.execution.utils import BackendName, ResultType
 from qoolqit.register import Register
 
 __all__ = ["QuantumProgram"]
+
+BackendType = Union[QutipBackend, EmuMPSBackend]
 
 
 class QuantumProgram:
@@ -28,14 +29,10 @@ class QuantumProgram:
         self,
         register: Register,
         drive: Drive,
-        backend_name: BackendName = BackendName.QUTIP,
-        **backend_params: Any,
     ) -> None:
 
         self._register = register
         self._drive = drive
-        self._backend_name = backend_name
-        self._backend_params = backend_params
         self._compiled_sequence: PulserSequence | None = None
         self._device: Device | None = None
 
@@ -124,7 +121,14 @@ class QuantumProgram:
                 else:
                     return None
 
-    def run(self, result_type: ResultType = ResultType.STATE_VECTOR, runs: int = 100) -> ArrayLike:
+    def run(
+        self,
+        backend_name: BackendName = BackendName.QUTIP,
+        result_type: ResultType = ResultType.STATEVECTOR,
+        runs: int = 100,
+        evaluation_times: list[float] = [1.0],
+        **backend_params: Any,
+    ) -> OutputType:
         """Run the compiled sequence on selected backend."""
         if self._compiled_sequence is None:
             raise ValueError(
@@ -132,12 +136,14 @@ class QuantumProgram:
             )
         elif self._device is not None:
             # initialize the backend
-            self._backend_params["with_modulation"] = not isinstance(self._device, MockDevice)
-            self._backend = Backend(
-                self._compiled_sequence, self._backend_name, result_type, **self._backend_params
-            )
+            backend_params["with_modulation"] = not isinstance(self._device, MockDevice)
+            backend: BackendType
+            if backend_name == BackendName.QUTIP:
+                backend = QutipBackend(self._compiled_sequence, result_type, **backend_params)
+            elif backend_name == BackendName.EMUMPS:
+                backend = EmuMPSBackend(self._compiled_sequence, result_type, **backend_params)
 
-        return self._backend.run(runs)
+        return backend.run(runs, evaluation_times)
 
     # def run(self) -> ArrayLike:
     #     """Temporary method to run a simulation on QuTip."""

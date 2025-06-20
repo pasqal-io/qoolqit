@@ -30,6 +30,7 @@ dependencies = [
   "pulser",
   "matplotlib",
   "networkx",
+  "emu_mps"
 ]
 
 [tool.hatch.metadata]

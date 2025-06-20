@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import string
+from abc import ABC, abstractmethod
 from collections import Counter
 from typing import Any, Union
 
@@ -16,23 +17,22 @@ from pulser.backends import QutipBackendV2
 
 from qoolqit.execution.utils import BackendName, ResultType
 
-AVAILABLE_BACKENDS = {BackendName.QUTIP: QutipBackendV2, BackendName.EMU_MPS: MPSBackend}
+AVAILABLE_BACKENDS = {BackendName.QUTIP: QutipBackendV2, BackendName.EMUMPS: MPSBackend}
 
-AVAILABLE_CONFIGS = {BackendName.QUTIP: EmulationConfig, BackendName.EMU_MPS: MPSConfig}
+AVAILABLE_CONFIGS = {BackendName.QUTIP: EmulationConfig, BackendName.EMUMPS: MPSConfig}
 
-ResType = Union[np.ndarray, list[Counter]]
+OutputType = Union[np.ndarray, list[Counter]]
 
 
-class Backend:
-    """Wrapper for Pulser's backend API."""
-
+class BaseBackend(ABC):
     def __init__(
         self,
         seq: Sequence,
         name: BackendName = BackendName.QUTIP,
-        result_type: ResultType = ResultType.STATE_VECTOR,
+        result_type: ResultType = ResultType.STATEVECTOR,
         **backend_params: Any,
-    ):
+    ) -> None:
+
         self.seq = seq
         self.name = name
         self.result_type = result_type
@@ -44,15 +44,17 @@ class Backend:
         # Get the appropriate config
         self.config_cls = AVAILABLE_CONFIGS[name]
 
-    def build_config(self, runs: int = 100) -> None:
+    def build_config(self, runs: int = 100, evaluation_times: list[float] = [1.0]) -> None:
         # Add the necessary observables based on the expected result type
         obs = self.backend_params.get("observables", [])
 
         if len(obs) == 0:
             if self.result_type == ResultType.BITSTRING:
-                obs.append(pulser.backend.BitStrings(num_shots=runs))
-            elif self.result_type == ResultType.STATE_VECTOR:
-                obs.append(pulser.backend.StateResult())
+                obs.append(
+                    pulser.backend.BitStrings(evaluation_times=evaluation_times, num_shots=runs)
+                )
+            elif self.result_type == ResultType.STATEVECTOR:
+                obs.append(pulser.backend.StateResult(evaluation_times=evaluation_times))
 
         self.backend_params["observables"] = obs
 
@@ -65,6 +67,19 @@ class Backend:
     def build_backend(self) -> None:
         # Build the local backend
         self.backend = self.backend_cls(self.seq, config=self.config)
+
+    @abstractmethod
+    def run(self) -> Any:
+        pass
+
+
+class EmuMPSBackend(BaseBackend):
+    """Emu-MPS backend."""
+
+    def __init__(
+        self, seq: Sequence, result_type: ResultType = ResultType.STATEVECTOR, **backend_params: Any
+    ):
+        super().__init__(seq, BackendName.EMUMPS, result_type, **backend_params)
 
     def contract_mps(self, mps_state: emu_mps.MPS) -> torch.Tensor:
         """
@@ -91,33 +106,50 @@ class Backend:
         result = torch.einsum(einsum_str, *mps_state.factors)
         return result.flatten().cpu()
 
-    def run(self, runs: int = 100) -> ResType:
+    def run(self, runs: int = 100, evaluation_times: list[float] = [1.0]) -> OutputType:
 
         # Build the config and the backend
-        self.build_config(runs)
+        self.build_config(runs, evaluation_times)
         self.build_backend()
 
-        if self.result_type == ResultType.STATE_VECTOR:
+        if self.result_type == ResultType.STATEVECTOR:
             states = self.backend.run().state
-            if self.name == BackendName.EMU_MPS:
-                # Get initial state vector
-                initial_state = self.backend._config.initial_state
-                if initial_state is None:
-                    initial_state = emu_mps.MPS.from_state_amplitudes(
-                        eigenstates=("r", "g"),
-                        amplitudes={"g" * len(self.seq.register.qubits): 1.0},
-                    )
 
-                # Constract MPS states to get state vectors
-                state_vecs = np.array(
-                    [self.contract_mps(initial_state)]
-                    + [self.contract_mps(state) for state in states]
-                )
-            else:
-                state_vecs = np.array(
-                    [np.flip(state.to_qobj().full().flatten()) for state in states]
+            # Get initial state vector
+            initial_state = self.backend._config.initial_state
+            if initial_state is None:
+                initial_state = emu_mps.MPS.from_state_amplitudes(
+                    eigenstates=("r", "g"),
+                    amplitudes={"g" * len(self.seq.register.qubits): 1.0},
                 )
 
+            # Constract MPS states to get state vectors
+            state_vecs = np.array(
+                [self.contract_mps(initial_state)] + [self.contract_mps(state) for state in states]
+            )
+            return state_vecs
+
+        elif self.result_type == ResultType.BITSTRING:
+            return self.backend.run().get_tagged_results()
+
+
+class QutipBackend(BaseBackend):
+    """Qutip backend."""
+
+    def __init__(
+        self, seq: Sequence, result_type: ResultType = ResultType.STATEVECTOR, **backend_params: Any
+    ):
+        super().__init__(seq, BackendName.QUTIP, result_type, **backend_params)
+
+    def run(self, runs: int = 100, evaluation_times: list[float] = [1.0]) -> OutputType:
+
+        # Build the config and the backend
+        self.build_config(runs, evaluation_times)
+        self.build_backend()
+
+        if self.result_type == ResultType.STATEVECTOR:
+            states = self.backend.run().state
+            state_vecs = np.array([np.flip(state.to_qobj().full().flatten()) for state in states])
             return state_vecs
 
         elif self.result_type == ResultType.BITSTRING:

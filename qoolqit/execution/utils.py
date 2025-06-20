@@ -13,11 +13,11 @@ class CompilerProfile(StrEnum):
 
 class BackendName(StrEnum):
 
-    QUTIP = "QutipBackendV2"
-    EMU_MPS = "EmuMPS"
+    QUTIP = "Qutip"
+    EMUMPS = "EmuMPS"
 
 
 class ResultType(StrEnum):
 
     BITSTRING = "Bitstring"
-    STATE_VECTOR = "StateVector"
+    STATEVECTOR = "StateVector"
