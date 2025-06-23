@@ -15,8 +15,8 @@ import pytest
 import requests_mock
 from pasqal_cloud.endpoints import Endpoints
 
-from qoolqit.solvers import backends
-from qoolqit.solvers.backends import (
+from qoolqit._solvers import backends
+from qoolqit._solvers.backends import (
     BackendConfig,
     BackendType,
     BaseBackend,

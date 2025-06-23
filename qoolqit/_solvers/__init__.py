@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from qoolqit.solvers.types import DeviceType
+from qoolqit._solvers.types import DeviceType
 
 from .backends import (
     BackendConfig,
