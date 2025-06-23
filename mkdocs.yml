@@ -18,7 +18,7 @@ nav:
       - Devices: contents/devices.md
       - Quantum programs: contents/programs.md
   - Tutorials:
-    - Amazing tutorial: tutorials/placeholder.md
+    - Getting started: tutorials/getting_started.md
     - Understanding unit conversions: tutorials/unit_conversion.md
   - Reference: $api/qoolqit.***
   - Open-source:
