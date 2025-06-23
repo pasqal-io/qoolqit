@@ -41,13 +41,20 @@ extras = [
   "jupyter",
 ]
 
+solvers = [
+  "pasqal-cloud",
+  "requests-mock",
+  "emu_mps",
+  "emu_sv",
+]
+
 [project.urls]
 Documentation = "https://github.com/pasqal-io/qoolqit" # FIXME
 Issues = "https://github.com/pasqal-io/qoolqit/issues"
 Source = "https://github.com/pasqal-io/qoolqit"
 
 [tool.hatch.envs.default]
-features = ["extras"]
+features = ["extras","solvers"]
 dependencies = [
   "pytest",
   "pytest-cov",
