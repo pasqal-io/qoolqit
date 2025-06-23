@@ -97,8 +97,25 @@ This seemingly small difference has an important implication: a Pulser sequence 
 
 ### Unit conversion
 
-QoolQit handles the unit conversion automatically through a compilation layer, and also includes a number of features for more advanced users to customize it. This is done by defining conversion factors for time, energy and distance, $\Delta_T$, $\Delta_E$, $\Delta_D$, such that:
+QoolQit handles the unit conversion automatically through a compilation layer, and also includes a number of features for more advanced users to customize it. This is done by defining a set of conversion factors for time, energy and distance, $\{\Delta_T$, $\Delta_E$, $\Delta_D\}$, such that:
 
-$$\text{Time[P]}=\Delta_T \times \text{Time[Q]},\quad\text{Energy[P]}=\Delta_E \times \text{Energy[Q]},\quad\text{Distance[P]}=\Delta_D \times \text{Distance[Q]}$$,
+$$\text{Time[P]}=\Delta_T \times \text{Time[Q]},\quad\text{Energy[P]}=\Delta_E \times \text{Energy[Q]},\quad\text{Distance[P]}=\Delta_D \times \text{Distance[Q]},$$
 
-where
+where $\text{P}$ and $\text{Q}$ refer to the Pulser and QoolQit units, respectively. Defining a valid set of conversion factors between QoolQit and Pulser can be done arbitrarily, as long as the **both the time-energy invariant and the energy-distance invariant are respected**:
+
+$$\Delta_T\,\times\,\Delta_E = 1000,\qquad \Delta_D^6\,\times\,\Delta_E = C_6.$$
+
+This means that it is possible to pick an arbitrary value for **one** of the conversion factors, and the two remaining ones can be automatically calculated from the invariants. As seen from the dependence of the invariants on the interaction coefficient $C_6$, these are calculated specifically for each device, and this is what guarantees that QoolQit programs can be device agnostic.
+
+For details on how to customize the unit conversion in QoolQit check the contents pages on [devices](../contents/devices.md) and [quantum programs](../contents/programs.md). For further examples on understanding the unit conversion check the [unit conversion tutorial](../tutorials/unit_conversion.md).
+
+#### Advantages & disadvantages
+
+Working with an adimensional model has a few advantages:
+
+- Programs are **more abstract and device agnostic**, and the rules to compile to different devices are clearly defined.
+- Algorithm descriptions are **more unified and consistent**, focusing more on the logic of the algorithm and less on the implementation details.
+- Increases **code portability** between experimental setups, different hardware configurations, and even different hardware calibrations.
+- Program descriptions are **more future-proof**, as the same description today can be valid for future hardware generations.
+
+However, while the above conversion is exact in theory, **in practice real device execution will have sources of errors and discrepancies** that are not accounted for in a simple unit conversion. Abstracting away the finer control over such errors can be seen as a disadvantage, but it is also an opportunity for improvement. The advanced user who understands such discrepancies can work on developing more robust protocols for compilation and noise mitigation and integrating them in the stack.
