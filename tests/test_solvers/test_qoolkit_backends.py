@@ -58,9 +58,7 @@ all_backends = local_backends + remote_backends
 
 
 def test_get_backend() -> None:
-    """
-    Test that `get_backend()` successfully instantiates backends of the right type.
-    """
+    """Test that `get_backend()` successfully instantiates backends of the right type."""
     for cls, type in all_backends:
         backend_config = BackendConfig(backend=type)
         backend = get_backend(backend_config)
@@ -69,12 +67,8 @@ def test_get_backend() -> None:
 
 @pytest.mark.parametrize("backend_kind", local_backends)
 @pytest.mark.parametrize("num_shots", [1, 10, 100])
-def test_local_execute(
-    backend_kind: tuple[type[BaseBackend], BackendType], num_shots: int
-) -> None:
-    """
-    Test that we can run locally a simple quantum program works.
-    """
+def test_local_execute(backend_kind: tuple[type[BaseBackend], BackendType], num_shots: int) -> None:
+    """Test that we can run locally a simple quantum program works."""
     backend_config = BackendConfig(
         backend=backend_kind[1],
     )
@@ -185,151 +179,85 @@ class BaseMockServer(abc.ABC):
         self.mocker.__exit__(type, value, traceback)
 
     def endpoint_post_authenticate_token(self, request: Any, context: Any) -> Any:
-        """
-        Mock for POST https://authenticate.pasqal.cloud/oauth/token
-        """
+        """Mock for POST https://authenticate.pasqal.cloud/oauth/token."""
         token = "mock-token-" + str(uuid4())
         return {
             "expires-in": 100000000,
             "access_token": token,
         }
 
-    def endpoint_post_batch(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for POST /api/v1/batches
-        """
+    def endpoint_post_batch(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for POST /api/v1/batches."""
         raise NotImplementedError
 
     def endpoint_get_batch(self, request: Any, context: Any, matches: list[str]) -> Any:
-        """
-        Mock for GET /api/v1/batches/{batch_id}
-        """
+        """Mock for GET /api/v1/batches/{batch_id}."""
         raise NotImplementedError
 
-    def endpoint_get_job_results(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for GET /api/v1/jobs/{job_id}/results_link
-        """
+    def endpoint_get_job_results(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for GET /api/v1/jobs/{job_id}/results_link."""
         raise NotImplementedError
 
-    def endpoint_patch_close_batch(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for PATCH /api/v2/batches/{batch_id}/complete
-        """
+    def endpoint_patch_close_batch(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for PATCH /api/v2/batches/{batch_id}/complete."""
         raise NotImplementedError
 
-    def endpoint_patch_cancel_batch(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for PATCH /api/v2/batches/{batch_id}/cancel
-        """
+    def endpoint_patch_cancel_batch(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for PATCH /api/v2/batches/{batch_id}/cancel."""
         raise NotImplementedError
 
-    def endpoint_patch_cancel_batches(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for PATCH /api/v2/batches/cancel
-        """
+    def endpoint_patch_cancel_batches(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for PATCH /api/v2/batches/cancel."""
         raise NotImplementedError
 
-    def endpoint_post_rebatch(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for POST /api/v2/batches/{batch_id}/rebatch
-        """
+    def endpoint_post_rebatch(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for POST /api/v2/batches/{batch_id}/rebatch."""
         raise NotImplementedError
 
     def endpoint_get_jobs(self, request: Any, context: Any, matches: list[str]) -> Any:
-        """
-        Mock for GET /api/v2/jobs
-        """
+        """Mock for GET /api/v2/jobs."""
         raise NotImplementedError
 
-    def endpoint_get_batches(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for GET /api/v1/batches
-        """
+    def endpoint_get_batches(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for GET /api/v1/batches."""
         raise NotImplementedError
 
     def endpoint_add_jobs(self, request: Any, context: Any, matches: list[str]) -> Any:
-        """
-        Mock for POST /api/v2/batches/{batch_id}/jobs
-        """
+        """Mock for POST /api/v2/batches/{batch_id}/jobs."""
         raise NotImplementedError
 
-    def endpoint_cancel_job(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for PATCH /api/v2/jobs/{job_id}/cancel
-        """
+    def endpoint_cancel_job(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for PATCH /api/v2/jobs/{job_id}/cancel."""
         raise NotImplementedError
 
-    def endpoint_cancel_jobs(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for PATCH /api/v2/batches/{batch_id}/cancel/jobs
-        """
+    def endpoint_cancel_jobs(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for PATCH /api/v2/batches/{batch_id}/cancel/jobs."""
         raise NotImplementedError
 
-    def endpoint_post_workload(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for POST /api/v1/workloads
-        """
+    def endpoint_post_workload(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for POST /api/v1/workloads."""
         raise NotImplementedError
 
-    def endpoint_get_workload(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for GET /api/v1/workloads/{workload_id}
-        """
+    def endpoint_get_workload(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for GET /api/v1/workloads/{workload_id}."""
         raise NotImplementedError
 
-    def endpoint_put_cancel_workload(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for PUT /api/v1/workloads/{workload_id}/cancel
-        """
+    def endpoint_put_cancel_workload(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for PUT /api/v1/workloads/{workload_id}/cancel."""
         raise NotImplementedError
 
-    def endpoint_get_devices_specs(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for GET /api/v1/devices/specs
-        """
+    def endpoint_get_devices_specs(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for GET /api/v1/devices/specs."""
         raise NotImplementedError
 
     def endpoint_get_devices_public_specs(
         self, request: Any, context: Any, matches: list[str]
     ) -> Any:
-        """
-        Mock for GET /api/v1/devices/public-specs
-        """
+        """Mock for GET /api/v1/devices/public-specs."""
         raise NotImplementedError
 
-    def endpoint_patch_batch_tags(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Mock for PATCH /api/v1/batches/{batch_id}/tags
-        """
+    def endpoint_patch_batch_tags(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Mock for PATCH /api/v1/batches/{batch_id}/tags."""
         raise NotImplementedError
 
 
@@ -341,12 +269,8 @@ class MyMockServer(BaseMockServer):
         self._start = str(datetime.datetime.now())
         self._runs = None
 
-    def endpoint_get_devices_specs(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
-        """
-        Return a basic device called `MY_DEVICE`.
-        """
+    def endpoint_get_devices_specs(self, request: Any, context: Any, matches: list[str]) -> Any:
+        """Return a basic device called `MY_DEVICE`."""
         return {
             "data": {"MY_DEVICE": pulser.AnalogDevice.to_abstract_repr()},
         }
@@ -354,9 +278,7 @@ class MyMockServer(BaseMockServer):
     def endpoint_get_devices_public_specs(
         self, request: Any, context: Any, matches: list[str]
     ) -> Any:
-        """
-        Return a basic device called `MY_DEVICE`.
-        """
+        """Return a basic device called `MY_DEVICE`."""
         return {
             "data": [
                 {
@@ -366,9 +288,7 @@ class MyMockServer(BaseMockServer):
             ],
         }
 
-    def endpoint_post_batch(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
+    def endpoint_post_batch(self, request: Any, context: Any, matches: list[str]) -> Any:
         batch: dict[str, Any] = json.loads(request.text)
         data = self.add_batch(batch)
         return {
@@ -376,9 +296,7 @@ class MyMockServer(BaseMockServer):
         }
 
     def endpoint_get_batch(self, request: Any, context: Any, matches: list[str]) -> Any:
-        """
-        Mock for GET /api/v1/batches/{batch_id}
-        """
+        """Mock for GET /api/v1/batches/{batch_id}."""
         assert matches[0] == "my-mock-batch-id"
 
         if self._iterations < 5:
@@ -462,9 +380,7 @@ class MyMockServer(BaseMockServer):
             counter[bitstr] += 1
         return {"counter": counter}
 
-    def endpoint_get_job_results(
-        self, request: Any, context: Any, matches: list[str]
-    ) -> Any:
+    def endpoint_get_job_results(self, request: Any, context: Any, matches: list[str]) -> Any:
         return {
             "data": {
                 "results_link": "http://example.com/results/my-results",
@@ -477,9 +393,7 @@ class MyMockServer(BaseMockServer):
 def test_remote_execute(
     backend_kind: tuple[type[BaseBackend], BackendType], num_shots: int
 ) -> None:
-    """
-    Test that we can run remotely a simple quantum program works.
-    """
+    """Test that we can run remotely a simple quantum program works."""
     backend_config = BackendConfig(
         backend=backend_kind[1],
         username="my_username",

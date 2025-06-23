@@ -25,9 +25,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class QuantumProgram:
-    """
-    Placeholder for qoolqit.QuantumProgram
-    """
+    """Placeholder for qoolqit.QuantumProgram."""
 
     device: pulser.devices.Device
     register: pulser.Register
@@ -38,17 +36,13 @@ pydantic.BaseModel.model_config["arbitrary_types_allowed"] = True
 
 
 class NamedDevice(str):
-    """
-    An individual, named, device, e.g. "FRESNEL".
-    """
+    """An individual, named, device, e.g. "FRESNEL"."""
 
     pass
 
 
 class BackendConfig(pydantic.BaseModel):
-    """
-    Generic configuration for backends.
-    """
+    """Generic configuration for backends."""
 
     backend: BackendType = BackendType.QUTIP
     """
@@ -59,7 +53,8 @@ class BackendConfig(pydantic.BaseModel):
 
     username: str | None = None
     """
-    For a backend that requires authentication, such as Pasqal Cloud,
+    For a backend that requires authentication, such as Pasqal Cloud,.
+
     the username.
 
     Otherwise, ignored.
@@ -67,7 +62,8 @@ class BackendConfig(pydantic.BaseModel):
 
     password: str | None = None
     """
-    For a backend that requires authentication, such as Pasqal Cloud,
+    For a backend that requires authentication, such as Pasqal Cloud,.
+
     the password.
 
     Otherwise, ignored.
@@ -75,7 +71,8 @@ class BackendConfig(pydantic.BaseModel):
 
     project_id: str | None = None
     """
-    For a backend that associates jobs to projects, such as Pasqal Cloud,
+    For a backend that associates jobs to projects, such as Pasqal Cloud,.
+
     the id of the project. The project must already exist.
 
     Otherwise, ignored.
@@ -93,7 +90,8 @@ class BackendConfig(pydantic.BaseModel):
 
     dt: int = 10
     """
-    For a backend that supports customizing the duration of steps, the
+    For a backend that supports customizing the duration of steps, the.
+
     timestep size.
 
     As of this writing, this parameter is used only by the EmuMPS backends.
@@ -102,7 +100,8 @@ class BackendConfig(pydantic.BaseModel):
 
 class CompilationError(Exception):
     """
-    An error raised when attempting to compile a graph for an architecture
+    An error raised when attempting to compile a graph for an architecture.
+
     that does not support it, e.g. because it requires too many qubits or
     because the physical constraints on the geometry are not satisfied.
     """
@@ -111,9 +110,7 @@ class CompilationError(Exception):
 
 
 class ExecutionError(Exception):
-    """
-    An error during the execution of a job.
-    """
+    """An error during the execution of a job."""
 
     pass
 
@@ -142,9 +139,7 @@ def make_sequence(program: QuantumProgram) -> pulser.Sequence:
 
 
 class JobId(str):
-    """
-    A unique identifier for a job.
-    """
+    """A unique identifier for a job."""
 
     pass
 
@@ -160,14 +155,13 @@ class Result:
 
     counts: Counter[str]
     """
-    A mapping from bitstrings observed to the number of instances of this
+    A mapping from bitstrings observed to the number of instances of this.
+
     bitstring observed.
     """
 
     def __len__(self) -> int:
-        """
-        The total number of measures.
-        """
+        """The total number of measures."""
         return sum(self.counts.values())
 
 
@@ -234,16 +228,16 @@ class BaseBackend(ABC):
         self.config = config
 
     def default_number_of_runs(self) -> int:
-        """
-        A backend-specific reasonable default value for the number of runs.
-        """
+        """A backend-specific reasonable default value for the number of runs."""
         # Reasonable default.
         return 100
 
     @abstractmethod
     def device(self) -> Device:
         """
-        Specifications for the device picked by `BackendConfig.device`. If
+        Specifications for the device picked by `BackendConfig.device`.
+
+        If
         no such device was specified, return the default device for this
         backend.
 
@@ -322,9 +316,7 @@ class BaseBackend(ABC):
 
 @dataclass
 class JobSuccess(BaseJob):
-    """
-    A job that has already succeeded.
-    """
+    """A job that has already succeeded."""
 
     result: Result
 
@@ -337,9 +329,7 @@ class JobSuccess(BaseJob):
 
 @dataclass
 class JobFailure(BaseJob):
-    """
-    A job that has already failed.
-    """
+    """A job that has already failed."""
 
     error: Exception
 
@@ -449,9 +439,7 @@ if os.name == "posix":
         def __init__(self, config: BackendConfig) -> None:
             super().__init__(config)
 
-        def _execute_locally(
-            self, sequence: Sequence, runs: int | None = None
-        ) -> Result:
+        def _execute_locally(self, sequence: Sequence, runs: int | None = None) -> Result:
             times = [1.0]  # 1.0 = end of the duration (normalized)
             if runs is None:
                 runs = 100  # Arbitrary device-specific value.
@@ -480,16 +468,12 @@ if os.name == "posix":
         def __init__(self, config: BackendConfig) -> None:
             super().__init__(config)
 
-        def _execute_locally(
-            self, sequence: Sequence, runs: int | None = None
-        ) -> Result:
+        def _execute_locally(self, sequence: Sequence, runs: int | None = None) -> Result:
             times = [1.0]  # 1.0 = end of the duration (normalized)
             if runs is None:
                 runs = 100  # Arbitrary device-specific value.
             bitstrings = emu_sv.BitStrings(evaluation_times=times, num_shots=runs)
-            config = emu_sv.SVConfig(
-                dt=self.config.dt, observables=[bitstrings], log_level=0
-            )
+            config = emu_sv.SVConfig(dt=self.config.dt, observables=[bitstrings], log_level=0)
             backend = emu_sv.SVBackend(sequence, config=config)
 
             results = backend.run()
@@ -557,9 +541,7 @@ class RemoteJob(BaseJob):
                 continue
             job = batch.ordered_jobs[0]
             if job.status == "ERROR":
-                self._error = Exception(
-                    f"Error while executing remote job: {job.errors}"
-                )
+                self._error = Exception(f"Error while executing remote job: {job.errors}")
                 # FIXME: This is subject to race condition.
                 raise self._error
             counter = job.result
@@ -598,9 +580,7 @@ class BaseRemoteBackend(BaseBackend):
         return 500
 
     def device(self) -> Device:
-        """
-        Make sure that we have fetched the latest specs for the device from the server.
-        """
+        """Make sure that we have fetched the latest specs for the device from the server."""
         if self._device is not None:
             assert self._max_runs is not None
             return self._device
@@ -627,9 +607,7 @@ class BaseRemoteBackend(BaseBackend):
 
     @abstractmethod
     def _execute_remotely(self, sequence: Sequence, runs: int) -> JobId:
-        """
-        Enqueue execution of a Pulser sequence.
-        """
+        """Enqueue execution of a Pulser sequence."""
         ...
 
     def submit(self, program: QuantumProgram, runs: int | None = None) -> BaseJob:
@@ -642,9 +620,7 @@ class BaseRemoteBackend(BaseBackend):
         try:
             sequence = make_sequence(program)
         except ValueError as e:
-            raise CompilationError(
-                f"This register/pulse cannot be executed on the device: {e}"
-            )
+            raise CompilationError(f"This register/pulse cannot be executed on the device: {e}")
         if runs is None:
             runs = 500
         runs = min(runs, self._api_max_runs())
@@ -681,7 +657,8 @@ class RemoteQPUBackend(BaseRemoteBackend):
 
 class RemoteEmuMPSBackend(BaseRemoteBackend):
     """
-    A backend that uses a remote high-performance emulator (EmuMPS)
+    A backend that uses a remote high-performance emulator (EmuMPS).
+
     published on Pasqal Cloud.
     """
 
@@ -702,26 +679,20 @@ portable_backends_map: dict[BackendType, type[BaseBackend]] = {
     BackendType.REMOTE_QPU: cast(type[BaseBackend], RemoteQPUBackend),
     # FIXME: Implemente REMOTE_EMUFREE and REMOTE_EMUSV
 }
-"""
-The backends available on all platforms.
-"""
+"""The backends available on all platforms."""
 
 posix_backends_map: dict[BackendType, type[BaseBackend]] = {
     BackendType.EMU_MPS: cast(type[BaseBackend], EmuMPSBackend),
     BackendType.EMU_SV: cast(type[BaseBackend], EmuSVBackend),
 }
-"""
-The backends available only on Posix platforms.
-"""
+"""The backends available only on Posix platforms."""
 
 if os.name == "posix":
     backends_map: dict[BackendType, type[BaseBackend]] = portable_backends_map.copy()
     for k, v in posix_backends_map.items():
         backends_map[k] = v
     unavailable_backends_map = {}
-    """
-    The backends not available on this platform.
-    """
+    """The backends not available on this platform."""
 else:
     backends_map = portable_backends_map
     unavailable_backends_map = posix_backends_map
@@ -739,8 +710,6 @@ def get_backend(backend_config: BackendConfig) -> BaseBackend:
     if backend is not None:
         return backend(backend_config)
     if backend_config.backend in unavailable_backends_map:
-        raise ValueError(
-            f"Backend {backend_config.backend} is not available on {os.name}."
-        )
+        raise ValueError(f"Backend {backend_config.backend} is not available on {os.name}.")
     else:
         raise ValueError(f"Unknown backend {backend_config.backend}.")

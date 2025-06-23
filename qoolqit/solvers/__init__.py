@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from qoolqit.solvers.types import DeviceType
+
 from .backends import (
     BackendConfig,
     BackendType,
@@ -19,7 +21,6 @@ from .backends import (
     Result,
     get_backend,
 )
-from .types import BackendType, DeviceType
 
 __all__ = [
     "BackendConfig",
@@ -37,6 +38,5 @@ __all__ = [
     "RemoteEmuMPSBackend",
     "Result",
     "get_backend",
-    "BackendType", 
     "DeviceType",
 ]

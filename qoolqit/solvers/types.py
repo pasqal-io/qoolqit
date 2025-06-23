@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from enum import Enum
 
-from pulser.devices import AnalogDevice, DigitalAnalogDevice 
+from pulser.devices import AnalogDevice, DigitalAnalogDevice
 
 
 class StrEnum(str, Enum):
-    """String-based Enums class implementation"""
+    """String-based Enums class implementation."""
 
     def __str__(self) -> str:
         """Used when dumping enum fields in a schema."""
@@ -23,9 +23,7 @@ class StrEnum(str, Enum):
 
 
 class BackendType(StrEnum):
-    """
-    Type of backend to use for solving the QUBO
-    """
+    """Type of backend to use for solving the QUBO."""
 
     QUTIP = "qutip"
     REMOTE_QPU = "remote_qpu"
@@ -35,9 +33,7 @@ class BackendType(StrEnum):
 
 
 class DeviceType(Enum):
-    """
-    Type of device to use for the solver.
-    """
+    """Type of device to use for the solver."""
 
     ANALOG_DEVICE = AnalogDevice
     DIGITAL_ANALOG_DEVICE = DigitalAnalogDevice
