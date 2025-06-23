@@ -681,13 +681,12 @@ portable_backends_map: dict[BackendType, type[BaseBackend]] = {
 }
 """The backends available on all platforms."""
 
-posix_backends_map: dict[BackendType, type[BaseBackend]] = {
-    BackendType.EMU_MPS: cast(type[BaseBackend], EmuMPSBackend),
-    BackendType.EMU_SV: cast(type[BaseBackend], EmuSVBackend),
-}
-"""The backends available only on Posix platforms."""
-
 if os.name == "posix":
+    posix_backends_map: dict[BackendType, type[BaseBackend]] = {
+        BackendType.EMU_MPS: cast(type[BaseBackend], EmuMPSBackend),
+        BackendType.EMU_SV: cast(type[BaseBackend], EmuSVBackend),
+    }
+    """The backends available only on Posix platforms."""
     backends_map: dict[BackendType, type[BaseBackend]] = portable_backends_map.copy()
     for k, v in posix_backends_map.items():
         backends_map[k] = v
@@ -695,7 +694,10 @@ if os.name == "posix":
     """The backends not available on this platform."""
 else:
     backends_map = portable_backends_map
-    unavailable_backends_map = posix_backends_map
+    unavailable_backends_map = {
+        BackendType.EMU_MPS: cast(type[BaseBackend], None),
+        BackendType.EMU_SV: cast(type[BaseBackend], None),
+    }
 
 
 def get_backend(backend_config: BackendConfig) -> BaseBackend:
