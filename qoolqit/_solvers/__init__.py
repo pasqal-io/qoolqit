@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 from qoolqit._solvers.types import DeviceType
 
 from .backends import (
@@ -11,8 +13,6 @@ from .backends import (
     BaseLocalBackend,
     BaseRemoteBackend,
     CompilationError,
-    EmuMPSBackend,
-    EmuSVBackend,
     ExecutionError,
     JobId,
     QuantumProgram,
@@ -29,8 +29,6 @@ __all__ = [
     "BaseLocalBackend",
     "BaseRemoteBackend",
     "CompilationError",
-    "EmuMPSBackend",
-    "EmuSVBackend",
     "ExecutionError",
     "JobId",
     "QuantumProgram",
@@ -40,3 +38,11 @@ __all__ = [
     "get_backend",
     "DeviceType",
 ]
+
+if os.name == "posix":
+    from .backends import EmuMPSBackend, EmuSVBackend
+
+    __all__ += [
+        "EmuMPSBackend",
+        "EmuSVBackend",
+    ]
