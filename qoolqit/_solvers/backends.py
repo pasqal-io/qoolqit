@@ -8,28 +8,20 @@ from dataclasses import dataclass
 from typing import Counter, cast
 from uuid import uuid4
 
-import pulser
 import pydantic
 from pasqal_cloud import SDK, EmulatorType
 from pasqal_cloud.batch import Batch
 from pulser import Sequence
 from pulser.backend.remote import BatchStatus
-from pulser.devices import Device
 from pulser.json.abstract_repr.deserializer import deserialize_device
 from pulser_simulation import QutipEmulator
+
+from qoolqit.devices import AnalogDevice, Device
+from qoolqit.program import QuantumProgram
 
 from .types import BackendType, DeviceType
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class QuantumProgram:
-    """Placeholder for qoolqit.QuantumProgram."""
-
-    device: pulser.devices.Device
-    register: pulser.Register
-    pulse: pulser.Pulse
 
 
 pydantic.BaseModel.model_config["arbitrary_types_allowed"] = True
@@ -113,29 +105,6 @@ class ExecutionError(Exception):
     """An error during the execution of a job."""
 
     pass
-
-
-def make_sequence(program: QuantumProgram) -> pulser.Sequence:
-    """
-    Build a sequence for a device from a pulse and a register.
-
-    This function is mostly intended for internal use and will likely move to qool-layer
-    in time.
-
-    Arguments:
-        program: A quantum program to compile into a sequence.
-
-    Raises:
-        CompilationError if the pulse + register are not compatible with the device.
-    """
-    register = program.register
-    if program.device.requires_layout and register.layout is None:
-        register = program.register.with_automatic_layout(program.device)
-    sequence = Sequence(register=register, device=program.device)
-    sequence.declare_channel("rydberg_global", "rydberg_global")
-    sequence.add(program.pulse, "rydberg_global")
-
-    return sequence
 
 
 class JobId(str):
@@ -343,6 +312,11 @@ class JobFailure(BaseJob):
 ############################ Local backends
 
 
+def get_device(device_type: DeviceType) -> Device:
+    if device_type == DeviceType.ANALOG_DEVICE:
+        return AnalogDevice()
+
+
 class BaseLocalBackend(BaseBackend):
     """
     Base class for emulators running locally.
@@ -353,25 +327,27 @@ class BaseLocalBackend(BaseBackend):
 
     def __init__(self, config: BackendConfig):
         super().__init__(config)
-        device = config.device
-        if device is None:
-            device = pulser.AnalogDevice
-        elif isinstance(device, NamedDevice):
+        if config.device is None:
+            device: Device = AnalogDevice()
+        elif isinstance(config.device, NamedDevice):
             raise ValueError(
                 "Local emulators do not support named devices, property `device` expects `None` "
                 + "or a `DeviceType`"
             )
-        elif isinstance(device, DeviceType):
-            device = device.value
-        assert isinstance(device, Device), f"Expected a device, got {device}"
-        self._device = device
+        elif isinstance(config.device, DeviceType):
+            device = get_device(config.device)
+        else:
+            assert isinstance(config.device, Device), f"Expected a device, got {config.device}"
+            device = config.device
+        self._device: Device = device
 
     def device(self) -> Device:
         return self._device
 
     def submit(self, program: QuantumProgram, runs: int | None = None) -> BaseJob:
         id = JobId(str(object=uuid4()))
-        sequence = make_sequence(program)
+        program.compile_to(self._device)
+        sequence = program.compiled_sequence
         try:
             result = self._execute_locally(sequence, runs)
             return JobSuccess(id=id, result=result)
@@ -601,8 +577,8 @@ class BaseRemoteBackend(BaseBackend):
             self._device = cast(Device, deserialize_device(specs[device_key]))
         else:
             assert isinstance(self.config.device, DeviceType)
-            self._device = self.config.device.value
-        self._max_runs = self._device.max_runs
+            self._device = get_device(self.config.device)
+        self._max_runs = self._device._device.max_runs
         return self._device
 
     @abstractmethod
@@ -618,7 +594,8 @@ class BaseRemoteBackend(BaseBackend):
             CompilationError: If the register/pulse may not be executed on this device.
         """
         try:
-            sequence = make_sequence(program)
+            program.compile_to(device=self.device())
+            sequence = program.compiled_sequence
         except ValueError as e:
             raise CompilationError(f"This register/pulse cannot be executed on the device: {e}")
         if runs is None:

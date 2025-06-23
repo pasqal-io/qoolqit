@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from enum import Enum
 
-from pulser.devices import AnalogDevice, DigitalAnalogDevice
-
 
 class StrEnum(str, Enum):
     """String-based Enums class implementation."""
@@ -32,8 +30,7 @@ class BackendType(StrEnum):
     EMU_SV = "emu_sv"
 
 
-class DeviceType(Enum):
+class DeviceType(StrEnum):
     """Type of device to use for the solver."""
 
-    ANALOG_DEVICE = AnalogDevice
-    DIGITAL_ANALOG_DEVICE = DigitalAnalogDevice
+    ANALOG_DEVICE = "analog-device"

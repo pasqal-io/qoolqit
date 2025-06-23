@@ -51,7 +51,7 @@ class QuantumProgram:
     @property
     def compiled_sequence(self) -> PulserSequence:
         """The Pulser sequence compiled to a specific device."""
-        if not self.is_compiled:
+        if self._compiled_sequence is None:
             raise ValueError(
                 "Program has not been compiled. Please call program.compile_to(device)."
             )
