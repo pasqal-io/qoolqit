@@ -10,7 +10,6 @@ from typing import Any, Callable, Counter
 from uuid import uuid4
 
 import pulser
-import pulser.pulse
 import pytest
 import requests_mock
 from pasqal_cloud.endpoints import Endpoints
@@ -21,21 +20,18 @@ from qoolqit._solvers.backends import (
     BackendType,
     BaseBackend,
     NamedDevice,
-    QuantumProgram,
     RemoteJob,
     get_backend,
 )
+from qoolqit.program import Drive, QuantumProgram, Register
+from qoolqit.waveforms import Delay
 
 
 def make_simple_program(backend: BaseBackend) -> QuantumProgram:
     return QuantumProgram(
-        device=backend.device(),  # Use the default device
-        register=pulser.Register({"q0": [0.0, 0.0], "q1": [10.0, 10.0]}),
-        pulse=pulser.pulse.Pulse.ConstantPulse(
-            duration=100,
-            amplitude=0.5,
-            phase=0.5,
-            detuning=0,
+        register=Register({"q0": [0.0, 0.0], "q1": [10.0, 10.0]}),
+        drive=Drive(
+            amplitude=Delay(duration=100),
         ),
     )
 
