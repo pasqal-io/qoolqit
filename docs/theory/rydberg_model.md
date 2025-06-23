@@ -47,8 +47,8 @@ A program in the Rydberg analog model is defined as a time-dependent *drive* Ham
     where $\Omega_i(t)$, $\delta_i(t)$ and $\phi_i(t)$ are time-dependent functions, or waveforms, that encode the program corresponding, respectively, to the amplitude, detuning and phase of the drive on each qubit.
 
     The drive $D_i(t)$ is the set of functions $D_i(t) = \{\Omega_i(t), \delta_i(t), \phi_i(t)\}$ defined for $t\geq0$ that define the time-dependent Hamiltonian $H^\text{d}_i(t)$ driving qubit $q_i$.
-    
-    The drive is global if it is the same for all qubits in the register, $D_i(t)=D(t)~\forall~q_i\in R$. 
+
+    The drive is global if it is the same for all qubits in the register, $D_i(t)=D(t)~\forall~q_i\in R$.
 
 #### Weighted detuning
 
@@ -66,7 +66,7 @@ with the condition that the waveform $\Delta(t)$ must be negative.
     A register of qubits $R$ is initialized, where each qubit $q_i$ has a position $p_i = (x_i, y_i)$.
 
     The local detuning weights are programmed, $\{q_i: \epsilon_i\}$.
-    
+
     The drive waveforms are programmed, $D(t) = \{\Omega(t), \delta(t), \Delta(t), \phi(t)\}$.
 
     The system evolves with the Hamiltonian:
@@ -91,7 +91,7 @@ Furthermore, Pulser writes the interaction term using a physical coefficient rel
 
 $$H^\text{int}_\text{Pulser}=\sum_{i=0}^{N-1}\sum_{j=0}^{i-1}\frac{C_6}{r^6_{ij}}\hat{n}_i\hat{n}_j.$$
 
-The interaction coefficient $C_6$ has units of $[\text{rad}.\mu\text{s}^{-1}.\mu\text{m}^{6}].$ 
+The interaction coefficient $C_6$ has units of $[\text{rad}.\mu\text{s}^{-1}.\mu\text{m}^{6}].$
 
 This seemingly small difference has an important implication: a Pulser sequence is fundamentally device-specific. Pulser has a safety-first design, and does extensive validation when each sequence is created to guarantee it is compatible with the device it is created for, which is very important.
 
@@ -101,5 +101,4 @@ QoolQit handles the unit conversion automatically through a compilation layer, a
 
 $$\text{Time[P]}=\Delta_T \times \text{Time[Q]},\quad\text{Energy[P]}=\Delta_E \times \text{Energy[Q]},\quad\text{Distance[P]}=\Delta_D \times \text{Distance[Q]}$$,
 
-where 
-
+where
