@@ -21,7 +21,7 @@ class Register:
         """
         if not isinstance(qubits, dict):
             raise TypeError(
-                "Register must be initialized with a dictionary a dictionary of "
+                "Register must be initialized with a dictionary of "
                 "qubits and respective coordinates {q: (x, y), ...}."
             )
 
@@ -36,7 +36,10 @@ class Register:
         """
 
         if not graph.has_coords:
-            raise ValueError("Initializing a a register from a graph requires node coordinates.")
+            raise ValueError("Initializing a register from a graph requires node coordinates.")
+
+        if len(graph.nodes) == 0:
+            raise ValueError("Trying to initialize a register from an empty graph.")
 
         return cls(graph.coords)
 
@@ -76,7 +79,7 @@ class Register:
 
     def interactions(self) -> dict:
         """Interaction 1/r^6 between each qubit pair."""
-        return {p: 1 / (r**6) for p, r in self.distances().items()}
+        return {p: 1.0 / (r**6) for p, r in self.distances().items()}
 
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
@@ -94,8 +97,8 @@ class Register:
         x_min, x_max = min(x_coords), max(x_coords)
         y_min, y_max = min(y_coords), max(y_coords)
 
-        grid_x_min, grid_x_max = min(0, x_min), max(1, x_max)
-        grid_y_min, grid_y_max = min(0, y_min), max(1, y_max)
+        grid_x_min, grid_x_max = min(-1, x_min), max(1, x_max)
+        grid_y_min, grid_y_max = min(-1, y_min), max(1, y_max)
 
         grid_scale = ceil(max(grid_x_max - grid_x_min, grid_y_max - grid_y_min))
 

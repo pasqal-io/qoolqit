@@ -10,6 +10,9 @@ nav:
   - Contents:
     - Problem generation:
       - Graphs: contents/graphs.md
+    - Problem embedding:
+      - Available embedders: contents/available_embedders.md
+      - Custom embedders: contents/custom_embedders.md
     - Writing a quantum program:
       - Registers: contents/registers.md
       - Waveforms: contents/waveforms.md
