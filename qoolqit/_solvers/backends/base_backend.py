@@ -3,14 +3,13 @@ from __future__ import annotations
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Counter
 
 import pulser
 from pulser import Sequence
 from pulser.backend.remote import BatchStatus
 from pulser.devices import Device
 
-from qoolqit._solvers.data import QuantumProgram, BackendConfig, BaseJob, JobId, Result
+from qoolqit._solvers.data import BackendConfig, BaseJob, JobId, QuantumProgram, Result
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +35,7 @@ def make_sequence(program: QuantumProgram) -> pulser.Sequence:
     sequence.add(program.pulse, "rydberg_global")
 
     return sequence
+
 
 class BaseBackend(ABC):
     """
@@ -165,4 +165,3 @@ class JobFailure(BaseJob):
 
     def wait(self) -> Result:
         raise self.error
-

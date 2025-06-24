@@ -4,20 +4,26 @@ import logging
 import os
 from typing import cast
 
-
 from qoolqit._solvers.types import BackendType
-from .base_backend import BaseBackend, BackendConfig
-from .local_backends import QutipBackend
-from .remote_backends import RemoteEmuMPSBackend, RemoteQPUBackend
-logger = logging.getLogger(__name__)
 
+from .base_backend import BackendConfig, BaseBackend
+from .local_backends import QutipBackend
+from .remote_backends import (
+    RemoteEmuFREEBackend,
+    RemoteEmuMPSBackend,
+    RemoteEmuTNBackend,
+    RemoteQPUBackend,
+)
+
+logger = logging.getLogger(__name__)
 
 
 portable_backends_map: dict[BackendType, type[BaseBackend]] = {
     BackendType.QUTIP: cast(type[BaseBackend], QutipBackend),
     BackendType.REMOTE_EMUMPS: cast(type[BaseBackend], RemoteEmuMPSBackend),
     BackendType.REMOTE_QPU: cast(type[BaseBackend], RemoteQPUBackend),
-    # FIXME: Implemente REMOTE_EMUFREE and REMOTE_EMUSV
+    BackendType.REMOTE_EMUFREE: cast(type[BaseBackend], RemoteEmuFREEBackend),
+    BackendType.REMOTE_EMUTN: cast(type[BaseBackend], RemoteEmuTNBackend),
 }
 """The backends available on all platforms."""
 

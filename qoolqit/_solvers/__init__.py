@@ -14,7 +14,13 @@ from .backends.base_backend import (
 )
 from .backends.get_backend import get_backend
 from .backends.local_backends import BaseLocalBackend, QutipBackend
-from .backends.remote_backends import RemoteEmuMPSBackend, RemoteJob, RemoteQPUBackend
+from .backends.remote_backends import (
+    RemoteEmuFREEBackend,
+    RemoteEmuMPSBackend,
+    RemoteEmuTNBackend,
+    RemoteJob,
+    RemoteQPUBackend,
+)
 from .data import BackendType, CompilationError, ExecutionError
 
 __all__ = [
@@ -31,6 +37,8 @@ __all__ = [
     "QutipBackend",
     "RemoteQPUBackend",
     "RemoteEmuMPSBackend",
+    "RemoteEmuTNBackend",
+    "RemoteEmuFREEBackend",
     "Result",
     "get_backend",
     "RemoteJob",

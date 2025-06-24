@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import logging
@@ -13,13 +12,20 @@ from pulser.backend.remote import BatchStatus
 from pulser.devices import Device
 from pulser.json.abstract_repr.deserializer import deserialize_device
 
+from qoolqit._solvers.data import CompilationError, NamedDevice
 from qoolqit._solvers.types import DeviceType
-from qoolqit._solvers.data import NamedDevice, CompilationError
-from .base_backend import BaseBackend, BackendConfig, QuantumProgram, BaseJob, JobId, make_sequence, Result
 
+from .base_backend import (
+    BackendConfig,
+    BaseBackend,
+    BaseJob,
+    JobId,
+    QuantumProgram,
+    Result,
+    make_sequence,
+)
 
 logger = logging.getLogger(__name__)
-
 
 
 ############################ Remote backends
@@ -213,3 +219,38 @@ class RemoteEmuMPSBackend(BaseRemoteBackend):
         )
         return JobId(batch.id)
 
+
+class RemoteEmuTNBackend(BaseRemoteBackend):
+    """
+    A backend that uses a remote high-performance emulator (EmuSV).
+
+    published on Pasqal Cloud.
+    """
+
+    def _execute_remotely(self, sequence: Sequence, runs: int) -> JobId:
+        batch = self._sdk.create_batch(
+            serialized_sequence=sequence.to_abstract_repr(),
+            jobs=[{"runs": runs}],
+            wait=False,
+            emulator=EmulatorType.EMU_TN,
+            configuration=None,
+        )
+        return JobId(batch.id)
+
+
+class RemoteEmuFREEBackend(BaseRemoteBackend):
+    """
+    A backend that uses a remote high-performance emulator (EmuFREE).
+
+    published on Pasqal Cloud.
+    """
+
+    def _execute_remotely(self, sequence: Sequence, runs: int) -> JobId:
+        batch = self._sdk.create_batch(
+            serialized_sequence=sequence.to_abstract_repr(),
+            jobs=[{"runs": runs}],
+            wait=False,
+            emulator=EmulatorType.EMU_FREE,
+            configuration=None,
+        )
+        return JobId(batch.id)

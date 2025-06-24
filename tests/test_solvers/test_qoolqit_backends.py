@@ -18,7 +18,9 @@ from pasqal_cloud.endpoints import Endpoints
 from qoolqit._solvers import (
     BaseBackend,
     QutipBackend,
+    RemoteEmuFREEBackend,
     RemoteEmuMPSBackend,
+    RemoteEmuTNBackend,
     RemoteJob,
     RemoteQPUBackend,
     get_backend,
@@ -52,6 +54,8 @@ if os.name == "posix":
 
 remote_backends: list[tuple[type[BaseBackend], BackendType]] = [
     (RemoteEmuMPSBackend, BackendType.REMOTE_EMUMPS),
+    (RemoteEmuTNBackend, BackendType.REMOTE_EMUTN),
+    (RemoteEmuFREEBackend, BackendType.REMOTE_EMUFREE),
     (RemoteQPUBackend, BackendType.REMOTE_QPU),
 ]
 

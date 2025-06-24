@@ -11,9 +11,21 @@ from pulser import Sequence
 from pulser.devices import Device
 from pulser_simulation import QutipEmulator
 
-from qoolqit._solvers.types import DeviceType
 from qoolqit._solvers.data import NamedDevice
-from .base_backend import BaseBackend, BackendConfig, QuantumProgram, BaseJob, JobId, make_sequence, JobFailure, JobSuccess, Result
+from qoolqit._solvers.types import DeviceType
+
+from .base_backend import (
+    BackendConfig,
+    BaseBackend,
+    BaseJob,
+    JobFailure,
+    JobId,
+    JobSuccess,
+    QuantumProgram,
+    Result,
+    make_sequence,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -156,4 +168,3 @@ if os.name == "posix":
             results = backend.run()
             counter: Counter[str] = results.get_result(bitstrings, time=1.0)
             return Result(counts=counter)
-
