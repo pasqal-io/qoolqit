@@ -15,16 +15,15 @@ import pytest
 import requests_mock
 from pasqal_cloud.endpoints import Endpoints
 
-from qoolqit._solvers import backends
-from qoolqit._solvers.backends import (
-    BackendConfig,
-    BackendType,
+from qoolqit._solvers import (
     BaseBackend,
-    NamedDevice,
-    QuantumProgram,
+    QutipBackend,
+    RemoteEmuMPSBackend,
     RemoteJob,
+    RemoteQPUBackend,
     get_backend,
 )
+from qoolqit._solvers.data import BackendConfig, BackendType, NamedDevice, QuantumProgram
 
 
 def make_simple_program(backend: BaseBackend) -> QuantumProgram:
@@ -41,17 +40,19 @@ def make_simple_program(backend: BaseBackend) -> QuantumProgram:
 
 
 local_backends: list[tuple[type[BaseBackend], BackendType]] = [
-    (backends.QutipBackend, BackendType.QUTIP),
+    (QutipBackend, BackendType.QUTIP),
 ]
 if os.name == "posix":
+    from qoolqit._solvers import EmuMPSBackend, EmuSVBackend
+
     local_backends += [
-        (backends.EmuMPSBackend, BackendType.EMU_MPS),
-        (backends.EmuSVBackend, BackendType.EMU_SV),
+        (EmuMPSBackend, BackendType.EMU_MPS),
+        (EmuSVBackend, BackendType.EMU_SV),
     ]
 
 remote_backends: list[tuple[type[BaseBackend], BackendType]] = [
-    (backends.RemoteEmuMPSBackend, BackendType.REMOTE_EMUMPS),
-    (backends.RemoteQPUBackend, BackendType.REMOTE_QPU),
+    (RemoteEmuMPSBackend, BackendType.REMOTE_EMUMPS),
+    (RemoteQPUBackend, BackendType.REMOTE_QPU),
 ]
 
 all_backends = local_backends + remote_backends

@@ -4,24 +4,22 @@ import os
 
 from qoolqit._solvers.types import DeviceType
 
-from .backends import (
+from .backends.base_backend import (
     BackendConfig,
-    BackendType,
+    BaseBackend,
     BaseJob,
-    BaseLocalBackend,
-    BaseRemoteBackend,
-    CompilationError,
-    ExecutionError,
     JobId,
     QuantumProgram,
-    QutipBackend,
-    RemoteEmuMPSBackend,
     Result,
-    get_backend,
 )
+from .backends.get_backend import get_backend
+from .backends.local_backends import BaseLocalBackend, QutipBackend
+from .backends.remote_backends import RemoteEmuMPSBackend, RemoteJob, RemoteQPUBackend
+from .data import BackendType, CompilationError, ExecutionError
 
 __all__ = [
     "BackendConfig",
+    "BaseBackend",
     "BackendType",
     "BaseJob",
     "BaseLocalBackend",
@@ -31,14 +29,16 @@ __all__ = [
     "JobId",
     "QuantumProgram",
     "QutipBackend",
+    "RemoteQPUBackend",
     "RemoteEmuMPSBackend",
     "Result",
     "get_backend",
+    "RemoteJob",
     "DeviceType",
 ]
 
 if os.name == "posix":
-    from .backends import EmuMPSBackend, EmuSVBackend
+    from .backends.local_backends import EmuMPSBackend, EmuSVBackend
 
     __all__ += [
         "EmuMPSBackend",

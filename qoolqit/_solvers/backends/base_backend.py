@@ -1,0 +1,168 @@
+from __future__ import annotations
+
+import logging
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import Counter
+
+import pulser
+from pulser import Sequence
+from pulser.backend.remote import BatchStatus
+from pulser.devices import Device
+
+from qoolqit._solvers.data import QuantumProgram, BackendConfig, BaseJob, JobId, Result
+
+logger = logging.getLogger(__name__)
+
+
+def make_sequence(program: QuantumProgram) -> pulser.Sequence:
+    """
+    Build a sequence for a device from a pulse and a register.
+
+    This function is mostly intended for internal use and will likely move to qool-layer
+    in time.
+
+    Arguments:
+        program: A quantum program to compile into a sequence.
+
+    Raises:
+        CompilationError if the pulse + register are not compatible with the device.
+    """
+    register = program.register
+    if program.device.requires_layout and register.layout is None:
+        register = program.register.with_automatic_layout(program.device)
+    sequence = Sequence(register=register, device=program.device)
+    sequence.declare_channel("rydberg_global", "rydberg_global")
+    sequence.add(program.pulse, "rydberg_global")
+
+    return sequence
+
+class BaseBackend(ABC):
+    """
+    Base class for backends.
+
+    # Implementation note
+
+    If you implement a new backend, please:
+
+    1. Make sure that `__init__` takes exactly the same arguments as
+        `BaseBackend.__init__`.
+    2. Register it as part of `BackendType`
+    2. Make sure that it can be executed on a background thread.
+    """
+
+    def __init__(self, config: BackendConfig):
+        self.config = config
+
+    def default_number_of_runs(self) -> int:
+        """A backend-specific reasonable default value for the number of runs."""
+        # Reasonable default.
+        return 100
+
+    @abstractmethod
+    def device(self) -> Device:
+        """
+        Specifications for the device picked by `BackendConfig.device`.
+
+        If
+        no such device was specified, return the default device for this
+        backend.
+
+        Note that any client (caller, etc.) MUST call `device()` to find out
+        about the specific device, rather than instantiating a device directly
+        from `pulser`. If your client ever calls a remote QPU, this is the
+        ONLY way of being certain that you have access to the latest version
+        of the QPU specs.
+
+        # Performance note
+
+        This method is expected to spend most of its time outside the GIL, which
+        means that if you run it on a background thread, it should not impact the
+        performance of other threads.
+        """
+        ...
+
+    def run(self, program: QuantumProgram, runs: int | None = None) -> Result:
+        """
+        Submit a quantum program for execution and wait for its result.
+
+        Arguments:
+            runs: How many times the program must be executed on the backend.
+                If `None`, pick a reasonable default.
+
+        Note that if you are submitting a long job and expecting the need
+        to resume it later, you should rather use `submit` and `proceed`.
+
+        # Performance note
+
+        This method is expected to spend most of its time outside the GIL, which
+        means that if you run it on a background thread, it should not impact the
+        performance of other threads.
+        """
+        return self.submit(program, runs).wait()
+
+    @abstractmethod
+    def submit(self, program: QuantumProgram, runs: int | None = None) -> BaseJob:
+        """
+        Submit a quantum program for execution.
+
+        Arguments:
+            runs: How many times the program must be executed on the backend.
+                If `None`, pick a reasonable default.
+
+                        Once a program is submitted, you can obtain a `BaseJob` from its job id
+        by calling `proceed()`. This can be useful if you enqueue a program on a
+        long queue (e.g. one in which you may need to wait for hours or days before
+        you have access to a QPU), save the job id, turn off your computer, then
+        resume your session a few days later to check the status of the program.
+
+        # Performance note
+
+        This method is expected to spend most of its time outside the GIL, which
+        means that if you run it on a background thread, it should not impact the
+        performance of other threads.
+        """
+        ...
+
+    @abstractmethod
+    def proceed(self, job: JobId) -> BaseJob:
+        """
+        Continue tracking execution of a quantum program submitted previously.
+
+        This may be useful, for instance, if you have launched a remote quantum
+        program during a previous session and now wish to check its result
+
+        # Performance note
+
+        This method is expected to spend most of its time outside the GIL, which
+        means that if you run it on a background thread, it should not impact the
+        performance of other threads.
+        """
+        ...
+
+
+@dataclass
+class JobSuccess(BaseJob):
+    """A job that has already succeeded."""
+
+    result: Result
+
+    def status(self) -> BatchStatus:
+        return BatchStatus.DONE
+
+    def wait(self) -> Result:
+        return self.result
+
+
+@dataclass
+class JobFailure(BaseJob):
+    """A job that has already failed."""
+
+    error: Exception
+
+    def status(self) -> BatchStatus:
+        return BatchStatus.ERROR
+
+    def wait(self) -> Result:
+        raise self.error
+
