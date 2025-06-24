@@ -81,6 +81,7 @@ with the condition that the waveform $\Delta(t)$ must be negative.
 
     The system is measured in the computational basis at some time $t^* > 0$.
 
+
 ---
 
 ## **Model units**
