@@ -5,9 +5,11 @@ hide:
 
 # **Quantum computing with Rydberg atoms**
 
-This page centralizes the theoretical framework of QoolQit. To start writing programs, go straight to the [Contents](../contents/graphs.md) section, or check out the [getting started tutorial](../tutorials/getting_started.md).
+This page centralizes the theoretical framework of QoolQit. To start writing programs, [go straight to the contents section](../contents/graphs.md), or [check out the getting started tutorial](../tutorials/getting_started.md).
 
 Manipulating Rydberg atomic systems for quantum computing is a complex topic, and in this page we will not cover all aspects of it. The aim of this page is to introduce the underlying computational model when writing analog algorithms with Rydberg atoms, and to abstract away as much as possible the hardware details on how these algorithms are implemented. For a more detailed description on the physics and hardware implementation of quantum computing with Rydberg atoms, [check out the **Pulser** library](https://pulser.readthedocs.io/en/stable/index.html).
+
+---
 
 ## **The Rydberg Analog Model**
 
@@ -78,6 +80,8 @@ with the condition that the waveform $\Delta(t)$ must be negative.
     $$
 
     The system is measured in the computational basis at some time $t^* > 0$.
+
+---
 
 ## **Model units**
 

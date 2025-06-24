@@ -110,3 +110,16 @@ FOR ALL PAGES
 .md-typeset details {
   font-size: 1em;
 }
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: #888888;
+    margin-top: 1em; /* Add some space above */
+    margin-bottom: 1em; /* Add some space below */
+}
+@media (prefers-color-scheme: dark) {
+    hr {
+        background-color: #888888;
+    }
+}
