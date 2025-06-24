@@ -12,7 +12,7 @@ import pulser
 import torch
 from emu_mps import MPSBackend, MPSConfig
 from pulser.backend import EmulationConfig
-from pulser.backends import QutipBackend as PulserQutipBackend
+from pulser.backends import QutipBackendV2 as PulserQutipBackend
 from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.execution.utils import BackendName, ResultType
