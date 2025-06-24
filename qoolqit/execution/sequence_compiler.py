@@ -6,6 +6,7 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import AvailableDevices, Device
 from qoolqit.drive import Drive
+from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
 
 from .compilation_functions import basic_compilation
@@ -86,9 +87,12 @@ class SequenceCompiler:
         if self._compilation_function is None:
             raise ValueError(f"Device {self.device.name} has an unknown compilation function.")
         else:
-            return self._compilation_function(
-                self.register,
-                self.drive,
-                self.device,
-                self.profile,
-            )
+            try:
+                return self._compilation_function(
+                    self.register,
+                    self.drive,
+                    self.device,
+                    self.profile,
+                )
+            except Exception as error:
+                raise CompilationError(f"Failed to compile the sequence due to:\n\n{error}")

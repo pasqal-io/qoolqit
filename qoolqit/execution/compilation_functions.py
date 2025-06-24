@@ -42,8 +42,6 @@ def _build_pulse(drive: Drive, converted_duration: int, time: float, energy: flo
 
     return PulserPulse(amp_wf, det_wf, drive.phase)
 
-# Tolerance when using device maximum / minimum values
-TOL = 0.05
 
 def basic_compilation(
     register: Register,
@@ -57,13 +55,13 @@ def basic_compilation(
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
     elif profile == CompilerProfile.MAX_DURATION:
-        TIME = ((1.0 - TOL) * device._max_duration) / drive.duration
+        TIME = (device._upper_duration) / drive.duration
         TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
     elif profile == CompilerProfile.MAX_AMPLITUDE:
-        ENERGY = ((1.0 - TOL) * device._max_amp) / drive.amplitude.max()
+        ENERGY = (device._upper_amp) / drive.amplitude.max()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
     elif profile == CompilerProfile.MIN_DISTANCE:
-        DISTANCE = ((1.0 + TOL) * device._min_distance) / register.min_distance()
+        DISTANCE = (device._lower_distance) / register.min_distance()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
     else:
         raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
