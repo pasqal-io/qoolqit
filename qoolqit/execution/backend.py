@@ -11,13 +11,13 @@ import numpy as np
 import pulser
 import torch
 from emu_mps import MPSBackend, MPSConfig
-from pulser import Sequence
 from pulser.backend import EmulationConfig
-from pulser.backends import QutipBackendV2
+from pulser.backends import QutipBackend as PulserQutipBackend
+from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.execution.utils import BackendName, ResultType
 
-AVAILABLE_BACKENDS = {BackendName.QUTIP: QutipBackendV2, BackendName.EMUMPS: MPSBackend}
+AVAILABLE_BACKENDS = {BackendName.QUTIP: PulserQutipBackend, BackendName.EMUMPS: MPSBackend}
 
 AVAILABLE_CONFIGS = {BackendName.QUTIP: EmulationConfig, BackendName.EMUMPS: MPSConfig}
 
@@ -27,7 +27,7 @@ OutputType = Union[np.ndarray, list[Counter]]
 class BaseBackend(ABC):
     def __init__(
         self,
-        seq: Sequence,
+        seq: PulserSequence,
         name: BackendName = BackendName.QUTIP,
         result_type: ResultType = ResultType.STATEVECTOR,
         **backend_params: Any,
@@ -77,7 +77,10 @@ class EmuMPSBackend(BaseBackend):
     """Emu-MPS backend."""
 
     def __init__(
-        self, seq: Sequence, result_type: ResultType = ResultType.STATEVECTOR, **backend_params: Any
+        self,
+        seq: PulserSequence,
+        result_type: ResultType = ResultType.STATEVECTOR,
+        **backend_params: Any,
     ):
         super().__init__(seq, BackendName.EMUMPS, result_type, **backend_params)
 
@@ -137,7 +140,10 @@ class QutipBackend(BaseBackend):
     """Qutip backend."""
 
     def __init__(
-        self, seq: Sequence, result_type: ResultType = ResultType.STATEVECTOR, **backend_params: Any
+        self,
+        seq: PulserSequence,
+        result_type: ResultType = ResultType.STATEVECTOR,
+        **backend_params: Any,
     ):
         super().__init__(seq, BackendName.QUTIP, result_type, **backend_params)
 
