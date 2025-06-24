@@ -2,11 +2,9 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 
 import pulser
 from pulser import Sequence
-from pulser.backend.remote import BatchStatus
 from pulser.devices import Device
 
 from qoolqit._solvers.data import BackendConfig, BaseJob, JobId, QuantumProgram, Result
@@ -139,29 +137,3 @@ class BaseBackend(ABC):
         performance of other threads.
         """
         ...
-
-
-@dataclass
-class JobSuccess(BaseJob):
-    """A job that has already succeeded."""
-
-    result: Result
-
-    def status(self) -> BatchStatus:
-        return BatchStatus.DONE
-
-    def wait(self) -> Result:
-        return self.result
-
-
-@dataclass
-class JobFailure(BaseJob):
-    """A job that has already failed."""
-
-    error: Exception
-
-    def status(self) -> BatchStatus:
-        return BatchStatus.ERROR
-
-    def wait(self) -> Result:
-        raise self.error

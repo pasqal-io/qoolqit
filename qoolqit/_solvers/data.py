@@ -176,3 +176,29 @@ class BaseJob(ABC):
         you should rather use method `wait()`.
         """
         ...
+
+
+@dataclass
+class JobSuccess(BaseJob):
+    """A job that has already succeeded."""
+
+    result: Result
+
+    def status(self) -> BatchStatus:
+        return BatchStatus.DONE
+
+    def wait(self) -> Result:
+        return self.result
+
+
+@dataclass
+class JobFailure(BaseJob):
+    """A job that has already failed."""
+
+    error: Exception
+
+    def status(self) -> BatchStatus:
+        return BatchStatus.ERROR
+
+    def wait(self) -> Result:
+        raise self.error

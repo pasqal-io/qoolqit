@@ -11,20 +11,19 @@ from pulser import Sequence
 from pulser.devices import Device
 from pulser_simulation import QutipEmulator
 
-from qoolqit._solvers.data import NamedDevice
-from qoolqit._solvers.types import DeviceType
-
-from .base_backend import (
+from qoolqit._solvers.data import (
     BackendConfig,
-    BaseBackend,
     BaseJob,
     JobFailure,
     JobId,
     JobSuccess,
+    NamedDevice,
     QuantumProgram,
     Result,
-    make_sequence,
 )
+from qoolqit._solvers.types import DeviceType
+
+from .base_backend import BaseBackend, make_sequence
 
 logger = logging.getLogger(__name__)
 
