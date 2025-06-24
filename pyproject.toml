@@ -57,6 +57,7 @@ Source = "https://github.com/pasqal-io/qoolqit"
 [tool.hatch.envs.default]
 features = ["extras","solvers"]
 dependencies = [
+  "flaky",
   "pytest",
   "pytest-cov",
   "pytest-xdist",
