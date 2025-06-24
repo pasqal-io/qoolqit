@@ -46,7 +46,6 @@ extras = [
 solvers = [
   "pasqal-cloud",
   "requests-mock",
-  "emu_mps",
   "emu_sv",
 ]
 
