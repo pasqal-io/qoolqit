@@ -28,7 +28,7 @@ program.is_compiled
 print(program.is_compiled) # markdown-exec: hide
 ```
 
-Now we instantiate a device and compile the program to that device. Compiling in QoolQit means to translate the adimensional values of time, energy, and distance used when defining the program in the Rydberg analog model to a specific set of values that implement the same set of instructions in a Pulser device, taking into account the Pulser units and the specific parameters of that device. More detailed information on this conversion is provided in the [Rydberg analog model page](../getting_started/rydberg_model.md).
+Now we instantiate a device and compile the program to that device. Compiling in QoolQit means to translate the adimensional values of time, energy, and distance used when defining the program in the Rydberg analog model to a specific set of values that implement the same set of instructions in a Pulser device, taking into account the Pulser units and the specific parameters of that device. More detailed information on this conversion is provided in the [Rydberg analog model page](../theory/rydberg_model.md).
 
 ```python exec="on" source="material-block" result="json" session="drives"
 from qoolqit import AnalogDevice

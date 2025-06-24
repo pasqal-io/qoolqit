@@ -12,7 +12,7 @@ from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 
 
-@pytest.mark.repeat(2)
+@pytest.mark.flaky(max_runs=2)
 @pytest.mark.parametrize("device_class", ALL_DEVICES)
 def test_program_init_and_compilation(
     device_class: Callable,
@@ -34,7 +34,7 @@ def test_program_init_and_compilation(
     assert isinstance(program.compiled_sequence, PulserSequence)
 
 
-@pytest.mark.repeat(3)
+@pytest.mark.flaky(max_runs=2)
 @pytest.mark.parametrize("device_class", ALL_DEVICES)
 @pytest.mark.parametrize("profile", CompilerProfile.list())
 def test_compiler_profiles(

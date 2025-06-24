@@ -4,9 +4,7 @@ repo_name: "QoolQit"
 
 nav:
   - Home: index.md
-  - Getting started:
-    - Installation: getting_started/installation.md
-    - Rydberg Analog Model: getting_started/rydberg_model.md
+  - Rydberg Model: theory/rydberg_model.md
   - Contents:
     - Problem generation:
       - Graphs: contents/graphs.md
@@ -20,10 +18,11 @@ nav:
       - Devices: contents/devices.md
       - Quantum programs: contents/programs.md
   - Tutorials:
-    - Amazing tutorial: tutorials/placeholder.md
+    - Getting started: tutorials/getting_started.md
+    - Understanding unit conversions: tutorials/unit_conversion.md
   - Reference: $api/qoolqit.***
   - Open-source:
-    - Licence (MIT-Derived): LICENSE.md
+    - License (MIT-Derived): LICENSE.md
     - Contributor Agreement: CONTRIBUTOR AGREEMENT.md
 
 theme:
@@ -64,6 +63,7 @@ markdown_extensions:
 - pymdownx.inlinehilite
 - pymdownx.snippets
 - pymdownx.superfences
+- md_in_html
 
 plugins:
 - search
