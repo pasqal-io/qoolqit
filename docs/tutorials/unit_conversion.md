@@ -138,7 +138,7 @@ device.converter
 print(device.converter) # markdown-exec: hide
 ```
 
-You can double-check yourself that the values of $\Omega$ and duration for this sequence match the ones set in QoolQit multiplied by the conversion factors.
+As described in the [model page](../theory/rydberg_model.md), unit conversion is done by multiplying the values in QoolQit by the conversion factors. You can double-check yourself that the values of $\Omega$ and duration for this sequence match the ones set in QoolQit multiplied by the factors in the converter.
 
 What if we wanted to set some custom conversion factors? Would it make a difference? Below we set the energy unit to $10.0$, and check that the converter is updated.
 
@@ -162,12 +162,12 @@ fig = get_figure(states_close, states_far)
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-As expected, the results are exactly the same. Our program did not change, and we are running on a perfect device, so the conversion is exact independently of the conversion factors used. Only the **physical implementation** of our program has changed.
+As expected, the results are exactly the same. Our program did not change, and since we are running on a perfect device the conversion is exact, independently of the conversion factors used. Only the **physical implementation** of our program has changed.
 
 
 ## Running on a realistic device
 
-Now, let's replicate this experiment for a more realistic device. Note that the workflow we will show now is for demonstration purposes, and is not a recommended way to go about writing programs in QoolQit.
+Now, let's replicate this experiment for a more realistic device. Note that the workflow we will show now is for demonstration purposes, and is not the recommended one for the average QoolQit user.
 
 We can use the `AnalogDevice`, which unlike the `MockDevice`, has limitations on certain values that can be set. This is immediately clear if we try to compile the program as it is to the default settings of the `AnalogDevice`:
 
