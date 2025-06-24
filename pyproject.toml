@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "0.0.3"
+version = "0.0.8"
 requires-python = ">=3.10,<3.13"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
@@ -14,6 +14,7 @@ authors = [
   { name = "João Moutiho", email = "joao.moutinho@pasqal.com" },
   { name = "Roland Guichard", email = "roland.guichard@pasqal.com" },
   { name = "David Teller",    email = "david.teller@pasqal.com" },
+  { name = "Manu Lahariya",email = "manu.lahariya@pasqal.com" },
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -42,14 +43,22 @@ extras = [
   "jupyter",
 ]
 
+solvers = [
+  "pasqal-cloud",
+  "requests-mock",
+  "emu_mps",
+  "emu_sv",
+]
+
 [project.urls]
 Documentation = "https://github.com/pasqal-io/qoolqit" # FIXME
 Issues = "https://github.com/pasqal-io/qoolqit/issues"
 Source = "https://github.com/pasqal-io/qoolqit"
 
 [tool.hatch.envs.default]
-features = ["extras"]
+features = ["extras","solvers"]
 dependencies = [
+  "flaky",
   "pytest",
   "pytest-cov",
   "pytest-xdist",
@@ -86,6 +95,7 @@ asyncio_mode="auto"
 asyncio_default_fixture_loop_scope="function"
 
 [tool.hatch.envs.docs]
+features = ["solvers"]
 dependencies = [
   "mkdocs",
   "mkdocs-material",
@@ -131,6 +141,7 @@ parallel = true
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 exclude_also = [
+  "def __str__",
   "def __repr__",
   "def __repr_content__",
   "def __repr_header__",

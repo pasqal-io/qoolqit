@@ -24,6 +24,8 @@ class Waveform(ABC):
     def __init__(
         self,
         duration: float,
+        *args: float,
+        **kwargs: float,
     ) -> None:
         """Initializes the Waveform.
 
@@ -34,15 +36,29 @@ class Waveform(ABC):
         if duration <= 0:
             raise ValueError("Duration needs to be a positive non-zero value.")
 
+        if len(args) > 0:
+            raise ValueError(
+                "Extra arguments need to be passed to `super().__init__` as keyword arguments"
+            )
+
         self._duration = duration
+        self._params_dict = kwargs
 
         self._max: float | None = None
         self._min: float | None = None
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     @property
     def duration(self) -> float:
         """Returns the duration of the waveform."""
         return self._duration
+
+    @property
+    def params(self) -> dict[str, float]:
+        """Dictonary of parameters used by the waveform."""
+        return self._params_dict
 
     @abstractmethod
     def function(self, t: float) -> float:
@@ -114,10 +130,15 @@ class Waveform(ABC):
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
     def __repr_header__(self) -> str:
-        return f"0 ≤ t ≤ {float(self.duration):.3g}: "
+        return f"0.00 ≤ t ≤ {float(self.duration):.2f}: "
 
     def __repr_content__(self) -> str:
-        return self.__class__.__name__ + "()"
+        if len(self.params) > 0:
+            params_list = [f"{value:.2f}" for value in self.params.values()]
+            string = ", ".join(params_list)
+            return self.__class__.__name__ + "(t, " + string + ")"
+        else:
+            return self.__class__.__name__ + "(t)"
 
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
@@ -160,7 +181,12 @@ class CompositeWaveform(Waveform):
         if not waveforms:
             raise ValueError("At least one Waveform must be provided.")
 
-        self._waveforms = list(waveforms)
+        self._waveforms = []
+        for wf in waveforms:
+            if isinstance(wf, CompositeWaveform):
+                self._waveforms += wf.waveforms
+            else:
+                self._waveforms.append(wf)
 
         super().__init__(sum(self.durations))
 
@@ -223,7 +249,7 @@ class CompositeWaveform(Waveform):
         for i, wf in enumerate(self.waveforms):
             t_str = "≤ t <" if i < self.n_waveforms - 1 else "≤ t ≤"
             interval_str = (
-                f"| {float(self.times[i]):.3g} " + t_str + f" {float(self.times[i + 1]):.3g}: "
+                f"| {float(self.times[i]):.2f} " + t_str + f" {float(self.times[i + 1]):.2f}: "
             )
             wf_strings.append(interval_str + wf.__repr_content__())
         return "\n".join(wf_strings)

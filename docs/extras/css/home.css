@@ -9,6 +9,13 @@ TOP IMAGE
     flex-grow: 0
 }
 
+.md-content__inner {
+    max-width: 1024px;
+    margin: 0 auto;
+    margin-top: 0.0rem;
+    margin-bottom: 3.5rem;
+}
+
 .md-main__inner {
     display: flex;
     height: 100%;
@@ -73,60 +80,46 @@ TOP IMAGE
 }
 
 /*
-FEATURE SECTION
+CONTENT SECTION
 */
-.main-features{
-    margin-top: 30px;
+.main-content{
+    margin-top: 25px;
 }
 
-
-.header{
+.top-summary{
     width:100%;
     text-align: center;
     margin-right: auto;
     margin-left: auto;
     font-size: 18px;
     font-weight: 500;
+    margin-bottom: -80px;
 }
 
-
-.features{
-    width:100%;
-    margin-right: auto;
-    margin-left: auto;
-    font-size: 16px;
-    font-weight: 500;
-    text-align:justify;
-}
-
-.arch-container{
-    display:grid;
-    align-items:center;
-    grid-template-columns: 1fr;
-    column-gap:10px;
-    min-width:20rem;
-}
-
-.arch-image{
-    width:80%;
-    min-width:20rem;
-    margin:auto;
-}
 
 @media screen and (min-width:60em) {
-    .arch-container{
-        grid-template-columns: 1fr 1fr;
+    .top-summary{
+        font-size: 26px;
     }
+}
 
-    .arch-image{
-        width:100%;
-    }
+/*
+FOR ALL PAGES
+*/
+.md-typeset .admonition,
+.md-typeset details {
+  font-size: 1em;
+}
 
-    .header{
-        font-size: 28px;
-    }
-
-    .features{
-        font-size: 25px;
+hr {
+    border: none;
+    height: 1px;
+    background-color: #888888;
+    margin-top: 1em; /* Add some space above */
+    margin-bottom: 1em; /* Add some space below */
+}
+@media (prefers-color-scheme: dark) {
+    hr {
+        background-color: #888888;
     }
 }

@@ -27,15 +27,16 @@ class Ramp(Waveform):
         final_value: the final value at t = duration.
     """
 
+    initial_value: float
+    final_value: float
+
     def __init__(
         self,
         duration: float,
         initial_value: float,
         final_value: float,
     ) -> None:
-        super().__init__(duration)
-        self.initial_value = initial_value
-        self.final_value = final_value
+        super().__init__(duration, initial_value=initial_value, final_value=final_value)
 
     def function(self, t: float) -> float:
         fraction = t / self._duration
@@ -47,10 +48,6 @@ class Ramp(Waveform):
     def min(self) -> float:
         return min([self.initial_value, self.final_value])
 
-    def __repr_content__(self) -> str:
-        string = str(self.initial_value) + ", " + str(self.final_value)
-        return self.__class__.__name__ + "(" + string + ")"
-
 
 class Constant(Waveform):
     """A constant waveform over a given duration.
@@ -60,13 +57,14 @@ class Constant(Waveform):
         value: the value to take during the duration.
     """
 
+    value: float
+
     def __init__(
         self,
         duration: float,
         value: float,
     ) -> None:
-        super().__init__(duration)
-        self.value = value
+        super().__init__(duration, value=value)
 
     def function(self, t: float) -> float:
         return self.value
@@ -76,10 +74,6 @@ class Constant(Waveform):
 
     def min(self) -> float:
         return self.value
-
-    def __repr_content__(self) -> str:
-        string = str(self.value)
-        return self.__class__.__name__ + "(" + string + ")"
 
 
 class PiecewiseLinear(CompositeWaveform):
@@ -133,6 +127,11 @@ class Sin(Waveform):
         shift: the vertical shift of the sine wave.
     """
 
+    amplitude: float
+    omega: float
+    phi: float
+    shift: float
+
     def __init__(
         self,
         duration: float,
@@ -141,16 +140,7 @@ class Sin(Waveform):
         phi: float = 0.0,
         shift: float = 0.0,
     ) -> None:
-        super().__init__(duration)
-        self.amplitude = amplitude
-        self.omega = omega
-        self.phi = phi
-        self.shift = shift
+        super().__init__(duration, amplitude=amplitude, omega=omega, phi=phi, shift=shift)
 
     def function(self, t: float) -> float:
         return self.amplitude * math.sin(self.omega * t + self.phi) + self.shift
-
-    def __repr_content__(self) -> str:
-        params = [str(self.amplitude), str(self.omega), str(self.phi), str(self.shift)]
-        string = ", ".join(params)
-        return self.__class__.__name__ + "(" + string + ")"

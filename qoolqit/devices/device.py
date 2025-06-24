@@ -52,7 +52,7 @@ class Device(ABC):
 
     def __post_init__(self) -> None:
         if not isinstance(self._device, BaseDevice):
-            raise TypeError("Incorrent base device set.")
+            raise TypeError("Incorrect base device set.")
 
     def __repr__(self) -> str:
         return self.name
