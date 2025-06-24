@@ -14,8 +14,8 @@ authors = [
   { name = "João Moutinho", email = "joao.moutinho@pasqal.com" },
   { name = "Vytautas Abramavicius", email = "vytautas.abramavicius@pasqal.com" },
   { name = "Roland Guichard", email = "roland.guichard@pasqal.com" },
-  { name = "David Teller",    email = "david.teller@pasqal.com" },
-  { name = "Manu Lahariya",email = "manu.lahariya@pasqal.com" },
+  { name = "David Teller", email = "david.teller@pasqal.com" },
+  { name = "Manu Lahariya", email = "manu.lahariya@pasqal.com" },
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
