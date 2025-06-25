@@ -193,7 +193,7 @@ print(device.specs) # markdown-exec: hide
 
 Note that the values shown are **adimensional**, meaning that they depend on the current unit converter that is set on the device. Since we tried setting the qubits at $r_\text{close} = 0.7$, this is lower than the minimum distance allowed on this device given the default converter.
 
-Changing the program would be an option to achieve the compilation. For example, instead of using $\Omega = 1$, we could set $\Omega = 0.3$, which in turn would reduce the blockade radius. Then we could set $r_\text{close} = 0.7r_b\approx0.856$ and $r_\text{far} = 1.5r_b\approx1.833$, which would now match the device constrains, and we would observe the same blockade behaviour (albeit with the dynamics on a different time-scale, scaled as $t/\Omega$).
+Changing the program would be an option to achieve the compilation. For example, instead of using $\Omega = 1$, we could set $\Omega = 0.3$, which in turn would increase the blockade radius. Then we could set $r_\text{close} = 0.7r_b\approx0.856$ and $r_\text{far} = 1.5r_b\approx1.833$, which would now match the device constrains, and we would observe the same blockade behaviour (albeit with the dynamics on a different time-scale, scaled as $t/\Omega$).
 
 However, that would be a fundamentally different program, and the goal in this tutorial is to exemplify how a fixed program can be translated differently through unit conversions. So, instead, we are just going to compile our original program differently. Below we check the unit converter used, then make a small arbitrary increase to the distance unit, and check the updated converter.
 
