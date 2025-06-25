@@ -4,7 +4,7 @@ In this tutorial we will exemplify how unit conversions play a role in the under
 
 ## Rydberg blockade
 
-Consider a system of two qubits in state $|00\rangle$, placed in two sites at a distance $r$ at $t=0$. For simplicity, we set the program drive as a constant amplitude waveform of value $\Omega$ for $t\geq0$. This means the qubits evolve with the Hamiltonian
+Consider a system of two qubits in state $|00\rangle$, placed in two sites at a distance $r$ at $t=0$. For simplicity, we set the program drive as a constant amplitude waveform of value $\Omega$ for $t\geq0$. Following the [Rydberg model page](../theory/rydberg_model.md), the two qubit system evolves with the Hamiltonian
 
 $$
 H_{01}=\frac{\Omega}{2}(\hat{\sigma}^x_0+\hat{\sigma}^x_1)+\frac{1}{r^6}\hat{n}_0\hat{n}_1
@@ -18,11 +18,11 @@ $$
 
 is called the Rydberg blockade radius, such that if two qubits are at a distance $r < r_b$, the state $|11\rangle$ is blocked, while if they are at a distance $r > r_b$, the state $|11\rangle$ is accessible.
 
-Setting now $\Omega = 1$, we have also that $r_b = 1$ If you solve the system analytically you will find that in the blockade regime the initial population of $|00\rangle$ oscillates with a period of $\pi\sqrt{2}$, while in the non-blockade regime the transition $|00\rangle \rightarrow |11\rangle$ is complete at $t=\pi$.
+For simplicity we now set $\Omega = 1$, and thus $r_b = 1$. If you solve the system analytically you will find that in the blockade regime the initial population of $|00\rangle$ transitions to $\frac{1}{\sqrt{2}}|01\rangle+|10\rangle$ at $t=\pi/\sqrt{2}$, while in the non-blockade regime the transition $|00\rangle \rightarrow |11\rangle$ is complete at $t=\pi$.
 
 ---
 
-Let's now write a simple program in QoolQit to demonstrate the behaviour described. We will create a program for the $r < r_b$ regime (qubits are close), and one for the $r > r_b$ (qubits are far), and start by defining the drive of the program with two different durations.
+Let's now write a simple program in QoolQit to demonstrate the behaviour described. We will create a program for the $r < 1$ regime (qubits are close), and one for the $r > 1$ (qubits are far), and start by defining the drive of the program with two different durations.
 
 ```python exec="on" source="material-block" session="unit-conversion"
 import numpy as np
@@ -184,16 +184,18 @@ except Exception as error:
 program_far.compile_to(device)
 ```
 
-While the program setting the qubits far apart compiled without problems, the one with the qubits closer together did not, clearly because the compiler tried to put atoms closer than the minimum physical distance they can be at on this device. Such limitations can be checked at the level of QoolQit in the `specs` property of the devices:
+While the program setting the qubits far apart compiled without problems, the one with the qubits closer together did not, because the compiler tried to put atoms closer than the minimum physical distance allowed on this device. Such limitations can be checked at the level of QoolQit in the `specs` property of the devices:
 
 ```python exec="on" source="material-block" result="json" session="unit-conversion"
 device.specs
 print(device.specs) # markdown-exec: hide
 ```
 
-Note that the values shown are **adimensional**, meaning that they depend on the current unit converter that is set on the device. Clearly, since we tried setting the qubits at $r_\text{close} = 0.7$, this is lower than the minimum distance acceptable on this device given the default converter.
+Note that the values shown are **adimensional**, meaning that they depend on the current unit converter that is set on the device. Since we tried setting the qubits at $r_\text{close} = 0.7$, this is lower than the minimum distance allowed on this device given the default converter.
 
-So, should we go back and change our program? No! We just need to compile it differently. Below we check the unit converter used, then make a small increase to the distance unit, and check the updated one.
+Changing the program would be an option to achieve the compilation. For example, instead of using $\Omega = 1$, we could set $\Omega = 0.3$, which in turn would reduce the blockade radius. Then we could set $r_\text{close} = 0.7r_b\approx0.856$ and $r_\text{far} = 1.5r_b\approx1.833$, which would now match the device constrains, and we would observe the same blockade behaviour (albeit with the dynamics on a different time-scale, scaled as $t/\Omega$).
+
+However, that would be a fundamentally different program, and the goal in this tutorial is to exemplify how a fixed program can be translated differently through unit conversions. So, instead, we are just going to compile our original program differently. Below we check the unit converter used, then make a small arbitrary increase to the distance unit, and check the updated converter.
 
 ```python exec="on" source="material-block" result="json" session="unit-conversion"
 print(device.converter)
@@ -210,7 +212,7 @@ device.specs
 print(device.specs) # markdown-exec: hide
 ```
 
-With the updated converter both programs should now compile, and we can again plot the results.
+With the updated converter the allowed minimum distance is smaller, and both programs should now compile. We can again plot the results:
 
 ```python exec="on" source="material-block" html="1" session="unit-conversion"
 program_close.compile_to(device)
@@ -237,7 +239,7 @@ As you can see, in a realistic device you cannot implement a perfectly square wa
 
 At the start of the previous section it was noted that the workflow of manually changing the unit converter is not necessarily the recommended one, and should be reserved for more advanced users. At the same time, at at the end of the section we saw that in this case the compilation was not ideal, because the program was slightly affected by waveform modulation errors.
 
-To address both of these issues, we can use **compiler profiles**. These are directives for the compiler to follow while trying to compiler the sequence, which can be designed with various specific purposes in mind. Going in detail on compiler profiles in QoolQit is not the purpose of this tutorial, but here can exemplify the usage of one:
+To address both of these issues, we can use **compiler profiles**. These are directives for the compiler to follow while trying to compile the sequence, which can be designed with various specific purposes in mind. Going in detail on compiler profiles in QoolQit is not the purpose of this tutorial, but here can exemplify the usage of one:
 
 ```python exec="on" source="material-block" html="1" session="unit-conversion""
 from qoolqit import AnalogDevice, CompilerProfile
