@@ -237,7 +237,7 @@ As you can see, in a realistic device you cannot implement a perfectly square wa
 
 ## Using compiler profiles
 
-At the start of the previous section it was noted that the workflow of manually changing the unit converter is not necessarily the recommended one, and should be reserved for more advanced users. At the same time, at at the end of the section we saw that in this case the compilation was not ideal, because the program was slightly affected by waveform modulation errors.
+At the start of the previous section it was noted that the workflow of manually changing the unit converter is not necessarily the recommended one, and should be reserved for more advanced users. At the same time, at the end of the section we saw that in this case the compilation was not ideal, because the program was slightly affected by waveform modulation errors.
 
 To address both of these issues, we can use **compiler profiles**. These are directives for the compiler to follow while trying to compile the sequence, which can be designed with various specific purposes in mind. Going in detail on compiler profiles in QoolQit is not the purpose of this tutorial, but here can exemplify the usage of one:
 
