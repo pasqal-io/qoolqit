@@ -18,7 +18,7 @@ nav:
       - Devices: contents/devices.md
       - Quantum programs: contents/programs.md
   - Tutorials:
-    - Getting started: tutorials/getting_started.md
+    - Solving a basic QUBO: tutorials/basic_qubo.md
 
     - Advanced:
       - Understanding unit conversions: tutorials/unit_conversion.md
