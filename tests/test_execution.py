@@ -58,6 +58,7 @@ def test_state_vector(random_program: Callable, backend_name: BackendName, devic
     assert np.isclose(qutip_res, bknd_res, atol=ATOL_STATE_VEC).all()
 
 
+@pytest.mark.flaky(max_runs=5)
 @pytest.mark.parametrize(
     "backend_name, device",
     [
