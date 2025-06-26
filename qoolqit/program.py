@@ -1,17 +1,20 @@
 from __future__ import annotations
 
+from typing import Any, Union
+
 import matplotlib.pyplot as plt
-import numpy as np
-from numpy.typing import ArrayLike
 from pulser.sequence.sequence import Sequence as PulserSequence
-from pulser_simulation import QutipEmulator
 
 from qoolqit.devices import Device, MockDevice
 from qoolqit.drive import Drive
 from qoolqit.execution import CompilerProfile, SequenceCompiler
+from qoolqit.execution.backend import EmuMPSBackend, OutputType, QutipBackend
+from qoolqit.execution.utils import BackendName, ResultType
 from qoolqit.register import Register
 
 __all__ = ["QuantumProgram"]
+
+BackendType = Union[QutipBackend, EmuMPSBackend]
 
 
 class QuantumProgram:
@@ -118,16 +121,26 @@ class QuantumProgram:
                 else:
                     return None
 
-    def run(self) -> ArrayLike:
-        """Temporary method to run a simulation on QuTip."""
+    def run(
+        self,
+        backend_name: BackendName = BackendName.QUTIP,
+        result_type: ResultType = ResultType.STATEVECTOR,
+        runs: int = 100,
+        evaluation_times: list[float] = [1.0],
+        **backend_params: Any,
+    ) -> OutputType:
+        """Run the compiled sequence on selected backend."""
         if self._compiled_sequence is None:
             raise ValueError(
                 "Program has not been compiled. Please call program.compile_to(device)."
             )
         elif self._device is not None:
-            with_modulation = not isinstance(self._device, MockDevice)
-            simulator = QutipEmulator.from_sequence(
-                self._compiled_sequence, with_modulation=with_modulation
-            )
-            result = simulator.run()
-            return np.array([np.flip(result[i].state[:].flatten()) for i in range(len(result))])
+            # initialize the backend
+            backend_params["with_modulation"] = not isinstance(self._device, MockDevice)
+            backend: BackendType
+            if backend_name == BackendName.QUTIP:
+                backend = QutipBackend(self._compiled_sequence, result_type, **backend_params)
+            elif backend_name == BackendName.EMUMPS:
+                backend = EmuMPSBackend(self._compiled_sequence, result_type, **backend_params)
+
+        return backend.run(runs, evaluation_times)

@@ -11,10 +11,11 @@ requires-python = ">=3.10,<3.13"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
 authors = [
-  { name = "João Moutiho", email = "joao.moutinho@pasqal.com" },
+  { name = "João Moutinho", email = "joao.moutinho@pasqal.com" },
+  { name = "Vytautas Abramavicius", email = "vytautas.abramavicius@pasqal.com" },
   { name = "Roland Guichard", email = "roland.guichard@pasqal.com" },
-  { name = "David Teller",    email = "david.teller@pasqal.com" },
-  { name = "Manu Lahariya",email = "manu.lahariya@pasqal.com" },
+  { name = "David Teller", email = "david.teller@pasqal.com" },
+  { name = "Manu Lahariya", email = "manu.lahariya@pasqal.com" },
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -31,6 +32,7 @@ dependencies = [
   "pulser",
   "matplotlib",
   "networkx",
+  "emu_mps"
 ]
 
 [tool.hatch.metadata]
@@ -45,7 +47,6 @@ extras = [
 solvers = [
   "pasqal-cloud",
   "requests-mock",
-  "emu_mps",
   "emu_sv",
 ]
 
