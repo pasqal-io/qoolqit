@@ -108,7 +108,7 @@ QoolQit handles the unit conversion automatically through a compilation layer, a
 
 $$\text{Time[P]}=\Delta_T \times \text{Time[Q]},\quad\text{Energy[P]}=\Delta_E \times \text{Energy[Q]},\quad\text{Distance[P]}=\Delta_D \times \text{Distance[Q]},$$
 
-where $\text{P}$ and $\text{Q}$ refer to the Pulser and QoolQit units, respectively. Defining a valid set of conversion factors between QoolQit and Pulser can be done arbitrarily, as long as the **both the time-energy invariant and the energy-distance invariant are respected**:
+where $\text{P}$ and $\text{Q}$ refer to the Pulser and QoolQit units, respectively. Defining a valid set of conversion factors between QoolQit and Pulser can be done arbitrarily, as long as **both the time-energy invariant and the energy-distance invariant are respected**:
 
 $$\Delta_T\,\times\,\Delta_E = 1000,\qquad \Delta_D^6\,\times\,\Delta_E = C_6.$$
 
