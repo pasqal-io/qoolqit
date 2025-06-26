@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+from functools import reduce
+from math import pi
 from random import randint, uniform
 from typing import Callable, Generator
 
+import numpy as np
 import pytest
+from scipy.linalg import expm
 
 from qoolqit.drive import Drive
 from qoolqit.program import QuantumProgram
@@ -69,3 +73,40 @@ def random_program(
         return QuantumProgram(register, drive)
 
     yield _generate_random_program
+
+
+@pytest.fixture
+def random_n_qubits() -> int:
+    return randint(1, 8)
+
+
+@pytest.fixture
+def random_rotation_angle() -> float:
+    return uniform(0, 1) * pi
+
+
+@pytest.fixture
+def evaluation_times() -> list[float]:
+    return list(np.linspace(0, 1, 101))
+
+
+@pytest.fixture
+def random_x_rotation(random_n_qubits: int, random_rotation_angle: float) -> np.ndarray:
+    # Pauli-X and identity matrices
+    sigma_x = np.array([[0, 1], [1, 0]], dtype=complex)
+    id_mat = np.eye(2, dtype=complex)
+
+    # Build Hamiltonian H = sum_j X_j
+    dim = 2**random_n_qubits
+    H = np.zeros((dim, dim), dtype=complex)
+
+    for j in range(random_n_qubits):
+        ops = [id_mat] * random_n_qubits
+        ops[j] = sigma_x
+        term = reduce(np.kron, ops)
+        H += term
+
+    # Compute unitary
+    U = expm(-1j * 0.5 * random_rotation_angle * H)
+
+    return U

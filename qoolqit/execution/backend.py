@@ -49,7 +49,7 @@ class BaseBackend(ABC):
         obs = self.backend_params.get("observables", [])
 
         if len(obs) == 0:
-            if self.result_type == ResultType.BITSTRING:
+            if self.result_type == ResultType.BITSTRINGS:
                 obs.append(
                     pulser.backend.BitStrings(evaluation_times=evaluation_times, num_shots=runs)
                 )
@@ -115,25 +115,36 @@ class EmuMPSBackend(BaseBackend):
         self.build_config(runs, evaluation_times)
         self.build_backend()
 
-        if self.result_type == ResultType.STATEVECTOR:
-            states = self.backend.run().state
+        # run the simulation
+        result = self.backend.run()
 
-            # Get initial state vector
-            initial_state = self.backend._config.initial_state
-            if initial_state is None:
-                initial_state = emu_mps.MPS.from_state_amplitudes(
-                    eigenstates=("r", "g"),
-                    amplitudes={"g" * len(self.seq.register.qubits): 1.0},
-                )
-
-            # Constract MPS states to get state vectors
-            state_vecs = np.array(
-                [self.contract_mps(initial_state)] + [self.contract_mps(state) for state in states]
+        # Get initial state vector
+        initial_state = self.backend._config.initial_state
+        if initial_state is None:
+            initial_state = emu_mps.MPS.from_state_amplitudes(
+                eigenstates=("r", "g"),
+                amplitudes={"g" * len(self.seq.register.qubits): 1.0},
             )
+
+        if self.result_type == ResultType.STATEVECTOR:
+            # Constract MPS states to get state vectors
+            if len(evaluation_times) == 1:
+                state_vecs = [self.contract_mps(state) for state in result.state]
+            else:
+                state_vecs = [self.contract_mps(initial_state)] + [
+                    self.contract_mps(state) for state in result.state
+                ]
+            state_vecs = np.array(state_vecs)
             return state_vecs
 
-        elif self.result_type == ResultType.BITSTRING:
-            return self.backend.run().get_tagged_results()
+        elif self.result_type == ResultType.BITSTRINGS:
+            if len(evaluation_times) == 1:
+                bitstrings = result.get_tagged_results()["bitstrings"]
+            else:
+                bitstrings = [initial_state.sample(num_shots=runs)] + result.get_tagged_results()[
+                    "bitstrings"
+                ]
+            return bitstrings
 
 
 class QutipBackend(BaseBackend):
@@ -153,10 +164,14 @@ class QutipBackend(BaseBackend):
         self.build_config(runs, evaluation_times)
         self.build_backend()
 
+        # run the simulation
+        result = self.backend.run()
+
         if self.result_type == ResultType.STATEVECTOR:
-            states = self.backend.run().state
-            state_vecs = np.array([np.flip(state.to_qobj().full().flatten()) for state in states])
+            state_vecs = np.array(
+                [np.flip(state.to_qobj().full().flatten()) for state in result.state]
+            )
             return state_vecs
 
-        elif self.result_type == ResultType.BITSTRING:
-            return self.backend.run().get_tagged_results()
+        elif self.result_type == ResultType.BITSTRINGS:
+            return result.get_tagged_results()["bitstrings"]

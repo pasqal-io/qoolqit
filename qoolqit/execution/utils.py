@@ -19,5 +19,5 @@ class BackendName(StrEnum):
 
 class ResultType(StrEnum):
 
-    BITSTRING = "Bitstring"
+    BITSTRINGS = "Bitstrings"
     STATEVECTOR = "StateVector"
