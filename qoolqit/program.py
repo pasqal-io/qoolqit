@@ -144,17 +144,3 @@ class QuantumProgram:
                 backend = EmuMPSBackend(self._compiled_sequence, result_type, **backend_params)
 
         return backend.run(runs, evaluation_times)
-
-    # def run(self) -> ArrayLike:
-    #     """Temporary method to run a simulation on QuTip."""
-    #     if self._compiled_sequence is None:
-    #         raise ValueError(
-    #             "Program has not been compiled. Please call program.compile_to(device)."
-    #         )
-    #     elif self._device is not None:
-    #         with_modulation = not isinstance(self._device, MockDevice)
-    #         simulator = QutipEmulator.from_sequence(
-    #             self._compiled_sequence, with_modulation=with_modulation
-    #         )
-    #         result = simulator.run()
-    #         return np.array([np.flip(result[i].state[:].flatten()) for i in range(len(result))])
