@@ -54,6 +54,9 @@ Finally, the user can pass keyword arguments for the backend's internal configur
 Let us run the quantum program defined previously and request the state vectors as output.
 
 ```python exec="on" source="material-block" result="json" session="drives"
+from qoolqit.execution import BackendName, ResultType
+import numpy as np
+
 # Define the evaluation times list
 T = 101
 evaluation_times = np.linspace(0, 1, T).tolist()
