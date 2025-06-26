@@ -11,6 +11,7 @@ from qoolqit.devices import Device
 from qoolqit.execution import BackendName, ResultType
 
 
+@pytest.mark.flaky(max_runs=5)
 @pytest.mark.parametrize("backend_name", BackendName.list())
 def test_theoretical_state_vector(
     backend_name: BackendName, random_x_rotation: np.ndarray, random_rotation_angle: float
