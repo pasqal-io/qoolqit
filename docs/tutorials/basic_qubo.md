@@ -106,9 +106,9 @@ from qoolqit import AnalogDevice, ResultType
 
 program.compile_to(device = AnalogDevice())
 
-result = program.run(runs = 500, result_type = ResultType.BITSTRING)
+result = program.run(runs = 500, result_type = ResultType.BITSTRINGS)
 
-counter = result["bitstrings"][0]
+counter = result[0]
 print(counter) # markdown-exec: hide
 ```
 

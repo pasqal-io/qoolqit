@@ -7,8 +7,6 @@
   </picture>
 </p>
 
-**WARNING: QoolQit is under heavy development, and usage before the release of v0.1.0 is not recommended!**
-
 **QoolQit** is a Python package designed for algorithm development in the Rydberg Analog Model.
 
 
