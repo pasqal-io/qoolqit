@@ -45,7 +45,7 @@ def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: fl
     np.random.seed(0)
 
     # Initial guess for the coordinates
-    x0 = 2 * np.random.random(len(matrix) * 2) - 1
+    x0 = np.random.random(len(matrix) * 2)
 
     res = minimize(
         cost_function,
@@ -58,6 +58,8 @@ def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: fl
 
     coords = np.reshape(res.x, (len(matrix), 2))
 
-    graph = DataGraph.from_coordinates(coords.tolist())
+    centered_coords = coords - np.mean(coords, axis=0)
+
+    graph = DataGraph.from_coordinates(centered_coords.tolist())
 
     return graph

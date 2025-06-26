@@ -26,10 +26,18 @@ class Device(ABC):
 
         self._C6 = self._device.interaction_coeff
         self._clock_period = self._device.channels["rydberg_global"].clock_period
-        self._max_duration = self._device.max_sequence_duration or UPPER_DURATION
-        self._max_amp = self._device.channels["rydberg_global"].max_amp or UPPER_AMP
-        self._max_det = self._device.channels["rydberg_global"].max_abs_detuning or UPPER_DET
-        self._min_distance = self._device.min_atom_distance or LOWER_DISTANCE
+
+        # Relevant limits from the underlying device (float or None)
+        self._max_duration = self._device.max_sequence_duration
+        self._max_amp = self._device.channels["rydberg_global"].max_amp
+        self._max_det = self._device.channels["rydberg_global"].max_abs_detuning
+        self._min_distance = self._device.min_atom_distance
+
+        # Values to use when limits do not exist
+        self._upper_duration = self._max_duration or UPPER_DURATION
+        self._upper_amp = self._max_amp or UPPER_AMP
+        self._upper_det = self._max_det or UPPER_DET
+        self._lower_distance = self._min_distance or LOWER_DISTANCE
 
         self.reset_converter()
 
@@ -44,6 +52,16 @@ class Device(ABC):
     def _default_converter(self) -> UnitConverter:
         """Abstract property defining the default unit converter."""
         ...
+
+    @property
+    def specs(self) -> dict:
+        TIME, ENERGY, DISTANCE = self.converter.factors
+        return {
+            "max_duration": self._max_duration / TIME if self._max_duration else None,
+            "max_amplitude": self._max_amp / ENERGY if self._max_amp else None,
+            "max_detuning": self._max_det / ENERGY if self._max_det else None,
+            "min_distance": self._min_distance / DISTANCE if self._min_distance else None,
+        }
 
     @property
     def name(self) -> str:
@@ -87,7 +105,7 @@ class MockDevice(Device):
 
     @property
     def _default_converter(self) -> UnitConverter:
-        return UnitConverter.from_energy(self._C6, self._max_amp)
+        return UnitConverter.from_energy(self._C6, self._upper_amp)
 
 
 class AnalogDevice(Device):
@@ -102,7 +120,7 @@ class AnalogDevice(Device):
 
     @property
     def _default_converter(self) -> UnitConverter:
-        return UnitConverter.from_energy(self._C6, self._max_amp)
+        return UnitConverter.from_energy(self._C6, self._upper_amp)
 
 
 class TestAnalogDevice(Device):
@@ -117,7 +135,7 @@ class TestAnalogDevice(Device):
 
     @property
     def _default_converter(self) -> UnitConverter:
-        return UnitConverter.from_energy(self._C6, self._max_amp)
+        return UnitConverter.from_energy(self._C6, self._upper_amp)
 
 
 ALL_DEVICES = [MockDevice, AnalogDevice, TestAnalogDevice]

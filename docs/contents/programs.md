@@ -98,7 +98,7 @@ The `CompilerProfile.MIN_DISTANCE` maps whatever is the minimum distance in the 
 ```python exec="on" source="material-block" result="json" session="drives"
 try:
     program.compile_to(device, profile = CompilerProfile.MIN_DISTANCE)
-except ValueError as error:
+except Exception as error:
     print(error)
 ```
 

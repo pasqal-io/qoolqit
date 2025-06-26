@@ -19,8 +19,10 @@ nav:
       - Quantum programs: contents/programs.md
       - Execution: contents/execution.md
   - Tutorials:
-    - Getting started: tutorials/getting_started.md
-    - Understanding unit conversions: tutorials/unit_conversion.md
+    - Solving a basic QUBO: tutorials/basic_qubo.md
+
+    - Advanced:
+      - Understanding unit conversions: tutorials/unit_conversion.md
   - Reference: $api/qoolqit.***
   - Open-source:
     - License (MIT-Derived): LICENSE.md

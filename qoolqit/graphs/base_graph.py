@@ -156,6 +156,10 @@ class BaseGraph(nx.Graph):
         else:
             raise AttributeError("Trying to compute distances for a graph without coordinates.")
 
+    def interactions(self) -> dict:
+        """Rydberg model interaction 1/r^6 between pair of nodes."""
+        return {p: 1.0 / (r**6) for p, r in self.distances().items()}
+
     def min_distance(self, connected: bool | None = None) -> float:
         """Returns the minimum distance in the graph.
 

@@ -135,6 +135,8 @@ print(fig_to_html(fig2)) # markdown-exec: hide
 
 ## Matrix embedding
 
+<a name="matrix-embedding"></a>
+
 Matrix embedding is the problem of encoding a matrix into the Rydberg analog model. Several approaches can be taken, using different algorithms.
 
 ### Interaction embedding

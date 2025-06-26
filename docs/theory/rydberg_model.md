@@ -5,7 +5,7 @@ hide:
 
 # **Quantum computing with Rydberg atoms**
 
-This page centralizes the theoretical framework of QoolQit. To start writing programs, [go straight to the contents section](../contents/graphs.md), or [check out the getting started tutorial](../tutorials/getting_started.md).
+This page centralizes the theoretical framework of QoolQit. To start writing programs, [go straight to the contents section](../contents/graphs.md), or [check out the tutorials section](../tutorials/basic_qubo.md).
 
 Manipulating Rydberg atomic systems for quantum computing is a complex topic, and in this page we will not cover all aspects of it. The aim of this page is to introduce the underlying computational model when writing analog algorithms with Rydberg atoms, and to abstract away as much as possible the hardware details on how these algorithms are implemented. For a more detailed description on the physics and hardware implementation of quantum computing with Rydberg atoms, [check out the **Pulser** library](https://pulser.readthedocs.io/en/stable/index.html).
 
@@ -108,7 +108,7 @@ QoolQit handles the unit conversion automatically through a compilation layer, a
 
 $$\text{Time[P]}=\Delta_T \times \text{Time[Q]},\quad\text{Energy[P]}=\Delta_E \times \text{Energy[Q]},\quad\text{Distance[P]}=\Delta_D \times \text{Distance[Q]},$$
 
-where $\text{P}$ and $\text{Q}$ refer to the Pulser and QoolQit units, respectively. Defining a valid set of conversion factors between QoolQit and Pulser can be done arbitrarily, as long as the **both the time-energy invariant and the energy-distance invariant are respected**:
+where $\text{P}$ and $\text{Q}$ refer to the Pulser and QoolQit units, respectively. Defining a valid set of conversion factors between QoolQit and Pulser can be done arbitrarily, as long as **both the time-energy invariant and the energy-distance invariant are respected**:
 
 $$\Delta_T\,\times\,\Delta_E = 1000,\qquad \Delta_D^6\,\times\,\Delta_E = C_6.$$
 

@@ -55,13 +55,13 @@ def basic_compilation(
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
     elif profile == CompilerProfile.MAX_DURATION:
-        TIME = (device._max_duration) / drive.duration
+        TIME = (device._upper_duration) / drive.duration
         TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
     elif profile == CompilerProfile.MAX_AMPLITUDE:
-        ENERGY = (device._max_amp) / drive.amplitude.max()
+        ENERGY = (device._upper_amp) / drive.amplitude.max()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
     elif profile == CompilerProfile.MIN_DISTANCE:
-        DISTANCE = (device._min_distance) / register.min_distance()
+        DISTANCE = (device._lower_distance) / register.min_distance()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
     else:
         raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
