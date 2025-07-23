@@ -6,7 +6,7 @@ import json
 import os
 import random
 import re
-from typing import Any, Callable, Counter
+from typing import Any, Callable, Counter, cast
 from uuid import uuid4
 
 import pulser
@@ -14,9 +14,11 @@ import pulser.pulse
 import pytest
 import requests_mock
 from pasqal_cloud.endpoints import Endpoints
+from pulser.waveforms import Waveform
 
 from qoolqit._solvers import (
     BaseBackend,
+    Detuning,
     QutipBackend,
     RemoteEmuFREEBackend,
     RemoteEmuMPSBackend,
@@ -38,6 +40,12 @@ def make_simple_program(backend: BaseBackend) -> QuantumProgram:
             phase=0.5,
             detuning=0,
         ),
+        detunings=[
+            Detuning(
+                weights={"q0": 0.5, "q1": 0.5},
+                waveform=cast(Waveform, pulser.waveforms.ConstantWaveform(duration=100, value=0.5)),
+            )
+        ],
     )
 
 

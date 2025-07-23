@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Counter
 
 import pulser
 import pydantic
 from pulser.backend.remote import BatchStatus
+from pulser.register import QubitId
+from pulser.waveforms import Waveform
 
 from qoolqit._solvers.types import BackendType, DeviceType
 
@@ -15,12 +17,36 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
+class Detuning:
+    """A single detuning channel."""
+
+    weights: dict[QubitId, float]
+    """Association of weights to qubits."""
+
+    waveform: Waveform
+    """The waveform for this detuning channel."""
+
+    name: str = "dmm"
+    """An optional, human-readable, name."""
+
+
+@dataclass
 class QuantumProgram:
-    """Placeholder for qoolqit.QuantumProgram."""
+    """
+    The program to execute on the QPU/emulator.
+
+    In time, this class is expected to disappear and be replaced with `qoolqit.QuantumProgram`.
+    """
 
     device: pulser.devices.Device
     register: pulser.Register
     pulse: pulser.Pulse
+    detunings: list[Detuning] = field(default_factory=list)
+    """
+    Detunings.
+
+    As of this writing, they're not supported in qoolqit.QuantumProgram.
+    """
 
 
 pydantic.BaseModel.model_config["arbitrary_types_allowed"] = True
