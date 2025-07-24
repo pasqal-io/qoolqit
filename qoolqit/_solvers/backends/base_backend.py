@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from copy import deepcopy
 import logging
 from abc import ABC, abstractmethod
+from uuid import uuid4
 
 import pulser
 from pulser import Sequence
@@ -25,12 +27,22 @@ def make_sequence(program: QuantumProgram) -> pulser.Sequence:
     Raises:
         CompilationError if the pulse + register are not compatible with the device.
     """
-    register = program.register
+    # Normalize and apply register.
+    register = deepcopy(program.register)
     if program.device.requires_layout and register.layout is None:
         register = program.register.with_automatic_layout(program.device)
     sequence = Sequence(register=register, device=program.device)
+
+    # Add global pulse.
     sequence.declare_channel("rydberg_global", "rydberg_global")
     sequence.add(program.pulse, "rydberg_global")
+
+    # Add any detuning pulse.
+    for detuning in program.detunings:
+        unique_id = f"{detuning.name}_{uuid4()}"
+        detuning_map = register.define_detuning_map(detuning_weights=detuning.weights)
+        sequence.config_detuning_map(detuning_map, dmm_id=unique_id)
+        sequence.add_dmm_detuning(detuning.waveform, unique_id)
 
     return sequence
 
