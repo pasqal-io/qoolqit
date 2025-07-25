@@ -149,7 +149,7 @@ class BaseRemoteBackend(BaseBackend):
         else:
             assert isinstance(self.config.device, DeviceType)
             self._device = self.config.device.value
-        self._max_runs = self._device.max_runs
+        self._max_runs = self._device.max_runs or self._api_max_runs()
         return self._device
 
     @abstractmethod

@@ -26,9 +26,6 @@ class Detuning:
     waveform: Waveform
     """The waveform for this detuning channel."""
 
-    name: str = "dmm"
-    """An optional, human-readable, name."""
-
 
 @dataclass
 class QuantumProgram:
