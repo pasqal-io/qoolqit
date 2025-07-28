@@ -49,6 +49,7 @@ solvers = [
   "pasqal-cloud",
   "requests-mock",
   "emu_sv",
+  "pulser-myqlm",
 ]
 
 [project.urls]

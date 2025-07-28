@@ -5,12 +5,16 @@ import time
 from abc import abstractmethod
 from typing import Counter, cast
 
+import pulser
+import pulser.backend.remote
 from pasqal_cloud import SDK, EmulatorType
 from pasqal_cloud.batch import Batch
 from pulser import Sequence
-from pulser.backend.remote import BatchStatus
+from pulser.backend.remote import BatchStatus, RemoteResults
 from pulser.devices import Device
 from pulser.json.abstract_repr.deserializer import deserialize_device
+from pulser.result import SampledResult
+from pulser_myqlm import PulserQLMConnection
 
 from qoolqit._solvers.data import (
     BackendConfig,
@@ -254,3 +258,134 @@ class RemoteEmuFREEBackend(BaseRemoteBackend):
             configuration=None,
         )
         return JobId(batch.id)
+
+
+# --- QLM specific
+
+
+class RemoteQLMQPUBackend(BaseBackend):
+    def __init__(self, config: BackendConfig):
+        super().__init__(config)
+
+        self._device = None
+        self._max_runs = None
+
+        # The documentation of the constructor mentions that it's possible
+        # to pass a username/password, but digging into the code doesn't
+        # seem to confirm it, so we assume that users of MyQLM use another
+        # auth mechanism.
+        if config.username is not None or config.password is not None:
+            logger.warning(
+                "ignoring username/password for the QLM backend "
+                + "in favor of external authentication"
+            )
+        self._connection = PulserQLMConnection()
+
+    def _api_max_runs(self) -> int:
+        # Arbitrary number, matching RemoteQPUBackend.
+        return 500
+
+    def _default_max_runs(self) -> int:
+        # Arbitrary number, matching RemoteQPUBackend.
+        return 500
+
+    def device(self) -> Device:
+        """Make sure that we have fetched the latest specs for the device from the server."""
+        if self._device is not None:
+            assert self._max_runs is not None
+            return self._device
+
+        # Fetch the latest list of QPUs
+        device_key = None
+        if isinstance(self.config.device, NamedDevice):
+            device_key = self.config.device
+        elif self.config.device is None:
+            device_key = NamedDevice("FRESNEL")
+        if device_key is not None:
+            specs = self._connection.fetch_available_devices()
+            if device_key not in specs:
+                raise ValueError(
+                    f"Unknown device {self.config.device}, "
+                    + f"available devices are {list(specs.keys())}"
+                )
+            device = specs[device_key]
+        else:
+            assert isinstance(self.config.device, DeviceType)
+            device = self.config.device.value
+        self._device = device
+        self._max_runs = (
+            device.max_runs if device.max_runs is not None else self._default_max_runs()
+        )
+        return device
+
+    def submit(self, program: QuantumProgram, runs: int | None = None) -> BaseJob:
+        """
+        Run the pulse + register.
+
+        Raises:
+            CompilationError: If the register/pulse may not be executed on this device.
+        """
+        try:
+            sequence = make_sequence(program)
+        except ValueError as e:
+            raise CompilationError(f"This register/pulse cannot be executed on the device: {e}")
+        if runs is None:
+            runs = 500
+        runs = min(runs, self._api_max_runs())
+        results = self._execute_remotely(sequence, runs)
+        return RemoteQLMJob(results=results)
+
+    def proceed(self, job: JobId) -> BaseJob:
+        # We may need to change the signature of this method, as we can't simply fetch
+        # a job from just its job id, we also need its batch id.
+        raise NotImplementedError
+
+    def _execute_remotely(self, sequence: Sequence, runs: int) -> RemoteResults:
+        return self._connection.submit(sequence, wait=False, open=False, runs=runs)
+
+
+class RemoteQLMJob(BaseJob):
+    """
+    An adapter from pulser.backend.remote.RemoteResults to BaseJob.
+
+    In the future, we expect to progressively migrate all of BaseJob
+    to use RemoteResults.
+    """
+
+    def __init__(
+        self, results: pulser.backend.remote.RemoteResults, sleep_duration_sec: float = 10
+    ):
+        assert len(results.job_ids) == 1
+        super().__init__(JobId(results.job_ids[0]))
+        self._remote_results = results
+        self._result: Result | None = None
+        self.sleep_duration_sec = sleep_duration_sec
+
+    def status(self) -> BatchStatus:
+        # As of this writing, we don't have a way to fetch the status.
+        if self._result is not None:
+            return BatchStatus.DONE
+        return BatchStatus.PENDING
+
+    def wait(self) -> Result:
+        if self._result is not None:
+            return self._result
+
+        # Wait for execution to complete.
+        while True:
+            time.sleep(self.sleep_duration_sec)
+            results = self._remote_results.get_available_results()
+            if len(results) != 1:
+                logger.info("We're still expecting the results to job %s", self.id)
+                self._status = BatchStatus.PENDING
+                continue
+
+            # From this point, we assume that len(expected) == 1, as this is the only
+            # way to construct a `RemoteQMLJob`.
+            result = results[self.id]
+            assert isinstance(result, SampledResult)
+
+            # FIXME: This is subject to race condition.
+            self._result = Result(counts=Counter(result.bitstring_counts))
+
+            return self._result
