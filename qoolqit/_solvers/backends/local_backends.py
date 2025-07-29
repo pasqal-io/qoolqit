@@ -43,7 +43,11 @@ class BaseLocalBackend(BaseBackend):
         super().__init__(config)
         device = config.device
         if device is None:
-            device = pulser.AnalogDevice
+            # Note that the choice of this device is somewhat arbitrary.
+            # We pick DigitalAnalogDevice because it supports DMM and we
+            # need DMM for some algorithms, but in the future, we might
+            # change this.
+            device = pulser.DigitalAnalogDevice
         elif isinstance(device, NamedDevice):
             raise ValueError(
                 "Local emulators do not support named devices, property `device` expects `None` "

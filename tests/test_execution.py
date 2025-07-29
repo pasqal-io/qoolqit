@@ -38,9 +38,6 @@ def test_theoretical_state_vector(
         pytest.param(
             BackendName.EMUMPS,
             AnalogDevice(),
-            marks=pytest.mark.xfail(
-                reason="EMUMPS backend fails with AnalogDevice and with_modulation=True argument."
-            ),
         ),
     ],
 )
@@ -66,9 +63,6 @@ def test_state_vector(random_program: Callable, backend_name: BackendName, devic
         pytest.param(
             BackendName.EMUMPS,
             AnalogDevice(),
-            marks=pytest.mark.xfail(
-                reason="EMUMPS backend fails with AnalogDevice and with_modulation=True argument."
-            ),
         ),
     ],
 )

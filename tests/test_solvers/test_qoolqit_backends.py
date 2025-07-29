@@ -6,7 +6,7 @@ import json
 import os
 import random
 import re
-from typing import Any, Callable, Counter
+from typing import Any, Callable, Counter, cast
 from uuid import uuid4
 
 import pulser
@@ -14,9 +14,11 @@ import pulser.pulse
 import pytest
 import requests_mock
 from pasqal_cloud.endpoints import Endpoints
+from pulser.waveforms import Waveform
 
 from qoolqit._solvers import (
     BaseBackend,
+    Detuning,
     QutipBackend,
     RemoteEmuFREEBackend,
     RemoteEmuMPSBackend,
@@ -38,6 +40,14 @@ def make_simple_program(backend: BaseBackend) -> QuantumProgram:
             phase=0.5,
             detuning=0,
         ),
+        detunings=[
+            Detuning(
+                weights={"q0": 0.5, "q1": 0.5},
+                waveform=cast(
+                    Waveform, pulser.waveforms.ConstantWaveform(duration=100, value=-0.5)
+                ),
+            )
+        ],
     )
 
 
@@ -277,7 +287,7 @@ class MyMockServer(BaseMockServer):
     def endpoint_get_devices_specs(self, request: Any, context: Any, matches: list[str]) -> Any:
         """Return a basic device called `MY_DEVICE`."""
         return {
-            "data": {"MY_DEVICE": pulser.AnalogDevice.to_abstract_repr()},
+            "data": {"MY_DEVICE": pulser.DigitalAnalogDevice.to_abstract_repr()},
         }
 
     def endpoint_get_devices_public_specs(
@@ -288,7 +298,7 @@ class MyMockServer(BaseMockServer):
             "data": [
                 {
                     "device_type": "MY_DEVICE",
-                    "specs": pulser.AnalogDevice.to_abstract_repr(),
+                    "specs": pulser.DigitalAnalogDevice.to_abstract_repr(),
                 },
             ],
         }
@@ -318,7 +328,7 @@ class MyMockServer(BaseMockServer):
                     "user_id": "my-user-id",
                     "status": "PENDING",
                     "ordered_jobs": [],
-                    "device_type": "AnalogDevice",
+                    "device_type": "DigitalAnalogDevice",
                 }
             }
 
@@ -333,7 +343,7 @@ class MyMockServer(BaseMockServer):
                 "user_id": "my-user-id",
                 "status": "DONE",
                 "ordered_jobs": [],
-                "device_type": "AnalogDevice",
+                "device_type": "DigitalAnalogDevice",
             }
         }
 
@@ -371,7 +381,7 @@ class MyMockServer(BaseMockServer):
             "user_id": "my-user-id",
             "status": "PENDING",
             "ordered_jobs": [],
-            "device_type": "AnalogDevice",
+            "device_type": "DigitalAnalogDevice",
         }
 
     def my_results(self, request: Any, context: Any) -> Any:
@@ -409,7 +419,7 @@ def test_remote_execute(
     with MyMockServer():
         backend = get_backend(backend_config)
         device = backend.device()
-        assert device.name == "AnalogDevice"
+        assert device.name == "DigitalAnalogDevice"
         program = make_simple_program(backend)
         job = backend.submit(program, num_shots)
         assert job.id == "my-mock-batch-id"

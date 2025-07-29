@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
+from copy import deepcopy
 
 import pulser
 from pulser import Sequence
 from pulser.devices import Device
 
 from qoolqit._solvers.data import BackendConfig, BaseJob, JobId, QuantumProgram, Result
+from qoolqit.exceptions import CompilationError
 
 logger = logging.getLogger(__name__)
 
@@ -25,12 +27,30 @@ def make_sequence(program: QuantumProgram) -> pulser.Sequence:
     Raises:
         CompilationError if the pulse + register are not compatible with the device.
     """
-    register = program.register
+    # Normalize and apply register.
+    register = deepcopy(program.register)
     if program.device.requires_layout and register.layout is None:
         register = program.register.with_automatic_layout(program.device)
     sequence = Sequence(register=register, device=program.device)
+
+    # Add global pulse.
     sequence.declare_channel("rydberg_global", "rydberg_global")
     sequence.add(program.pulse, "rydberg_global")
+
+    # Add any detuning pulse.
+    if len(program.detunings) > 0:
+        channels = list(program.device.dmm_channels.keys())
+        if len(channels) == 0:
+            raise CompilationError(
+                f"This program specifies {len(program.detunings)} detunings but "
+                "the device doesn't offer any DMM channel to execute them."
+            )
+        # Arbitrarily pick the first channel.
+        dmm_id = channels[0]
+        for detuning in program.detunings:
+            detuning_map = register.define_detuning_map(detuning_weights=detuning.weights)
+            sequence.config_detuning_map(detuning_map, dmm_id=dmm_id)
+            sequence.add_dmm_detuning(detuning.waveform, dmm_id)
 
     return sequence
 
