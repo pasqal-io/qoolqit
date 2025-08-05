@@ -98,38 +98,37 @@ class DataGraph(BaseGraph):
         spacing: float = 1.0,
     ) -> "DataGraph":
         """
-        Costruisce un grafo a reticolo triangolare, con le rispettive coordinate.
-
+        Constructs a triangular lattice graph, with respective coordinates.
+        
         Arguments:
-            m: Numero di righe di nodi.
-            n: Numero di colonne di nodi.
-            spacing: La distanza tra nodi adiacenti nel reticolo finale.
+            m: Number of rows of hexagons.
+            n: Number of columns of hexagons.
+            spacing: The distance between adjacent nodes on the final lattice.
         """
-        # 1. Crea un reticolo triangolare standard usando networkx.
-        # La distanza predefinita tra nodi adiacenti è 1.
+        # 1. Create a standard triangular lattice using networkx. 
+        # The default distance between adjacent nodes is 1.
         G = nx.triangular_lattice_graph(m, n, with_positions=True)
 
-        # 2. Estrae e scala le posizioni dei nodi.
-        # Otteniamo le posizioni originali e le scaliamo secondo lo 'spacing' desiderato.
+        # 2. Extract and scale node positions.
+        # We get the original positions and scale them by the desired spacing.
         pos_unit = nx.get_node_attributes(G, "pos")
         final_pos = {node: (x * spacing, y * spacing) for node, (x, y) in pos_unit.items()}
 
-        # 3. Converte il grafo networkx con etichette-tuple in un DataGraph con etichette intere.
-        # Estraiamo coordinate e archi, per poi costruire il DataGraph finale.
+        # 3. Convert the networkx graph with tuple labels to a DataGraph with integer labels.
+        # We extract coordinates and edges, then build the final DataGraph.
         
-        # Ottiene una lista ordinata di nodi per garantire un ordinamento coerente
+        # Get a sorted list of nodes to ensure consistent ordering
         final_nodes = sorted(list(G.nodes()))
         
-        # Ottiene le coordinate scalate nell'ordine corretto
+        # Get the scaled coordinates in the sorted order
         final_coords = [final_pos[label] for label in final_nodes]
         
-        # Crea una mappatura dalle etichette-tuple agli indici interi finali (0, 1, 2, ...)
+        # Create a mapping from tuple-labels to final integer indices (0, 1, 2, ...)
         label_to_int = {label: i for i, label in enumerate(final_nodes)}
         
-        # Ottiene gli archi e mappa le loro etichette ai nuovi indici interi
+        # Get the edges and map their labels to the new integer indices
         final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G.edges()]
 
-        # Crea l'istanza finale di DataGraph
         graph = cls.from_coordinates(final_coords)
         graph.add_edges_from(final_edges)
         graph._reset_dicts()
@@ -145,7 +144,7 @@ class DataGraph(BaseGraph):
         spacing: float = 1.0,
     ) -> "DataGraph":
         """
-        Constructs a standard hexagonal lattice graph, with respective coordinates.
+        Constructs a hexagonal lattice graph, with respective coordinates.
 
         Arguments:
             m: Number of rows of hexagons.
@@ -191,7 +190,7 @@ class DataGraph(BaseGraph):
         spacing: float = 1.0,
     ) -> "DataGraph":
         """
-        Constructs a heavy-hexagon lattice graph, with respective coordinates. 
+        Constructs a heavy-hexagonal lattice graph, with respective coordinates. 
 
         Arguments:
             m: Number of rows of hexagons.
