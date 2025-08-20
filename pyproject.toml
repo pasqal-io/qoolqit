@@ -67,6 +67,7 @@ dependencies = [
   "pytest-repeat",
   "pytest-markdown-docs",
   "nbconvert",
+  "nbmake",
   "ipykernel",
   "pre-commit",
   "black",
@@ -76,12 +77,12 @@ dependencies = [
 ]
 
 [tool.hatch.envs.default.scripts]
-test = "pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --cov=tests --markdown-docs {args}"
-test_readme = "pytest --markdown-docs README.md"
+test = "pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs {args}"
+test_tutorials = "pytest -c NUL --nbmake ./docs/tutorials/*.ipynb"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = """-vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --cov=tests --markdown-docs"""
+addopts = """-vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs"""
 xfail_strict = true
 filterwarnings = [
   "ignore:Call to deprecated create function FieldDescriptor",

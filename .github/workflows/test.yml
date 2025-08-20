@@ -34,9 +34,10 @@ jobs:
     - name: Install Hatch
       run: |
         pip install hatch
-    - name: Run tests
+    - name: Run tests & tutorials
       run: |
         hatch -v run test
+        hatch run test_tutorials
     - name: Upload coverage data
       uses: actions/upload-artifact@v4
       with:
