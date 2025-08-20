@@ -163,6 +163,7 @@ flake8-quotes.docstring-quotes = "double"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
+"*.ipynb" = ["E402"]
 
 [tool.black]
 line-length = 100
