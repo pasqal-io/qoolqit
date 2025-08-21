@@ -19,8 +19,7 @@ nav:
       - Quantum programs: contents/programs.md
       - Execution: contents/execution.md
   - Tutorials:
-    - Solving a basic QUBO: tutorials/basic_qubo.md
-
+    - Solving a basic QUBO: tutorials/basic_qubo.ipynb
     - Advanced:
       - Understanding unit conversions: tutorials/unit_conversion.md
   - Reference: $api/qoolqit.***
@@ -72,7 +71,8 @@ plugins:
 - search
 - section-index
 - markdown-exec
-- mkapi
+- mkdocs-jupyter:
+    include: ["./docs/tutorials/*.ipynb"] # only notebooks in tutorials
 - mkdocstrings:
     default_handler: python
     handlers:
@@ -86,6 +86,7 @@ plugins:
           heading_level: 3
           merge_init_into_class: true
           docstring_section_style: spacy
+- mkapi
 
 watch:
   - qoolqit
