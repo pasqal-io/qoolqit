@@ -25,12 +25,6 @@ repos:
       - id: mypy
         exclude: examples|docs
 
-# Cleanup jupyter notebooks
--   repo: https://github.com/kynan/nbstripout
-    rev: 0.5.0
-    hooks:
-      - id: nbstripout
-
 -   repo: https://github.com/DanielNoord/pydocstringformatter
     rev: v0.7.3
     hooks:
