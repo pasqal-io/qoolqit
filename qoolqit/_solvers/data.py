@@ -102,13 +102,20 @@ class BackendConfig(pydantic.BaseModel):
     If unspecified, pick a backend-appropriate device.
     """
 
-    dt: int = 10
+    dt: float = 10.0
     """
     For a backend that supports customizing the duration of steps, the.
 
     timestep size.
 
     As of this writing, this parameter is used only by the EmuMPS backends.
+    """
+
+    wait: bool = False
+    """
+    For a remote backend where we submit a batch of jobs,.
+
+    block execution on this statement until all the submitted jobs are terminated .
     """
 
 
