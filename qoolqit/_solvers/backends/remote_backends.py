@@ -7,6 +7,7 @@ from typing import Counter, cast
 
 from pasqal_cloud import SDK, EmulatorType
 from pasqal_cloud.batch import Batch
+from pasqal_cloud.device import EmuTNConfig
 from pulser import Sequence
 from pulser.backend.remote import BatchStatus
 from pulser.devices import Device
@@ -118,6 +119,7 @@ class BaseRemoteBackend(BaseBackend):
             project_id=self.config.project_id,
             password=self.config.password,
         )
+        self.wait = self.config.wait
         self._max_runs: int | None = None
         self._device: Device | None = None
 
@@ -195,8 +197,8 @@ class RemoteQPUBackend(BaseRemoteBackend):
         batch = self._sdk.create_batch(
             serialized_sequence=sequence.to_abstract_repr(),
             jobs=[{"runs": runs}],
-            wait=False,
-            emulator=None,
+            wait=self.wait,
+            device_type=None,
             configuration=None,
         )
         return JobId(batch.id)
@@ -213,8 +215,8 @@ class RemoteEmuMPSBackend(BaseRemoteBackend):
         batch = self._sdk.create_batch(
             serialized_sequence=sequence.to_abstract_repr(),
             jobs=[{"runs": runs}],
-            wait=False,
-            emulator=EmulatorType.EMU_MPS,
+            wait=self.wait,
+            device_type=EmulatorType.EMU_MPS,
             configuration=None,
         )
         return JobId(batch.id)
@@ -231,9 +233,9 @@ class RemoteEmuTNBackend(BaseRemoteBackend):
         batch = self._sdk.create_batch(
             serialized_sequence=sequence.to_abstract_repr(),
             jobs=[{"runs": runs}],
-            wait=False,
-            emulator=EmulatorType.EMU_TN,
-            configuration=None,
+            wait=self.wait,
+            device_type=EmulatorType.EMU_TN,
+            configuration=EmuTNConfig(dt=self.config.dt),
         )
         return JobId(batch.id)
 
@@ -250,7 +252,7 @@ class RemoteEmuFREEBackend(BaseRemoteBackend):
             serialized_sequence=sequence.to_abstract_repr(),
             jobs=[{"runs": runs}],
             wait=False,
-            emulator=EmulatorType.EMU_FREE,
+            device_type=EmulatorType.EMU_FREE,
             configuration=None,
         )
         return JobId(batch.id)

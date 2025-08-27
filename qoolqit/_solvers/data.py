@@ -111,6 +111,13 @@ class BackendConfig(pydantic.BaseModel):
     As of this writing, this parameter is used only by the EmuMPS backends.
     """
 
+    wait: bool = False
+    """
+    For a remote backend where we submit a batch of jobs,.
+
+    block execution on this statement until all the submitted jobs are terminated .
+    """
+
 
 class CompilationError(Exception):
     """
