@@ -102,7 +102,7 @@ class BackendConfig(pydantic.BaseModel):
     If unspecified, pick a backend-appropriate device.
     """
 
-    dt: float = 10.0
+    dt: int = 10
     """
     For a backend that supports customizing the duration of steps, the.
 
