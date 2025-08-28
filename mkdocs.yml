@@ -88,6 +88,12 @@ plugins:
           docstring_section_style: spacy
 - mkapi
 
+# For mathjax
+extra_javascript:
+  - extras/javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
 watch:
   - qoolqit
 
@@ -100,9 +106,3 @@ extra_css:
 - extras/css/mkdocstrings.css
 - extras/css/home.css
 - extras/css/colors.css
-
-# For mathjax
-extra_javascript:
-  - extras/javascripts/mathjax.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
