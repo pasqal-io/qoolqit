@@ -112,3 +112,22 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
     edge_weights = sorted(list(graph.edge_weights.values()))
 
     assert np.allclose(edge_weights, data_edge_weights)
+
+
+def test_triangular() -> None:
+    graph = DataGraph.triangular(2, 2, spacing=2.71)
+
+    expected_coords = {
+        0: (0.0, 0.0),
+        1: (1.355, 2.3469288442558285),
+        2: (0.0, 4.693857688511657),
+        3: (2.71, 0.0),
+        4: (4.0649999999999995, 2.3469288442558285),
+        5: (2.71, 4.693857688511657),
+    }
+    for k, v in graph.coords.items():
+        assert np.allclose(v, expected_coords[k])
+
+    edges = graph.sorted_edges
+    expected_edges = {(0, 1), (0, 3), (1, 2), (1, 3), (1, 4), (1, 5), (2, 5), (3, 4), (4, 5)}
+    assert edges == expected_edges

@@ -14,6 +14,7 @@ from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import Ramp, Waveform
 
+# TODO: remove fixing seed after pulser updates to 1.6
 seed(99)
 
 
