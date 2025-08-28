@@ -1,5 +1,6 @@
 # TODO:
 # - refactor this to reuse common methods in constructors
+# - refactor using rescale_coords method
 # - explore nx.convert_node_labels_to_integers() built-in function
 
 from __future__ import annotations
@@ -103,8 +104,8 @@ class DataGraph(BaseGraph):
         Constructs a triangular lattice graph, with respective coordinates.
 
         Arguments:
-            m: Number of rows of hexagons.
-            n: Number of columns of hexagons.
+            m: Number of rows of triangles.
+            n: Number of columns of triangles.
             spacing: The distance between adjacent nodes on the final lattice.
         """
         # 1. Create a standard triangular lattice using networkx.
@@ -185,6 +186,10 @@ class DataGraph(BaseGraph):
             m: Number of rows of hexagons.
             n: Number of columns of hexagons.
             spacing: The distance between adjacent nodes on the final lattice.
+
+        Notes:
+            The heavy-hexagonal lattice is a regular hexagonal lattice where
+            each edge is decorated with an additional lattice site.
         """
         # 1. Create a standard hexagonal lattice. The distance between nodes is 1.
         G_hex = nx.hexagonal_lattice_graph(m, n, with_positions=True)
@@ -225,9 +230,6 @@ class DataGraph(BaseGraph):
             G_heavy.add_edge(mid_label, v_new)
 
         # 4. Convert the networkx graph with tuple labels to a DataGraph with integer labels.
-        # We extract coordinates and edges, then build the final DataGraph.
-
-        # Get a sorted list of nodes to ensure consistent ordering
         final_nodes = sorted(list(G_heavy.nodes()))
 
         final_coords = [G_heavy.nodes[label]["pos"] for label in final_nodes]
