@@ -45,9 +45,7 @@ class BaseGraph(nx.Graph):
         """Placeholder method to reset attribute dictionaries."""
         ...
 
-    ####################
-    ### CONSTRUCTORS ###
-    ####################
+    # classmethods
 
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
@@ -80,9 +78,7 @@ class BaseGraph(nx.Graph):
         graph._reset_dicts()
         return graph
 
-    ##################
-    ### PROPERTIES ###
-    ##################
+    # properties
 
     @property
     def sorted_edges(self) -> set:
@@ -134,9 +130,7 @@ class BaseGraph(nx.Graph):
             coords_dict = coords
         self._coords = coords_dict
 
-    ###############
-    ### METHODS ###
-    ###############
+    # methods
 
     def distances(self, edge_list: Iterable | None = None) -> dict:
         """Returns a dictionary of distances for a given set of edges.
