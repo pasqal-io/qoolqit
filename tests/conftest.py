@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from functools import reduce
 from math import pi
-from random import randint, uniform
+from random import randint, seed, uniform
 from typing import Callable, Generator
 
 import numpy as np
@@ -13,6 +13,9 @@ from qoolqit.drive import Drive
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import Ramp, Waveform
+
+# TODO: remove fixing seed after pulser updates to 1.6
+seed(99)
 
 
 @pytest.fixture

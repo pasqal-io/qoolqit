@@ -30,9 +30,9 @@ classifiers = [
 
 
 dependencies = [
-  "pulser",
+  "pulser==1.5.5",
   "matplotlib",
-  "networkx",
+  "networkx==3.4.2",
   "emu_mps"
 ]
 
@@ -104,7 +104,7 @@ dependencies = [
   "mkdocstrings",
   "mkdocstrings-python",
   "mkdocs-section-index",
-  "mkdocs-jupyter",
+  "mkdocs-jupyter==0.24.7",
   "mkdocs-exclude",
   "mkapi",
   "markdown-exec",
@@ -165,7 +165,7 @@ flake8-quotes.docstring-quotes = "double"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
-"*.ipynb" = ["E402"]
+"*.ipynb" = ["E402", "I002"]
 
 [tool.black]
 line-length = 100

@@ -194,7 +194,7 @@ assert graph.has_edge_weights
 <a name="constructors"></a>
 ## Graph constructors
 
-Class constructors can help you create a variety of graphs. A very useful constructor is starting from a set of coordinates. By default that will create an empty set of edges, but we can use the `set_ud_edges` method to specify the edges as the unit-disk intersections.
+Class constructors can help you create a variety of graphs. A useful constructor is starting from a set of coordinates. By default, it will create an empty set of edges, but we can use the `set_ud_edges` method to specify the edges as the unit-disk intersections.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 from qoolqit import DataGraph
@@ -218,18 +218,61 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 Some geometric graph constructors will already have coordinates by default.
 
+### Line
+A line graph on n nodes.
+
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
-from qoolqit import DataGraph
-
-# A line graph on n nodes.
 graph = DataGraph.line(n = 10, spacing = 1.0)
+graph.draw()
+fig = graph.draw(return_fig = True) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+```
 
-# A circle graph on n nodes.
+### Circle
+A circle graph on n nodes.
+
+```python exec="on" source="material-block" html="1" session="graph-constructors"
 graph = DataGraph.circle(n = 10, spacing = 1.0, center = (0.0, 0.0))
+graph.draw()
+fig = graph.draw(return_fig = True) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+```
 
-# An random UD graph by uniformly sampling points in area of side L
+### Triangular
+A triangular lattice graph with m rows and n columns of triangles.
+
+```python exec="on" source="material-block" html="1" session="graph-constructors"
+graph = DataGraph.triangular(m = 2, n = 2, spacing = 1.0)
+graph.draw()
+fig = graph.draw(return_fig = True) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+```
+
+### Hexagonal
+A Hexagonal lattice graph with m rows and n columns of hexagons.
+
+```python exec="on" source="material-block" html="1" session="graph-constructors"
+graph = DataGraph.hexagonal(m = 2, n = 2, spacing = 1.0)
+graph.draw()
+fig = graph.draw(return_fig = True) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+```
+
+### Heavy-hexagonal
+An Heavy-Hexagonal lattice graph with m rows and n columns of hexagons where each edge is decorated with an additional lattice site.
+
+```python exec="on" source="material-block" html="1" session="graph-constructors"
+graph = DataGraph.heavy_hexagonal(m = 2, n = 2, spacing = 1.0)
+graph.draw()
+fig = graph.draw(return_fig = True) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+```
+
+### Random unit-disk
+A random unit-disk graph by uniformly sampling points in area of side L.
+
+```python exec="on" source="material-block" html="1" session="graph-constructors"
 graph = DataGraph.random_ud(n = 10, radius = 1.0, L = 2.0)
-
 graph.draw()
 fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
@@ -237,10 +280,11 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 Other generic constructors are also available which have no information on node coordinates.
 
-```python exec="on" source="material-block" html="1" session="graph-constructors"
-# An Erdős–Rényi random graph
-graph = DataGraph.random_er(n = 10, p = 0.5, seed = 1)
+### Erdős–Rényi
+A random Erdős–Rényi graph of n nodes.
 
+```python exec="on" source="material-block" html="1" session="graph-constructors"
+graph = DataGraph.random_er(n = 10, p = 0.5, seed = 1)
 graph.draw()
 fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
