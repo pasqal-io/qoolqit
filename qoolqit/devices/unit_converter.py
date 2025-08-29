@@ -5,20 +5,20 @@ from math import isclose
 
 
 def _factors_from_time(C6: float, time: float) -> tuple[float, ...]:
-    energy = 1000.0 / time
+    energy = 1.0 / time
     distance = (C6 / energy) ** (1 / 6)
     return time, energy, distance
 
 
 def _factors_from_energy(C6: float, energy: float) -> tuple[float, ...]:
-    time = 1000.0 / energy
+    time = 1.0 / energy
     distance = (C6 / energy) ** (1 / 6)
     return time, energy, distance
 
 
 def _factors_from_distance(C6: float, distance: float) -> tuple[float, ...]:
     energy = C6 / (distance**6)
-    time = 1000.0 / energy
+    time = 1.0 / energy
     return time, energy, distance
 
 
@@ -32,7 +32,7 @@ class UnitConverter:
     units used by Pulser:
 
     Conversion invariants:
-    1. TIME * ENERGY = 1000 ( <=> TIME = 1000 / ENERGY )
+    1. TIME * ENERGY = 1 ( <=> TIME = 1 / ENERGY )
     2. DISTANCE^6 * ENERGY = C6 ( <=> ENERGY = C6 / (DISTANCE ^ 6) )
     """
 
@@ -55,7 +55,7 @@ class UnitConverter:
         """Returns True if the conversion invariants are respected."""
         time_energy_inv = time * energy
         energy_dist_inv = (distance**6) * energy
-        return isclose(time_energy_inv, 1000.0) and isclose(energy_dist_inv, self.C6)
+        return isclose(time_energy_inv, 1.0) and isclose(energy_dist_inv, self.C6)
 
     @classmethod
     def from_time(cls, C6: float, time: float) -> UnitConverter:
