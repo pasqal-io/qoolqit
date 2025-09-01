@@ -21,8 +21,8 @@ def test_theoretical_state_vector(
     n_qubits = int(np.log2(len(theor_state)))
 
     # Create and run a quantum program with different backends
-    random_rotation_angle = 0.25 * random_rotation_angle / np.pi
-    drive = Drive(amplitude=Constant(4 * np.pi, random_rotation_angle), phase=0)
+    random_rotation_angle = random_rotation_angle / np.pi
+    drive = Drive(amplitude=Constant(40 * np.pi, 0.025 * random_rotation_angle), phase=0)
     register = Register.from_coordinates([(x * 100.0, 0.0) for x in np.arange(n_qubits)])
     program = QuantumProgram(register, drive)
     program.compile_to(MockDevice())
