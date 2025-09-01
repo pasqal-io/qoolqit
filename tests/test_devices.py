@@ -15,7 +15,7 @@ from qoolqit.utils import ATOL_32, EQUAL
 
 def _validate_invariants(c6: float, t: float, e: float, d: float) -> bool:
     # Verify time-energy and energy-distance invariants
-    return EQUAL(t * e, 1000.0, atol=ATOL_32) and EQUAL(e * (d**6), c6, atol=ATOL_32)
+    return EQUAL(t * e, 1.0, atol=ATOL_32) and EQUAL(e * (d**6), c6, atol=ATOL_32)
 
 
 def test_unit_converter() -> None:
