@@ -114,7 +114,7 @@ $$\Delta_T\,\times\,\Delta_E = 1000,\qquad \Delta_D^6\,\times\,\Delta_E = C_6.$$
 
 This means that it is possible to pick an arbitrary value for **one** of the conversion factors, and the two remaining ones can be automatically calculated from the invariants. As seen from the dependence of the invariants on the interaction coefficient $C_6$, these are calculated specifically for each device, and this is what guarantees that QoolQit programs can be device agnostic.
 
-For details on how to customize the unit conversion in QoolQit check the contents pages on [devices](../contents/devices.md) and [quantum programs](../contents/programs.md). For further examples on understanding the unit conversion check the [unit conversion tutorial](../tutorials/unit_conversion.md).
+For details on how to customize the unit conversion in QoolQit check the contents pages on [devices](../contents/devices.md) and [quantum programs](../contents/programs.md). For further examples on understanding the unit conversion check the [unit conversion tutorial](../tutorials/basic_qubo.ipynb).
 
 #### Advantages & disadvantages
 
