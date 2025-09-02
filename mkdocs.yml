@@ -20,8 +20,9 @@ nav:
       - Execution: contents/execution.md
   - Tutorials:
     - Solving a basic QUBO: tutorials/basic_qubo.ipynb
+    - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
     - Advanced:
-      - Understanding unit conversions: tutorials/unit_conversion.md
+      - Understanding unit conversions: tutorials/unit_conversion.ipynb
   - Reference: $api/qoolqit.***
   - Open-source:
     - License (MIT-Derived): LICENSE.md
