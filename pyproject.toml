@@ -32,9 +32,9 @@ classifiers = [
 
 
 dependencies = [
-  "pulser==1.5.5",
-  "matplotlib",
+  "pulser==1.5.6",
   "networkx==3.4.2",
+  "matplotlib",
   "emu_mps"
 ]
 

@@ -53,7 +53,7 @@ def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: fl
         args=(matrix,),
         method=method,
         tol=tol,
-        options={"maxiter": maxiter, "maxfev": None},
+        options={"maxiter": maxiter},
     )
 
     coords = np.reshape(res.x, (len(matrix), 2))
