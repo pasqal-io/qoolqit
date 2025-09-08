@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Union
+import os
+from typing import Any
 
 import matplotlib.pyplot as plt
 from pulser.sequence.sequence import Sequence as PulserSequence
@@ -8,13 +9,15 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 from qoolqit.devices import Device, MockDevice
 from qoolqit.drive import Drive
 from qoolqit.execution import CompilerProfile, SequenceCompiler
-from qoolqit.execution.backend import EmuMPSBackend, OutputType, QutipBackend
+from qoolqit.execution.backend import BaseBackend, OutputType, QutipBackend
 from qoolqit.execution.utils import BackendName, ResultType
 from qoolqit.register import Register
 
 __all__ = ["QuantumProgram"]
 
-BackendType = Union[QutipBackend, EmuMPSBackend]
+BackendType = BaseBackend
+# Note: Once EmuMPS is available on all platforms, we may be able
+# to restore this to Union[QutipBackend, EmuMPSBackend]
 
 
 class QuantumProgram:
@@ -140,7 +143,16 @@ class QuantumProgram:
             backend: BackendType
             if backend_name == BackendName.QUTIP:
                 backend = QutipBackend(self._compiled_sequence, result_type, **backend_params)
+                return backend.run(runs, evaluation_times)
             elif backend_name == BackendName.EMUMPS:
-                backend = EmuMPSBackend(self._compiled_sequence, result_type, **backend_params)
+                if os.name == "posix":
+                    from qoolqit.execution.backend import EmuMPSBackend
 
-        return backend.run(runs, evaluation_times)
+                    backend = EmuMPSBackend(self._compiled_sequence, result_type, **backend_params)
+                    return backend.run(runs, evaluation_times)
+                else:
+                    raise NotImplementedError("EmuMPS is only available on Unix platforms")
+            else:
+                raise ValueError(f"Invalid backend {backend_name}")
+        else:
+            raise ValueError("Missing device")

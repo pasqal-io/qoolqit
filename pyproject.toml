@@ -6,8 +6,8 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "0.1.2"
-requires-python = ">=3.10,<3.13"
+version = "0.1.3"
+requires-python = ">=3.10"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
 authors = [
@@ -32,8 +32,8 @@ classifiers = [
 
 
 dependencies = [
-  "pulser==1.5.6",
-  "networkx==3.4.2",
+  "pulser~=1.5",
+  "networkx~=3.4",
   "matplotlib",
   "emu_mps"
 ]
@@ -106,7 +106,7 @@ dependencies = [
   "mkdocstrings",
   "mkdocstrings-python",
   "mkdocs-section-index",
-  "mkdocs-jupyter==0.24.7",
+  "mkdocs-jupyter~=0.24",
   "mkdocs-exclude",
   "mkapi",
   "markdown-exec",

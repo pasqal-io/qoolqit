@@ -1,25 +1,31 @@
 from __future__ import annotations
 
 import logging
+import os
 import string
 from abc import ABC, abstractmethod
 from collections import Counter
 from typing import Any, Union
 
-import emu_mps
 import numpy as np
 import pulser
 import torch
-from emu_mps import MPSBackend, MPSConfig
 from pulser.backend import EmulationConfig
 from pulser.backends import QutipBackendV2 as PulserQutipBackend
 from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.execution.utils import BackendName, ResultType
 
-AVAILABLE_BACKENDS = {BackendName.QUTIP: PulserQutipBackend, BackendName.EMUMPS: MPSBackend}
+AVAILABLE_BACKENDS = {BackendName.QUTIP: PulserQutipBackend}
 
-AVAILABLE_CONFIGS = {BackendName.QUTIP: EmulationConfig, BackendName.EMUMPS: MPSConfig}
+AVAILABLE_CONFIGS = {BackendName.QUTIP: EmulationConfig}
+
+if os.name == "posix":
+    # As of this writing, EmuMPS doesn't work under Windows.
+    from emu_mps import MPSBackend, MPSConfig
+
+    AVAILABLE_BACKENDS[BackendName.EMUMPS] = MPSBackend
+    AVAILABLE_CONFIGS[BackendName.EMUMPS] = MPSConfig
 
 OutputType = Union[np.ndarray, list[Counter]]
 
@@ -73,78 +79,81 @@ class BaseBackend(ABC):
         pass
 
 
-class EmuMPSBackend(BaseBackend):
-    """Emu-MPS backend."""
+if os.name == "posix":
+    import emu_mps
 
-    def __init__(
-        self,
-        seq: PulserSequence,
-        result_type: ResultType = ResultType.STATEVECTOR,
-        **backend_params: Any,
-    ):
-        super().__init__(seq, BackendName.EMUMPS, result_type, **backend_params)
+    class EmuMPSBackend(BaseBackend):
+        """Emu-MPS backend."""
 
-    def contract_mps(self, mps_state: emu_mps.MPS) -> torch.Tensor:
-        """
-        Contract a MPS state into a full state vector.
+        def __init__(
+            self,
+            seq: PulserSequence,
+            result_type: ResultType = ResultType.STATEVECTOR,
+            **backend_params: Any,
+        ):
+            super().__init__(seq, BackendName.EMUMPS, result_type, **backend_params)
 
-        Args:
-            mps_state (MPS): MPS state to contract
+        def contract_mps(self, mps_state: emu_mps.MPS) -> torch.Tensor:
+            """
+            Contract a MPS state into a full state vector.
 
-        Returns:
-            A flattened torch.Tensor representing the state vector.
-        """
-        n = len(mps_state.factors)
+            Args:
+                mps_state (MPS): MPS state to contract
 
-        # Use ascii letters to build einsum subscripts
-        letters = list(string.ascii_lowercase)
-        einsum_subs = []
-        for i in range(n):
-            left = letters[i]
-            phys = letters[n + i]
-            right = letters[i + 1]
-            einsum_subs.append(f"{left}{phys}{right}")
+            Returns:
+                A flattened torch.Tensor representing the state vector.
+            """
+            n = len(mps_state.factors)
 
-        einsum_str = ",".join(einsum_subs) + "->" + "".join(letters[n : 2 * n])
-        result = torch.einsum(einsum_str, *mps_state.factors)
-        return result.flatten().cpu()
+            # Use ascii letters to build einsum subscripts
+            letters = list(string.ascii_lowercase)
+            einsum_subs = []
+            for i in range(n):
+                left = letters[i]
+                phys = letters[n + i]
+                right = letters[i + 1]
+                einsum_subs.append(f"{left}{phys}{right}")
 
-    def run(self, runs: int = 100, evaluation_times: list[float] = [1.0]) -> OutputType:
+            einsum_str = ",".join(einsum_subs) + "->" + "".join(letters[n : 2 * n])
+            result = torch.einsum(einsum_str, *mps_state.factors)
+            return result.flatten().cpu()
 
-        # Build the config and the backend
-        self.build_config(runs, evaluation_times)
-        self.build_backend()
+        def run(self, runs: int = 100, evaluation_times: list[float] = [1.0]) -> OutputType:
 
-        # run the simulation
-        result = self.backend.run()
+            # Build the config and the backend
+            self.build_config(runs, evaluation_times)
+            self.build_backend()
 
-        # Get initial state vector
-        initial_state = self.backend._config.initial_state
-        if initial_state is None:
-            initial_state = emu_mps.MPS.from_state_amplitudes(
-                eigenstates=("r", "g"),
-                amplitudes={"g" * len(self.seq.register.qubits): 1.0},
-            )
+            # run the simulation
+            result = self.backend.run()
 
-        if self.result_type == ResultType.STATEVECTOR:
-            # Constract MPS states to get state vectors
-            if len(evaluation_times) == 1:
-                state_vecs = [self.contract_mps(state) for state in result.state]
-            else:
-                state_vecs = [self.contract_mps(initial_state)] + [
-                    self.contract_mps(state) for state in result.state
-                ]
-            state_vecs = np.array(state_vecs)
-            return state_vecs
+            # Get initial state vector
+            initial_state = self.backend._config.initial_state
+            if initial_state is None:
+                initial_state = emu_mps.MPS.from_state_amplitudes(
+                    eigenstates=("r", "g"),
+                    amplitudes={"g" * len(self.seq.register.qubits): 1.0},
+                )
 
-        elif self.result_type == ResultType.BITSTRINGS:
-            if len(evaluation_times) == 1:
-                bitstrings = result.get_tagged_results()["bitstrings"]
-            else:
-                bitstrings = [initial_state.sample(num_shots=runs)] + result.get_tagged_results()[
-                    "bitstrings"
-                ]
-            return bitstrings
+            if self.result_type == ResultType.STATEVECTOR:
+                # Constract MPS states to get state vectors
+                if len(evaluation_times) == 1:
+                    state_vecs = [self.contract_mps(state) for state in result.state]
+                else:
+                    state_vecs = [self.contract_mps(initial_state)] + [
+                        self.contract_mps(state) for state in result.state
+                    ]
+                state_vecs = np.array(state_vecs)
+                return state_vecs
+
+            elif self.result_type == ResultType.BITSTRINGS:
+                if len(evaluation_times) == 1:
+                    bitstrings = result.get_tagged_results()["bitstrings"]
+                else:
+                    bitstrings = [
+                        initial_state.sample(num_shots=runs)
+                    ] + result.get_tagged_results()["bitstrings"]
+                return bitstrings
 
 
 class QutipBackend(BaseBackend):
