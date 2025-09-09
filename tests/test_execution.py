@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Callable
 
 import numpy as np
@@ -16,6 +17,10 @@ from qoolqit.execution import BackendName, ResultType
 def test_theoretical_state_vector(
     backend_name: BackendName, random_x_rotation: np.ndarray, random_rotation_angle: float
 ) -> None:
+    if backend_name == BackendName.EMUMPS and os.name != "posix":
+        pytest.skip("EmuMPS is only available under Unix")
+        return
+
     # Theoretical final state after X rotation
     theor_state = random_x_rotation[:, 0]
     n_qubits = int(np.log2(len(theor_state)))
@@ -31,6 +36,7 @@ def test_theoretical_state_vector(
     assert np.isclose(theor_state, res, atol=ATOL_STATE_VEC).all()
 
 
+@pytest.mark.skipif(os.name != "posix", reason="EmuMPS is currently available only under Unix")
 @pytest.mark.parametrize(
     "backend_name, device",
     [
@@ -55,11 +61,18 @@ def test_state_vector(random_program: Callable, backend_name: BackendName, devic
     assert np.isclose(qutip_res, bknd_res, atol=ATOL_STATE_VEC).all()
 
 
+@pytest.mark.skipif(os.name != "posix", reason="EmuMPS is currently available only under Unix")
 @pytest.mark.flaky(max_runs=5)
 @pytest.mark.parametrize(
     "backend_name, device",
     [
-        pytest.param(BackendName.EMUMPS, MockDevice(), marks=pytest.mark.flaky(max_runs=5)),
+        pytest.param(
+            BackendName.EMUMPS,
+            MockDevice(),
+            marks=[
+                pytest.mark.flaky(max_runs=5),
+            ],
+        ),
         pytest.param(
             BackendName.EMUMPS,
             AnalogDevice(),
@@ -100,7 +113,20 @@ def test_bitstrings(random_program: Callable, backend_name: BackendName, device:
 
 
 @pytest.mark.flaky(max_runs=5)
-@pytest.mark.parametrize("backend_name", [BackendName.QUTIP, BackendName.EMUMPS])
+@pytest.mark.parametrize(
+    "backend_name",
+    [
+        pytest.param(BackendName.QUTIP),
+        pytest.param(
+            BackendName.EMUMPS,
+            marks=[
+                pytest.mark.skipif(
+                    os.name != "posix", reason="EmuMPS is currently available only under Unix"
+                )
+            ],
+        ),
+    ],
+)
 @pytest.mark.parametrize("result_type", [ResultType.STATEVECTOR, ResultType.BITSTRINGS])
 def test_evaluation_times(
     random_program: Callable, backend_name: BackendName, result_type: ResultType
