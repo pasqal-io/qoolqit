@@ -51,7 +51,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        python-version: ["3.13"]
+        python-version: ["3.10", "3.13"] # Testing with fewer versions as Windows tests are slow.
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout QoolQit

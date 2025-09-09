@@ -106,7 +106,7 @@ dependencies = [
   "mkdocstrings",
   "mkdocstrings-python",
   "mkdocs-section-index",
-  "mkdocs-jupyter~=0.24",
+  "mkdocs-jupyter==0.24.7", # Don't let it update to 0.25 as it doesn't render LaTeX in notebooks correctly!
   "mkdocs-exclude",
   "mkapi",
   "markdown-exec",
