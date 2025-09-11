@@ -1,11 +1,12 @@
-from pulser.backend import Backend, EmulatorBackend, EmulationConfig, Results
-from pulser.backend.remote import RemoteBackend, RemoteResults
+# import pulser.backends as backends
+from __future__ import annotations
+
+from pulser.backend import Backend, EmulationConfig, EmulatorBackend, Results
 from pulser.backend.qpu import QPUBackend
+from pulser.backend.remote import RemoteBackend, RemoteResults
 from pulser_pasqal import PasqalCloud
 from pulser_simulation import QutipBackendV2
 
-# import pulser.backends as backends
-from typing import Type
 from qoolqit import QuantumProgram
 
 
@@ -15,7 +16,7 @@ class PulserBackend:
     def __init__(
         self,
         program: QuantumProgram,
-        backend_type: Type[Backend] = QutipBackendV2,
+        backend_type: type[Backend] = QutipBackendV2,
         backend_config: EmulationConfig | None = None,
         connection: PasqalCloud | None = None,
     ):
@@ -28,6 +29,7 @@ class PulserBackend:
         else:
             raise TypeError(f"{backend_type.__name__} is not a valid backend.")
 
+        self.program = program
         self.backend_type = backend_type
         self.backend_config = backend_config
         self.connection = connection
@@ -49,3 +51,5 @@ class PulserBackend:
         elif issubclass(self.backend_type, QPUBackend):
             backend = self.backend_type(compiled_seq, connection=self.connection)
             return backend.run()
+        else:
+            return None
