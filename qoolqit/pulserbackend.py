@@ -23,7 +23,7 @@ class PulserBackend:
 
     Args:
         backend_type: backend type from PulserBackend.available_backends().
-        backend_config:
+        emulator_config:
         connection: connection to execute the program on remote backends.
 
     Examples:
@@ -32,23 +32,27 @@ class PulserBackend:
          - links to documentation
     """
 
-    default_config = EmulationConfig(observables=(BitStrings(),))
+    default_config = EmulationConfig(observables=(BitStrings(),), log_level=2000)
 
     def __init__(
         self,
+        *,
         backend_type: type[Backend] = QutipBackendV2,
-        backend_config: EmulationConfig = default_config,
+        emulation_config: EmulationConfig = default_config,
         connection: RemoteConnection | None = None,
     ) -> None:
+        # fail immediately if not supported
         if not issubclass(backend_type, (EmulatorBackend, RemoteBackend, QPUBackend)):
             raise TypeError(f"{backend_type.__name__} is not a supported backend type.")
 
         self.backend_type: type[Backend] = backend_type
-        self.backend_config: EmulationConfig = backend_config
+        self.emulation_config: EmulationConfig = emulation_config
         self.connection: RemoteConnection | None = connection  # is PasqalCloud sufficient here?
 
-    def available_backends(self) -> None:
+    @staticmethod
+    def available_backends() -> None:
         # list will be updated on pulser 1.6
+        # would be nice to print them separately as local, remote, QPU, etc.
         print(*_BACKENDS.keys())
 
     def run(
@@ -62,25 +66,31 @@ class PulserBackend:
         """
 
         if issubclass(self.backend_type, EmulatorBackend):
-            backend = self.backend_type(sequence=sequence, config=self.backend_config)
+            backend = self.backend_type(sequence=sequence, config=self.emulation_config)
             return backend.run()
         elif issubclass(self.backend_type, PasqalEmulator):
             if not isinstance(self.connection, PasqalCloud):
                 raise TypeError(
-                    "Remote execution requires a"
-                    "`pulser_pasqal.pasqal_cloud.PasqalCloud` connection."
+                    f"""Error in `BackendConfig`: a backend of type {self.backend_type.__name__}
+                    requires a `connection` of type {PasqalCloud}."""
                 )
             backend = self.backend_type(
                 sequence=sequence,
                 connection=self.connection,
-                config=self.backend_config,
+                config=self.emulation_config,
                 mimic_qpu=False,
             )
             return backend.run(wait=True)
         elif issubclass(self.backend_type, QPUBackend):
             if not isinstance(self.connection, RemoteConnection):
-                raise TypeError("Must provide connection.")
+                raise TypeError(
+                    f"""Error in `BackendConfig`: a backend of type {self.backend_type.__name__}
+                    requires a `connection` of type {RemoteConnection}."""
+                )
             backend = self.backend_type(sequence=sequence, connection=self.connection)
             return backend.run()
         else:
-            raise TypeError("Not supported backend.")
+            raise TypeError(
+                f"""Error in `BackendConfig`: backends of type {self.backend_type.__name__}
+                is currently not supported."""
+            )
