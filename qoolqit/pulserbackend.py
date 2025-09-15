@@ -16,7 +16,7 @@ from pulser_simulation import QutipBackendV2
 
 class PulserBackend:
     """
-    Class to run QuantumProgram on multiple Pasqal's backends.
+    Class to run a QoolQit `QuantumProgram` on multiple Pasqal's backends.
 
     This class serves as a primary interface between tools written using Qoolqit (including solvers)
     and Pasqal's backends (including QPUs and local/remote emulators).
@@ -75,7 +75,7 @@ class PulserBackend:
         return connection
 
     def run(self, sequence: PulserSequence) -> Results | Sequence[Results]:
-        """Run a Sequence/QuantumProgram and return the results.
+        """Run a QuantumProgram and return the results.
 
         Note:
             For simplicity let's just focus on running a Sequence now.
