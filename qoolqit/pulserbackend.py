@@ -7,7 +7,7 @@ from pulser.backend import Backend, BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
 from pulser.backend.config import EmulationConfig
 from pulser.backend.qpu import QPUBackend
-from pulser.backend.remote import JobParams, RemoteBackend, RemoteConnection
+from pulser.backend.remote import JobParams, RemoteBackend
 from pulser.sequence import Sequence as PulserSequence
 from pulser_pasqal.backends import RemoteEmulatorBackend
 from pulser_pasqal.pasqal_cloud import PasqalCloud
@@ -43,17 +43,36 @@ class PulserBackend:
         *,
         backend_type: type[Backend] = QutipBackendV2,
         emulation_config: EmulationConfig | None = None,
-        connection: RemoteConnection | None = None,
+        connection: PasqalCloud | None = None,
         mimic_qpu: bool = False,
     ) -> None:
-        # fail immediately if not supported
+
+        self.backend_type: type[Backend] = self.validate_backend_type(backend_type)
+        if issubclass(self.backend_type, RemoteBackend):
+            self.connection: PasqalCloud = self.validate_connection(connection)
+        self.emulation_config = emulation_config if emulation_config else self.default_config
+        self.mimic_qpu: bool = mimic_qpu
+
+    @staticmethod
+    def validate_backend_type(backend_type: type[Backend]) -> type[Backend]:
+        """Only suppport Pulser EmulatorBackend or RemoteBackend subclasses backend type."""
         if not issubclass(backend_type, (EmulatorBackend, RemoteBackend)):
             raise TypeError(f"{backend_type.__name__} is not a supported backend type.")
+        return backend_type
 
-        self.backend_type: type[Backend] = backend_type
-        self.emulation_config = emulation_config if emulation_config else self.default_config
-        self.connection: RemoteConnection | None = connection
-        self.mimic_qpu: bool = mimic_qpu
+    def validate_connection(self, connection: PasqalCloud | None) -> PasqalCloud:
+        """Validate the required PasqalCloud connection for remote backends.
+
+        Note:
+            Local emulators and internal QPUs require a `PasqalCloud` connection to send jobs.
+            Client's QPUs require a derived OVHConnection(PasqalCloud).
+        """
+        if not isinstance(connection, PasqalCloud):
+            raise TypeError(
+                f"""Error in `PulserBackend`: a remote backend of type {self.backend_type.__name__}
+                requires a `connection` of type {PasqalCloud}."""
+            )
+        return connection
 
     def run(self, sequence: PulserSequence) -> Results | Sequence[Results]:
         """Run a Sequence/QuantumProgram and return the results.
@@ -63,19 +82,7 @@ class PulserBackend:
             A QuantumProgram will simply host a compiled sequence internally.
         """
         if issubclass(self.backend_type, RemoteBackend):
-            # RemoteBackend requires a connection
-            if self.connection is None:
-                raise TypeError(
-                    f"""Error in `PulserBackend`: a backend of type {self.backend_type.__name__}
-                    requires a `connection` of type {RemoteConnection}."""
-                )
-
             if issubclass(self.backend_type, RemoteEmulatorBackend):
-                if not isinstance(self.connection, PasqalCloud):
-                    raise TypeError(
-                        f"""Error in `BackendConfig`: a backend of type {self.backend_type.__name__}
-                        requires a `connection` of type {PasqalCloud}."""
-                    )
                 backend = self.backend_type(
                     sequence=sequence,
                     connection=self.connection,
@@ -104,6 +111,6 @@ class PulserBackend:
             return backend.run()
         else:
             raise TypeError(
-                f"""Error in `BackendConfig`: backends of type {self.backend_type.__name__}
+                f"""Error in `PulserBackend`: backend of type {self.backend_type.__name__}
                 is currently not supported."""
             )
