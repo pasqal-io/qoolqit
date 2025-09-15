@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from collections.abc import Sequence
 
 from pulser.backend import Backend, BitStrings, Results
@@ -35,13 +36,13 @@ class PulserBackend:
     """
 
     # default emulator configuration to return final time bitstrings
-    default_config = EmulationConfig(observables=(BitStrings(),), log_level=2000)
+    default_config = EmulationConfig(observables=(BitStrings(),), log_level=logging.WARN)
 
     def __init__(
         self,
         *,
         backend_type: type[Backend] = QutipBackendV2,
-        emulation_config: EmulationConfig = default_config,
+        emulation_config: EmulationConfig | None = None,
         connection: RemoteConnection | None = None,
         mimic_qpu: bool = False,
     ) -> None:
@@ -50,7 +51,7 @@ class PulserBackend:
             raise TypeError(f"{backend_type.__name__} is not a supported backend type.")
 
         self.backend_type: type[Backend] = backend_type
-        self.emulation_config: EmulationConfig = emulation_config
+        self.emulation_config = emulation_config if emulation_config else self.default_config
         self.connection: RemoteConnection | None = connection
         self.mimic_qpu: bool = mimic_qpu
 
