@@ -109,11 +109,12 @@ class PulserBackend:
                     type {self._backend_type.__name__} is not supported"""
                 )
 
-            # job_params `runs` is ignored in emulators
+            # job_params `runs` is used in QPUBackend but ignored in remote emulators
+            # since it is specified in the emulation config
             # TODO: after pulser 1.6 assess if job_params is still needed
             job_params = [JobParams(runs=self._runs)]
             job = backend.run(job_params=job_params, wait=True)
-            # job.results returns tuple[Results]
+            # len(job.results) == len(job_params) == 1
             return job.results[0]
 
         elif issubclass(self._backend_type, EmulatorBackend):
