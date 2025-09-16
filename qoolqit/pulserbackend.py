@@ -8,10 +8,11 @@ from pulser.backend.abc import EmulatorBackend
 from pulser.backend.config import EmulationConfig
 from pulser.backend.qpu import QPUBackend
 from pulser.backend.remote import JobParams, RemoteBackend, RemoteConnection
-from pulser.sequence import Sequence as PulserSequence
 from pulser_pasqal.backends import RemoteEmulatorBackend
 from pulser_pasqal.pasqal_cloud import PasqalCloud
 from pulser_simulation import QutipBackendV2
+
+from qoolqit import QuantumProgram
 
 
 class PulserBackend:
@@ -70,14 +71,14 @@ class PulserBackend:
         """
         if not isinstance(connection, RemoteConnection):
             raise TypeError(
-                f"""Error in `PulserBackend`: a remote backend of type
-                {self._backend_type.__name__} requires a `connection` of type {RemoteConnection}."""
+                f"""Error in `PulserBackend`: remote backend type {self._backend_type.__name__}
+                requires a `connection` of type {RemoteConnection}."""
             )
         if issubclass(self._backend_type, RemoteEmulatorBackend):
             if not isinstance(connection, PasqalCloud):
                 raise TypeError(
-                    f"""Error in `PulserBackend`: a remote backend of type
-                    {self._backend_type.__name__} requires a `connection` of type {PasqalCloud}."""
+                    f"""Error in `PulserBackend`: remote backend type {self._backend_type.__name__}
+                    requires a `connection` of type {PasqalCloud}."""
                 )
 
         return connection
@@ -90,20 +91,24 @@ class PulserBackend:
             observables=(BitStrings(num_shots=self._runs),), log_level=logging.WARN
         )
 
-    def run(self, sequence: PulserSequence) -> Results | Sequence[Results]:
-        """Run a QuantumProgram and return the results.
+    def run(self, program: QuantumProgram) -> Results | Sequence[Results]:
+        """Run a compiled QuantumProgram and return the results."""
+        if program._compiled_sequence is None:
+            raise ValueError(
+                "QuantumProgram has not been compiled. Please call program.compile_to(device)."
+            )
 
-        Note:
-            For simplicity let's just focus on running a Sequence now.
-            A QuantumProgram will simply host a compiled sequence internally.
-        """
         if issubclass(self._backend_type, RemoteBackend):
             if issubclass(self._backend_type, RemoteEmulatorBackend):
                 backend = self._backend_type(
-                    sequence=sequence, connection=self._connection, config=self._emulation_config
+                    sequence=program.compiled_sequence,
+                    connection=self._connection,
+                    config=self._emulation_config,
                 )
             elif issubclass(self._backend_type, QPUBackend):
-                backend = self._backend_type(sequence=sequence, connection=self._connection)
+                backend = self._backend_type(
+                    sequence=program.compiled_sequence, connection=self._connection
+                )
             else:
                 raise TypeError(
                     f"""Error in `PulserBackend`: remote backend of
@@ -116,12 +121,15 @@ class PulserBackend:
             job_params = [JobParams(runs=self._runs)]
             job = backend.run(job_params=job_params, wait=True)
             # len(job.results) == len(job_params) == 1
-            return job.results[0]
+            results = job.results[0]
+            return results
 
         elif issubclass(self._backend_type, EmulatorBackend):
             if not self._emulation_config:
                 self._emulation_config = self.default_emulation_config()
-            backend = self._backend_type(sequence=sequence, config=self._emulation_config)
+            backend = self._backend_type(
+                sequence=program.compiled_sequence, config=self._emulation_config
+            )
             return backend.run()
         else:
             raise TypeError(
