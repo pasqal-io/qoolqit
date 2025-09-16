@@ -22,12 +22,14 @@ class PulserBackend:
     and Pasqal's backends (including QPUs and local/remote emulators).
 
     Args:
-        backend_type (type): backend type from PulserBackend.available_backends().
+        backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.
         emulator_config (EmulationConfig): optional configuration object emulators.
             This argument is used only if `backend_type` is an emulator backend.
         connection (RemoteConnection): connection to execute the program on remote backends.
             This argument is used only if `backend_type` is a remote backend.
-        runs (int):
+        runs (int): run the program `runs` times to collect bitstrings statisticts.
+            On QPU backends this represents the actual number of runs of the program.
+            On emulators, the quantum state is bitstring sampled `runs` times.
 
     Examples:
         TODO:
@@ -35,24 +37,19 @@ class PulserBackend:
          - links to documentation
     """
 
-    # default emulator configuration to return final time bitstrings
-    default_config = EmulationConfig(
-        observables=(BitStrings(num_shots=100),), log_level=logging.WARN
-    )
-
     def __init__(
         self,
         *,
         backend_type: type[Backend] = QutipBackendV2,
-        emulation_config: EmulationConfig | None = None,
         connection: RemoteConnection | None = None,
-        runs: int = 100,  # is 100 fine?
+        emulation_config: EmulationConfig | None = None,
+        runs: int = 100,
     ) -> None:
 
         self._backend_type: type[Backend] = self.validate_backend_type(backend_type)
         if issubclass(self._backend_type, RemoteBackend):
             self._connection: RemoteConnection = self.validate_connection(connection)
-        self._emulation_config = emulation_config if emulation_config else self.default_config
+        self._emulation_config = emulation_config
         self._runs = runs
 
     @staticmethod
@@ -85,6 +82,13 @@ class PulserBackend:
 
         return connection
 
+    def default_emulation_config(self) -> EmulationConfig:
+        """"""
+        # return final time bitstrings sampled `self._runs` times
+        return EmulationConfig(
+            observables=(BitStrings(num_shots=self._runs),), log_level=logging.WARN
+        )
+
     def run(self, sequence: PulserSequence) -> Results | Sequence[Results]:
         """Run a QuantumProgram and return the results.
 
@@ -105,7 +109,7 @@ class PulserBackend:
                     type {self._backend_type.__name__} is not supported"""
                 )
 
-            # job_params runs is ignored in emulators
+            # job_params `runs` is ignored in emulators
             # TODO: after pulser 1.6 assess if job_params is still needed
             job_params = [JobParams(runs=self._runs)]
             job = backend.run(job_params=job_params, wait=True)
@@ -113,6 +117,8 @@ class PulserBackend:
             return job.results[0]
 
         elif issubclass(self._backend_type, EmulatorBackend):
+            if not self._emulation_config:
+                self._emulation_config = self.default_emulation_config()
             backend = self._backend_type(sequence=sequence, config=self._emulation_config)
             return backend.run()
         else:
