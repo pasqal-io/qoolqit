@@ -62,11 +62,11 @@ class PulserBackend:
         return backend_type
 
     def validate_connection(self, connection: RemoteConnection | None) -> RemoteConnection:
-        """Validate the required PasqalCloud connection for remote backends.
+        """Validate the required connection for remote backends.
 
         Note:
-            Local emulators and internal QPUs require a `PasqalCloud` connection to send jobs.
-            Client's QPUs require a derived OVHConnection(PasqalCloud).
+            Remote emulators and QPUs require a `pulser.backend.remote.RemoteConnection`
+            or derived to send jobs.
         """
         if not isinstance(connection, RemoteConnection):
             raise TypeError(
@@ -83,8 +83,9 @@ class PulserBackend:
         return connection
 
     def default_emulation_config(self) -> EmulationConfig:
-        """"""
-        # return final time bitstrings sampled `self._runs` times
+        """Return a default and unique emulation config for all local emulators."""
+        # final time bitstrings sampled `self._runs` times
+        # log_level set to WARN to remove unwanted INFO output from emulators
         return EmulationConfig(
             observables=(BitStrings(num_shots=self._runs),), log_level=logging.WARN
         )
