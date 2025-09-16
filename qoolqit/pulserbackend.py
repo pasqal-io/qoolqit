@@ -23,11 +23,11 @@ class PulserBackend:
 
     Args:
         backend_type (type): backend type from PulserBackend.available_backends().
-        emulator_config (EmulationConfig): optional configuration object to configure
-            remote and local emulators.
+        emulator_config (EmulationConfig): optional configuration object emulators.
+            This argument is used only if `backend_type` is an emulator backend.
         connection (RemoteConnection): connection to execute the program on remote backends.
-        mimic_qpu (bool):  Whether to mimic the validations necessary for
-            execution on a QPU.
+            This argument is used only if `backend_type` is a remote backend.
+        runs (int):
 
     Examples:
         TODO:
@@ -36,7 +36,9 @@ class PulserBackend:
     """
 
     # default emulator configuration to return final time bitstrings
-    default_config = EmulationConfig(observables=(BitStrings(),), log_level=logging.WARN)
+    default_config = EmulationConfig(
+        observables=(BitStrings(num_shots=100),), log_level=logging.WARN
+    )
 
     def __init__(
         self,
@@ -44,19 +46,21 @@ class PulserBackend:
         backend_type: type[Backend] = QutipBackendV2,
         emulation_config: EmulationConfig | None = None,
         connection: RemoteConnection | None = None,
-        mimic_qpu: bool = False,
+        runs: int = 100,  # is 100 fine?
     ) -> None:
 
-        self.backend_type: type[Backend] = self.validate_backend_type(backend_type)
-        if issubclass(self.backend_type, RemoteBackend):
-            self.connection: RemoteConnection = self.validate_connection(connection)
-        self.emulation_config = emulation_config if emulation_config else self.default_config
-        self.mimic_qpu: bool = mimic_qpu
+        self._backend_type: type[Backend] = self.validate_backend_type(backend_type)
+        if issubclass(self._backend_type, RemoteBackend):
+            self._connection: RemoteConnection = self.validate_connection(connection)
+        self._emulation_config = emulation_config if emulation_config else self.default_config
+        self._runs = runs
 
     @staticmethod
     def validate_backend_type(backend_type: type[Backend]) -> type[Backend]:
-        """Only suppport Pulser EmulatorBackend or RemoteBackend subclasses backend type."""
-        if not issubclass(backend_type, (EmulatorBackend, RemoteBackend)):
+        """Validate backend type."""
+        # only support backends based on pulser.backend.Backend
+        # checking early otherwise the contructor backend_type(sequence) will fail.
+        if not issubclass(backend_type, Backend):
             raise TypeError(f"{backend_type.__name__} is not a supported backend type.")
         return backend_type
 
@@ -70,13 +74,13 @@ class PulserBackend:
         if not isinstance(connection, RemoteConnection):
             raise TypeError(
                 f"""Error in `PulserBackend`: a remote backend of type
-                {self.backend_type.__name__} requires a `connection` of type {RemoteConnection}."""
+                {self._backend_type.__name__} requires a `connection` of type {RemoteConnection}."""
             )
-        if issubclass(self.backend_type, RemoteEmulatorBackend):
+        if issubclass(self._backend_type, RemoteEmulatorBackend):
             if not isinstance(connection, PasqalCloud):
                 raise TypeError(
                     f"""Error in `PulserBackend`: a remote backend of type
-                    {self.backend_type.__name__} requires a `connection` of type {PasqalCloud}."""
+                    {self._backend_type.__name__} requires a `connection` of type {PasqalCloud}."""
                 )
 
         return connection
@@ -88,36 +92,31 @@ class PulserBackend:
             For simplicity let's just focus on running a Sequence now.
             A QuantumProgram will simply host a compiled sequence internally.
         """
-        if issubclass(self.backend_type, RemoteBackend):
-            if issubclass(self.backend_type, RemoteEmulatorBackend):
-                backend = self.backend_type(
-                    sequence=sequence,
-                    connection=self.connection,
-                    config=self.emulation_config,
-                    mimic_qpu=self.mimic_qpu,
+        if issubclass(self._backend_type, RemoteBackend):
+            if issubclass(self._backend_type, RemoteEmulatorBackend):
+                backend = self._backend_type(
+                    sequence=sequence, connection=self._connection, config=self._emulation_config
                 )
-            elif issubclass(self.backend_type, QPUBackend):
-                backend = self.backend_type(sequence=sequence, connection=self.connection)
+            elif issubclass(self._backend_type, QPUBackend):
+                backend = self._backend_type(sequence=sequence, connection=self._connection)
             else:
                 raise TypeError(
                     f"""Error in `PulserBackend`: remote backend of
-                    type {self.backend_type.__name__} is not supported"""
+                    type {self._backend_type.__name__} is not supported"""
                 )
 
-            # RemoteBackend.run() returns a RemoteResults
-            # job_params is ignored in remote_emulators
+            # job_params runs is ignored in emulators
             # TODO: after pulser 1.6 assess if job_params is still needed
-            job = backend.run(job_params=[JobParams(runs=1)], wait=True)
+            job_params = [JobParams(runs=self._runs)]
+            job = backend.run(job_params=job_params, wait=True)
             # job.results returns tuple[Results]
             return job.results[0]
 
-        elif issubclass(self.backend_type, EmulatorBackend):
-            backend = self.backend_type(
-                sequence=sequence, config=self.emulation_config, mimic_qpu=self.mimic_qpu
-            )
+        elif issubclass(self._backend_type, EmulatorBackend):
+            backend = self._backend_type(sequence=sequence, config=self._emulation_config)
             return backend.run()
         else:
             raise TypeError(
-                f"""Error in `PulserBackend`: backend of type {self.backend_type.__name__}
+                f"""Error in `PulserBackend`: backend of type {self._backend_type.__name__}
                 is currently not supported."""
             )
