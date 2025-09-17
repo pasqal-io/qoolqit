@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import warnings
 from collections.abc import Sequence
 
 from pulser.backend import Backend, BitStrings, Results
@@ -50,6 +51,13 @@ class PulserBackend:
         self._backend_type: type[Backend] = self.validate_backend_type(backend_type)
         if issubclass(self._backend_type, RemoteBackend):
             self._connection: RemoteConnection = self.validate_connection(connection)
+        if issubclass(self._backend_type, QPUBackend) and emulation_config:
+            warnings.warn(
+                """Warning in `PulserBackend`: an `emulation_config` has been passed to a
+                `QPUBackend` which does not require it. It will be ignored."""
+            )
+        # TODO: replace with validate_config in pulser 1.6
+        # self._emulation_config = self._backend_type.validate_config(emulation_config)
         self._emulation_config = emulation_config
         self._runs = runs
 
