@@ -17,10 +17,10 @@ from qoolqit import QuantumProgram
 
 class PulserBackend:
     """
-    Class to run a QoolQit `QuantumProgram` on multiple Pasqal's backends.
+    Class to run a QoolQit `QuantumProgram` on multiple Pasqal backends.
 
-    This class serves as a primary interface between tools written using Qoolqit (including solvers)
-    and Pasqal's backends (including QPUs and local/remote emulators).
+    This class serves as a primary interface between tools written using QoolQit (including solvers)
+    and Pasqal backends (including QPUs and local/remote emulators).
 
     Args:
         backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.
@@ -28,7 +28,7 @@ class PulserBackend:
             This argument is used only if `backend_type` is an emulator backend.
         connection (RemoteConnection): connection to execute the program on remote backends.
             This argument is used only if `backend_type` is a remote backend.
-        runs (int): run the program `runs` times to collect bitstrings statisticts.
+        runs (int): run the program `runs` times to collect bitstrings statistics.
             On QPU backends this represents the actual number of runs of the program.
             On emulators, the quantum state is bitstring sampled `runs` times.
 
@@ -55,9 +55,13 @@ class PulserBackend:
 
     @staticmethod
     def validate_backend_type(backend_type: type[Backend]) -> type[Backend]:
-        """Validate backend type."""
-        # only support backends based on pulser.backend.Backend
-        # checking early otherwise the contructor backend_type(sequence) will fail.
+        """Validate backend type.
+
+        Note:
+            Early validation that the provided backend is derived from `pulser.backend.Backend`.
+            We re-validate during run() as we dispatch to the proper handlers, but early validation
+            makes the error easier to understand.
+        """
         if not issubclass(backend_type, Backend):
             raise TypeError(f"{backend_type.__name__} is not a supported backend type.")
         return backend_type
@@ -67,7 +71,7 @@ class PulserBackend:
 
         Note:
             Remote emulators and QPUs require a `pulser.backend.remote.RemoteConnection`
-            or derived to send jobs.
+            or derived to send jobs. Early validation makes the error easier to understand.
         """
         if not isinstance(connection, RemoteConnection):
             raise TypeError(
@@ -84,7 +88,13 @@ class PulserBackend:
         return connection
 
     def default_emulation_config(self) -> EmulationConfig:
-        """Return a default and unique emulation config for all local emulators."""
+        """Return a default and unique emulation config for all emulators.
+
+        Note:
+            If `emulation_config` not specified in `PulserBackend`, to provide a
+            consistent experience between emulators, we set default configuration that
+            asks for the final bitstring, sampled `runs` times.
+        """
         # final time bitstrings sampled `self._runs` times
         # log_level set to WARN to remove unwanted INFO output from emulators
         return EmulationConfig(
@@ -134,5 +144,5 @@ class PulserBackend:
         else:
             raise TypeError(
                 f"""Error in `PulserBackend`: backend of type {self._backend_type.__name__}
-                is currently not supported."""
+                is not supported."""
             )
