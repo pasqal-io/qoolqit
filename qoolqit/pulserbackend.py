@@ -95,7 +95,6 @@ class PulserBackend:
             consistent experience between emulators, we set default configuration that
             asks for the final bitstring, sampled `runs` times.
         """
-        # final time bitstrings sampled `self._runs` times
         # log_level set to WARN to remove unwanted INFO output from emulators
         return EmulationConfig(
             observables=(BitStrings(num_shots=self._runs),), log_level=logging.WARN
