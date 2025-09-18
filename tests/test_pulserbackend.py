@@ -1,12 +1,15 @@
+from __future__ import annotations
+
 from collections.abc import Sequence
-import json
-from pulser.sequence import Sequence as PulserSequence
-from qoolqit.program import QuantumProgram
-from qoolqit.pulserbackend import PulserBackend
+from unittest.mock import MagicMock
+
+import pytest
 from pulser.backend import Backend, EmulationConfig, EmulatorBackend, Results
 from pulser.backend.remote import JobParams, RemoteBackend, RemoteConnection, RemoteResults
-from unittest.mock import MagicMock
-import pytest
+from pulser.sequence import Sequence as PulserSequence
+
+from qoolqit.program import QuantumProgram
+from qoolqit.pulserbackend import PulserBackend
 
 
 class TestPulserBackend:
@@ -93,7 +96,5 @@ class TestPulserBackend:
 
     def test_not_compiled_seq(self) -> None:
         backend = PulserBackend(backend_type=self.MockEmulatorBackend)
-        with pytest.raises(
-            match="QuantumProgram has not been compiled."
-        ):
+        with pytest.raises(match="QuantumProgram has not been compiled."):
             backend.run(self.mock_program_not_compiled)
