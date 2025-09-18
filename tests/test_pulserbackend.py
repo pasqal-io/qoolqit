@@ -43,7 +43,6 @@ class TestPulserBackend:
     def test_default_backend(self) -> None:
         backend = PulserBackend(backend_type=self.MockBackend)
         assert backend._backend_type is self.MockBackend
-        assert backend._emulation_config is None
         assert backend._runs == 100
 
     def test_default_remote_backend(self) -> None:
@@ -52,11 +51,12 @@ class TestPulserBackend:
         )
         assert backend._backend_type is self.MockRemoteBackend
         assert backend._connection is self.mock_connection
-        assert backend._emulation_config is None
         assert backend._runs == 100
 
-    def test_backend_with_config(self) -> None:
-        backend = PulserBackend(backend_type=self.MockBackend, emulation_config=self.mock_config)
+    def test_emulator_backend_with_config(self) -> None:
+        backend = PulserBackend(
+            backend_type=self.MockEmulatorBackend, emulation_config=self.mock_config
+        )
         assert backend._emulation_config is self.mock_config
 
     def test_validate_backend_type(self) -> None:

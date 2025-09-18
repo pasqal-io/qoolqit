@@ -49,17 +49,25 @@ class PulserBackend:
     ) -> None:
 
         self._backend_type: type[Backend] = self.validate_backend_type(backend_type)
+        self._runs = runs
+        # require a connection for RemoteBackend
         if issubclass(self._backend_type, RemoteBackend):
             self._connection: RemoteConnection = self.validate_connection(connection)
-        if issubclass(self._backend_type, QPUBackend) and emulation_config:
+        elif connection:
             warnings.warn(
-                """Warning in `PulserBackend`: an `emulation_config` has been passed to a
-                `QPUBackend` which does not require it. It will be ignored."""
+                f"""Warning in `PulserBackend`: a `connection` has been passed to the
+                local backend {self._backend_type.__name__} which does not require it.
+                It will be ignored."""
             )
-        # TODO: replace with validate_config in pulser 1.6
-        # self._emulation_config = self._backend_type.validate_config(emulation_config)
-        self._emulation_config = emulation_config
-        self._runs = runs
+        # accept and validate the config for EmulatorBackend
+        if issubclass(self._backend_type, EmulatorBackend):
+            self._emulation_config = self.validate_emulation_config(emulation_config)
+        elif emulation_config:
+            warnings.warn(
+                f"""Warning in `PulserBackend`: an `emulation_config` has been passed to the
+                a non-emulator backend {self._backend_type.__name__} which does not require it.
+                It will be ignored."""
+            )
 
     @staticmethod
     def validate_backend_type(backend_type: type[Backend]) -> type[Backend]:
@@ -94,6 +102,16 @@ class PulserBackend:
                 )
 
         return connection
+
+    def validate_emulation_config(
+        self, emulation_config: EmulationConfig | None
+    ) -> EmulationConfig:
+        # if provided, otherwise fall back to our default config
+        config = emulation_config if emulation_config else self.default_emulation_config()
+        # TODO: in both cases validate it when pulser 1.6 is released
+        # uncomment line below
+        # config = self._backend_type.validate_config(config)
+        return config
 
     def default_emulation_config(self) -> EmulationConfig:
         """Return a default and unique emulation config for all emulators.
@@ -142,8 +160,6 @@ class PulserBackend:
             return results
 
         elif issubclass(self._backend_type, EmulatorBackend):
-            if not self._emulation_config:
-                self._emulation_config = self.default_emulation_config()
             backend = self._backend_type(
                 sequence=program.compiled_sequence, config=self._emulation_config
             )
