@@ -1,12 +1,12 @@
 from __future__ import annotations
-from typing import Optional, Callable
+
 from math import pi
+from typing import Callable, Optional, cast
 
 from pulser.devices._device_datacls import BaseDevice
 
 from ._pulser_devices import _AnalogDevice, _DigitalAnalogDevice, _MockDevice, _TestAnalogDevice
 from .unit_converter import UnitConverter
-
 
 UPPER_DURATION = 6000
 UPPER_AMP = 4.0 * pi
@@ -40,7 +40,7 @@ class Device:
             pulser_device = type(self)._device.__get__(self, type(self))
 
         if not isinstance(pulser_device, BaseDevice):
-            raise TypeError("`pulser_device` must be an instance of Pulser Device class.")
+            raise TypeError("`pulser_device` must be an instance of Pulser BaseDevice class.")
 
         # Store it for all subsequent lookups
         self._pulser_device: BaseDevice = pulser_device
@@ -66,14 +66,12 @@ class Device:
         if default_converter is not None:
             # Snapshot the caller-provided factors so reset() reproduces them exactly.
             t0, e0, d0 = default_converter.factors
-            self._default_factory: Callable[[], UnitConverter] = (
-                lambda: UnitConverter(self._C6, t0, e0, d0)
+            self._default_factory: Callable[[], UnitConverter] = lambda: UnitConverter(
+                self._C6, t0, e0, d0
             )
         else:
             # Default from energy using C6 and the "upper" amplitude.
-            self._default_factory = lambda: UnitConverter.from_energy(
-                self._C6, self._upper_amp
-            )
+            self._default_factory = lambda: UnitConverter.from_energy(self._C6, self._upper_amp)
 
         self.reset_converter()
         self.__post_init__()
@@ -126,7 +124,7 @@ class Device:
 
     @property
     def name(self) -> str:
-        return self._device.name
+        return cast(str, self._device.name)
 
     def __post_init__(self) -> None:
         if not isinstance(self._device, BaseDevice):
