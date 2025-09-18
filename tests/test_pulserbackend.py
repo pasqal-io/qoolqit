@@ -25,6 +25,7 @@ class TestPulserBackend:
             return MagicMock(spec=Results)
 
     class MockEmulatorBackend(EmulatorBackend):
+        run_calls = 0
         default_config = MagicMock(spec=EmulationConfig)
 
         @staticmethod
@@ -32,12 +33,20 @@ class TestPulserBackend:
             pass
 
         def run(self) -> Results | Sequence[Results]:
+            self.run_calls += 1
             return MagicMock(spec=Results)
 
     class MockRemoteBackend(RemoteBackend):
+        run_calls = 0
+
+        @staticmethod
+        def validate_sequence(sequence: PulserSequence, mimic_qpu: bool = False) -> None:
+            pass
+
         def run(
             self, job_params: list[JobParams] | None = None, wait: bool = False
         ) -> RemoteResults:
+            self.run_calls += 1
             return MagicMock(spec=RemoteResults)
 
     def test_default_backend(self) -> None:
@@ -75,7 +84,7 @@ class TestPulserBackend:
 
         with pytest.raises(
             match=f"""Error in `PulserBackend`: remote backend type {backend._backend_type.__name__}
-                requires a `connection` of type {RemoteConnection}."""
+                    requires a `connection` of type {RemoteConnection}."""
         ):
             backend.validate_connection(4.0)
 
@@ -98,3 +107,19 @@ class TestPulserBackend:
         backend = PulserBackend(backend_type=self.MockEmulatorBackend)
         with pytest.raises(match="QuantumProgram has not been compiled."):
             backend.run(self.mock_program_not_compiled)
+
+    def test_local_emulator_run(self) -> None:
+        backend = PulserBackend(backend_type=self.MockEmulatorBackend)
+        backend.run(self.mock_program_compiled)
+        assert isinstance(backend._backend, self.MockEmulatorBackend)
+        # assert called once
+        assert backend._backend.run_calls == 1
+
+    def test_remote_run(self) -> None:
+        backend = PulserBackend(
+            backend_type=self.MockRemoteBackend, connection=self.mock_connection
+        )
+        backend.run(self.mock_program_compiled)
+        assert isinstance(backend._backend, self.MockRemoteBackend)
+        # assert called once
+        assert backend._backend.run_calls == 1
