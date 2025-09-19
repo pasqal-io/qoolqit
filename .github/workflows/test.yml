@@ -38,8 +38,8 @@ jobs:
     - name: Run tests & tutorials
       shell: bash
       run: |
-        hatch -v run --filter '{}' test
-        hatch run --filter '{}' test_tutorials
+        hatch -v env run --filter '{}' test
+        hatch -v env run --filter '{}' test_tutorials
     - name: Upload coverage data
       uses: actions/upload-artifact@v4
       with:
