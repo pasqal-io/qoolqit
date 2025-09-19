@@ -36,10 +36,9 @@ jobs:
         pip install hatch
         pip install click==8.2.1
     - name: Run tests & tutorials
-      shell: bash
       run: |
-        hatch -v env run --filter '{}' test
-        hatch -v env run --filter '{}' test_tutorials
+        hatch -v run test
+        hatch run test_tutorials
     - name: Upload coverage data
       uses: actions/upload-artifact@v4
       with:

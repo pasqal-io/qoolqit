@@ -28,6 +28,5 @@ jobs:
         pip install click==8.2.1
 
     - name: Run docs building
-      shell: bash
       run: |
-        hatch -v run --filter "{}" docs:test
+        hatch -v run docs:test
