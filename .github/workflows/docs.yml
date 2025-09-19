@@ -29,4 +29,4 @@ jobs:
 
     - name: Run docs building
       run: |
-        hatch -v run --filter "{}" docs:test
+        hatch -v run docs:test
