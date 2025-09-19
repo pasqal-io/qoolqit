@@ -23,8 +23,9 @@ jobs:
 
     - name: Install Hatch
       run: |
-        pip install 'hatch<1.13'
+        pip install hatch
 
     - name: Run docs building
+      shell: bash
       run: |
-        hatch -v run docs:test
+        hatch -v run --filter "{}" docs:test

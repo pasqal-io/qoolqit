@@ -32,11 +32,12 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Hatch
       run: |
-        pip install 'hatch<1.13'
+        pip install hatch
     - name: Run tests & tutorials
+      shell: bash
       run: |
-        hatch -v run test
-        hatch run test_tutorials
+        hatch -v run --filter '{}' test
+        hatch run --filter '{}' test_tutorials
     - name: Upload coverage data
       uses: actions/upload-artifact@v4
       with:
@@ -62,7 +63,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Hatch
       run: |
-        pip install 'hatch<1.13'
+        pip install hatch
     - name: Run tests & tutorials
+      shell: pwsh
       run: |
-        hatch -v run test
+        hatch -v run --filter '{}' test
