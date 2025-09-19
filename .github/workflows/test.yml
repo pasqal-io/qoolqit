@@ -65,4 +65,4 @@ jobs:
         pip install hatch
     - name: Run tests & tutorials
       run: |
-        hatch -v run test
+        hatch -v run --filter "{}" test

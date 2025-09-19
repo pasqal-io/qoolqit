@@ -12,30 +12,6 @@ device_ideal = MockDevice()
 device_real = AnalogDevice()
 ```
 
-## Create a QoolQit device directly from a Pulser device
-
-Custom QoolQit device can be created by either subclassing the `Device` class or build it straight from any `pulser.devices` object:
-
-```python exec="on" source="material-block" result="json" session="devices"
-from qoolqit.devices import Device
-from pulser import devices
-
-# Wrap a Pulser device object into a QoolQit Device
-device_from_pulser = Device(pulser_device=devices.AnalogDevice)
-
-print(device_from_pulser.name)  # markdown-exec: hide
-```
-
-**Notes**
-
-- Advanced users may also pass a prebuilt `default_converter` to the constructor to start in a custom unit system:
-  ```python
-  from qoolqit import UnitConverter
-  custom_default = UnitConverter.from_energy(C6=device_from_pulser._C6, upper_amp=2.0)
-  device_custom = Device(pulser_device=devices.AnalogDevice, default_converter=custom_default)
-  ```
-
----
 
 ## Unit conversion
 
