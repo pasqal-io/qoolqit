@@ -26,6 +26,5 @@ jobs:
         pip install hatch
 
     - name: Run docs building
-      shell: bash
       run: |
-        hatch -v run --filter "{}" docs:test
+        hatch -v run docs:test

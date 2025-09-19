@@ -34,10 +34,9 @@ jobs:
       run: |
         pip install hatch
     - name: Run tests & tutorials
-      shell: bash
       run: |
-        hatch -v env run --filter '{}' test
-        hatch -v env run --filter '{}' test_tutorials
+        hatch -v run test
+        hatch run test_tutorials
     - name: Upload coverage data
       uses: actions/upload-artifact@v4
       with:
@@ -65,6 +64,5 @@ jobs:
       run: |
         pip install hatch
     - name: Run tests & tutorials
-      shell: pwsh
       run: |
-        hatch -v env run --filter '{}' test
+        hatch -v run test
