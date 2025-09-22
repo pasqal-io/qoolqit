@@ -31,8 +31,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install Hatch
+      # Workaround for hatch crash - install click==8.2.1
       run: |
         pip install hatch
+        pip install click==8.2.1
     - name: Run tests & tutorials
       run: |
         hatch -v run test
@@ -61,8 +63,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install Hatch
+      # Workaround for hatch crash - install click==8.2.1
       run: |
         pip install hatch
+        pip install click==8.2.1
     - name: Run tests & tutorials
       run: |
         hatch -v run test
