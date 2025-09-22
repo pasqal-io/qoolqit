@@ -5,11 +5,7 @@ from typing import Callable
 
 import pytest
 
-from qoolqit.devices import (
-    ALL_DEVICES,
-    AvailableDevices,
-    UnitConverter,
-)
+from qoolqit.devices import ALL_DEVICES, AvailableDevices, Device, UnitConverter
 from qoolqit.utils import ATOL_32, EQUAL
 
 
@@ -70,3 +66,9 @@ def test_device_init_and_units(device_class: Callable) -> None:
     assert EQUAL(TIME_ORIG, TIME_NEW)
     assert EQUAL(ENERGY_ORIG, ENERGY_NEW)
     assert EQUAL(DISTANCE_ORIG, DISTANCE_NEW)
+
+
+@pytest.mark.parametrize("device_class", ALL_DEVICES)
+def test_device_init_from_pulser(device_class: Callable) -> None:
+    device = device_class()
+    assert device.specs == Device(device._device).specs
