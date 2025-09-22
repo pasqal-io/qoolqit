@@ -33,6 +33,7 @@ jobs:
     - name: Install Hatch
       run: |
         pip install hatch
+        pip install click==8.2.1
     - name: Run tests & tutorials
       run: |
         hatch -v run test
@@ -63,6 +64,7 @@ jobs:
     - name: Install Hatch
       run: |
         pip install hatch
+        pip install click==8.2.1
     - name: Run tests & tutorials
       run: |
         hatch -v run test

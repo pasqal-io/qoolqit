@@ -24,6 +24,7 @@ jobs:
     - name: Install Hatch
       run: |
         pip install hatch
+        pip install click==8.2.1
 
     - name: Run docs building
       run: |
