@@ -7,9 +7,7 @@ from collections.abc import Sequence
 from pulser.backend import Backend, BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
 from pulser.backend.config import EmulationConfig
-from pulser.backend.remote import JobParams, RemoteBackend, RemoteConnection
-from pulser_pasqal.backends import RemoteEmulatorBackend
-from pulser_pasqal.pasqal_cloud import PasqalCloud
+from pulser.backend.remote import JobParams, RemoteBackend, RemoteConnection, RemoteResults
 from pulser_simulation import QutipBackendV2
 
 from qoolqit import QuantumProgram
@@ -31,6 +29,8 @@ class PulserBackend:
         runs (int): run the program `runs` times to collect bitstrings statistics.
             On QPU backends this represents the actual number of runs of the program.
             On emulators, the quantum state is bitstring sampled `runs` times.
+        wait (bool): Wait for remote backend to complete the job.
+            This argument is used only if `backend_type` is a remote backend.
 
     Notes:
         TODO: links to documentation
@@ -51,10 +51,12 @@ class PulserBackend:
         connection: RemoteConnection | None = None,
         emulation_config: EmulationConfig | None = None,
         runs: int = 100,
+        wait: bool = False,
     ) -> None:
 
         self._backend_type = self.validate_backend_type(backend_type)
         self._runs = runs
+        self._wait = wait
         # require a connection for RemoteBackend
         self._connection = self.validate_connection(connection)
         # accept and validate the config for EmulatorBackend
@@ -86,13 +88,6 @@ class PulserBackend:
                     f"""Error in `PulserBackend`: remote backend type {self._backend_type.__name__}
                     requires a `connection` of type {RemoteConnection}."""
                 )
-            if issubclass(self._backend_type, RemoteEmulatorBackend):
-                if not isinstance(connection, PasqalCloud):
-                    raise TypeError(
-                        f"""Error in `PulserBackend`: remote backend type
-                        {self._backend_type.__name__} requires a `connection`
-                        of type {PasqalCloud}."""
-                    )
         elif connection:
             warnings.warn(
                 f"""Warning in `PulserBackend`: a `connection` has been passed to the
@@ -141,14 +136,14 @@ class PulserBackend:
             observables=(BitStrings(num_shots=self._runs),), log_level=logging.WARN
         )
 
-    def run(self, program: QuantumProgram) -> Results | Sequence[Results]:
+    def run(self, program: QuantumProgram) -> Results | Sequence[Results] | RemoteResults:
         """Run a compiled QuantumProgram and return the results."""
         if program._compiled_sequence is None:
             raise ValueError(
                 "QuantumProgram has not been compiled. Please call program.compile_to(device)."
             )
         # Instantiate internal backend
-        backend_kwargs = {"mimic_qpu": False}
+        backend_kwargs = {}
         if self._connection:
             backend_kwargs["connection"] = self._connection
         if self._emulation_config:
@@ -161,9 +156,9 @@ class PulserBackend:
             # since it is specified in the emulation config
             # TODO: after pulser 1.6 assess if job_params is still needed
             job_params = [JobParams(runs=self._runs)]
-            job = self._backend.run(job_params=job_params, wait=True)
-            # len(job.results) == len(job_params) == 1
-            results = job.results[0]
-            return results
+            result = self._backend.run(job_params=job_params, wait=self._wait)
+            if self._wait:
+                result = result.get_available_results()
+            return result
         else:
             return self._backend.run()
