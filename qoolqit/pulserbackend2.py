@@ -18,8 +18,8 @@ class BasePulserBackend:
     _runs: int
 
     def validate_emulation_config(
-        self, backend_type: type[Backend], emulation_config: EmulationConfig | None
-    ) -> EmulationConfig | None:
+        self, backend_type: type[Backend], emulation_config: Optional[EmulationConfig]
+    ) -> Optional[EmulationConfig]:
         """Returns a valid config for emulator backends, if needed.
 
         Args:
@@ -84,7 +84,7 @@ class PulserBackend(BasePulserBackend):
         self,
         *,
         backend_type: type[EmulatorBackend] = QutipBackendV2,
-        emulation_config: EmulationConfig | None = None,
+        emulation_config: Optional[EmulationConfig],
         runs: int = 100,
     ) -> None:
         if not issubclass(backend_type, EmulatorBackend):
@@ -151,7 +151,7 @@ class PulserRemoteBackend(BasePulserBackend):
         *,
         backend_type: type[RemoteBackend] = EmuFreeBackendV2,
         connection: RemoteConnection,
-        emulation_config: EmulationConfig | None = None,
+        emulation_config: Optional[EmulationConfig],
         runs: int = 100,
     ) -> None:
 
