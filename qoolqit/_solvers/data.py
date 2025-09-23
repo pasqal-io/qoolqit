@@ -165,11 +165,7 @@ class Result:
 
 @dataclass
 class BaseJob(ABC):
-    """
-    A job, either pending or in progress.
-
-    To wait until the job is complete, use `await job`.
-    """
+    """A job, either pending or in progress."""
 
     id: JobId
     """
