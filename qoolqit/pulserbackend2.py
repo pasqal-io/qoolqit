@@ -4,6 +4,7 @@ import logging
 import warnings
 from collections.abc import Sequence
 from typing import Optional
+
 from pulser.backend import Backend, BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
 from pulser.backend.config import EmulationConfig
