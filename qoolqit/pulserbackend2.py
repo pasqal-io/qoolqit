@@ -206,8 +206,9 @@ class PulserRemoteBackend(BasePulserBackend):
                 program.compiled_sequence, connection=self._connection
             )
 
-        # job_params `runs` is used in QPUBackend but ignored in remote emulators
-        # since it is specified in the emulation config
+        # in QPU backends `runs` is specified in a JobParams object
+        # in remote emulators JobParams is ignored and the number
+        # of runs required by the user is set instead in `default_emulation_config()`.
         # TODO: after pulser 1.6 assess if job_params is still needed
         job_param = JobParams(runs=self._runs)
         remote_results = self._backend.run(job_params=[job_param], wait=wait)
