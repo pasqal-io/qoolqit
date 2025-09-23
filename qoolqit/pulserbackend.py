@@ -15,7 +15,7 @@ from qoolqit import QuantumProgram
 
 class PulserBackend:
     """
-    Class to run a QoolQit `QuantumProgram` on multiple Pasqal backends.
+    Run QoolQit `QuantumProgram`s on a Pasqal backend, local or remote.
 
     This class serves as a primary interface between tools written using QoolQit (including solvers)
     and Pasqal backends (including QPUs and local/remote emulators).
@@ -31,9 +31,6 @@ class PulserBackend:
             On emulators, instead the bitstring are sampled from the quantum state `runs` times.
         wait (bool): Wait for remote backend to complete the job.
             This argument is used only if `backend_type` is a remote backend.
-
-    Notes:
-        TODO: links to documentation
 
     Examples:
         ```python
