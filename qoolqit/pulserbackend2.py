@@ -70,8 +70,8 @@ class PulserBackend(BasePulserBackend):
         emulator_config (EmulationConfig): optional configuration object emulators.
             This argument is used only if `backend_type` is an emulator backend.
         runs (int): run the program `runs` times to collect bitstrings statistics.
-            On emulators, the quantum state is bitstring sampled `runs` times.
             On QPU backends this represents the actual number of runs of the program.
+            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
 
     Examples:
         ```python
@@ -129,7 +129,7 @@ class PulserRemoteBackend(BasePulserBackend):
             This argument is used only if `backend_type` is an emulator backend.
         runs (int): run the program `runs` times to collect bitstrings statistics.
             On QPU backends this represents the actual number of runs of the program.
-            On emulators, the quantum state is bitstring sampled `runs` times.
+            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
 
     Examples:
         ```python

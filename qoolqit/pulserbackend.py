@@ -28,7 +28,7 @@ class PulserBackend:
             This argument is used only if `backend_type` is a remote backend.
         runs (int): run the program `runs` times to collect bitstrings statistics.
             On QPU backends this represents the actual number of runs of the program.
-            On emulators, the quantum state is bitstring sampled `runs` times.
+            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
         wait (bool): Wait for remote backend to complete the job.
             This argument is used only if `backend_type` is a remote backend.
 
