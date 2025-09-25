@@ -9,7 +9,7 @@ from pulser.backend.remote import JobParams, RemoteBackend, RemoteConnection, Re
 from pulser.sequence import Sequence as PulserSequence
 
 from qoolqit.program import QuantumProgram
-from qoolqit.pulserbackend import PulserBackend
+from qoolqit.pulserbackend import PulserBackend, PulserRemoteBackend
 
 
 class TestPulserBackend:
@@ -50,12 +50,12 @@ class TestPulserBackend:
             return MagicMock(spec=RemoteResults)
 
     def test_default_backend(self) -> None:
-        backend = PulserBackend(backend_type=self.MockBackend)
-        assert backend._backend_type is self.MockBackend
+        backend = PulserBackend(backend_type=self.MockEmulatorBackend)
+        assert backend._backend_type is self.MockEmulatorBackend
         assert backend._runs == 100
 
     def test_default_remote_backend(self) -> None:
-        backend = PulserBackend(
+        backend = PulserRemoteBackend(
             backend_type=self.MockRemoteBackend, connection=self.mock_connection
         )
         assert backend._backend_type is self.MockRemoteBackend
@@ -68,23 +68,23 @@ class TestPulserBackend:
         )
         assert backend._emulation_config is self.mock_config
 
-    def test_validate_backend_type(self) -> None:
-        backend = PulserBackend.validate_backend_type(self.MockBackend)
-        assert backend is self.MockBackend
+    def test_check_backend_type(self) -> None:
+        with pytest.raises(match="`backend_type` must be a EmulatorBackend type."):
+            PulserBackend(backend_type=int)
 
-        with pytest.raises(match=f"{int.__name__} is not a supported backend type."):
-            PulserBackend.validate_backend_type(int)
+        with pytest.raises(match="`backend_type` must be a RemoteBackend type."):
+            PulserRemoteBackend(backend_type=str, connection=self.mock_connection)
 
     def test_validate_connection(self) -> None:
-        backend = PulserBackend(
+        backend = PulserRemoteBackend(
             backend_type=self.MockRemoteBackend, connection=self.mock_connection
         )
         connection = backend.validate_connection(self.mock_connection)
         assert connection is self.mock_connection
 
         with pytest.raises(
-            match=f"""Error in `PulserBackend`: remote backend type {backend._backend_type.__name__}
-                    requires a `connection` of type {RemoteConnection}."""
+            match=f"""Error in `PulserRemoteBackend`:
+                `connection` must be of type {RemoteConnection}."""
         ):
             backend.validate_connection(4.0)
 
@@ -116,7 +116,7 @@ class TestPulserBackend:
         assert backend._backend.run_calls == 1
 
     def test_remote_run(self) -> None:
-        backend = PulserBackend(
+        backend = PulserRemoteBackend(
             backend_type=self.MockRemoteBackend, connection=self.mock_connection
         )
         backend.run(self.mock_program_compiled)

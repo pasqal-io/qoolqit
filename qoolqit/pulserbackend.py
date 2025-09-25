@@ -1,103 +1,25 @@
 from __future__ import annotations
 
-import logging
 import warnings
 from collections.abc import Sequence
+from typing import Optional
 
 from pulser.backend import Backend, BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
 from pulser.backend.config import EmulationConfig
 from pulser.backend.remote import JobParams, RemoteBackend, RemoteConnection, RemoteResults
+from pulser_pasqal.backends import EmuFreeBackendV2
 from pulser_simulation import QutipBackendV2
 
 from qoolqit import QuantumProgram
 
 
-class PulserBackend:
-    """
-    Run QoolQit `QuantumProgram`s on a Pasqal backend, local or remote.
-
-    This class serves as a primary interface between tools written using QoolQit (including solvers)
-    and Pasqal backends (including QPUs and local/remote emulators).
-
-    Args:
-        backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.
-        emulator_config (EmulationConfig): optional configuration object emulators.
-            This argument is used only if `backend_type` is an emulator backend.
-        connection (RemoteConnection): connection to execute the program on remote backends.
-            This argument is used only if `backend_type` is a remote backend.
-        runs (int): run the program `runs` times to collect bitstrings statistics.
-            On QPU backends this represents the actual number of runs of the program.
-            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
-        wait (bool): Wait for remote backend to complete the job.
-            This argument is used only if `backend_type` is a remote backend.
-
-    Examples:
-        ```python
-        from qoolqit import PulserBackend
-        from emu_sv import SVBackend
-        backend = PulserBackend(backend_type=SVBackend)
-        result = backend.run(program)
-        ```
-    """
-
-    def __init__(
-        self,
-        *,
-        backend_type: type[Backend] = QutipBackendV2,
-        connection: RemoteConnection | None = None,
-        emulation_config: EmulationConfig | None = None,
-        runs: int = 100,
-        wait: bool = False,
-    ) -> None:
-
-        self._backend_type = self.validate_backend_type(backend_type)
-        self._runs = runs
-        self._wait = wait
-        # require a connection for RemoteBackend
-        self._connection = self.validate_connection(connection)
-        # accept and validate the config for EmulatorBackend
-        self._emulation_config = self.validate_emulation_config(emulation_config)
-
-    @staticmethod
-    def validate_backend_type(backend_type: type[Backend]) -> type[Backend]:
-        """Validate backend type.
-
-        Note:
-            Early validation that the provided backend is derived from `pulser.backend.Backend`.
-            We re-validate during run() as we dispatch to the proper handlers, but early validation
-            makes the error easier to understand.
-        """
-        if not issubclass(backend_type, Backend):
-            raise TypeError(f"{backend_type.__name__} is not a supported backend type.")
-        return backend_type
-
-    def validate_connection(self, connection: RemoteConnection | None) -> RemoteConnection | None:
-        """Validate the required connection for remote backends.
-
-        Note:
-            Remote emulators and QPUs require a `pulser.backend.remote.RemoteConnection`
-            or derived to send jobs. Early validation makes the error easier to understand.
-        """
-        if issubclass(self._backend_type, RemoteBackend):
-            if not isinstance(connection, RemoteConnection):
-                raise TypeError(
-                    f"""Error in `PulserBackend`: remote backend type {self._backend_type.__name__}
-                    requires a `connection` of type {RemoteConnection}."""
-                )
-        elif connection:
-            warnings.warn(
-                f"""Warning in `PulserBackend`: a `connection` has been passed to the
-                local backend {self._backend_type.__name__} which does not require it.
-                It will be ignored."""
-            )
-            connection = None
-
-        return connection
+class BasePulserBackend:
+    _runs: int
 
     def validate_emulation_config(
-        self, emulation_config: EmulationConfig | None
-    ) -> EmulationConfig | None:
+        self, backend_type: type[Backend], emulation_config: Optional[EmulationConfig]
+    ) -> Optional[EmulationConfig]:
         """Returns a valid config for emulator backends, if needed.
 
         Args:
@@ -107,17 +29,18 @@ class PulserBackend:
             Emulators backend (local/remote) can be configured through the generic
             `EmulationConfig` object. Early validation makes the error easier to understand.
         """
-        if issubclass(self._backend_type, EmulatorBackend):
+        if issubclass(backend_type, EmulatorBackend):
             if emulation_config is None:
                 emulation_config = self.default_emulation_config()
                 # TODO: validate config when pulser 1.6 is released (uncomment below)
-                # config = self._backend_type.validate_config(config)
+                # config = backend_type.validate_config(config)
         elif emulation_config:
             warnings.warn(
                 f"""Warning in `PulserBackend`: an `emulation_config` has been passed to the
-                a non-emulator backend {self._backend_type.__name__} which does not require it.
+                a non-emulator backend {backend_type.__name__} which does not require it.
                 It will be ignored."""
             )
+            emulation_config = None
         return emulation_config
 
     def default_emulation_config(self) -> EmulationConfig:
@@ -129,34 +52,166 @@ class PulserBackend:
             asks for the final bitstring, sampled `runs` times.
         """
         # log_level set to WARN to remove unwanted INFO output from emulators
-        return EmulationConfig(
-            observables=(BitStrings(num_shots=self._runs),), log_level=logging.WARN
+        return EmulationConfig(observables=(BitStrings(num_shots=self._runs),))
+
+
+class PulserBackend(BasePulserBackend):
+    """
+    Run QoolQit `QuantumProgram`s on a Pasqal local backend.
+
+    This class serves as a primary interface between tools written using QoolQit (including solvers)
+    and Pasqal backends local emulators backends.
+
+    Args:
+        backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.
+        emulator_config (EmulationConfig): optional configuration object emulators.
+            This argument is used only if `backend_type` is an emulator backend.
+        runs (int): run the program `runs` times to collect bitstrings statistics.
+            On QPU backends this represents the actual number of runs of the program.
+            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
+
+    Examples:
+        ```python
+        from qoolqit import PulserBackend, SVBackend
+        backend = PulserBackend(backend_type=SVBackend)
+        result = backend.run(program)
+        ```
+    """
+
+    def __init__(
+        self,
+        *,
+        backend_type: type[EmulatorBackend] = QutipBackendV2,
+        emulation_config: Optional[EmulationConfig] = None,
+        runs: int = 100,
+    ) -> None:
+        if not issubclass(backend_type, EmulatorBackend):
+            raise TypeError(
+                """Error in `PulserBackend`: `backend_type` must be a EmulatorBackend type."""
+            )
+        self._backend_type = backend_type
+        self._runs = runs
+        self._emulation_config = self.validate_emulation_config(
+            self._backend_type, emulation_config
         )
 
-    def run(self, program: QuantumProgram) -> Results | Sequence[Results] | RemoteResults:
+    def run(self, program: QuantumProgram) -> Results | Sequence[Results]:
         """Run a compiled QuantumProgram and return the results."""
         if program._compiled_sequence is None:
             raise ValueError(
                 "QuantumProgram has not been compiled. Please call program.compile_to(device)."
             )
-        # Instantiate internal backend
-        backend_kwargs = {}
-        if self._connection:
-            backend_kwargs["connection"] = self._connection
+        # Instantiate backend
+        self._backend = self._backend_type(program.compiled_sequence, config=self._emulation_config)
+
+        result = self._backend.run()
+        return result
+
+
+class PulserRemoteBackend(BasePulserBackend):
+    """
+    Run QoolQit `QuantumProgram`s on a Pasqal remote backend.
+
+    This class serves as a primary interface between tools written using QoolQit (including solvers)
+    and Pasqal remote backends, including QPUs, digital-twins and remote emulators.
+    The behvior is similar to the local PulserBackend class, but here, requires credentials
+    through a `connection` to run a program.
+    To get your credentials and to create a connection object, please refer to the [Pasqal Cloud
+    interface documentation](https://docs.pasqal.com/cloud).
+
+    Args:
+        backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.
+        connection (RemoteConnection): connection to execute the program on remote backends.
+        emulator_config (EmulationConfig): optional configuration object emulators.
+            This argument is used only if `backend_type` is an emulator backend.
+        runs (int): run the program `runs` times to collect bitstrings statistics.
+            On QPU backends this represents the actual number of runs of the program.
+            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
+
+    Examples:
+        ```python
+        from pulser_pasqal import PasqalCloud
+        from qoolqit import PulserRemoteBackend, EmuFreeBackendV2
+        connection = PasqalCloud(username=..., password=..., project_id=...)
+        backend = PulserRemoteBackend(backend_type=EmuFreeBackendV2, connection=connection)
+        ```
+        then
+        ```python
+        remote_results = backend.submit(program)
+        ```
+        or
+        ```python
+        results = backend.run(program)
+    """
+
+    def __init__(
+        self,
+        *,
+        backend_type: type[RemoteBackend] = EmuFreeBackendV2,
+        connection: RemoteConnection,
+        emulation_config: Optional[EmulationConfig] = None,
+        runs: int = 100,
+    ) -> None:
+
+        if not issubclass(backend_type, RemoteBackend):
+            raise TypeError(
+                """Error in `PulserRemoteBackend`: `backend_type` must be a RemoteBackend type."""
+            )
+        self._backend_type = backend_type
+        self._runs = runs
+        self._emulation_config = self.validate_emulation_config(
+            self._backend_type, emulation_config
+        )
+        # require a connection for RemoteBackend
+        self._connection = self.validate_connection(connection)
+
+    def validate_connection(self, connection: RemoteConnection) -> RemoteConnection:
+        """Validate the required connection to instantiate a RemoteBackend.
+
+        Remote emulators and QPUs require a `pulser.backend.remote.RemoteConnection` or derived
+        to send jobs. Validation also happens inside the backend. Early validation just makes the
+        error easier to understand.
+        """
+        if not isinstance(connection, RemoteConnection):
+            raise TypeError(
+                f"""Error in `PulserRemoteBackend`:
+                `connection` must be of type {RemoteConnection}."""
+            )
+        return connection
+
+    def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
+        """Run a compiled QuantumProgram and return a remote handler of the results.
+
+        Args:
+            program (QuantumProgram): the compiled quantum program to run.
+            wait (bool): Wait for remote backend to complete the job.
+        """
+        if program._compiled_sequence is None:
+            raise ValueError(
+                "QuantumProgram has not been compiled. Please call program.compile_to(device)."
+            )
+
+        # Instantiate backend
         if self._emulation_config:
-            backend_kwargs["config"] = self._emulation_config
+            self._backend = self._backend_type(
+                program.compiled_sequence,
+                connection=self._connection,
+                config=self._emulation_config,
+            )
+        else:  # is QPU
+            self._backend = self._backend_type(
+                program.compiled_sequence, connection=self._connection
+            )
 
-        self._backend = self._backend_type(program.compiled_sequence, **backend_kwargs)
+        # in QPU backends `runs` is specified in a JobParams object
+        # in remote emulators JobParams is ignored and the number
+        # of runs required by the user is set instead in `default_emulation_config()`.
+        # TODO: after pulser 1.6 assess if job_params is still needed
+        job_param = JobParams(runs=self._runs)
+        remote_results = self._backend.run(job_params=[job_param], wait=wait)
+        return remote_results
 
-        if self._connection:
-            # in QPU backends `runs` is specified in a JobParams object
-            # in remote emulators JobParams is ignored and the number
-            # of runs required by the user is set instead in `default_emulation_config()`.
-            # TODO: after pulser 1.6 assess if job_params is still needed
-            job_params = [JobParams(runs=self._runs)]
-            result = self._backend.run(job_params=job_params, wait=self._wait)
-            if self._wait:
-                result = result.get_available_results()
-            return result
-        else:
-            return self._backend.run()
+    def run(self, program: QuantumProgram) -> Results | Sequence[Results]:
+        """Run a compiled QuantumProgram and return the results."""
+        remote_results = self.submit(program, wait=True)
+        return remote_results.results
