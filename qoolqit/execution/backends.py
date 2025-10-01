@@ -6,10 +6,9 @@ from typing import Optional
 from pulser.backend import BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
 from pulser.backend.config import EmulationConfig
-from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
 from pulser.backend.qpu import QPUBackend
-from pulser_pasqal.backends import RemoteEmulatorBackend
-from pulser_pasqal.backends import EmuFreeBackendV2
+from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
+from pulser_pasqal.backends import EmuFreeBackendV2, RemoteEmulatorBackend
 from pulser_simulation import QutipBackendV2
 
 from qoolqit.program import QuantumProgram
@@ -96,9 +95,7 @@ class Emulator(PulserEmulatorBackend):
         runs: int = 100,
     ) -> None:
         if not issubclass(backend_type, EmulatorBackend):
-            raise TypeError(
-                """Error in `PulserBackend`: `backend_type` must be a EmulatorBackend type."""
-            )
+            raise TypeError("Error in `Emulator`: `backend_type` must be a EmulatorBackend type.")
         self._backend_type = backend_type
         self._runs = runs
         self._emulation_config = self.validate_emulation_config(emulation_config)
@@ -115,8 +112,8 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
     Run QoolQit `QuantumProgram`s on a Pasqal remote backend.
 
     This class serves as a primary interface between tools written using QoolQit (including solvers)
-    and Pasqal remote backends, including QPUs, digital-twins and remote emulators.
-    The behvior is similar to the local PulserBackend class, but here, requires credentials
+    and Pasqal remote emulators backends, including QPUs, digital-twins and remote emulators.
+    The behvior is similar to the local `Emulator` class, but here, requires credentials
     through a `connection` to run a program.
     To get your credentials and to create a connection object, please refer to the [Pasqal Cloud
     interface documentation](https://docs.pasqal.com/cloud).
@@ -157,7 +154,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
 
         if not issubclass(backend_type, RemoteEmulatorBackend):
             raise TypeError(
-                """Error in `PulserRemoteBackend`: `backend_type` must be a RemoteEmulatorBackend type."""
+                "Error in `RemoteEmulator`: `backend_type` must be a RemoteEmulatorBackend type."
             )
         self._backend_type = backend_type
         self._runs = runs
@@ -197,11 +194,11 @@ class QPU(PulserRemoteBackend):
     Run QoolQit `QuantumProgram`s on a Pasqal QPU.
 
     This class serves as a primary interface between tools written using QoolQit (including solvers)
-    and Pasqal remote backends, including QPUs, digital-twins and remote emulators.
-    The behvior is similar to the local PulserBackend class, but here, requires credentials
-    through a `connection` to run a program.
-    To get your credentials and to create a connection object, please refer to the [Pasqal Cloud
-    interface documentation](https://docs.pasqal.com/cloud).
+    and Pasqal QPU backend. It requires credentials through a `connection` to submit a program.
+    Please, contact your provider to get your credentials and get help on how create a
+    connection object:
+    - [Pasqal Cloud interface documentation](https://docs.pasqal.com/cloud)
+    - [Atos MyQML framework](https://github.com/pasqal-io/Pulser-myQLM/blob/main/tutorials/Submitting%20AFM%20state%20prep%20to%20QPU.ipynb)
 
     Args:
         backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.

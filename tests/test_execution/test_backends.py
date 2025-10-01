@@ -4,13 +4,13 @@ from collections.abc import Sequence
 from unittest.mock import MagicMock
 
 import pytest
-from pulser.backend import Backend, EmulationConfig, EmulatorBackend, Results
+from pulser.backend import EmulationConfig, EmulatorBackend, Results
 from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
-from pulser_pasqal.backends import RemoteEmulatorBackend
 from pulser.sequence import Sequence as PulserSequence
+from pulser_pasqal.backends import RemoteEmulatorBackend
 
-from qoolqit.program import QuantumProgram
 from qoolqit.execution import Emulator, RemoteEmulator
+from qoolqit.program import QuantumProgram
 
 
 class TestBackends:
