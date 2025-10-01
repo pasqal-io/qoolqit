@@ -61,8 +61,7 @@ class QuantumProgram:
             raise ValueError(
                 "Program has not been compiled. Please call program.compile_to(device)."
             )
-        else:
-            return self._compiled_sequence
+        return self._compiled_sequence
 
     def __repr__(self) -> str:
         header = "Quantum Program:\n"

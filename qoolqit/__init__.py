@@ -8,7 +8,6 @@ from .embedding import *
 from .execution import *
 from .graphs import *
 from .program import *
-from .pulserbackend import PulserBackend, PulserRemoteBackend
 from .register import *
 from .waveforms import *
 
@@ -23,7 +22,7 @@ list_of_submodules = [
     ".embedding",
 ]
 
-__all__ = ["PulserBackend", "PulserRemoteBackend"]
+__all__ = []
 for submodule in list_of_submodules:
     __all_submodule__ = getattr(import_module(submodule, package="qoolqit"), "__all__")
     __all__ += __all_submodule__
