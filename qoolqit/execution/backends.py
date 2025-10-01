@@ -141,6 +141,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         or
         ```python
         results = backend.run(program)
+        ```
     """
 
     def __init__(
@@ -234,9 +235,7 @@ class QPU(PulserRemoteBackend):
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled QuantumProgram and return a remote handler of the results.
 
-        Args:        or
-        ```python
-        results = backend.run(program)
+        Args:
             program (QuantumProgram): the compiled quantum program to run.
             wait (bool): Wait for remote backend to complete the job.
         """
