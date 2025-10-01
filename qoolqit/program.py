@@ -8,9 +8,9 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device, MockDevice
 from qoolqit.drive import Drive
-from qoolqit.execution import CompilerProfile, SequenceCompiler
 from qoolqit.execution.backend import BaseBackend, OutputType, QutipBackend
-from qoolqit.execution.utils import BackendName, ResultType
+from qoolqit.execution.sequence_compiler import SequenceCompiler
+from qoolqit.execution.utils import BackendName, CompilerProfile, ResultType
 from qoolqit.register import Register
 
 __all__ = ["QuantumProgram"]

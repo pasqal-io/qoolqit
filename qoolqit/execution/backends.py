@@ -81,8 +81,8 @@ class Emulator(PulserEmulatorBackend):
 
     Examples:
         ```python
-        from qoolqit import PulserBackend, SVBackend
-        backend = PulserBackend(backend_type=SVBackend)
+        from qoolqit.execution import Emulator, SVBackend
+        backend = Emulator(backend_type=SVBackend)
         result = backend.run(program)
         ```
     """
@@ -130,9 +130,9 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
     Examples:
         ```python
         from pulser_pasqal import PasqalCloud
-        from qoolqit import PulserRemoteBackend, EmuFreeBackendV2
+        from qoolqit.execution import RemoteEmulator, EmuFreeBackendV2
         connection = PasqalCloud(username=..., password=..., project_id=...)
-        backend = PulserRemoteBackend(backend_type=EmuFreeBackendV2, connection=connection)
+        backend = RemoteEmulator(backend_type=EmuFreeBackendV2, connection=connection)
         ```
         then
         ```python
@@ -210,18 +210,15 @@ class QPU(PulserRemoteBackend):
     Examples:
         ```python
         from pulser_pasqal import PasqalCloud
-        from qoolqit import PulserQPUBackend
+        from qoolqit.execution import QPU
         connection = PasqalCloud(username=..., password=..., project_id=...)
-        backend = PulserQPUBackend(connection=connection)
+        backend = QPU(connection=connection)
         ```
         then
         ```python
         remote_results = backend.submit(program)
         ```
-        or
-        ```python
-        results = backend.run(program)
-    """
+    """  # noqa
 
     def __init__(
         self,
@@ -237,7 +234,9 @@ class QPU(PulserRemoteBackend):
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled QuantumProgram and return a remote handler of the results.
 
-        Args:
+        Args:        or
+        ```python
+        results = backend.run(program)
             program (QuantumProgram): the compiled quantum program to run.
             wait (bool): Wait for remote backend to complete the job.
         """
