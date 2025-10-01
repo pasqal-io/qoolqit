@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from typing import Any
+from warnings import warn
 
 import matplotlib.pyplot as plt
 from pulser.sequence.sequence import Sequence as PulserSequence
@@ -132,6 +133,12 @@ class QuantumProgram:
         **backend_params: Any,
     ) -> OutputType:
         """Run the compiled sequence on selected backend."""
+        warn(
+            """`run()` method of a QuantumProgram is deprecated.
+            Please, intantiate a backend from qoolqit.execution.backends
+            and run the program through its submit/run method.""",
+            DeprecationWarning,
+        )
         if self._compiled_sequence is None:
             raise ValueError(
                 "Program has not been compiled. Please call program.compile_to(device)."
