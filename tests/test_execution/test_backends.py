@@ -25,7 +25,7 @@ class TestBackends:
 
     class MockEmulatorBackend(EmulatorBackend):
         run_calls = 0
-        default_config = MagicMock(spec=EmulationConfig)
+        default_config = MagicMock(spec=EmulationConfig, _backend_options={})
 
         @staticmethod
         def validate_sequence(sequence: PulserSequence, mimic_qpu: bool = False) -> None:
