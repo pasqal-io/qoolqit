@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 from typing import Optional
 
 from pulser.backend import BitStrings, Results
@@ -15,7 +14,16 @@ from qoolqit.program import QuantumProgram
 
 
 class PulserEmulatorBackend:
-    _runs: int
+    """Base Emulator class.
+
+    Args:
+        runs (int): run the program `runs` times to collect bitstrings statistics.
+            On QPU backends this represents the actual number of runs of the program.
+            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
+    """
+
+    def __init__(self, runs: int = 100):
+        self._runs = runs
 
     def validate_emulation_config(
         self, emulation_config: Optional[EmulationConfig]
@@ -63,17 +71,16 @@ class PulserRemoteBackend:
 
 class LocalEmulator(PulserEmulatorBackend):
     """
-    Run QoolQit `QuantumProgram`s on a Pasqal local backend.
+    Run QoolQit `QuantumProgram`s on a Pasqal local emulator backends.
 
     This class serves as a primary interface between tools written using QoolQit (including solvers)
-    and Pasqal local emulators backends.
+    and local emulator backends.
 
     Args:
         backend_type (type): backend type. Must be a subtype of `pulser.backend.EmulatorBackend`.
         emulator_config (EmulationConfig): optional configuration object emulators.
-        runs (int): run the program `runs` times to collect bitstrings statistics.
-            On QPU backends this represents the actual number of runs of the program.
-            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
+        runs (int): number of bitstring samples to collect from the final quantum state.
+            It emulates running the program `runs` times to collect bitstrings statistics.
 
     Examples:
         ```python
@@ -90,6 +97,7 @@ class LocalEmulator(PulserEmulatorBackend):
         emulation_config: Optional[EmulationConfig] = None,
         runs: int = 100,
     ) -> None:
+        super().__init__(runs=runs)
         if not issubclass(backend_type, EmulatorBackend):
             raise TypeError(
                 "Error in `LocalEmulator`: `backend_type` must be a EmulatorBackend type."
@@ -101,24 +109,27 @@ class LocalEmulator(PulserEmulatorBackend):
                 RemoteEmulator class."""
             )
         self._backend_type = backend_type
-        self._runs = runs
         self._emulation_config = self.validate_emulation_config(emulation_config)
 
-    def run(self, program: QuantumProgram) -> Results | Sequence[Results]:
+    def run(self, program: QuantumProgram) -> tuple[Results, ...]:
         """Run a compiled QuantumProgram and return the results."""
         self._backend = self._backend_type(program.compiled_sequence, config=self._emulation_config)
-        result = self._backend.run()
-        return result
+        results = self._backend.run()
+        if isinstance(results, Results):
+            results = (results,)
+        else:
+            results = tuple(results)
+        return results
 
 
 class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
     """
-    Run QoolQit `QuantumProgram`s on a Pasqal remote backend.
+    Run QoolQit `QuantumProgram`s on a Pasqal remote emulator backends.
 
     This class serves as a primary interface between tools written using QoolQit (including solvers)
-    and Pasqal remote emulators backends, including QPUs, digital-twins and remote emulators.
-    The behavior is similar to the local `Emulator` class, but here, requires credentials
-    through a `connection` to run a program.
+    and remote emulator backends.
+    The behavior is similar to `LocalEmulator`, but here, requires credentials through
+    a `connection` to submit/run a program.
     To get your credentials and to create a connection object, please refer to the [Pasqal Cloud
     interface documentation](https://docs.pasqal.com/cloud).
 
@@ -126,10 +137,8 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.
         connection (RemoteConnection): connection to execute the program on remote backends.
         emulator_config (EmulationConfig): optional configuration object emulators.
-            This argument is used only if `backend_type` is an emulator backend.
-        runs (int): run the program `runs` times to collect bitstrings statistics.
-            On QPU backends this represents the actual number of runs of the program.
-            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
+        runs (int): number of bitstring samples to collect from the final quantum state.
+            It emulates running the program `runs` times to collect bitstrings statistics.
 
     Examples:
         ```python
@@ -156,13 +165,12 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         emulation_config: Optional[EmulationConfig] = None,
         runs: int = 100,
     ) -> None:
-
+        super().__init__(runs=runs)
         if not issubclass(backend_type, RemoteEmulatorBackend):
             raise TypeError(
                 "Error in `RemoteEmulator`: `backend_type` must be a RemoteEmulatorBackend type."
             )
         self._backend_type = backend_type
-        self._runs = runs
         self._emulation_config = self.validate_emulation_config(emulation_config)
         self._connection = self.validate_connection(connection)
 
@@ -188,7 +196,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         remote_results = self._backend.run(job_params=[job_param], wait=wait)
         return remote_results
 
-    def run(self, program: QuantumProgram) -> Results | Sequence[Results]:
+    def run(self, program: QuantumProgram) -> tuple[Results, ...]:
         """Run a compiled QuantumProgram remotely and return the results."""
         remote_results = self.submit(program, wait=True)
         return remote_results.results
@@ -199,7 +207,7 @@ class QPU(PulserRemoteBackend):
     Run QoolQit `QuantumProgram`s on a Pasqal QPU.
 
     This class serves as a primary interface between tools written using QoolQit (including solvers)
-    and Pasqal QPU backend. It requires credentials through a `connection` to submit a program.
+    and QPU backend. It requires credentials through a `connection` to submit/run a program.
     Please, contact your provider to get your credentials and get help on how create a
     connection object:
     - [Pasqal Cloud interface documentation](https://docs.pasqal.com/cloud)
@@ -209,8 +217,6 @@ class QPU(PulserRemoteBackend):
         backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.
         connection (RemoteConnection): connection to execute the program on remote backends.
         runs (int): run the program `runs` times to collect bitstrings statistics.
-            On QPU backends this represents the actual number of runs of the program.
-            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
 
     Examples:
         ```python
@@ -218,9 +224,6 @@ class QPU(PulserRemoteBackend):
         from qoolqit.execution import QPU
         connection = PasqalCloud(username=..., password=..., project_id=...)
         backend = QPU(connection=connection)
-        ```
-        then
-        ```python
         remote_results = backend.submit(program)
         ```
     """  # noqa
@@ -248,7 +251,7 @@ class QPU(PulserRemoteBackend):
         remote_results = self._backend.run(job_params=[job_param], wait=wait)
         return remote_results
 
-    def run(self, program: QuantumProgram) -> Results | Sequence[Results]:
+    def run(self, program: QuantumProgram) -> tuple[Results, ...]:
         """Run a compiled QuantumProgram remotely and return the results."""
         remote_results = self.submit(program, wait=True)
         return remote_results.results
