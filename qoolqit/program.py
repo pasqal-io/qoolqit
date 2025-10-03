@@ -2,15 +2,16 @@ from __future__ import annotations
 
 import os
 from typing import Any
+from warnings import warn
 
 import matplotlib.pyplot as plt
 from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device, MockDevice
 from qoolqit.drive import Drive
-from qoolqit.execution import CompilerProfile, SequenceCompiler
 from qoolqit.execution.backend import BaseBackend, OutputType, QutipBackend
-from qoolqit.execution.utils import BackendName, ResultType
+from qoolqit.execution.sequence_compiler import SequenceCompiler
+from qoolqit.execution.utils import BackendName, CompilerProfile, ResultType
 from qoolqit.register import Register
 
 __all__ = ["QuantumProgram"]
@@ -61,8 +62,7 @@ class QuantumProgram:
             raise ValueError(
                 "Program has not been compiled. Please call program.compile_to(device)."
             )
-        else:
-            return self._compiled_sequence
+        return self._compiled_sequence
 
     def __repr__(self) -> str:
         header = "Quantum Program:\n"
@@ -133,6 +133,12 @@ class QuantumProgram:
         **backend_params: Any,
     ) -> OutputType:
         """Run the compiled sequence on selected backend."""
+        warn(
+            """`run()` method of a QuantumProgram is deprecated.
+            Please, intantiate a backend from qoolqit.execution.backends
+            and run the program through its submit/run method.""",
+            DeprecationWarning,
+        )
         if self._compiled_sequence is None:
             raise ValueError(
                 "Program has not been compiled. Please call program.compile_to(device)."

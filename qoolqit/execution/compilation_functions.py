@@ -12,11 +12,14 @@ from qoolqit.register import Register
 from .utils import CompilerProfile
 
 
-def _build_register(register: Register, distance: float) -> PulserRegister:
+def _build_register(register: Register, device: Device, distance: float) -> PulserRegister:
     """Builds a Pulser Register from a QoolQit Register."""
     coords_qoolqit = register.qubits
     coords_pulser = {str(q): (distance * c[0], distance * c[1]) for q, c in coords_qoolqit.items()}
-    return PulserRegister(coords_pulser)
+    pulser_register = PulserRegister(coords_pulser)
+    if device._requires_layout:
+        pulser_register = pulser_register.with_automatic_layout(device=device._device)
+    return pulser_register
 
 
 def _build_pulse(drive: Drive, converted_duration: int, time: float, energy: float) -> PulserPulse:
@@ -74,7 +77,7 @@ def basic_compilation(
 
     # Build pulse and register
     pulser_pulse = _build_pulse(drive, converted_duration, TIME, ENERGY)
-    pulser_register = _build_register(register, DISTANCE)
+    pulser_register = _build_register(register, device, DISTANCE)
 
     # Create sequence
     pulser_sequence = PulserSequence(pulser_register, TARGET_DEVICE)
