@@ -9,7 +9,7 @@ from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
 from pulser.sequence import Sequence as PulserSequence
 from pulser_pasqal.backends import RemoteEmulatorBackend
 
-from qoolqit.execution import Emulator, RemoteEmulator
+from qoolqit.execution import LocalEmulator, RemoteEmulator
 from qoolqit.program import QuantumProgram
 
 
@@ -50,7 +50,7 @@ class TestBackends:
             return MagicMock(spec=RemoteResults)
 
     def test_default_backend(self) -> None:
-        backend = Emulator(backend_type=self.MockEmulatorBackend)
+        backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
         assert backend._backend_type is self.MockEmulatorBackend
         assert backend._runs == 100
 
@@ -63,12 +63,14 @@ class TestBackends:
         assert backend._runs == 100
 
     def test_emulator_backend_with_config(self) -> None:
-        backend = Emulator(backend_type=self.MockEmulatorBackend, emulation_config=self.mock_config)
+        backend = LocalEmulator(
+            backend_type=self.MockEmulatorBackend, emulation_config=self.mock_config
+        )
         assert backend._emulation_config is self.mock_config
 
     def test_check_backend_type(self) -> None:
         with pytest.raises(match="`backend_type` must be a EmulatorBackend type."):
-            Emulator(backend_type=int)
+            LocalEmulator(backend_type=int)
 
         with pytest.raises(match="`backend_type` must be a RemoteEmulatorBackend type."):
             RemoteEmulator(backend_type=str, connection=self.mock_connection)
@@ -87,7 +89,7 @@ class TestBackends:
             backend.validate_connection(4.0)
 
     def test_default_emulation_config(self) -> None:
-        backend = Emulator(backend_type=self.MockEmulatorBackend)
+        backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
         backend.run(self.mock_program_compiled)
 
         expected_config = backend.default_emulation_config()
@@ -102,7 +104,7 @@ class TestBackends:
         assert config_repr == expected_config_repr
 
     def test_local_emulator_run(self) -> None:
-        backend = Emulator(backend_type=self.MockEmulatorBackend)
+        backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
         backend.run(self.mock_program_compiled)
         assert isinstance(backend._backend, self.MockEmulatorBackend)
         # assert called once

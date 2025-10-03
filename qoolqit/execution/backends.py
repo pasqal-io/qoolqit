@@ -36,12 +36,9 @@ class PulserEmulatorBackend:
         return emulation_config
 
     def default_emulation_config(self) -> EmulationConfig:
-        """Return a default and unique emulation config for all emulators.
+        """Return a unique emulation config for all emulators.
 
-        Note:
-            If `emulation_config` not specified in `PulserBackend`, to provide a
-            consistent experience between emulators, we set default configuration that
-            asks for the final bitstring, sampled `runs` times.
+        Defaults to a configuration that asks for the final bitstring, sampled `runs` times.
         """
         return EmulationConfig(observables=(BitStrings(num_shots=self._runs),))
 
@@ -64,17 +61,16 @@ class PulserRemoteBackend:
         return connection
 
 
-class Emulator(PulserEmulatorBackend):
+class LocalEmulator(PulserEmulatorBackend):
     """
     Run QoolQit `QuantumProgram`s on a Pasqal local backend.
 
     This class serves as a primary interface between tools written using QoolQit (including solvers)
-    and Pasqal backends local emulators backends.
+    and Pasqal local emulators backends.
 
     Args:
-        backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.
+        backend_type (type): backend type. Must be a subtype of `pulser.backend.EmulatorBackend`.
         emulator_config (EmulationConfig): optional configuration object emulators.
-            This argument is used only if `backend_type` is an emulator backend.
         runs (int): run the program `runs` times to collect bitstrings statistics.
             On QPU backends this represents the actual number of runs of the program.
             On emulators, instead the bitstring are sampled from the quantum state `runs` times.
@@ -95,7 +91,15 @@ class Emulator(PulserEmulatorBackend):
         runs: int = 100,
     ) -> None:
         if not issubclass(backend_type, EmulatorBackend):
-            raise TypeError("Error in `Emulator`: `backend_type` must be a EmulatorBackend type.")
+            raise TypeError(
+                "Error in `LocalEmulator`: `backend_type` must be a EmulatorBackend type."
+            )
+        if issubclass(backend_type, RemoteEmulator):
+            raise TypeError(
+                """Error in `LocalEmulator`: `backend_type` cannot be a RemoteBackend type.
+                If you wish to run your program on a remote emulator backend, please, use the
+                RemoteEmulator class."""
+            )
         self._backend_type = backend_type
         self._runs = runs
         self._emulation_config = self.validate_emulation_config(emulation_config)
@@ -113,7 +117,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
 
     This class serves as a primary interface between tools written using QoolQit (including solvers)
     and Pasqal remote emulators backends, including QPUs, digital-twins and remote emulators.
-    The behvior is similar to the local `Emulator` class, but here, requires credentials
+    The behavior is similar to the local `Emulator` class, but here, requires credentials
     through a `connection` to run a program.
     To get your credentials and to create a connection object, please refer to the [Pasqal Cloud
     interface documentation](https://docs.pasqal.com/cloud).
