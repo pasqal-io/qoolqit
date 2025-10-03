@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, Sequence
 
 from pulser.backend import BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
@@ -111,15 +111,12 @@ class LocalEmulator(PulserEmulatorBackend):
         self._backend_type = backend_type
         self._emulation_config = self.validate_emulation_config(emulation_config)
 
-    def run(self, program: QuantumProgram) -> tuple[Results, ...]:
+    def run(self, program: QuantumProgram) -> Sequence[Results]:
         """Run a compiled QuantumProgram and return the results."""
         self._backend = self._backend_type(program.compiled_sequence, config=self._emulation_config)
         results = self._backend.run()
-        if isinstance(results, Results):
-            results = (results,)
-        else:
-            results = tuple(results)
-        return results
+        res_seq = (results,) if isinstance(results, Results) else tuple(results)
+        return res_seq
 
 
 class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
@@ -196,10 +193,11 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         remote_results = self._backend.run(job_params=[job_param], wait=wait)
         return remote_results
 
-    def run(self, program: QuantumProgram) -> tuple[Results, ...]:
+    def run(self, program: QuantumProgram) -> Sequence[Results]:
         """Run a compiled QuantumProgram remotely and return the results."""
         remote_results = self.submit(program, wait=True)
-        return remote_results.results
+        res_seq: Sequence[Results] = remote_results.results
+        return res_seq
 
 
 class QPU(PulserRemoteBackend):
@@ -251,7 +249,8 @@ class QPU(PulserRemoteBackend):
         remote_results = self._backend.run(job_params=[job_param], wait=wait)
         return remote_results
 
-    def run(self, program: QuantumProgram) -> tuple[Results, ...]:
+    def run(self, program: QuantumProgram) -> Sequence[Results]:
         """Run a compiled QuantumProgram remotely and return the results."""
         remote_results = self.submit(program, wait=True)
-        return remote_results.results
+        res_seq: Sequence[Results] = remote_results.results
+        return res_seq
