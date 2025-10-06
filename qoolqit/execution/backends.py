@@ -148,7 +148,8 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
     interface documentation](https://docs.pasqal.com/cloud).
 
     Args:
-        backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.
+        backend_type (type): backend type. Must be a subtype of
+            `pulser_pasqal.backends.RemoteEmulatorBackend`.
         connection (RemoteConnection): connection to execute the program on remote backends.
         emulator_config (EmulationConfig): optional configuration object emulators.
         runs (int): number of bitstring samples to collect from the final quantum state.
