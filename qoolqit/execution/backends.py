@@ -187,6 +187,10 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         self._backend_type = backend_type
         self._emulation_config = self.validate_emulation_config(emulation_config)
         self._connection = self.validate_connection(connection)
+        # in remote emulators JobParams is ignored and the number
+        # of runs required by the user is set instead in `default_emulation_config()`.
+        # TODO: after pulser 1.6 assess if job_params is still needed
+        self._job_params = [JobParams(runs=self._runs)]
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled QuantumProgram and return a remote handler of the results.
@@ -201,13 +205,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
             connection=self._connection,
             config=self._emulation_config,
         )
-
-        # in QPU backends `runs` is specified in a JobParams object
-        # in remote emulators JobParams is ignored and the number
-        # of runs required by the user is set instead in `default_emulation_config()`.
-        # TODO: after pulser 1.6 assess if job_params is still needed
-        job_param = JobParams(runs=self._runs)
-        remote_results = self._backend.run(job_params=[job_param], wait=wait)
+        remote_results = self._backend.run(job_params=self._job_params, wait=wait)
         return remote_results
 
     def run(self, program: QuantumProgram) -> Sequence[Results]:
@@ -253,6 +251,8 @@ class QPU(PulserRemoteBackend):
         self._backend_type = QPUBackend
         self._runs = runs
         self._connection = self.validate_connection(connection)
+        # in QPU backends `runs` is specified in a JobParams object
+        self._job_params = [JobParams(runs=self._runs)]
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled QuantumProgram and return a remote handler of the results.
@@ -262,8 +262,7 @@ class QPU(PulserRemoteBackend):
             wait (bool): Wait for remote backend to complete the job.
         """
         self._backend = self._backend_type(program.compiled_sequence, connection=self._connection)
-        job_param = JobParams(runs=self._runs)
-        remote_results = self._backend.run(job_params=[job_param], wait=wait)
+        remote_results = self._backend.run(job_params=self._job_params, wait=wait)
         return remote_results
 
     def run(self, program: QuantumProgram) -> Sequence[Results]:
