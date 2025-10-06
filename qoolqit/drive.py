@@ -1,13 +1,25 @@
 from __future__ import annotations
 
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 from qoolqit.waveforms import CompositeWaveform, Delay, Waveform
 
-__all__ = ["Drive"]
+__all__ = ["DetuningChannel", "Drive"]
+
+
+@dataclass
+class DetuningChannel:
+    """A single detuning channel."""
+
+    weights: dict[Any, float]
+    """Association of weights to qubits."""
+
+    waveform: Waveform
+    """The waveform for this detuning channel."""
 
 
 class Drive:
@@ -18,6 +30,7 @@ class Drive:
         *args: Any,
         amplitude: Waveform | None = None,
         detuning: Waveform | None = None,
+        individual_detunings: list[DetuningChannel] | None = None,
         phase: float = 0.0,
     ) -> None:
         """Default constructor for the Drive.
@@ -29,6 +42,8 @@ class Drive:
             amplitude: waveform representing Ω(t) in the drive Hamiltonian.
             detuning: waveform representing δ(t) in the drive Hamiltonian.
             phase: phase value ɸ for the amplitude term.
+            individual_detunings: additional waveforms and weights applied to individual
+                qubits. Note that these detunings are not supported on all devices.
         """
 
         if len(args) > 0:
@@ -71,6 +86,9 @@ class Drive:
 
         self._duration = self._amplitude.duration
         self._phase = phase
+        self._individual_detunings = (
+            individual_detunings if individual_detunings is not None else []
+        )
 
     @property
     def amplitude(self) -> Waveform:
@@ -81,6 +99,11 @@ class Drive:
     def detuning(self) -> Waveform:
         """The detuning waveform in the drive."""
         return self._detuning_orig
+
+    @property
+    def individual_detunings(self) -> Sequence[DetuningChannel]:
+        """Detunings applied to individual qubits."""
+        return self._individual_detunings
 
     @property
     def phase(self) -> float:
