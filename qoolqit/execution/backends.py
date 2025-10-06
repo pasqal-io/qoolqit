@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import copy
+import logging
 from typing import Optional, Sequence
 
 from pulser.backend import BitStrings, Results
@@ -39,8 +41,23 @@ class PulserEmulatorBackend:
         """
         if emulation_config is None:
             emulation_config = self.default_emulation_config()
-            # TODO: validate config when bump to pulser==1.6 (uncomment below)
-            # config = backend_type.validate_config(config)
+        else:
+            emulation_config = copy.deepcopy(emulation_config)
+            has_bitstrings = any(
+                isinstance(obs, BitStrings) for obs in emulation_config.observables
+            )
+            if has_bitstrings:
+                # if the provided config has already a biststring obs, ignore nruns
+                logging.warning(
+                    f"""The number of runs is specified both in {self.__class__.__name__}
+                        and in `EmulationConfig`, ignoring the former"""
+                )
+            else:
+                # else append a bitstring observable with nruns specified by the user
+                updated_obs = (*emulation_config.observables, BitStrings(num_shots=self._runs))
+                emulation_config.observables = updated_obs
+        # TODO: validate config when bump to pulser==1.6 (uncomment below)
+        # config = backend_type.validate_config(config)
         return emulation_config
 
     def default_emulation_config(self) -> EmulationConfig:

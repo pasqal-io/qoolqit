@@ -4,7 +4,7 @@ from collections.abc import Sequence
 from unittest.mock import MagicMock
 
 import pytest
-from pulser.backend import EmulationConfig, EmulatorBackend, Results
+from pulser.backend import BitStrings, EmulationConfig, EmulatorBackend, Results
 from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
 from pulser.sequence import Sequence as PulserSequence
 from pulser_pasqal.backends import RemoteEmulatorBackend
@@ -63,10 +63,36 @@ class TestBackends:
         assert backend._runs == 100
 
     def test_emulator_backend_with_config(self) -> None:
-        backend = LocalEmulator(
-            backend_type=self.MockEmulatorBackend, emulation_config=self.mock_config
-        )
-        assert backend._emulation_config is self.mock_config
+        config = EmulationConfig(observables=(BitStrings(num_shots=1117),))
+        backend = LocalEmulator(backend_type=self.MockEmulatorBackend, emulation_config=config)
+
+        # convert configs to str
+        expected_config_repr = config.to_abstract_repr()
+        config_repr = backend._emulation_config.to_abstract_repr()
+        assert config_repr == expected_config_repr
+
+    def test_emulator_backend_with_nruns(self) -> None:
+        backend = LocalEmulator(backend_type=self.MockEmulatorBackend, runs=123)
+
+        expected_config = EmulationConfig(observables=(BitStrings(num_shots=123),))
+        # convert configs to str
+        expected_config_repr = expected_config.to_abstract_repr()
+        config_repr = backend._emulation_config.to_abstract_repr()
+        assert config_repr == expected_config_repr
+
+    def test_emulator_backend_default_config(self) -> None:
+        backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
+
+        expected_config = backend.default_emulation_config()
+        # convert the expected config to a str
+        expected_config_repr = expected_config.to_abstract_repr()
+
+        config = backend._emulation_config
+        assert isinstance(config, EmulationConfig)
+        # convert the saved config to a str
+        config_repr = config.to_abstract_repr()
+
+        assert config_repr == expected_config_repr
 
     def test_check_backend_type(self) -> None:
         with pytest.raises(match="`backend_type` must be a EmulatorBackend type."):
@@ -87,21 +113,6 @@ class TestBackends:
                 `connection` must be of type {RemoteConnection}."""
         ):
             backend.validate_connection(4.0)
-
-    def test_default_emulation_config(self) -> None:
-        backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
-        backend.run(self.mock_program_compiled)
-
-        expected_config = backend.default_emulation_config()
-        # convert the expected config to a str
-        expected_config_repr = expected_config.to_abstract_repr()
-
-        config = backend._emulation_config
-        assert isinstance(config, EmulationConfig)
-        # convert the saved config to a str
-        config_repr = config.to_abstract_repr()
-
-        assert config_repr == expected_config_repr
 
     def test_local_emulator_run(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
