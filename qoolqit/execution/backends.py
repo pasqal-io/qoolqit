@@ -188,13 +188,17 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         self._backend_type = backend_type
         self._emulation_config = self.validate_emulation_config(emulation_config)
         self._connection = self.validate_connection(connection)
-        # in remote emulators JobParams is ignored and the number
-        # of runs required by the user is set instead in `default_emulation_config()`.
+        # JobParams is ignored in remote emulators and `runs`
+        # is set instead in `default_emulation_config()`.
         # TODO: after pulser 1.6 assess if job_params is still needed
-        self._job_params = [JobParams(runs=self._runs)]
+        self._job_params = [JobParams(runs=1)]
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled QuantumProgram and return a remote handler of the results.
+
+        The returned handler `RemoteResults` can be used to:
+        - query the job status with `remote_results.get_batch_status()`
+        - when DONE, retrieve results with `remote_results.results`
 
         Args:
             program (QuantumProgram): the compiled quantum program to run.
@@ -257,6 +261,10 @@ class QPU(PulserRemoteBackend):
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled QuantumProgram and return a remote handler of the results.
+
+        The returned handler `RemoteResults` can be used to:
+        - query the job status with `remote_results.get_batch_status()`
+        - when DONE, retrieve results with `remote_results.results`
 
         Args:
             program (QuantumProgram): the compiled quantum program to run.
