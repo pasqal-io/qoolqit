@@ -232,7 +232,6 @@ class QPU(PulserRemoteBackend):
     - [Atos MyQML framework](https://github.com/pasqal-io/Pulser-myQLM/blob/main/tutorials/Submitting%20AFM%20state%20prep%20to%20QPU.ipynb)
 
     Args:
-        backend_type (type): backend type. Must be a subtype of pulser.backend.Backend.
         connection (RemoteConnection): connection to execute the program on remote backends.
         runs (int): run the program `runs` times to collect bitstrings statistics.
 
