@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from math import ceil
 from typing import Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
-from matplotlib.ticker import MultipleLocator
 
 from .utils import (
     all_node_pairs,
@@ -272,36 +270,26 @@ class BaseGraph(nx.Graph):
             *args: arguments to pass to draw_networkx.
             **kwargs: keyword-arguments to pass to draw_networkx.
         """
-        fig, ax = plt.subplots(1, 1, figsize=(4, 4), dpi=150)
+        fig, ax = plt.subplots(figsize=(4, 4), dpi=250)
         ax.set_aspect("equal")
         if self.has_coords:
-            x_coords, y_coords = zip(*self.coords.values())
-            x_min, x_max = min(x_coords), max(x_coords)
-            y_min, y_max = min(y_coords), max(y_coords)
-
-            grid_x_min, grid_x_max = min(-1, x_min), max(1, x_max)
-            grid_y_min, grid_y_max = min(-1, y_min), max(1, y_max)
-
-            grid_scale = ceil(max(grid_x_max - grid_x_min, grid_y_max - grid_y_min))
-
-            ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
-            ax.set_axisbelow(True)
             ax.set_xlabel("x")
             ax.set_ylabel("y")
+            ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+            ax.tick_params(direction="in")
+            ax.set_axisbelow(True)
 
-            eps = 0.05 * grid_scale
-            ax.set_xlim(grid_x_min - eps, grid_x_max + eps)
-            ax.set_ylim(grid_y_min - eps, grid_y_max + eps)
-
-            possible_multiples = [0.2, 0.25, 0.5, 1.0, 2.0, 2.5, 5.0, 10.0]
-            grid_multiple = min(possible_multiples, key=lambda x: abs(x - grid_scale / 8))
-            majorLocatorX = MultipleLocator(grid_multiple)
-            majorLocatorY = MultipleLocator(grid_multiple)
-            ax.xaxis.set_major_locator(majorLocatorX)
-            ax.yaxis.set_major_locator(majorLocatorY)
+            if "hide_ticks" not in kwargs:
+                kwargs["hide_ticks"] = False
 
             nx.draw_networkx(self, *args, ax=ax, pos=self.coords, **kwargs)
-            ax.tick_params(axis="both", which="both", labelbottom=True, labelleft=True, labelsize=8)
+
+            # minimum ybox
+            ylim = ax.get_ylim()
+            if (ylim[1] - ylim[0]) < 2:
+                y_center = (ylim[0] + ylim[1]) / 2
+                ax.set_ylim(y_center - 1, y_center + 1)
+            plt.tight_layout()
         else:
             nx.draw_networkx(self, *args, ax=ax, **kwargs)
 
