@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import os
-
 from .base_backend import BaseBackend
 from .get_backend import get_backend
-from .local_backends import BaseLocalBackend, QutipBackend
+from .local_backends import BaseLocalBackend, EmuMPSBackend, EmuSVBackend, QutipBackend
 from .remote_backends import (
     BaseRemoteBackend,
     RemoteEmuFREEBackend,
@@ -25,12 +23,6 @@ __all__ = [
     "RemoteEmuFREEBackend",
     "get_backend",
     "RemoteJob",
+    "EmuMPSBackend",
+    "EmuSVBackend",
 ]
-
-if os.name == "posix":
-    from .local_backends import EmuMPSBackend, EmuSVBackend
-
-    __all__ += [
-        "EmuMPSBackend",
-        "EmuSVBackend",
-    ]

@@ -32,7 +32,7 @@ classifiers = [
 
 
 dependencies = [
-  "pulser~=1.5",
+  "pulser~=1.6.1",
   "networkx~=3.4",
   "matplotlib",
   "emu_mps"
@@ -54,7 +54,7 @@ solvers = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/pasqal-io/qoolqit" # FIXME
+Documentation = "https://pasqal-io.github.io/qoolqit/latest"
 Issues = "https://github.com/pasqal-io/qoolqit/issues"
 Source = "https://github.com/pasqal-io/qoolqit"
 
@@ -119,7 +119,7 @@ serve = "mkdocs serve --dev-addr localhost:8000"
 test = "mkdocs build --clean --strict"
 
 [[tool.hatch.envs.test.matrix]]
-python = ["310", "311", "312"]
+python = ["310", "311", "312", "313"]
 
 [tool.hatch.build.targets.sdist]
 exclude = [

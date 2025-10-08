@@ -3,7 +3,6 @@ from __future__ import annotations
 import abc
 import datetime
 import json
-import os
 import random
 import re
 from typing import Any, Callable, Counter, cast
@@ -19,6 +18,8 @@ from pulser.waveforms import Waveform
 from qoolqit._solvers import (
     BaseBackend,
     Detuning,
+    EmuMPSBackend,
+    EmuSVBackend,
     QutipBackend,
     RemoteEmuFREEBackend,
     RemoteEmuMPSBackend,
@@ -53,14 +54,9 @@ def make_simple_program(backend: BaseBackend) -> QuantumProgram:
 
 local_backends: list[tuple[type[BaseBackend], BackendType]] = [
     (QutipBackend, BackendType.QUTIP),
+    (EmuMPSBackend, BackendType.EMU_MPS),
+    (EmuSVBackend, BackendType.EMU_SV),
 ]
-if os.name == "posix":
-    from qoolqit._solvers import EmuMPSBackend, EmuSVBackend
-
-    local_backends += [
-        (EmuMPSBackend, BackendType.EMU_MPS),
-        (EmuSVBackend, BackendType.EMU_SV),
-    ]
 
 remote_backends: list[tuple[type[BaseBackend], BackendType]] = [
     (RemoteEmuMPSBackend, BackendType.REMOTE_EMUMPS),

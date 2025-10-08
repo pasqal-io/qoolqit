@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from typing import Any
 from warnings import warn
 
@@ -9,7 +8,7 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device, MockDevice
 from qoolqit.drive import Drive
-from qoolqit.execution.backend import BaseBackend, OutputType, QutipBackend
+from qoolqit.execution.backend import BaseBackend, EmuMPSBackend, OutputType, QutipBackend
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.execution.utils import BackendName, CompilerProfile, ResultType
 from qoolqit.register import Register
@@ -151,13 +150,9 @@ class QuantumProgram:
                 backend = QutipBackend(self._compiled_sequence, result_type, **backend_params)
                 return backend.run(runs, evaluation_times)
             elif backend_name == BackendName.EMUMPS:
-                if os.name == "posix":
-                    from qoolqit.execution.backend import EmuMPSBackend
+                backend = EmuMPSBackend(self._compiled_sequence, result_type, **backend_params)
+                return backend.run(runs, evaluation_times)
 
-                    backend = EmuMPSBackend(self._compiled_sequence, result_type, **backend_params)
-                    return backend.run(runs, evaluation_times)
-                else:
-                    raise NotImplementedError("EmuMPS is only available on Unix platforms")
             else:
                 raise ValueError(f"Invalid backend {backend_name}")
         else:
