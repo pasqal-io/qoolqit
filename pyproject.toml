@@ -80,7 +80,7 @@ dependencies = [
 
 [tool.hatch.envs.default.scripts]
 test = "pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs {args}"
-test_tutorials = "pytest --nbmake ./docs/tutorials/*.ipynb"
+test_tutorials = "pytest --nbmake docs/tutorials/*.ipynb"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
