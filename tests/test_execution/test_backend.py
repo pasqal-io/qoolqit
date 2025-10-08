@@ -118,15 +118,20 @@ def test_bitstrings(random_program: Callable, backend_name: BackendName, device:
     ],
 )
 @pytest.mark.parametrize("result_type", [ResultType.STATEVECTOR, ResultType.BITSTRINGS])
+@pytest.mark.parametrize("steps", [10, 20, 30])
 def test_evaluation_times(
-    random_program: Callable, backend_name: BackendName, result_type: ResultType
+    random_program: Callable, backend_name: BackendName, result_type: ResultType, steps: int
 ) -> None:
+    # this test fail for even number of steps because emulators
+    # do not respect the evaluation times passed by the user
+    # TODO: asses again when the issue is solved
+
     # Create a quantum program
     program = random_program()
     program.compile_to(MockDevice())
 
     # Run with other backend
-    evaluation_times = np.linspace(0, 1, np.random.randint(50, 200)).tolist()
+    evaluation_times = np.linspace(0, 1, steps).tolist()
     bknd_res = program.run(
         backend_name=backend_name, result_type=result_type, evaluation_times=evaluation_times
     )
