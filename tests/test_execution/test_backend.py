@@ -16,9 +16,6 @@ from qoolqit.execution import BackendName, ResultType
 def test_theoretical_state_vector(
     backend_name: BackendName, random_x_rotation: np.ndarray, random_rotation_angle: float
 ) -> None:
-    if backend_name == BackendName.EMUMPS:
-        pytest.skip("EmuMPS is only available under Unix")
-        return
 
     # Theoretical final state after X rotation
     theor_state = random_x_rotation[:, 0]
