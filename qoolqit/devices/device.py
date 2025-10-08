@@ -5,7 +5,7 @@ from math import pi
 
 from pulser.devices._device_datacls import BaseDevice
 
-from ._pulser_devices import _AnalogDevice, _MockDevice, _TestAnalogDevice
+from ._pulser_devices import _AnalogDevice, _DigitalAnalogDevice, _MockDevice, _TestAnalogDevice
 from .unit_converter import UnitConverter
 
 UPPER_DURATION = 6000
@@ -126,6 +126,21 @@ class AnalogDevice(Device):
         return UnitConverter.from_energy(self._C6, self._upper_amp)
 
 
+class DigitalAnalogDevice(Device):
+    """A device with digital and analog capabilites."""
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    @property
+    def _device(self) -> BaseDevice:
+        return _DigitalAnalogDevice
+
+    @property
+    def _default_converter(self) -> UnitConverter:
+        return UnitConverter.from_energy(self._C6, self._upper_amp)
+
+
 class TestAnalogDevice(Device):
     """A realistic device with constraints mimicking a real QPU."""
 
@@ -141,4 +156,4 @@ class TestAnalogDevice(Device):
         return UnitConverter.from_energy(self._C6, self._upper_amp)
 
 
-ALL_DEVICES = [MockDevice, AnalogDevice, TestAnalogDevice]
+ALL_DEVICES = [MockDevice, AnalogDevice, TestAnalogDevice, DigitalAnalogDevice]
