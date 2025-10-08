@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 from pulser.channels import Rydberg
 from pulser.channels.eom import RydbergBeam, RydbergEOM
-from pulser.devices import AnalogDevice, MockDevice
+from pulser.devices import AnalogDevice, DigitalAnalogDevice, MockDevice
 from pulser.devices._device_datacls import Device
 from pulser.register.special_layouts import TriangularLatticeLayout
 
@@ -12,6 +12,9 @@ _MockDevice = MockDevice
 
 """The Pulser analog device."""
 _AnalogDevice = AnalogDevice
+
+"""The Pulser digital-analog device."""
+_DigitalAnalogDevice = DigitalAnalogDevice
 
 """Replicates the AnalogDevice but changes many parameters for testing."""
 _TestAnalogDevice = Device(
