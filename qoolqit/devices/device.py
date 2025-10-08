@@ -33,6 +33,9 @@ class Device(ABC):
         self._max_det = self._device.channels["rydberg_global"].max_abs_detuning
         self._min_distance = self._device.min_atom_distance
 
+        # layouts
+        self._requires_layout = self._device.requires_layout
+
         # Values to use when limits do not exist
         self._upper_duration = self._max_duration or UPPER_DURATION
         self._upper_amp = self._max_amp or UPPER_AMP
