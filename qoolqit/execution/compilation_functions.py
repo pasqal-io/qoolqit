@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pulser.devices import Device as PulserDevice
 from pulser.pulse import Pulse as PulserPulse
 from pulser.register.register import Register as PulserRegister
 from pulser.sequence.sequence import Sequence as PulserSequence
@@ -18,6 +19,7 @@ def _build_register(register: Register, device: Device, distance: float) -> Puls
     coords_pulser = {str(q): (distance * c[0], distance * c[1]) for q, c in coords_qoolqit.items()}
     pulser_register = PulserRegister(coords_pulser)
     if device._requires_layout:
+        assert isinstance(device._device, PulserDevice)
         pulser_register = pulser_register.with_automatic_layout(device=device._device)
     return pulser_register
 
@@ -87,24 +89,24 @@ def basic_compilation(
     # to keep mypy happy.
     assert isinstance(pulser_pulse, PulserPulse)
 
-    pulser_register = _build_register(register, DISTANCE)
+    pulser_register = _build_register(register, device, DISTANCE)
 
     # Create sequence
     pulser_sequence = PulserSequence(pulser_register, TARGET_DEVICE)
     pulser_sequence.declare_channel("ising", "rydberg_global")
     pulser_sequence.add(pulser_pulse, "ising")
 
-    if len(drive.individual_detunings) > 0:
+    if len(drive.weighted_detunings) > 0:
         # Add detuning map
         channels = list(device._device.dmm_channels.keys())
         if len(channels) == 0:
             raise ValueError(
-                f"This program specifies {len(drive.individual_detunings)} detunings but "
+                f"This program specifies {len(drive.weighted_detunings)} detunings but "
                 "the device doesn't offer any DMM channel to execute them."
             )
         # Arbitrarily pick the first channel.
         dmm_id = channels[0]
-        for detuning in drive.individual_detunings:
+        for detuning in drive.weighted_detunings:
             detuning_map = pulser_register.define_detuning_map(detuning_weights=detuning.weights)
             pulser_sequence.config_detuning_map(detuning_map, dmm_id=dmm_id)
             waveform = wf_converter.convert(detuning.waveform)

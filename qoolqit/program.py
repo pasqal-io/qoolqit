@@ -38,7 +38,7 @@ class QuantumProgram:
         self._drive = drive
         self._compiled_sequence: PulserSequence | None = None
         self._device: Device | None = None
-        for detuning in drive.individual_detunings:
+        for detuning in drive.weighted_detunings:
             for key in detuning.weights.keys():
                 if key not in register.qubits:
                     raise ValueError(
