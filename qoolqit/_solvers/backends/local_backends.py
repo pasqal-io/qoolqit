@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import logging
-import os
 from abc import abstractmethod
 from typing import Counter
 from uuid import uuid4
 
+import emu_mps
+import emu_sv
 import pulser
 from pulser import Sequence
 from pulser.devices import Device
@@ -111,63 +112,57 @@ class QutipBackend(BaseLocalBackend):
         return Result(counts=result)
 
 
-if os.name == "posix":
-    # EmuMPS is only available under Linux and Darwin/macOS.
-    import emu_mps
+class EmuMPSBackend(BaseLocalBackend):
+    """
+    Execute a Register and a Pulse on the high-performance emu-mps Emulator.
 
-    class EmuMPSBackend(BaseLocalBackend):
-        """
-        Execute a Register and a Pulse on the high-performance emu-mps Emulator.
+    As of this writing, this local emulator is only available under Unix. However,
+    the RemoteEmuMPSBackend is available on all platforms.
 
-        As of this writing, this local emulator is only available under Unix. However,
-        the RemoteEmuMPSBackend is available on all platforms.
+    Performance warning:
+        Executing anything quantum related on an emulator takes an amount of resources
+        polynomial in 2^N, where N is the number of qubits. This can easily go beyond
+        the limit of the computer on which you're executing it.
+    """
 
-        Performance warning:
-            Executing anything quantum related on an emulator takes an amount of resources
-            polynomial in 2^N, where N is the number of qubits. This can easily go beyond
-            the limit of the computer on which you're executing it.
-        """
+    def __init__(self, config: BackendConfig) -> None:
+        super().__init__(config)
 
-        def __init__(self, config: BackendConfig) -> None:
-            super().__init__(config)
+    def _execute_locally(self, sequence: Sequence, runs: int | None = None) -> Result:
+        times = [1.0]  # 1.0 = end of the duration (normalized)
+        if runs is None:
+            runs = 100  # Arbitrary device-specific value.
+        bitstrings = emu_mps.BitStrings(evaluation_times=times, num_shots=runs)
+        config = emu_mps.MPSConfig(observables=[bitstrings], dt=self.config.dt)
+        backend = emu_mps.MPSBackend(sequence, config=config)
+        results = backend.run()
+        counter: Counter[str] = results.bitstrings[-1]
+        return Result(counts=counter)
 
-        def _execute_locally(self, sequence: Sequence, runs: int | None = None) -> Result:
-            times = [1.0]  # 1.0 = end of the duration (normalized)
-            if runs is None:
-                runs = 100  # Arbitrary device-specific value.
-            bitstrings = emu_mps.BitStrings(evaluation_times=times, num_shots=runs)
-            config = emu_mps.MPSConfig(observables=[bitstrings], dt=self.config.dt)
-            backend = emu_mps.MPSBackend(sequence, config=config)
-            results = backend.run()
-            counter: Counter[str] = results.bitstrings[-1]
-            return Result(counts=counter)
 
-    import emu_sv
+class EmuSVBackend(BaseLocalBackend):
+    """
+    Execute a Register and a Pulse on the high-performance emu-sv Emulator.
 
-    # EmuSV is only available under Linux and Darwin/macOS.
-    class EmuSVBackend(BaseLocalBackend):
-        """
-        Execute a Register and a Pulse on the high-performance emu-sv Emulator.
+    As of this writing, this local emulator is only available under Unix.
 
-        As of this writing, this local emulator is only available under Unix.
+    Performance warning:
+        Executing anything quantum related on an emulator takes an amount of resources
+        polynomial in 2^N, where N is the number of qubits. This can easily go beyond
+        the limit of the computer on which you're executing it.
+    """
 
-        Performance warning:
-            Executing anything quantum related on an emulator takes an amount of resources
-            polynomial in 2^N, where N is the number of qubits. This can easily go beyond
-            the limit of the computer on which you're executing it.
-        """
+    def __init__(self, config: BackendConfig) -> None:
+        super().__init__(config)
 
-        def __init__(self, config: BackendConfig) -> None:
-            super().__init__(config)
+    def _execute_locally(self, sequence: Sequence, runs: int | None = None) -> Result:
+        times = [1.0]  # 1.0 = end of the duration (normalized)
+        if runs is None:
+            runs = 100  # Arbitrary device-specific value.
+        bitstrings = emu_sv.BitStrings(evaluation_times=times, num_shots=runs)
+        config = emu_sv.SVConfig(dt=self.config.dt, observables=[bitstrings], log_level=0)
+        backend = emu_sv.SVBackend(sequence, config=config)
 
-        def _execute_locally(self, sequence: Sequence, runs: int | None = None) -> Result:
-            times = [1.0]  # 1.0 = end of the duration (normalized)
-            if runs is None:
-                runs = 100  # Arbitrary device-specific value.
-            bitstrings = emu_sv.BitStrings(evaluation_times=times, num_shots=runs)
-            config = emu_sv.SVConfig(dt=self.config.dt, observables=[bitstrings], log_level=0)
-            backend = emu_sv.SVBackend(sequence, config=config)
-
-            results = backend.run()
-            counter: Counter[str] = results.get_result(bitstrings, time=1.0)
-            return Result(counts=counter)
+        results = backend.run()
+        counter: Counter[str] = results.get_result(bitstrings, time=1.0)
+        return Result(counts=counter)

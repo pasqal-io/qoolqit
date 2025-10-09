@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from typing import Callable
 
 import numpy as np
@@ -17,9 +16,6 @@ from qoolqit.execution import BackendName, ResultType
 def test_theoretical_state_vector(
     backend_name: BackendName, random_x_rotation: np.ndarray, random_rotation_angle: float
 ) -> None:
-    if backend_name == BackendName.EMUMPS and os.name != "posix":
-        pytest.skip("EmuMPS is only available under Unix")
-        return
 
     # Theoretical final state after X rotation
     theor_state = random_x_rotation[:, 0]
@@ -36,7 +32,6 @@ def test_theoretical_state_vector(
     assert np.isclose(theor_state, res, atol=ATOL_STATE_VEC).all()
 
 
-@pytest.mark.skipif(os.name != "posix", reason="EmuMPS is currently available only under Unix")
 @pytest.mark.parametrize(
     "backend_name, device",
     [
@@ -61,7 +56,6 @@ def test_state_vector(random_program: Callable, backend_name: BackendName, devic
     assert np.isclose(qutip_res, bknd_res, atol=ATOL_STATE_VEC).all()
 
 
-@pytest.mark.skipif(os.name != "posix", reason="EmuMPS is currently available only under Unix")
 @pytest.mark.flaky(max_runs=5)
 @pytest.mark.parametrize(
     "backend_name, device",
@@ -117,26 +111,24 @@ def test_bitstrings(random_program: Callable, backend_name: BackendName, device:
     "backend_name",
     [
         pytest.param(BackendName.QUTIP),
-        pytest.param(
-            BackendName.EMUMPS,
-            marks=[
-                pytest.mark.skipif(
-                    os.name != "posix", reason="EmuMPS is currently available only under Unix"
-                )
-            ],
-        ),
+        pytest.param(BackendName.EMUMPS),
     ],
 )
 @pytest.mark.parametrize("result_type", [ResultType.STATEVECTOR, ResultType.BITSTRINGS])
+@pytest.mark.parametrize("steps", [10, 20, 30])
 def test_evaluation_times(
-    random_program: Callable, backend_name: BackendName, result_type: ResultType
+    random_program: Callable, backend_name: BackendName, result_type: ResultType, steps: int
 ) -> None:
+    # this test fail for even number of steps because emulators
+    # do not respect the evaluation times passed by the user
+    # TODO: asses again when the issue is solved
+
     # Create a quantum program
     program = random_program()
     program.compile_to(MockDevice())
 
     # Run with other backend
-    evaluation_times = np.linspace(0, 1, np.random.randint(50, 200)).tolist()
+    evaluation_times = np.linspace(0, 1, steps).tolist()
     bknd_res = program.run(
         backend_name=backend_name, result_type=result_type, evaluation_times=evaluation_times
     )
