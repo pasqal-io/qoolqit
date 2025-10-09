@@ -38,6 +38,14 @@ class QuantumProgram:
         self._drive = drive
         self._compiled_sequence: PulserSequence | None = None
         self._device: Device | None = None
+        for detuning in drive.weighted_detunings:
+            for key in detuning.weights.keys():
+                if key not in register.qubits:
+                    raise ValueError(
+                        "In this QuantumProgram, the drive and the register "
+                        f"do not match: qubit {key} appears in the drive but "
+                        f"is not defined in the register."
+                    )
 
     @property
     def register(self) -> Register:
@@ -57,7 +65,7 @@ class QuantumProgram:
     @property
     def compiled_sequence(self) -> PulserSequence:
         """The Pulser sequence compiled to a specific device."""
-        if not self.is_compiled:
+        if not self._compiled_sequence:
             raise ValueError(
                 "Program has not been compiled. Please call program.compile_to(device)."
             )
