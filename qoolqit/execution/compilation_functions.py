@@ -24,6 +24,18 @@ def _build_register(register: Register, device: Device, distance: float) -> Puls
     return pulser_register
 
 
+class QuantumProgramCompilationError(ValueError):
+    """An error encountered while compiling a QuantumProgram."""
+
+    ...
+
+
+class WeightedDetuningWaveformError(QuantumProgramCompilationError):
+    """An error encountered while compiling the waveform of a WeightedDetuning."""
+
+    ...
+
+
 class WaveformConverter:
     def __init__(self, converted_duration: int, time: float, energy: float):
         self._energy = energy
@@ -141,4 +153,11 @@ class _DetuningAdder:
         detuning_map = self._pulser_register.define_detuning_map(detuning_weights=detuning.weights)
         self._pulser_sequence.config_detuning_map(detuning_map, dmm_id=dmm_id)
         waveform = self._wf_converter.convert(detuning.waveform)
+        assert isinstance(waveform, PulserCustomWaveform)
+        for sample in waveform.samples:
+            if sample > 0:
+                raise WeightedDetuningWaveformError(
+                    f"While compiling weighted detuning for channel {dmm_id}, "
+                    "encountered a waveform with a value >0 ."
+                )
         self._pulser_sequence.add_dmm_detuning(waveform, dmm_id)
