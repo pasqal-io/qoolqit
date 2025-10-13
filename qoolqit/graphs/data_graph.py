@@ -110,17 +110,13 @@ class DataGraph(BaseGraph):
             spacing: The distance between adjacent nodes on the final lattice.
         """
         G = nx.triangular_lattice_graph(m, n, with_positions=True)
-
+        G = nx.convert_node_labels_to_integers(G)
         pos_unit = nx.get_node_attributes(G, "pos")
+
         final_pos = {node: (x * spacing, y * spacing) for node, (x, y) in pos_unit.items()}
 
-        final_nodes = sorted(list(G.nodes()))
-        final_coords = [final_pos[label] for label in final_nodes]
-        label_to_int = {label: i for i, label in enumerate(final_nodes)}
-        final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G.edges()]
-
-        graph = cls.from_coordinates(final_coords)
-        graph.add_edges_from(final_edges)
+        graph = cls.from_coordinates(final_pos)
+        graph.add_edges_from(G.edges)
         graph._reset_dicts()
         return graph
 
@@ -140,17 +136,13 @@ class DataGraph(BaseGraph):
             spacing: The distance between adjacent nodes on the final lattice.
         """
         G = nx.hexagonal_lattice_graph(m, n, with_positions=True)
+        G = nx.convert_node_labels_to_integers(G)
         pos_unit = nx.get_node_attributes(G, "pos")
+
         final_pos = {node: (x * spacing, y * spacing) for node, (x, y) in pos_unit.items()}
-        final_nodes = sorted(list(G.nodes()))
 
-        final_coords = [final_pos[label] for label in final_nodes]
-
-        label_to_int = {label: i for i, label in enumerate(final_nodes)}
-
-        final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G.edges()]
-        graph = cls.from_coordinates(final_coords)
-        graph.add_edges_from(final_edges)
+        graph = cls.from_coordinates(final_pos)
+        graph.add_edges_from(G.edges)
         graph._reset_dicts()
         return graph
 
@@ -173,7 +165,6 @@ class DataGraph(BaseGraph):
             The heavy-hexagonal lattice is a regular hexagonal lattice where
             each edge is decorated with an additional lattice site.
         """
-        # 1. Create a standard hexagonal lattice. The distance between nodes is 1.
         G_hex = nx.hexagonal_lattice_graph(m, n, with_positions=True)
         pos_unit = nx.get_node_attributes(G_hex, "pos")
 
