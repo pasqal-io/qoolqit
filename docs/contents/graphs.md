@@ -248,6 +248,16 @@ fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
+### Triangular
+A square lattice graph with m rows and n columns of squares.
+
+```python exec="on" source="material-block" html="1" session="graph-constructors"
+graph = DataGraph.square(m = 2, n = 2, spacing = 1.0)
+graph.draw()
+fig = graph.draw(return_fig = True) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+'''
+
 ### Hexagonal
 A Hexagonal lattice graph with m rows and n columns of hexagons.
 

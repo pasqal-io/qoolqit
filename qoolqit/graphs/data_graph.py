@@ -1,7 +1,8 @@
 # TODO:
 # - refactor this to reuse common methods in constructors
 # - refactor using rescale_coords method
-# - explore nx.convert_node_labels_to_integers() built-in function
+# - explore nx.convert_node_labels_to_integers(G)
+
 
 from __future__ import annotations
 
@@ -144,9 +145,10 @@ class DataGraph(BaseGraph):
         final_nodes = sorted(list(G.nodes()))
 
         final_coords = [final_pos[label] for label in final_nodes]
-        label_to_int = {label: i for i, label in enumerate(final_nodes)}
-        final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G.edges()]
 
+        label_to_int = {label: i for i, label in enumerate(final_nodes)}
+
+        final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G.edges()]
         graph = cls.from_coordinates(final_coords)
         graph.add_edges_from(final_edges)
         graph._reset_dicts()
@@ -233,12 +235,9 @@ class DataGraph(BaseGraph):
 
         final_nodes = sorted(list(G.nodes()))
         final_coords = [(x * spacing, y * spacing) for (x, y) in final_nodes]
-        label_to_int = {label: i for i, label in enumerate(final_nodes)}
-
-        final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G.edges()]
-
+        G = nx.convert_node_labels_to_integers(G)
         graph = cls.from_coordinates(final_coords)
-        graph.add_edges_from(final_edges)
+        graph.add_edges_from(G.edges)
         graph._reset_dicts()
         return graph
 
