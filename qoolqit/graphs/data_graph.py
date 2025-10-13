@@ -108,23 +108,14 @@ class DataGraph(BaseGraph):
             n: Number of columns of triangles.
             spacing: The distance between adjacent nodes on the final lattice.
         """
-        # 1. Create a standard triangular lattice using networkx.
         G = nx.triangular_lattice_graph(m, n, with_positions=True)
 
-        # 2. Extract and scale node positions.
         pos_unit = nx.get_node_attributes(G, "pos")
         final_pos = {node: (x * spacing, y * spacing) for node, (x, y) in pos_unit.items()}
 
-        # 3. Convert the networkx graph with tuple labels to a DataGraph with integer labels.
         final_nodes = sorted(list(G.nodes()))
-
-        # Get the scaled coordinates in the sorted order
         final_coords = [final_pos[label] for label in final_nodes]
-
-        # Create a mapping from tuple-labels to final integer indices (0, 1, 2, ...)
         label_to_int = {label: i for i, label in enumerate(final_nodes)}
-
-        # Get the edges and map their labels to the new integer indices
         final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G.edges()]
 
         graph = cls.from_coordinates(final_coords)
@@ -147,26 +138,15 @@ class DataGraph(BaseGraph):
             n: Number of columns of hexagons.
             spacing: The distance between adjacent nodes on the final lattice.
         """
-        # 1. Create a standard hexagonal lattice using networkx.
         G = nx.hexagonal_lattice_graph(m, n, with_positions=True)
-
-        # 2. Extract and scale node positions.
         pos_unit = nx.get_node_attributes(G, "pos")
         final_pos = {node: (x * spacing, y * spacing) for node, (x, y) in pos_unit.items()}
-
-        # 3. Convert the networkx graph with tuple labels to a DataGraph with integer labels.
         final_nodes = sorted(list(G.nodes()))
 
-        # Get the scaled coordinates in the sorted order
         final_coords = [final_pos[label] for label in final_nodes]
-
-        # Create a mapping from tuple-labels to final integer indices (0, 1, 2, ...)
         label_to_int = {label: i for i, label in enumerate(final_nodes)}
-
-        # Get the edges and map their labels to the new integer indices
         final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G.edges()]
 
-        # Create the final DataGraph instance
         graph = cls.from_coordinates(final_coords)
         graph.add_edges_from(final_edges)
         graph._reset_dicts()
@@ -195,13 +175,9 @@ class DataGraph(BaseGraph):
         G_hex = nx.hexagonal_lattice_graph(m, n, with_positions=True)
         pos_unit = nx.get_node_attributes(G_hex, "pos")
 
-        # 2. Create a new graph for the heavy-hex lattice.
-        # We will scale the coordinates and relabel the nodes from the original graph.
-        # The scaling factor makes the distance between degree-3 nodes equal to 2 * spacing.
         G_heavy = nx.Graph()
         scaling_factor = 2 * spacing
 
-        # This mapping connects the old tuple labels to the new scaled tuple labels
         label_map = {}
         for old_label, (x, y) in pos_unit.items():
             # Relabel to an even-integer grid to make space for midpoint nodes
@@ -212,34 +188,27 @@ class DataGraph(BaseGraph):
             new_pos = (x * scaling_factor, y * scaling_factor)
             G_heavy.add_node(new_label, pos=new_pos)
 
-        # 3. Split every edge once by inserting a "heavy" mid-point node.
         for u_old, v_old in G_hex.edges():
             u_new, v_new = label_map[u_old], label_map[v_old]
 
-            # The midpoint label is the integer average of the *new* even labels.
             mid_label = ((u_new[0] + v_new[0]) // 2, (u_new[1] + v_new[1]) // 2)
 
-            # Calculate the midpoint's physical position.
             pos_u = G_heavy.nodes[u_new]["pos"]
             pos_v = G_heavy.nodes[v_new]["pos"]
             mid_pos = ((pos_u[0] + pos_v[0]) / 2, (pos_u[1] + pos_v[1]) / 2)
 
-            # Add the new midpoint node and connect it.
             G_heavy.add_node(mid_label, pos=mid_pos)
             G_heavy.add_edge(u_new, mid_label)
             G_heavy.add_edge(mid_label, v_new)
 
-        # 4. Convert the networkx graph with tuple labels to a DataGraph with integer labels.
         final_nodes = sorted(list(G_heavy.nodes()))
 
         final_coords = [G_heavy.nodes[label]["pos"] for label in final_nodes]
 
-        # Create a mapping from tuple-labels to final integer indices (0, 1, 2, ...)
         label_to_int = {label: i for i, label in enumerate(final_nodes)}
 
         final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G_heavy.edges()]
 
-        # Create the final DataGraph instance
         graph = cls.from_coordinates(final_coords)
         graph.add_edges_from(final_edges)
         graph._reset_dicts()
@@ -266,10 +235,8 @@ class DataGraph(BaseGraph):
         final_coords = [(x * spacing, y * spacing) for (x, y) in final_nodes]
         label_to_int = {label: i for i, label in enumerate(final_nodes)}
 
-        # Get the edges and map their labels to the new integer indices
         final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G.edges()]
 
-        # Create the final DataGraph instance
         graph = cls.from_coordinates(final_coords)
         graph.add_edges_from(final_edges)
         graph._reset_dicts()
