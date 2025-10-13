@@ -1,7 +1,6 @@
 # TODO:
 # - refactor this to reuse common methods in constructors
 # - refactor using rescale_coords method
-# - explore nx.convert_node_labels_to_integers(G)
 
 
 from __future__ import annotations
@@ -223,11 +222,10 @@ class DataGraph(BaseGraph):
             spacing: The distance between adjacent nodes on the final lattice.
         """
         G = nx.grid_2d_graph(m, n)
-
-        final_nodes = sorted(list(G.nodes()))
-        final_coords = [(x * spacing, y * spacing) for (x, y) in final_nodes]
+        final_coords = [(x * spacing, y * spacing) for (x, y) in list(G.nodes)]
         G = nx.convert_node_labels_to_integers(G)
-        graph = cls.from_coordinates(final_coords)
+
+        graph = DataGraph.from_coordinates(final_coords)
         graph.add_edges_from(G.edges)
         graph._reset_dicts()
         return graph
