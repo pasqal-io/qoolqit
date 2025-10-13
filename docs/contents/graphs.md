@@ -248,7 +248,7 @@ fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-### Triangular
+### Square
 A square lattice graph with m rows and n columns of squares.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
