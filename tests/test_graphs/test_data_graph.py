@@ -182,6 +182,29 @@ def test_hexagonal() -> None:
     assert edges == expected_edges
 
 
+def test_square() -> None:
+    graph = DataGraph.square(2, 2, spacing=5)
+
+    expected_coords = {
+        0: (0.0, 0.0),
+        1: (0.0, 5),
+        2: (5, 0.0),
+        3: (5, 5),
+    }
+
+    for k, v in graph.coords.items():
+        assert np.allclose(v, expected_coords[k])
+
+    edges = graph.sorted_edges
+    expected_edges = {
+        (0, 1),
+        (0, 2),
+        (1, 3),
+        (2, 3),
+    }
+    assert edges == expected_edges
+
+
 def test_heavy_hexagonal() -> None:
     graph = DataGraph.heavy_hexagonal(2, 2, spacing=1.6)
 

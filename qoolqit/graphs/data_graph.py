@@ -246,6 +246,36 @@ class DataGraph(BaseGraph):
         return graph
 
     @classmethod
+    def square(
+        cls,
+        m: int,
+        n: int,
+        spacing: float = 1.0,
+    ) -> DataGraph:
+        """
+        Constructs a square lattice graph, with respective coordinates.
+
+        Arguments:
+            m: Number of rows of square.
+            n: Number of columns of square.
+            spacing: The distance between adjacent nodes on the final lattice.
+        """
+        G = nx.grid_2d_graph(m, n)
+
+        final_nodes = sorted(list(G.nodes()))
+        final_coords = [(x * spacing, y * spacing) for (x, y) in final_nodes]
+        label_to_int = {label: i for i, label in enumerate(final_nodes)}
+
+        # Get the edges and map their labels to the new integer indices
+        final_edges = [(label_to_int[u], label_to_int[v]) for u, v in G.edges()]
+
+        # Create the final DataGraph instance
+        graph = cls.from_coordinates(final_coords)
+        graph.add_edges_from(final_edges)
+        graph._reset_dicts()
+        return graph
+
+    @classmethod
     def random_ud(
         cls,
         n: int,
