@@ -183,13 +183,13 @@ def test_hexagonal() -> None:
 
 
 def test_square() -> None:
-    graph = DataGraph.square(2, 2, spacing=5)
+    graph = DataGraph.square(2, 2, spacing=5.0)
 
     expected_coords = {
         0: (0.0, 0.0),
         1: (0.0, 5),
-        2: (5, 0.0),
-        3: (5, 5),
+        2: (5.0, 0.0),
+        3: (5.0, 5.0),
     }
 
     for k, v in graph.coords.items():
