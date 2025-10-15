@@ -53,7 +53,6 @@ def test_compiler_profiles(
         assert isinstance(program.compiled_sequence, PulserSequence)
 
 
-@pytest.mark.flaky(max_runs=2)
 @pytest.mark.parametrize("device_class", ALL_DEVICES)
 @pytest.mark.parametrize("profile", CompilerProfile.list())
 def test_compiler_profiles_dmm(
@@ -64,7 +63,6 @@ def test_compiler_profiles_dmm(
 
     if profile != CompilerProfile.MIN_DISTANCE:
         program = random_program_dmm()
-        print(program.register, program.drive.weighted_detunings)
         device = device_class()
         if device._device.dmm_channels:
             program.compile_to(device, profile=profile)
