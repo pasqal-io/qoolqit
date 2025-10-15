@@ -63,6 +63,11 @@ class Register:
         return self._qubits
 
     @property
+    def qubits_ids(self) -> list:
+        """Returns the qubit keys."""
+        return list(self._qubits.keys())
+
+    @property
     def n_qubits(self) -> int:
         """Number of qubits in the Register."""
         return len(self.qubits)
