@@ -163,3 +163,34 @@ def test_from_nx_with_weights_and_pos() -> None:
         1: (1.0, 0.0),
         2: (0.5, 1.0),
     }
+
+
+def test_from_nx_not_all_node_weights() -> None:
+    G = nx.Graph()
+    G.add_node(0, weight=1.0)
+    G.add_node(1)  # missing weight
+    G.add_edge(0, 1, weight=0.5)
+
+    with pytest.raises(ValueError, match=r"_node_weights"):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_not_all_edge_weights() -> None:
+    G = nx.Graph()
+    G.add_node(0, weight=1.0)
+    G.add_node(1, weight=2.0)
+    G.add_edge(0, 1, weight=0.5)
+    G.add_edge(1, 0)  # missing weight
+
+    with pytest.raises(ValueError, match=r"_edge_weights"):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_not_all_pos() -> None:
+    G = nx.Graph()
+    G.add_node(0, pos=(1.0, 0))
+    G.add_node(1)  # missing pos
+    G.add_edge(0, 1, weight=0.5)
+
+    with pytest.raises(ValueError, match=r"_coords"):
+        BaseGraph.from_nx(G)
