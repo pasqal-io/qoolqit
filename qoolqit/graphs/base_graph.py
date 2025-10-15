@@ -120,11 +120,11 @@ class BaseGraph(nx.Graph):
                 raise ValueError(f"All {attr_name} must be assigned if any is.")
             for e, val in attr_value.items():
                 if not isinstance(val, attr_typ):
-                    raise TypeError(f"{attr_name} value must be {attr_typ}, got {type(val)}.")
+                    raise TypeError(f"{attr_name} value must be {attr_typ}, got type {type(val)}.")
                 if isinstance(val, (tuple, list)):
                     if not (len(val) == 2 and all(isinstance(x, (float, int)) for x in val)):
                         raise TypeError(
-                            f"{attr_name} value must be a 2-dimensional tuple of {(float,int)}."
+                            f"{attr_name} value must be a 2-dimensional tuple/list of (float, int)."
                         )
             getattr(graph, attr_name).update(attr_value)
 
@@ -150,9 +150,9 @@ class BaseGraph(nx.Graph):
         num_edges = g.edge_index.size(1)
 
         attr_specs = {
-            "x": (torch.Size((num_nodes, 1)), "nodes"),
-            "pos": (torch.Size((num_nodes, 2)), "nodes"),
-            "edge_attr": (torch.Size((num_edges, 1)), "edges"),
+            "x": (torch.Size([num_nodes, 1]), "nodes"),
+            "pos": (torch.Size([num_nodes, 2]), "nodes"),
+            "edge_attr": (torch.Size([num_edges, 1]), "edges"),
         }
 
         is_present: dict[str, list[str]] = {"nodes": [], "edges": []}
@@ -161,16 +161,13 @@ class BaseGraph(nx.Graph):
             if val is None:
                 continue
             if not isinstance(val, torch.Tensor):
-                raise TypeError(f"'{attr}' must be a torch.Tensor if provided.")
+                raise TypeError(f"{attr} must be a torch.Tensor if provided.")
             if val.shape != shape:
-                raise ValueError(f"'{attr}' must have shape {shape}, got {val.shape}.")
+                raise ValueError(f"{attr} must have shape {shape}, got {val.shape}.")
             is_present[group].append(attr)
 
-        # --- Convert to NetworkX ---
         G_nx = to_networkx(
-            g,
-            node_attrs=is_present["nodes"],
-            edge_attrs=is_present["edges"],
+            g, node_attrs=is_present["nodes"], edge_attrs=is_present["edges"], to_undirected=True
         )
 
         # --- Rename and flatten attributes ---

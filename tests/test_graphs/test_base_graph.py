@@ -3,6 +3,8 @@ from __future__ import annotations
 import networkx as nx
 import numpy as np
 import pytest
+import torch
+from torch_geometric.data import Data
 
 from qoolqit.graphs import BaseGraph, random_coords, random_edge_list
 
@@ -153,10 +155,10 @@ def test_from_nx_with_weights_and_pos() -> None:
     g = BaseGraph.from_nx(G)
 
     assert set(g.nodes) == {0, 1, 2}
-    assert set(g.edges) == {(0, 1), (1, 2), (2, 0)}
+    assert set(g.edges) == {(0, 1), (1, 2), (0, 2)}
 
     assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
-    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (2, 0): 0.3}
+    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
 
     assert g._coords == {
         0: (0.0, 0.0),
@@ -171,18 +173,19 @@ def test_from_nx_not_all_node_weights() -> None:
     G.add_node(1)  # missing weight
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(ValueError, match=r"_node_weights"):
+    with pytest.raises(ValueError, match=r"All _node_weights must be assigned if any is."):
         BaseGraph.from_nx(G)
 
 
-def test_from_nx_not_all_edge_weights() -> None:
+def test_from_nx_not_all_edges_weights() -> None:
     G = nx.Graph()
     G.add_node(0, weight=1.0)
     G.add_node(1, weight=2.0)
+    G.add_node(2, weight=2.0)
     G.add_edge(0, 1, weight=0.5)
-    G.add_edge(1, 0)  # missing weight
+    G.add_edge(0, 2)  # missing weight
 
-    with pytest.raises(ValueError, match=r"_edge_weights"):
+    with pytest.raises(ValueError, match=r"All _edge_weights must be assigned if any is."):
         BaseGraph.from_nx(G)
 
 
@@ -192,7 +195,7 @@ def test_from_nx_not_all_pos() -> None:
     G.add_node(1)  # missing pos
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(ValueError, match=r"_coords"):
+    with pytest.raises(ValueError, match=r"All _coords must be assigned if any is."):
         BaseGraph.from_nx(G)
 
 
@@ -203,7 +206,7 @@ def test_from_nx_node_weight_type() -> None:
     G.add_node(1, weight=[1, 0])
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(TypeError, match=r"_node_weights"):
+    with pytest.raises(TypeError, match=r"_node_weights value must be "):
         BaseGraph.from_nx(G)
 
 
@@ -215,7 +218,7 @@ def test_from_nx_edge_weight_type() -> None:
     G.add_edge(0, 1, weight="pippo")
     G.add_edge(1, 0)
 
-    with pytest.raises(TypeError, match=r"_node_weights"):
+    with pytest.raises(TypeError, match=r"_edge_weights value must be "):
         BaseGraph.from_nx(G)
 
 
@@ -226,7 +229,7 @@ def test_from_nx_wrong_pos_type() -> None:
     G.add_node(1, weight=2.0, pos="paperino")
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(TypeError, match=r"_coords"):
+    with pytest.raises(TypeError, match=r"_coords value must be "):
         BaseGraph.from_nx(G)
 
 
@@ -237,5 +240,78 @@ def test_from_nx_wrong_pos_content_type() -> None:
     G.add_node(1, weight=2.0, pos=("sempronio"))
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(TypeError, match=r"_coords"):
+    with pytest.raises(TypeError, match=r"_coords value must be a 2-dimensional tuple/list"):
         BaseGraph.from_nx(G)
+
+
+def test_from_pyg_only_edges() -> None:
+    """Test importing a PyG Data with only edge_index (no weights or positions)."""
+    edge_index = torch.tensor([[0, 1, 1, 2], [1, 0, 2, 1]])  # edges: (0,1), (1,0), (1,2), (2,1)
+    data = Data(edge_index=edge_index, num_nodes=3)
+
+    g = BaseGraph.from_pyg(data)
+
+    # Check that nodes and edges were copied
+    assert set(g.nodes) == {0, 1, 2}
+    assert all(v is None for v in g._node_weights.values())
+    assert all(v is None for v in g._coords.values())
+    assert all(v is None for v in g._edge_weights.values())
+
+
+def test_from_pyg() -> None:
+    """Test importing a PyG Data object with node and edge attributes."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.float64)  # (0->1, 1->2, 2->0)
+
+    x = torch.tensor([[1.0], [2.0], [3.0]], dtype=torch.float64)  # node weights
+    pos = torch.tensor([[0.0, 0.0], [1.0, 0.0], [0.5, 1.0]], dtype=torch.float64)  # positions
+    edge_attr = torch.tensor([[0.1], [0.2], [0.3]], dtype=torch.float64)  # edge weights
+
+    data = Data(x=x, pos=pos, edge_index=edge_index, edge_attr=edge_attr)
+
+    g = BaseGraph.from_pyg(data)
+
+    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
+    assert g._coords == {0: [0.0, 0.0], 1: [1.0, 0.0], 2: [0.5, 1.0]}
+
+
+def test_from_pyg_wrong_shape_x() -> None:
+    """Test that invalid tensor shapes raise ValueError."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.float64)
+    x = torch.tensor(
+        [[1.0, 2.0], [2.0, 1.0]], dtype=torch.float64
+    )  # wrong shape: should be (num_nodes,1)
+    data = Data(x=x, edge_index=edge_index)
+
+    with pytest.raises(ValueError, match=r"x"):
+        BaseGraph.from_pyg(data)
+
+
+def test_from_pyg_wrong_shape_pos() -> None:
+    """Test that non-numeric tensors raise TypeError."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.float64)
+    pos = torch.tensor([[0, 1, 1], [1, 0, 0]], dtype=torch.float64)
+    data = Data(edge_index=edge_index, pos=pos)
+
+    with pytest.raises(ValueError, match=r"pos"):
+        BaseGraph.from_pyg(data)
+
+
+def test_from_pyg_edge_attr_num_edges() -> None:
+    """Test that edge_attr with wrong number of rows raises ValueError."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]])  # 3 edges
+    edge_attr = torch.tensor([[0.1], [0.2]])  # only 2 edge attributes
+    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
+
+    with pytest.raises(ValueError, match=r"edge_attr"):
+        BaseGraph.from_pyg(data)
+
+
+def test_from_pyg_wrong_edge_shape() -> None:
+    """Test that non-tensor edge_attr raises TypeError."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]])  # 3 edges
+    edge_attr = torch.tensor([[0.1, 0.2], [0.1, 0.2], [0.1, 0.2]])  # shape mismatch
+    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
+
+    with pytest.raises(ValueError, match=r"edge_attr"):
+        BaseGraph.from_pyg(data)
