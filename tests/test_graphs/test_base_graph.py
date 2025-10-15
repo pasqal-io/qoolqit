@@ -194,3 +194,48 @@ def test_from_nx_not_all_pos() -> None:
 
     with pytest.raises(ValueError, match=r"_coords"):
         BaseGraph.from_nx(G)
+
+
+def test_from_nx_node_weight_type() -> None:
+    """Test that non-numeric node weights raise TypeError."""
+    G = nx.Graph()
+    G.add_node(0, weight="pippo")  # string instead of float
+    G.add_node(1, weight=[1, 0])
+    G.add_edge(0, 1, weight=0.5)
+
+    with pytest.raises(TypeError, match=r"_node_weights"):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_edge_weight_type() -> None:
+    """Test that non-numeric node weights raise TypeError."""
+    G = nx.Graph()
+    G.add_node(0, weight=1.0)
+    G.add_node(1, weight=2.0)
+    G.add_edge(0, 1, weight="pippo")
+    G.add_edge(1, 0)
+
+    with pytest.raises(TypeError, match=r"_node_weights"):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_wrong_pos_type() -> None:
+    """Test that non-tuple/list positions raise TypeError."""
+    G = nx.Graph()
+    G.add_node(0, weight=1.0, pos="pluto")  # wrong type
+    G.add_node(1, weight=2.0, pos="paperino")
+    G.add_edge(0, 1, weight=0.5)
+
+    with pytest.raises(TypeError, match=r"_coords"):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_wrong_pos_content_type() -> None:
+    """Test that positions with non-numeric contents raise TypeError."""
+    G = nx.Graph()
+    G.add_node(0, weight=1.0, pos=("tizio", "caio"))  # wrong contents
+    G.add_node(1, weight=2.0, pos=("sempronio"))
+    G.add_edge(0, 1, weight=0.5)
+
+    with pytest.raises(TypeError, match=r"_coords"):
+        BaseGraph.from_nx(G)
