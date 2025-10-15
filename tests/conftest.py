@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 from scipy.linalg import expm
 
-from qoolqit.drive import Drive
+from qoolqit.drive import Drive, WeightedDetuning
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import Ramp, Waveform
@@ -70,6 +70,26 @@ def random_program(
     def _generate_random_program() -> QuantumProgram:
         register = random_linear_register()
         drive = random_drive()
+        return QuantumProgram(register, drive)
+
+    yield _generate_random_program
+
+
+@pytest.fixture
+def random_program_dmm(
+    random_linear_register: Callable[[], Register],
+    random_pos_ramp: Callable[[], Waveform],
+    random_neg_ramp: Callable[[], Waveform],
+) -> Generator[Callable[[], QuantumProgram]]:
+    def _generate_random_program() -> QuantumProgram:
+        register = random_linear_register()
+        wf_amp = random_pos_ramp()
+        wf_det = random_neg_ramp()
+        wdetuning = WeightedDetuning(
+            weights={q: uniform(0.1, 0.99) for q in register.qubits.keys()},
+            waveform=Ramp(1.0, -0.2, -0.5),
+        )
+        drive = Drive(amplitude=wf_amp, detuning=wf_det, weighted_detunings=[wdetuning])
         return QuantumProgram(register, drive)
 
     yield _generate_random_program

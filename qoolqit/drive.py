@@ -17,6 +17,8 @@ class WeightedDetuning:
 
     See https://pasqal-io.github.io/qoolqit/latest/theory/rydberg_model/#weighted-detuning for
     details on weighted detunings.
+
+    Note: detuning with positive waveforms cannot be instantiated.
     """
 
     weights: dict[Any, float]
@@ -36,6 +38,10 @@ class WeightedDetuning:
 
     In the companion documentation, this is the function Delta(t).
     """
+
+    def __post_init__(self) -> None:
+        if self.waveform.max() > 0:
+            raise ValueError("WeightedDetuning waveform must not be positive.")
 
 
 class Drive:

@@ -119,7 +119,8 @@ def basic_compilation(
 
         detuning_adder = _DetuningAdder(wf_converter, pulser_register, pulser_sequence)
 
-        # If our device supports reusable channels, we can attach all the detunings to any channel.
+        # If our device supports reusable channels, we can declare multiple
+        # DMM channels with the same specs
         if device._device.reusable_channels:
             # Arbitrarily pick the first channel.
             dmm_id = channels[0]
@@ -150,14 +151,13 @@ class _DetuningAdder:
         self._pulser_sequence = pulser_sequence
 
     def add_detuning(self, dmm_id: str, detuning: WeightedDetuning) -> None:
-        detuning_map = self._pulser_register.define_detuning_map(detuning_weights=detuning.weights)
+        # conversion may be needed for pulser register as only str keys are accepted
+        converted_weights = {
+            k if isinstance(k, str) else str(k): v for k, v in detuning.weights.items()
+        }
+        detuning_map = self._pulser_register.define_detuning_map(detuning_weights=converted_weights)
         self._pulser_sequence.config_detuning_map(detuning_map, dmm_id=dmm_id)
         waveform = self._wf_converter.convert(detuning.waveform)
         assert isinstance(waveform, PulserCustomWaveform)
-        for sample in waveform.samples:
-            if sample > 0:
-                raise WeightedDetuningWaveformError(
-                    f"While compiling weighted detuning for channel {dmm_id}, "
-                    "encountered a waveform with a value >0 ."
-                )
+        # Note: Pulser raises an error when DMM is positive
         self._pulser_sequence.add_dmm_detuning(waveform, dmm_id)
