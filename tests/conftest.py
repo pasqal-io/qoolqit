@@ -86,7 +86,7 @@ def random_program_dmm(
         wf_amp = random_pos_ramp()
         wf_det = random_neg_ramp()
         wdetuning = WeightedDetuning(
-            weights={q: uniform(0.1, 0.99) for q in register.qubits.keys()},
+            weights={q: uniform(0.1, 0.99) for q in register.qubits_ids},
             waveform=Ramp(1.0, -0.2, -0.5),
         )
         drive = Drive(amplitude=wf_amp, detuning=wf_det, weighted_detunings=[wdetuning])
