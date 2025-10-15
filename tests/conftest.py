@@ -76,12 +76,10 @@ def random_program(
 
 
 @pytest.fixture
-def random_program_dmm(
+def dmm_program(
     random_linear_register: Callable[[], Register],
-    random_pos_ramp: Callable[[], Waveform],
-    random_neg_ramp: Callable[[], Waveform],
 ) -> Generator[Callable[[], QuantumProgram]]:
-    def _generate_random_program() -> QuantumProgram:
+    def _generate_program() -> QuantumProgram:
         register = random_linear_register()
         wf_amp = Ramp(1.0, 0.5, 0.5)
         wf_det = Ramp(1.0, -0.2, -0.5)
@@ -92,7 +90,7 @@ def random_program_dmm(
         drive = Drive(amplitude=wf_amp, detuning=wf_det, weighted_detunings=[wdetuning])
         return QuantumProgram(register, drive)
 
-    yield _generate_random_program
+    yield _generate_program
 
 
 @pytest.fixture

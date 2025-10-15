@@ -58,11 +58,11 @@ def test_compiler_profiles(
 def test_compiler_profiles_dmm(
     device_class: Callable,
     profile: CompilerProfile,
-    random_program_dmm: Callable[[], QuantumProgram],
+    dmm_program: Callable[[], QuantumProgram],
 ) -> None:
 
     if profile != CompilerProfile.MIN_DISTANCE:
-        program = random_program_dmm()
+        program = dmm_program()
         device = device_class()
         if device._device.dmm_channels:
             program.compile_to(device, profile=profile)
