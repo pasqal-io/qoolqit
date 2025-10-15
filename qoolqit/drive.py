@@ -1,13 +1,47 @@
 from __future__ import annotations
 
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 from qoolqit.waveforms import CompositeWaveform, Delay, Waveform
 
-__all__ = ["Drive"]
+__all__ = ["WeightedDetuning", "Drive"]
+
+
+@dataclass
+class WeightedDetuning:
+    """A weighted detuning.
+
+    See https://pasqal-io.github.io/qoolqit/latest/theory/rydberg_model/#weighted-detuning for
+    details on weighted detunings.
+
+    Note: detuning with positive waveforms cannot be instantiated.
+    """
+
+    weights: dict[Any, float]
+    """
+    Association of weights to qubits.
+
+    Each weight must be in [0, 1], where `0` means that the
+    waveform is ignored for this qubit and `1` means that the waveform is fully applied to this
+    qubit.
+
+    In the companion documentation, these are the value epsilon_i.
+    """
+
+    waveform: Waveform
+    """
+    The waveform for this detuning.
+
+    In the companion documentation, this is the function Delta(t).
+    """
+
+    def __post_init__(self) -> None:
+        if self.waveform.max() > 0:
+            raise ValueError("WeightedDetuning waveform must not be positive.")
 
 
 class Drive:
@@ -18,6 +52,7 @@ class Drive:
         *args: Any,
         amplitude: Waveform | None = None,
         detuning: Waveform | None = None,
+        weighted_detunings: list[WeightedDetuning] | None = None,
         phase: float = 0.0,
     ) -> None:
         """Default constructor for the Drive.
@@ -29,6 +64,8 @@ class Drive:
             amplitude: waveform representing Ω(t) in the drive Hamiltonian.
             detuning: waveform representing δ(t) in the drive Hamiltonian.
             phase: phase value ɸ for the amplitude term.
+            weighted_detunings: additional waveforms and weights applied to individual
+                qubits. Note that these detunings are not supported on all devices.
         """
 
         if len(args) > 0:
@@ -71,6 +108,7 @@ class Drive:
 
         self._duration = self._amplitude.duration
         self._phase = phase
+        self._weighted_detunings = weighted_detunings if weighted_detunings is not None else []
 
     @property
     def amplitude(self) -> Waveform:
@@ -81,6 +119,11 @@ class Drive:
     def detuning(self) -> Waveform:
         """The detuning waveform in the drive."""
         return self._detuning_orig
+
+    @property
+    def weighted_detunings(self) -> Sequence[WeightedDetuning]:
+        """Detunings applied to individual qubits."""
+        return self._weighted_detunings
 
     @property
     def phase(self) -> float:
