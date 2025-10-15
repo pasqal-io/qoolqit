@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import networkx as nx
 import numpy as np
 import pytest
 
@@ -117,3 +118,48 @@ def test_basegraph_constructors(n_nodes: int) -> None:
 
     assert graph1.is_ud_graph()
     assert graph2.is_ud_graph()
+
+
+def test_from_nx() -> None:
+    """Test importing a NetworkX graph without any weights or positions."""
+    G = nx.triangular_lattice_graph(1, 2, with_positions=False)
+    G = nx.convert_node_labels_to_integers(G)
+    g = BaseGraph.from_nx(G)
+
+    # Check whether we copied nodes and edges correctly
+    assert set(g.nodes) == set(range(4))
+    assert set(g.edges) == set([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3)])
+
+    # Check whether the coords exist and are all None
+    assert all(v is None for v in g._coords.values())
+    assert all(v is None for v in g._node_weights.values())
+    assert all(v is None for v in g._edge_weights.values())
+    # Check whether the has_coords method gives False
+    assert not g.has_coords
+
+
+def test_from_nx_with_weights_and_pos() -> None:
+    """Test importing a NetworkX graph that has node/edge weights and positions."""
+    G = nx.Graph()
+
+    G.add_node(0, weight=1.0, pos=(0.0, 0.0))
+    G.add_node(1, weight=2.0, pos=(1.0, 0.0))
+    G.add_node(2, weight=3.0, pos=(0.5, 1.0))
+
+    G.add_edge(0, 1, weight=0.1)
+    G.add_edge(1, 2, weight=0.2)
+    G.add_edge(2, 0, weight=0.3)
+
+    g = BaseGraph.from_nx(G)
+
+    assert set(g.nodes) == {0, 1, 2}
+    assert set(g.edges) == {(0, 1), (1, 2), (2, 0)}
+
+    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (2, 0): 0.3}
+
+    assert g._coords == {
+        0: (0.0, 0.0),
+        1: (1.0, 0.0),
+        2: (0.5, 1.0),
+    }

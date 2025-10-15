@@ -5,6 +5,9 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
+import torch
+from torch_geometric.data import Data
+from torch_geometric.utils import to_networkx
 
 from .utils import (
     all_node_pairs,
@@ -76,7 +79,118 @@ class BaseGraph(nx.Graph):
         graph._reset_dicts()
         return graph
 
-    # properties
+    @classmethod
+    def from_nx(cls, g: nx.Graph) -> "BaseGraph":
+        """Construct a BaseGraph from a NetworkX graph.
+
+        Expected NetworkX attributes:
+            - Node attribute "weight" : float
+            - Edge attribute "weight" : float
+            - Node attribute "pos"    : tuple(float, float)
+
+        Returns BaseGraph with following attributes:
+            - _node_weights : dict[node, float or None]
+            - _edge_weights : dict[(u,v), float or None]
+            - _coords       : dict[node, (float,float) or None]
+        """
+        if not isinstance(g, nx.Graph):
+            raise TypeError("Input must be a networkx.Graph instance.")
+
+        graph = cls()
+        g = nx.convert_node_labels_to_integers(g)
+        graph.add_nodes_from(g.nodes)
+        graph.add_edges_from(g.edges)
+
+        num_nodes = len(g.nodes)
+        num_edges = len(g.edges)
+
+        # Defaults to None
+        graph._node_weights = {v: None for v in g.nodes}
+        graph._coords = {v: None for v in g.nodes}
+        graph._edge_weights = {(u, v): None for u, v in g.edges}
+
+        attr = {
+            "_node_weights": (nx.get_node_attributes(g, "weight"), num_nodes, (float, int)),
+            "_edge_weights": (nx.get_edge_attributes(g, "weight"), num_edges, (float, int)),
+            "_coords": (nx.get_node_attributes(g, "pos"), num_nodes, (tuple, list)),
+        }
+
+        for attr_name, (attr_value, dim, attr_typ) in attr.items():
+            if 0 < len(attr_value) < dim:
+                raise ValueError(f"All {attr_name} must be assigned if any is.")
+            for e, val in attr_value.items():
+                if not isinstance(val, attr_typ):
+                    raise TypeError(f"{attr_name} value must be {attr_typ}, got {type(val)}.")
+                if isinstance(val, (tuple, list)):
+                    if not (len(val) == 2 and all(isinstance(x, (float, int)) for x in val)):
+                        raise TypeError(
+                            f"{attr_name} value must be a 2-dimensional tuple of {(float,int)}."
+                        )
+            getattr(graph, attr_name).update(attr_value)
+
+        return graph
+
+    @classmethod
+    def from_pyg(cls, g: Data) -> "BaseGraph":
+        """Convert a PyTorch Geometric Data object into a BaseGraph.
+
+        Required:
+            - edge_index
+        Optional (validated if present):
+            - x         : shape (num_nodes, 1)
+            - pos       : shape (num_nodes, 2)
+            - edge_attr : shape (num_edges, 1)
+        """
+        if not isinstance(g, Data):
+            raise TypeError("Input must be a torch_geometric.data.Data object.")
+        if not hasattr(g, "edge_index"):
+            raise AttributeError("Data object must have an 'edge_index' attribute.")
+
+        num_nodes = g.num_nodes
+        num_edges = g.edge_index.size(1)
+
+        attr_specs = {
+            "x": (torch.Size((num_nodes, 1)), "nodes"),
+            "pos": (torch.Size((num_nodes, 2)), "nodes"),
+            "edge_attr": (torch.Size((num_edges, 1)), "edges"),
+        }
+
+        is_present: dict[str, list[str]] = {"nodes": [], "edges": []}
+        for attr, (shape, group) in attr_specs.items():
+            val = getattr(g, attr, None)
+            if val is None:
+                continue
+            if not isinstance(val, torch.Tensor):
+                raise TypeError(f"'{attr}' must be a torch.Tensor if provided.")
+            if val.shape != shape:
+                raise ValueError(f"'{attr}' must have shape {shape}, got {val.shape}.")
+            is_present[group].append(attr)
+
+        # --- Convert to NetworkX ---
+        G_nx = to_networkx(
+            g,
+            node_attrs=is_present["nodes"],
+            edge_attrs=is_present["edges"],
+        )
+
+        # --- Rename and flatten attributes ---
+        if "x" in is_present["nodes"]:
+            nx.set_node_attributes(
+                G_nx, {n: float(d["x"][0]) for n, d in G_nx.nodes(data=True)}, "weight"
+            )
+            for _, d in G_nx.nodes(data=True):
+                d.pop("x", None)
+
+        if "edge_attr" in is_present["edges"]:
+            nx.set_edge_attributes(
+                G_nx,
+                {(u, v): float(d["edge_attr"][0]) for u, v, d in G_nx.edges(data=True)},
+                "weight",
+            )
+            for _, _, d in G_nx.edges(data=True):
+                d.pop("edge_attr", None)
+
+        return cls.from_nx(G_nx)
 
     @property
     def sorted_edges(self) -> set:
