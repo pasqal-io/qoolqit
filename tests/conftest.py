@@ -83,11 +83,11 @@ def random_program_dmm(
 ) -> Generator[Callable[[], QuantumProgram]]:
     def _generate_random_program() -> QuantumProgram:
         register = random_linear_register()
-        wf_amp = random_pos_ramp()
-        wf_det = random_neg_ramp()
+        wf_amp = Ramp(1.0, 0.5, 0.5)
+        wf_det = Ramp(1.0, -0.2, -0.5)
         wdetuning = WeightedDetuning(
             weights={q: uniform(0.1, 0.99) for q in register.qubits_ids},
-            waveform=Ramp(1.0, -0.2, -0.5),
+            waveform=wf_det,
         )
         drive = Drive(amplitude=wf_amp, detuning=wf_det, weighted_detunings=[wdetuning])
         return QuantumProgram(register, drive)
