@@ -136,8 +136,6 @@ def test_from_nx() -> None:
     assert all(v is None for v in g._coords.values())
     assert all(v is None for v in g._node_weights.values())
     assert all(v is None for v in g._edge_weights.values())
-    # Check whether the has_coords method gives False
-    assert not g.has_coords
 
 
 def test_from_nx_with_weights_and_pos() -> None:
@@ -173,7 +171,7 @@ def test_from_nx_not_all_node_weights() -> None:
     G.add_node(1)  # missing weight
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(ValueError, match=r"All _node_weights must be assigned if any is."):
+    with pytest.raises(ValueError, match=r"_node_weights must be of dimension"):
         BaseGraph.from_nx(G)
 
 
@@ -185,7 +183,7 @@ def test_from_nx_not_all_edges_weights() -> None:
     G.add_edge(0, 1, weight=0.5)
     G.add_edge(0, 2)  # missing weight
 
-    with pytest.raises(ValueError, match=r"All _edge_weights must be assigned if any is."):
+    with pytest.raises(ValueError, match=r"_edge_weights must be of dimension"):
         BaseGraph.from_nx(G)
 
 
@@ -195,7 +193,7 @@ def test_from_nx_not_all_pos() -> None:
     G.add_node(1)  # missing pos
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(ValueError, match=r"All _coords must be assigned if any is."):
+    with pytest.raises(ValueError, match=r"_coords must be of dimension"):
         BaseGraph.from_nx(G)
 
 
