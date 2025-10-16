@@ -146,9 +146,10 @@ class AnalogDevice(Device):
 
 class DigitalAnalogDevice(Device):
     """A device with digital and analog capabilites."""
+
     def __init__(self) -> None:
         super().__init__(pulser_device=_DigitalAnalogDevice)
-    
+
 
 class TestAnalogDevice(Device):
     def __init__(self) -> None:
