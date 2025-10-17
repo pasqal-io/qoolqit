@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 import time
 from abc import abstractmethod
-from typing import Counter, cast
+from collections import Counter
+from typing import cast
 
 from pasqal_cloud import SDK, EmulatorType
 from pasqal_cloud.batch import Batch
@@ -85,7 +86,6 @@ class RemoteJob(BaseJob):
             batch.refresh()
             if batch.status in {"PENDING", "RUNNING"}:
                 # Continue waiting.
-
                 continue
             job = batch.ordered_jobs[0]
             if job.status == "ERROR":
@@ -94,7 +94,7 @@ class RemoteJob(BaseJob):
                 raise self._error
             counter = job.result
             assert isinstance(counter, dict)
-            counter = cast(Counter[str], counter)
+            counter = Counter(counter)
 
             # FIXME: This is subject to race condition.
             self._result = Result(counts=counter)
