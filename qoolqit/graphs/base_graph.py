@@ -80,7 +80,7 @@ class BaseGraph(nx.Graph):
         return graph
 
     @classmethod
-    def from_nx(cls, g: nx.Graph) -> "BaseGraph":
+    def from_nx(cls, g: nx.Graph) -> BaseGraph:
         """Construct a BaseGraph from a NetworkX graph.
 
         Required:
