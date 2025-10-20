@@ -150,7 +150,7 @@ class BaseGraph(nx.Graph):
         """
         if not isinstance(g, Data):
             raise TypeError("Input must be a torch_geometric.data.Data object.")
-        if not hasattr(g, "edge_index"):
+        if g.edge_index is None:
             raise AttributeError("Data object must have an 'edge_index' attribute.")
 
         num_nodes = g.num_nodes
