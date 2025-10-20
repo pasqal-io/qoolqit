@@ -15,7 +15,9 @@ Let us revisit the quantum program definition described in the [Quantum program]
 
 ```python exec="on" source="material-block" result="json" session="execution"
 
-from qoolqit import Drive, PiecewiseLinear, QuantumProgram, Ramp, Register, Constant
+from qoolqit import Drive, Ramp, Register, Constant
+from qoolqit import QuantumProgram
+from qoolqit import MockDevice
 
 # Create the register
 register = Register.from_coordinates([(0,1), (0,-1), (2,0)])
