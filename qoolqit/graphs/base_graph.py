@@ -138,7 +138,7 @@ class BaseGraph(nx.Graph):
         return graph
 
     @classmethod
-    def from_pyg(cls, g: Data) -> "BaseGraph":
+    def from_pyg(cls, g: Data) -> BaseGraph:
         """Convert a PyTorch Geometric Data object into a BaseGraph.
 
         Required:
