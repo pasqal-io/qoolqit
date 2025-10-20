@@ -13,7 +13,7 @@ Later, we will briefly show how to authenticate and send a remote job.
 
 Let us revisit the quantum program definition described in the [Quantum program](./programs.md) page.
 
-```python exec="on" source="material-block" result="json" session="drives"
+```python exec="on" source="material-block" result="json" session="execution"
 
 from qoolqit import Drive, PiecewiseLinear, QuantumProgram, Ramp, Register, Constant
 
@@ -42,9 +42,9 @@ program.compile_to(device)
 ## Executing locally
 
 Executing your program locally is as simple as importing the local emulator and just run your program on it
-```python exec="on" source="material-block" result="json" session="drives"
+```python exec="on" source="material-block" result="json" session="execution"
 
 from qoolqit.execution import LocalEmulator
 emulator = LocalEmulator()
-results = emulator.run()
+results = emulator.run(program)
 ```
