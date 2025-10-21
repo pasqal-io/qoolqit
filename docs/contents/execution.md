@@ -161,6 +161,8 @@ Here, the remote results can act as a job handler:
     ```
 - Retrieve the remote results from `batch_id` and a `connection`:
     ```python
+    from qoolqit.execution import RemoteResults
+
     remote_results = RemoteResults(batch_id, connection)
     ```
 
