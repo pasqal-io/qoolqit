@@ -29,6 +29,7 @@ def test_remote_backend_run(
 ) -> None:
 
     device = device_class()
+    name = device._device.__name__ if hasattr(device._device, "__name__") else ""
 
     class MyMockServer(BaseMockServer):
 
@@ -45,7 +46,7 @@ def test_remote_backend_run(
         def endpoint_get_devices_specs(self, request: Any, context: Any, matches: list[str]) -> Any:
             """Return a basic device."""
             return {
-                "data": {device._device.__name__: device._device.__name__.to_abstract_repr()},
+                "data": {name: device._device.to_abstract_repr()},
             }
 
         def endpoint_get_devices_public_specs(
@@ -55,8 +56,8 @@ def test_remote_backend_run(
             return {
                 "data": [
                     {
-                        "device_type": device._device.__name__,
-                        "specs": device._device.__name__.to_abstract_repr(),
+                        "device_type": name,
+                        "specs": device._device.to_abstract_repr(),
                     },
                 ],
             }
@@ -86,7 +87,7 @@ def test_remote_backend_run(
                         "user_id": "my-user-id",
                         "status": "PENDING",
                         "ordered_jobs": [],
-                        "device_type": device._device.__name__,
+                        "device_type": name,
                         "sequence_builder": self._sequence_builder,
                     }
                 }
@@ -102,7 +103,7 @@ def test_remote_backend_run(
                     "user_id": "my-user-id",
                     "status": "DONE",
                     "ordered_jobs": [],
-                    "device_type": device._device.__name__,
+                    "device_type": name,
                     "sequence_builder": self._sequence_builder,
                 }
             }
@@ -143,7 +144,7 @@ def test_remote_backend_run(
                 "user_id": "my-user-id",
                 "status": "PENDING",
                 "ordered_jobs": [],
-                "device_type": device._device.__name__,
+                "device_type": name,
                 "sequence_builder": self._sequence_builder,
             }
 
