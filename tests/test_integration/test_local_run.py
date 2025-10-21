@@ -1,15 +1,15 @@
 from __future__ import annotations
-from typing import Any, Callable
+
+from typing import Callable
 
 import pytest
 from emu_mps import MPSBackend
 from emu_sv import SVBackend
-from pasqal_cloud.utils.mock_server import BaseMockServer
 from pulser.backend.abc import EmulatorBackend
 from pulser_simulation import QutipBackendV2
 
 from qoolqit.devices import ALL_DEVICES
-from qoolqit.execution import CompilerProfile, LocalEmulator, RemoteEmulator
+from qoolqit.execution import CompilerProfile, LocalEmulator
 from qoolqit.program import QuantumProgram
 
 

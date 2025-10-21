@@ -15,6 +15,7 @@ from qoolqit.devices import ALL_DEVICES
 from qoolqit.execution import CompilerProfile, RemoteEmulator
 from qoolqit.program import QuantumProgram
 
+
 @pytest.mark.parametrize("device_class", ALL_DEVICES)
 @pytest.mark.parametrize("profile", CompilerProfile.list())
 @pytest.mark.parametrize("backend_type", [EmuMPSBackend, EmuFreeBackendV2])
