@@ -183,3 +183,6 @@ def test_remote_backend_run(
             program.compile_to(device, profile=profile)
             results = remote_emulator.run(program)
             assert results
+            execution_result = results[-1]
+            counter = execution_result.bitstring_counts
+            assert sum(counter.values()) == runs
