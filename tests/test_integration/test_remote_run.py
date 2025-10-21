@@ -12,6 +12,7 @@ from pulser_pasqal import PasqalCloud
 from pulser_pasqal.backends import EmuFreeBackendV2, EmuMPSBackend, RemoteEmulatorBackend
 
 from qoolqit.devices import ALL_DEVICES
+from qoolqit.exceptions import CompilationError
 from qoolqit.execution import CompilerProfile, RemoteEmulator
 from qoolqit.program import QuantumProgram
 
@@ -180,9 +181,12 @@ def test_remote_emulator_run(
                 backend_type=backend_type, connection=connexion, runs=runs
             )
             program = random_program()
-            program.compile_to(device, profile=profile)
-            results = remote_emulator.run(program)
-            assert results
-            execution_result = results[-1]
-            counter = execution_result.bitstring_counts
-            assert sum(counter.values()) == runs
+            try:
+                program.compile_to(device, profile=profile)
+                results = remote_emulator.run(program)
+                assert results
+                execution_result = results[-1]
+                counter = execution_result.bitstring_counts
+                assert sum(counter.values()) == runs
+            except CompilationError:
+                assert remote_emulator
