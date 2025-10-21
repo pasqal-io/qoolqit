@@ -61,7 +61,7 @@ emulator = LocalEmulator(backend_type=SVBackend)
 
 - `QutipBackendV2`: Based on Qutip, runs programs with up to ~12 qubits and return qutip objects in the results.
 - `SVBackend`: PyTorch based state vectors and sparse matrices emulator. Runs programs with up to ~25 qubits and return torch objects in the results.
-- `MPSBackend`: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~100 qubits and return torch objects in the results.
+- `MPSBackend`: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~80 qubits and return torch objects in the results.
 
 More experienced users, might also want to configure an emulator through the generic `EmulationConfig` or the specific `QutipConfig`, `SVConfig`, `MPSConfig`.
 For more information about how the configuration options, please, refer to [Pulser documentation](https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.EmulationConfig.html).
@@ -77,6 +77,22 @@ emulator = LocalEmulator(emulation_config=emulation_config)
 
 ### Handling local results
 
+The call `emulator.run(program)` will return a `Sequence[Results]` object type. This is where the results of the computation are stored.
+For more info about this specific object, please, have a look at [Pulser documentation](https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.Results.html#results).
+As an example, lets inspect the results we got in the previous run:
+```python exec="on" source="material-block" session="execution"
+# single result in the sequence
+results[0].get_result_tags()
+print(results[0].get_result_tags())  # markdown-exec: hide
+```
+Then the bitstrings can be extracted simply as:
+```python exec="on" source="material-block" session="execution"
+# single result in the sequence
+final_bitstrings = results[0].final_bitstrings
+print(final_bitstrings)  # markdown-exec: hide
+```
+
+
 ## Executing remotely
 
 As anticipated, credentials to create a connection is required for most remote workflows.
@@ -89,7 +105,7 @@ Let's first initialize a connection as:
 from pulser_pasqal import PasqalCloud
 ```
 
-```python source="material-block"
+```python
 connection = PasqalCloud(
     username=USERNAME,  # Your username or email address for the Pasqal Cloud Platform
     password=PASSWORD,  # The password for your Pasqal Cloud Platform account
@@ -97,23 +113,71 @@ connection = PasqalCloud(
 )
 ```
 
+To use such connection, and to send jobs to the cloud, we first need to initialize a remote emulator:
+
 ```python exec="on" source="material-block" session="execution"
 from qoolqit.execution import RemoteEmulator
 
+connection = PasqalCloud()  # markdown-exec: hide
 emulator = RemoteEmulator(connection=connection)
+```
+
+As before, also `RemoteEmulator` can be instantiated with:
+- `backend_type`: remote counterpart of backends, namely `EmuFreeBackendV2`, `EmuSVBackend` (not available yet), `EmuMPSBackend`.
+- `emulation_config`: same as before.
+- `runs`: same as before.
+
+```python
+from qoolqit.execution import RemoteEmulator, EmuMPSBackend
+
+remote_emulator = RemoteEmulator(
+        backend_type=EmuMPSBackend,
+        connection=connection,
+        emulation_config = emulation_config
+        runs=200
+)
+results = remote_emulator.run(program)
 ```
 
 ### Handling remote results
 
+Remote emulators and QPU both have a `run()` method that will return a `Sequence[Results]` object type.
+However, if your program requires intensive resources to be run, or if QPU happens to be on maintenance, the use of this method is discouraged since it might leave your script hanging.
+In these situations prefer the use of the `submit(program) -> RemoteResults` instead:
+
+```python
+remote_emulator = RemoteEmulator(.., connection=connection, ...)
+remote_results = remote_emulator.submit(program)
+```
+
+Here, the remote results can act as a job handler:
+- Query the batch status: PENDING, RUNNING, DONE, etc.:
+    ```python
+    batch_status = remote_results.get_batch_status()
+    ```
+- Query the batch id, to be saved for later retrieval of results:
+    ```python
+    batch_id = remote_results.get_batch_id()
+    ```
+- Retrieve the remote results from `batch_id` and a `connection`:
+    ```python
+    remote_results = RemoteResults(batch_id, connection)
+    ```
+
+Once the batch has been completed (`batch_status` returns DONE), the complete results can be finally fetched as:
+```python
+results = remote_results.results
+```
 
 ## Executing remotely on a QPU
 
 A connection object can also be used to run the program directly on a QPU.
 To see the list of available devices, run:
 
-```python exec="on" source="material-block" result="json" session="execution"
-connection=PasqalCloud()
+```python exec="on" source="material-block" session="execution"
+connection = PasqalCloud()
 connection.fetch_available_devices()
+print(connection.fetch_available_devices())   # markdown-exec: hide
 ```
 
 Finally, on a QPU there is no configuration and, as per the properties of the quantum hardware, results will come as a bitstrings counter of length specified by the `runs` parameter.
