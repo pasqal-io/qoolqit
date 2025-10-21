@@ -57,7 +57,7 @@ def test_local_backend_run(
         assert sum(bitstrings.values()) == runs
 
 
-@pytest.mark.skip(reason="Remote not working")
+# @pytest.mark.skip(reason="Remote not working")
 @pytest.mark.parametrize("device_class", ALL_DEVICES)
 @pytest.mark.parametrize("profile", CompilerProfile.list())
 @pytest.mark.parametrize("backend_type", [EmuMPSBackend, EmuFreeBackendV2])
@@ -205,18 +205,18 @@ def test_compiler_profiles_dmm(
             }
 
     if profile != CompilerProfile.MIN_DISTANCE:
-        USERNAME = "my_username"
-        PROJECT_ID = "my-project-id"
-        PASSWORD = "my_password"
-        connection = PasqalCloud(
-            username=USERNAME,
-            password=PASSWORD,
-            project_id=PROJECT_ID,
-        )
-        remote_emulator = RemoteEmulator(
-            backend_type=backend_type, connection=connection, runs=runs
-        )
         with MyMockServer():
+            USERNAME = "my_username"
+            PROJECT_ID = "my-project-id"
+            PASSWORD = "my_password"
+            connexion = PasqalCloud(
+                username=USERNAME,
+                password=PASSWORD,
+                project_id=PROJECT_ID,
+            )
+            remote_emulator = RemoteEmulator(
+                backend_type=backend_type, connection=connexion, runs=runs
+            )
             program = dmm_program()
             device = device_class()
             if device._device.dmm_channels:
