@@ -30,7 +30,7 @@ def test_remote_emulator_run(
 ) -> None:
 
     device = device_class()
-    name = device._device.__name__ if hasattr(device._device, "__name__") else ""
+    name = device._device.name
 
     class MyMockServer(BaseMockServer):
 
