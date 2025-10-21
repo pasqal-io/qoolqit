@@ -20,7 +20,7 @@ from qoolqit.program import QuantumProgram
 @pytest.mark.parametrize("profile", CompilerProfile.list())
 @pytest.mark.parametrize("backend_type", [EmuMPSBackend, EmuFreeBackendV2])
 @pytest.mark.parametrize("runs", [500, 100])
-def test_remote_backend_run(
+def test_remote_emulator_run(
     device_class: Callable,
     profile: CompilerProfile,
     random_program: Callable[[], QuantumProgram],
