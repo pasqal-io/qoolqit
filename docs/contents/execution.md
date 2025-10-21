@@ -50,3 +50,30 @@ from qoolqit.execution import LocalEmulator
 emulator = LocalEmulator()
 results = emulator.run(program)
 ```
+
+The `LocalEmulator` is a flexible object which allows to emulate the program run on different backends:
+```python exec="on" source="material-block" session="execution"
+from qoolqit.execution import LocalEmulator
+from qoolqit.execution import QutipBackendV2, SVBackend, MPSBackend
+
+emulator = LocalEmulator(backend_type=SVBackend)
+```
+
+- `QutipBackendV2`: Based on Qutip, runs programs with up to ~12 qubits and return qutip objects in the results.
+- `SVBackend`: PyTorch based state vectors and sparse matrices emulator. Runs programs with up to ~25 qubits and return torch objects in the results.
+- `MPSBackend`: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~100 qubits and return torch objects in the results.
+
+More experienced users, might also want to configure an emulator through the generic `EmulationConfig` or the specific `QutipConfig`, `SVConfig`, `MPSConfig`.
+For more information about how the configuration options, please, refer to [Pulser documentation](https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.EmulationConfig.html).
+
+```python exec="on" source="material-block" session="execution"
+from qoolqit.execution import EmulationConfig
+
+emulation_config = EmulationConfig()
+emulator = LocalEmulator(emulation_config=emulation_config)
+```
+
+## Executing remotely
+
+
+## Executing remotely on a QPU
