@@ -12,7 +12,7 @@ from pulser_pasqal import PasqalCloud
 
 from qoolqit import AnalogDevice
 from qoolqit.exceptions import CompilationError
-from qoolqit.execution import CompilerProfile, QPU
+from qoolqit.execution import QPU, CompilerProfile
 from qoolqit.program import QuantumProgram
 
 
