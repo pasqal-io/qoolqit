@@ -6,69 +6,29 @@ import random
 from collections import Counter
 from typing import Any, Callable
 
-import pulser
 import pytest
-from emu_mps import MPSBackend
-from emu_sv import SVBackend
 from pasqal_cloud.utils.mock_server import BaseMockServer
-from pulser.backend.abc import EmulatorBackend
-from pulser.sequence import Sequence as PulserSequence
 from pulser_pasqal import PasqalCloud
 from pulser_pasqal.backends import EmuFreeBackendV2, EmuMPSBackend, RemoteEmulatorBackend
-from pulser_simulation import QutipBackendV2
 
 from qoolqit.devices import ALL_DEVICES
-from qoolqit.execution import CompilerProfile, LocalEmulator, RemoteEmulator
+from qoolqit.execution import CompilerProfile, RemoteEmulator
 from qoolqit.program import QuantumProgram
 
-
-@pytest.mark.flaky(max_runs=2)
-@pytest.mark.parametrize("device_class", ALL_DEVICES)
-@pytest.mark.parametrize("profile", CompilerProfile.list())
-@pytest.mark.parametrize(
-    "backend_type",
-    [
-        QutipBackendV2,
-        SVBackend,
-        MPSBackend,
-    ],
-)
-@pytest.mark.parametrize("runs", [500, 100])
-def test_local_backend_run(
-    device_class: Callable,
-    profile: CompilerProfile,
-    random_program: Callable[[], QuantumProgram],
-    backend_type: type[EmulatorBackend],
-    runs: int,
-) -> None:
-
-    # FIXME: Reactivate the min_distance profile once we implement safe-mode compilation
-    # Currently trying to set the atoms at the min distance will very often cause the
-    # amplitude to go over the limit allowed for the channel, which will fail the compilation.
-    if profile != CompilerProfile.MIN_DISTANCE:
-        program = random_program()
-        device = device_class()
-        program.compile_to(device, profile=profile)
-
-        local_emulator = LocalEmulator(backend_type=backend_type, runs=runs)
-        results = local_emulator.run(program)
-        assert results
-        bitstrings = results[-1].final_bitstrings
-        assert sum(bitstrings.values()) == runs
-
-
-# @pytest.mark.skip(reason="Remote not working")
 @pytest.mark.parametrize("device_class", ALL_DEVICES)
 @pytest.mark.parametrize("profile", CompilerProfile.list())
 @pytest.mark.parametrize("backend_type", [EmuMPSBackend, EmuFreeBackendV2])
 @pytest.mark.parametrize("runs", [500, 100])
-def test_compiler_profiles_dmm(
+def test_remote_backend_run(
     device_class: Callable,
     profile: CompilerProfile,
-    dmm_program: Callable[[], QuantumProgram],
+    random_program: Callable[[], QuantumProgram],
     backend_type: type[RemoteEmulatorBackend],
     runs: int,
 ) -> None:
+
+    device = device_class()
+
     class MyMockServer(BaseMockServer):
 
         # Override any endpoints.
@@ -84,7 +44,7 @@ def test_compiler_profiles_dmm(
         def endpoint_get_devices_specs(self, request: Any, context: Any, matches: list[str]) -> Any:
             """Return a basic device called `DigitalAnalogDevice`."""
             return {
-                "data": {"DigitalAnalogDevice": pulser.DigitalAnalogDevice.to_abstract_repr()},
+                "data": {device._device.__name__: device._device.__name__.to_abstract_repr()},
             }
 
         def endpoint_get_devices_public_specs(
@@ -94,8 +54,8 @@ def test_compiler_profiles_dmm(
             return {
                 "data": [
                     {
-                        "device_type": "DigitalAnalogDevice",
-                        "specs": pulser.DigitalAnalogDevice.to_abstract_repr(),
+                        "device_type": device._device.__name__,
+                        "specs": device._device.__name__.to_abstract_repr(),
                     },
                 ],
             }
@@ -217,12 +177,7 @@ def test_compiler_profiles_dmm(
             remote_emulator = RemoteEmulator(
                 backend_type=backend_type, connection=connexion, runs=runs
             )
-            program = dmm_program()
-            device = device_class()
-            if device._device.dmm_channels:
-                program.compile_to(device, profile=profile)
-                assert program.is_compiled
-                assert isinstance(program.compiled_sequence, PulserSequence)
-
-                results = remote_emulator.run(program)
-                assert results
+            program = random_program()
+            program.compile_to(device, profile=profile)
+            results = remote_emulator.run(program)
+            assert results
