@@ -43,7 +43,7 @@ def test_remote_backend_run(
             self._register = ""
 
         def endpoint_get_devices_specs(self, request: Any, context: Any, matches: list[str]) -> Any:
-            """Return a basic device called `DigitalAnalogDevice`."""
+            """Return a basic device."""
             return {
                 "data": {device._device.__name__: device._device.__name__.to_abstract_repr()},
             }
@@ -51,7 +51,7 @@ def test_remote_backend_run(
         def endpoint_get_devices_public_specs(
             self, request: Any, context: Any, matches: list[str]
         ) -> Any:
-            """Return a basic device called `DigitalAnalogDevice`."""
+            """Return a basic device."""
             return {
                 "data": [
                     {
@@ -86,7 +86,7 @@ def test_remote_backend_run(
                         "user_id": "my-user-id",
                         "status": "PENDING",
                         "ordered_jobs": [],
-                        "device_type": "DigitalAnalogDevice",
+                        "device_type": device._device.__name__,
                         "sequence_builder": self._sequence_builder,
                     }
                 }
@@ -102,7 +102,7 @@ def test_remote_backend_run(
                     "user_id": "my-user-id",
                     "status": "DONE",
                     "ordered_jobs": [],
-                    "device_type": "DigitalAnalogDevice",
+                    "device_type": device._device.__name__,
                     "sequence_builder": self._sequence_builder,
                 }
             }
@@ -143,7 +143,7 @@ def test_remote_backend_run(
                 "user_id": "my-user-id",
                 "status": "PENDING",
                 "ordered_jobs": [],
-                "device_type": "DigitalAnalogDevice",
+                "device_type": device._device.__name__,
                 "sequence_builder": self._sequence_builder,
             }
 
