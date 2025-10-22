@@ -82,6 +82,12 @@ class QuantumProgram:
             device = ""
         return header + register + drive + compiled + device
 
+    def _validate_program(self, device: Device) -> None:
+        """Check that the program respect the device bounds."""
+        TIME, ENERGY, DISTANCE = device.converter.factors
+        if device._max_amp:
+            assert self.drive.amplitude.max() < device._max_amp / ENERGY
+
     def compile_to(
         self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT
     ) -> None:
@@ -91,6 +97,7 @@ class QuantumProgram:
             device: the Device to compile to.
             profile: the compiler profile to use during compilation.
         """
+        self._validate_program(device)
         compiler = SequenceCompiler(self.register, self.drive, device)
         compiler.profile = profile
         self._device = device
