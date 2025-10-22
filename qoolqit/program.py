@@ -139,11 +139,18 @@ class QuantumProgram:
         evaluation_times: list[float] = [1.0],
         **backend_params: Any,
     ) -> OutputType:
-        """Run the compiled sequence on selected backend."""
+        """Run the compiled sequence on selected backend.
+
+        `run()` method of a QuantumProgram is deprecated starting from qoolqit v0.1.3.
+
+        Please, instantiate a backend from `qoolqit.execution.backends` and run the program
+        through its submit/run method, as discussed in the [documentation](https://pasqal-io.github.io/qoolqit/latest/contents/execution/).
+        """  # noqa
         warn(
-            """`run()` method of a QuantumProgram is deprecated.
-            Please, intantiate a backend from qoolqit.execution.backends
-            and run the program through its submit/run method.""",
+            """`run()` method of a QuantumProgram is deprecated starting from qoolqit v0.1.3.
+
+                Please, instantiate a backend from `qoolqit.execution.backends` and run the program
+                through its submit/run method, as discussed in the [documentation](https://pasqal-io.github.io/qoolqit/latest/contents/execution/).""",
             DeprecationWarning,
         )
         if self._compiled_sequence is None:
