@@ -1,5 +1,6 @@
-This page refers to a soon to be deprecated way to run quantum programs as `program.run(backend_type=...)`.
-All users are encouraged to move to the new emulators/QPU API described in [Execution](./execution.md).
+This page refers to a deprecated way to run quantum programs as `program.run(backend_type=...)`, which is not maintained anymore.
+Deprecation of the method happened in qoolqit v0.1.3 and future versions might remove it.
+As an equivalent alternative, all users are encouraged to move to the new emulators/QPU API described in [Execution](./execution.md).
 
 # Executing a quantum program
 
