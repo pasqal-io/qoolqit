@@ -10,7 +10,7 @@ from .unit_converter import UnitConverter
 
 UPPER_DURATION = 6000
 UPPER_AMP = 4.0 * pi
-UPPER_DET = 4.0 * pi
+UPPER_DET = 40.0 * pi
 LOWER_DISTANCE = 5.0
 
 
@@ -53,6 +53,7 @@ class Device:
         self._max_amp = self._pulser_device.channels["rydberg_global"].max_amp
         self._max_det = self._pulser_device.channels["rydberg_global"].max_abs_detuning
         self._min_distance = self._pulser_device.min_atom_distance
+        self._max_radial_distance = self._pulser_device.max_radial_distance
 
         # layouts
         self._requires_layout = self._pulser_device.requires_layout
@@ -115,11 +116,16 @@ class Device:
     @property
     def specs(self) -> dict:
         TIME, ENERGY, DISTANCE = self.converter.factors
+        max_duration = self._max_duration / TIME if self._max_duration else None
+        max_amplitude = self._max_amp / ENERGY if self._max_amp else None
+        max_detuning = self._max_det / ENERGY if self._max_det else None
+        min_distance = self._min_distance / DISTANCE if self._min_distance else None
+        max_distance = self._max_radial_distance / DISTANCE if self._max_radial_distance else None
         return {
-            "max_duration": self._max_duration / TIME if self._max_duration else None,
-            "max_amplitude": self._max_amp / ENERGY if self._max_amp else None,
-            "max_detuning": self._max_det / ENERGY if self._max_det else None,
-            "min_distance": self._min_distance / DISTANCE if self._min_distance else None,
+            "duration": (0.0, max_duration),
+            "amplitude": (0.0, max_amplitude),
+            "detuning": (-max_detuning, max_detuning) if max_detuning else (None, None),
+            "distance": (min_distance, max_distance),
         }
 
     @property

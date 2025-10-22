@@ -65,8 +65,6 @@ def basic_compilation(
     profile: CompilerProfile,
 ) -> PulserSequence:
 
-    TARGET_DEVICE = device._device
-
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
     elif profile == CompilerProfile.MAX_DURATION:
@@ -104,7 +102,8 @@ def basic_compilation(
     pulser_register = _build_register(register, device, DISTANCE)
 
     # Create sequence
-    pulser_sequence = PulserSequence(pulser_register, TARGET_DEVICE)
+    pulser_device = device._device
+    pulser_sequence = PulserSequence(pulser_register, pulser_device)
     pulser_sequence.declare_channel("ising", "rydberg_global")
     pulser_sequence.add(pulser_pulse, "ising")
 

@@ -1,23 +1,22 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Union
 from warnings import warn
 
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device, MockDevice
 from qoolqit.drive import Drive
-from qoolqit.execution.backend import BaseBackend, EmuMPSBackend, OutputType, QutipBackend
+from qoolqit.execution.backend import EmuMPSBackend, OutputType, QutipBackend
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.execution.utils import BackendName, CompilerProfile, ResultType
 from qoolqit.register import Register
 
 __all__ = ["QuantumProgram"]
 
-BackendType = BaseBackend
-# Note: Once EmuMPS is available on all platforms, we may be able
-# to restore this to Union[QutipBackend, EmuMPSBackend]
+BackendType = Union[QutipBackend, EmuMPSBackend]
 
 
 class QuantumProgram:
@@ -102,7 +101,7 @@ class QuantumProgram:
         n_points: int = 500,
         compiled: bool = False,
         return_fig: bool = False,
-    ) -> plt.Figure | None:
+    ) -> Figure | None:
         if not compiled:
             return self.drive.draw(n_points=n_points, return_fig=return_fig)
         else:
