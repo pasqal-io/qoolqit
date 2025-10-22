@@ -190,8 +190,8 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         self._connection = self.validate_connection(connection)
         # JobParams is ignored in remote emulators and `runs`
         # is set instead in `default_emulation_config()`.
-        # TODO: after pulser 1.6 assess if job_params is still needed
-        self._job_params = [JobParams(runs=runs)]
+        # TODO: after pulser 1.6 & pasqal-cloud 0.20.6 assess if job_params is still needed
+        self._job_params = [JobParams(runs=self._runs)]
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled QuantumProgram and return a remote handler of the results.
