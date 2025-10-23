@@ -32,7 +32,7 @@ classifiers = [
 
 
 dependencies = [
-  "pulser~=1.6.1",
+  "pulser~=1.6.2",
   "networkx~=3.4",
   "matplotlib",
   "emu_mps"
@@ -48,7 +48,7 @@ extras = [
 ]
 
 solvers = [
-  "pasqal-cloud>=0.20.3",
+  "pasqal-cloud>=0.20.6",
   "requests-mock",
   "emu_sv",
 ]
