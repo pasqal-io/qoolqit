@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import networkx as nx
 import numpy as np
 import pytest
+import torch
+from torch_geometric.data import Data
 
 from qoolqit.graphs import BaseGraph, random_coords, random_edge_list
 
@@ -117,3 +120,196 @@ def test_basegraph_constructors(n_nodes: int) -> None:
 
     assert graph1.is_ud_graph()
     assert graph2.is_ud_graph()
+
+
+def test_from_nx() -> None:
+    """Test importing a NetworkX graph without any weights or positions."""
+    G = nx.triangular_lattice_graph(1, 2, with_positions=False)
+    G = nx.convert_node_labels_to_integers(G)
+    g = BaseGraph.from_nx(G)
+
+    # Check whether we copied nodes and edges correctly
+    assert set(g.nodes) == set(range(4))
+    assert set(g.edges) == set([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3)])
+
+    # Check whether the coords exist and are all None
+    assert all(v is None for v in g._coords.values())
+    assert all(v is None for v in g._node_weights.values())
+    assert all(v is None for v in g._edge_weights.values())
+
+
+def test_from_nx_with_weights_and_pos() -> None:
+    """Test importing a NetworkX graph that has node/edge weights and positions."""
+    G = nx.Graph()
+
+    G.add_node(0, weight=1.0, pos=(0.0, 0.0))
+    G.add_node(1, weight=2.0, pos=(1.0, 0.0))
+    G.add_node(2, weight=3.0, pos=(0.5, 1.0))
+
+    G.add_edge(0, 1, weight=0.1)
+    G.add_edge(1, 2, weight=0.2)
+    G.add_edge(2, 0, weight=0.3)
+
+    g = BaseGraph.from_nx(G)
+
+    assert set(g.nodes) == {0, 1, 2}
+    assert set(g.edges) == {(0, 1), (1, 2), (0, 2)}
+
+    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
+
+    assert g._coords == {
+        0: (0.0, 0.0),
+        1: (1.0, 0.0),
+        2: (0.5, 1.0),
+    }
+
+
+def test_from_nx_not_all_node_weights() -> None:
+    G = nx.Graph()
+    G.add_node(0, weight=1.0)
+    G.add_node(1)  # missing weight
+    G.add_edge(0, 1, weight=0.5)
+
+    with pytest.raises(ValueError, match=r"_node_weights must be of dimension"):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_not_all_edges_weights() -> None:
+    G = nx.Graph()
+    G.add_node(0, weight=1.0)
+    G.add_node(1, weight=2.0)
+    G.add_node(2, weight=2.0)
+    G.add_edge(0, 1, weight=0.5)
+    G.add_edge(0, 2)  # missing weight
+
+    with pytest.raises(ValueError, match=r"_edge_weights must be of dimension"):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_not_all_pos() -> None:
+    G = nx.Graph()
+    G.add_node(0, pos=(1.0, 0))
+    G.add_node(1)  # missing pos
+    G.add_edge(0, 1, weight=0.5)
+
+    with pytest.raises(ValueError, match=r"_coords must be of dimension"):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_node_weight_type() -> None:
+    """Test that non-numeric node weights raise TypeError."""
+    G = nx.Graph()
+    G.add_node(0, weight="pippo")  # string instead of float
+    G.add_node(1, weight=[1, 0])
+    G.add_edge(0, 1, weight=0.5)
+
+    with pytest.raises(TypeError, match=r"_node_weights value must be "):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_edge_weight_type() -> None:
+    """Test that non-numeric node weights raise TypeError."""
+    G = nx.Graph()
+    G.add_node(0, weight=1.0)
+    G.add_node(1, weight=2.0)
+    G.add_edge(0, 1, weight="pippo")
+    G.add_edge(1, 0)
+
+    with pytest.raises(TypeError, match=r"_edge_weights value must be "):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_wrong_pos_type() -> None:
+    """Test that non-tuple/list positions raise TypeError."""
+    G = nx.Graph()
+    G.add_node(0, weight=1.0, pos="pluto")  # wrong type
+    G.add_node(1, weight=2.0, pos="paperino")
+    G.add_edge(0, 1, weight=0.5)
+
+    with pytest.raises(TypeError, match=r"_coords value must be "):
+        BaseGraph.from_nx(G)
+
+
+def test_from_nx_wrong_pos_content_type() -> None:
+    """Test that positions with non-numeric contents raise TypeError."""
+    G = nx.Graph()
+    G.add_node(0, weight=1.0, pos=("tizio", "caio"))  # wrong contents
+    G.add_node(1, weight=2.0, pos=("sempronio"))
+    G.add_edge(0, 1, weight=0.5)
+
+    with pytest.raises(TypeError, match=r"_coords value must be a 2-dimensional tuple/list"):
+        BaseGraph.from_nx(G)
+
+
+def test_from_pyg_only_edges() -> None:
+    """Test importing a PyG Data with only edge_index (no weights or positions)."""
+    edge_index = torch.tensor([[0, 1, 1, 2], [1, 0, 2, 1]])  # edges: (0,1), (1,0), (1,2), (2,1)
+    data = Data(edge_index=edge_index, num_nodes=3)
+
+    g = BaseGraph.from_pyg(data)
+
+    # Check that nodes and edges were copied
+    assert set(g.nodes) == {0, 1, 2}
+    assert all(v is None for v in g._node_weights.values())
+    assert all(v is None for v in g._coords.values())
+    assert all(v is None for v in g._edge_weights.values())
+
+
+def test_from_pyg() -> None:
+    """Test importing a PyG Data object with node and edge attributes."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.float64)  # (0->1, 1->2, 2->0)
+
+    x = torch.tensor([[1.0], [2.0], [3.0]], dtype=torch.float64)  # node weights
+    pos = torch.tensor([[0.0, 0.0], [1.0, 0.0], [0.5, 1.0]], dtype=torch.float64)  # positions
+    edge_attr = torch.tensor([[0.1], [0.2], [0.3]], dtype=torch.float64)  # edge weights
+
+    data = Data(x=x, pos=pos, edge_index=edge_index, edge_attr=edge_attr)
+
+    g = BaseGraph.from_pyg(data)
+
+    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
+    assert g._coords == {0: [0.0, 0.0], 1: [1.0, 0.0], 2: [0.5, 1.0]}
+
+
+def test_from_pyg_wrong_shape_x() -> None:
+    """Test that invalid tensor shapes raise ValueError."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.float64)
+    x = torch.tensor(
+        [[1.0, 2.0], [2.0, 1.0]], dtype=torch.float64
+    )  # wrong shape: should be (num_nodes,1)
+    data = Data(x=x, edge_index=edge_index)
+
+    with pytest.raises(ValueError, match=r"x"):
+        BaseGraph.from_pyg(data)
+
+
+def test_from_pyg_wrong_shape_pos() -> None:
+    """Test that non-numeric tensors raise TypeError."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.float64)
+    pos = torch.tensor([[0, 1, 1], [1, 0, 0]], dtype=torch.float64)
+    data = Data(edge_index=edge_index, pos=pos)
+
+    with pytest.raises(ValueError, match=r"pos"):
+        BaseGraph.from_pyg(data)
+
+
+def test_from_pyg_edge_attr_num_edges() -> None:
+    """Test that edge_attr with wrong number of rows raises ValueError."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]])  # 3 edges
+    edge_attr = torch.tensor([[0.1], [0.2]])  # only 2 edge attributes
+    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
+
+    with pytest.raises(ValueError, match=r"edge_attr"):
+        BaseGraph.from_pyg(data)
+
+
+def test_from_pyg_wrong_edge_shape() -> None:
+    """Test that non-tensor edge_attr raises TypeError."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]])  # 3 edges
+    edge_attr = torch.tensor([[0.1, 0.2], [0.1, 0.2], [0.1, 0.2]])  # shape mismatch
+    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
+
+    with pytest.raises(ValueError, match=r"edge_attr"):
+        BaseGraph.from_pyg(data)

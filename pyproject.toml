@@ -34,6 +34,7 @@ classifiers = [
 dependencies = [
   "pulser~=1.6.2",
   "networkx~=3.4",
+  "torch_geometric",
   "matplotlib",
   "emu_mps"
 ]

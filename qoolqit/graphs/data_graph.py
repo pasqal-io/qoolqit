@@ -296,13 +296,6 @@ class DataGraph(BaseGraph):
         graph.edge_weights = edge_weights
         return graph
 
-    @classmethod
-    def from_pyg(cls, data) -> DataGraph:  # type: ignore
-        """Create a graph from a pyg data object."""
-        raise NotImplementedError
-
-    # properties
-
     @property
     def node_weights(self) -> dict:
         """Return the dictionary of node weights."""
