@@ -5,6 +5,9 @@ from typing import Any, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pulser
+from matplotlib.figure import Figure
+from pulser.parametrized import ParamObj
 
 from qoolqit.waveforms import CompositeWaveform, Delay, Waveform
 
@@ -174,7 +177,7 @@ class Drive:
             )
         return amp_repr + "\n\n" + det_repr
 
-    def draw(self, n_points: int = 500, return_fig: bool = False) -> plt.Figure | None:
+    def draw(self, n_points: int = 500, return_fig: bool = False) -> Figure | None:
         fig, ax = plt.subplots(2, 1, sharex=True, figsize=(16, 4), dpi=200)
 
         ax[0].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
@@ -200,3 +203,17 @@ class Drive:
             return fig
         else:
             return None
+
+    def _to_pulser(self) -> ParamObj | pulser.Pulse:
+        """Return a pulser.Pulse from a Drive.
+
+        Note:
+        - Only support single global phase
+        - does not support post_phase_shift argument
+        """
+        # pulser_duration = round(self.duration)
+        return pulser.Pulse(
+            amplitude=self.amplitude._to_pulser(),
+            detuning=self.detuning._to_pulser(),
+            phase=self.phase,
+        )

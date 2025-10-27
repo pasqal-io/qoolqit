@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import math
 
-from .base_waveforms import CompositeWaveform, Waveform
+import pulser
+from pulser.parametrized import ParamObj
+
+from qoolqit.waveforms.base_waveforms import CompositeWaveform, Waveform
 
 
 class Delay(Waveform):
@@ -16,6 +19,9 @@ class Delay(Waveform):
 
     def min(self) -> float:
         return 0.0
+
+    def _to_pulser(self) -> ParamObj | pulser.ConstantWaveform:
+        return pulser.ConstantWaveform(round(self.duration), 0.0)
 
 
 class Ramp(Waveform):
@@ -48,6 +54,9 @@ class Ramp(Waveform):
     def min(self) -> float:
         return min([self.initial_value, self.final_value])
 
+    def _to_pulser(self) -> ParamObj | pulser.RampWaveform:
+        return pulser.RampWaveform(round(self.duration), self.initial_value, self.final_value)
+
 
 class Constant(Waveform):
     """A constant waveform over a given duration.
@@ -74,6 +83,9 @@ class Constant(Waveform):
 
     def min(self) -> float:
         return self.value
+
+    def _to_pulser(self) -> ParamObj | pulser.ConstantWaveform:
+        return pulser.ConstantWaveform(round(self.duration), self.value)
 
 
 class PiecewiseLinear(CompositeWaveform):

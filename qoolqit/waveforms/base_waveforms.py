@@ -5,6 +5,9 @@ from typing import Any, cast, overload
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pulser
+from matplotlib.figure import Figure
+from pulser.parametrized import ParamObj
 
 # Default number of points used to resolve the full waveform duration
 N_POINTS = 500
@@ -57,7 +60,7 @@ class Waveform(ABC):
 
     @property
     def params(self) -> dict[str, float]:
-        """Dictonary of parameters used by the waveform."""
+        """Dictionary of parameters used by the waveform."""
         return self._params_dict
 
     @abstractmethod
@@ -143,9 +146,17 @@ class Waveform(ABC):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
+    def _to_pulser(self) -> ParamObj | pulser.waveforms.Waveform:
+        """Default and wrong approach.
+
+        Better define _to_pulser() in concrete impl.
+        """
+        samples = [self(t) for t in range(round(self.duration) + 1)]
+        return pulser.CustomWaveform(samples)
+
     def draw(
         self, n_points: int = N_POINTS, return_fig: bool = False, **kwargs: Any
-    ) -> plt.Figure | None:
+    ) -> Figure | None:
         fig, ax = plt.subplots(1, 1, figsize=(8, 4), dpi=150)
         ax.grid(True)
         t_array = np.linspace(0.0, self.duration, n_points)
@@ -256,3 +267,6 @@ class CompositeWaveform(Waveform):
 
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
+
+    def _to_pulser(self) -> ParamObj | pulser.CompositeWaveform:
+        return pulser.CompositeWaveform(*(w._to_pulser() for w in self.waveforms))
