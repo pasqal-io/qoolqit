@@ -9,7 +9,7 @@ import pulser
 from matplotlib.figure import Figure
 from pulser.parametrized import ParamObj
 
-from qoolqit.waveforms.utils import roundsum
+from qoolqit.waveforms.utils import round_to_sum
 
 # Default number of points used to resolve the full waveform duration
 N_POINTS = 500
@@ -280,7 +280,7 @@ class CompositeWaveform(Waveform):
         of the composite waveform.
         """
         ratio = duration / self.duration
-        new_durations = roundsum([ratio * wd for wd in self.durations])
+        new_durations = round_to_sum([ratio * wd for wd in self.durations])
         pulser_waveforms = (
             w._to_pulser(duration=duration) for w, duration in zip(self.waveforms, new_durations)
         )

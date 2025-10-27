@@ -1,17 +1,29 @@
+from __future__ import annotations
+
 import numpy as np
 
 
-def roundsum(a: list[float]) -> list[int]:
-    a_round = [round(el) for el in a]
-    reminders = [el - rel for rel, el in zip(a_round, a)]
+def round_to_sum(values: list[float]) -> list[int]:
+    """Round a list of numbers such that their sum is the rounded sum.
+
+    Σᵢround(aᵢ) = round(Σᵢaᵢ)
+
+    Example:
+        ```python
+        >>> round_to_sum([100.3, 100.3, 100.4])
+        >>> [100, 100, 101]
+        ```
+    """
+    rounded_values = [round(el) for el in values]
+    reminders = [el - rel for rel, el in zip(rounded_values, values)]
+    sum_reminders = round(sum(reminders))
     p = np.argsort(reminders)
 
-    sum_reminders = round(sum(reminders))
     for i in range(abs(sum_reminders)):
         if sum_reminders < 0:
-            a_round[p[i]] -= 1
+            rounded_values[p[i]] -= 1
         if sum_reminders > 0:
-            a_round[p[-1 - i]] += 1
+            rounded_values[p[-1 - i]] += 1
 
-    assert round(sum(a)) == sum(a_round)
-    return a_round
+    assert round(sum(values)) == sum(rounded_values)
+    return rounded_values
