@@ -9,6 +9,8 @@ import pulser
 from matplotlib.figure import Figure
 from pulser.parametrized import ParamObj
 
+from qoolqit.waveforms.utils import roundsum
+
 # Default number of points used to resolve the full waveform duration
 N_POINTS = 500
 
@@ -146,12 +148,14 @@ class Waveform(ABC):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
-    def _to_pulser(self) -> ParamObj | pulser.waveforms.Waveform:
-        """Default and wrong approach.
+    def _to_pulser(self, duration: int) -> ParamObj | pulser.waveforms.Waveform:
+        """Convert an arbitrary Qoolqit waveform to a `pulser.CustomWaveform`.
 
-        Better define _to_pulser() in concrete impl.
+        Default approach when no better functional conversion is available in a
+        concrete waveform.
         """
-        samples = [self(t) for t in range(round(self.duration) + 1)]
+        t_ratio = self.duration / duration
+        samples = [self(t * t_ratio) for t in range(duration + 1)]
         return pulser.CustomWaveform(samples)
 
     def draw(
@@ -268,5 +272,16 @@ class CompositeWaveform(Waveform):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
-    def _to_pulser(self) -> ParamObj | pulser.CompositeWaveform:
-        return pulser.CompositeWaveform(*(w._to_pulser() for w in self.waveforms))
+    def _to_pulser(self, duration: int) -> ParamObj | pulser.CompositeWaveform:
+        """Converts a CompositeWaveform from QoolQit to Pulser.
+
+        Pulser only supports integer duration, so the sum of rounded
+        durations of each waveform needs to add up to the rounded duration
+        of the composite waveform.
+        """
+        ratio = duration / self.duration
+        new_durations = roundsum([ratio * wd for wd in self.durations])
+        pulser_waveforms = (
+            w._to_pulser(duration=duration) for w, duration in zip(self.waveforms, new_durations)
+        )
+        return pulser.CompositeWaveform(*pulser_waveforms)

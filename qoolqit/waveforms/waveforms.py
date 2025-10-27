@@ -20,8 +20,8 @@ class Delay(Waveform):
     def min(self) -> float:
         return 0.0
 
-    def _to_pulser(self) -> ParamObj | pulser.ConstantWaveform:
-        return pulser.ConstantWaveform(round(self.duration), 0.0)
+    def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
+        return pulser.ConstantWaveform(duration, 0.0)
 
 
 class Ramp(Waveform):
@@ -54,8 +54,8 @@ class Ramp(Waveform):
     def min(self) -> float:
         return min([self.initial_value, self.final_value])
 
-    def _to_pulser(self) -> ParamObj | pulser.RampWaveform:
-        return pulser.RampWaveform(round(self.duration), self.initial_value, self.final_value)
+    def _to_pulser(self, duration: int) -> ParamObj | pulser.RampWaveform:
+        return pulser.RampWaveform(duration, self.initial_value, self.final_value)
 
 
 class Constant(Waveform):
@@ -84,8 +84,8 @@ class Constant(Waveform):
     def min(self) -> float:
         return self.value
 
-    def _to_pulser(self) -> ParamObj | pulser.ConstantWaveform:
-        return pulser.ConstantWaveform(round(self.duration), self.value)
+    def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
+        return pulser.ConstantWaveform(duration, self.value)
 
 
 class PiecewiseLinear(CompositeWaveform):

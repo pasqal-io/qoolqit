@@ -92,21 +92,16 @@ def basic_compilation(
     )
 
     # Build pulse and register
-    amp_wf = wf_converter.convert(drive.amplitude)
-    det_wf = wf_converter.convert(drive.detuning)
-
+    amp_wf = drive.amplitude._to_pulser(duration=converted_duration) * ENERGY
+    det_wf = drive.detuning._to_pulser(duration=converted_duration) * ENERGY
     pulser_pulse = PulserPulse(amp_wf, det_wf, drive.phase)
-    # PulserPulse.__new__ is overloaded to return several types of values.
-    # assert to make sure that we're not accidentally misusing it - and
-    # to keep mypy happy.
-    assert isinstance(pulser_pulse, PulserPulse)
 
     pulser_register = _build_register(register, device, DISTANCE)
 
     # Create sequence
     pulser_sequence = PulserSequence(pulser_register, TARGET_DEVICE)
-    pulser_sequence.declare_channel("ising", "rydberg_global")
-    pulser_sequence.add(pulser_pulse, "ising")
+    pulser_sequence.declare_channel("rydberg", "rydberg_global")
+    pulser_sequence.add(pulser_pulse, "rydberg")
 
     if len(drive.weighted_detunings) > 0:
         # Add detuning map

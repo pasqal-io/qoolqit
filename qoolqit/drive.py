@@ -204,16 +204,15 @@ class Drive:
         else:
             return None
 
-    def _to_pulser(self) -> ParamObj | pulser.Pulse:
+    def _to_pulser(self, duration: int) -> ParamObj | pulser.Pulse:
         """Return a pulser.Pulse from a Drive.
 
         Note:
         - Only support single global phase
         - does not support post_phase_shift argument
         """
-        # pulser_duration = round(self.duration)
         return pulser.Pulse(
-            amplitude=self.amplitude._to_pulser(),
-            detuning=self.detuning._to_pulser(),
+            amplitude=self.amplitude._to_pulser(duration=duration),
+            detuning=self.detuning._to_pulser(duration=duration),
             phase=self.phase,
         )
