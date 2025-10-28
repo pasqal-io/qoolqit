@@ -8,6 +8,7 @@ import numpy as np
 import pulser
 from matplotlib.figure import Figure
 from pulser.parametrized import ParamObj
+from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.waveforms.utils import round_to_sum
 
@@ -148,14 +149,14 @@ class Waveform(ABC):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
-    def _to_pulser(self, duration: int) -> ParamObj | pulser.waveforms.Waveform:
+    def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
         """Convert an arbitrary Qoolqit waveform to a `pulser.CustomWaveform`.
 
         Default approach when no better functional conversion is available in a
         concrete waveform.
         """
         t_ratio = self.duration / duration
-        samples = [self(t * t_ratio) for t in range(duration + 1)]
+        samples = [self(t * t_ratio) for t in range(duration)]
         return pulser.CustomWaveform(samples)
 
     def draw(

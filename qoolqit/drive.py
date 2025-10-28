@@ -5,9 +5,7 @@ from typing import Any, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pulser
 from matplotlib.figure import Figure
-from pulser.parametrized import ParamObj
 
 from qoolqit.waveforms import CompositeWaveform, Delay, Waveform
 
@@ -203,16 +201,3 @@ class Drive:
             return fig
         else:
             return None
-
-    def _to_pulser(self, duration: int) -> ParamObj | pulser.Pulse:
-        """Return a pulser.Pulse from a Drive.
-
-        Note:
-        - Only support single global phase
-        - does not support post_phase_shift argument
-        """
-        return pulser.Pulse(
-            amplitude=self.amplitude._to_pulser(duration=duration),
-            detuning=self.detuning._to_pulser(duration=duration),
-            phase=self.phase,
-        )

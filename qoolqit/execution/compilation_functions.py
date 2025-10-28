@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from pulser.devices import Device as PulserDevice
+from pulser.parametrized import ParamObj
 from pulser.pulse import Pulse as PulserPulse
 from pulser.register.register import Register as PulserRegister
 from pulser.sequence.sequence import Sequence as PulserSequence
-from pulser.waveforms import CustomWaveform as PulserCustomWaveform
+from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.devices import Device
 from qoolqit.drive import Drive, Waveform, WeightedDetuning
@@ -37,25 +38,21 @@ class WeightedDetuningWaveformError(QuantumProgramCompilationError):
 
 
 class WaveformConverter:
-    def __init__(self, converted_duration: int, time: float, energy: float):
+    def __init__(self, device: Device, time: float, energy: float):
+        self._time = time
         self._energy = energy
+        self._clock_period = device._clock_period
 
-        # Converted duration is an integer value in nanoseconds
-        # Pulser requires a sample value for each nanosecond.
-        time_array_pulser = list(range(converted_duration))
+    def _pulser_duration(self, waveform: Waveform) -> int:
+        converted_duration = int(waveform.duration * self._time)
+        cp = self._clock_period
+        rm = converted_duration % cp
+        pulser_duration = converted_duration + (cp - rm) if rm != 0 else converted_duration
+        return pulser_duration
 
-        # Convert each time step to the corresponding qoolqit value
-        self._time_array_qoolqit = [t / time for t in time_array_pulser]
-
-    def convert(self, waveform: Waveform) -> PulserCustomWaveform:
-        values_qoolqit = waveform(self._time_array_qoolqit)
-        values_pulser = [v * self._energy for v in values_qoolqit]
-        result = PulserCustomWaveform(values_pulser)
-        # PulserCustomWaveform.__new__ is overloaded to return several types of values.
-        # assert to make sure that we're not accidentally misusing it - and
-        # to keep mypy happy.
-        assert isinstance(result, PulserCustomWaveform)
-        return result
+    def convert(self, waveform: Waveform) -> ParamObj | PulserWaveform:
+        pulser_duration = self._pulser_duration(waveform)
+        return waveform._to_pulser(duration=pulser_duration) * self._energy
 
 
 def basic_compilation(
@@ -81,19 +78,11 @@ def basic_compilation(
     else:
         raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
 
-    # Duration as multiple of clock period
-    rounded_duration = int(drive.duration * TIME)
-    cp = device._clock_period
-    rm = rounded_duration % cp
-    converted_duration = rounded_duration + (cp - rm) if rm != 0 else rounded_duration
+    wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
 
-    wf_converter = WaveformConverter(
-        converted_duration=converted_duration, time=TIME, energy=ENERGY
-    )
-
-    # Build pulse and register
-    amp_wf = drive.amplitude._to_pulser(duration=converted_duration) * ENERGY
-    det_wf = drive.detuning._to_pulser(duration=converted_duration) * ENERGY
+    # Build pulser pulse and register
+    amp_wf = wf_converter.convert(drive._amplitude)
+    det_wf = wf_converter.convert(drive._detuning)
     pulser_pulse = PulserPulse(amp_wf, det_wf, drive.phase)
 
     pulser_register = _build_register(register, device, DISTANCE)
@@ -153,6 +142,4 @@ class _DetuningAdder:
         detuning_map = self._pulser_register.define_detuning_map(detuning_weights=converted_weights)
         self._pulser_sequence.config_detuning_map(detuning_map, dmm_id=dmm_id)
         waveform = self._wf_converter.convert(detuning.waveform)
-        assert isinstance(waveform, PulserCustomWaveform)
-        # Note: Pulser raises an error when DMM is positive
         self._pulser_sequence.add_dmm_detuning(waveform, dmm_id)

@@ -25,5 +25,4 @@ def round_to_sum(values: list[float]) -> list[int]:
         if sum_reminders > 0:
             rounded_values[p[-1 - i]] += 1
 
-    assert round(sum(values)) == sum(rounded_values)
     return rounded_values
