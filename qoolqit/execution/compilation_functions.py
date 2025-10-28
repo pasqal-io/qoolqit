@@ -38,12 +38,19 @@ class WeightedDetuningWaveformError(QuantumProgramCompilationError):
 
 
 class WaveformConverter:
+    """Convert a QoolQit waveform into a equivalent Pulser waveform.
+
+    Requires the new time and energy scales set by the compilation profile.
+    Additionaly, requires the clock period fo the device to round the duration.
+    """
+
     def __init__(self, device: Device, time: float, energy: float):
         self._time = time
         self._energy = energy
         self._clock_period = device._clock_period
 
     def _pulser_duration(self, waveform: Waveform) -> int:
+        """Return the new duration of the converted pulser waveform."""
         converted_duration = int(waveform.duration * self._time)
         cp = self._clock_period
         rm = converted_duration % cp
@@ -51,6 +58,7 @@ class WaveformConverter:
         return pulser_duration
 
     def convert(self, waveform: Waveform) -> ParamObj | PulserWaveform:
+        """Convert a QoolQit waveform into a equivalent Pulser waveform."""
         pulser_duration = self._pulser_duration(waveform)
         return waveform._to_pulser(duration=pulser_duration) * self._energy
 
