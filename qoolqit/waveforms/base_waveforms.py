@@ -150,14 +150,14 @@ class Waveform(ABC):
         return self.__repr_header__() + self.__repr_content__()
 
     def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
-        """Convert an arbitrary Qoolqit waveform to a `pulser.CustomWaveform`.
+        """Convert an arbitrary Qoolqit waveform to a `pulser.InterpolatedWaveform`.
 
-        Default approach when no better functional conversion is available in a
-        concrete waveform.
+        To keep a compact representation the maximum number of samples to interpolate is set to 100.
         """
-        t_ratio = self.duration / duration
-        samples = [self(t * t_ratio) for t in range(duration)]
-        return pulser.CustomWaveform(samples)
+        n_samples = min(100, duration)
+        times = np.linspace(0.0, self.duration, n_samples)
+        samples = self(times)
+        return pulser.InterpolatedWaveform(duration, samples)
 
     def draw(
         self, n_points: int = N_POINTS, return_fig: bool = False, **kwargs: Any
