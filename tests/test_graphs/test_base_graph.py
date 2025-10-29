@@ -281,7 +281,7 @@ def test_from_pyg_wrong_shape_x() -> None:
     )  # wrong shape: should be (num_nodes,1)
     data = Data(x=x, edge_index=edge_index)
 
-    with pytest.raises(ValueError, match=r"x"):
+    with pytest.raises(ValueError, match="x"):
         BaseGraph.from_pyg(data)
 
 
@@ -291,7 +291,7 @@ def test_from_pyg_wrong_shape_pos() -> None:
     pos = torch.tensor([[0, 1, 1], [1, 0, 0]], dtype=torch.float64)
     data = Data(edge_index=edge_index, pos=pos)
 
-    with pytest.raises(ValueError, match=r"pos"):
+    with pytest.raises(ValueError, match="pos"):
         BaseGraph.from_pyg(data)
 
 
