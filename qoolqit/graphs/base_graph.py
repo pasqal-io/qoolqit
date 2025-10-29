@@ -20,7 +20,7 @@ from .utils import (
 
 class BaseGraph(nx.Graph):
     """
-    The BaseGraph in QoolQit, direclty inheriting from the NetworkX Graph.
+    The BaseGraph in QoolQit, directly inheriting from the NetworkX Graph.
 
     Defines basic functionalities for graphs within the Rydberg Analog, such
     as instantiating from a set of node coordinates, directly accessing node
@@ -91,7 +91,7 @@ class BaseGraph(nx.Graph):
             - Edge attribute "weight" : float
             - Node attribute "pos"    : Sequence[float, float]
 
-        Returns an instacce of the class with following attributes:
+        Returns an instance of the class with following attributes:
             - _node_weights : dict[node, float or None]
             - _edge_weights : dict[(u,v), float or None]
             - _coords       : dict[node, (float,float) or None]
@@ -189,6 +189,11 @@ class BaseGraph(nx.Graph):
                     raise ValueError(
                         f"Data attribute {attr_key} must be a 2D tensor of shape {shape}."
                     )
+                if not attr.isreal().all():
+                    raise ValueError(
+                        f"Data attribute {attr_key} must be a 2D tensor of real numbers."
+                    )
+
         # g.edge_attrs() also returns "edge_index" which should not be passed to to_networkx
         edge_attrs = ["edge_attr"] if "edge_attr" in g else None
         data_nx = to_networkx(
