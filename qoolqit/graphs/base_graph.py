@@ -99,41 +99,62 @@ class BaseGraph(nx.Graph):
         if not isinstance(g, nx.Graph):
             raise TypeError("Input must be a networkx.Graph instance.")
 
-        graph = cls()
         g = nx.convert_node_labels_to_integers(g)
-        graph.add_nodes_from(g.nodes)
-        graph.add_edges_from(g.edges)
-
         num_nodes = len(g.nodes)
         num_edges = len(g.edges)
 
-        # Defaults to None
-        graph._node_weights = {v: None for v in g.nodes}
-        graph._coords = {v: None for v in g.nodes}
-        graph._edge_weights = {(u, v): None for u, v in g.edges}
+        # validate node attributes
+        for name, data in g.nodes.data():
+            unexpected_keys = set(data) - {"weight", "pos"}
+            if unexpected_keys:
+                raise ValueError(f"{unexpected_keys} not allowed in node attributes.")
 
-        attr = {
-            "_node_weights": (nx.get_node_attributes(g, "weight"), num_nodes, (float, int)),
-            "_edge_weights": (nx.get_edge_attributes(g, "weight"), num_edges, (float, int)),
-            "_coords": (nx.get_node_attributes(g, "pos"), num_nodes, (tuple, list)),
-        }
+        node_pos = nx.get_node_attributes(g, "pos")
+        if node_pos:
+            if len(node_pos) != num_nodes:
+                raise ValueError("Node attribute `pos` must be defined for all nodes")
+            for name, pos in node_pos.items():
+                is_2D = isinstance(pos, (tuple, list)) & (len(pos) == 2)
+                is_real = all(isinstance(p, (float, int)) for p in pos)
+                if not (is_2D & is_real):
+                    raise TypeError(
+                        f"In node {name} the `pos` attribute must be a 2D tuple/list"
+                        f" of real numbers, got {pos} instead."
+                    )
+        node_weights = nx.get_node_attributes(g, "weight")
+        if node_weights:
+            if len(node_weights) != num_nodes:
+                raise ValueError("Node attribute `weight` must be defined for all nodes")
+            for name, weight in node_weights.items():
+                if not isinstance(weight, (float, int)):
+                    raise TypeError(
+                        f"In node {name} the `weight` attribute must be a real number, "
+                        f"got {type(weight)} instead."
+                        ""
+                    )
 
-        for attr_name, (attr_value, dim, attr_typ) in attr.items():
-            if not attr_value:
-                continue
+        # validate edge attributes
+        for u, v, data in g.edges.data():
+            unexpected_keys = set(data) - {"weight"}
+            if unexpected_keys:
+                raise ValueError(f"{unexpected_keys} not allowed in edge attributes.")
+        edge_weights = nx.get_edge_attributes(g, "weight")
+        if edge_weights:
+            if len(edge_weights) != num_edges:
+                raise ValueError("Edge attribute `weight` must be defined for all edges")
+            for name, weight in edge_weights.items():
+                if not isinstance(weight, (float, int)):
+                    raise TypeError(
+                        f"In edge {name}, the attribute `weight` must be a real number, "
+                        f"got {type(weight)} instead."
+                    )
 
-            if len(attr_value) != dim:
-                raise ValueError(f"{attr_name} must be of dimension {0} or {dim}.")
-
-            for e, val in attr_value.items():
-                if not isinstance(val, attr_typ):
-                    raise TypeError(f"{attr_name} value must be {attr_typ}, got type {type(val)}.")
-                if isinstance(val, (tuple, list)):
-                    if not (len(val) == 2 and all(isinstance(x, (float, int)) for x in val)):
-                        raise TypeError(
-                            f"{attr_name} value must be a 2-dimensional tuple/list of (float, int)."
-                        )
-            getattr(graph, attr_name).update(attr_value)
+        graph = cls()
+        graph.add_nodes_from(g.nodes)
+        graph.add_edges_from(g.edges)
+        graph._node_weights = nx.get_node_attributes(g, "weight", default=None)
+        graph._coords = nx.get_node_attributes(g, "pos", default=None)
+        graph._edge_weights = nx.get_edge_attributes(g, "weight", default=None)
 
         return graph
 

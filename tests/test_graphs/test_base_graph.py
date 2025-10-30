@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 import networkx as nx
 import numpy as np
 import pytest
@@ -125,7 +127,6 @@ def test_basegraph_constructors(n_nodes: int) -> None:
 def test_from_nx() -> None:
     """Test importing a NetworkX graph without any weights or positions."""
     G = nx.triangular_lattice_graph(1, 2, with_positions=False)
-    G = nx.convert_node_labels_to_integers(G)
     g = BaseGraph.from_nx(G)
 
     # Check whether we copied nodes and edges correctly
@@ -171,7 +172,7 @@ def test_from_nx_not_all_node_weights() -> None:
     G.add_node(1)  # missing weight
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(ValueError, match=r"_node_weights must be of dimension"):
+    with pytest.raises(ValueError, match="Node attribute `weight` must be defined for all nodes"):
         BaseGraph.from_nx(G)
 
 
@@ -183,7 +184,7 @@ def test_from_nx_not_all_edges_weights() -> None:
     G.add_edge(0, 1, weight=0.5)
     G.add_edge(0, 2)  # missing weight
 
-    with pytest.raises(ValueError, match=r"_edge_weights must be of dimension"):
+    with pytest.raises(ValueError, match="Edge attribute `weight` must be defined for all edges"):
         BaseGraph.from_nx(G)
 
 
@@ -193,52 +194,55 @@ def test_from_nx_not_all_pos() -> None:
     G.add_node(1)  # missing pos
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(ValueError, match=r"_coords must be of dimension"):
+    with pytest.raises(ValueError, match="Node attribute `pos` must be defined for all nodes"):
         BaseGraph.from_nx(G)
 
 
-def test_from_nx_node_weight_type() -> None:
+@pytest.mark.parametrize("wrong_node_weight", ["hello", [1, 2, 3], 2j])
+def test_from_nx_wrong_node_weight(wrong_node_weight: Any) -> None:
     """Test that non-numeric node weights raise TypeError."""
     G = nx.Graph()
-    G.add_node(0, weight="pippo")  # string instead of float
-    G.add_node(1, weight=[1, 0])
+    G.add_node(0, weight=wrong_node_weight)
+    G.add_node(1, weight=3.0)
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(TypeError, match=r"_node_weights value must be "):
+    with pytest.raises(
+        TypeError,
+        match="In node 0 the `weight` attribute must be a real number",
+    ):
         BaseGraph.from_nx(G)
 
 
-def test_from_nx_edge_weight_type() -> None:
+@pytest.mark.parametrize("wrong_edge_weight", ["hello", [1, 2, 3], 2j])
+def test_from_nx_edge_weight_type(wrong_edge_weight: Any) -> None:
     """Test that non-numeric node weights raise TypeError."""
     G = nx.Graph()
     G.add_node(0, weight=1.0)
     G.add_node(1, weight=2.0)
-    G.add_edge(0, 1, weight="pippo")
+    G.add_edge(0, 1, weight=wrong_edge_weight)
     G.add_edge(1, 0)
 
-    with pytest.raises(TypeError, match=r"_edge_weights value must be "):
+    with pytest.raises(
+        TypeError,
+        match=r"In edge \(0, 1\), the attribute `weight` must be a real number",
+    ):
         BaseGraph.from_nx(G)
 
 
-def test_from_nx_wrong_pos_type() -> None:
+@pytest.mark.parametrize(
+    "wrong_node_pos", ["hello", ("hello", "world"), (1.0, 2.0, 3.0), (1.0, 2.0j)]
+)
+def test_from_nx_wrong_pos_attr(wrong_node_pos: Any) -> None:
     """Test that non-tuple/list positions raise TypeError."""
     G = nx.Graph()
-    G.add_node(0, weight=1.0, pos="pluto")  # wrong type
-    G.add_node(1, weight=2.0, pos="paperino")
+    G.add_node(0, weight=1.0, pos=wrong_node_pos)
+    G.add_node(1, weight=2.0, pos=(1.0, 1.0))
     G.add_edge(0, 1, weight=0.5)
 
-    with pytest.raises(TypeError, match=r"_coords value must be "):
-        BaseGraph.from_nx(G)
-
-
-def test_from_nx_wrong_pos_content_type() -> None:
-    """Test that positions with non-numeric contents raise TypeError."""
-    G = nx.Graph()
-    G.add_node(0, weight=1.0, pos=("tizio", "caio"))  # wrong contents
-    G.add_node(1, weight=2.0, pos=("sempronio"))
-    G.add_edge(0, 1, weight=0.5)
-
-    with pytest.raises(TypeError, match=r"_coords value must be a 2-dimensional tuple/list"):
+    with pytest.raises(
+        TypeError,
+        match="In node 0 the `pos` attribute must be a 2D tuple/list of real numbers",
+    ):
         BaseGraph.from_nx(G)
 
 
