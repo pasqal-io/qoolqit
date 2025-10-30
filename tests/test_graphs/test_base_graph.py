@@ -124,6 +124,30 @@ def test_basegraph_constructors(n_nodes: int) -> None:
     assert graph2.is_ud_graph()
 
 
+@pytest.mark.parametrize("input", ["hello", Data()])
+def test_from_nx_wrong_input(input: Any) -> None:
+    with pytest.raises(TypeError, match="Input must be a networkx.Graph instance."):
+        BaseGraph.from_nx(input)
+
+
+@pytest.mark.parametrize("wrong_node_attr", [{"hello": 1.0}, {"pos": (1.0, 1.0), "world": 3.0}])
+def test_from_wrong_node_attrs_name(wrong_node_attr: Any) -> None:
+    G = nx.Graph()
+    G.add_node(0, **wrong_node_attr)
+    G.add_node(1, **wrong_node_attr)
+    with pytest.raises(ValueError, match="not allowed in node attributes."):
+        BaseGraph.from_nx(G)
+
+
+@pytest.mark.parametrize("wrong_edge_attr", [{"hello": 1.0}, {"weight": (1.0, 1.0), "world": 3.0}])
+def test_from_wrong_edge_attrs_name(wrong_edge_attr: Any) -> None:
+    G = nx.Graph()
+    G.add_edge(0, 1, **wrong_edge_attr)
+    G.add_edge(1, 2, **wrong_edge_attr)
+    with pytest.raises(ValueError, match="not allowed in edge attributes."):
+        BaseGraph.from_nx(G)
+
+
 def test_from_nx() -> None:
     """Test importing a NetworkX graph without any weights or positions."""
     G = nx.triangular_lattice_graph(1, 2, with_positions=False)
@@ -244,6 +268,11 @@ def test_from_nx_wrong_pos_attr(wrong_node_pos: Any) -> None:
         match="In node 0 the `pos` attribute must be a 2D tuple/list of real numbers",
     ):
         BaseGraph.from_nx(G)
+
+
+def test_from_pyg_wrong_input() -> None:
+    with pytest.raises(TypeError, match="Input must be a torch_geometric.data.Data object."):
+        BaseGraph.from_pyg("hello")
 
 
 def test_from_pyg_only_edges() -> None:

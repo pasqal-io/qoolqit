@@ -6,6 +6,7 @@ from typing import Any
 import matplotlib.pyplot as plt
 import networkx as nx
 import torch
+from matplotlib.figure import Figure
 from torch_geometric.data import Data
 from torch_geometric.utils import to_networkx
 
@@ -412,7 +413,7 @@ class BaseGraph(nx.Graph):
         self.remove_edges_from(list(self.edges))
         self.add_edges_from(self.ud_edges(radius))
 
-    def draw(self, return_fig: bool = False, *args: Any, **kwargs: Any) -> plt.Figure | None:
+    def draw(self, return_fig: bool = False, *args: Any, **kwargs: Any) -> Figure | None:
         """Draw the graph.
 
         Uses the draw_networkx function from NetworkX.
