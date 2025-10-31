@@ -5,6 +5,7 @@ from typing import Any, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.figure import Figure
 
 from qoolqit.waveforms import CompositeWaveform, Delay, Waveform
 
@@ -174,7 +175,7 @@ class Drive:
             )
         return amp_repr + "\n\n" + det_repr
 
-    def draw(self, n_points: int = 500, return_fig: bool = False) -> plt.Figure | None:
+    def draw(self, n_points: int = 500, return_fig: bool = False) -> Figure | None:
         fig, ax = plt.subplots(2, 1, sharex=True, figsize=(16, 4), dpi=200)
 
         ax[0].grid(True, color="lightgray", linestyle="--", linewidth=0.7)

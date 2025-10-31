@@ -28,10 +28,10 @@ def test_drive_init_and_composition(
     with pytest.raises(ValueError):
         drive = Drive()
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match="Amplitude and detuning must be of type Waveform."):
         drive = Drive(amplitude=1.0, detuning=det_wf)  # type: ignore [arg-type]
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match="Amplitude and detuning must be of type Waveform."):
         drive = Drive(amplitude=amp_wf, detuning=1.0)  # type: ignore [arg-type]
 
     with pytest.raises(ValueError):
@@ -74,7 +74,12 @@ def test_drive_init_and_composition(
         drive1 >> drive2
 
 
-def test_error_wdetuning_positive() -> None:
+def test_error_amplitude_negative() -> None:
+    with pytest.raises(ValueError, match="Amplitude cannot be negative."):
+        neg_ramp = Ramp(10.0, -1.0, 2.0)
+        Drive(amplitude=neg_ramp, detuning=neg_ramp)
 
+
+def test_error_wdetuning_positive() -> None:
     with pytest.raises(ValueError):
         WeightedDetuning(weights={0: 1}, waveform=Ramp(1.0, 0.2, 0.5))

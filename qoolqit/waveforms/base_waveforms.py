@@ -5,6 +5,12 @@ from typing import Any, cast, overload
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pulser
+from matplotlib.figure import Figure
+from pulser.parametrized import ParamObj
+from pulser.waveforms import Waveform as PulserWaveform
+
+from qoolqit.waveforms.utils import round_to_sum
 
 # Default number of points used to resolve the full waveform duration
 N_POINTS = 500
@@ -57,7 +63,7 @@ class Waveform(ABC):
 
     @property
     def params(self) -> dict[str, float]:
-        """Dictonary of parameters used by the waveform."""
+        """Dictionary of parameters used by the waveform."""
         return self._params_dict
 
     @abstractmethod
@@ -143,9 +149,19 @@ class Waveform(ABC):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
+    def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
+        """Convert an arbitrary Qoolqit waveform to a `pulser.InterpolatedWaveform`.
+
+        To keep a compact representation the maximum number of samples to interpolate is set to 100.
+        """
+        n_samples = min(100, duration)
+        times = np.linspace(0.0, self.duration, n_samples)
+        samples = self(times)
+        return pulser.InterpolatedWaveform(duration, samples)
+
     def draw(
         self, n_points: int = N_POINTS, return_fig: bool = False, **kwargs: Any
-    ) -> plt.Figure | None:
+    ) -> Figure | None:
         fig, ax = plt.subplots(1, 1, figsize=(8, 4), dpi=150)
         ax.grid(True)
         t_array = np.linspace(0.0, self.duration, n_points)
@@ -256,3 +272,17 @@ class CompositeWaveform(Waveform):
 
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
+
+    def _to_pulser(self, duration: int) -> ParamObj | pulser.CompositeWaveform:
+        """Converts a CompositeWaveform from QoolQit to Pulser.
+
+        Pulser only supports integer duration, so the sum of rounded
+        durations of each waveform needs to add up to the rounded duration
+        of the composite waveform.
+        """
+        ratio = duration / self.duration
+        new_durations = round_to_sum([ratio * wd for wd in self.durations])
+        pulser_waveforms = (
+            w._to_pulser(duration=duration) for w, duration in zip(self.waveforms, new_durations)
+        )
+        return pulser.CompositeWaveform(*pulser_waveforms)
