@@ -82,15 +82,15 @@ class BaseGraph(nx.Graph):
 
     @classmethod
     def from_nx(cls, g: nx.Graph) -> BaseGraph:
-        """Construct a BaseGraph from a NetworkX graph.
+        """Convert a NetworkX Graph object into a QoolQit graph instance.
 
-        Required:
-            - Edges
+        The input `networkx.Graph` graph must be defined only with the following allowed
 
-        Optional attributes:
-            - Node attribute "weight" : float
-            - Edge attribute "weight" : float
-            - Node attribute "pos"    : Sequence[float, float]
+        Node attributes:
+            pos (tuple): represents the node 2D position. Must be a list/tuple of real numbers.
+            weight: represents the node weight. Must be a real number.
+        Edge attibutes:
+            weight: represents the edge weight. Must be a real number.
 
         Returns an instance of the class with following attributes:
             - _node_weights : dict[node, float or None]
@@ -150,6 +150,7 @@ class BaseGraph(nx.Graph):
                         f"got {type(weight)} instead."
                     )
 
+        # build the instance of the graph
         graph = cls()
         graph.add_nodes_from(g.nodes)
         graph.add_edges_from(g.edges)
@@ -161,7 +162,7 @@ class BaseGraph(nx.Graph):
 
     @classmethod
     def from_pyg(cls, g: Data) -> BaseGraph:
-        """Convert a PyTorch Geometric Data object into a BaseGraph.
+        """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
 
         The input `torch_geometric.Data` object must be defined only with the following
         allowed attributes:
