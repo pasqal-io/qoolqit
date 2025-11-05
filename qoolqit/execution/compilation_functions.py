@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+
 from pulser.devices import Device as PulserDevice
 from pulser.parametrized import ParamObj
 from pulser.pulse import Pulse as PulserPulse
@@ -80,6 +82,9 @@ def basic_compilation(
     elif profile == CompilerProfile.MAX_AMPLITUDE:
         ENERGY = (device._upper_amp) / drive.amplitude.max()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
+        # round up/down to avoid roundoff errors
+        if ENERGY > 1:
+            ENERGY = math.floor(1e12 * ENERGY) / 1e12
     elif profile == CompilerProfile.MIN_DISTANCE:
         DISTANCE = (device._lower_distance) / register.min_distance()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
