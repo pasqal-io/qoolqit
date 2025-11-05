@@ -132,7 +132,7 @@ class PiecewiseLinear(CompositeWaveform):
         return "Piecewise linear waveform:\n"
 
 
-class InterpolatedWaveform(Waveform):
+class Interpolated(Waveform):
     """A waveform created from interpolation of a set of data points.
 
     Arguments:
