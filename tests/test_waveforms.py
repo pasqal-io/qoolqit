@@ -162,6 +162,14 @@ def test_interpolated_wrong_times_len() -> None:
         Interpolated(10, values=[0, 1], times=[0, 0.5, 0.8])
 
 
+def test_interpolated_to_pulser() -> None:
+    values = [0.1, 0.3, -0.5, 1.0, 5.7]
+    interpolated = Interpolated(20.46, values=values)
+
+    pulser_interpolated = interpolated._to_pulser(duration=222)
+    assert pulser_interpolated.duration == 222
+
+
 @pytest.mark.parametrize("n_waveforms", [3, 4, 5])
 def test_waveform_composition(n_waveforms: int) -> None:
 
