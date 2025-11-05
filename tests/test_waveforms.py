@@ -128,6 +128,20 @@ def test_piecewise(n_pieces: int) -> None:
 
 @pytest.mark.parametrize("interpolator", ["PchipInterpolator", "interp1d"])
 def test_interpolated(interpolator: str) -> None:
+    values = [-2.1, 5.3, 3.12, 1.04]
+    duration = 100
+    interpolated = Interpolated(duration, values=values, interpolator=interpolator)
+
+    expected_fractional_times = np.linspace(0, 1, len(values))
+    assert np.allclose(interpolated._times, expected_fractional_times)
+
+    waveform_times = duration * expected_fractional_times
+    interpolated_values = interpolated(waveform_times)
+    assert np.allclose(interpolated_values, values)
+
+
+@pytest.mark.parametrize("interpolator", ["PchipInterpolator", "interp1d"])
+def test_interpolated_with_times(interpolator: str) -> None:
     values = [0.1, 0.3, -0.5, 1.0]
     times = [0.0, 0.2, 0.8, 1.0]
     duration = 100
@@ -139,8 +153,13 @@ def test_interpolated(interpolator: str) -> None:
 
 
 def test_interpolated_fractional_times() -> None:
-    with pytest.raises(ValueError, match="[0,1]"):
+    with pytest.raises(ValueError, match=r"must be in \[0,1\]."):
         Interpolated(10, values=[0, 1], times=[0, 10])
+
+
+def test_interpolated_wrong_times_len() -> None:
+    with pytest.raises(ValueError, match="must be arrays of the same lenght."):
+        Interpolated(10, values=[0, 1], times=[0, 0.5, 0.8])
 
 
 @pytest.mark.parametrize("n_waveforms", [3, 4, 5])
