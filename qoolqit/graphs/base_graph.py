@@ -5,6 +5,10 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
+import torch
+from matplotlib.figure import Figure
+from torch_geometric.data import Data
+from torch_geometric.utils import to_networkx
 
 from .utils import (
     all_node_pairs,
@@ -17,7 +21,7 @@ from .utils import (
 
 class BaseGraph(nx.Graph):
     """
-    The BaseGraph in QoolQit, direclty inheriting from the NetworkX Graph.
+    The BaseGraph in QoolQit, directly inheriting from the NetworkX Graph.
 
     Defines basic functionalities for graphs within the Rydberg Analog, such
     as instantiating from a set of node coordinates, directly accessing node
@@ -76,7 +80,156 @@ class BaseGraph(nx.Graph):
         graph._reset_dicts()
         return graph
 
-    # properties
+    @classmethod
+    def from_nx(cls, g: nx.Graph) -> BaseGraph:
+        """Convert a NetworkX Graph object into a QoolQit graph instance.
+
+        The input `networkx.Graph` graph must be defined only with the following allowed
+
+        Node attributes:
+            pos (tuple): represents the node 2D position. Must be a list/tuple of real numbers.
+            weight: represents the node weight. Must be a real number.
+        Edge attibutes:
+            weight: represents the edge weight. Must be a real number.
+
+        Returns an instance of the class with following attributes:
+            - _node_weights : dict[node, float or None]
+            - _edge_weights : dict[(u,v), float or None]
+            - _coords       : dict[node, (float,float) or None]
+        """
+        if not isinstance(g, nx.Graph):
+            raise TypeError("Input must be a networkx.Graph instance.")
+
+        g = nx.convert_node_labels_to_integers(g)
+        num_nodes = len(g.nodes)
+        num_edges = len(g.edges)
+
+        # validate node attributes
+        for name, data in g.nodes.data():
+            unexpected_keys = set(data) - {"weight", "pos"}
+            if unexpected_keys:
+                raise ValueError(f"{unexpected_keys} not allowed in node attributes.")
+
+        node_pos = nx.get_node_attributes(g, "pos")
+        if node_pos:
+            if len(node_pos) != num_nodes:
+                raise ValueError("Node attribute `pos` must be defined for all nodes")
+            for name, pos in node_pos.items():
+                is_2D = isinstance(pos, (tuple, list)) & (len(pos) == 2)
+                is_real = all(isinstance(p, (float, int)) for p in pos)
+                if not (is_2D & is_real):
+                    raise TypeError(
+                        f"In node {name} the `pos` attribute must be a 2D tuple/list"
+                        f" of real numbers, got {pos} instead."
+                    )
+        node_weights = nx.get_node_attributes(g, "weight")
+        if node_weights:
+            if len(node_weights) != num_nodes:
+                raise ValueError("Node attribute `weight` must be defined for all nodes")
+            for name, weight in node_weights.items():
+                if not isinstance(weight, (float, int)):
+                    raise TypeError(
+                        f"In node {name} the `weight` attribute must be a real number, "
+                        f"got {type(weight)} instead."
+                        ""
+                    )
+
+        # validate edge attributes
+        for u, v, data in g.edges.data():
+            unexpected_keys = set(data) - {"weight"}
+            if unexpected_keys:
+                raise ValueError(f"{unexpected_keys} not allowed in edge attributes.")
+        edge_weights = nx.get_edge_attributes(g, "weight")
+        if edge_weights:
+            if len(edge_weights) != num_edges:
+                raise ValueError("Edge attribute `weight` must be defined for all edges")
+            for name, weight in edge_weights.items():
+                if not isinstance(weight, (float, int)):
+                    raise TypeError(
+                        f"In edge {name}, the attribute `weight` must be a real number, "
+                        f"got {type(weight)} instead."
+                    )
+
+        # build the instance of the graph
+        graph = cls()
+        graph.add_nodes_from(g.nodes)
+        graph.add_edges_from(g.edges)
+        graph._node_weights = nx.get_node_attributes(g, "weight", default=None)
+        graph._coords = nx.get_node_attributes(g, "pos", default=None)
+        graph._edge_weights = nx.get_edge_attributes(g, "weight", default=None)
+
+        return graph
+
+    @classmethod
+    def from_pyg(cls, g: Data) -> BaseGraph:
+        """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
+
+        The input `torch_geometric.Data` object must be defined only with the following
+        allowed attributes:
+            x (torch.Tensor): node weights as a matrix with shape (num_nodes, 1).
+            edge_index (torch.Tensor): graph connectivity as a matrix with shape (2, num_edges).
+            num_nodes (int): minimum number of nodes. The total number of nodes will be inferred
+                from this number and from the edges of the graph.
+            pos (torch.Tensor): node 2D positions as a matrix with shape (num_nodes, 2)
+            edge_attr (torch.Tensor): edge weights as a matrix with shape (num_edges, 1).
+
+        If the graph is defined only through the `edge_index` attribute, `num_nodes` is required.
+        The input graph will be converted to a unidirectional graph.
+        """
+        if not isinstance(g, Data):
+            raise TypeError("Input must be a torch_geometric.data.Data object.")
+
+        expected_attrs = {"x", "edge_index", "pos", "edge_attr", "num_nodes"}
+        unexpected_attrs = set(g.keys()) - expected_attrs
+        if unexpected_attrs:
+            raise AttributeError(
+                f"""Input Data graph has the following unexpected attributes: {unexpected_attrs}"""
+            )
+
+        if not g.node_attrs():
+            if "num_nodes" not in g.keys():
+                raise AttributeError(
+                    """Data object must have at least one of the following
+                    attribute: `x`, `pos`, `num_nodes`."""
+                )
+
+        num_nodes = g.num_nodes
+        num_edges = g.num_edges
+        expected_shape = {
+            "x": (num_nodes, 1),
+            "edge_index": (2, num_edges),
+            "pos": (num_nodes, 2),
+            "edge_attr": (num_edges, 1),
+        }
+
+        for attr_key, shape in expected_shape.items():
+            if attr_key in g:
+                attr = g[attr_key]
+                if not isinstance(attr, torch.Tensor):
+                    raise TypeError(f"Data attribute {attr_key} must be a tensor.")
+                # add that has to be a tensor of real numbers
+                if attr.shape != shape:
+                    raise ValueError(
+                        f"Data attribute {attr_key} must be a 2D tensor of shape {shape}."
+                    )
+                if not attr.isreal().all():
+                    raise ValueError(
+                        f"Data attribute {attr_key} must be a 2D tensor of real numbers."
+                    )
+
+        # g.edge_attrs() also returns "edge_index" which should not be passed to to_networkx
+        edge_attrs = ["edge_attr"] if "edge_attr" in g else None
+        data_nx = to_networkx(
+            g, node_attrs=g.node_attrs(), edge_attrs=edge_attrs, to_undirected=True
+        )
+        if "edge_attr" in g:
+            for u, v, edge in data_nx.edges(data=True):
+                edge["weight"] = edge.pop("edge_attr")[0]
+        if "x" in g:
+            for u, node in data_nx.nodes(data=True):
+                node["weight"] = node.pop("x")[0]
+
+        return cls.from_nx(data_nx)
 
     @property
     def sorted_edges(self) -> set:
@@ -261,7 +414,7 @@ class BaseGraph(nx.Graph):
         self.remove_edges_from(list(self.edges))
         self.add_edges_from(self.ud_edges(radius))
 
-    def draw(self, return_fig: bool = False, *args: Any, **kwargs: Any) -> plt.Figure | None:
+    def draw(self, return_fig: bool = False, *args: Any, **kwargs: Any) -> Figure | None:
         """Draw the graph.
 
         Uses the draw_networkx function from NetworkX.
