@@ -139,8 +139,8 @@ class Interpolated(Waveform):
         duration (int): The waveform duration (in ns).
         values (ArrayLike): Values of the interpolation points. Must be a list of castable
             to float or a parametrized object.
-        times (ArrayLike): Fractions of the total duration (between 0
-            and 1), indicating where to place each value on the time axis. Must
+        times (ArrayLike): Fractions of the total duration (between 0 and 1),
+            indicating where to place each value on the time axis. Must
             be a list of castable to float or a parametrized object. If
             not given, the values are spread evenly throughout the full
             duration of the waveform.
@@ -161,10 +161,12 @@ class Interpolated(Waveform):
         """Initializes a new InterpolatedWaveform."""
         super().__init__(duration, values=values)
         self._values = np.array(values, dtype=float)
-        if times:
+        if times:  # fractional times in [0,1]
+            if all([0 < ft < 1 for ft in times]):
+                raise ValueError("All values in `times` must be in [0,1].")
             self._times = np.array(times, dtype=float)
         else:
-            self._times = np.linspace(0, duration, num=len(self._values))
+            self._times = np.linspace(0, 1, num=len(self._values))
 
         if interpolator not in self._valid_interpolators:
             raise ValueError(
@@ -175,7 +177,7 @@ class Interpolated(Waveform):
         self._interpolator_kwargs = interpolator_kwargs
 
         interp_cls = getattr(interpolate, interpolator)
-        self._interp_func = interp_cls(self._times, self._values, **interpolator_kwargs)
+        self._interp_func = interp_cls(duration * self._times, self._values, **interpolator_kwargs)
 
     def function(self, t: float) -> float:
         return float(self._interp_func(t))
@@ -188,7 +190,7 @@ class Interpolated(Waveform):
 
     def _to_pulser(self, duration: int) -> ParamObj | pulser.InterpolatedWaveform:
         return pulser.InterpolatedWaveform(
-            self.duration,
+            duration,
             values=self._values,
             times=self._times,
             interpolator=self._interpolator,
