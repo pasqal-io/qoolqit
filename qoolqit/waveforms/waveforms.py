@@ -159,10 +159,10 @@ class Interpolated(Waveform):
         **interpolator_kwargs: Any,
     ):
         """Initializes a new InterpolatedWaveform."""
-        super().__init__(duration, values=values)
+        super().__init__(duration)
         self._values = np.array(values, dtype=float)
         if times:  # fractional times in [0,1]
-            if all([0 < ft < 1 for ft in times]):
+            if any([(ft < 0) or (ft > 1) for ft in times]):
                 raise ValueError("All values in `times` must be in [0,1].")
             self._times = np.array(times, dtype=float)
             if len(times) != len(self._values):

@@ -138,6 +138,11 @@ def test_interpolated(interpolator: str) -> None:
     assert np.allclose(interpolated_values, values)
 
 
+def test_interpolated_fractional_times() -> None:
+    with pytest.raises(ValueError, match="[0,1]"):
+        Interpolated(10, values=[0, 1], times=[0, 10])
+
+
 @pytest.mark.parametrize("n_waveforms", [3, 4, 5])
 def test_waveform_composition(n_waveforms: int) -> None:
 
