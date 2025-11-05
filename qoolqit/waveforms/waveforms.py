@@ -165,6 +165,10 @@ class Interpolated(Waveform):
             if all([0 < ft < 1 for ft in times]):
                 raise ValueError("All values in `times` must be in [0,1].")
             self._times = np.array(times, dtype=float)
+            if len(times) != len(self._values):
+                raise ValueError(
+                    "Arguments `values` and `times` must be arrays of the same lenght."
+                )
         else:
             self._times = np.linspace(0, 1, num=len(self._values))
 

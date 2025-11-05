@@ -10,6 +10,7 @@ from qoolqit.waveforms import (
     CompositeWaveform,
     Constant,
     Delay,
+    Interpolated,
     PiecewiseLinear,
     Ramp,
     Sin,
@@ -123,6 +124,18 @@ def test_piecewise(n_pieces: int) -> None:
     wf = PiecewiseLinear(durations, values)
 
     assert wf.n_waveforms == n_pieces
+
+
+@pytest.mark.parametrize("interpolator", ["PchipInterpolator", "interp1d"])
+def test_interpolated(interpolator: str) -> None:
+    values = [0.1, 0.3, -0.5, 1.0]
+    times = [0.0, 0.2, 0.8, 1.0]
+    duration = 100
+    interpolated = Interpolated(duration, values=values, times=times, interpolator=interpolator)
+
+    waveform_times = duration * np.array(times, dtype=float)
+    interpolated_values = interpolated(waveform_times)
+    assert np.allclose(interpolated_values, values)
 
 
 @pytest.mark.parametrize("n_waveforms", [3, 4, 5])
