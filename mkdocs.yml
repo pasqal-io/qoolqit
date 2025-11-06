@@ -25,8 +25,9 @@ nav:
     - Advanced:
       - Understanding unit conversions: tutorials/unit_conversion.ipynb
   - API: $api/qoolqit.***
-  - Open-source:
+  - Contribute:
     - How to contribute: CONTRIBUTING.md
+    - Code of conduct: CODE_OF_CONDUCT.md
     - Contributor Agreement: CONTRIBUTOR_AGREEMENT.md
 
 theme:
