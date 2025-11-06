@@ -27,7 +27,6 @@ nav:
   - API: $api/qoolqit.***
   - Open-source:
     - How to contribute: CONTRIBUTING.md
-    - License (MIT-Derived): LICENSE.md
     - Contributor Agreement: CONTRIBUTOR_AGREEMENT.md
 
 theme:
