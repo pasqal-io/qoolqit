@@ -33,19 +33,22 @@ git push --set-upstream origin <your initials>/<branch name>
 
 ## Setting up your development environment
 
-Our repo is currently not compatible with `hatch`. The repo installs properly using `pip` directly.
+1) Clone the [QoolQit GitHub repository](https://github.com/pasqal-io/qoolqit)
 
-```shell
-pip install -e .
+```sh
+git clone https://github.com/pasqal-io/qoolqit.git
 ```
 
-We recommend using a virtual environment.
-To run the automated tests, assuming you installed the repo using the above, use:
+2) Setup an environment for developing. We recommend using [Hatch](https://hatch.pypa.io/latest/). With Hatch installed, you can enter the `qoolqit` repository and run
 
-```shell
-pip install -r test_requirements.txt
+```sh
+hatch shell
+```
 
-pytest
+This will automatically take you into an environment with the necessary dependencies. Alternatively, if you wish to use a different environment manager like `conda` or `venv`, you can instead enter the `qoolqit` repository from within the environment and run
+
+```sh
+pip install -e .
 ```
 
 ### Useful Things for your workflow: Linting and Testing
@@ -57,16 +60,4 @@ pip install pre-commit
 pre-commit install
 pre-commit run --all-files
 pytest
-```
-
-Make sure your docs build too!
-First, `pip` install the dependencies:
-```shell
-pip install -r doc_requirements.txt
-```
-
-Then build the documentation:
-
-```shell
- mkdocs build --clean --strict
 ```
