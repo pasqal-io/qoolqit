@@ -62,6 +62,21 @@ fig = wf3.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
+### Interpolated waveform
+
+Special waveform to easily fit a set given values with a smooth function.
+For the full set of available options please refer to the [API reference](../api/qoolqit/waveforms/waveforms.md).
+
+```python exec="on" source="material-block" html="1" session="waveforms"
+from qoolqit import Interpolated
+
+values = np.sin(np.linspace(0,2*np.pi, 10))
+wf_interpolated = Interpolated(100, values)
+wf_interpolated.draw()
+fig = wf_interpolated.draw(return_fig = True) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+```
+
 ## Composite waveforms
 
 The most straightforward way to arbitrarily compose waveforms is to use the `>>` operator. This will create a `CompositeWaveform` representing the waveforms in the order provided.
@@ -151,7 +166,8 @@ A few things are crucial in the snippet above:
 - Keeping the `duration` argument as the first one in the `__init__`, and initializing the parent class with that value, to be consistent with other waveforms.
 - Passing every other parameter needed for the waveform in the `__init__` and passing it as a **keyword argument** to the parent class. This will automatically create a `params` dictionary of extra parameters, and set them as attributes to be used later.
 - Overriding the `function` abstract method, which represents the evaluation of the waveform at some time `t`.
-- **Optional**: overriding the `max` and `min` methods. The intended result of `wf.max()` and `wf.min()` is to get the maximum/minimum value the waveform takes over its duration. By default, the base `Waveform` class implements a brute-force sampling method that **approximates** the maximum and minimum values. However, if this value is easy to know from the waveform parameters, the method should be overriden.
+- **Optional**: overriding the `max` and `min` methods. The intended result of `wf.max()` and `wf.min()` is to get the maximum/minimum value the waveform takes over its duration. By default, the base `Waveform` class implements a brute-force sampling method that **approximates** the maximum and minimum values. However, if this value is easy to know from the waveform parameters, the method should be overridden.
+- Internally, before being executed by an emulator or a QPU, custom defined waveforms will be converted to an `Interpolated` waveform with a maximum of 100 points. If you need a finer time resolution, please, consider using directly an `Interpolated` waveform.
 
 To showcase the usage of the newly defined waveform, let's define a new sine waveform and compose it with a piecewise linear waveform.
 
