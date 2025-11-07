@@ -28,6 +28,7 @@ nav:
   - Contribute:
     - How to contribute: CONTRIBUTING.md
     - Code of conduct: CODE_OF_CONDUCT.md
+    - License: LICENSE.md
     - Contributor Agreement: CONTRIBUTOR_AGREEMENT.md
 
 theme:
