@@ -24,10 +24,12 @@ nav:
     - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
     - Advanced:
       - Understanding unit conversions: tutorials/unit_conversion.ipynb
-  - Reference: $api/qoolqit.***
-  - Open-source:
-    - License (MIT-Derived): LICENSE.md
-    - Contributor Agreement: CONTRIBUTOR AGREEMENT.md
+  - API: $api/qoolqit.***
+  - Contribute:
+    - How to contribute: CONTRIBUTING.md
+    - Code of conduct: CODE_OF_CONDUCT.md
+    - License: LICENSE.md
+    - Contributor Agreement: CONTRIBUTOR_AGREEMENT.md
 
 theme:
   name: material
