@@ -12,7 +12,7 @@ class EmbeddingConfig(ABC):
 
     Subclasses define parameters specific to their algorithms. Each config
     should define fields that directly translate to arguments in the respective
-    embedding function it configurates.
+    embedding function it configures.
     """
 
     def dict(self) -> dict:
@@ -76,7 +76,7 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType, ConfigType]):
     @property
     def info(self) -> str:
         """Prints info about the embedding algorithm."""
-        header = "-- Embedding agorithm docstring:\n\n"
+        header = "-- Embedding algorithm docstring:\n\n"
         docstring: str | None = inspect.getdoc(self.algorithm)
         if docstring is None:
             raise ValueError("No information found for the embedding algorithm.")
