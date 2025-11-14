@@ -31,14 +31,14 @@ def spring_layout_embedding(
     Generates a graph with the same nodes and edges as the original graph, but with
     node coordinates set to be the positions given by nx.spring_layout.
 
-    Check the documentation for nx.spring_layout for more information on each parameter.
+    Check the documentation for nx.spring_layout for more information about each parameter.
 
     Arguments:
         graph: the graph to embed.
         k: optimal distance between nodes.
         iterations: maximum number of iterations to take.
         threshold: threshold value for relative error in node position changes.
-        sed: random seed.
+        seed: random seed.
     """
     output_graph = DataGraph.from_nodes(graph.nodes)
     output_graph.add_edges_from(graph.edges)
