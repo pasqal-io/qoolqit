@@ -27,4 +27,4 @@ jobs:
 
     - name: Run docs building
       run: |
-        hatch -v run docs:test
+        hatch -v run docs:build

@@ -115,9 +115,8 @@ dependencies = [
 ]
 
 [tool.hatch.envs.docs.scripts]
-build = "mkdocs build --clean --strict {args}"
+build = "mkdocs build --clean --strict"
 serve = "mkdocs serve --dev-addr localhost:8000"
-test = "mkdocs build --clean --strict"
 
 [[tool.hatch.envs.test.matrix]]
 python = ["310", "311", "312", "313"]
@@ -188,7 +187,7 @@ exclude = '''
 '''
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
