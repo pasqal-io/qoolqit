@@ -1,5 +1,5 @@
 # Update development version of documentation on succesful PR
-name: Docs dev version 
+name: Docs dev version
 
 on:
   pull_request:
