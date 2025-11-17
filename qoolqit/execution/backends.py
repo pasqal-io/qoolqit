@@ -95,7 +95,7 @@ class LocalEmulator(PulserEmulatorBackend):
 
     Args:
         backend_type (type): backend type. Must be a subtype of `pulser.backend.EmulatorBackend`.
-        emulator_config (EmulationConfig): optional configuration object emulators.
+        emulation_config (EmulationConfig): optional configuration object emulators.
         runs (int): number of bitstring samples to collect from the final quantum state.
             It emulates running the program `runs` times to collect bitstrings statistics.
 
@@ -151,7 +151,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         backend_type (type): backend type. Must be a subtype of
             `pulser_pasqal.backends.RemoteEmulatorBackend`.
         connection (RemoteConnection): connection to execute the program on remote backends.
-        emulator_config (EmulationConfig): optional configuration object emulators.
+        emulation_config (EmulationConfig): optional configuration object emulators.
         runs (int): number of bitstring samples to collect from the final quantum state.
             It emulates running the program `runs` times to collect bitstrings statistics.
 
