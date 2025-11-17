@@ -41,7 +41,6 @@ theme:
     - content.action.view
     - content.action.edit
     - content.tooltips
-    - navigation.expand
     - navigation.indexes
     - navigation.sections
     - navigation.tabs
