@@ -1,3 +1,5 @@
+"""A Python library for algorithm development in the Rydberg Analog Model."""
+
 from __future__ import annotations
 
 from importlib import import_module
