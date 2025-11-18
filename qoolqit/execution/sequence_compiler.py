@@ -12,21 +12,11 @@ from qoolqit.register import Register
 from .compilation_functions import basic_compilation
 from .utils import CompilerProfile
 
-COMPILATION_FUNCTIONS = {
-    AvailableDevices.MOCK.value: basic_compilation,
-    AvailableDevices.ANALOG.value: basic_compilation,
-    AvailableDevices.DigitalAnalogDevice.value: basic_compilation,
-    AvailableDevices.TEST_ANALOG.value: basic_compilation,
-}
+COMPILATION_FUNCTIONS = {device.value: basic_compilation for device in AvailableDevices}
 
 ALL_COMPILER_PROFILES: set = set(CompilerProfile.list())
 
-SUPPORTED_PROFILES = {
-    AvailableDevices.MOCK.value: ALL_COMPILER_PROFILES,
-    AvailableDevices.ANALOG.value: ALL_COMPILER_PROFILES,
-    AvailableDevices.DigitalAnalogDevice.value: ALL_COMPILER_PROFILES,
-    AvailableDevices.TEST_ANALOG.value: ALL_COMPILER_PROFILES,
-}
+SUPPORTED_PROFILES = {device.value: ALL_COMPILER_PROFILES for device in AvailableDevices}
 
 
 class SequenceCompiler:
