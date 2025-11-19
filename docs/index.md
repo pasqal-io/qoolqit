@@ -8,10 +8,16 @@ hide:
 
 ## **Installation**
 
-QoolQit can be installed from PyPi with `pip` as follows
+QoolQit can be installed from PyPi with `pip`/`pipx`/`uv` as follows
 
 ```sh
 $ pip install qoolqit
+```
+```sh
+$ pipx install qoolqit
+```
+```sh
+$ uv pip install qoolqit
 ```
 
 

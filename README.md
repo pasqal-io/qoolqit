@@ -14,15 +14,19 @@
 
 # Installation
 
-QoolQit can be installed from PyPi with `pip` as follows
+QoolQit can be installed from PyPi with `pip`/`pipx`/`uv` as follows
 
 ```sh
 $ pip install qoolqit
-
-# or
-
+```
+```sh
 $ pipx install qoolqit
 ```
+```sh
+$ uv pip install qoolqit
+```
+
+Please, don't forget to create a virtual environment first.
 
 ## Install from source
 
