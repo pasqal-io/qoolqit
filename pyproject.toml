@@ -26,42 +26,23 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
-
 dependencies = [
   "pulser~=1.6.2",
+  "pasqal-cloud>=0.20.6",
   "networkx~=3.4",
   "torch_geometric",
-  "matplotlib",
-  "emu_mps"
+  "emu_mps",
+  "emu_sv"
 ]
-
-[tool.hatch.metadata]
-allow-direct-references = true
-allow-ambiguous-features = true
 
 [project.optional-dependencies]
 extras = [
   "jupyter",
-]
-
-solvers = [
-  "pasqal-cloud>=0.20.6",
-  "requests-mock",
-  "emu_sv",
-]
-
-[project.urls]
-Documentation = "https://pasqal-io.github.io/qoolqit/latest"
-Issues = "https://github.com/pasqal-io/qoolqit/issues"
-Source = "https://github.com/pasqal-io/qoolqit"
-
-[tool.hatch.envs.default]
-features = ["extras","solvers"]
-dependencies = [
   "flaky",
   "pytest",
   "pytest-cov",
@@ -78,6 +59,30 @@ dependencies = [
   "ruff",
   "pydocstringformatter",
 ]
+docs = [
+  "mkdocs",
+  "mkdocs-material",
+  "mkdocstrings",
+  "mkdocstrings-python",
+  "mkdocs-section-index",
+  "mkdocs-jupyter==0.24.7", # Don't let it update to 0.25 as it doesn't render LaTeX in notebooks correctly!
+  "mkdocs-exclude",
+  "mkapi",
+  "markdown-exec",
+  "mike",
+]
+
+[project.urls]
+Documentation = "https://pasqal-io.github.io/qoolqit/latest"
+Issues = "https://github.com/pasqal-io/qoolqit/issues"
+Source = "https://github.com/pasqal-io/qoolqit"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+allow-ambiguous-features = true
+
+[tool.hatch.envs.default]
+features = ["extras"]
 
 [tool.hatch.envs.default.scripts]
 test = "pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs {args}"
@@ -100,19 +105,7 @@ asyncio_mode="auto"
 asyncio_default_fixture_loop_scope="function"
 
 [tool.hatch.envs.docs]
-features = ["solvers"]
-dependencies = [
-  "mkdocs",
-  "mkdocs-material",
-  "mkdocstrings",
-  "mkdocstrings-python",
-  "mkdocs-section-index",
-  "mkdocs-jupyter==0.24.7", # Don't let it update to 0.25 as it doesn't render LaTeX in notebooks correctly!
-  "mkdocs-exclude",
-  "mkapi",
-  "markdown-exec",
-  "mike",
-]
+features = ["docs"]
 
 [tool.hatch.envs.docs.scripts]
 build = "mkdocs build --clean --strict"
