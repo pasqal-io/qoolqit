@@ -23,8 +23,8 @@ class QuantumProgram:
     """A program representing a Sequence acting on a Register of qubits.
 
     Arguments:
-        register: the Register of qubits.
-        sequence: the Sequence of waveforms.
+        register: the register of qubits, defining their positions.
+        drive: the drive acting on qubits, defining amplitude, detuning and phase.
     """
 
     def __init__(
