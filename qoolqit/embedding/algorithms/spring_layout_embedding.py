@@ -31,7 +31,8 @@ def spring_layout_embedding(
     Generates a graph with the same nodes and edges as the original graph, but with
     node coordinates set to be the positions given by nx.spring_layout.
 
-    Check the documentation for nx.spring_layout for more information about each parameter.
+    Check the documentation for nx.spring_layout for more information about each parameter:
+    https://networkx.org/documentation/stable/reference/generated/networkx.drawing.layout.spring_layout.html
 
     Arguments:
         graph: the graph to embed.
