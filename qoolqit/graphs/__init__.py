@@ -1,8 +1,10 @@
+"""Graph creation and manipulation in QoolQit."""
+
 from __future__ import annotations
 
-from .base_graph import BaseGraph
-from .data_graph import DataGraph
-from .utils import (
+from qoolqit.graphs.base_graph import BaseGraph
+from qoolqit.graphs.data_graph import DataGraph
+from qoolqit.graphs.utils import (
     all_node_pairs,
     distances,
     random_coords,
@@ -11,4 +13,13 @@ from .utils import (
     space_coords,
 )
 
-__all__ = ["DataGraph"]
+__all__ = [
+    "BaseGraph",
+    "DataGraph",
+    "all_node_pairs",
+    "distances",
+    "random_coords",
+    "random_edge_list",
+    "scale_coords",
+    "space_coords",
+]

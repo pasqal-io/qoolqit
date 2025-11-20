@@ -6,6 +6,8 @@ hide:
   - toc
 ---
 
+**QoolQit** is a Python library for algorithm development in the Rydberg Analog Model.
+
 ## **Installation**
 
 QoolQit can be installed from PyPi with `pip`/`pipx`/`uv` as follows
