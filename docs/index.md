@@ -13,13 +13,13 @@ hide:
 QoolQit can be installed from PyPi with `pip`/`pipx`/`uv` as follows
 
 ```sh
-$ pip install qoolqit
+pip install qoolqit
 ```
 ```sh
-$ pipx install qoolqit
+pipx install qoolqit
 ```
 ```sh
-$ uv pip install qoolqit
+uv pip install qoolqit
 ```
 
 
@@ -30,19 +30,19 @@ $ uv pip install qoolqit
     1) Clone the [QoolQit GitHub repository](https://github.com/pasqal-io/qoolqit)
 
     ```sh
-    $ git clone https://github.com/pasqal-io/qoolqit.git
+    git clone https://github.com/pasqal-io/qoolqit.git
     ```
 
     2) Setup an environment for developing. We recommend using [Hatch](https://hatch.pypa.io/latest/). From your `qoolqit` folder run
 
     ```sh
-    $ hatch shell
+    hatch shell
     ```
 
     If you wish to use a different environment manager like `conda` or `venv`, activate your environment and run
 
     ```sh
-    $ pip install -e .
+    pip install -e .
     ```
 
 !!! tip "Using any pyproject-compatible Python manager"

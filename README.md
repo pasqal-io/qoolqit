@@ -17,13 +17,13 @@
 QoolQit can be installed from PyPi with `pip`/`pipx`/`uv` as follows
 
 ```sh
-$ pip install qoolqit
+pip install qoolqit
 ```
 ```sh
-$ pipx install qoolqit
+pipx install qoolqit
 ```
 ```sh
-$ uv pip install qoolqit
+uv pip install qoolqit
 ```
 
 Please, don't forget to create a virtual environment first.
