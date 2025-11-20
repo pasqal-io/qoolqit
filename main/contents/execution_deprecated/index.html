@@ -190,6 +190,8 @@
         </button>
       </nav>
       
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -340,7 +342,7 @@
   
     
   
-  API
+  API Reference
 
       </a>
     </li>
@@ -1314,7 +1316,7 @@
   <span class="md-ellipsis">
     
   
-    API
+    API Reference
   
 
     
@@ -1336,7 +1338,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    API
+    API Reference
   
 
           </label>
@@ -2737,15 +2739,15 @@ As an equivalent alternative, all users are encouraged to move to the new emulat
 </code></pre></div>
 </div>
 <p>The compiled program is ready to be executed using its <code>run()</code> method. The signature of this method is the following:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>def run(
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    self,
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    backend_name: BackendName = BackendName.QUTIP,
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    result_type: ResultType = ResultType.STATEVECTOR,
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    runs: int = 100,
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    evaluation_times: list[float] = [1.0],
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    **backend_params: Any,
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>) -&gt; OutputType:
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    ...
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">backend_name</span><span class="p">:</span> <span class="n">BackendName</span> <span class="o">=</span> <span class="n">BackendName</span><span class="o">.</span><span class="n">QUTIP</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">result_type</span><span class="p">:</span> <span class="n">ResultType</span> <span class="o">=</span> <span class="n">ResultType</span><span class="o">.</span><span class="n">STATEVECTOR</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">runs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">evaluation_times</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="o">**</span><span class="n">backend_params</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OutputType</span><span class="p">:</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="o">...</span>
 </code></pre></div></p>
 <p>The execution process is primarily controlled by two arguments: <code>backend_name</code> and <code>result_type</code>.</p>
 <p>The <code>backend_name</code> parameter expects a value from the <code>BackendName</code> enumeration, which specifies the computational backend responsible for simulating the underlying Pulser sequence. Supported values include <code>QUTIP</code> and <code>EMUMPS</code>, corresponding to the <a href="https://qutip.readthedocs.io/en/qutip-5.2.x/">QuTiP</a> backend for Pulser and the <a href="https://pasqal-io.github.io/emulators/latest/emu_mps/">emu-mps</a> quantum emulator, respectively.</p>
@@ -2813,7 +2815,7 @@ As an equivalent alternative, all users are encouraged to move to the new emulat
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">Le</span><span class="kc">n</span><span class="err">g</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">o</span><span class="kc">f</span><span class="w"> </span><span class="kc">t</span><span class="err">he</span><span class="w"> </span><span class="err">ou</span><span class="kc">t</span><span class="err">pu</span><span class="kc">t</span><span class="w"> </span><span class="err">lis</span><span class="kc">t</span><span class="p">:</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="mi">100</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="err">Fi</span><span class="kc">nal</span><span class="w"> </span><span class="err">s</span><span class="kc">tate</span><span class="w"> </span><span class="err">bi</span><span class="kc">tstr</span><span class="err">i</span><span class="kc">n</span><span class="err">gs</span><span class="p">:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="err">Cou</span><span class="kc">nter</span><span class="err">(</span><span class="p">{</span><span class="err">&#39;</span><span class="mi">0000</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">113</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1000</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1001</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0010</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">95</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0001</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">95</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0110</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">94</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0100</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0011</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0101</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">57</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1010</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">55</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1100</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0111</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1011</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1101</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1110</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1111</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">}</span><span class="err">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="err">Cou</span><span class="kc">nter</span><span class="err">(</span><span class="p">{</span><span class="err">&#39;</span><span class="mi">1001</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">114</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0100</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1000</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0000</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">96</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0110</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">95</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0010</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">94</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0001</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0011</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">57</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1010</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">56</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0101</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">54</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1100</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">54</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">0111</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1101</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1011</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1110</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="mi">1111</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">}</span><span class="err">)</span>
 </code></pre></div>
 </div>
 
@@ -2835,6 +2837,12 @@ As an equivalent alternative, all users are encouraged to move to the new emulat
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -2865,7 +2873,7 @@ As an equivalent alternative, all users are encouraged to move to the new emulat
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "content.action.view", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.sections", "content.code.copy"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "content.code.copy", "content.action.view", "content.action.edit", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>

@@ -186,6 +186,8 @@
         </button>
       </nav>
       
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -332,7 +334,7 @@
   
     
   
-  API
+  API Reference
 
       </a>
     </li>
@@ -1280,7 +1282,7 @@
   <span class="md-ellipsis">
     
   
-    API
+    API Reference
   
 
     
@@ -1302,7 +1304,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    API
+    API Reference
   
 
           </label>
@@ -2745,7 +2747,8 @@
 <span class="normal"><a href="#__codelineno-0-45">45</a></span>
 <span class="normal"><a href="#__codelineno-0-46">46</a></span>
 <span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4"></a>
@@ -2778,21 +2781,22 @@
 <a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">    Generates a graph with the same nodes and edges as the original graph, but with</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="sd">    node coordinates set to be the positions given by nx.spring_layout.</span>
 <a id="__codelineno-0-33" name="__codelineno-0-33"></a>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">    Check the documentation for nx.spring_layout for more information on each parameter.</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">    Arguments:</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">        graph: the graph to embed.</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">        k: optimal distance between nodes.</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">        iterations: maximum number of iterations to take.</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        threshold: threshold value for relative error in node position changes.</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">        sed: random seed.</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="n">output_graph</span> <span class="o">=</span> <span class="n">DataGraph</span><span class="o">.</span><span class="n">from_nodes</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="n">output_graph</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="n">output_graph</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a>        <span class="n">graph</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="n">iterations</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="p">)</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="k">return</span> <span class="n">output_graph</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">    Check the documentation for nx.spring_layout for more information about each parameter:</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">    https://networkx.org/documentation/stable/reference/generated/networkx.drawing.layout.spring_layout.html</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">    Arguments:</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">        graph: the graph to embed.</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">        k: optimal distance between nodes.</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        iterations: maximum number of iterations to take.</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">        threshold: threshold value for relative error in node position changes.</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">        seed: random seed.</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="n">output_graph</span> <span class="o">=</span> <span class="n">DataGraph</span><span class="o">.</span><span class="n">from_nodes</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="n">output_graph</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="n">output_graph</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a>        <span class="n">graph</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="n">iterations</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="p">)</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="k">return</span> <span class="n">output_graph</span>
 </code></pre></div></td></tr></table></div>
 
 
@@ -2817,6 +2821,12 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -2847,7 +2857,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../../..", "features": ["content.code.annotate", "content.action.view", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.sections", "content.code.copy"], "search": "../../../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../../..", "features": ["content.code.annotate", "content.code.copy", "content.action.view", "content.action.edit", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest"], "search": "../../../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../../../../../assets/javascripts/bundle.e71a0d61.min.js"></script>

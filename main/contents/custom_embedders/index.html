@@ -190,6 +190,8 @@
         </button>
       </nav>
       
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -340,7 +342,7 @@
   
     
   
-  API
+  API Reference
 
       </a>
     </li>
@@ -1362,7 +1364,7 @@
   <span class="md-ellipsis">
     
   
-    API
+    API Reference
   
 
     
@@ -1384,7 +1386,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    API
+    API Reference
   
 
           </label>
@@ -2784,7 +2786,7 @@
 <li><code>GraphToGraphEmbedder</code> which concretizes the <code>BaseEmbedder</code> with a <code>DataGraph</code> input type and a <code>DataGraph</code> output type.</li>
 <li><code>MatrixToGraphEmbedder</code> which concretizes the <code>BaseEmbedder</code> with a <code>np.ndarray</code> input type and a <code>DataGraph</code> output type.</li>
 </ul>
-<p>In both cases, the <code>validate_input</code> and <code>validate_output</code> are overriden to check the input and output are of the correct type. In the case of the <code>MatrixToGraphEmbedder</code> conditions on the input matrix are also checked such as if the array has the right dimensions and is symmetric. Still, at this level, no specific embedding algorithm is defined.</p>
+<p>In both cases, the <code>validate_input</code> and <code>validate_output</code> are overridden to check the input and output are of the correct type. In the case of the <code>MatrixToGraphEmbedder</code> conditions on the input matrix are also checked such as if the array has the right dimensions and is symmetric. Still, at this level, no specific embedding algorithm is defined.</p>
 <p>In the future, more families of embedders can be defined that may require different input and output data types.</p>
 <p><strong>Level 2: Concretizing the algorithms and configurations</strong></p>
 <p>The final level is defining concrete embedders, such as the ones we have used in the <a href="../available_embedders/">available embedders page</a>. Here the requirement is to define a concrete function that maps the input to the output, along with any parameters required, and a config dataclass inheriting from <code>EmbeddingConfig</code> holding all the configuration parameters. In the previous examples, we used the <code>SpingLayoutEmbedder</code> which is a subclass of a <code>GraphToGraphEmbedder</code> and the <code>InteractionEmbedder</code> which is a subclass of the <code>MatrixToGraphEmbedder</code>.</p>
@@ -2911,6 +2913,12 @@
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
@@ -2940,7 +2948,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "content.action.view", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.sections", "content.code.copy"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.annotate", "content.code.copy", "content.action.view", "content.action.edit", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>

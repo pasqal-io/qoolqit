@@ -190,6 +190,8 @@
         </button>
       </nav>
       
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -338,7 +340,7 @@
   
     
   
-  API
+  API Reference
 
       </a>
     </li>
@@ -1291,7 +1293,7 @@
   <span class="md-ellipsis">
     
   
-    API
+    API Reference
   
 
     
@@ -1313,7 +1315,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    API
+    API Reference
   
 
           </label>
@@ -2864,7 +2866,17 @@ Force-directed embedding, wrapping nx.spring_layout.</p>
 <p>Force-directed embedding, wrapping nx.spring_layout.</p>
 <p>Generates a graph with the same nodes and edges as the original graph, but with
 node coordinates set to be the positions given by nx.spring_layout.</p>
-<p>Check the documentation for nx.spring_layout for more information on each parameter.</p>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle check the documentation for nx.spring_layout for more information about each parameter">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Check the documentation for nx.spring_layout for more information about each parameter</span>
+</p>
+<div class="mkapi-section-content">
+<p><a href="https://networkx.org/documentation/stable/reference/generated/networkx.drawing.layout.spring_layout.html">https://networkx.org/documentation/stable/reference/generated/networkx.drawing.layout.spring_layout.html</a></p>
+</div>
 <p class="mkapi-section">
 <span class="mkapi-object-link">
 <span class="mkapi-section-toggle" title="Toggle parameters">
@@ -2896,8 +2908,8 @@ maximum number of iterations to take.</p>
 threshold value for relative error in node position changes.</p>
 </li>
 <li>
-<p><span class="mkapi-item-name">sed</span>
- <span class="mkapi-dash">&mdash;</span>
+<p><span class="mkapi-item-name">seed</span> : 
+<span class="mkapi-item-type">int | None</span> <span class="mkapi-dash">&mdash;</span>
 random seed.</p>
 </li>
 </ul>
@@ -2922,6 +2934,12 @@ random seed.</p>
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -2952,7 +2970,7 @@ random seed.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../../..", "features": ["content.code.annotate", "content.action.view", "content.action.edit", "navigation.tabs", "navigation.indexes", "navigation.sections", "content.code.copy"], "search": "../../../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../../..", "features": ["content.code.annotate", "content.code.copy", "content.action.view", "content.action.edit", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest"], "search": "../../../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../../../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
