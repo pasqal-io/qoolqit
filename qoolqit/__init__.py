@@ -28,3 +28,5 @@ __all__ = ["DataGraph"]
 for submodule in list_of_submodules:
     __all_submodule__ = getattr(import_module(submodule, package="qoolqit"), "__all__")
     __all__ += __all_submodule__
+
+__version__ = "0.3.1"
