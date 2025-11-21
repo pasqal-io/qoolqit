@@ -1,12 +1,14 @@
 from __future__ import annotations
+
 from typing import Callable
+
 import numpy as np
 import pytest
+from pulser.backend import Backend, Occupation
 
 from qoolqit import AnalogDevice, Constant, Drive, MockDevice, QuantumProgram, Register
 from qoolqit.devices import Device
-from qoolqit.execution import LocalEmulator, QutipBackendV2, SVBackend, MPSBackend, EmulationConfig
-from pulser.backend import Backend, Occupation
+from qoolqit.execution import EmulationConfig, LocalEmulator, MPSBackend, QutipBackendV2, SVBackend
 
 backends_list = (QutipBackendV2, SVBackend, MPSBackend)
 
