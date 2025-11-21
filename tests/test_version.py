@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import tomllib
+
 from qoolqit import __version__ as init_version
 
 
