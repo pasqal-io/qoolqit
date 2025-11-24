@@ -77,16 +77,17 @@ def test_results(random_program: Callable, backend_type: Backend, device: Device
     program.compile_to(device)
 
     # Run with QUTIP backend as reference
+    runs = 2000  # how many bitstrings to sample
     steps = 20
     evaluation_times = np.linspace(0, 1, steps).tolist()
     config = EmulationConfig(observables=(Occupation(evaluation_times=evaluation_times),))
-    qutip_emulator = LocalEmulator(emulation_config=config, runs=1000)
+    qutip_emulator = LocalEmulator(emulation_config=config, runs=runs)
     qutip_res = qutip_emulator.run(program)[0]
     qutip_occupation = qutip_res.occupation
     qutip_bitstrings = qutip_res.final_bitstrings
 
     # Run with other backend
-    other_emulator = LocalEmulator(backend_type=backend_type, emulation_config=config, runs=1000)
+    other_emulator = LocalEmulator(backend_type=backend_type, emulation_config=config, runs=runs)
     other_res = other_emulator.run(program)[0]
     other_occupation = other_res.occupation
     other_bitstrings = other_res.final_bitstrings
