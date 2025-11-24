@@ -1,4 +1,4 @@
-# Update development version of documentation on succesful PR
+# Update development version of documentation on successful PR
 name: Docs dev version
 
 on:
