@@ -1,13 +1,10 @@
 from __future__ import annotations
 
-from functools import reduce
-from math import pi
 from random import randint, uniform
 from typing import Callable, Generator
 
 import numpy as np
 import pytest
-from scipy.linalg import expm
 
 from qoolqit.drive import Drive, WeightedDetuning
 from qoolqit.program import QuantumProgram
@@ -19,9 +16,9 @@ from qoolqit.waveforms import Ramp, Waveform
 def random_pos_ramp() -> Generator[Callable[[], Waveform]]:
     def _generate_random_waveform() -> Waveform:
         n = randint(2, 6)
-        wf: Waveform = Ramp(uniform(0.5, 1.0), uniform(0.0, 1.0), uniform(0.0, 1.0))
+        wf: Waveform = Ramp(uniform(0.1, 1.0), uniform(0.0, 1.0), uniform(0.0, 1.0))
         for _ in range(n):
-            wf = wf >> Ramp(uniform(0.5, 1.0), uniform(0.0, 1.0), uniform(0.0, 1.0))
+            wf = wf >> Ramp(uniform(0.1, 1.0), uniform(0.0, 1.0), uniform(0.0, 1.0))
         return wf
 
     yield _generate_random_waveform
@@ -31,10 +28,10 @@ def random_pos_ramp() -> Generator[Callable[[], Waveform]]:
 def random_neg_ramp() -> Generator[Callable[[], Waveform]]:
     def _generate_random_waveform() -> Waveform:
         n = randint(2, 6)
-        wf: Waveform = Ramp(uniform(0.5, 1.0), uniform(-1.0, 1.0), uniform(-1.0, 1.0))
+        wf: Waveform = Ramp(uniform(0.1, 1.0), uniform(-1.0, 1.0), uniform(-1.0, 1.0))
         while wf.min() >= 0:
             for _ in range(n):
-                wf = wf >> Ramp(uniform(0.5, 1.0), uniform(-1.0, 1.0), uniform(-1.0, 1.0))
+                wf = wf >> Ramp(uniform(0.1, 1.0), uniform(-1.0, 1.0), uniform(-1.0, 1.0))
         return wf
 
     yield _generate_random_waveform
@@ -99,32 +96,5 @@ def random_n_qubits() -> int:
 
 
 @pytest.fixture
-def random_rotation_angle() -> float:
-    return uniform(0, 1) * pi
-
-
-@pytest.fixture
 def evaluation_times() -> list[float]:
     return list(np.linspace(0, 1, 101))
-
-
-@pytest.fixture
-def random_x_rotation(random_n_qubits: int, random_rotation_angle: float) -> np.ndarray:
-    # Pauli-X and identity matrices
-    sigma_x = np.array([[0, 1], [1, 0]], dtype=complex)
-    id_mat = np.eye(2, dtype=complex)
-
-    # Build Hamiltonian H = sum_j X_j
-    dim = 2**random_n_qubits
-    H = np.zeros((dim, dim), dtype=complex)
-
-    for j in range(random_n_qubits):
-        ops = [id_mat] * random_n_qubits
-        ops[j] = sigma_x
-        term = reduce(np.kron, ops)
-        H += term
-
-    # Compute unitary
-    U = expm(-1j * 0.5 * random_rotation_angle * H)
-
-    return U
