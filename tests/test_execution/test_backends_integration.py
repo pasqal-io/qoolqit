@@ -70,7 +70,7 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
     ],
 )
 def test_results(random_program: Callable, backend_type: Backend, device: Device) -> None:
-    # Just run once and test multiple things for efficicency
+    # Just run once and test multiple things for efficiency
 
     # Create a quantum program
     program = random_program()
