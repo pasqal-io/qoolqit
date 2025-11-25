@@ -3,6 +3,19 @@
 from __future__ import annotations
 
 from importlib import import_module
+import warnings
+
+try:
+    import torch
+except ImportError:
+    torch = None
+else:
+    # If CUDA is not available - avoid NVML warning
+    if not torch.cuda.is_available():
+        warnings.filterwarnings(
+            "ignore",
+            message="Can't initialize NVML"
+        )
 
 from qoolqit.graphs import DataGraph
 
