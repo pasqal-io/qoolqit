@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import copy
 import logging
-from typing import Optional, Sequence
+import inspect
+from functools import lru_cache
+from typing import Optional, Sequence, Type
 
 from pulser.backend import BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
@@ -14,8 +16,41 @@ from pulser_simulation import QutipBackendV2
 
 from qoolqit.program import QuantumProgram
 
+class PulserIntrospectionBase:
+    """PulserIntrospectionBase class.
+    It is providing cached signature inspection utilities shared across all QoolQit-Pulser backend wrappers.
+    """
+    _INTROSPECTION_CACHE_SIZE = 128  # Max cached backend types
+    @staticmethod
+    @lru_cache(maxsize=_INTROSPECTION_CACHE_SIZE)
+    def _backend_accepts_mimic_qpu(backend_type: Type[object]) -> bool:
+        """ Check whether a backend class supports the mimic_qpu keyword. 
+   
+        This inspects the Method Resolution Order (MRO) of backend_type and looks at each class' __init__ signature to see if it declares a
+        parameter named mimic_qpu. If any __init__ in the MRO accepts this parameter, the backend is considered compatible and it is safe to
+        forward the mimic_qpu= keyword argument when instantiating it.
 
-class PulserEmulatorBackend:
+        Results are cached to avoid repeated introspection of the same backend classes.
+
+        Args:
+            backend_type: The backend class to inspect.
+
+        Returns:
+            bool: True if any __init__ in the backend's MRO defines a mimic_qpu parameter, False otherwise.
+        """
+        for cls in backend_type.mro():
+            try:
+                sig = inspect.signature(cls.__init__)
+            except (TypeError, ValueError):
+                continue
+
+            if "mimic_qpu" in sig.parameters:
+                return True
+
+        return False
+
+
+class PulserEmulatorBackend(PulserIntrospectionBase):
     """Base Emulator class.
 
     Args:
@@ -24,8 +59,9 @@ class PulserEmulatorBackend:
             On emulators, instead the bitstring are sampled from the quantum state `runs` times.
     """
 
-    def __init__(self, runs: int = 100):
+    def __init__(self, runs: int = 100, mimic_qpu: bool = False) -> None:
         self._runs = runs
+        self._mimic_qpu = bool(mimic_qpu)
 
     def validate_emulation_config(
         self, emulation_config: Optional[EmulationConfig]
@@ -40,22 +76,21 @@ class PulserEmulatorBackend:
             `EmulationConfig` object. Early validation makes the error easier to understand.
         """
         if emulation_config is None:
-            emulation_config = self.default_emulation_config()
-        else:
-            emulation_config = copy.deepcopy(emulation_config)
-            has_bitstrings = any(
-                isinstance(obs, BitStrings) for obs in emulation_config.observables
+            return self.default_emulation_config()
+        
+        emulation_config = copy.deepcopy(emulation_config)
+        has_bitstrings = any(
+            isinstance(obs, BitStrings) for obs in emulation_config.observables
+        )
+        if has_bitstrings:
+            # if the provided config has already a biststring obs, ignore nruns
+            logging.warning(
+                f"""The number of runs is specified both in {self.__class__.__name__}
+                    and in `EmulationConfig`, ignoring the former"""
             )
-            if has_bitstrings:
-                # if the provided config has already a biststring obs, ignore nruns
-                logging.warning(
-                    f"""The number of runs is specified both in {self.__class__.__name__}
-                        and in `EmulationConfig`, ignoring the former"""
-                )
-            else:
-                # else append a bitstring observable with nruns specified by the user
-                updated_obs = (*emulation_config.observables, BitStrings(num_shots=self._runs))
-                emulation_config.observables = updated_obs
+        else:
+            # else append a bitstring observable with nruns specified by the user
+            emulation_config.observables = (*emulation_config.observables, BitStrings(num_shots=self._runs))
         # TODO: validate config when bump to pulser==1.6 (uncomment below)
         # config = backend_type.validate_config(config)
         return emulation_config
@@ -68,7 +103,7 @@ class PulserEmulatorBackend:
         return EmulationConfig(observables=(BitStrings(num_shots=self._runs),))
 
 
-class PulserRemoteBackend:
+class PulserRemoteBackend(PulserIntrospectionBase):
 
     @staticmethod
     def validate_connection(connection: RemoteConnection) -> RemoteConnection:
@@ -113,13 +148,14 @@ class LocalEmulator(PulserEmulatorBackend):
         backend_type: type[EmulatorBackend] = QutipBackendV2,
         emulation_config: Optional[EmulationConfig] = None,
         runs: int = 100,
+        mimic_qpu: bool = False,
     ) -> None:
-        super().__init__(runs=runs)
+        super().__init__(runs=runs, mimic_qpu=mimic_qpu)
         if not issubclass(backend_type, EmulatorBackend):
             raise TypeError(
                 "Error in `LocalEmulator`: `backend_type` must be a EmulatorBackend type."
             )
-        if issubclass(backend_type, RemoteEmulator):
+        if issubclass(backend_type, RemoteEmulatorBackend):
             raise TypeError(
                 """Error in `LocalEmulator`: `backend_type` cannot be a RemoteBackend type.
                 If you wish to run your program on a remote emulator backend, please, use the
@@ -130,10 +166,15 @@ class LocalEmulator(PulserEmulatorBackend):
 
     def run(self, program: QuantumProgram) -> Sequence[Results]:
         """Run a compiled QuantumProgram and return the results."""
-        self._backend = self._backend_type(program.compiled_sequence, config=self._emulation_config)
+        
+        backend_kwargs = {"config": self._emulation_config}
+        if self._backend_accepts_mimic_qpu(self._backend_type):
+            backend_kwargs["mimic_qpu"] = self._mimic_qpu
+
+        self._backend = self._backend_type(program.compiled_sequence, **backend_kwargs)
         results = self._backend.run()
-        res_seq = (results,) if isinstance(results, Results) else tuple(results)
-        return res_seq
+        return (results,) if isinstance(results, Results) else tuple(results)
+        
 
 
 class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
@@ -179,8 +220,9 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         connection: RemoteConnection,
         emulation_config: Optional[EmulationConfig] = None,
         runs: int = 100,
+        mimic_qpu: bool = False,
     ) -> None:
-        super().__init__(runs=runs)
+        super().__init__(runs=runs, mimic_qpu=mimic_qpu)
         if not issubclass(backend_type, RemoteEmulatorBackend):
             raise TypeError(
                 "Error in `RemoteEmulator`: `backend_type` must be a RemoteEmulatorBackend type."
@@ -204,14 +246,20 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
             program (QuantumProgram): the compiled quantum program to run.
             wait (bool): Wait for remote backend to complete the job.
         """
+        backend_kwargs = {
+            "connection": self._connection,
+            "config": self._emulation_config,
+        }
+        if self._backend_accepts_mimic_qpu(self._backend_type):
+            backend_kwargs["mimic_qpu"] = self._mimic_qpu
+
         # Instantiate backend
         self._backend = self._backend_type(
             program.compiled_sequence,
-            connection=self._connection,
-            config=self._emulation_config,
+            **backend_kwargs,
         )
-        remote_results = self._backend.run(job_params=self._job_params, wait=wait)
-        return remote_results
+        return self._backend.run(job_params=self._job_params, wait=wait)
+        
 
     def run(self, program: QuantumProgram) -> Sequence[Results]:
         """Run a compiled QuantumProgram remotely and return the results."""
@@ -270,8 +318,8 @@ class QPU(PulserRemoteBackend):
             wait (bool): Wait for remote backend to complete the job.
         """
         self._backend = self._backend_type(program.compiled_sequence, connection=self._connection)
-        remote_results = self._backend.run(job_params=self._job_params, wait=wait)
-        return remote_results
+        return self._backend.run(job_params=self._job_params, wait=wait)
+        
 
     def run(self, program: QuantumProgram) -> Sequence[Results]:
         """Run a compiled QuantumProgram remotely and return the results."""
