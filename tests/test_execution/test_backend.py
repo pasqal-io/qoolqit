@@ -11,6 +11,11 @@ from qoolqit.devices import Device
 from qoolqit.execution import BackendName, ResultType
 
 
+BACKEND_MIN_QUBITS = {
+    BackendName.EMUMPS: 2,
+    BackendName.QUTIP: 1,
+}
+
 @pytest.mark.flaky(max_runs=5)
 @pytest.mark.parametrize("backend_name", BackendName.list())
 def test_theoretical_state_vector(
@@ -21,6 +26,12 @@ def test_theoretical_state_vector(
     theor_state = random_x_rotation[:, 0]
     n_qubits = int(np.log2(len(theor_state)))
 
+    # Capability-aware skip based on backend requirements
+    min_qubits = BACKEND_MIN_QUBITS.get(backend_name, 1)
+    if n_qubits < min_qubits:
+        pytest.skip(
+            f"{backend_name} requires at least {min_qubits} qubits for STATEVECTOR, got {n_qubits}."
+        )
     # Create and run a quantum program with different backends
     random_rotation_angle = 0.25 * random_rotation_angle / np.pi
     drive = Drive(amplitude=Constant(4 * np.pi, random_rotation_angle), phase=0)
