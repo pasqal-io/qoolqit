@@ -13,17 +13,17 @@ from qoolqit.execution import EmulationConfig, LocalEmulator, MPSBackend, QutipB
 backends_list = (QutipBackendV2, SVBackend, MPSBackend)
 
 
-def check_bitstrings(bitstrings_1: dict, bitstrings_2: dict, atol: float) -> bool:
-    """Return True if two normalized bitstring distributions differs more than tolerance."""
+def check_bitstrings(b1: dict, b2: dict, atol: float) -> bool:
+    """Return False if two normalized bitstring distributions differs more than tolerance."""
 
     # Get union of all keys
-    all_keys = set(bitstrings_1.keys()).union(bitstrings_2.keys())
+    all_keys = set(b1.keys()).union(b2.keys())
 
     # Normalize both counters
-    nruns_1 = sum(bitstrings_1.values(), 0)
-    nruns_2 = sum(bitstrings_2.values(), 0)
-    p1 = {key: bitstrings_1.get(key, 0) / nruns_1 for key in all_keys}
-    p2 = {key: bitstrings_2.get(key, 0) / nruns_2 for key in all_keys}
+    nruns_1 = sum(b1.values(), 0)
+    nruns_2 = sum(b2.values(), 0)
+    p1 = {key: b1.get(key, 0) / nruns_1 for key in all_keys}
+    p2 = {key: b2.get(key, 0) / nruns_2 for key in all_keys}
 
     # Compare with tolerance
     similar = True
