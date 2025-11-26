@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from importlib import import_module
-
+from qoolqit.devices import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.drive import Drive
 from qoolqit.embedding import (
     InteractionEmbedder,
@@ -16,12 +15,6 @@ from qoolqit.graphs import DataGraph
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import Constant, Delay, Interpolated, PiecewiseLinear, Ramp
-
-from .devices import *
-
-list_of_submodules = [
-    ".devices",
-]
 
 __all__ = [
     "DataGraph",
@@ -39,10 +32,10 @@ __all__ = [
     "QuantumProgram",
     "CompilerProfile",
     "SequenceCompiler",
+    "AnalogDevice",
+    "DigitalAnalogDevice",
+    "MockDevice",
 ]
 
-for submodule in list_of_submodules:
-    __all_submodule__ = getattr(import_module(submodule, package="qoolqit"), "__all__")
-    __all__ += __all_submodule__
 
 __version__ = "0.3.1"
