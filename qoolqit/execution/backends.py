@@ -24,7 +24,7 @@ class PulserEmulatorBackend:
             On emulators, instead the bitstring are sampled from the quantum state `runs` times.
     """
 
-    def __init__(self, runs: int = 100):
+    def __init__(self, runs: int = 1000):
         self._runs = runs
 
     def validate_emulation_config(
@@ -55,7 +55,7 @@ class PulserEmulatorBackend:
             else:
                 # else append a bitstring observable with nruns specified by the user
                 updated_obs = (*emulation_config.observables, BitStrings(num_shots=self._runs))
-                emulation_config.observables = updated_obs
+                emulation_config._backend_options["observables"] = updated_obs
         # TODO: validate config when bump to pulser==1.6 (uncomment below)
         # config = backend_type.validate_config(config)
         return emulation_config

@@ -9,7 +9,7 @@ from pulser_simulation import QutipBackendV2, QutipConfig
 
 from qoolqit.execution.backends import QPU, LocalEmulator, RemoteEmulator
 from qoolqit.execution.sequence_compiler import SequenceCompiler
-from qoolqit.execution.utils import BackendName, CompilerProfile, ResultType
+from qoolqit.execution.utils import CompilerProfile
 
 __all__ = [
     "MPSBackend",
@@ -24,8 +24,6 @@ __all__ = [
     "QutipConfig",
     "SequenceCompiler",
     "CompilerProfile",
-    "ResultType",
-    "BackendName",
     "LocalEmulator",
     "RemoteEmulator",
     "QPU",

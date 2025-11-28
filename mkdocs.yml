@@ -18,7 +18,6 @@ nav:
       - Devices: contents/devices.md
       - Quantum programs: contents/programs.md
       - Execution: contents/execution.md
-      - Execution (Deprecated): contents/execution_deprecated.md
   - Tutorials:
     - Solving a basic QUBO: tutorials/basic_qubo.ipynb
     - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
