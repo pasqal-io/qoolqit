@@ -756,8 +756,6 @@
       
         
       
-        
-      
     
     
     
@@ -958,34 +956,6 @@
     
   
     Execution
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../contents/execution_deprecated/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Execution (Deprecated)
   
 
     
@@ -1776,8 +1746,6 @@
       
         
       
-        
-      
     
     
     
@@ -1829,34 +1797,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../api/qoolqit/execution/backend/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    qoolqit.execution.backend
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -3156,7 +3096,7 @@
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">            On emulators, instead the bitstring are sampled from the quantum state `runs` times.</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">):</span>
 <a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_runs</span> <span class="o">=</span> <span class="n">runs</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29"></a>
 <a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate_emulation_config</span><span class="p">(</span><div class="mkapi-source-link" id="qoolqit.execution.backends.PulserEmulatorBackend.validate_emulation_config"><a href="../../../../api/qoolqit/execution/backends/#qoolqit.execution.backends.PulserEmulatorBackend.validate_emulation_config" title="Go to docs">[docs]</a></div>
@@ -3187,7 +3127,7 @@
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a>            <span class="k">else</span><span class="p">:</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>                <span class="c1"># else append a bitstring observable with nruns specified by the user</span>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a>                <span class="n">updated_obs</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">emulation_config</span><span class="o">.</span><span class="n">observables</span><span class="p">,</span> <span class="n">BitStrings</span><span class="p">(</span><span class="n">num_shots</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_runs</span><span class="p">))</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>                <span class="n">emulation_config</span><span class="o">.</span><span class="n">observables</span> <span class="o">=</span> <span class="n">updated_obs</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>                <span class="n">emulation_config</span><span class="o">.</span><span class="n">_backend_options</span><span class="p">[</span><span class="s2">&quot;observables&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">updated_obs</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="c1"># TODO: validate config when bump to pulser==1.6 (uncomment below)</span>
 <a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="c1"># config = backend_type.validate_config(config)</span>
 <a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="k">return</span> <span class="n">emulation_config</span>

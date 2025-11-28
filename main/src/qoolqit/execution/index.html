@@ -756,8 +756,6 @@
       
         
       
-        
-      
     
     
     
@@ -958,34 +956,6 @@
     
   
     Execution
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../contents/execution_deprecated/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Execution (Deprecated)
   
 
     
@@ -1776,8 +1746,6 @@
       
         
       
-        
-      
     
     
     
@@ -1829,34 +1797,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../api/qoolqit/execution/backend/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    qoolqit.execution.backend
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -3062,28 +3002,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#qoolqit.execution.ResultType" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ResultType
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#qoolqit.execution.BackendName" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BackendName
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#qoolqit.execution.LocalEmulator" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3246,9 +3164,7 @@
 <span class="normal"><a href="#__codelineno-0-27">27</a></span>
 <span class="normal"><a href="#__codelineno-0-28">28</a></span>
 <span class="normal"><a href="#__codelineno-0-29">29</a></span>
-<span class="normal"><a href="#__codelineno-0-30">30</a></span>
-<span class="normal"><a href="#__codelineno-0-31">31</a></span>
-<span class="normal"><a href="#__codelineno-0-32">32</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emu_mps</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPSBackend</span><span class="p">,</span> <span class="n">MPSConfig</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emu_sv</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVBackend</span><span class="p">,</span> <span class="n">SVConfig</span>
@@ -3259,7 +3175,7 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution.backends</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPU</span><span class="p">,</span> <span class="n">LocalEmulator</span><span class="p">,</span> <span class="n">RemoteEmulator</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution.sequence_compiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequenceCompiler</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackendName</span><span class="p">,</span> <span class="n">CompilerProfile</span><span class="p">,</span> <span class="n">ResultType</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompilerProfile</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13"></a>
 <a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="s2">&quot;MPSBackend&quot;</span><span class="p">,</span>
@@ -3274,12 +3190,10 @@
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="s2">&quot;QutipConfig&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25"></a>    <span class="s2">&quot;SequenceCompiler&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26"></a>    <span class="s2">&quot;CompilerProfile&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="s2">&quot;ResultType&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="s2">&quot;BackendName&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="s2">&quot;LocalEmulator&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="s2">&quot;RemoteEmulator&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="s2">&quot;QPU&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="p">]</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="s2">&quot;LocalEmulator&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="s2">&quot;RemoteEmulator&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="s2">&quot;QPU&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
 
 
