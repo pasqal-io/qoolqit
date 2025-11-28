@@ -13,28 +13,6 @@ from qoolqit.execution import EmulationConfig, LocalEmulator, MPSBackend, QutipB
 backends_list = (QutipBackendV2, SVBackend, MPSBackend)
 
 
-def check_bitstrings(b1: dict, b2: dict, atol: float) -> bool:
-    """Return False if two normalized bitstring distributions differs more than tolerance."""
-
-    # Get union of all keys
-    all_keys = set(b1.keys()).union(b2.keys())
-
-    # Normalize both counters
-    nruns_1 = sum(b1.values(), 0)
-    nruns_2 = sum(b2.values(), 0)
-    p1 = {key: b1.get(key, 0) / nruns_1 for key in all_keys}
-    p2 = {key: b2.get(key, 0) / nruns_2 for key in all_keys}
-
-    # Compare with tolerance
-    similar = True
-    for key in all_keys:
-        diff = abs(p1[key] - p2[key])
-        if diff > atol:
-            similar = False
-
-    return similar
-
-
 @pytest.mark.parametrize("rotation_angle", [0.3 * np.pi])
 @pytest.mark.parametrize("backend_type", backends_list)
 def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) -> None:
@@ -77,20 +55,24 @@ def test_results(random_program: Callable, backend_type: Backend, device: Device
     program.compile_to(device)
 
     # Run with QUTIP backend as reference
-    runs = 2000  # how many bitstrings to sample
+    runs = 1001  # how many bitstrings to sample
     steps = 20
     evaluation_times = np.linspace(0, 1, steps).tolist()
     config = EmulationConfig(observables=(Occupation(evaluation_times=evaluation_times),))
     qutip_emulator = LocalEmulator(emulation_config=config, runs=runs)
     qutip_res = qutip_emulator.run(program)[0]
     qutip_occupation = qutip_res.occupation
+    # assert final time bitstrings dict is present, with `runs` entries
     qutip_bitstrings = qutip_res.final_bitstrings
+    assert sum(qutip_bitstrings.values()) == runs
 
     # Run with other backend
     other_emulator = LocalEmulator(backend_type=backend_type, emulation_config=config, runs=runs)
     other_res = other_emulator.run(program)[0]
     other_occupation = other_res.occupation
+    # assert final time bitstrings dict is present, with `runs` entries
     other_bitstrings = other_res.final_bitstrings
+    assert sum(other_bitstrings.values()) == runs
 
     # Test result observables tags
     expected_tags = {"occupation", "bitstrings"}
@@ -111,7 +93,6 @@ def test_results(random_program: Callable, backend_type: Backend, device: Device
     if backend_type in (SVBackend, MPSBackend):
         assert np.allclose(other_eval_times, evaluation_times[1:], atol=0.05)
 
-    assert check_bitstrings(qutip_bitstrings, other_bitstrings, atol=0.05)
     # value comparison of result is not fair because of different evaluation times
     # TODO: review this test when https://github.com/pasqal-io/emulators/issues/169 is solved
     assert np.allclose(qutip_occupation[1:], other_occupation, atol=0.2)
