@@ -26,7 +26,8 @@ def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: fl
     Uses scipy.minimize to find the optimal set of node coordinates such that the
     matrix of values 1/(r_ij)^6 approximate the off-diagonal terms of the input matrix.
 
-    Check scipy.minimize documentation for more information on each parameter.
+    Check the documentation for scipy.minimize for more information about each parameter:
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
 
     Arguments:
         matrix: the matrix to embed.
