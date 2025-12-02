@@ -2906,15 +2906,26 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 <li><code>SVBackend</code>: PyTorch based state vectors and sparse matrices emulator. Runs programs with up to ~25 qubits and return torch objects in the results.</li>
 <li><code>MPSBackend</code>: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~80 qubits and return torch objects in the results.</li>
 </ul>
-<p>More experienced users, might also want to configure an emulator through the generic <code>EmulationConfig</code> or the specific <code>QutipConfig</code>, <code>SVConfig</code>, <code>MPSConfig</code>.
-For more information about how the configuration options, please, refer to <a href="https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.EmulationConfig.html">Pulser documentation</a>.</p>
-<p>To run a program on a configured emulator (local or remote), we can simply pass the configuration as an additional argument to the emulator instance as:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmulationConfig</span>
+<p>More experienced users, might also want to configure an emulator.
+To fully exploit the potential of each emulator backend, they can be configured through the generic <code>EmulationConfig</code> object. For example, the following configuration,</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmulationConfig</span><span class="p">,</span> <span class="n">Occupation</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">emulation_config</span> <span class="o">=</span> <span class="n">EmulationConfig</span><span class="p">()</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">(</span><span class="n">emulation_config</span><span class="o">=</span><span class="n">emulation_config</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">observables</span> <span class="o">=</span> <span class="p">(</span><span class="n">Occupation</span><span class="p">(</span><span class="n">evaluation_times</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">emulation_config</span> <span class="o">=</span> <span class="n">EmulationConfig</span><span class="p">(</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">observables</span><span class="o">=</span><span class="n">observables</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">with_modulation</span><span class="o">=</span><span class="kc">True</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="p">)</span>
 </code></pre></div>
 <div class="result"></div>
+<p>simply asks the backend to compute some observable during runtime and to emulate the hardware more closely by considering finite-bandwidth hardware modulation of the drive.</p>
+<p>Finally, to run a program on a configured emulator (local or remote), we can simply pass the configuration as an additional argument to the emulator instance as:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmulationConfig</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">(</span><span class="n">emulation_config</span><span class="o">=</span><span class="n">emulation_config</span><span class="p">)</span>
+</code></pre></div>
+<div class="result"></div>
+<p>Dedicated and specific configuration for each backend also exist: <code>QutipConfig</code>, <code>SVConfig</code>, <code>MPSConfig</code>. They should be used by pairing them with the corresponding backend type.
+For more information about how the configuration options, please, refer to <a href="https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.EmulationConfig.html">Pulser documentation</a>.</p>
 <h3 id="handling-local-results">Handling local results</h3>
 <p>The call <code>emulator.run(program)</code> will return a <code>Sequence[Results]</code> object type. This is where the results of the computation are stored.
 For more info about this specific object, please, have a look at <a href="https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.Results.html#results">Pulser documentation</a>.
@@ -3000,7 +3011,7 @@ To see the list of available devices, run:</p>
 <p>Finally, on a QPU there is no configuration and, as per the properties of the quantum hardware, results will come as a bitstrings counter of length specified by the <code>runs</code> parameter.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPU</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">qpu</span> <span class="o">=</span> <span class="n">QPU</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span> <span class="n">runs</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">qpu</span> <span class="o">=</span> <span class="n">QPU</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span> <span class="n">runs</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 </code></pre></div>
 <div class="result"></div>
 
