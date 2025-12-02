@@ -1,30 +1,58 @@
 from __future__ import annotations
 
-from emu_mps import MPSBackend, MPSConfig
-from emu_sv import SVBackend, SVConfig
-from pulser.backend import EmulationConfig
+from emu_mps import MPO, MPS, MPSBackend, MPSConfig
+from emu_sv import DenseOperator, StateVector, SVBackend, SVConfig
+from pulser.backend import (
+    BitStrings,
+    CorrelationMatrix,
+    EmulationConfig,
+    Energy,
+    EnergySecondMoment,
+    EnergyVariance,
+    Expectation,
+    Fidelity,
+    Occupation,
+    Results,
+    StateResult,
+)
 from pulser.backend.remote import RemoteResults
 from pulser_pasqal import EmuFreeBackendV2, EmuMPSBackend
-from pulser_simulation import QutipBackendV2, QutipConfig
+from pulser_simulation import QutipBackendV2, QutipConfig, QutipOperator, QutipState
 
 from qoolqit.execution.backends import QPU, LocalEmulator, RemoteEmulator
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.execution.utils import CompilerProfile
 
 __all__ = [
-    "MPSBackend",
-    "MPSConfig",
-    "SVBackend",
-    "SVConfig",
-    "EmulationConfig",
-    "RemoteResults",
-    "EmuFreeBackendV2",
-    "EmuMPSBackend",
-    "QutipBackendV2",
-    "QutipConfig",
     "SequenceCompiler",
     "CompilerProfile",
     "LocalEmulator",
     "RemoteEmulator",
     "QPU",
+    "QutipBackendV2",
+    "QutipConfig",
+    "QutipState",
+    "QutipOperator",
+    "MPSBackend",
+    "MPSConfig",
+    "MPS",
+    "MPO",
+    "SVBackend",
+    "SVConfig",
+    "StateVector",
+    "DenseOperator",
+    "EmuFreeBackendV2",
+    "EmuMPSBackend",
+    "EmulationConfig",
+    "BitStrings",
+    "CorrelationMatrix",
+    "Energy",
+    "EnergySecondMoment",
+    "EnergyVariance",
+    "Expectation",
+    "Fidelity",
+    "Occupation",
+    "StateResult",
+    "Results",
+    "RemoteResults",
 ]

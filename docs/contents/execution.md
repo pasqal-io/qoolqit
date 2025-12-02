@@ -63,17 +63,32 @@ emulator = LocalEmulator(backend_type=SVBackend)
 - `SVBackend`: PyTorch based state vectors and sparse matrices emulator. Runs programs with up to ~25 qubits and return torch objects in the results.
 - `MPSBackend`: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~80 qubits and return torch objects in the results.
 
-More experienced users, might also want to configure an emulator through the generic `EmulationConfig` or the specific `QutipConfig`, `SVConfig`, `MPSConfig`.
-For more information about how the configuration options, please, refer to [Pulser documentation](https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.EmulationConfig.html).
+More experienced users, might also want to configure an emulator.
+To fully exploit the potential of each emulator backend, they can be configured through the generic `EmulationConfig` object. For example, the following configuration,
 
-To run a program on a configured emulator (local or remote), we can simply pass the configuration as an additional argument to the emulator instance as:
+```python exec="on" source="material-block" session="execution"
+from qoolqit.execution import EmulationConfig, Occupation
+
+observables = (Occupation(evaluation_times=[0.1, 0.5, 1.0]),)
+emulation_config = EmulationConfig(
+    observables=observables,
+    with_modulation=True
+    )
+```
+
+simply asks the backend to compute some observable during runtime and to emulate the hardware more closely by considering finite-bandwidth hardware modulation of the drive.
+
+Finally, to run a program on a configured emulator (local or remote), we can simply pass the configuration as an additional argument to the emulator instance as:
 
 ```python exec="on" source="material-block" session="execution"
 from qoolqit.execution import EmulationConfig
 
-emulation_config = EmulationConfig()
 emulator = LocalEmulator(emulation_config=emulation_config)
 ```
+
+Dedicated and specific configuration for each backend also exist: `QutipConfig`, `SVConfig`, `MPSConfig`. They should be used by pairing them with the corresponding backend type.
+For more information about how the configuration options, please, refer to [Pulser documentation](https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.EmulationConfig.html).
+
 
 ### Handling local results
 
@@ -187,5 +202,5 @@ Finally, on a QPU there is no configuration and, as per the properties of the qu
 ```python exec="on" source="material-block" session="execution"
 from qoolqit.execution import QPU
 
-qpu = QPU(connection=connection, runs=100)
+qpu = QPU(connection=connection, runs=500)
 ```
