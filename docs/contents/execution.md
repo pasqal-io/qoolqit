@@ -64,7 +64,7 @@ emulator = LocalEmulator(backend_type=SVBackend)
 - `MPSBackend`: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~80 qubits and return torch objects in the results.
 
 More experienced users, might also want to configure an emulator.
-To fully exploit the potential of each emulator backend, they can be configured through the generic `EmulationConfig` object, or the specific `QutipConfig`, `SVConfig`, `MPSConfig`. For example, the following configuration,
+To fully exploit the potential of each emulator backend, they can be configured through the generic `EmulationConfig` object. For example, the following configuration,
 
 ```python exec="on" source="material-block" session="execution"
 from qoolqit.execution import EmulationConfig, Occupation
@@ -78,8 +78,6 @@ emulation_config = EmulationConfig(
 
 simply asks the backend to compute some observable during runtime and to emulate the hardware more closely by considering finite-bandwidth hardware modulation of the drive.
 
-For more information about how the configuration options, please, refer to [Pulser documentation](https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.EmulationConfig.html).
-
 Finally, to run a program on a configured emulator (local or remote), we can simply pass the configuration as an additional argument to the emulator instance as:
 
 ```python exec="on" source="material-block" session="execution"
@@ -87,6 +85,10 @@ from qoolqit.execution import EmulationConfig
 
 emulator = LocalEmulator(emulation_config=emulation_config)
 ```
+
+Dedicated and specific configuration for each backend also exist: `QutipConfig`, `SVConfig`, `MPSConfig`. They should be used by pairing them with the corresponding backend type.
+For more information about how the configuration options, please, refer to [Pulser documentation](https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.EmulationConfig.html).
+
 
 ### Handling local results
 
