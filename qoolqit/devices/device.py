@@ -1,17 +1,11 @@
 from __future__ import annotations
 
-from math import pi
 from typing import Callable, Optional, cast
 
+import pulser
 from pulser.devices._device_datacls import BaseDevice
 
-from ._pulser_devices import _AnalogDevice, _DigitalAnalogDevice, _MockDevice, _TestAnalogDevice
 from .unit_converter import UnitConverter
-
-UPPER_DURATION = 6000
-UPPER_AMP = 4.0 * pi
-UPPER_DET = 4.0 * pi
-LOWER_DISTANCE = 5.0
 
 
 class Device:
@@ -56,12 +50,6 @@ class Device:
 
         # layouts
         self._requires_layout = self._pulser_device.requires_layout
-
-        # Values to use when limits do not exist
-        self._upper_duration = self._max_duration or UPPER_DURATION
-        self._upper_amp = self._max_amp or UPPER_AMP
-        self._upper_det = self._max_det or UPPER_DET
-        self._lower_distance = self._min_distance or LOWER_DISTANCE
 
         if default_converter is not None:
             # Snapshot the caller-provided factors so reset() reproduces them exactly.
@@ -136,24 +124,16 @@ class Device:
 
 class MockDevice(Device):
     def __init__(self) -> None:
-        super().__init__(pulser_device=_MockDevice)
+        super().__init__(pulser_device=pulser.MockDevice)
 
 
 class AnalogDevice(Device):
     def __init__(self) -> None:
-        super().__init__(pulser_device=_AnalogDevice)
+        super().__init__(pulser_device=pulser.AnalogDevice)
 
 
 class DigitalAnalogDevice(Device):
     """A device with digital and analog capabilites."""
 
     def __init__(self) -> None:
-        super().__init__(pulser_device=_DigitalAnalogDevice)
-
-
-class TestAnalogDevice(Device):
-    def __init__(self) -> None:
-        super().__init__(pulser_device=_TestAnalogDevice)
-
-
-ALL_DEVICES = [MockDevice, AnalogDevice, TestAnalogDevice, DigitalAnalogDevice]
+        super().__init__(pulser_device=pulser.DigitalAnalogDevice)
