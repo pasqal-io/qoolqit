@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from typing import Callable
+from typing import Callable, Optional
 
 from pulser.sequence.sequence import Sequence as PulserSequence
 
-from qoolqit.devices import AvailableDevices, Device
+from qoolqit.devices import Device
 from qoolqit.drive import Drive
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
@@ -12,11 +12,7 @@ from qoolqit.register import Register
 from .compilation_functions import basic_compilation
 from .utils import CompilerProfile
 
-COMPILATION_FUNCTIONS = {device.value: basic_compilation for device in AvailableDevices}
-
 ALL_COMPILER_PROFILES: set = set(CompilerProfile.list())
-
-SUPPORTED_PROFILES = {device.value: ALL_COMPILER_PROFILES for device in AvailableDevices}
 
 
 class SequenceCompiler:
@@ -34,10 +30,8 @@ class SequenceCompiler:
         self._register = register
         self._drive = drive
         self._device = device
-
         self._target_device = device._device
-
-        self._compilation_function: Callable | None = COMPILATION_FUNCTIONS.get(device.name, None)
+        self._compilation_function: Optional[Callable] = basic_compilation
         self._profile = CompilerProfile.DEFAULT
 
     @property
@@ -68,7 +62,7 @@ class SequenceCompiler:
             raise TypeError(
                 "Unknown profile, please pick one from the CompilerProfile enumeration."
             )
-        elif profile not in SUPPORTED_PROFILES[self.device.name]:
+        elif profile not in ALL_COMPILER_PROFILES:
             raise NotImplementedError(
                 f"The requested profile is not implemented for device {self.device.name}"
             )

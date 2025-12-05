@@ -1,11 +1,17 @@
 from __future__ import annotations
 
+from math import pi
 from typing import Callable, Optional, cast
 
 import pulser
 from pulser.devices._device_datacls import BaseDevice
 
 from .unit_converter import UnitConverter
+
+UPPER_DURATION = 6000
+UPPER_AMP = 4.0 * pi
+UPPER_DET = 4.0 * pi
+LOWER_DISTANCE = 5.0
 
 
 class Device:
@@ -47,6 +53,12 @@ class Device:
         self._max_amp = self._pulser_device.channels["rydberg_global"].max_amp
         self._max_det = self._pulser_device.channels["rydberg_global"].max_abs_detuning
         self._min_distance = self._pulser_device.min_atom_distance
+
+        # Values to use when limits do not exist
+        self._upper_duration = self._max_duration or UPPER_DURATION
+        self._upper_amp = self._max_amp or UPPER_AMP
+        self._upper_det = self._max_det or UPPER_DET
+        self._lower_distance = self._min_distance or LOWER_DISTANCE
 
         # layouts
         self._requires_layout = self._pulser_device.requires_layout
