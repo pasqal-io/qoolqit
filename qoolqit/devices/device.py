@@ -54,14 +54,14 @@ class Device:
         self._max_det = self._pulser_device.channels["rydberg_global"].max_abs_detuning
         self._min_distance = self._pulser_device.min_atom_distance
 
+        # layouts
+        self._requires_layout = self._pulser_device.requires_layout
+
         # Values to use when limits do not exist
         self._upper_duration = self._max_duration or UPPER_DURATION
         self._upper_amp = self._max_amp or UPPER_AMP
         self._upper_det = self._max_det or UPPER_DET
         self._lower_distance = self._min_distance or LOWER_DISTANCE
-
-        # layouts
-        self._requires_layout = self._pulser_device.requires_layout
 
         if default_converter is not None:
             # Snapshot the caller-provided factors so reset() reproduces them exactly.
