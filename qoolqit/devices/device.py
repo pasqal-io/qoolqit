@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from math import pi
-from typing import Callable, Optional, cast
+from typing import Callable, Optional
 
 import pulser
+from pulser.backend.remote import RemoteConnection
 from pulser.devices._device_datacls import BaseDevice
 
 from .unit_converter import UnitConverter
@@ -124,7 +125,7 @@ class Device:
 
     @property
     def name(self) -> str:
-        return cast(str, self._device.name)
+        return self._device.name
 
     def __post_init__(self) -> None:
         if not isinstance(self._device, BaseDevice):
@@ -149,3 +150,18 @@ class DigitalAnalogDevice(Device):
 
     def __init__(self) -> None:
         super().__init__(pulser_device=pulser.DigitalAnalogDevice)
+
+
+class RemoteDevice(Device):
+    def __init__(self, connection: RemoteConnection, name: str) -> None:
+        if not isinstance(connection, RemoteConnection):
+            raise TypeError("connection must be of type `RemoteConnection`.")
+        available_devices = connection.fetch_available_devices()
+        if name not in available_devices:
+            available_device_names = list(available_devices.keys())
+            raise ValueError(
+                f"device {name} is not available. through the provided connection"
+                f"Here is a list of available devices: {available_device_names}"
+            )
+        pulser_remote_device = connection.fetch_available_devices()[name]
+        super().__init__(pulser_device=pulser_remote_device)
