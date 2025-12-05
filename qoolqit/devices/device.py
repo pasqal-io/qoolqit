@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from math import pi
-from typing import Callable, Optional, cast
+from typing import Callable, Optional
 
+import pulser
+from pulser.backend.remote import RemoteConnection
 from pulser.devices._device_datacls import BaseDevice
 
-from ._pulser_devices import _AnalogDevice, _DigitalAnalogDevice, _MockDevice, _TestAnalogDevice
 from .unit_converter import UnitConverter
 
 UPPER_DURATION = 6000
@@ -124,7 +125,7 @@ class Device:
 
     @property
     def name(self) -> str:
-        return cast(str, self._device.name)
+        return self._device.name
 
     def __post_init__(self) -> None:
         if not isinstance(self._device, BaseDevice):
@@ -136,24 +137,31 @@ class Device:
 
 class MockDevice(Device):
     def __init__(self) -> None:
-        super().__init__(pulser_device=_MockDevice)
+        super().__init__(pulser_device=pulser.MockDevice)
 
 
 class AnalogDevice(Device):
     def __init__(self) -> None:
-        super().__init__(pulser_device=_AnalogDevice)
+        super().__init__(pulser_device=pulser.AnalogDevice)
 
 
 class DigitalAnalogDevice(Device):
     """A device with digital and analog capabilites."""
 
     def __init__(self) -> None:
-        super().__init__(pulser_device=_DigitalAnalogDevice)
+        super().__init__(pulser_device=pulser.DigitalAnalogDevice)
 
 
-class TestAnalogDevice(Device):
-    def __init__(self) -> None:
-        super().__init__(pulser_device=_TestAnalogDevice)
-
-
-ALL_DEVICES = [MockDevice, AnalogDevice, TestAnalogDevice, DigitalAnalogDevice]
+class RemoteDevice(Device):
+    def __init__(self, connection: RemoteConnection, name: str) -> None:
+        if not isinstance(connection, RemoteConnection):
+            raise TypeError("connection must be of type `RemoteConnection`.")
+        available_devices = connection.fetch_available_devices()
+        if name not in available_devices:
+            available_device_names = list(available_devices.keys())
+            raise ValueError(
+                f"device {name} is not available. through the provided connection"
+                f"Here is a list of available devices: {available_device_names}"
+            )
+        pulser_remote_device = connection.fetch_available_devices()[name]
+        super().__init__(pulser_device=pulser_remote_device)
