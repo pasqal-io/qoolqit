@@ -142,6 +142,7 @@ class DigitalAnalogDevice(Device):
 
 class RemoteDevice(Device):
     """QoolQit device from remotely available pulser device."""
+
     def __init__(self, connection: RemoteConnection, name: str) -> None:
         if not isinstance(connection, RemoteConnection):
             raise TypeError("connection must be of type `RemoteConnection`.")

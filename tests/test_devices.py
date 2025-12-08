@@ -84,4 +84,5 @@ def test_device_init_from_pulser(device_class: Callable) -> None:
     assert device.specs == Device(device._device).specs
 
 
-def test_remote_device() ->
+def test_remote_device() -> None:
+    pass
