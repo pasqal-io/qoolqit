@@ -78,11 +78,30 @@ def test_device_init_and_units(device_class: Callable) -> None:
     assert DISTANCE_ORIG == pytest.approx(DISTANCE_NEW)
 
 
-@pytest.mark.parametrize("device_class", QOOLQIT_DEFAULT_DEVICES)
-def test_device_init_from_pulser(device_class: Callable) -> None:
-    device = device_class()
-    assert device.specs == Device(device._device).specs
+def test_default_device_specs() -> None:
+    mock_device = MockDevice()
+    expected_mock_specs = {
+        "max_duration": None,
+        "max_amplitude": None,
+        "max_detuning": None,
+        "min_distance": None,
+    }
+    assert mock_device.specs == expected_mock_specs
 
+    analog_device = AnalogDevice()
+    expected_analog_specs = {
+        "max_duration": 75.39822368615503,
+        "max_amplitude": 1.0,
+        "max_detuning": 10.0,
+        "min_distance": 0.7809234915702248,
+    }
+    assert analog_device.specs == expected_analog_specs
 
-def test_remote_device() -> None:
-    pass
+    digital_analog_device = DigitalAnalogDevice()
+    expected_digital_analog_specs = {
+        "max_duration": None,
+        "max_amplitude": 1.0,
+        "max_detuning": 8.0,
+        "min_distance": 0.47761501632709613,
+    }
+    assert digital_analog_device.specs == expected_digital_analog_specs

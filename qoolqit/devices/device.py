@@ -4,7 +4,6 @@ from math import pi
 from typing import Callable, Optional
 
 import pulser
-from pulser.backend.remote import RemoteConnection
 from pulser.devices._device_datacls import BaseDevice
 
 from .unit_converter import UnitConverter
@@ -138,20 +137,3 @@ class DigitalAnalogDevice(Device):
 
     def __init__(self) -> None:
         super().__init__(pulser_device=pulser.DigitalAnalogDevice)
-
-
-class RemoteDevice(Device):
-    """QoolQit device from remotely available pulser device."""
-
-    def __init__(self, connection: RemoteConnection, name: str) -> None:
-        if not isinstance(connection, RemoteConnection):
-            raise TypeError("connection must be of type `RemoteConnection`.")
-        available_devices = connection.fetch_available_devices()
-        if name not in available_devices:
-            available_device_names = list(available_devices.keys())
-            raise ValueError(
-                f"device {name} is not in the available devices of the provided connection: "
-                f"{available_device_names}"
-            )
-        pulser_remote_device = connection.fetch_available_devices()[name]
-        super().__init__(pulser_device=pulser_remote_device)
