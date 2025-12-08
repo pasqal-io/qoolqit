@@ -18,6 +18,13 @@ def _validate_invariants(c6: float, t: float, e: float, d: float) -> np.bool:
     return np.isclose(t * e, 1000) and np.isclose(e * (d**6), c6)
 
 
+def test_device_pulser_device_type() -> None:
+    with pytest.raises(
+        TypeError, match="`pulser_device` must be an instance of Pulser BaseDevice class."
+    ):
+        Device(pulser_device="device")
+
+
 def test_unit_converter() -> None:
     # Some arbitrary value for the interaction coefficient
     # that would come from a real device.
@@ -75,3 +82,6 @@ def test_device_init_and_units(device_class: Callable) -> None:
 def test_device_init_from_pulser(device_class: Callable) -> None:
     device = device_class()
     assert device.specs == Device(device._device).specs
+
+
+def test_remote_device() ->
