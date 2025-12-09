@@ -32,13 +32,13 @@ PulserFresnelDevice = connection.fetch_available_devices()["FRESNEL"]
 
 # Wrap a Pulser device object into a QoolQit Device
 FresnelDevice = Device(pulser_device=PulserFresnelDevice)
-FresnelDevice.specs
+print(FresnelDevice.specs)   # markdown-exec: hide
 ```
 
 ### Custom pulser devices
 ```python exec="on" source="material-block" result="json" session="devices"
 from dataclasses import replace
-from pulser.devices import AnalogDevice, VirtualDevice
+from pulser import AnalogDevice
 from qoolqit.devices import Device
 
 # Converting the pulser Device object in a VirtualDevice object
@@ -48,9 +48,8 @@ ModdedAnalogDevice = replace(VirtualAnalog, max_radial_distance=100, max_sequenc
 
 # Wrap a Pulser device object into a QoolQit Device
 mod_analog_device = Device(pulser_device=ModdedAnalogDevice)
-mod_analog_device.specs
+print(mod_analog_device.specs)  # markdown-exec: hide
 ```
-
 
 
 ## Unit conversion
