@@ -34,9 +34,7 @@ Now we instantiate a device and compile the program to that device. Compiling in
 from qoolqit import AnalogDevice
 
 device = AnalogDevice()
-
 program.compile_to(device)
-
 print(program) # markdown-exec: hide
 ```
 
