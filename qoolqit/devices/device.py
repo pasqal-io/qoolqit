@@ -18,11 +18,49 @@ class Device:
     """
     QoolQit Device wrapper around a Pulser BaseDevice.
 
-    Attributes:
-    - pulser_device (BaseDevice): a `BaseDevice` to build the QoolQit device from.
-    - default_converter (Optional[UnitConverter]): optional unit converter to handle
-        unit conversion. Defaults to the unit converter that rescales energies by the
-        maximum allowed amplitude by the device.
+    Args:
+        pulser_device (BaseDevice): a `BaseDevice` to build the QoolQit device from.
+        default_converter (Optional[UnitConverter]): optional unit converter to handle
+            unit conversion. Defaults to the unit converter that rescales energies by the
+            maximum allowed amplitude by the device.
+
+    Examples:
+        From Pulser device:
+        ```python
+        qoolqit_device = Device(pulser_device=pulser_device)
+        ```
+
+        From remote Pulser device:
+        ```python
+        from pulser_pasqal import PasqalCloud
+        from qoolqit.devices import Device
+
+        # Fetch the remote device from the connection
+        connection = PasqalCloud()
+        pulser_fresnel_device = connection.fetch_available_devices()["FRESNEL"]
+
+        # Wrap a Pulser device object into a QoolQit Device
+        fresnel_device = Device(pulser_device=PulserFresnelDevice)
+        ```
+
+        From custom Pulser device:
+        ```
+        from dataclasses import replace
+        from pulser import AnalogDevice
+        from qoolqit.devices import Device
+
+        # Converting the pulser Device object in a VirtualDevice object
+        VirtualAnalog = AnalogDevice.to_virtual()
+        # Replacing desired values
+        ModdedAnalogDevice = replace(
+            VirtualAnalog,
+            max_radial_distance=100,
+            max_sequence_duration=7000
+            )
+
+        # Wrap a Pulser device object into a QoolQit Device
+        mod_analog_device = Device(pulser_device=ModdedAnalogDevice)
+        ```
     """
 
     def __init__(

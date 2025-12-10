@@ -28,11 +28,11 @@ from qoolqit.devices import Device
 
 # Fetch the remote device from the connection
 connection = PasqalCloud()
-PulserFresnelDevice = connection.fetch_available_devices()["FRESNEL"]
+pulser_fresnel_device = connection.fetch_available_devices()["FRESNEL"]
 
 # Wrap a Pulser device object into a QoolQit Device
-FresnelDevice = Device(pulser_device=PulserFresnelDevice)
-print(FresnelDevice.specs)   # markdown-exec: hide
+fresnel_device = Device(pulser_device=PulserFresnelDevice)
+print(fresnel_device.specs)   # markdown-exec: hide
 ```
 
 ### Custom pulser devices
