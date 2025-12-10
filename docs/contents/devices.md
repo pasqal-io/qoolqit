@@ -24,7 +24,7 @@ Custom QoolQit device can be created by either subclassing the `Device` class or
 ### Remote devices
 ```python exec="on" source="material-block" result="json" session="devices"
 from pulser_pasqal import PasqalCloud
-from qoolqit.devices import Device
+from qoolqit import Device
 
 # Fetch the remote device from the connection
 connection = PasqalCloud()
@@ -39,7 +39,7 @@ print(fresnel_device.specs)   # markdown-exec: hide
 ```python exec="on" source="material-block" result="json" session="devices"
 from dataclasses import replace
 from pulser import AnalogDevice
-from qoolqit.devices import Device
+from qoolqit import Device
 
 # Converting the pulser Device object in a VirtualDevice object
 VirtualAnalog = AnalogDevice.to_virtual()

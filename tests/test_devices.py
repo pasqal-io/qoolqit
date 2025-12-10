@@ -6,8 +6,7 @@ from typing import Callable
 import numpy as np
 import pytest
 
-from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
-from qoolqit.devices import Device
+from qoolqit import AnalogDevice, Device, DigitalAnalogDevice, MockDevice
 from qoolqit.devices.unit_converter import UnitConverter
 
 QOOLQIT_DEFAULT_DEVICES = [AnalogDevice, DigitalAnalogDevice, MockDevice]

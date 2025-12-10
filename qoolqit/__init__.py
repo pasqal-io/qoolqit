@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from qoolqit.devices import AnalogDevice, DigitalAnalogDevice, MockDevice
+from qoolqit.devices import AnalogDevice, Device, DigitalAnalogDevice, MockDevice
 from qoolqit.drive import Drive
 from qoolqit.embedding import (
     InteractionEmbedder,
@@ -36,6 +36,7 @@ __all__ = [
     "AnalogDevice",
     "DigitalAnalogDevice",
     "MockDevice",
+    "Device",
 ]
 
 

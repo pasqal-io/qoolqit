@@ -33,7 +33,7 @@ class Device:
         From remote Pulser device:
         ```python
         from pulser_pasqal import PasqalCloud
-        from qoolqit.devices import Device
+        from qoolqit import Device
 
         # Fetch the remote device from the connection
         connection = PasqalCloud()
@@ -47,7 +47,7 @@ class Device:
         ```
         from dataclasses import replace
         from pulser import AnalogDevice
-        from qoolqit.devices import Device
+        from qoolqit import Device
 
         # Converting the pulser Device object in a VirtualDevice object
         VirtualAnalog = AnalogDevice.to_virtual()
