@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pulser.sequence import store_package_version_metadata
+
 from qoolqit.devices import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.drive import Drive
 from qoolqit.embedding import (
@@ -40,3 +42,4 @@ __all__ = [
 
 
 __version__ = "0.3.1"
+store_package_version_metadata(package_name="qoolqit", package_version=__version__)

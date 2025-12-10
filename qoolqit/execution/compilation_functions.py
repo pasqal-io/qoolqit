@@ -43,7 +43,7 @@ class WaveformConverter:
     """Convert a QoolQit waveform into a equivalent Pulser waveform.
 
     Requires the new time and energy scales set by the compilation profile.
-    Additionaly, requires the clock period fo the device to round the duration.
+    Additionally, requires the clock period fo the device to round the duration.
     """
 
     def __init__(self, device: Device, time: float, energy: float):
@@ -82,7 +82,7 @@ def basic_compilation(
     elif profile == CompilerProfile.MAX_AMPLITUDE:
         ENERGY = (device._upper_amp) / drive.amplitude.max()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
-        # round up/down to avoid roundoff errors
+        # round up/down to avoid round-off errors
         if ENERGY > 1:
             ENERGY = math.floor(1e12 * ENERGY) / 1e12
     elif profile == CompilerProfile.MIN_DISTANCE:
