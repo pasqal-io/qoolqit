@@ -81,7 +81,5 @@ def test_compiled_sequence_metadata(random_program: Callable[[], QuantumProgram]
     compiled_seq_repr = json.loads(program.compiled_sequence.to_abstract_repr())
 
     compiled_seq_metadata = compiled_seq_repr["metadata"]
-    expected_package_versions = {"qoolqit": qoolqit_version}
-    assert compiled_seq_metadata["package_versions"] == expected_package_versions
-
-    assert not compiled_seq_metadata["extra"]
+    expected_metadata = {"package_versions": {"qoolqit": qoolqit_version}, "extra": {}}
+    assert compiled_seq_metadata == expected_metadata
