@@ -17,7 +17,7 @@ device_real_digital = DigitalAnalogDevice()
 
 ## Create a QoolQit device directly from a Pulser device
 
-Custom QoolQit device can be created by either subclassing the `Device` class or build it straight from any `pulser.devices` object. The latter can be relevant for two reasons:
+A custom QoolQit device can be created by either subclassing the `Device` class or build it straight from any `pulser.devices` object. The latter can be relevant for two reasons:
 - Fetching a remotely available device.
 - Creating as custom device from scratch, following [pulser documentation](https://docs.pasqal.com/pulser/tutorials/virtual_devices/).
 
