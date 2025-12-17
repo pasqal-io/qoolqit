@@ -4081,8 +4081,8 @@ aka tensor trains.</p>
 <li>
 <p><span class="mkapi-item-name"><a href="./#qoolqit.execution.MPSConfig" title="qoolqit.execution.MPSConfig">MPSConfig</a></span>
  <span class="mkapi-dash">&mdash;</span>
-The configuration of the emu-mps MPSBackend. The kwargs passed to this class
-are passed on to the base class.
+The configuration of the emu-mps MPSBackend. The kwargs passed to this
+class are passed on to the base class.
 See the API for that class for a list of available options.</p>
 </li>
 <li>
@@ -5727,13 +5727,13 @@ the simulation results</p>
 <i class="fa-regular fa-square-minus"></i>
 </span>
 </span><span class="mkapi-object-kind">class</span>
-<span class="mkapi-object-name"><a href="./#qoolqit.execution.MPSConfig" title="qoolqit.execution.MPSConfig">MPSConfig</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-star">*</span><span class="mkapi-comma">, </span><span class="mkapi-arg">dt</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default">10</span><span class="mkapi-comma">, </span><span class="mkapi-arg">precision</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-equal"> = </span><span class="mkapi-default"><span class="mkapi-tooltip" title="emu_mps.mps.DEFAULT_PRECISION">DEFAULT_PRECISION</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">max_bond_dim</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default"><span class="mkapi-tooltip" title="emu_mps.mps.DEFAULT_MAX_BOND_DIM">DEFAULT_MAX_BOND_DIM</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">max_krylov_dim</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default">100</span><span class="mkapi-comma">, </span><span class="mkapi-arg">extra_krylov_tolerance</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-equal"> = </span><span class="mkapi-default">0.001</span><span class="mkapi-comma">, </span><span class="mkapi-arg">num_gpus_to_use</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">optimize_qubit_ordering</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool</span><span class="mkapi-equal"> = </span><span class="mkapi-default">True</span><span class="mkapi-comma">, </span><span class="mkapi-arg">interaction_cutoff</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-equal"> = </span><span class="mkapi-default">0.0</span><span class="mkapi-comma">, </span><span class="mkapi-arg">log_level</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default"><span class="mkapi-tooltip" title="logging">logging</span>.<span class="mkapi-tooltip" title="logging.INFO">INFO</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">log_file</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="pathlib">pathlib</span>.<span class="mkapi-tooltip" title="pathlib.Path">Path</span> | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">autosave_prefix</span><span class="mkapi-colon">: </span><span class="mkapi-ann">str</span><span class="mkapi-equal"> = </span><span class="mkapi-default">'emu_mps_save_'</span><span class="mkapi-comma">, </span><span class="mkapi-arg">autosave_dt</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default">600</span><span class="mkapi-comma">, </span><span class="mkapi-arg">solver</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="emu_mps.solver.Solver">Solver</span></span><span class="mkapi-equal"> = </span><span class="mkapi-default"><span class="mkapi-tooltip" title="emu_mps.solver.Solver">Solver</span>.<span class="mkapi-tooltip" title="emu_mps.solver.Solver.TDVP">TDVP</span></span><span class="mkapi-comma">, </span><span class="mkapi-star">**</span><span class="mkapi-arg">kwargs</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Any">Any</span></span><span class="mkapi-paren">)</span></span>
+<span class="mkapi-object-name"><a href="./#qoolqit.execution.MPSConfig" title="qoolqit.execution.MPSConfig">MPSConfig</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-star">*</span><span class="mkapi-comma">, </span><span class="mkapi-arg">dt</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default">10</span><span class="mkapi-comma">, </span><span class="mkapi-arg">precision</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-equal"> = </span><span class="mkapi-default"><span class="mkapi-tooltip" title="emu_mps.mps.DEFAULT_PRECISION">DEFAULT_PRECISION</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">max_bond_dim</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default"><span class="mkapi-tooltip" title="emu_mps.mps.DEFAULT_MAX_BOND_DIM">DEFAULT_MAX_BOND_DIM</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">max_krylov_dim</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default">100</span><span class="mkapi-comma">, </span><span class="mkapi-arg">extra_krylov_tolerance</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-equal"> = </span><span class="mkapi-default">0.001</span><span class="mkapi-comma">, </span><span class="mkapi-arg">num_gpus_to_use</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">optimize_qubit_ordering</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool</span><span class="mkapi-equal"> = </span><span class="mkapi-default">True</span><span class="mkapi-comma">, </span><span class="mkapi-arg">interaction_cutoff</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-equal"> = </span><span class="mkapi-default">0.0</span><span class="mkapi-comma">, </span><span class="mkapi-arg">log_level</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default"><span class="mkapi-tooltip" title="logging">logging</span>.<span class="mkapi-tooltip" title="logging.INFO">INFO</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">log_file</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="pathlib">pathlib</span>.<span class="mkapi-tooltip" title="pathlib.Path">Path</span> | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">autosave_prefix</span><span class="mkapi-colon">: </span><span class="mkapi-ann">str</span><span class="mkapi-equal"> = </span><span class="mkapi-default">'emu_mps_save_'</span><span class="mkapi-comma">, </span><span class="mkapi-arg">autosave_dt</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int | float</span><span class="mkapi-equal"> = </span><span class="mkapi-default">float('inf')</span><span class="mkapi-comma">, </span><span class="mkapi-arg">solver</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="emu_mps.solver.Solver">Solver</span></span><span class="mkapi-equal"> = </span><span class="mkapi-default"><span class="mkapi-tooltip" title="emu_mps.solver.Solver">Solver</span>.<span class="mkapi-tooltip" title="emu_mps.solver.Solver.TDVP">TDVP</span></span><span class="mkapi-comma">, </span><span class="mkapi-star">**</span><span class="mkapi-arg">kwargs</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Any">Any</span></span><span class="mkapi-paren">)</span></span>
 </p>
 <div class="mkapi-document">
 <p class="mkapi-bases">Bases :
 <span class="mkapi-base"><span class="mkapi-tooltip" title="pulser.backend.config.EmulationConfig">EmulationConfig</span></span></p>
-<p>The configuration of the emu-mps MPSBackend. The kwargs passed to this class
-are passed on to the base class.
+<p>The configuration of the emu-mps MPSBackend. The kwargs passed to this
+class are passed on to the base class.
 See the API for that class for a list of available options.</p>
 <p class="mkapi-section">
 <span class="mkapi-object-link">
@@ -5760,51 +5760,58 @@ Defaults to <code>1e-5</code>.</p>
 <li>
 <p><span class="mkapi-item-name">max_bond_dim</span> : 
 <span class="mkapi-item-type">int</span> <span class="mkapi-dash">&mdash;</span>
-The maximum bond dimension that the state is allowed to have.
+The maximum bond dimension that the state is allowed
+to have.
 Defaults to <code>1024</code>.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">max_krylov_dim</span> : 
 <span class="mkapi-item-type">int</span> <span class="mkapi-dash">&mdash;</span>
-The size of the krylov subspace that the Lanczos algorithm maximally builds</p>
+The size of the krylov subspace that the Lanczos algorithm
+maximally builds</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">extra_krylov_tolerance</span> : 
 <span class="mkapi-item-type">float</span> <span class="mkapi-dash">&mdash;</span>
-The Lanczos algorithm uses this*precision as the convergence tolerance</p>
+The Lanczos algorithm uses this*precision as the convergence
+tolerance</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">num_gpus_to_use</span> : 
 <span class="mkapi-item-type">int | None</span> <span class="mkapi-dash">&mdash;</span>
 number of GPUs to be used in a given simulation.</p>
 <ul>
-<li>if it is set to a number <code>n &gt; 0</code>, the state will be distributed across <code>n</code> GPUs.</li>
+<li>if it is set to a number <code>n &gt; 0</code>, the state will be distributed
+    across <code>n</code> GPUs.</li>
 <li>if it is set to <code>n = 0</code>, the entire simulation runs on the CPU.</li>
-<li>if it is <code>None</code> (the default value), the backend internally chooses the number of GPUs</li>
+<li>if it is <code>None</code> (the default value), the backend internally
+    chooses the number of GPUs</li>
 </ul>
 <p>based on the hardware availability during runtime.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">As shown in the benchmarks, using multiple GPUs might</span>
  <span class="mkapi-dash">&mdash;</span>
-alleviate memory pressure per GPU, but the runtime should be similar.</p>
+alleviate memory pressure per GPU, but the runtime should
+be similar.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">optimize_qubit_ordering</span> : 
 <span class="mkapi-item-type">bool</span> <span class="mkapi-dash">&mdash;</span>
-Optimize the register ordering. Improves performance and
-accuracy, but disables certain features.</p>
+Optimize the register ordering. Improves
+performance and accuracy, but disables certain features.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">interaction_cutoff</span> : 
 <span class="mkapi-item-type">float</span> <span class="mkapi-dash">&mdash;</span>
-Set interaction coefficients below this value to <code>0</code>.
-Potentially improves runtime and memory consumption.</p>
+Set interaction coefficients Uᵢⱼ below this value
+to <code>0.0</code>. Potentially improves runtime and memory consumption.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">log_level</span> : 
 <span class="mkapi-item-type">int</span> <span class="mkapi-dash">&mdash;</span>
-How much to log. Set to <span class="mkapi-tooltip" title="logging.WARN"><code>logging.WARN</code></span> to get rid of the timestep info.</p>
+How much to log. Set to <span class="mkapi-tooltip" title="logging.WARN"><code>logging.WARN</code></span> to get rid of the
+timestep info.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">log_file</span> : 
@@ -5814,11 +5821,12 @@ If specified, log to this file rather than stout.</p>
 <li>
 <p><span class="mkapi-item-name">autosave_prefix</span> : 
 <span class="mkapi-item-type">str</span> <span class="mkapi-dash">&mdash;</span>
-filename prefix for autosaving simulation state to file</p>
+filename prefix for autosaving simulation state to
+file</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">autosave_dt</span> : 
-<span class="mkapi-item-type">int</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">int | float</span> <span class="mkapi-dash">&mdash;</span>
 Minimum time interval in seconds between two autosaves.
 Saving the simulation state is only possible at specific times,
 therefore this interval is only a lower bound.</p>
