@@ -140,6 +140,7 @@ class Device:
 
     @property
     def specs(self) -> dict:
+        """Return the device specification constrains."""
         TIME, ENERGY, DISTANCE = self.converter.factors
         return {
             "max_duration": self._max_duration / TIME if self._max_duration else None,
@@ -154,6 +155,16 @@ class Device:
 
     def __repr__(self) -> str:
         return self._name
+
+    def __str__(self) -> str:
+        output = f"{self.name}: {self._device.short_description}\n"
+        for k, v in self.specs.items():
+            output += f" └── {k}: {v}\n"
+        return output
+
+    def info(self) -> None:
+        """Show the device short description and constrains."""
+        print(self)
 
 
 class MockDevice(Device):
@@ -175,3 +186,9 @@ class DigitalAnalogDevice(Device):
 
     def __init__(self) -> None:
         super().__init__(pulser_device=pulser.DigitalAnalogDevice)
+
+
+def available_default_devices() -> None:
+    """Show the default available devices in QooQit."""
+    for dev in (AnalogDevice(), DigitalAnalogDevice(), MockDevice()):
+        dev.info()
