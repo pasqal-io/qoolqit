@@ -14,7 +14,7 @@ device_real = AnalogDevice()
 
 ## Create a QoolQit device directly from a Pulser device
 
-A custom QoolQit device can be created by either subclassing the `Device` class or build it straight from any `pulser.devices` object:
+Custom QoolQit device can be created by either subclassing the `Device` class or build it straight from any `pulser.devices` object:
 
 ```python exec="on" source="material-block" result="json" session="devices"
 from qoolqit.devices import Device
