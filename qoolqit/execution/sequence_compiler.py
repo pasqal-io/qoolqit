@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Optional
+from typing import Callable
 
 from pulser.sequence.sequence import Sequence as PulserSequence
 
@@ -31,7 +31,7 @@ class SequenceCompiler:
         self._drive = drive
         self._device = device
         self._target_device = device._device
-        self._compilation_function: Optional[Callable] = basic_compilation
+        self._compilation_function: Callable = basic_compilation
         self._profile = CompilerProfile.DEFAULT
 
     @property
