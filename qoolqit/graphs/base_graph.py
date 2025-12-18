@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
 import torch
 from matplotlib.figure import Figure
-from torch_geometric.data import Data
-from torch_geometric.utils import to_networkx
 
 from .utils import (
     all_node_pairs,
@@ -17,6 +15,10 @@ from .utils import (
     scale_coords,
     space_coords,
 )
+
+# import only for the static type checker, not during runtime
+if TYPE_CHECKING:
+    import torch_geometric
 
 
 class BaseGraph(nx.Graph):
@@ -46,8 +48,6 @@ class BaseGraph(nx.Graph):
     def _reset_dicts(self) -> None:
         """Placeholder method to reset attribute dictionaries."""
         ...
-
-    # classmethods
 
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
@@ -89,7 +89,7 @@ class BaseGraph(nx.Graph):
         Node attributes:
             pos (tuple): represents the node 2D position. Must be a list/tuple of real numbers.
             weight: represents the node weight. Must be a real number.
-        Edge attibutes:
+        Edge attributes:
             weight: represents the edge weight. Must be a real number.
 
         Returns an instance of the class with following attributes:
@@ -161,10 +161,11 @@ class BaseGraph(nx.Graph):
         return graph
 
     @classmethod
-    def from_pyg(cls, g: Data) -> BaseGraph:
+    def from_pyg(cls, g: torch_geometric.data.Data) -> BaseGraph:
         """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
 
-        The input `torch_geometric.Data` object must be defined only with the following
+        This method requires installing the `torch_geometric` package.
+        The input `torch_geometric.data.Data` object must be defined only with the following
         allowed attributes:
             x (torch.Tensor): node weights as a matrix with shape (num_nodes, 1).
             edge_index (torch.Tensor): graph connectivity as a matrix with shape (2, num_edges).
@@ -176,7 +177,12 @@ class BaseGraph(nx.Graph):
         If the graph is defined only through the `edge_index` attribute, `num_nodes` is required.
         The input graph will be converted to a unidirectional graph.
         """
-        if not isinstance(g, Data):
+        try:
+            import torch_geometric
+        except ImportError as e:
+            raise ImportError("Please, install the `torch_geometric` package.") from e
+
+        if not isinstance(g, torch_geometric.data.Data):
             raise TypeError("Input must be a torch_geometric.data.Data object.")
 
         expected_attrs = {"x", "edge_index", "pos", "edge_attr", "num_nodes"}
@@ -219,7 +225,7 @@ class BaseGraph(nx.Graph):
 
         # g.edge_attrs() also returns "edge_index" which should not be passed to to_networkx
         edge_attrs = ["edge_attr"] if "edge_attr" in g else None
-        data_nx = to_networkx(
+        data_nx = torch_geometric.utils.to_networkx(
             g, node_attrs=g.node_attrs(), edge_attrs=edge_attrs, to_undirected=True
         )
         if "edge_attr" in g:
