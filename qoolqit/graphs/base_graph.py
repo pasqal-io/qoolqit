@@ -16,6 +16,10 @@ from .utils import (
     space_coords,
 )
 
+# import only for the static type checker, not during runtime
+if TYPE_CHECKING:
+    import torch_geometric
+
 
 class BaseGraph(nx.Graph):
     """
@@ -156,10 +160,6 @@ class BaseGraph(nx.Graph):
 
         return graph
 
-    # import only for the static type checker, not during runtime
-    if TYPE_CHECKING:
-        import torch_geometric
-
     @classmethod
     def from_pyg(cls, g: torch_geometric.data.Data) -> BaseGraph:
         """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
@@ -180,8 +180,7 @@ class BaseGraph(nx.Graph):
         try:
             import torch_geometric
         except ImportError as e:
-            print("Please, install the `torch_geometric` package.")
-            raise e
+            raise ImportError("Please, install the `torch_geometric` package.") from e
 
         if not isinstance(g, torch_geometric.data.Data):
             raise TypeError("Input must be a torch_geometric.data.Data object.")
