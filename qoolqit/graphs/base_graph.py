@@ -16,12 +16,6 @@ from .utils import (
     space_coords,
 )
 
-if TYPE_CHECKING:
-    try:
-        import torch_geometric
-    except ImportError:
-        pass
-
 
 class BaseGraph(nx.Graph):
     """
@@ -162,10 +156,15 @@ class BaseGraph(nx.Graph):
 
         return graph
 
+    # import only for the static type checker, not during runtime
+    if TYPE_CHECKING:
+        import torch_geometric
+
     @classmethod
     def from_pyg(cls, g: torch_geometric.data.Data) -> BaseGraph:
         """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
 
+        This method requires installing the `torch_geometric` package.
         The input `torch_geometric.data.Data` object must be defined only with the following
         allowed attributes:
             x (torch.Tensor): node weights as a matrix with shape (num_nodes, 1).
