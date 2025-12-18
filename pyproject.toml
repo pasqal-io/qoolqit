@@ -41,6 +41,7 @@ dependencies = [
 
 [project.optional-dependencies]
 extras = [
+  "torch_geometric",
   "jupyter",
   "flaky",
   "pytest",
