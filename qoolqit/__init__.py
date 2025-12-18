@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-from qoolqit.devices import AnalogDevice, DigitalAnalogDevice, MockDevice
+from qoolqit.devices import (
+    AnalogDevice,
+    Device,
+    DigitalAnalogDevice,
+    MockDevice,
+    available_default_devices,
+)
 from qoolqit.drive import Drive
 from qoolqit.embedding import (
     InteractionEmbedder,
@@ -33,9 +39,11 @@ __all__ = [
     "QuantumProgram",
     "CompilerProfile",
     "SequenceCompiler",
+    "available_default_devices",
     "AnalogDevice",
     "DigitalAnalogDevice",
     "MockDevice",
+    "Device",
 ]
 
 

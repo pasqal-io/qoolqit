@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from math import pi
-from typing import Callable, Optional, cast
+from typing import Callable, Optional
 
+import pulser
 from pulser.devices._device_datacls import BaseDevice
 
-from ._pulser_devices import _AnalogDevice, _DigitalAnalogDevice, _MockDevice, _TestAnalogDevice
 from .unit_converter import UnitConverter
 
 UPPER_DURATION = 6000
@@ -18,32 +18,63 @@ class Device:
     """
     QoolQit Device wrapper around a Pulser BaseDevice.
 
-    You can either:
-      1) Instantiate directly with a Pulser device instance via `pulser_device=...`, or
-      2) Subclass and override the `_device` property (backward-compatible path).
+    Args:
+        pulser_device (BaseDevice): a `BaseDevice` to build the QoolQit device from.
+        default_converter (Optional[UnitConverter]): optional unit converter to handle
+            unit conversion. Defaults to the unit converter that rescales energies by the
+            maximum allowed amplitude by the device.
+
+    Examples:
+        From Pulser device:
+        ```python
+        qoolqit_device = Device(pulser_device=pulser_device)
+        ```
+
+        From remote Pulser device:
+        ```python
+        from pulser_pasqal import PasqalCloud
+        from qoolqit import Device
+
+        # Fetch the remote device from the connection
+        connection = PasqalCloud()
+        pulser_fresnel_device = connection.fetch_available_devices()["FRESNEL"]
+
+        # Wrap a Pulser device object into a QoolQit Device
+        fresnel_device = Device(pulser_device=PulserFresnelDevice)
+        ```
+
+        From custom Pulser device:
+        ```
+        from dataclasses import replace
+        from pulser import AnalogDevice
+        from qoolqit import Device
+
+        # Converting the pulser Device object in a VirtualDevice object
+        VirtualAnalog = AnalogDevice.to_virtual()
+        # Replacing desired values
+        ModdedAnalogDevice = replace(
+            VirtualAnalog,
+            max_radial_distance=100,
+            max_sequence_duration=7000
+            )
+
+        # Wrap a Pulser device object into a QoolQit Device
+        mod_analog_device = Device(pulser_device=ModdedAnalogDevice)
+        ```
     """
 
     def __init__(
         self,
-        pulser_device: Optional[BaseDevice] = None,
+        pulser_device: BaseDevice,
         default_converter: Optional[UnitConverter] = None,
     ) -> None:
-        # Determine which Pulser device to use.
-        if pulser_device is None:
-            # If a subclass overrides `_device`, use that; otherwise error out.
-            uses_override = type(self)._device is not Device._device
-            if not uses_override:
-                raise TypeError(
-                    "Device requires `pulser_device` unless a subclass overrides `_device`."
-                )
-            # Access the subclass-provided device
-            pulser_device = type(self)._device.__get__(self, type(self))
 
         if not isinstance(pulser_device, BaseDevice):
             raise TypeError("`pulser_device` must be an instance of Pulser BaseDevice class.")
 
         # Store it for all subsequent lookups
         self._pulser_device: BaseDevice = pulser_device
+        self._name: str = self._pulser_device.name
 
         # Physical constants / channel & limit lookups (assumes 'rydberg_global' channel)
         self._C6 = self._pulser_device.interaction_coeff
@@ -74,15 +105,10 @@ class Device:
             self._default_factory = lambda: UnitConverter.from_energy(self._C6, self._upper_amp)
 
         self.reset_converter()
-        self.__post_init__()
 
     @property
     def _device(self) -> BaseDevice:
-        """Pulser device used by this QoolQit Device.
-
-        Subclasses may override this property to provide a default device.
-        """
-        # Base implementation returns the explicitly provided device.
+        """Pulser device used by this QoolQit Device."""
         return self._pulser_device
 
     @property
@@ -114,6 +140,7 @@ class Device:
 
     @property
     def specs(self) -> dict:
+        """Return the device specification constrains."""
         TIME, ENERGY, DISTANCE = self.converter.factors
         return {
             "max_duration": self._max_duration / TIME if self._max_duration else None,
@@ -124,36 +151,44 @@ class Device:
 
     @property
     def name(self) -> str:
-        return cast(str, self._device.name)
-
-    def __post_init__(self) -> None:
-        if not isinstance(self._device, BaseDevice):
-            raise TypeError("Incorrect base device set.")
+        return self._name
 
     def __repr__(self) -> str:
-        return self.name
+        return self._name
+
+    def __str__(self) -> str:
+        output = f"{self.name}: {self._device.short_description}\n"
+        for k, v in self.specs.items():
+            output += f" └── {k}: {v}\n"
+        return output
+
+    def info(self) -> None:
+        """Show the device short description and constrains."""
+        print(self)
 
 
 class MockDevice(Device):
+    """A virtual device for unconstrained prototyping."""
+
     def __init__(self) -> None:
-        super().__init__(pulser_device=_MockDevice)
+        super().__init__(pulser_device=pulser.MockDevice)
 
 
 class AnalogDevice(Device):
+    """A realistic device for analog sequence execution."""
+
     def __init__(self) -> None:
-        super().__init__(pulser_device=_AnalogDevice)
+        super().__init__(pulser_device=pulser.AnalogDevice)
 
 
 class DigitalAnalogDevice(Device):
-    """A device with digital and analog capabilites."""
+    """A device with digital and analog capabilities."""
 
     def __init__(self) -> None:
-        super().__init__(pulser_device=_DigitalAnalogDevice)
+        super().__init__(pulser_device=pulser.DigitalAnalogDevice)
 
 
-class TestAnalogDevice(Device):
-    def __init__(self) -> None:
-        super().__init__(pulser_device=_TestAnalogDevice)
-
-
-ALL_DEVICES = [MockDevice, AnalogDevice, TestAnalogDevice, DigitalAnalogDevice]
+def available_default_devices() -> None:
+    """Show the default available devices in QooQit."""
+    for dev in (AnalogDevice(), DigitalAnalogDevice(), MockDevice()):
+        dev.info()
