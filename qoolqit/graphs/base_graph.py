@@ -19,9 +19,8 @@ from .utils import (
 if TYPE_CHECKING:
     try:
         import torch_geometric
-    except ImportError as e:
-        print("Please, install the `torch_geometric` package.")
-        raise e
+    except ImportError:
+        pass
 
 
 class BaseGraph(nx.Graph):
