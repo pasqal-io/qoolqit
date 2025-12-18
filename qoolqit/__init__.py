@@ -18,7 +18,7 @@ from qoolqit.embedding import (
 )
 from qoolqit.execution import CompilerProfile, SequenceCompiler
 from qoolqit.graphs import DataGraph
-from qoolqit.program import QuantumProgram
+from qoolqit.program import QuantumProgram, store_package_version_metadata
 from qoolqit.register import Register
 from qoolqit.waveforms import Constant, Delay, Interpolated, PiecewiseLinear, Ramp, Sin
 
@@ -48,3 +48,5 @@ __all__ = [
 
 
 __version__ = "0.3.1"
+
+store_package_version_metadata("qoolqit", __version__)
