@@ -6,8 +6,8 @@ from typing import Callable
 import pytest
 from pulser.sequence import Sequence as PulserSequence
 
-from qoolqit import __version__ as qoolqit_version
 from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
+from qoolqit import __version__ as qoolqit_version
 from qoolqit.drive import Drive
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution import CompilerProfile
