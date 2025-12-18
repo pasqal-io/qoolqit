@@ -35,7 +35,6 @@ dependencies = [
   "pulser~=1.6.2",
   "pasqal-cloud>=0.20.6",
   "networkx~=3.4",
-  "torch_geometric",
   "emu_mps",
   "emu_sv"
 ]

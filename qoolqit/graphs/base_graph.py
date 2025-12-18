@@ -8,7 +8,6 @@ import networkx as nx
 import torch
 from matplotlib.figure import Figure
 from torch_geometric.data import Data
-from torch_geometric.utils import to_networkx
 
 from .utils import (
     all_node_pairs,
@@ -161,7 +160,7 @@ class BaseGraph(nx.Graph):
         return graph
 
     @classmethod
-    def from_pyg(cls, g: Data) -> BaseGraph:
+    def from_pyg(cls, g: "torch_geometric.Data") -> BaseGraph:
         """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
 
         The input `torch_geometric.Data` object must be defined only with the following
@@ -176,6 +175,12 @@ class BaseGraph(nx.Graph):
         If the graph is defined only through the `edge_index` attribute, `num_nodes` is required.
         The input graph will be converted to a unidirectional graph.
         """
+        try:
+            import torch_geometric
+        except ImportError as e:
+            print("Please, install the `torch_geometric` package.")
+            raise e
+
         if not isinstance(g, Data):
             raise TypeError("Input must be a torch_geometric.data.Data object.")
 
@@ -219,7 +224,7 @@ class BaseGraph(nx.Graph):
 
         # g.edge_attrs() also returns "edge_index" which should not be passed to to_networkx
         edge_attrs = ["edge_attr"] if "edge_attr" in g else None
-        data_nx = to_networkx(
+        data_nx = torch_geometric.to_networkx(
             g, node_attrs=g.node_attrs(), edge_attrs=edge_attrs, to_undirected=True
         )
         if "edge_attr" in g:
