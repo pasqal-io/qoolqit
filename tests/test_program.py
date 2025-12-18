@@ -1,20 +1,24 @@
 from __future__ import annotations
 
+import json
 from typing import Callable
 
 import pytest
 from pulser.sequence import Sequence as PulserSequence
 
-from qoolqit.devices import ALL_DEVICES
+from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
+from qoolqit import __version__ as qoolqit_version
 from qoolqit.drive import Drive
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution import CompilerProfile
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 
+QOOLQIT_DEFAULT_DEVICES = [AnalogDevice, DigitalAnalogDevice, MockDevice]
+
 
 @pytest.mark.flaky(max_runs=2)
-@pytest.mark.parametrize("device_class", ALL_DEVICES)
+@pytest.mark.parametrize("device_class", QOOLQIT_DEFAULT_DEVICES)
 def test_program_init_and_compilation(
     device_class: Callable,
     random_linear_register: Callable[[], Register],
@@ -36,7 +40,7 @@ def test_program_init_and_compilation(
 
 
 @pytest.mark.flaky(max_runs=2)
-@pytest.mark.parametrize("device_class", ALL_DEVICES)
+@pytest.mark.parametrize("device_class", QOOLQIT_DEFAULT_DEVICES)
 @pytest.mark.parametrize("profile", CompilerProfile.list())
 def test_compiler_profiles(
     device_class: Callable, profile: CompilerProfile, random_program: Callable[[], QuantumProgram]
@@ -53,7 +57,7 @@ def test_compiler_profiles(
         assert isinstance(program.compiled_sequence, PulserSequence)
 
 
-@pytest.mark.parametrize("device_class", ALL_DEVICES)
+@pytest.mark.parametrize("device_class", QOOLQIT_DEFAULT_DEVICES)
 @pytest.mark.parametrize("profile", CompilerProfile.list())
 def test_compiler_profiles_dmm(
     device_class: Callable,
@@ -71,3 +75,13 @@ def test_compiler_profiles_dmm(
         else:
             with pytest.raises(CompilationError):
                 program.compile_to(device, profile=profile)
+
+
+def test_compiled_sequence_metadata(random_program: Callable[[], QuantumProgram]) -> None:
+    program = random_program()
+    program.compile_to(MockDevice())
+    compiled_seq_repr = json.loads(program.compiled_sequence.to_abstract_repr())
+
+    compiled_seq_metadata = compiled_seq_repr["metadata"]
+    expected_metadata = {"package_versions": {"qoolqit": qoolqit_version}, "extra": {}}
+    assert compiled_seq_metadata == expected_metadata

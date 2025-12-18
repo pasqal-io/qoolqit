@@ -3,37 +3,53 @@
 Each `Device` in QoolQit wraps a Pulser device and defines the hardware characteristics that the program will be compiled to and later executed on.
 
 ```python exec="on" source="material-block" session="devices"
-from qoolqit import MockDevice, AnalogDevice
+from qoolqit import MockDevice, AnalogDevice, DigitalAnalogDevice
 
-# An example of an ideal device
+# An example of an mock device with no hardware constrains
 device_ideal = MockDevice()
 
 # An example of a real device
 device_real = AnalogDevice()
+
+# An example of a real device with digital-analog capabilities.
+device_real_digital = DigitalAnalogDevice()
 ```
 
 ## Create a QoolQit device directly from a Pulser device
 
-Custom QoolQit device can be created by either subclassing the `Device` class or build it straight from any `pulser.devices` object:
+A custom QoolQit device can be created by either subclassing the `Device` class or build it straight from any `pulser.devices` object. The latter can be relevant for two reasons:
+- Fetching a remotely available device through a connection.
+- Creating a custom device from scratch, following [pulser documentation](https://docs.pasqal.com/pulser/tutorials/virtual_devices/).
 
+### Remote devices
 ```python exec="on" source="material-block" result="json" session="devices"
-from qoolqit.devices import Device
-from pulser import devices
+from pulser_pasqal import PasqalCloud
+from qoolqit import Device
+
+# Fetch the remote device from the connection
+connection = PasqalCloud()
+pulser_device = connection.fetch_available_devices()["FRESNEL"]
 
 # Wrap a Pulser device object into a QoolQit Device
-device_from_pulser = Device(pulser_device=devices.AnalogDevice)
-
-print(device_from_pulser.name)  # markdown-exec: hide
+fresnel_device = Device(pulser_device=pulser_device)
+print(fresnel_device.specs)   # markdown-exec: hide
 ```
 
-**Notes**
+### Custom pulser devices
+```python exec="on" source="material-block" result="json" session="devices"
+from dataclasses import replace
+from pulser import AnalogDevice
+from qoolqit import Device
 
-- Advanced users may also pass a prebuilt `default_converter` to the constructor to start in a custom unit system:
-  ```python
-  from qoolqit import UnitConverter
-  custom_default = UnitConverter.from_energy(C6=device_from_pulser._C6, upper_amp=2.0)
-  device_custom = Device(pulser_device=devices.AnalogDevice, default_converter=custom_default)
-  ```
+# Converting the pulser Device object in a VirtualDevice object
+VirtualAnalog = AnalogDevice.to_virtual()
+# Replacing desired values
+ModdedAnalogDevice = replace(VirtualAnalog, max_radial_distance=100, max_sequence_duration=7000)
+
+# Wrap a Pulser device object into a QoolQit Device
+mod_analog_device = Device(pulser_device=ModdedAnalogDevice)
+print(mod_analog_device.specs)  # markdown-exec: hide
+```
 
 
 ## Unit conversion
@@ -73,3 +89,12 @@ You can always restore the default converter:
 device_real.reset_converter()
 print(device_real.converter)  # markdown-exec: hide
 ```
+
+**Notes**
+
+- Advanced users may also pass a prebuilt `default_converter` to the constructor to start in a custom unit system:
+  ```python
+  from qoolqit import UnitConverter
+  custom_default = UnitConverter.from_energy(C6=device_from_pulser._C6, upper_amp=2.0)
+  device_custom = Device(pulser_device=devices.AnalogDevice, default_converter=custom_default)
+  ```
