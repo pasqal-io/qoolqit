@@ -167,7 +167,7 @@ class BaseGraph(nx.Graph):
     def from_pyg(cls, g: torch_geometric.data.Data) -> BaseGraph:
         """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
 
-        The input `torch_geometric.Data` object must be defined only with the following
+        The input `torch_geometric.data.Data` object must be defined only with the following
         allowed attributes:
             x (torch.Tensor): node weights as a matrix with shape (num_nodes, 1).
             edge_index (torch.Tensor): graph connectivity as a matrix with shape (2, num_edges).
@@ -185,7 +185,7 @@ class BaseGraph(nx.Graph):
             print("Please, install the `torch_geometric` package.")
             raise e
 
-        if not isinstance(g, torch_geometric.Data):
+        if not isinstance(g, torch_geometric.data.Data):
             raise TypeError("Input must be a torch_geometric.data.Data object.")
 
         expected_attrs = {"x", "edge_index", "pos", "edge_attr", "num_nodes"}
