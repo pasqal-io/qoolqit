@@ -1293,8 +1293,6 @@
       
         
       
-        
-      
     
     
     
@@ -1390,34 +1388,6 @@
     
   
     qoolqit.devices.unit_converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../api/qoolqit/devices/utils/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    qoolqit.devices.utils
   
 
     
@@ -2881,7 +2851,7 @@
 <a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a QoolQit waveform into a equivalent Pulser waveform.</span>
 <a id="__codelineno-0-44" name="__codelineno-0-44"></a>
 <a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">    Requires the new time and energy scales set by the compilation profile.</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">    Additionaly, requires the clock period fo the device to round the duration.</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">    Additionally, requires the clock period of the device to round the duration.</span>
 <a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a>
 <a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">energy</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
@@ -2920,7 +2890,7 @@
 <a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="k">elif</span> <span class="n">profile</span> <span class="o">==</span> <span class="n">CompilerProfile</span><span class="o">.</span><span class="n">MAX_AMPLITUDE</span><span class="p">:</span>
 <a id="__codelineno-0-83" name="__codelineno-0-83"></a>        <span class="n">ENERGY</span> <span class="o">=</span> <span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">_upper_amp</span><span class="p">)</span> <span class="o">/</span> <span class="n">drive</span><span class="o">.</span><span class="n">amplitude</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 <a id="__codelineno-0-84" name="__codelineno-0-84"></a>        <span class="n">TIME</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">DISTANCE</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">factors_from_energy</span><span class="p">(</span><span class="n">ENERGY</span><span class="p">)</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="c1"># round up/down to avoid roundoff errors</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="c1"># round up/down to avoid round-off errors</span>
 <a id="__codelineno-0-86" name="__codelineno-0-86"></a>        <span class="k">if</span> <span class="n">ENERGY</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
 <a id="__codelineno-0-87" name="__codelineno-0-87"></a>            <span class="n">ENERGY</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="mf">1e12</span> <span class="o">*</span> <span class="n">ENERGY</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e12</span>
 <a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="k">elif</span> <span class="n">profile</span> <span class="o">==</span> <span class="n">CompilerProfile</span><span class="o">.</span><span class="n">MIN_DISTANCE</span><span class="p">:</span>

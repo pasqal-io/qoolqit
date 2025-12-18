@@ -1304,8 +1304,6 @@
       
         
       
-        
-      
     
     
     
@@ -1404,34 +1402,6 @@
     
   
     qoolqit.devices.unit_converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="devices/utils/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    qoolqit.devices.utils
   
 
     
@@ -3436,6 +3406,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qoolqit.available_default_devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        available_default_devices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#qoolqit.AnalogDevice" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3465,6 +3446,111 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qoolqit.Device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Device">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Device.converter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        converter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Device.reset_converter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reset_converter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Device.set_time_unit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_time_unit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Device.set_energy_unit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_energy_unit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Device.set_distance_unit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_distance_unit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Device.specs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        specs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Device.name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Device.info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        info
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3587,15 +3673,41 @@ A program representing a Sequence acting on a Register of qubits.</p>
 Compiles a QoolQit Register and Drive to a Device.</p>
 </li>
 <li>
-<p><span class="mkapi-item-name"><a href="./#qoolqit.AnalogDevice" title="qoolqit.AnalogDevice">AnalogDevice</a></span></p>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.AnalogDevice" title="qoolqit.AnalogDevice">AnalogDevice</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+A realistic device for analog sequence execution.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name"><a href="./#qoolqit.DigitalAnalogDevice" title="qoolqit.DigitalAnalogDevice">DigitalAnalogDevice</a></span>
  <span class="mkapi-dash">&mdash;</span>
-A device with digital and analog capabilites.</p>
+A device with digital and analog capabilities.</p>
 </li>
 <li>
-<p><span class="mkapi-item-name"><a href="./#qoolqit.MockDevice" title="qoolqit.MockDevice">MockDevice</a></span></p>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.MockDevice" title="qoolqit.MockDevice">MockDevice</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+A virtual device for unconstrained prototyping.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.Device" title="qoolqit.Device">Device</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+QoolQit Device wrapper around a Pulser BaseDevice.</p>
+</li>
+</ul>
+</div>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle functions">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Functions</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.available_default_devices" title="qoolqit.available_default_devices">available_default_devices</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+Show the default available devices in QooQit.</p>
 </li>
 </ul>
 </div>
@@ -6067,6 +6179,20 @@ The compiler profile to use.</p>
 </ul>
 </div>
 </div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.available_default_devices">
+<span class="mkapi-object-link">
+
+<span class="mkapi-definition-link"><a href="devices/device/#qoolqit.devices.device.available_default_devices" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/devices/device/#qoolqit.devices.device.available_default_devices" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-object-name"><a href="./#qoolqit.available_default_devices" title="qoolqit.available_default_devices">available_default_devices</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">None</span></span>
+</p>
+<div class="mkapi-document">
+<p>Show the default available devices in QooQit.</p>
+</div>
 <p class="mkapi-object mkapi-page-source" id="qoolqit.AnalogDevice">
 <span class="mkapi-object-link">
 
@@ -6081,6 +6207,24 @@ The compiler profile to use.</p>
 <div class="mkapi-document">
 <p class="mkapi-bases">Bases :
 <span class="mkapi-base"><a href="devices/device/#qoolqit.devices.device.Device" title="qoolqit.devices.device.Device">Device</a></span></p>
+<p>A realistic device for analog sequence execution.</p>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle attributes">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Attributes</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name">specs</span> : 
+<span class="mkapi-item-type">dict</span> <span class="mkapi-dash">&mdash;</span>
+Return the device specification constrains.</p>
+</li>
+</ul>
+</div>
 </div>
 <p class="mkapi-object mkapi-page-source" id="qoolqit.DigitalAnalogDevice">
 <span class="mkapi-object-link">
@@ -6096,7 +6240,24 @@ The compiler profile to use.</p>
 <div class="mkapi-document">
 <p class="mkapi-bases">Bases :
 <span class="mkapi-base"><a href="devices/device/#qoolqit.devices.device.Device" title="qoolqit.devices.device.Device">Device</a></span></p>
-<p>A device with digital and analog capabilites.</p>
+<p>A device with digital and analog capabilities.</p>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle attributes">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Attributes</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name">specs</span> : 
+<span class="mkapi-item-type">dict</span> <span class="mkapi-dash">&mdash;</span>
+Return the device specification constrains.</p>
+</li>
+</ul>
+</div>
 </div>
 <p class="mkapi-object mkapi-page-source" id="qoolqit.MockDevice">
 <span class="mkapi-object-link">
@@ -6112,6 +6273,289 @@ The compiler profile to use.</p>
 <div class="mkapi-document">
 <p class="mkapi-bases">Bases :
 <span class="mkapi-base"><a href="devices/device/#qoolqit.devices.device.Device" title="qoolqit.devices.device.Device">Device</a></span></p>
+<p>A virtual device for unconstrained prototyping.</p>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle attributes">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Attributes</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name">specs</span> : 
+<span class="mkapi-item-type">dict</span> <span class="mkapi-dash">&mdash;</span>
+Return the device specification constrains.</p>
+</li>
+</ul>
+</div>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Device">
+<span class="mkapi-object-link">
+
+<span class="mkapi-definition-link"><a href="devices/device/#qoolqit.devices.device.Device" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/devices/device/#qoolqit.devices.device.Device" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">class</span>
+<span class="mkapi-object-name"><a href="./#qoolqit.Device" title="qoolqit.Device">Device</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">pulser_device</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="pulser.devices._device_datacls.BaseDevice">BaseDevice</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">default_converter</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Optional">Optional</span>[<a href="devices/unit_converter/#qoolqit.devices.unit_converter.UnitConverter" title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</a>]</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-paren">)</span></span>
+</p>
+<div class="mkapi-document">
+<p>QoolQit Device wrapper around a Pulser BaseDevice.</p>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle parameters">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Parameters</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name">pulser_device</span> : 
+<span class="mkapi-item-type"><span class="mkapi-tooltip" title="pulser.devices._device_datacls.BaseDevice">BaseDevice</span></span> <span class="mkapi-dash">&mdash;</span>
+a <span class="mkapi-tooltip" title="pulser.devices._device_datacls.BaseDevice"><code>BaseDevice</code></span> to build the QoolQit device from.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name">default_converter</span> : 
+<span class="mkapi-item-type"><span class="mkapi-tooltip" title="typing.Optional">Optional</span>[<a href="devices/unit_converter/#qoolqit.devices.unit_converter.UnitConverter" title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</a>]</span> <span class="mkapi-dash">&mdash;</span>
+optional unit converter to handle
+unit conversion. Defaults to the unit converter that rescales energies by the
+maximum allowed amplitude by the device.</p>
+</li>
+</ul>
+</div>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle examples">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Examples</span>
+</p>
+<div class="mkapi-section-content">
+<p>From Pulser device:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">qoolqit_device</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">pulser_device</span><span class="o">=</span><span class="n">pulser_device</span><span class="p">)</span>
+</code></pre></div></p>
+<p>From remote Pulser device:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pulser_pasqal</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloud</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Device</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Fetch the remote device from the connection</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloud</span><span class="p">()</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">pulser_fresnel_device</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">()[</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">]</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Wrap a Pulser device object into a QoolQit Device</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">pulser_device</span><span class="o">=</span><span class="n">PulserFresnelDevice</span><span class="p">)</span>
+</code></pre></div></p>
+<p>From custom Pulser device:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">replace</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pulser</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalogDevice</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Device</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Converting the pulser Device object in a VirtualDevice object</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">VirtualAnalog</span> <span class="o">=</span> <span class="n">AnalogDevice</span><span class="o">.</span><span class="n">to_virtual</span><span class="p">()</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Replacing desired values</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">ModdedAnalogDevice</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">VirtualAnalog</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">max_radial_distance</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">max_sequence_duration</span><span class="o">=</span><span class="mi">7000</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="p">)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Wrap a Pulser device object into a QoolQit Device</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">mod_analog_device</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">pulser_device</span><span class="o">=</span><span class="n">ModdedAnalogDevice</span><span class="p">)</span>
+</code></pre></div></p>
+</div>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle attributes">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Attributes</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name">specs</span> : 
+<span class="mkapi-item-type">dict</span> <span class="mkapi-dash">&mdash;</span>
+Return the device specification constrains.</p>
+</li>
+</ul>
+</div>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle methods">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Methods</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.Device.reset_converter" title="qoolqit.Device.reset_converter">reset_converter</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+Resets the unit converter to the default one.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.Device.set_time_unit" title="qoolqit.Device.set_time_unit">set_time_unit</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+Changes the unit converter according to a reference time unit.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.Device.set_energy_unit" title="qoolqit.Device.set_energy_unit">set_energy_unit</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+Changes the unit converter according to a reference energy unit.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.Device.set_distance_unit" title="qoolqit.Device.set_distance_unit">set_distance_unit</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+Changes the unit converter according to a reference distance unit.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.Device.info" title="qoolqit.Device.info">info</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+Show the device short description and constrains.</p>
+</li>
+</ul>
+</div>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Device.converter">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="devices/device/#qoolqit.devices.device.Device.converter" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/devices/device/#qoolqit.devices.device.Device.converter" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">property</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Device" title="qoolqit.Device">Device</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Device.converter" title="qoolqit.Device.converter">converter</a></span><span class="mkapi-signature"><span class="mkapi-colon">: </span><span class="mkapi-return"><a href="devices/unit_converter/#qoolqit.devices.unit_converter.UnitConverter" title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</a></span></span>
+</p>
+<div class="mkapi-document"></div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Device.reset_converter">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="devices/device/#qoolqit.devices.device.Device.reset_converter" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/devices/device/#qoolqit.devices.device.Device.reset_converter" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Device" title="qoolqit.Device">Device</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Device.reset_converter" title="qoolqit.Device.reset_converter">reset_converter</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">None</span></span>
+</p>
+<div class="mkapi-document">
+<p>Resets the unit converter to the default one.</p>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Device.set_time_unit">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="devices/device/#qoolqit.devices.device.Device.set_time_unit" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/devices/device/#qoolqit.devices.device.Device.set_time_unit" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Device" title="qoolqit.Device">Device</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Device.set_time_unit" title="qoolqit.Device.set_time_unit">set_time_unit</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">time</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">None</span></span>
+</p>
+<div class="mkapi-document">
+<p>Changes the unit converter according to a reference time unit.</p>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Device.set_energy_unit">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="devices/device/#qoolqit.devices.device.Device.set_energy_unit" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/devices/device/#qoolqit.devices.device.Device.set_energy_unit" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Device" title="qoolqit.Device">Device</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Device.set_energy_unit" title="qoolqit.Device.set_energy_unit">set_energy_unit</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">energy</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">None</span></span>
+</p>
+<div class="mkapi-document">
+<p>Changes the unit converter according to a reference energy unit.</p>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Device.set_distance_unit">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="devices/device/#qoolqit.devices.device.Device.set_distance_unit" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/devices/device/#qoolqit.devices.device.Device.set_distance_unit" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Device" title="qoolqit.Device">Device</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Device.set_distance_unit" title="qoolqit.Device.set_distance_unit">set_distance_unit</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">distance</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">None</span></span>
+</p>
+<div class="mkapi-document">
+<p>Changes the unit converter according to a reference distance unit.</p>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Device.specs">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="devices/device/#qoolqit.devices.device.Device.specs" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/devices/device/#qoolqit.devices.device.Device.specs" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">property</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Device" title="qoolqit.Device">Device</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Device.specs" title="qoolqit.Device.specs">specs</a></span><span class="mkapi-signature"><span class="mkapi-colon">: </span><span class="mkapi-return">dict</span></span>
+</p>
+<div class="mkapi-document">
+<p>Return the device specification constrains.</p>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Device.name">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="devices/device/#qoolqit.devices.device.Device.name" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/devices/device/#qoolqit.devices.device.Device.name" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">property</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Device" title="qoolqit.Device">Device</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Device.name" title="qoolqit.Device.name">name</a></span><span class="mkapi-signature"><span class="mkapi-colon">: </span><span class="mkapi-return">str</span></span>
+</p>
+<div class="mkapi-document"></div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Device.info">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="devices/device/#qoolqit.devices.device.Device.info" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/devices/device/#qoolqit.devices.device.Device.info" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Device" title="qoolqit.Device">Device</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Device.info" title="qoolqit.Device.info">info</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">None</span></span>
+</p>
+<div class="mkapi-document">
+<p>Show the device short description and constrains.</p>
 </div>
 
 
