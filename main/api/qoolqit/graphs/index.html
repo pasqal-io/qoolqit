@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3424,7 +3424,7 @@ list or dictionary of coordinate pairs.</p>
 <div class="highlight"><pre><span></span><code><span class="n">pos</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">):</span> <span class="n">represents</span> <span class="n">the</span> <span class="n">node</span> <span class="mi">2</span><span class="n">D</span> <span class="n">position</span><span class="o">.</span> <span class="n">Must</span> <span class="n">be</span> <span class="n">a</span> <span class="nb">list</span><span class="o">/</span><span class="nb">tuple</span> <span class="n">of</span> <span class="n">real</span> <span class="n">numbers</span><span class="o">.</span>
 <span class="n">weight</span><span class="p">:</span> <span class="n">represents</span> <span class="n">the</span> <span class="n">node</span> <span class="n">weight</span><span class="o">.</span> <span class="n">Must</span> <span class="n">be</span> <span class="n">a</span> <span class="n">real</span> <span class="n">number</span><span class="o">.</span>
 </code></pre></div>
-<p>Edge attibutes:
+<p>Edge attributes:
     weight: represents the edge weight. Must be a real number.</p>
 </div>
 <p class="mkapi-section">
@@ -3473,11 +3473,12 @@ list or dictionary of coordinate pairs.</p>
 </span>
 </span><span class="mkapi-object-kind">classmethod</span>
 <span class="mkapi-object-parent">
-<a href="./#qoolqit.graphs.BaseGraph" title="qoolqit.graphs.BaseGraph">BaseGraph</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.graphs.BaseGraph.from_pyg" title="qoolqit.graphs.BaseGraph.from_pyg">from_pyg</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">g</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="torch_geometric.data.data.Data">Data</span></span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return"><a href="base_graph/#qoolqit.graphs.base_graph.BaseGraph" title="qoolqit.graphs.base_graph.BaseGraph">BaseGraph</a></span></span>
+<a href="./#qoolqit.graphs.BaseGraph" title="qoolqit.graphs.BaseGraph">BaseGraph</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.graphs.BaseGraph.from_pyg" title="qoolqit.graphs.BaseGraph.from_pyg">from_pyg</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">g</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="torch_geometric">torch_geometric</span>.<span class="mkapi-tooltip" title="torch_geometric">data</span>.<span class="mkapi-tooltip" title="torch_geometric">Data</span></span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return"><a href="base_graph/#qoolqit.graphs.base_graph.BaseGraph" title="qoolqit.graphs.base_graph.BaseGraph">BaseGraph</a></span></span>
 </p>
 <div class="mkapi-document">
 <p>Convert a PyTorch Geometric Data object into a QoolQit graph instance.</p>
-<p>The input <code>torch_geometric.Data</code> object must be defined only with the following
+<p>This method requires installing the <span class="mkapi-tooltip" title="torch_geometric"><code>torch_geometric</code></span> package.
+The input <span class="mkapi-tooltip" title="torch_geometric"><code>torch_geometric.data.Data</code></span> object must be defined only with the following
 allowed attributes:
     x (torch.Tensor): node weights as a matrix with shape (num_nodes, 1).
     edge_index (torch.Tensor): graph connectivity as a matrix with shape (2, num_edges).
@@ -3502,6 +3503,9 @@ The input graph will be converted to a unidirectional graph.</p>
 </li>
 <li>
 <p><span class="mkapi-item-type">AttributeError</span></p>
+</li>
+<li>
+<p><span class="mkapi-item-type">ImportError</span></p>
 </li>
 <li>
 <p><span class="mkapi-item-type">ValueError</span></p>
@@ -4890,10 +4894,10 @@ value to set as minimum distance.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.annotate", "content.code.copy", "content.action.view", "content.action.edit", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.annotate", "content.code.copy", "content.action.view", "content.action.edit", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="../../../assets/_markdown_exec_pyodide.js"></script>
       
