@@ -15,27 +15,31 @@ device_real = AnalogDevice()
 device_real_digital = DigitalAnalogDevice()
 ```
 
-## Create a QoolQit device directly from a Pulser device
+Besides available default devices, relevant for QPU emulation, new QPU devices can be:
+- imported remotely
+- created from custom Pulser devices
 
-A custom QoolQit device can be created by either subclassing the `Device` class or build it straight from any `pulser.devices` object. The latter can be relevant for two reasons:
-- Fetching a remotely available device through a connection.
-- Creating a custom device from scratch, following [pulser documentation](https://docs.pasqal.com/pulser/tutorials/virtual_devices/).
+### Fetching a QoolQit device from a connection
+Depending on your provider you might have different QPUs available to launch your quantum program to.
+The list of available ones can be fetched through the specific connection handler object, with the generic `connection.fetch_available_devices()` method.
+For the Pasqal Cloud service, for example, creating a QoolQit device from a connection object, simply reads as:
 
-### Remote devices
 ```python exec="on" source="material-block" result="json" session="devices"
 from pulser_pasqal import PasqalCloud
 from qoolqit import Device
 
-# Fetch the remote device from the connection
 connection = PasqalCloud()
-pulser_device = connection.fetch_available_devices()["FRESNEL"]
+print(connection.fetch_available_devices())
 
-# Wrap a Pulser device object into a QoolQit Device
-fresnel_device = Device(pulser_device=pulser_device)
-print(fresnel_device.specs)   # markdown-exec: hide
+# fetch QoolQit device
+fresnel_device = Device.from_connection(connection=connection, name="FRESNEL")
+print(fresnel_device)   # markdown-exec: hide
 ```
 
-### Custom pulser devices
+### Create a QoolQit device from a Pulser device
+A custom QoolQit device can be also built straight from any Pulser device, with any desired specification.
+Please, refer to [Pulser documentation](https://docs.pasqal.com/pulser/tutorials/virtual_devices/) to learn how to make a custom device.
+
 ```python exec="on" source="material-block" result="json" session="devices"
 from dataclasses import replace
 from pulser import AnalogDevice
@@ -48,9 +52,8 @@ ModdedAnalogDevice = replace(VirtualAnalog, max_radial_distance=100, max_sequenc
 
 # Wrap a Pulser device object into a QoolQit Device
 mod_analog_device = Device(pulser_device=ModdedAnalogDevice)
-print(mod_analog_device.specs)  # markdown-exec: hide
+print(mod_analog_device)  # markdown-exec: hide
 ```
-
 
 ## Unit conversion
 
