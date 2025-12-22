@@ -5,6 +5,7 @@ from typing import Callable
 
 import numpy as np
 import pytest
+from pulser_pasqal import PasqalCloud
 
 from qoolqit import AnalogDevice, Device, DigitalAnalogDevice, MockDevice
 from qoolqit.devices.unit_converter import UnitConverter
@@ -104,3 +105,24 @@ def test_default_device_specs() -> None:
         "min_distance": 0.47761501632709613,
     }
     assert digital_analog_device.specs == expected_digital_analog_specs
+
+
+def test_device_from_connection() -> None:
+    fresnel_device = Device.from_connection(PasqalCloud(), "FRESNEL")
+    assert fresnel_device.name == "FRESNEL"
+
+    expected_fresnel_specs = {
+        "max_duration": 67.85840131753953,
+        "max_amplitude": 1.0,
+        "max_detuning": 5.555555555555555,
+        "min_distance": 0.7673301077365813,
+    }
+
+    assert fresnel_device.specs == expected_fresnel_specs
+
+
+def test_device_from_connection_not_available() -> None:
+    with pytest.raises(
+        ValueError, match="Device HELLO_WORLD is not available through the provided connection."
+    ):
+        Device.from_connection(connection=PasqalCloud(), name="HELLO_WORLD")
