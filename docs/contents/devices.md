@@ -33,7 +33,7 @@ print(connection.fetch_available_devices())
 
 # fetch QoolQit device
 fresnel_device = Device.from_connection(connection=connection, name="FRESNEL")
-fresnel_device.info()   # markdown-exec: hide
+print(fresnel_device)   # markdown-exec: hide
 ```
 
 ### Create a QoolQit device from a Pulser device
@@ -52,7 +52,7 @@ ModdedAnalogDevice = replace(VirtualAnalog, max_radial_distance=100, max_sequenc
 
 # Wrap a Pulser device object into a QoolQit Device
 mod_analog_device = Device(pulser_device=ModdedAnalogDevice)
-mod_analog_device.info()  # markdown-exec: hide
+print(mod_analog_device)  # markdown-exec: hide
 ```
 
 ## Unit conversion
