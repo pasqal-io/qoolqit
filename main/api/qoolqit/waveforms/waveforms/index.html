@@ -3655,7 +3655,7 @@ Returns the number of waveforms.</p>
 <i class="fa-regular fa-square-minus"></i>
 </span>
 </span><span class="mkapi-object-kind">class</span>
-<span class="mkapi-object-name"><a href="./#qoolqit.waveforms.waveforms.Interpolated" title="qoolqit.waveforms.waveforms.Interpolated">Interpolated</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">duration</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-arg">values</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy._typing._array_like.ArrayLike">ArrayLike</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">times</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Optional">Optional</span>[<span class="mkapi-tooltip" title="numpy._typing._array_like.ArrayLike">ArrayLike</span>]</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">interpolator</span><span class="mkapi-colon">: </span><span class="mkapi-ann">str</span><span class="mkapi-equal"> = </span><span class="mkapi-default">'PchipInterpolator'</span><span class="mkapi-comma">, </span><span class="mkapi-star">**</span><span class="mkapi-arg">interpolator_kwargs</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Any">Any</span></span><span class="mkapi-paren">)</span></span>
+<span class="mkapi-object-name"><a href="./#qoolqit.waveforms.waveforms.Interpolated" title="qoolqit.waveforms.waveforms.Interpolated">Interpolated</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">duration</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-arg">values</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy._typing.ArrayLike">ArrayLike</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">times</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Optional">Optional</span>[<span class="mkapi-tooltip" title="numpy._typing.ArrayLike">ArrayLike</span>]</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">interpolator</span><span class="mkapi-colon">: </span><span class="mkapi-ann">str</span><span class="mkapi-equal"> = </span><span class="mkapi-default">'PchipInterpolator'</span><span class="mkapi-comma">, </span><span class="mkapi-star">**</span><span class="mkapi-arg">interpolator_kwargs</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Any">Any</span></span><span class="mkapi-paren">)</span></span>
 </p>
 <div class="mkapi-document">
 <p class="mkapi-bases">Bases :
@@ -3679,13 +3679,13 @@ The waveform duration (in ns).</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">values</span> : 
-<span class="mkapi-item-type"><span class="mkapi-tooltip" title="numpy._typing._array_like.ArrayLike">ArrayLike</span></span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type"><span class="mkapi-tooltip" title="numpy._typing.ArrayLike">ArrayLike</span></span> <span class="mkapi-dash">&mdash;</span>
 Values of the interpolation points. Must be a list of castable
 to float or a parametrized object.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">times</span> : 
-<span class="mkapi-item-type"><span class="mkapi-tooltip" title="numpy._typing._array_like.ArrayLike">ArrayLike</span></span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type"><span class="mkapi-tooltip" title="numpy._typing.ArrayLike">ArrayLike</span></span> <span class="mkapi-dash">&mdash;</span>
 Fractions of the total duration (between 0 and 1),
 indicating where to place each value on the time axis. Must
 be a list of castable to float or a parametrized object. If

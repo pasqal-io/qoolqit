@@ -976,41 +976,24 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-a-qoolqit-device-directly-from-a-pulser-device" class="md-nav__link">
+  <a href="#fetching-a-qoolqit-device-from-a-connection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Create a QoolQit device directly from a Pulser device
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Create a QoolQit device directly from a Pulser device">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#remote-devices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Remote devices
+        Fetching a QoolQit device from a connection
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-pulser-devices" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#create-a-qoolqit-device-from-a-pulser-device" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom pulser devices
+        Create a QoolQit device from a Pulser device
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2710,41 +2693,24 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-a-qoolqit-device-directly-from-a-pulser-device" class="md-nav__link">
+  <a href="#fetching-a-qoolqit-device-from-a-connection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Create a QoolQit device directly from a Pulser device
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Create a QoolQit device directly from a Pulser device">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#remote-devices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Remote devices
+        Fetching a QoolQit device from a connection
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-pulser-devices" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#create-a-qoolqit-device-from-a-pulser-device" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom pulser devices
+        Create a QoolQit device from a Pulser device
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2834,26 +2800,34 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">device_real_digital</span> <span class="o">=</span> <span class="n">DigitalAnalogDevice</span><span class="p">()</span>
 </code></pre></div>
 <div class="result"></div>
-<h2 id="create-a-qoolqit-device-directly-from-a-pulser-device">Create a QoolQit device directly from a Pulser device</h2>
-<p>A custom QoolQit device can be created by either subclassing the <code>Device</code> class or build it straight from any <code>pulser.devices</code> object. The latter can be relevant for two reasons:
-- Fetching a remotely available device through a connection.
-- Creating a custom device from scratch, following <a href="https://docs.pasqal.com/pulser/tutorials/virtual_devices/">pulser documentation</a>.</p>
-<h3 id="remote-devices">Remote devices</h3>
+<p>Besides available default devices, relevant for QPU emulation, new QPU devices can be:
+- imported remotely
+- created from custom Pulser devices</p>
+<h3 id="fetching-a-qoolqit-device-from-a-connection">Fetching a QoolQit device from a connection</h3>
+<p>Depending on your provider you might have different QPUs available to launch your quantum program to.
+The list of available ones can be fetched through the specific connection handler object, with the generic <code>connection.fetch_available_devices()</code> method.
+For the Pasqal Cloud service, for example, creating a QoolQit device from a connection object, simply reads as:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pulser_pasqal</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloud</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Device</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Fetch the remote device from the connection</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloud</span><span class="p">()</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">pulser_device</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">()[</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Wrap a Pulser device object into a QoolQit Device</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">pulser_device</span><span class="o">=</span><span class="n">pulser_device</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloud</span><span class="p">()</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">())</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># fetch QoolQit device</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
 </code></pre></div>
 <div class="result">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="err">&#39;max_dura</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mf">67.85840131753953</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;max_ampli</span><span class="kc">tu</span><span class="err">de&#39;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;max_de</span><span class="kc">tun</span><span class="err">i</span><span class="kc">n</span><span class="err">g&#39;</span><span class="p">:</span><span class="w"> </span><span class="mf">5.555555555555555</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;mi</span><span class="kc">n</span><span class="err">_dis</span><span class="kc">tan</span><span class="err">ce&#39;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7673301077365813</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="err">&#39;FRESNEL&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">FRESNEL</span><span class="p">}</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="err">FRESNEL</span><span class="p">:</span><span class="w"> </span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w"> </span><span class="err">└──</span><span class="w"> </span><span class="err">max_dura</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="mf">67.85840131753953</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w"> </span><span class="err">└──</span><span class="w"> </span><span class="err">max_ampli</span><span class="kc">tu</span><span class="err">de</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w"> </span><span class="err">└──</span><span class="w"> </span><span class="err">max_de</span><span class="kc">tun</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="p">:</span><span class="w"> </span><span class="mf">5.555555555555555</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w"> </span><span class="err">└──</span><span class="w"> </span><span class="err">mi</span><span class="kc">n</span><span class="err">_dis</span><span class="kc">tan</span><span class="err">ce</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7673301077365813</span>
 </code></pre></div>
 </div>
-<h3 id="custom-pulser-devices">Custom pulser devices</h3>
+<h3 id="create-a-qoolqit-device-from-a-pulser-device">Create a QoolQit device from a Pulser device</h3>
+<p>A custom QoolQit device can be also built straight from any Pulser device, with any desired specification.
+Please, refer to <a href="https://docs.pasqal.com/pulser/tutorials/virtual_devices/">Pulser documentation</a> to learn how to make a custom device.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">replace</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pulser</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalogDevice</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Device</span>
@@ -2867,7 +2841,11 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">mod_analog_device</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">pulser_device</span><span class="o">=</span><span class="n">ModdedAnalogDevice</span><span class="p">)</span>
 </code></pre></div>
 <div class="result">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="err">&#39;max_dura</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="mf">87.96459430051421</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;max_ampli</span><span class="kc">tu</span><span class="err">de&#39;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;max_de</span><span class="kc">tun</span><span class="err">i</span><span class="kc">n</span><span class="err">g&#39;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.0</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;mi</span><span class="kc">n</span><span class="err">_dis</span><span class="kc">tan</span><span class="err">ce&#39;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7809234915702248</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">A</span><span class="kc">nal</span><span class="err">ogDevice</span><span class="p">:</span><span class="w"> </span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w"> </span><span class="err">└──</span><span class="w"> </span><span class="err">max_dura</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="p">:</span><span class="w"> </span><span class="mf">87.96459430051421</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w"> </span><span class="err">└──</span><span class="w"> </span><span class="err">max_ampli</span><span class="kc">tu</span><span class="err">de</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w"> </span><span class="err">└──</span><span class="w"> </span><span class="err">max_de</span><span class="kc">tun</span><span class="err">i</span><span class="kc">n</span><span class="err">g</span><span class="p">:</span><span class="w"> </span><span class="mf">10.0</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w"> </span><span class="err">└──</span><span class="w"> </span><span class="err">mi</span><span class="kc">n</span><span class="err">_dis</span><span class="kc">tan</span><span class="err">ce</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7809234915702248</span>
 </code></pre></div>
 </div>
 <h2 id="unit-conversion">Unit conversion</h2>
