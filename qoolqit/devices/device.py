@@ -4,6 +4,7 @@ from math import pi
 from typing import Callable, Optional
 
 import pulser
+from pulser.backend.remote import RemoteConnection
 from pulser.devices._device_datacls import BaseDevice
 
 from .unit_converter import UnitConverter
@@ -165,6 +166,28 @@ class Device:
     def info(self) -> None:
         """Show the device short description and constrains."""
         print(self)
+
+    @classmethod
+    def from_connection(cls, connection: RemoteConnection, name: str) -> Device:
+        """Return the specified device from the selected device from a connection.
+
+        Available devices through the provided connection are can be seen with
+        the `connection.fetch_available_devices()` method.
+
+        Args:
+            connection (RemoteConnection): connection object to fetch the available devices.
+            name (str): The name of the desired device.
+
+        Example:
+        ```python
+        fresnel_device = Device.from_connection(connection=PasqalCloud(), name="FRESNEL")
+        ```
+        """
+        available_remote_devices = connection.fetch_available_devices()
+        if name not in available_remote_devices:
+            raise ValueError(f"Device {name} is not available through the provided connection.")
+        pulser_device = available_remote_devices[name]
+        return cls(pulser_device=pulser_device)
 
 
 class MockDevice(Device):
