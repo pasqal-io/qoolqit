@@ -243,6 +243,12 @@ class Blackman(Waveform):
     """
 
     def __init__(self, duration: pm.AbstractArray, area: pm.AbstractArray) -> None:
+        duration = pm.AbstractArray(duration)
+        params = {"duration": duration, "area": area}
+        for k, v in params.items():
+            v = pm.AbstractArray(v)
+            if v.ndim != 0:
+                raise ValueError(f"{k} must be a scalar.")
         super().__init__(duration, area=area)
 
     def function(self, t: float) -> ArrayLike:
