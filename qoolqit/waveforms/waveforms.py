@@ -242,6 +242,8 @@ class Blackman(Waveform):
             it takes the positive waveform and changes the sign of all its values.
     """
 
+    area: pm.AbstractArray
+
     def __init__(self, duration: pm.AbstractArray, area: pm.AbstractArray) -> None:
         duration = pm.AbstractArray(duration)
         params = {"duration": duration, "area": area}
@@ -253,4 +255,5 @@ class Blackman(Waveform):
 
     def function(self, t: float) -> ArrayLike:
         alpha = 2 * np.pi / self.duration
-        return 0.42 - 0.5 * np.cos(alpha * t) + 0.08 * np.cos(2 * alpha * t)
+        area_factor = self.area / (0.42 * self.duration)
+        return (0.42 - 0.5 * np.cos(alpha * t) + 0.08 * np.cos(2 * alpha * t)) * area_factor
