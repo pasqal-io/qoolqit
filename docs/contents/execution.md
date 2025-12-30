@@ -143,10 +143,10 @@ As before, also `RemoteEmulator` can be instantiated with:
 - `runs`: same as before.
 
 ```python
-from qoolqit.execution import RemoteEmulator, EmuMPSBackend
+from qoolqit.execution import RemoteEmulator, BackendType
 
 remote_emulator = RemoteEmulator(
-        backend_type=EmuMPSBackend,
+        backend_type=BackendType.EmuMPSBackend,
         connection=connection,
         emulation_config = emulation_config
         runs=200
