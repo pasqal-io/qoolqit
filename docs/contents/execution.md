@@ -53,10 +53,9 @@ results = emulator.run(program)
 
 The `LocalEmulator` is a flexible object which allows to emulate the program run on different backends:
 ```python exec="on" source="material-block" session="execution"
-from qoolqit.execution import LocalEmulator
-from qoolqit.execution import QutipBackendV2, SVBackend, MPSBackend
+from qoolqit.execution import LocalEmulator, BackendType
 
-emulator = LocalEmulator(backend_type=SVBackend)
+emulator = LocalEmulator(backend_type=BackendType.SVBackend)
 ```
 
 - `QutipBackendV2`: Based on Qutip, runs programs with up to ~12 qubits and return qutip objects in the results.
