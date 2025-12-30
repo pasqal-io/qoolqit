@@ -44,7 +44,7 @@ class Waveform(ABC):
 
         if len(args) > 0:
             raise ValueError(
-                "Extra arguments need to be passed to `super().__init__` as keyword arguments"
+                f"Extra arguments in {type(self).__name__} need to be passed as keyword arguments"
             )
 
         self._duration = duration
@@ -163,11 +163,12 @@ class Waveform(ABC):
         self, n_points: int = N_POINTS, return_fig: bool = False, **kwargs: Any
     ) -> Figure | None:
         fig, ax = plt.subplots(1, 1, figsize=(8, 4), dpi=150)
-        ax.grid(True)
-        t_array = np.linspace(0.0, self.duration, n_points)
-        y_array = self(t_array)
-        ax.plot(t_array, self(t_array))
-        ax.fill_between(t_array, y_array, color="skyblue", alpha=0.4)
+        ax.grid(True, linewidth=0.5)
+        times = np.linspace(0.0, self.duration, n_points)
+        values = self(times)
+        print(values, type(values))
+        ax.plot(times, values)
+        ax.fill_between(times, values, color="skyblue", alpha=0.4)
         ax.set_xlabel("Time t")
         ax.set_ylabel("Waveform")
         if return_fig:

@@ -6,6 +6,7 @@ from typing import Any, Optional
 import numpy as np
 import pulser
 import pulser.math as pm
+import torch
 from numpy.typing import ArrayLike
 from pulser.parametrized import ParamObj
 from scipy import interpolate
@@ -168,7 +169,7 @@ class Interpolated(Waveform):
             self._times = np.array(times, dtype=float)
             if len(times) != len(self._values):
                 raise ValueError(
-                    "Arguments `values` and `times` must be arrays of the same lenght."
+                    "Arguments `values` and `times` must be arrays of the same length."
                 )
         else:
             self._times = np.linspace(0, 1, num=len(self._values))
@@ -238,22 +239,24 @@ class Blackman(Waveform):
 
     Args:
         duration: The waveform duration.
-        area: The integral of the waveform. Can be negative, in which case
-            it takes the positive waveform and changes the sign of all its values.
+        area: The integral of the waveform.
     """
 
-    area: pm.AbstractArray
+    area: float | torch.Tensor
 
-    def __init__(self, duration: pm.AbstractArray, area: pm.AbstractArray) -> None:
-        duration = pm.AbstractArray(duration)
-        params = {"duration": duration, "area": area}
-        for k, v in params.items():
-            v = pm.AbstractArray(v)
-            if v.ndim != 0:
-                raise ValueError(f"{k} must be a scalar.")
+    def __init__(self, duration: float | torch.Tensor, area: float | torch.Tensor) -> None:
         super().__init__(duration, area=area)
 
-    def function(self, t: float) -> ArrayLike:
+    def function(self, t: float) -> pm.AbstractArray:
         alpha = 2 * np.pi / self.duration
         area_factor = self.area / (0.42 * self.duration)
-        return (0.42 - 0.5 * np.cos(alpha * t) + 0.08 * np.cos(2 * alpha * t)) * area_factor
+        return (0.42 - 0.5 * pm.cos(alpha * t) + 0.08 * pm.cos(2 * alpha * t)) * area_factor
+
+    def max(self) -> float:
+        return float(self.area / (0.42 * self.duration))
+
+    def min(self) -> float:
+        return 0.0
+
+    def _to_pulser(self, duration: int) -> ParamObj | pulser.BlackmanWaveform:
+        return pulser.BlackmanWaveform(duration, self.area)
