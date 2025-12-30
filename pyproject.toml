@@ -32,30 +32,23 @@ classifiers = [
 ]
 
 dependencies = [
-  "pulser~=1.6.2",
-  "pasqal-cloud>=0.20.6",
+  "pulser[torch]~=1.6.2",
   "networkx~=3.4",
-  "emu_mps",
-  "emu_sv"
 ]
 
 [project.optional-dependencies]
 extras = [
   "torch_geometric",
+  "emu_sv",
+  "emu_mps",
   "jupyter",
   "flaky",
   "pytest",
   "pytest-cov",
   "pytest-repeat",
   "pytest-markdown-docs",
-  "nbconvert",
-  "nbmake",
   "ipykernel",
   "pre-commit",
-  "black",
-  "isort",
-  "ruff",
-  "pydocstringformatter",
 ]
 docs = [
   "mkdocs",
@@ -68,6 +61,8 @@ docs = [
   "mkapi",
   "markdown-exec",
   "mike",
+  "nbconvert",
+  "nbmake",
 ]
 
 [project.urls]
