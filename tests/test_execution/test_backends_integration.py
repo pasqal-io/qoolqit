@@ -8,9 +8,9 @@ from pulser.backend import Backend, Occupation
 
 from qoolqit import AnalogDevice, Constant, Drive, MockDevice, QuantumProgram, Register
 from qoolqit.devices import Device
-from qoolqit.execution import EmulationConfig, LocalEmulator, MPSBackend, QutipBackendV2, SVBackend
+from qoolqit.execution import BackendType, EmulationConfig, LocalEmulator
 
-backends_list = (QutipBackendV2, SVBackend, MPSBackend)
+backends_list = (BackendType.QutipBackendV2, BackendType.SVBackend, BackendType.MPSBackend)
 
 
 @pytest.mark.parametrize("rotation_angle", [0.3 * np.pi])
@@ -41,10 +41,10 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
 @pytest.mark.parametrize(
     "backend_type, device",
     [
-        (SVBackend, MockDevice()),
-        (SVBackend, AnalogDevice()),
-        (MPSBackend, MockDevice()),
-        (MPSBackend, AnalogDevice()),
+        (BackendType.SVBackend, MockDevice()),
+        (BackendType.SVBackend, AnalogDevice()),
+        (BackendType.MPSBackend, MockDevice()),
+        (BackendType.MPSBackend, AnalogDevice()),
     ],
 )
 def test_results(random_program: Callable, backend_type: Backend, device: Device) -> None:
@@ -90,7 +90,7 @@ def test_results(random_program: Callable, backend_type: Backend, device: Device
     # - will fail for even steps
     # TODO: review this test when https://github.com/pasqal-io/emulators/issues/169 is solved
     other_eval_times = other_res.get_result_times("occupation")
-    if backend_type in (SVBackend, MPSBackend):
+    if backend_type in (BackendType.SVBackend, BackendType.MPSBackend):
         assert np.allclose(other_eval_times, evaluation_times[1:], atol=0.05)
 
     # value comparison of result is not fair because of different evaluation times
