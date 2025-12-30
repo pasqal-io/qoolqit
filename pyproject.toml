@@ -38,31 +38,35 @@ dependencies = [
 
 [project.optional-dependencies]
 extras = [
-  "torch_geometric",
   "emu_sv",
   "emu_mps",
+  "torch_geometric",
+]
+dev = [
+  "qoolqit[extras]",
   "jupyter",
   "flaky",
   "pytest",
   "pytest-cov",
-  "pytest-repeat",
   "pytest-markdown-docs",
   "ipykernel",
   "pre-commit",
   "nbmake",
-]
-docs = [
   "mkdocs",
   "mkdocs-material",
   "mkdocstrings",
   "mkdocstrings-python",
   "mkdocs-section-index",
-  "mkdocs-jupyter==0.24.7", # Don't let it update to 0.25 as it doesn't render LaTeX in notebooks correctly!
+  "mkdocs-jupyter==0.24.7", # Don't let it update to 0.25 as it doesn't render LaTeX in notebooks!
   "mkdocs-exclude",
   "mkapi",
   "markdown-exec",
   "mike",
   "nbconvert",
+  "black",
+  "flake8",
+  "isort",
+  "ruff",
 ]
 
 [project.urls]
@@ -75,7 +79,7 @@ allow-direct-references = true
 allow-ambiguous-features = true
 
 [tool.hatch.envs.default]
-features = ["extras"]
+features = ["dev"]
 
 [tool.hatch.envs.default.scripts]
 test = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs {args}"
@@ -96,7 +100,7 @@ filterwarnings = [
 ]
 
 [tool.hatch.envs.docs]
-features = ["docs"]
+features = ["dev"]
 
 [tool.hatch.envs.docs.scripts]
 build = "mkdocs build --clean --strict"
