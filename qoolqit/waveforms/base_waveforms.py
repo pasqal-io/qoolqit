@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, cast, overload
+from typing import Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pulser
+import torch
 from matplotlib.figure import Figure
 from pulser.parametrized import ParamObj
 from pulser.waveforms import Waveform as PulserWaveform
@@ -31,7 +32,7 @@ class Waveform(ABC):
         self,
         duration: float,
         *args: float,
-        **kwargs: float,
+        **kwargs: float | torch.Tensor,
     ) -> None:
         """Initializes the Waveform.
 
@@ -62,12 +63,12 @@ class Waveform(ABC):
         return self._duration
 
     @property
-    def params(self) -> dict[str, float]:
+    def params(self) -> dict[str, float | torch.Tensor]:
         """Dictionary of parameters used by the waveform."""
         return self._params_dict
 
     @abstractmethod
-    def function(self, t: float) -> float:
+    def function(self, t: float) -> float | torch.Tensor:
         """Evaluates the waveform function at a given time t."""
         ...
 
@@ -100,29 +101,10 @@ class Waveform(ABC):
             self._approximate_min_max()
         return cast(float, self._min)
 
-    def __single_call__(self, t: float) -> float:
-        return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
-
-    @overload
-    def __call__(self, t: float) -> float: ...
-
-    @overload
-    def __call__(self, t: list | np.ndarray) -> list | np.ndarray: ...
-
-    def __call__(self, t: float | list | np.ndarray) -> float | list[float] | np.ndarray:
-        if isinstance(t, list | np.ndarray):
-            value_array: list[float] | np.ndarray
-            if isinstance(t, np.ndarray):
-                value_array = np.array([self.__single_call__(ti) for ti in t])
-            elif isinstance(t, list):
-                value_array = [self.__single_call__(ti) for ti in t]
-            else:
-                raise TypeError(
-                    "Waveform array calling is supported on Python lists or NumPy arrays."
-                )
-            return value_array
-        else:
-            return self.__single_call__(t)
+    def __call__(self, t: float) -> float | torch.Tensor:
+        if t < 0.0 or t > self.duration:
+            raise ValueError(f"Waveform called at time {t} outside [0.0, {self.duration}]")
+        return self.function(t)
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         return self.__rrshift__(other)
