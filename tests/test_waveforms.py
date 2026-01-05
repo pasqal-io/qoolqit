@@ -45,22 +45,21 @@ def test_constant() -> None:
 
     assert wf.value == value
 
-    t_val = random.random()
+    t_val = random.random() * duration
 
-    assert wf(0.0 - t_val) == 0.0
+    with pytest.raises(ValueError, match="outside"):
+        wf(0.0 - t_val)
+    with pytest.raises(ValueError, match="outside"):
+        wf(duration + t_val)
+
     assert wf(t_val) == value
-    assert wf(duration + t_val) == 0.0
     assert wf.max() == value
     assert wf.min() == value
 
-    n_points = 10
-    t_array = np.random.rand(n_points)
-    assert isinstance(wf(t_array), np.ndarray)
-    assert len(wf(t_array)) == n_points
-
-    t_list = [random.random() for i in range(n_points)]
-    assert isinstance(wf(t_list), list)
-    assert len(wf(t_list)) == n_points
+    values = wf._sample(10)
+    assert len(values) == 10
+    for val in values:
+        assert np.isclose(val, value)
 
 
 def test_ramp() -> None:
@@ -95,11 +94,10 @@ def test_sin() -> None:
     assert wf.shift == shift
 
     n_points = 100
-    t_array = t_array = np.random.uniform(low=-1.0, high=2.0, size=(n_points,))
     approx_max = wf.max()
     approx_min = wf.min()
-    random_samples_max = np.max(wf(t_array))
-    random_samples_min = np.min(wf(t_array))
+    random_samples_max = np.max(wf._sample(n_points))
+    random_samples_min = np.min(wf._sample(n_points))
     assert (approx_max > random_samples_max) or EQUAL(approx_max, random_samples_max, atol=1e-05)
     assert (approx_min > random_samples_min) or EQUAL(approx_min, random_samples_min, atol=1e-05)
 
@@ -136,7 +134,7 @@ def test_interpolated(interpolator: str) -> None:
     assert np.allclose(interpolated._times, expected_fractional_times)
 
     waveform_times = duration * expected_fractional_times
-    interpolated_values = interpolated(waveform_times)
+    interpolated_values = np.array([interpolated(t) for t in waveform_times])
     assert np.allclose(interpolated_values, values)
 
 
@@ -148,7 +146,7 @@ def test_interpolated_with_times(interpolator: str) -> None:
     interpolated = Interpolated(duration, values=values, times=times, interpolator=interpolator)
 
     waveform_times = duration * np.array(times, dtype=float)
-    interpolated_values = interpolated(waveform_times)
+    interpolated_values = np.array([interpolated(t) for t in waveform_times])
     assert np.allclose(interpolated_values, values)
 
 
@@ -199,13 +197,12 @@ def test_waveform_composition(n_waveforms: int) -> None:
     assert len(wf2.times) == 2 * len(wf.times) - 1
 
     n_points = 100
-    t_array = np.random.uniform(low=-1.0, high=2.0 * duration * n_waveforms + 1.0, size=(n_points,))
     approx_max = wf.max()
     approx_min = wf.min()
-    random_samples_max = np.max(wf(t_array))
-    random_samples_min = np.min(wf(t_array))
+    random_samples_max = np.max(wf._sample(n_points))
+    random_samples_min = np.min(wf._sample(n_points))
     assert (approx_max > random_samples_max) or EQUAL(approx_max, random_samples_max, atol=1e-05)
-    assert (approx_min > random_samples_min) or EQUAL(approx_min, random_samples_min, atol=1e-05)
+    assert (approx_min < random_samples_min) or EQUAL(approx_min, random_samples_min, atol=1e-05)
 
     with pytest.raises(TypeError):
         CompositeWaveform(wf, 1.0)  # type: ignore [arg-type]

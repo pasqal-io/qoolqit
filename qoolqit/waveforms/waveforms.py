@@ -5,7 +5,6 @@ from typing import Any, Optional
 
 import numpy as np
 import pulser
-import pulser.math as pm
 import torch
 from numpy.typing import ArrayLike
 from pulser.parametrized import ParamObj
@@ -244,16 +243,16 @@ class Blackman(Waveform):
 
     area: float | torch.Tensor
 
-    def __init__(self, duration: float | torch.Tensor, area: float | torch.Tensor) -> None:
+    def __init__(self, duration: float, area: float | torch.Tensor) -> None:
         super().__init__(duration, area=area)
 
-    def function(self, t: float) -> pm.AbstractArray:
+    def function(self, t: float) -> float | torch.Tensor:
         alpha = 2 * np.pi / self.duration
         area_factor = self.area / (0.42 * self.duration)
-        return (0.42 - 0.5 * pm.cos(alpha * t) + 0.08 * pm.cos(2 * alpha * t)) * area_factor
+        return (0.42 - 0.5 * np.cos(alpha * t) + 0.08 * np.cos(2 * alpha * t)) * area_factor
 
-    def max(self) -> float:
-        return float(self.area / (0.42 * self.duration))
+    def max(self) -> float | torch.Tensor:
+        return self.area / (0.42 * self.duration)
 
     def min(self) -> float:
         return 0.0
