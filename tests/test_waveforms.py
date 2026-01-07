@@ -3,6 +3,7 @@ from __future__ import annotations
 import random
 
 import numpy as np
+import pulser
 import pytest
 
 from qoolqit.waveforms import (
@@ -111,7 +112,7 @@ def test_sin() -> None:
 def test_piecewise(n_pieces: int) -> None:
 
     durations = [1.0 for _ in range(n_pieces)]
-    values = np.random.rand(n_pieces + 1)
+    values = np.random.rand(n_pieces + 1).tolist()
 
     with pytest.raises(ValueError):
         wf = PiecewiseLinear([1.0], values)
@@ -214,9 +215,13 @@ def test_waveform_composition(n_waveforms: int) -> None:
         approx_min, random_samples_min, atol=1e-05
     )
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match="All arguments must be instances of Waveform."):
         CompositeWaveform(wf, 1.0)  # type: ignore [arg-type]
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        NotImplementedError, match="Composing with object of type <class 'float'> not supported."
+    ):
+        wf >> 1.0  # type: ignore [operator]
+    with pytest.raises(ValueError, match="At least one Waveform must be provided."):
         CompositeWaveform()
 
 
@@ -246,7 +251,6 @@ def test_negative_duration() -> None:
 
 
 def test_waveform_only_kwarg() -> None:
-    # mock waveform class
     class MockWaveform(Waveform):
         def function(self, t: float) -> float:
             return t
@@ -259,3 +263,20 @@ def test_waveform_only_kwarg() -> None:
         match="Extra arguments in MockWaveform need to be passed as keyword arguments",
     ):
         MockWaveform(200.0, 2.0, 3.1)
+
+
+def test_base_waveform_to_pulser() -> None:
+    class MockWaveform(Waveform):
+        def function(self, t: float) -> float:
+            return t**2
+
+    wf = MockWaveform(200.0)
+    pulser_wf = wf._to_pulser(duration=1000)
+
+    assert isinstance(pulser_wf, pulser.InterpolatedWaveform)
+    assert pulser_wf.duration == 1000
+
+    expected_times = np.linspace(0.0, 1.0, 100)
+    expected_values = (200.0 * expected_times) ** 2
+    assert np.allclose(pulser_wf._times, expected_times)
+    assert np.allclose(pulser_wf._values, expected_values)
