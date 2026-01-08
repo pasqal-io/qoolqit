@@ -3129,7 +3129,7 @@ Returns the duration of the waveform.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">params</span> : 
-<span class="mkapi-item-type">dict[str, float]</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>]</span> <span class="mkapi-dash">&mdash;</span>
 Dictionary of parameters used by the waveform.</p>
 </li>
 </ul>
@@ -3210,7 +3210,7 @@ Dictionary of parameters used by the waveform.</p>
 <i class="fa-regular fa-square-minus"></i>
 </span>
 </span><span class="mkapi-object-kind">class</span>
-<span class="mkapi-object-name"><a href="./#qoolqit.waveforms.Delay" title="qoolqit.waveforms.Delay">Delay</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">duration</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-star">*</span><span class="mkapi-arg">args</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-star">**</span><span class="mkapi-arg">kwargs</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-paren">)</span></span>
+<span class="mkapi-object-name"><a href="./#qoolqit.waveforms.Delay" title="qoolqit.waveforms.Delay">Delay</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">duration</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-star">*</span><span class="mkapi-arg">args</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-star">**</span><span class="mkapi-arg">kwargs</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-paren">)</span></span>
 </p>
 <div class="mkapi-document">
 <p class="mkapi-bases">Bases :
@@ -3251,7 +3251,7 @@ Returns the duration of the waveform.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">params</span> : 
-<span class="mkapi-item-type">dict[str, float]</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>]</span> <span class="mkapi-dash">&mdash;</span>
 Dictionary of parameters used by the waveform.</p>
 </li>
 </ul>
@@ -3394,7 +3394,7 @@ Returns the duration of the waveform.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">params</span> : 
-<span class="mkapi-item-type">dict[str, float]</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>]</span> <span class="mkapi-dash">&mdash;</span>
 Dictionary of parameters used by the waveform.</p>
 </li>
 </ul>
@@ -3522,7 +3522,7 @@ Returns the duration of the waveform.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">params</span> : 
-<span class="mkapi-item-type">dict[str, float]</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>]</span> <span class="mkapi-dash">&mdash;</span>
 Dictionary of parameters used by the waveform.</p>
 </li>
 <li>
@@ -3607,7 +3607,7 @@ Returns the duration of the waveform.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">params</span> : 
-<span class="mkapi-item-type">dict[str, float]</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>]</span> <span class="mkapi-dash">&mdash;</span>
 Dictionary of parameters used by the waveform.</p>
 </li>
 </ul>
@@ -3748,7 +3748,7 @@ Returns the duration of the waveform.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">params</span> : 
-<span class="mkapi-item-type">dict[str, float]</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>]</span> <span class="mkapi-dash">&mdash;</span>
 Dictionary of parameters used by the waveform.</p>
 </li>
 </ul>
@@ -3799,7 +3799,7 @@ Dictionary of parameters used by the waveform.</p>
 <p class="mkapi-bases">Bases :
 <span class="mkapi-base"><a href="base_waveforms/#qoolqit.waveforms.base_waveforms.Waveform" title="qoolqit.waveforms.base_waveforms.Waveform">Waveform</a></span></p>
 <p>Base class for composite waveforms.</p>
-<p>A CompositeWaveform stores a sequence of waveforms occuring one after the other
+<p>A CompositeWaveform stores a sequence of waveforms occurring one after the other
 by the order given. When it is evaluated at time t, the corresponding waveform
 from the sequence is identified depending on the duration of each one, and it is
 then evaluated for a time t' = t minus the duration of all previous waveforms.</p>
@@ -3838,7 +3838,7 @@ Returns the duration of the waveform.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">params</span> : 
-<span class="mkapi-item-type">dict[str, float]</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>]</span> <span class="mkapi-dash">&mdash;</span>
 Dictionary of parameters used by the waveform.</p>
 </li>
 <li>
@@ -3997,7 +3997,7 @@ Get the maximum value of the waveform.</p>
 <i class="fa-regular fa-square-minus"></i>
 </span>
 </span><span class="mkapi-object-kind">class</span>
-<span class="mkapi-object-name"><a href="./#qoolqit.waveforms.Waveform" title="qoolqit.waveforms.Waveform">Waveform</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">duration</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-star">*</span><span class="mkapi-arg">args</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-star">**</span><span class="mkapi-arg">kwargs</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-paren">)</span></span>
+<span class="mkapi-object-name"><a href="./#qoolqit.waveforms.Waveform" title="qoolqit.waveforms.Waveform">Waveform</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">duration</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-star">*</span><span class="mkapi-arg">args</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-star">**</span><span class="mkapi-arg">kwargs</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-paren">)</span></span>
 </p>
 <div class="mkapi-document">
 <p class="mkapi-bases">Bases :
@@ -4043,7 +4043,7 @@ Returns the duration of the waveform.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name">params</span> : 
-<span class="mkapi-item-type">dict[str, float]</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>]</span> <span class="mkapi-dash">&mdash;</span>
 Dictionary of parameters used by the waveform.</p>
 </li>
 </ul>
@@ -4108,7 +4108,7 @@ Get the approximate minimum value of the waveform.</p>
 </span>
 </span><span class="mkapi-object-kind">property</span>
 <span class="mkapi-object-parent">
-<a href="./#qoolqit.waveforms.Waveform" title="qoolqit.waveforms.Waveform">Waveform</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.waveforms.Waveform.params" title="qoolqit.waveforms.Waveform.params">params</a></span><span class="mkapi-signature"><span class="mkapi-colon">: </span><span class="mkapi-return">dict[str, float]</span></span>
+<a href="./#qoolqit.waveforms.Waveform" title="qoolqit.waveforms.Waveform">Waveform</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.waveforms.Waveform.params" title="qoolqit.waveforms.Waveform.params">params</a></span><span class="mkapi-signature"><span class="mkapi-colon">: </span><span class="mkapi-return">dict[str, float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>]</span></span>
 </p>
 <div class="mkapi-document">
 <p>Dictionary of parameters used by the waveform.</p>
