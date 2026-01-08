@@ -7,6 +7,7 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
 from qoolqit.drive import Drive
+from qoolqit.exceptions import CompilationError
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.execution.utils import CompilerProfile
 from qoolqit.register import Register
@@ -74,6 +75,13 @@ class QuantumProgram:
             compiled = f"| Compiled: {self.is_compiled}"
             device = ""
         return header + register + drive + compiled + device
+
+    def _validate_program(self, device: Device) -> None:
+        """Validate that the program resect the given device specifications."""
+        specs = device.specs
+        max_amplitude = self.drive.amplitude.max()
+        if max_amplitude > specs["max_amplitude"]:
+            raise CompilationError()
 
     def compile_to(
         self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT
