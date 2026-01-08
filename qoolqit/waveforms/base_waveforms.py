@@ -33,7 +33,7 @@ class Waveform(ABC):
         self,
         duration: float,
         *args: float,
-        **kwargs: float | torch.Tensor,
+        **kwargs: float | np.ndarray | torch.Tensor,
     ) -> None:
         """Initializes the Waveform.
 
@@ -69,7 +69,7 @@ class Waveform(ABC):
         return self._duration
 
     @property
-    def params(self) -> dict[str, float | torch.Tensor]:
+    def params(self) -> dict[str, float | np.ndarray | torch.Tensor]:
         """Dictionary of parameters used by the waveform."""
         return self._params_dict
 

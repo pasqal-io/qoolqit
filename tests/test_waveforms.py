@@ -3,9 +3,9 @@ from __future__ import annotations
 import random
 
 import numpy as np
+import pulser
 import pytest
 
-from qoolqit.utils import EQUAL
 from qoolqit.waveforms import (
     CompositeWaveform,
     Constant,
@@ -73,7 +73,7 @@ def test_ramp() -> None:
     assert wf.initial_value == initial_value
     assert wf.final_value == final_value
     min_val, max_val = min([initial_value, final_value]), max([initial_value, final_value])
-    value: float = wf(t_val)
+    value = wf(t_val)
     assert min_val <= value <= max_val
     assert wf.max() == max_val
     assert wf.min() == min_val
@@ -98,15 +98,19 @@ def test_sin() -> None:
     approx_min = wf.min()
     random_samples_max = np.max(wf._sample(n_points))
     random_samples_min = np.min(wf._sample(n_points))
-    assert (approx_max > random_samples_max) or EQUAL(approx_max, random_samples_max, atol=1e-05)
-    assert (approx_min > random_samples_min) or EQUAL(approx_min, random_samples_min, atol=1e-05)
+    assert (approx_max > random_samples_max) or np.isclose(
+        approx_max, random_samples_max, atol=1e-05
+    )
+    assert (approx_min > random_samples_min) or np.isclose(
+        approx_min, random_samples_min, atol=1e-05
+    )
 
 
 @pytest.mark.parametrize("n_pieces", [3, 4, 5])
 def test_piecewise(n_pieces: int) -> None:
 
     durations = [1.0 for _ in range(n_pieces)]
-    values = np.random.rand(n_pieces + 1)
+    values = np.random.rand(n_pieces + 1).tolist()
 
     with pytest.raises(ValueError):
         wf = PiecewiseLinear([1.0], values)
@@ -185,14 +189,14 @@ def test_waveform_composition(n_waveforms: int) -> None:
 
     assert isinstance(wf, CompositeWaveform)
     assert wf.n_waveforms == 2 * n_waveforms
-    assert EQUAL(wf.duration, 2 * n_waveforms * duration)
+    assert np.isclose(wf.duration, 2 * n_waveforms * duration)
     assert len(wf.durations) == 2 * n_waveforms
     assert len(wf.times) == 2 * n_waveforms + 1
 
     # Testing composing directly with the class
     wf2 = CompositeWaveform(wf, wf)
     assert wf2.n_waveforms == 2 * wf.n_waveforms
-    assert EQUAL(wf2.duration, 2 * wf.duration)
+    assert np.isclose(wf2.duration, 2 * wf.duration)
     assert len(wf2.durations) == 2 * len(wf.durations)
     assert len(wf2.times) == 2 * len(wf.times) - 1
 
@@ -201,12 +205,20 @@ def test_waveform_composition(n_waveforms: int) -> None:
     approx_min = wf.min()
     random_samples_max = np.max(wf._sample(n_points))
     random_samples_min = np.min(wf._sample(n_points))
-    assert (approx_max > random_samples_max) or EQUAL(approx_max, random_samples_max, atol=1e-05)
-    assert (approx_min < random_samples_min) or EQUAL(approx_min, random_samples_min, atol=1e-05)
+    assert (approx_max > random_samples_max) or np.isclose(
+        approx_max, random_samples_max, atol=1e-05
+    )
+    assert (approx_min < random_samples_min) or np.isclose(
+        approx_min, random_samples_min, atol=1e-05
+    )
 
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match="All arguments must be instances of Waveform."):
         CompositeWaveform(wf, 1.0)  # type: ignore [arg-type]
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        NotImplementedError, match="Composing with object of type <class 'float'> not supported."
+    ):
+        wf >> 1.0  # type: ignore [operator]
+    with pytest.raises(ValueError, match="At least one Waveform must be provided."):
         CompositeWaveform()
 
 
@@ -236,7 +248,6 @@ def test_negative_duration() -> None:
 
 
 def test_waveform_only_kwarg() -> None:
-    # mock waveform class
     class MockWaveform(Waveform):
         def function(self, t: float) -> float:
             return t
@@ -249,3 +260,20 @@ def test_waveform_only_kwarg() -> None:
         match="Extra arguments in MockWaveform need to be passed as keyword arguments",
     ):
         MockWaveform(200.0, 2.0, 3.1)
+
+
+def test_base_waveform_to_pulser() -> None:
+    class MockWaveform(Waveform):
+        def function(self, t: float) -> float:
+            return t**2
+
+    wf = MockWaveform(200.0)
+    pulser_wf = wf._to_pulser(duration=1000)
+
+    assert isinstance(pulser_wf, pulser.InterpolatedWaveform)
+    assert pulser_wf.duration == 1000
+
+    expected_times = np.linspace(0.0, 1.0, 100)
+    expected_values = (200.0 * expected_times) ** 2
+    assert np.allclose(pulser_wf._times, expected_times)
+    assert np.allclose(pulser_wf._values, expected_values)
