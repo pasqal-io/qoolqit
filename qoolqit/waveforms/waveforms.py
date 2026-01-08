@@ -167,7 +167,7 @@ class Interpolated(Waveform):
             self._times = np.array(times, dtype=float)
             if len(times) != len(self._values):
                 raise ValueError(
-                    "Arguments `values` and `times` must be arrays of the same lenght."
+                    "Arguments `values` and `times` must be arrays of the same length."
                 )
         else:
             self._times = np.linspace(0, 1, num=len(self._values))

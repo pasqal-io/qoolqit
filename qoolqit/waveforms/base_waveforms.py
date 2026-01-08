@@ -31,7 +31,7 @@ class Waveform(ABC):
         self,
         duration: float,
         *args: float,
-        **kwargs: float,
+        **kwargs: float | np.ndarray,
     ) -> None:
         """Initializes the Waveform.
 
@@ -44,7 +44,7 @@ class Waveform(ABC):
 
         if len(args) > 0:
             raise ValueError(
-                "Extra arguments need to be passed to `super().__init__` as keyword arguments"
+                f"Extra arguments in {type(self).__name__} need to be passed as keyword arguments"
             )
 
         self._duration = duration
@@ -62,7 +62,7 @@ class Waveform(ABC):
         return self._duration
 
     @property
-    def params(self) -> dict[str, float]:
+    def params(self) -> dict[str, float | np.ndarray]:
         """Dictionary of parameters used by the waveform."""
         return self._params_dict
 
@@ -107,9 +107,9 @@ class Waveform(ABC):
     def __call__(self, t: float) -> float: ...
 
     @overload
-    def __call__(self, t: list | np.ndarray) -> list | np.ndarray: ...
+    def __call__(self, t: list[float] | np.ndarray) -> list | np.ndarray: ...
 
-    def __call__(self, t: float | list | np.ndarray) -> float | list[float] | np.ndarray:
+    def __call__(self, t: float | list[float] | np.ndarray) -> float | list[float] | np.ndarray:
         if isinstance(t, list | np.ndarray):
             value_array: list[float] | np.ndarray
             if isinstance(t, np.ndarray):
@@ -180,7 +180,7 @@ class Waveform(ABC):
 class CompositeWaveform(Waveform):
     """Base class for composite waveforms.
 
-    A CompositeWaveform stores a sequence of waveforms occuring one after the other
+    A CompositeWaveform stores a sequence of waveforms occurring one after the other
     by the order given. When it is evaluated at time t, the corresponding waveform
     from the sequence is identified depending on the duration of each one, and it is
     then evaluated for a time t' = t minus the duration of all previous waveforms.
