@@ -92,6 +92,42 @@ class Constant(Waveform):
         return pulser.ConstantWaveform(duration, self.value)
 
 
+class Blackman(Waveform):
+    """A Blackman window of a specified duration and area under the curve.
+
+    Implements the Blackman window shaped waveform
+        blackman(t) = A*(0.42 + 0.5*cos(αt) + 0.08*cos(2αt))
+                  A = area/(0.42*duration)
+                  α = 2π/duration
+
+    See:
+    https://en.wikipedia.org/wiki/Window_function#:~:text=Blackman%20window
+
+    Args:
+        duration: The waveform duration.
+        area: The integral of the waveform.
+    """
+
+    area: float
+
+    def __init__(self, duration: float, area: float) -> None:
+        super().__init__(duration, area=area)
+
+    def function(self, t: float) -> float:
+        alpha = 2 * math.pi / self.duration
+        A = self.area / (0.42 * self.duration)
+        return A * (0.42 - 0.5 * math.cos(alpha * t) + 0.08 * math.cos(2 * alpha * t))
+
+    def max(self) -> float:
+        return self.area / (0.42 * self.duration)
+
+    def min(self) -> float:
+        return 0.0
+
+    def _to_pulser(self, duration: int) -> ParamObj | pulser.BlackmanWaveform:
+        return pulser.BlackmanWaveform(duration, self.area)
+
+
 class PiecewiseLinear(CompositeWaveform):
     """A piecewise linear waveform.
 
