@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from abc import ABC, abstractmethod
 from typing import Any, cast, overload
 
@@ -310,9 +311,9 @@ class Blackman(Waveform):
         super().__init__(duration, area=area)
 
     def function(self, t: float) -> float:
-        alpha = 2 * np.pi / self.duration
+        alpha = 2 * math.pi / self.duration
         A = self.area / (0.42 * self.duration)
-        return A * (0.42 - 0.5 * np.cos(alpha * t) + 0.08 * np.cos(2 * alpha * t))
+        return A * (0.42 - 0.5 * math.cos(alpha * t) + 0.08 * math.cos(2 * alpha * t))
 
     def max(self) -> float:
         return self.area / (0.42 * self.duration)
