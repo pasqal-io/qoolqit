@@ -85,6 +85,7 @@ def test_default_device_specs() -> None:
         "max_amplitude": None,
         "max_detuning": None,
         "min_distance": None,
+        "max_radial_distance": None,
     }
     assert mock_device.specs == expected_mock_specs
 
@@ -94,6 +95,7 @@ def test_default_device_specs() -> None:
         "max_amplitude": 1.0,
         "max_detuning": 10.0,
         "min_distance": 0.7809234915702248,
+        "max_radial_distance": 5.935018535933708,
     }
     assert analog_device.specs == expected_analog_specs
 
@@ -103,6 +105,7 @@ def test_default_device_specs() -> None:
         "max_amplitude": 1.0,
         "max_detuning": 8.0,
         "min_distance": 0.47761501632709613,
+        "max_radial_distance": 5.970187704088701,
     }
     assert digital_analog_device.specs == expected_digital_analog_specs
 
@@ -116,6 +119,7 @@ def test_device_from_connection() -> None:
         "max_amplitude": 1.0,
         "max_detuning": 5.555555555555555,
         "min_distance": 0.7673301077365813,
+        "max_radial_distance": 7.059436991176549,
     }
 
     assert fresnel_device.specs == expected_fresnel_specs
