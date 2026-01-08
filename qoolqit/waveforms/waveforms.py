@@ -103,14 +103,20 @@ class Blackman(Waveform):
     See:
     https://en.wikipedia.org/wiki/Window_function#:~:text=Blackman%20window
 
-    Args:
+    Arguments:
         duration: The waveform duration.
         area: The integral of the waveform.
+
+    Example:
+        ```python
+        blackman_wf = Blackman(100.0, area=3.14)
+        ```
     """
 
     area: float
 
     def __init__(self, duration: float, area: float) -> None:
+        """Initializes a new Blackman waveform."""
         super().__init__(duration, area=area)
 
     def function(self, t: float) -> float:
@@ -194,7 +200,7 @@ class Interpolated(Waveform):
         interpolator: str = "PchipInterpolator",
         **interpolator_kwargs: Any,
     ):
-        """Initializes a new InterpolatedWaveform."""
+        """Initializes a new Interpolated waveform."""
         super().__init__(duration)
         self._values = np.array(values, dtype=float)
         if times:  # fractional times in [0,1]
