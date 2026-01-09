@@ -7,6 +7,7 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
 from qoolqit.drive import Drive
+from qoolqit.exceptions import CompilationError
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.execution.utils import CompilerProfile
 from qoolqit.register import Register
@@ -26,10 +27,13 @@ class QuantumProgram:
         drive: Drive,
     ) -> None:
 
+        if not isinstance(register, Register):
+            raise TypeError("`register` must be of type Register.")
         self._register = register
+        if not isinstance(drive, Drive):
+            raise TypeError("`drive` must be of type Drive.")
         self._drive = drive
         self._compiled_sequence: PulserSequence | None = None
-        self._device: Device | None = None
         for detuning in drive.weighted_detunings:
             for key in detuning.weights.keys():
                 if key not in register.qubits:
@@ -75,6 +79,26 @@ class QuantumProgram:
             device = ""
         return header + register + drive + compiled + device
 
+    def _validate_program(self, device: Device) -> None:
+        """Validate that the program resect the given device specifications."""
+        specs = device.specs
+        max_amplitude = self.drive.amplitude.max()
+        if specs["max_amplitude"]:
+            if max_amplitude > specs["max_amplitude"]:
+                msg = (
+                    f"The program drive max amplitude {max_amplitude} is bigger than the maximum "
+                    + f"allowed on the selected device: \n {device}"
+                )
+                raise CompilationError(msg)
+        duration = self.drive.duration
+        if specs["max_duration"]:
+            if duration > specs["max_duration"]:
+                msg = (
+                    f"The program drive duration {duration} is bigger than the maximum "
+                    + f"allowed on the selected device: \n {device}"
+                )
+                raise CompilationError(msg)
+
     def compile_to(
         self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT
     ) -> None:
@@ -84,6 +108,7 @@ class QuantumProgram:
             device: the Device to compile to.
             profile: the compiler profile to use during compilation.
         """
+        self._validate_program(device=device)
         compiler = SequenceCompiler(self.register, self.drive, device)
         compiler.profile = profile
         self._device = device
