@@ -86,7 +86,15 @@ class QuantumProgram:
         if specs["max_amplitude"]:
             if max_amplitude > specs["max_amplitude"]:
                 msg = (
-                    f"The program drive amplitude {max_amplitude} is bigger than the maximum "
+                    f"The program drive max amplitude {max_amplitude} is bigger than the maximum "
+                    + f"allowed on the selected device: \n {device}"
+                )
+                raise CompilationError(msg)
+        duration = self.drive.duration
+        if specs["max_duration"]:
+            if duration > specs["max_duration"]:
+                msg = (
+                    f"The program drive duration {duration} is bigger than the maximum "
                     + f"allowed on the selected device: \n {device}"
                 )
                 raise CompilationError(msg)
