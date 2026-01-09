@@ -101,8 +101,8 @@ class LocalEmulator(PulserEmulatorBackend):
 
     Examples:
         ```python
-        from qoolqit.execution import Emulator, SVBackend
-        backend = Emulator(backend_type=SVBackend)
+        from qoolqit.execution import LocalEmulator, BackendType
+        backend = LocalEmulator(backend_type=BackendType.SVBackend)
         result = backend.run(program)
         ```
     """

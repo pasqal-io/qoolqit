@@ -53,15 +53,14 @@ results = emulator.run(program)
 
 The `LocalEmulator` is a flexible object which allows to emulate the program run on different backends:
 ```python exec="on" source="material-block" session="execution"
-from qoolqit.execution import LocalEmulator
-from qoolqit.execution import QutipBackendV2, SVBackend, MPSBackend
+from qoolqit.execution import LocalEmulator, BackendType
 
-emulator = LocalEmulator(backend_type=SVBackend)
+emulator = LocalEmulator(backend_type=BackendType.SVBackend)
 ```
 
 - `QutipBackendV2`: Based on Qutip, runs programs with up to ~12 qubits and return qutip objects in the results.
-- `SVBackend`: PyTorch based state vectors and sparse matrices emulator. Runs programs with up to ~25 qubits and return torch objects in the results.
-- `MPSBackend`: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~80 qubits and return torch objects in the results.
+- `SVBackend`: PyTorch based state vectors and sparse matrices emulator. Runs programs with up to ~25 qubits and return torch objects in the results. Requires installing the `emu-sv` package.
+- `MPSBackend`: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~80 qubits and return torch objects in the results. Requires installing the `emu-mps` package.
 
 More experienced users, might also want to configure an emulator.
 To fully exploit the potential of each emulator backend, they can be configured through the generic `EmulationConfig` object. For example, the following configuration,
@@ -86,7 +85,7 @@ from qoolqit.execution import EmulationConfig
 emulator = LocalEmulator(emulation_config=emulation_config)
 ```
 
-Dedicated and specific configuration for each backend also exist: `QutipConfig`, `SVConfig`, `MPSConfig`. They should be used by pairing them with the corresponding backend type.
+Dedicated and specific configuration for each backend also exist: `QutipConfig`, `SVConfig`, `MPSConfig`. They should be used by pairing them with the corresponding backend type and imported from their respective packages, namely `pulser-simulation`, `emu-sv` and `emu-mps`.
 For more information about how the configuration options, please, refer to [Pulser documentation](https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.EmulationConfig.html).
 
 
@@ -143,10 +142,10 @@ As before, also `RemoteEmulator` can be instantiated with:
 - `runs`: same as before.
 
 ```python
-from qoolqit.execution import RemoteEmulator, EmuMPSBackend
+from qoolqit.execution import RemoteEmulator, BackendType
 
 remote_emulator = RemoteEmulator(
-        backend_type=EmuMPSBackend,
+        backend_type=BackendType.EmuMPSBackend,
         connection=connection,
         emulation_config = emulation_config
         runs=200

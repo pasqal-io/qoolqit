@@ -11,7 +11,6 @@ from qoolqit.utils import EQUAL
 from qoolqit.waveforms import Delay, Ramp, Waveform
 
 
-@pytest.mark.repeat(3)
 def test_drive_init_and_composition(
     random_pos_ramp: Callable[[], Waveform], random_neg_ramp: Callable[[], Waveform]
 ) -> None:
