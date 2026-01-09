@@ -96,7 +96,7 @@ class Blackman(Waveform):
     """A Blackman window of a specified duration and area under the curve.
 
     Implements the Blackman window shaped waveform
-        blackman(t) = A*(0.42 + 0.5*cos(αt) + 0.08*cos(2αt))
+        blackman(t) = A*(0.42 - 0.5*cos(αt) + 0.08*cos(2αt))
                   A = area/(0.42*duration)
                   α = 2π/duration
 
