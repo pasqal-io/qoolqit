@@ -220,13 +220,8 @@ wf = Sin(
 )
 
 wf.max()
-
 print(wf) # markdown-exec: hide
-
 print("Maximum value: ", wf.max()) # markdown-exec: hide
-
-
-
 ```
 
 ```python exec="on" source="material-block" html="1" session="waveforms"
