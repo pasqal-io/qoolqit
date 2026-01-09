@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import pulser
+import pulser.sequence as pulser_sequence
 
 from qoolqit.devices import (
     AnalogDevice,
@@ -51,5 +51,5 @@ __all__ = [
 
 __version__ = "0.3.3"
 
-if hasattr(pulser.sequence, "store_package_version_metadata"):
-    pulser.sequence.store_package_version_metadata("qoolqit", __version__)
+if hasattr(pulser_sequence, "store_package_version_metadata"):
+    pulser_sequence.store_package_version_metadata("qoolqit", __version__)
