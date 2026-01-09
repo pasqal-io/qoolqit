@@ -1,5 +1,8 @@
-from __future__ import annotations
+from setuptools import find_packages, setup
 
-from setuptools import setup
-
-setup()
+setup(
+    name="qoolqit",
+    version="0.3.3",
+    install_requires=["pulser[torch]>=1.6.3", "networkx~=3.4"],
+    packages=find_packages(),
+)
