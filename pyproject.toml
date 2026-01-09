@@ -8,7 +8,7 @@ description = "A Python library for developing algorithms in the Rydberg Analog 
 readme = "README.md"
 version = "0.3.3"
 requires-python = ">=3.10"
-license-files = ["LICENSE"]
+license = {text = "MIT-Derived"}
 keywords = ["quantum"]
 authors = [
   { name = "João Moutinho", email = "joao.moutinho@pasqal.com" },
