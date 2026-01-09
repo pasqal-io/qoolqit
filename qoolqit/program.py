@@ -27,10 +27,13 @@ class QuantumProgram:
         drive: Drive,
     ) -> None:
 
+        if not isinstance(register, Register):
+            raise TypeError("`register` must be of type Register.")
         self._register = register
+        if not isinstance(drive, Drive):
+            raise TypeError("`drive` must be of type Drive.")
         self._drive = drive
         self._compiled_sequence: PulserSequence | None = None
-        self._device: Device | None = None
         for detuning in drive.weighted_detunings:
             for key in detuning.weights.keys():
                 if key not in register.qubits:
@@ -80,8 +83,13 @@ class QuantumProgram:
         """Validate that the program resect the given device specifications."""
         specs = device.specs
         max_amplitude = self.drive.amplitude.max()
-        if max_amplitude > specs["max_amplitude"]:
-            raise CompilationError()
+        if specs["max_amplitude"]:
+            if max_amplitude > specs["max_amplitude"]:
+                msg = (
+                    f"The program drive amplitude {max_amplitude} is bigger than the maximum "
+                    + f"allowed on the selected device: \n {device}"
+                )
+                raise CompilationError(msg)
 
     def compile_to(
         self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT
@@ -92,6 +100,7 @@ class QuantumProgram:
             device: the Device to compile to.
             profile: the compiler profile to use during compilation.
         """
+        self._validate_program(device=device)
         compiler = SequenceCompiler(self.register, self.drive, device)
         compiler.profile = profile
         self._device = device

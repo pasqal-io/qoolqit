@@ -141,7 +141,7 @@ class Device:
         self.converter.factors = self.converter.factors_from_distance(distance)
 
     @property
-    def specs(self) -> dict:
+    def specs(self) -> dict[str, float | None]:
         """Return the device specification constrains."""
         TIME, ENERGY, DISTANCE = self.converter.factors
         max_duration = self._max_duration / TIME if self._max_duration else None
