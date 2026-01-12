@@ -51,5 +51,4 @@ __all__ = [
 
 __version__ = "0.3.3"
 
-if hasattr(pulser_sequence, "store_package_version_metadata"):
-    pulser_sequence.store_package_version_metadata("qoolqit", __version__)
+pulser_sequence.store_package_version_metadata("qoolqit", __version__)
