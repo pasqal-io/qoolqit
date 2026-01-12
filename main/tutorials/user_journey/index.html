@@ -3886,7 +3886,7 @@ connection = PasqalCloud(
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [28]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-13">
@@ -3899,25 +3899,25 @@ connection = PasqalCloud(
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmulationConfig</span><span class="p">,</span> <span class="n">EmuMPSBackend</span><span class="p">,</span> <span class="n">Occupation</span><span class="p">,</span> <span class="n">RemoteEmulator</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackendType</span><span class="p">,</span> <span class="n">EmulationConfig</span><span class="p">,</span> <span class="n">Occupation</span><span class="p">,</span> <span class="n">RemoteEmulator</span>
 
 <span class="n">observables</span> <span class="o">=</span> <span class="p">(</span><span class="n">Occupation</span><span class="p">(),)</span>
 <span class="n">emulation_config</span> <span class="o">=</span> <span class="n">EmulationConfig</span><span class="p">(</span><span class="n">observables</span><span class="o">=</span><span class="n">observables</span><span class="p">,</span> <span class="n">with_modulation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">emulator</span> <span class="o">=</span> <span class="n">RemoteEmulator</span><span class="p">(</span>
-    <span class="n">backend_type</span><span class="o">=</span><span class="n">EmuMPSBackend</span><span class="p">,</span>
+    <span class="n">backend_type</span><span class="o">=</span><span class="n">BackendType</span><span class="o">.</span><span class="n">EmuMPSBackend</span><span class="p">,</span>
     <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
     <span class="n">emulation_config</span><span class="o">=</span><span class="n">emulation_config</span><span class="p">,</span>
     <span class="n">runs</span><span class="o">=</span><span class="mi">1000</span>
     <span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-13">from qoolqit.execution import EmulationConfig, EmuMPSBackend, Occupation, RemoteEmulator
+<div class="clipboard-copy-txt" id="cell-13">from qoolqit.execution import BackendType, EmulationConfig, Occupation, RemoteEmulator
 
 observables = (Occupation(),)
 emulation_config = EmulationConfig(observables=observables, with_modulation=True)
 
 emulator = RemoteEmulator(
-    backend_type=EmuMPSBackend,
+    backend_type=BackendType.EmuMPSBackend,
     connection=connection,
     emulation_config=emulation_config,
     runs=1000

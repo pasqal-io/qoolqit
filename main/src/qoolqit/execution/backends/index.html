@@ -3143,8 +3143,8 @@
 <a id="__codelineno-0-101" name="__codelineno-0-101"></a>
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="sd">    Examples:</span>
 <a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="sd">        ```python</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">        from qoolqit.execution import Emulator, SVBackend</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">        backend = Emulator(backend_type=SVBackend)</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">        from qoolqit.execution import LocalEmulator, BackendType</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">        backend = LocalEmulator(backend_type=BackendType.QutipBackendV2)</span>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="sd">        result = backend.run(program)</span>
 <a id="__codelineno-0-107" name="__codelineno-0-107"></a><span class="sd">        ```</span>
 <a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="sd">    &quot;&quot;&quot;</span>
@@ -3200,9 +3200,9 @@
 <a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="sd">    Examples:</span>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a><span class="sd">        ```python</span>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">        from pulser_pasqal import PasqalCloud</span>
-<a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="sd">        from qoolqit.execution import RemoteEmulator, EmuFreeBackendV2</span>
+<a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="sd">        from qoolqit.execution import RemoteEmulator, BackendType</span>
 <a id="__codelineno-0-162" name="__codelineno-0-162"></a><span class="sd">        connection = PasqalCloud(username=..., password=..., project_id=...)</span>
-<a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="sd">        backend = RemoteEmulator(backend_type=EmuFreeBackendV2, connection=connection)</span>
+<a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="sd">        backend = RemoteEmulator(backend_type=BackendType.EmuFreeBackendV2, connection=connection)</span>
 <a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="sd">        ```</span>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="sd">        then</span>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">        ```python</span>

@@ -3473,12 +3473,12 @@ list or dictionary of coordinate pairs.</p>
 </span>
 </span><span class="mkapi-object-kind">classmethod</span>
 <span class="mkapi-object-parent">
-<a href="./#qoolqit.graphs.BaseGraph" title="qoolqit.graphs.BaseGraph">BaseGraph</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.graphs.BaseGraph.from_pyg" title="qoolqit.graphs.BaseGraph.from_pyg">from_pyg</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">g</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="torch_geometric">torch_geometric</span>.<span class="mkapi-tooltip" title="torch_geometric">data</span>.<span class="mkapi-tooltip" title="torch_geometric">Data</span></span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return"><a href="base_graph/#qoolqit.graphs.base_graph.BaseGraph" title="qoolqit.graphs.base_graph.BaseGraph">BaseGraph</a></span></span>
+<a href="./#qoolqit.graphs.BaseGraph" title="qoolqit.graphs.BaseGraph">BaseGraph</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.graphs.BaseGraph.from_pyg" title="qoolqit.graphs.BaseGraph.from_pyg">from_pyg</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">g</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="torch_geometric">torch_geometric</span>.<span class="mkapi-tooltip" title="torch_geometric.data">data</span>.<span class="mkapi-tooltip" title="torch_geometric.data.data.Data">Data</span></span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return"><a href="base_graph/#qoolqit.graphs.base_graph.BaseGraph" title="qoolqit.graphs.base_graph.BaseGraph">BaseGraph</a></span></span>
 </p>
 <div class="mkapi-document">
 <p>Convert a PyTorch Geometric Data object into a QoolQit graph instance.</p>
 <p>This method requires installing the <span class="mkapi-tooltip" title="torch_geometric"><code>torch_geometric</code></span> package.
-The input <span class="mkapi-tooltip" title="torch_geometric"><code>torch_geometric.data.Data</code></span> object must be defined only with the following
+The input <span class="mkapi-tooltip" title="torch_geometric.data.data.Data"><code>torch_geometric.data.Data</code></span> object must be defined only with the following
 allowed attributes:
     x (torch.Tensor): node weights as a matrix with shape (num_nodes, 1).
     edge_index (torch.Tensor): graph connectivity as a matrix with shape (2, num_edges).
