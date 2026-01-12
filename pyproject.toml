@@ -32,8 +32,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "pulser~=1.6.3",
-  "torch",
+  "pulser[torch]~=1.6.3",
   "networkx~=3.4",
 ]
 

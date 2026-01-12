@@ -3,6 +3,6 @@ from setuptools import find_packages, setup
 setup(
     name="qoolqit",
     version="0.3.3",
-    install_requires=["pulser~=1.6.3", "torch", "networkx~=3.4"],
+    install_requires=["pulser[torch]~=1.6.3", "networkx~=3.4"],
     packages=find_packages(),
 )
