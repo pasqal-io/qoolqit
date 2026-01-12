@@ -22,7 +22,7 @@ from qoolqit.execution import CompilerProfile, SequenceCompiler
 from qoolqit.graphs import DataGraph
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
-from qoolqit.waveforms import Constant, Delay, Interpolated, PiecewiseLinear, Ramp, Sin
+from qoolqit.waveforms import Blackman, Constant, Delay, Interpolated, PiecewiseLinear, Ramp, Sin
 
 __all__ = [
     "DataGraph",
@@ -30,6 +30,7 @@ __all__ = [
     "InteractionEmbeddingConfig",
     "SpringLayoutConfig",
     "SpringLayoutEmbedder",
+    "Blackman",
     "Constant",
     "Delay",
     "Interpolated",
