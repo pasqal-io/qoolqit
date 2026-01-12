@@ -2561,6 +2561,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.Blackman" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blackman
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Blackman">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.Blackman.function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.Blackman.max" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        max
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.Blackman.min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        min
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#qoolqit.waveforms.Constant" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2993,17 +3043,33 @@
 </span><span class="mkapi-object-kind">package</span>
 <span class="mkapi-object-name"><a href="./#qoolqit.waveforms" title="qoolqit.waveforms">qoolqit.waveforms</a></span>
 </p>
-<div class="mkapi-source no-copy highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
-<span class="normal"><a href="#__codelineno-0-2">2</a></span>
-<span class="normal"><a href="#__codelineno-0-3">3</a></span>
-<span class="normal"><a href="#__codelineno-0-4">4</a></span>
-<span class="normal"><a href="#__codelineno-0-5">5</a></span>
-<span class="normal"><a href="#__codelineno-0-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<div class="mkapi-source no-copy highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms.base_waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompositeWaveform</span><span class="p">,</span> <span class="n">Waveform</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">Delay</span><span class="p">,</span> <span class="n">Interpolated</span><span class="p">,</span> <span class="n">PiecewiseLinear</span><span class="p">,</span> <span class="n">Ramp</span><span class="p">,</span> <span class="n">Sin</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Constant&quot;</span><span class="p">,</span> <span class="s2">&quot;Delay&quot;</span><span class="p">,</span> <span class="s2">&quot;Interpolated&quot;</span><span class="p">,</span> <span class="s2">&quot;PiecewiseLinear&quot;</span><span class="p">,</span> <span class="s2">&quot;Ramp&quot;</span><span class="p">,</span> <span class="s2">&quot;Sin&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a>    <span class="n">Blackman</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a>    <span class="n">Constant</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a>    <span class="n">Delay</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>    <span class="n">Interpolated</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="n">PiecewiseLinear</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="n">Ramp</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a>    <span class="n">Sin</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Blackman&quot;</span><span class="p">,</span> <span class="s2">&quot;Constant&quot;</span><span class="p">,</span> <span class="s2">&quot;Delay&quot;</span><span class="p">,</span> <span class="s2">&quot;Interpolated&quot;</span><span class="p">,</span> <span class="s2">&quot;PiecewiseLinear&quot;</span><span class="p">,</span> <span class="s2">&quot;Ramp&quot;</span><span class="p">,</span> <span class="s2">&quot;Sin&quot;</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
 
 

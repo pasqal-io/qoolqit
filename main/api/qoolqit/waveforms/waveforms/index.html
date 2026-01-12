@@ -2415,6 +2415,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.waveforms.Blackman" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blackman
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Blackman">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.waveforms.Blackman.function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.waveforms.Blackman.max" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        max
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.waveforms.Blackman.min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        min
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#qoolqit.waveforms.waveforms.PiecewiseLinear" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3025,6 +3075,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.waveforms.Blackman" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blackman
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Blackman">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.waveforms.Blackman.function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.waveforms.Blackman.max" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        max
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.waveforms.waveforms.Blackman.min" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        min
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#qoolqit.waveforms.waveforms.PiecewiseLinear" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3166,6 +3266,11 @@ A ramp that linearly interpolates between an initial and final value.</p>
 <p><span class="mkapi-item-name"><a href="./#qoolqit.waveforms.waveforms.Constant" title="qoolqit.waveforms.waveforms.Constant">Constant</a></span>
  <span class="mkapi-dash">&mdash;</span>
 A constant waveform over a given duration.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.waveforms.waveforms.Blackman" title="qoolqit.waveforms.waveforms.Blackman">Blackman</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+A Blackman window of a specified duration and area under the curve.</p>
 </li>
 <li>
 <p><span class="mkapi-item-name"><a href="./#qoolqit.waveforms.waveforms.PiecewiseLinear" title="qoolqit.waveforms.waveforms.PiecewiseLinear">PiecewiseLinear</a></span>
@@ -3564,6 +3669,160 @@ Dictionary of parameters used by the waveform.</p>
 <a href="./#qoolqit.waveforms.waveforms.Constant" title="qoolqit.waveforms.waveforms.Constant">Constant</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.waveforms.waveforms.Constant.min" title="qoolqit.waveforms.waveforms.Constant.min">min</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">float</span></span>
 </p>
 <div class="mkapi-document"></div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.waveforms.waveforms.Blackman">
+<span class="mkapi-object-link">
+
+
+<a href="../../../../src/qoolqit/waveforms/waveforms/#qoolqit.waveforms.waveforms.Blackman" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">class</span>
+<span class="mkapi-object-name"><a href="./#qoolqit.waveforms.waveforms.Blackman" title="qoolqit.waveforms.waveforms.Blackman">Blackman</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">duration</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-comma">, </span><span class="mkapi-arg">area</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-paren">)</span></span>
+</p>
+<div class="mkapi-document">
+<p class="mkapi-bases">Bases :
+<span class="mkapi-base"><a href="../base_waveforms/#qoolqit.waveforms.base_waveforms.Waveform" title="qoolqit.waveforms.base_waveforms.Waveform">Waveform</a></span></p>
+<p>A Blackman window of a specified duration and area under the curve.</p>
+<p>Implements the Blackman window shaped waveform
+    blackman(t) = A<em>(0.42 - 0.5</em>cos(αt) + 0.08<em>cos(2αt))
+              A = area/(0.42</em>duration)
+              α = 2π/duration</p>
+<p>Initializes a new Blackman waveform.</p>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle see">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">See</span>
+</p>
+<div class="mkapi-section-content">
+<p><a href="https://en.wikipedia.org/wiki/Window_function#:~:text=Blackman%20window">https://en.wikipedia.org/wiki/Window_function#:~:text=Blackman%20window</a></p>
+</div>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle parameters">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Parameters</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name">duration</span> : 
+<span class="mkapi-item-type">float</span> <span class="mkapi-dash">&mdash;</span>
+The waveform duration.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name">area</span> : 
+<span class="mkapi-item-type">float</span> <span class="mkapi-dash">&mdash;</span>
+The integral of the waveform.</p>
+</li>
+</ul>
+</div>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle example">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Example</span>
+</p>
+<div class="mkapi-section-content">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">blackman_wf</span> <span class="o">=</span> <span class="n">Blackman</span><span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="mf">3.14</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle attributes">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Attributes</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name">duration</span> : 
+<span class="mkapi-item-type">float</span> <span class="mkapi-dash">&mdash;</span>
+Returns the duration of the waveform.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name">params</span> : 
+<span class="mkapi-item-type">dict[str, float | <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>]</span> <span class="mkapi-dash">&mdash;</span>
+Dictionary of parameters used by the waveform.</p>
+</li>
+</ul>
+</div>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle methods">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Methods</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.waveforms.waveforms.Blackman.function" title="qoolqit.waveforms.waveforms.Blackman.function">function</a></span></p>
+</li>
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.waveforms.waveforms.Blackman.max" title="qoolqit.waveforms.waveforms.Blackman.max">max</a></span></p>
+</li>
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.waveforms.waveforms.Blackman.min" title="qoolqit.waveforms.waveforms.Blackman.min">min</a></span></p>
+</li>
+</ul>
+</div>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.waveforms.waveforms.Blackman.function">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+
+<a href="../../../../src/qoolqit/waveforms/waveforms/#qoolqit.waveforms.waveforms.Blackman.function" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.waveforms.waveforms.Blackman" title="qoolqit.waveforms.waveforms.Blackman">Blackman</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.waveforms.waveforms.Blackman.function" title="qoolqit.waveforms.waveforms.Blackman.function">function</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">t</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">float</span></span>
+</p>
+<div class="mkapi-document"></div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.waveforms.waveforms.Blackman.max">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+
+<a href="../../../../src/qoolqit/waveforms/waveforms/#qoolqit.waveforms.waveforms.Blackman.max" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.waveforms.waveforms.Blackman" title="qoolqit.waveforms.waveforms.Blackman">Blackman</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.waveforms.waveforms.Blackman.max" title="qoolqit.waveforms.waveforms.Blackman.max">max</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">float</span></span>
+</p>
+<div class="mkapi-document"></div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.waveforms.waveforms.Blackman.min">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+
+<a href="../../../../src/qoolqit/waveforms/waveforms/#qoolqit.waveforms.waveforms.Blackman.min" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.waveforms.waveforms.Blackman" title="qoolqit.waveforms.waveforms.Blackman">Blackman</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.waveforms.waveforms.Blackman.min" title="qoolqit.waveforms.waveforms.Blackman.min">min</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">float</span></span>
+</p>
+<div class="mkapi-document"></div>
 <p class="mkapi-object mkapi-page-source" id="qoolqit.waveforms.waveforms.PiecewiseLinear">
 <span class="mkapi-object-link">
 
@@ -3661,7 +3920,7 @@ Returns the number of waveforms.</p>
 <p class="mkapi-bases">Bases :
 <span class="mkapi-base"><a href="../base_waveforms/#qoolqit.waveforms.base_waveforms.Waveform" title="qoolqit.waveforms.base_waveforms.Waveform">Waveform</a></span></p>
 <p>A waveform created from interpolation of a set of data points.</p>
-<p>Initializes a new InterpolatedWaveform.</p>
+<p>Initializes a new Interpolated waveform.</p>
 <p class="mkapi-section">
 <span class="mkapi-object-link">
 <span class="mkapi-section-toggle" title="Toggle parameters">
