@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "0.3.2"
+version = "0.3.3"
 requires-python = ">=3.10"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
@@ -32,42 +32,41 @@ classifiers = [
 ]
 
 dependencies = [
-  "pulser~=1.6.2",
-  "pasqal-cloud>=0.20.6",
+  "pulser[torch]~=1.6.3",
   "networkx~=3.4",
-  "emu_mps",
-  "emu_sv"
 ]
 
 [project.optional-dependencies]
 extras = [
+  "emu_sv",
+  "emu_mps",
   "torch_geometric",
+]
+dev = [
+  "qoolqit[extras]",
   "jupyter",
   "flaky",
   "pytest",
   "pytest-cov",
-  "pytest-repeat",
   "pytest-markdown-docs",
-  "nbconvert",
-  "nbmake",
   "ipykernel",
   "pre-commit",
-  "black",
-  "isort",
-  "ruff",
-  "pydocstringformatter",
-]
-docs = [
+  "nbmake",
   "mkdocs",
   "mkdocs-material",
   "mkdocstrings",
   "mkdocstrings-python",
   "mkdocs-section-index",
-  "mkdocs-jupyter==0.24.7", # Don't let it update to 0.25 as it doesn't render LaTeX in notebooks correctly!
+  "mkdocs-jupyter==0.24.7", # Don't let it update to 0.25 as it doesn't render LaTeX in notebooks!
   "mkdocs-exclude",
   "mkapi",
   "markdown-exec",
   "mike",
+  "nbconvert",
+  "black",
+  "flake8",
+  "isort",
+  "ruff",
 ]
 
 [project.urls]
@@ -80,7 +79,7 @@ allow-direct-references = true
 allow-ambiguous-features = true
 
 [tool.hatch.envs.default]
-features = ["extras"]
+features = ["dev"]
 
 [tool.hatch.envs.default.scripts]
 test = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs {args}"
@@ -101,7 +100,7 @@ filterwarnings = [
 ]
 
 [tool.hatch.envs.docs]
-features = ["docs"]
+features = ["dev"]
 
 [tool.hatch.envs.docs.scripts]
 build = "mkdocs build --clean --strict"
@@ -157,6 +156,7 @@ flake8-quotes.docstring-quotes = "double"
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
 "*.ipynb" = ["E402", "I002"]
+"setup.py" = ["I002"]
 
 [tool.black]
 line-length = 100
