@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import random
 from itertools import product
-from math import dist, isclose
+from math import dist, hypot, isclose
 from typing import Iterable
 
 import numpy as np
@@ -27,6 +27,15 @@ def distances(coords: dict, edge_list: Iterable) -> dict:
         edge_list: edge list to compute the distances for.
     """
     return {edge: dist(coords[edge[0]], coords[edge[1]]) for edge in edge_list}
+
+
+def radial_distances(coords: dict) -> dict:
+    """Return a dictionary of node distances from the origin.
+
+    Arguments:
+        coords: dictionary of node coordinates.
+    """
+    return {key: hypot(*node) for key, node in coords.items()}
 
 
 def scale_coords(coords: dict, scaling: float) -> dict:

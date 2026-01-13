@@ -81,22 +81,40 @@ class QuantumProgram:
     def _validate_program(self, device: Device) -> None:
         """Validate that the program resect the given device specifications."""
         specs = device.specs
+        device_specs_msg = f"{device}"
+
         max_amplitude = self.drive.amplitude.max()
         if specs["max_amplitude"]:
             if max_amplitude > specs["max_amplitude"]:
                 msg = (
-                    f"The program drive max amplitude {max_amplitude} is bigger than the maximum "
-                    + f"allowed on the selected device: \n {device}"
+                    f"The drive's max amplitude {max_amplitude} "
+                    "goes over the maximum value allowed for the chosen device:\n."
                 )
-                raise CompilationError(msg)
+                raise CompilationError(msg + device_specs_msg)
         duration = self.drive.duration
         if specs["max_duration"]:
             if duration > specs["max_duration"]:
                 msg = (
-                    f"The program drive duration {duration} is bigger than the maximum "
-                    + f"allowed on the selected device: \n {device}"
+                    f"The drive's duration {duration} "
+                    "goes over the maximum value allowed for the chosen device:\n"
                 )
-                raise CompilationError(msg)
+                raise CompilationError(msg + device_specs_msg)
+        min_distance = self.register.min_distance()
+        if specs["min_distance"]:
+            if min_distance < specs["min_distance"]:
+                msg = (
+                    f"The register minimum distance between two qubits {min_distance} "
+                    "goes below the minimum allowed for the chosen device:\n"
+                )
+                raise CompilationError(msg + device_specs_msg)
+        max_radial_distance = self.register.max_radial_distance()
+        if specs["max_radial_distance"]:
+            if max_radial_distance > specs["max_radial_distance"]:
+                msg = (
+                    f"The register maximum radial distance {max_radial_distance} "
+                    "goes over the maximum allowed for the chosen device:\n"
+                )
+                raise CompilationError(msg + device_specs_msg)
 
     def compile_to(
         self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT
