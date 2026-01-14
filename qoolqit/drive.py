@@ -187,8 +187,8 @@ class Drive:
         ax[1].set_xlabel("Time t")
 
         t_array = np.linspace(0.0, self.duration, n_points)
-        y_amp = self.amplitude(t_array)
-        y_det = self.detuning(t_array)
+        y_amp = self._amplitude._sample(n_points)
+        y_det = self._detuning._sample(n_points)
 
         ax[0].plot(t_array, y_amp, color="darkgreen")
         ax[1].plot(t_array, y_det, color="darkmagenta")

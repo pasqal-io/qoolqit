@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, cast, overload
+from itertools import accumulate
+from typing import Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pulser
+import torch
 from matplotlib.figure import Figure
 from pulser.parametrized import ParamObj
 from pulser.waveforms import Waveform as PulserWaveform
@@ -31,7 +33,7 @@ class Waveform(ABC):
         self,
         duration: float,
         *args: float,
-        **kwargs: float | np.ndarray,
+        **kwargs: float | np.ndarray | torch.Tensor,
     ) -> None:
         """Initializes the Waveform.
 
@@ -50,11 +52,16 @@ class Waveform(ABC):
         self._duration = duration
         self._params_dict = kwargs
 
-        self._max: float | None = None
-        self._min: float | None = None
+        self._max: float | torch.Tensor | None = None
+        self._min: float | torch.Tensor | None = None
 
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    @abstractmethod
+    def function(self, t: float) -> float | torch.Tensor:
+        """Evaluates the waveform function at a given time t."""
+        ...
 
     @property
     def duration(self) -> float:
@@ -62,21 +69,23 @@ class Waveform(ABC):
         return self._duration
 
     @property
-    def params(self) -> dict[str, float | np.ndarray]:
+    def params(self) -> dict[str, float | np.ndarray | torch.Tensor]:
         """Dictionary of parameters used by the waveform."""
         return self._params_dict
 
-    @abstractmethod
-    def function(self, t: float) -> float:
-        """Evaluates the waveform function at a given time t."""
-        ...
+    def __call__(self, t: float) -> float | torch.Tensor:
+        if t < 0.0 or t > self.duration:
+            raise ValueError(f"Waveform called at time {t} outside [0.0, {self.duration}]")
+        return self.function(t)
 
     def _approximate_min_max(self) -> None:
-        t_array = np.linspace(0.0, self.duration, N_POINTS)
-        self._max = np.max(self(t_array)).item()
-        self._min = np.min(self(t_array)).item()
+        # TOFIX: rewrite this using scipy.optimize or similar
+        times = np.linspace(0.0, self.duration, N_POINTS)
+        values = [self.function(t) for t in times]
+        self._max = max(values)
+        self._min = min(values)
 
-    def max(self) -> float:
+    def max(self) -> float | torch.Tensor:
         """Get the approximate maximum value of the waveform.
 
         This is a brute-force method that samples the waveform over a
@@ -88,7 +97,7 @@ class Waveform(ABC):
             self._approximate_min_max()
         return cast(float, self._max)
 
-    def min(self) -> float:
+    def min(self) -> float | torch.Tensor:
         """Get the approximate minimum value of the waveform.
 
         This is a brute-force method that samples the waveform over a
@@ -100,29 +109,13 @@ class Waveform(ABC):
             self._approximate_min_max()
         return cast(float, self._min)
 
-    def __single_call__(self, t: float) -> float:
-        return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
-
-    @overload
-    def __call__(self, t: float) -> float: ...
-
-    @overload
-    def __call__(self, t: list[float] | np.ndarray) -> list | np.ndarray: ...
-
-    def __call__(self, t: float | list[float] | np.ndarray) -> float | list[float] | np.ndarray:
-        if isinstance(t, list | np.ndarray):
-            value_array: list[float] | np.ndarray
-            if isinstance(t, np.ndarray):
-                value_array = np.array([self.__single_call__(ti) for ti in t])
-            elif isinstance(t, list):
-                value_array = [self.__single_call__(ti) for ti in t]
-            else:
-                raise TypeError(
-                    "Waveform array calling is supported on Python lists or NumPy arrays."
-                )
-            return value_array
-        else:
-            return self.__single_call__(t)
+    def _sample(self, num_points: int) -> np.ndarray:
+        times = np.linspace(0.0, self.duration, num_points)
+        values = [self.function(t) for t in times]
+        for val in values:
+            if isinstance(val, torch.Tensor):
+                val = val.clone().detach()
+        return np.array(values)
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         return self.__rrshift__(other)
@@ -156,18 +149,18 @@ class Waveform(ABC):
         """
         n_samples = min(100, duration)
         times = np.linspace(0.0, self.duration, n_samples)
-        samples = self(times)
+        samples = [self.function(t) for t in times]
         return pulser.InterpolatedWaveform(duration, samples)
 
     def draw(
-        self, n_points: int = N_POINTS, return_fig: bool = False, **kwargs: Any
+        self, num_points: int = N_POINTS, return_fig: bool = False, **kwargs: Any
     ) -> Figure | None:
+        times = np.linspace(0.0, self.duration, num_points)
+        samples = self._sample(num_points)
         fig, ax = plt.subplots(1, 1, figsize=(8, 4), dpi=150)
-        ax.grid(True)
-        t_array = np.linspace(0.0, self.duration, n_points)
-        y_array = self(t_array)
-        ax.plot(t_array, self(t_array))
-        ax.fill_between(t_array, y_array, color="skyblue", alpha=0.4)
+        ax.grid(True, linewidth=0.5)
+        ax.plot(times, samples)
+        ax.fill_between(times, samples, color="skyblue", alpha=0.4)
         ax.set_xlabel("Time t")
         ax.set_ylabel("Waveform")
         if return_fig:
@@ -214,8 +207,7 @@ class CompositeWaveform(Waveform):
     @property
     def times(self) -> list[float]:
         """Returns the list of times when each individual waveform starts."""
-        time_array: list[float] = np.cumsum([0.0] + self.durations).tolist()
-        return time_array
+        return [0.0] + list(accumulate(self.durations))
 
     @property
     def waveforms(self) -> list[Waveform]:
@@ -227,24 +219,24 @@ class CompositeWaveform(Waveform):
         """Returns the number of waveforms."""
         return len(self.waveforms)
 
-    def function(self, t: float) -> float:
+    def function(self, t: float) -> float | torch.Tensor:
         """Identifies the right waveform in the composition and evaluates it at time t."""
         idx = np.searchsorted(self.times, t, side="right") - 1
-        if idx == -1:
-            return 0.0
-        if idx == self.n_waveforms:
-            if t == self.times[-1]:
-                idx = idx - 1
-            else:
-                return 0.0
-
-        local_t = t - self.times[idx]
-        value: float = self.waveforms[idx](local_t)
+        if t == self.duration:
+            idx -= 1
+        if idx < 0 or idx > self.n_waveforms:
+            raise ValueError(f"CompositeWaveform called at time {t} outside [0.0, {self.duration}]")
+        local_t = np.clip(t - self.times[idx], 0.0, self.waveforms[idx].duration)
+        value = self.waveforms[idx](local_t)
         return value
 
-    def max(self) -> float:
-        """Get the maximum value of the waveform."""
+    def max(self) -> float | torch.Tensor:
+        """Get the maximum value of the composite waveform."""
         return max([wf.max() for wf in self.waveforms])
+
+    def min(self) -> float | torch.Tensor:
+        """Get the minimum value of the composite waveform."""
+        return min([wf.min() for wf in self.waveforms])
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         return self.__rrshift__(other)
