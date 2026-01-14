@@ -11,6 +11,7 @@ from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.devices import Device
 from qoolqit.drive import Drive, Waveform, WeightedDetuning
+from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
 
 from .utils import CompilerProfile
@@ -72,6 +73,8 @@ def basic_compilation(
     profile: CompilerProfile,
 ) -> PulserSequence:
 
+    _validate_program(register, drive, device, profile)
+
     TARGET_DEVICE = device._device
 
     if profile == CompilerProfile.DEFAULT:
@@ -90,6 +93,13 @@ def basic_compilation(
         TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
     else:
         raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
+
+    # TOFIX: temporarily validating here that the compiled program
+    # satisfies minimal device constrains.
+    # As of now compilation return a pulser.Sequence making it hard to
+    # validate values beforehand.
+    # In the future compilation will return a compiled quantum program
+    # Only when validated it will be then converted to a pulser sequence internally.
 
     wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
 
@@ -156,3 +166,63 @@ class _DetuningAdder:
         self._pulser_sequence.config_detuning_map(detuning_map, dmm_id=dmm_id)
         waveform = self._wf_converter.convert(detuning.waveform)
         self._pulser_sequence.add_dmm_detuning(waveform, dmm_id)
+
+
+def _validate_program(
+    register: Register,
+    drive: Drive,
+    device: Device,
+    profile: CompilerProfile,
+) -> None:
+    """Validate that the program resect the given device specifications."""
+    specs = device.specs
+
+    # just get profile new factors in the adimensional basis
+    # not conversion factors to pulser
+    if profile == CompilerProfile.DEFAULT:
+        TIME, ENERGY, DISTANCE = 1.0, 1.0, 1.0
+    elif profile == CompilerProfile.MAX_DURATION and specs["max_duration"]:
+        TIME = specs["max_duration"] / drive.duration
+        TIME, ENERGY, DISTANCE = TIME, 1 / TIME, TIME ** (1 / 6)
+    elif profile == CompilerProfile.MAX_AMPLITUDE and specs["max_amplitude"]:
+        ENERGY = specs["max_amplitude"] / drive.amplitude.max()
+        TIME, ENERGY, DISTANCE = 1 / ENERGY, ENERGY, ENERGY ** (-1 / 6)
+    elif profile == CompilerProfile.MIN_DISTANCE and specs["min_distance"]:
+        DISTANCE = specs["min_distance"] / register.min_distance()
+        TIME, ENERGY, DISTANCE = DISTANCE**6, 1 / DISTANCE**6, DISTANCE
+    else:
+        raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
+
+    device_specs_msg = f"{device}"
+
+    max_amplitude = drive.amplitude.max() * ENERGY
+    if specs["max_amplitude"] and (max_amplitude > specs["max_amplitude"]):
+        msg = (
+            f"The drive's max amplitude {max_amplitude} "
+            "goes over the maximum value allowed for the chosen device:\n."
+        )
+        raise CompilationError(msg + device_specs_msg)
+
+    duration = drive.duration * TIME
+    if specs["max_duration"] and (duration > specs["max_duration"]):
+        msg = (
+            f"The drive's duration {duration} "
+            "goes over the maximum value allowed for the chosen device:\n"
+        )
+        raise CompilationError(msg + device_specs_msg)
+
+    min_distance = register.min_distance() * DISTANCE
+    if specs["min_distance"] and (min_distance < specs["min_distance"]):
+        msg = (
+            f"The register minimum distance between two qubits {min_distance} "
+            "goes below the minimum allowed for the chosen device:\n"
+        )
+        raise CompilationError(msg + device_specs_msg)
+
+    max_radial_distance = register.max_radial_distance() * DISTANCE
+    if specs["max_radial_distance"] and (max_radial_distance > specs["max_radial_distance"]):
+        msg = (
+            f"The register maximum radial distance {max_radial_distance} "
+            "goes over the maximum allowed for the chosen device:\n"
+        )
+        raise CompilationError(msg + device_specs_msg)

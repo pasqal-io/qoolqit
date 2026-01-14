@@ -6,7 +6,6 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
 from qoolqit.drive import Drive
-from qoolqit.exceptions import CompilationError
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.execution.utils import CompilerProfile
 from qoolqit.register import Register
@@ -78,44 +77,6 @@ class QuantumProgram:
             device = ""
         return header + register + drive + compiled + device
 
-    def _validate_program(self, device: Device) -> None:
-        """Validate that the program resect the given device specifications."""
-        specs = device.specs
-        device_specs_msg = f"{device}"
-
-        max_amplitude = self.drive.amplitude.max()
-        if specs["max_amplitude"]:
-            if max_amplitude > specs["max_amplitude"]:
-                msg = (
-                    f"The drive's max amplitude {max_amplitude} "
-                    "goes over the maximum value allowed for the chosen device:\n."
-                )
-                raise CompilationError(msg + device_specs_msg)
-        duration = self.drive.duration
-        if specs["max_duration"]:
-            if duration > specs["max_duration"]:
-                msg = (
-                    f"The drive's duration {duration} "
-                    "goes over the maximum value allowed for the chosen device:\n"
-                )
-                raise CompilationError(msg + device_specs_msg)
-        min_distance = self.register.min_distance()
-        if specs["min_distance"]:
-            if min_distance < specs["min_distance"]:
-                msg = (
-                    f"The register minimum distance between two qubits {min_distance} "
-                    "goes below the minimum allowed for the chosen device:\n"
-                )
-                raise CompilationError(msg + device_specs_msg)
-        max_radial_distance = self.register.max_radial_distance()
-        if specs["max_radial_distance"]:
-            if max_radial_distance > specs["max_radial_distance"]:
-                msg = (
-                    f"The register maximum radial distance {max_radial_distance} "
-                    "goes over the maximum allowed for the chosen device:\n"
-                )
-                raise CompilationError(msg + device_specs_msg)
-
     def compile_to(
         self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT
     ) -> None:
@@ -125,7 +86,6 @@ class QuantumProgram:
             device: the Device to compile to.
             profile: the compiler profile to use during compilation.
         """
-        self._validate_program(device=device)
         compiler = SequenceCompiler(self.register, self.drive, device)
         compiler.profile = profile
         self._device = device

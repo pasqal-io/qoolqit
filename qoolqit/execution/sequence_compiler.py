@@ -80,5 +80,7 @@ class SequenceCompiler:
                     self.device,
                     self.profile,
                 )
+            except CompilationError as error:
+                raise error
             except Exception as error:
                 raise CompilationError(f"Failed to compile the sequence due to:\n\n{error}")

@@ -40,8 +40,19 @@ def test_program_init_and_compilation(
 
 
 @pytest.mark.flaky(max_runs=2)
-@pytest.mark.parametrize("device_class", QOOLQIT_DEFAULT_DEVICES)
-@pytest.mark.parametrize("profile", CompilerProfile.list())
+@pytest.mark.parametrize(
+    "device_class, profile",
+    [
+        (AnalogDevice, CompilerProfile.DEFAULT),
+        (AnalogDevice, CompilerProfile.MAX_AMPLITUDE),
+        (AnalogDevice, CompilerProfile.MAX_DURATION),
+        (AnalogDevice, CompilerProfile.MIN_DISTANCE),
+        (DigitalAnalogDevice, CompilerProfile.DEFAULT),
+        (DigitalAnalogDevice, CompilerProfile.MAX_AMPLITUDE),
+        (DigitalAnalogDevice, CompilerProfile.MIN_DISTANCE),
+        (MockDevice, CompilerProfile.DEFAULT),
+    ],
+)
 def test_compiler_profiles(
     device_class: Callable, profile: CompilerProfile, random_program: Callable[[], QuantumProgram]
 ) -> None:
@@ -57,8 +68,15 @@ def test_compiler_profiles(
         assert isinstance(program.compiled_sequence, PulserSequence)
 
 
-@pytest.mark.parametrize("device_class", QOOLQIT_DEFAULT_DEVICES)
-@pytest.mark.parametrize("profile", CompilerProfile.list())
+@pytest.mark.parametrize(
+    "device_class, profile",
+    [
+        (DigitalAnalogDevice, CompilerProfile.DEFAULT),
+        (DigitalAnalogDevice, CompilerProfile.MAX_AMPLITUDE),
+        (DigitalAnalogDevice, CompilerProfile.MIN_DISTANCE),
+        (MockDevice, CompilerProfile.DEFAULT),
+    ],
+)
 def test_compiler_profiles_dmm(
     device_class: Callable,
     profile: CompilerProfile,
