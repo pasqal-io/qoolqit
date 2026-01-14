@@ -204,7 +204,7 @@ def _validate_program(
         raise CompilationError(msg + device_specs_msg)
 
     max_abs_detuning = max(abs(drive.detuning.min()), abs(drive.detuning.max())) * ENERGY
-    if specs["max_detuning"] and (max_amplitude > specs["max_detuning"]):
+    if specs["max_abs_detuning"] and (max_amplitude > specs["max_abs_detuning"]):
         msg = (
             f"The drive's maximum absolute detuning {max_abs_detuning} "
             "goes over the maximum value allowed for the chosen device:\n."

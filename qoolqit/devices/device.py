@@ -154,7 +154,7 @@ class Device:
         return {
             "max_duration": max_duration,
             "max_amplitude": max_amplitude,
-            "max_detuning": max_abs_detuning,
+            "max_abs_detuning": max_abs_detuning,
             "min_distance": min_distance,
             "max_radial_distance": max_radial_distance,
         }
