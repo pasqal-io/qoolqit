@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pulser.sequence as pulser_sequence
+
 from qoolqit.devices import (
     AnalogDevice,
     Device,
@@ -18,9 +20,9 @@ from qoolqit.embedding import (
 )
 from qoolqit.execution import CompilerProfile, SequenceCompiler
 from qoolqit.graphs import DataGraph
-from qoolqit.program import QuantumProgram, store_package_version_metadata
+from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
-from qoolqit.waveforms import Constant, Delay, Interpolated, PiecewiseLinear, Ramp, Sin
+from qoolqit.waveforms import Blackman, Constant, Delay, Interpolated, PiecewiseLinear, Ramp, Sin
 
 __all__ = [
     "DataGraph",
@@ -28,6 +30,7 @@ __all__ = [
     "InteractionEmbeddingConfig",
     "SpringLayoutConfig",
     "SpringLayoutEmbedder",
+    "Blackman",
     "Constant",
     "Delay",
     "Interpolated",
@@ -47,6 +50,6 @@ __all__ = [
 ]
 
 
-__version__ = "0.3.2"
+__version__ = "0.3.3"
 
-store_package_version_metadata("qoolqit", __version__)
+pulser_sequence.store_package_version_metadata("qoolqit", __version__)

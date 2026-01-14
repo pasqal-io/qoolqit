@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-from pulser.sequence import store_extra_metadata, store_package_version_metadata
 from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
@@ -124,4 +123,4 @@ class QuantumProgram:
                     return None
 
 
-__all__ = ["QuantumProgram", "store_package_version_metadata", "store_extra_metadata"]
+__all__ = ["QuantumProgram"]

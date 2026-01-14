@@ -5,7 +5,9 @@ import random
 import numpy as np
 import pulser
 import pytest
+from scipy.integrate import quad
 
+from qoolqit import Blackman
 from qoolqit.waveforms import (
     CompositeWaveform,
     Constant,
@@ -104,6 +106,27 @@ def test_sin() -> None:
     assert (approx_min > random_samples_min) or np.isclose(
         approx_min, random_samples_min, atol=1e-05
     )
+
+
+def test_blackman() -> None:
+    duration = 11.0
+    area = 1.5 * np.pi
+    blackman = Blackman(duration, area=area)
+
+    assert blackman.duration == duration
+    assert blackman.area == area
+    assert blackman.params == {"area": area}
+
+    assert np.isclose(blackman.max(), area / (0.42 * duration))
+    assert blackman.min() == 0.0
+
+    # test area as integral
+    res, _ = quad(blackman, 0.0, blackman.duration)
+    assert np.isclose(res, area)
+
+    pulser_blackman = blackman._to_pulser(duration=200)
+    assert isinstance(pulser_blackman, pulser.BlackmanWaveform)
+    assert pulser_blackman.duration == 200
 
 
 @pytest.mark.parametrize("n_pieces", [3, 4, 5])

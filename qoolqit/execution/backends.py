@@ -101,8 +101,8 @@ class LocalEmulator(PulserEmulatorBackend):
 
     Examples:
         ```python
-        from qoolqit.execution import Emulator, SVBackend
-        backend = Emulator(backend_type=SVBackend)
+        from qoolqit.execution import LocalEmulator, BackendType
+        backend = LocalEmulator(backend_type=BackendType.QutipBackendV2)
         result = backend.run(program)
         ```
     """
@@ -158,9 +158,9 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
     Examples:
         ```python
         from pulser_pasqal import PasqalCloud
-        from qoolqit.execution import RemoteEmulator, EmuFreeBackendV2
+        from qoolqit.execution import RemoteEmulator, BackendType
         connection = PasqalCloud(username=..., password=..., project_id=...)
-        backend = RemoteEmulator(backend_type=EmuFreeBackendV2, connection=connection)
+        backend = RemoteEmulator(backend_type=BackendType.EmuFreeBackendV2, connection=connection)
         ```
         then
         ```python
