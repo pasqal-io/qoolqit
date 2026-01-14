@@ -11,7 +11,7 @@ from .unit_converter import UnitConverter
 
 UPPER_DURATION = 6000
 UPPER_AMP = 4.0 * pi
-UPPER_DET = 4.0 * pi
+UPPER_ABS_DET = 40.0 * pi
 LOWER_DISTANCE = 5.0
 
 
@@ -83,7 +83,7 @@ class Device:
         # Relevant limits from the underlying device (float or None)
         self._max_duration = self._pulser_device.max_sequence_duration
         self._max_amp = self._pulser_device.channels["rydberg_global"].max_amp
-        self._max_det = self._pulser_device.channels["rydberg_global"].max_abs_detuning
+        self._max_abs_det = self._pulser_device.channels["rydberg_global"].max_abs_detuning
         self._min_distance = self._pulser_device.min_atom_distance
         self._max_radial_distance = self._pulser_device.max_radial_distance
 
@@ -93,7 +93,7 @@ class Device:
         # Values to use when limits do not exist
         self._upper_duration = self._max_duration or UPPER_DURATION
         self._upper_amp = self._max_amp or UPPER_AMP
-        self._upper_det = self._max_det or UPPER_DET
+        self._upper_det = self._max_abs_det or UPPER_ABS_DET
         self._lower_distance = self._min_distance or LOWER_DISTANCE
 
         if default_converter is not None:
@@ -146,7 +146,7 @@ class Device:
         TIME, ENERGY, DISTANCE = self.converter.factors
         max_duration = self._max_duration / TIME if self._max_duration else None
         max_amplitude = self._max_amp / ENERGY if self._max_amp else None
-        max_abs_detuning = self._max_det / ENERGY if self._max_det else None
+        max_abs_detuning = self._max_abs_det / ENERGY if self._max_abs_det else None
         min_distance = self._min_distance / DISTANCE if self._min_distance else None
         max_radial_distance = (
             self._max_radial_distance / DISTANCE if self._max_radial_distance else None
