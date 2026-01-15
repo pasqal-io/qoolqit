@@ -70,17 +70,14 @@ class SequenceCompiler:
             self._profile = profile
 
     def compile_sequence(self) -> PulserSequence:
-        if self._compilation_function is None:
-            raise ValueError(f"Device {self.device.name} has an unknown compilation function.")
-        else:
-            try:
-                return self._compilation_function(
-                    self.register,
-                    self.drive,
-                    self.device,
-                    self.profile,
-                )
-            except CompilationError as error:
-                raise error
-            except Exception as error:
-                raise CompilationError(f"Failed to compile the sequence due to:\n\n{error}")
+        try:
+            return self._compilation_function(
+                self.register,
+                self.drive,
+                self.device,
+                self.profile,
+            )
+        except CompilationError as error:
+            raise error
+        except Exception as error:
+            raise CompilationError(f"Failed to compile the sequence due to:\n\n{error}")
