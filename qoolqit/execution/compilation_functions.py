@@ -66,16 +66,16 @@ def basic_compilation(
     # strategies are applied only if the device has the corresponding extrema value
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
-    elif profile == CompilerProfile.MAX_DURATION and device._max_duration:
+    elif (profile == CompilerProfile.MAX_DURATION) and device._max_duration:
         TIME = (device._max_duration) / drive.duration
         TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
-    elif profile == CompilerProfile.MAX_AMPLITUDE and device._max_amp:
+    elif (profile == CompilerProfile.MAX_AMPLITUDE) and device._max_amp:
         ENERGY = (device._max_amp) / drive.amplitude.max()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
         # round up/down to avoid round-off errors
         if ENERGY > 1:
             ENERGY = math.floor(1e12 * ENERGY) / 1e12
-    elif profile == CompilerProfile.MIN_DISTANCE and (device._min_distance > 0.0):
+    elif (profile == CompilerProfile.MIN_DISTANCE) and (device._min_distance > 0.0):
         DISTANCE = (device._min_distance) / register.min_distance()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
     else:
@@ -182,17 +182,20 @@ def _validate_program(
     # this part can be removed when compilation return a QuantumProgram that can be directly checked
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = 1.0, 1.0, 1.0
-    elif profile == CompilerProfile.MAX_DURATION and specs["max_duration"]:
+    elif (profile == CompilerProfile.MAX_DURATION) and specs["max_duration"]:
         TIME = specs["max_duration"] / drive.duration
         TIME, ENERGY, DISTANCE = TIME, 1 / TIME, TIME ** (1 / 6)
-    elif profile == CompilerProfile.MAX_AMPLITUDE and specs["max_amplitude"]:
+    elif (profile == CompilerProfile.MAX_AMPLITUDE) and specs["max_amplitude"]:
         ENERGY = specs["max_amplitude"] / drive.amplitude.max()
         TIME, ENERGY, DISTANCE = 1 / ENERGY, ENERGY, ENERGY ** (-1 / 6)
-    elif profile == CompilerProfile.MIN_DISTANCE and specs["min_distance"]:
+    elif (profile == CompilerProfile.MIN_DISTANCE) and specs["min_distance"]:
         DISTANCE = specs["min_distance"] / register.min_distance()
         TIME, ENERGY, DISTANCE = DISTANCE**6, 1 / DISTANCE**6, DISTANCE
     else:
-        raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
+        raise CompilationError(
+            f"Compiler profile {profile.value} cannot be used with {device.name} "
+            f"because the target min/max value is not specified in the chosen device: \n {device}"
+        )
 
     device_specs_msg = f"{device}"
 

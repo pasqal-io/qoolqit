@@ -22,7 +22,7 @@ def test_device_pulser_device_type() -> None:
     with pytest.raises(
         TypeError, match="`pulser_device` must be an instance of Pulser BaseDevice class."
     ):
-        Device(pulser_device="device")
+        Device(pulser_device="device")  # type: ignore
 
 
 def test_unit_converter() -> None:
