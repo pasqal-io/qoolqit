@@ -9,11 +9,6 @@ from pulser.devices._device_datacls import BaseDevice
 
 from .unit_converter import UnitConverter
 
-UPPER_DURATION = 6000
-UPPER_AMP = 4.0 * pi
-UPPER_ABS_DET = 40.0 * pi
-LOWER_DISTANCE = 5.0
-
 
 class Device:
     """
@@ -90,12 +85,6 @@ class Device:
         # layouts
         self._requires_layout = self._pulser_device.requires_layout
 
-        # Values to use when limits do not exist
-        self._upper_duration = self._max_duration or UPPER_DURATION
-        self._upper_amp = self._max_amp or UPPER_AMP
-        self._upper_det = self._max_abs_det or UPPER_ABS_DET
-        self._lower_distance = self._min_distance or LOWER_DISTANCE
-
         if default_converter is not None:
             # Snapshot the caller-provided factors so reset() reproduces them exactly.
             t0, e0, d0 = default_converter.factors
@@ -103,8 +92,11 @@ class Device:
                 self._C6, t0, e0, d0
             )
         else:
-            # Default from energy using C6 and the "upper" amplitude.
-            self._default_factory = lambda: UnitConverter.from_energy(self._C6, self._upper_amp)
+            # Default from energy using C6 and max amplitude.
+            # On MockDevice there is no max_amp so the reasonable reference is 4.0 * pi
+            self._default_factory = lambda: UnitConverter.from_energy(
+                self._C6, self._max_amp or 4.0 * pi
+            )
 
         self.reset_converter()
 

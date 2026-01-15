@@ -28,18 +28,6 @@ def _build_register(register: Register, device: Device, distance: float) -> Puls
     return pulser_register
 
 
-class QuantumProgramCompilationError(ValueError):
-    """An error encountered while compiling a QuantumProgram."""
-
-    ...
-
-
-class WeightedDetuningWaveformError(QuantumProgramCompilationError):
-    """An error encountered while compiling the waveform of a WeightedDetuning."""
-
-    ...
-
-
 class WaveformConverter:
     """Convert a QoolQit waveform into a equivalent Pulser waveform.
 
@@ -75,31 +63,22 @@ def basic_compilation(
 
     _validate_program(register, drive, device, profile)
 
-    TARGET_DEVICE = device._device
-
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
-    elif profile == CompilerProfile.MAX_DURATION:
-        TIME = (device._upper_duration) / drive.duration
+    elif profile == CompilerProfile.MAX_DURATION and device._max_duration:
+        TIME = (device._max_duration) / drive.duration
         TIME, ENERGY, DISTANCE = device.converter.factors_from_time(TIME)
-    elif profile == CompilerProfile.MAX_AMPLITUDE:
-        ENERGY = (device._upper_amp) / drive.amplitude.max()
+    elif profile == CompilerProfile.MAX_AMPLITUDE and device._max_amp:
+        ENERGY = (device._max_amp) / drive.amplitude.max()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
         # round up/down to avoid round-off errors
         if ENERGY > 1:
             ENERGY = math.floor(1e12 * ENERGY) / 1e12
-    elif profile == CompilerProfile.MIN_DISTANCE:
-        DISTANCE = (device._lower_distance) / register.min_distance()
+    elif profile == CompilerProfile.MIN_DISTANCE and (device._min_distance > 0.0):
+        DISTANCE = (device._min_distance) / register.min_distance()
         TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
     else:
         raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
-
-    # TOFIX: temporarily validating here that the compiled program
-    # satisfies minimal device constrains.
-    # As of now compilation return a pulser.Sequence making it hard to
-    # validate values beforehand.
-    # In the future compilation will return a compiled quantum program
-    # Only when validated it will be then converted to a pulser sequence internally.
 
     wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
 
@@ -111,7 +90,8 @@ def basic_compilation(
     pulser_register = _build_register(register, device, DISTANCE)
 
     # Create sequence
-    pulser_sequence = PulserSequence(pulser_register, TARGET_DEVICE)
+    pulser_device = device._device
+    pulser_sequence = PulserSequence(pulser_register, pulser_device)
     pulser_sequence.declare_channel("rydberg", "rydberg_global")
     pulser_sequence.add(pulser_pulse, "rydberg")
 
@@ -174,7 +154,22 @@ def _validate_program(
     device: Device,
     profile: CompilerProfile,
 ) -> None:
-    """Validate that the program resect the given device specifications."""
+    """Validate that the program respect the given device specifications.
+
+    Get the rescaling factors from different compilation strategies still in the
+    adimensional frame. The default compilation just preserve ratios.
+    Then compute the new properties of the program: max amplitude, duration and min distance.
+    Finally, check that the new values comply with the device specifications.
+
+    Args:
+        register: the register containing the qubits positions.
+        drive: the drive acting on qubits, defining amplitude, detuning and phase.
+        device: the selected device to compile to.
+        profile: the compilation strategy.
+
+    Raises:
+        CompilationError: if the compiled program does not respect the device specifications.
+    """
     specs = device.specs
 
     # just get profile new factors in the adimensional basis
