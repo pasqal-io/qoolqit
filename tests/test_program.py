@@ -13,7 +13,7 @@ from qoolqit.exceptions import CompilationError
 from qoolqit.execution import CompilerProfile
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
-from qoolqit.waveforms import Ramp
+from qoolqit.waveforms import Constant, Ramp
 
 QOOLQIT_DEFAULT_DEVICES = [AnalogDevice, DigitalAnalogDevice, MockDevice]
 
@@ -106,8 +106,32 @@ def test_compiled_sequence_metadata(random_program: Callable[[], QuantumProgram]
     assert compiled_seq_metadata == expected_metadata
 
 
-def test_validate_program() -> None:
-    pass
+def test_validate_program_catch_compilation_error_max_amp() -> None:
+    register = Register({"q0": (0.0, 0.0), "q1": (1.0, 1.0)})
+    drive = Drive(amplitude=Constant(50, value=1.1))
+    program = QuantumProgram(register, drive)
+    with pytest.raises(
+        CompilationError,
+        match=(
+            "The drive's maximum amplitude 1.1 goes over "
+            "the maximum value allowed for the chosen device"
+        ),
+    ):
+        program.compile_to(device=AnalogDevice())
+
+
+def test_validate_program_catch_compilation_error_max_det() -> None:
+    register = Register({"q0": (0.0, 0.0), "q1": (1.0, 1.0)})
+    drive = Drive(amplitude=Constant(50, value=0.9), detuning=Constant(50, value=100))
+    program = QuantumProgram(register, drive)
+    with pytest.raises(
+        CompilationError,
+        match=(
+            "The drive's maximum absolute detuning 100.0 goes over "
+            "the maximum value allowed for the chosen device"
+        ),
+    ):
+        program.compile_to(device=AnalogDevice())
 
 
 @pytest.mark.parametrize(
