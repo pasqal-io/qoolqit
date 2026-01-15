@@ -6,13 +6,14 @@ from typing import Callable
 import pytest
 from pulser.sequence import Sequence as PulserSequence
 
-from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
+from qoolqit import AnalogDevice, Device, DigitalAnalogDevice, MockDevice
 from qoolqit import __version__ as qoolqit_version
 from qoolqit.drive import Drive
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution import CompilerProfile
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
+from qoolqit.waveforms import Ramp
 
 QOOLQIT_DEFAULT_DEVICES = [AnalogDevice, DigitalAnalogDevice, MockDevice]
 
@@ -103,3 +104,26 @@ def test_compiled_sequence_metadata(random_program: Callable[[], QuantumProgram]
     compiled_seq_metadata = compiled_seq_repr["metadata"]
     expected_metadata = {"package_versions": {"qoolqit": qoolqit_version}, "extra": {}}
     assert compiled_seq_metadata == expected_metadata
+
+
+def test_validate_program() -> None:
+    pass
+
+
+@pytest.mark.parametrize(
+    "device, profile",
+    [
+        (MockDevice(), CompilerProfile.MAX_AMPLITUDE),
+        (MockDevice(), CompilerProfile.MAX_DURATION),
+        (MockDevice(), CompilerProfile.MIN_DISTANCE),
+        (DigitalAnalogDevice(), CompilerProfile.MAX_DURATION),
+    ],
+)
+def test_validate_program_unsupported_profile(device: Device, profile: CompilerProfile) -> None:
+    register = Register({f"q{i}": (i, i) for i in range(3)})
+    drive = Drive(amplitude=Ramp(50, initial_value=0.6, final_value=0.8))
+    program = QuantumProgram(register, drive)
+    with pytest.raises(
+        CompilationError, match="the target min/max value is not specified in the chosen device"
+    ):
+        program.compile_to(device=device, profile=profile)
