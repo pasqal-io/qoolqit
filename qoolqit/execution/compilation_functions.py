@@ -63,6 +63,7 @@ def basic_compilation(
 
     _validate_program(register, drive, device, profile)
 
+    # strategies are applied only if the device has the corresponding extrema value
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
     elif profile == CompilerProfile.MAX_DURATION and device._max_duration:
@@ -158,7 +159,11 @@ def _validate_program(
 
     Get the rescaling factors from different compilation strategies still in the
     adimensional frame. The default compilation just preserve ratios.
-    Then compute the new properties of the program: max amplitude, duration and min distance.
+    Then compute the new properties of the program:
+        - maximum drive amplitude
+        - drive duration
+        - register minimum distance between qubits
+        - register maximum radial distance
     Finally, check that the new values comply with the device specifications.
 
     Args:
@@ -172,8 +177,9 @@ def _validate_program(
     """
     specs = device.specs
 
-    # just get profile new factors in the adimensional basis
-    # not conversion factors to pulser
+    # just get profile new factors in the adimensional basis, not conversion factors to pulser
+    # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
+    # this part can be removed when compilation return a QuantumProgram that can be directly checked
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = 1.0, 1.0, 1.0
     elif profile == CompilerProfile.MAX_DURATION and specs["max_duration"]:
