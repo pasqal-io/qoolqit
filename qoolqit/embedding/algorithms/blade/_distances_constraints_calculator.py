@@ -3,11 +3,11 @@ from __future__ import annotations
 import dataclasses
 from typing import Any, Optional
 
+import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-import matplotlib.pyplot as plt
 
-from ._helpers import normalized_interaction, distance_matrix_from_positions
+from ._helpers import distance_matrix_from_positions, normalized_interaction
 
 
 def compute_best_scaling_for_qubo(
@@ -106,7 +106,7 @@ class DistancesContraintsCalculator:
     def compute_scaling_min_max(
         self, positions: np.ndarray, step_cursor: float, plot: bool = False
     ) -> tuple[float, Optional[float], Optional[float]]:
-        """step_cursor is between 0 (start) and 1 (end)"""
+        """Step_cursor is between 0 (start) and 1 (end)."""
         assert 0 <= step_cursor <= 1
 
         scaling_factor = compute_best_scaling_for_pos(

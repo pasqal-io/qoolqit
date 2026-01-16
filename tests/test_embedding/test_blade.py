@@ -1,11 +1,14 @@
-import pytest
+from __future__ import annotations
 
-from qoolqit.embedding.algorithms.blade.blade import update_positions, em_blade, em_blade_for_device
-from qoolqit.embedding.algorithms.blade._helpers import normalized_best_dist, normalized_interaction
-from pulser.devices import AnalogDevice
-import numpy as np
-import networkx as nx
 import dataclasses
+
+import networkx as nx
+import numpy as np
+import pytest
+from pulser.devices import AnalogDevice
+
+from qoolqit.embedding.algorithms.blade._helpers import normalized_best_dist, normalized_interaction
+from qoolqit.embedding.algorithms.blade.blade import em_blade, em_blade_for_device, update_positions
 
 
 @pytest.mark.parametrize(

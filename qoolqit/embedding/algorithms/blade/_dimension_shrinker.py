@@ -55,9 +55,10 @@ class DimensionShrinker:
         positions = shrink_dimensions(positions=positions, dimensions_lengths=dims_lengths)
 
         if self._step >= self._steps:
+            nb_dimensions_left = nb_dimensions - self._dimensions_to_remove
             assert np.all(
-                np.isclose(positions[:, nb_dimensions - self._dimensions_to_remove :], 0)
-            ), f"{positions[:, nb_dimensions - self._dimensions_to_remove:]=}"
+                np.isclose(positions[:, nb_dimensions_left:], 0)
+            ), f"{positions[:, nb_dimensions_left:]=}"
 
         assert not np.any(np.isnan(positions))
 

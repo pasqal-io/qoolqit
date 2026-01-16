@@ -33,7 +33,8 @@ class Force:
         min_temperature = np.min(maximum_temperatures)
 
         # the next condition fixes the case where at some index, weighted_vectors is almost zero,
-        # and squared in vector_weights it becomes 0 (but distances_to_walk is not zero so the force will be infinite)
+        # and squared in vector_weights it becomes 0
+        # (but distances_to_walk is not zero so the force will be infinite)
         return min_temperature if min_temperature != np.inf else 0
 
     def get_forces(self, temperature: float) -> np.ndarray:

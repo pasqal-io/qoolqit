@@ -3,11 +3,11 @@ from __future__ import annotations
 from typing import Any, Optional
 
 import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
 import networkx as nx
 import numpy as np
-from numpy import format_float_scientific
 import pandas as pd
+from matplotlib.axes import Axes
+from numpy import format_float_scientific
 
 from ._helpers import normalized_interaction
 
@@ -108,7 +108,7 @@ def draw_weighted_graph(
 def draw_set_graph_coords(
     graph: nx.Graph, coords: np.ndarray, edge_labels: Optional[dict] = None
 ) -> None:
-    """coords are positions in numerical order of the nodes"""
+    """Coords are positions in numerical order of the nodes."""
     nx.set_node_attributes(graph, dict(enumerate(coords)), "pos")
     draw_weighted_graph(graph, edge_labels=edge_labels)
     plt.show()

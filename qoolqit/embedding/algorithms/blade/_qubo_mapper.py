@@ -11,7 +11,7 @@ VariableId = Union[str, int]
 
 
 class Qubo:
-    """Simple container class for a Qubo problem
+    """Simple container class for a Qubo problem.
 
     This class provides some convenience methods for
     creating a Qubo to and from a matrix or from a dictionary of terms
@@ -44,7 +44,7 @@ class Qubo:
         return self._coeffs
 
     def as_matrix(self, variables: Optional[list[VariableId]] = None) -> np.ndarray:
-        """Return the dense upper triangular matrix corresponding to the Qubo instance
+        """Return the dense upper triangular matrix corresponding to the Qubo instance.
 
         The matrix is triangular and constructed in such a way that the row
         and column indices of each element correspond to the Qubo term and the
@@ -95,6 +95,7 @@ class Qubo:
     def variables(self) -> list[VariableId]:
         """
         Returns:
+
             List of all the variables' names that are used in the Qubo
                 formulation. It is sorted by ascending order of integers, then
                 alphabetically for strings.
@@ -109,8 +110,8 @@ class Qubo:
 
     def node_coeffs(self, include_absent: bool = False) -> dict[VariableId, float]:
         """
-
         Args:
+
             include_absent: If `True`, include in the dictionary the variables
                 that don't have any linear coefficients. In that case, the
                 coefficient 0 will apply.
@@ -133,8 +134,8 @@ class Qubo:
 
     def evaluate(self, values: Mapping[VariableId, float]) -> float:
         """
-
         Args:
+
             values: Values to attribute to the variables.
 
         Returns:
@@ -150,7 +151,7 @@ class Qubo:
 
     @staticmethod
     def from_matrix(matrix: np.ndarray | list) -> Qubo:
-        """Return a QUBO instance from a matrix representation
+        """Return a QUBO instance from a matrix representation.
 
         The matrix must be 2-dimensional and either symmetric or traingular.
         The matrix is constructed in such a way that the row and column indices
@@ -208,7 +209,7 @@ class Qubo:
 
     @staticmethod
     def from_terms(terms: Mapping[tuple[VariableId, VariableId] | VariableId, float]) -> Qubo:
-        """Generate a QUBO instance or a matrix from a set of terms
+        """Generate a QUBO instance or a matrix from a set of terms.
 
         Terms are given as a dictionary with the following form:
 
@@ -248,8 +249,10 @@ class Qubo:
 
     @staticmethod
     def from_graph(graph: nx.Graph) -> Qubo:
-        """Construct a Qubo problem from a graph, possibly having
-        "weight" attributes on its nodes and edges."""
+        """Construct a Qubo problem from a graph, possibly having.
+
+        "weight" attributes on its nodes and edges.
+        """
 
         terms = dict()
 
@@ -271,7 +274,8 @@ def tri_lower_to_upper(matrix: np.ndarray) -> np.ndarray:
 
 
 def random_qubo(size: int, density: float = 1.0, bounds: tuple[int, int] = (-10, 10)) -> Qubo:
-    """Generates a NxN symetric matrix with uniform random coefficients between
+    """Generates a NxN symetric matrix with uniform random coefficients between.
+
     lower_bound (default = -10) and upper_bound (default = 10) given a certain
     density of the matrix determined by the density argument (default = 1.0)
 

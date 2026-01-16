@@ -6,10 +6,11 @@ from typing import Callable, Optional
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+import scipy
 import torch
 from pulser.devices._device_datacls import BaseDevice
 from sklearn.decomposition import PCA
-import scipy
+
 from qoolqit.devices.device import Device
 
 from ._dimension_shrinker import DimensionShrinker
@@ -37,7 +38,8 @@ def update_positions(
     max_distance_to_walk: float | tuple[float, float, float] = np.inf,
 ) -> np.ndarray:
     """
-    Compute vector moves and apply them on the positions of the nodes to make
+    Compute vector moves and apply them on the positions of the nodes to make.
+
     their interactions closer to the target QUBO.
 
     positions: Starting positions of the nodes.
@@ -202,10 +204,11 @@ def update_positions(
     if draw_step:
         logger.debug(f"Resulting positions = {dict(enumerate(positions))}")
         print(f"Current number of dimensions is {positions.shape[-1]}")
+        distances = np.min(distance_matrix[np.triu_indices_from(distance_matrix, k=1)])
         print(
             f"{min_dist=}, {max_dist=}, "
-            f"current min dist = {np.min(distance_matrix[np.triu_indices_from(distance_matrix, k=1)])}, "
-            f"current max dist = {np.max(distance_matrix[np.triu_indices_from(distance_matrix, k=1)])}"
+            f"current min dist = {np.min(distances)}, "
+            f"current max dist = {np.max(distances)}"
         )
         draw_graph_including_actual_weights(qubo_graph=qubo_graph, positions=positions)
 
@@ -252,8 +255,10 @@ def evolve_with_forces_through_dim_change(
         assert np.unique(positions, axis=0).shape == positions.shape
         positions = scaling * positions
         if draw_step:
+            distances = scipy.spatial.distance.pdist(positions)
             print(
-                f"After {scaling=}, max/min is {np.max(scipy.spatial.distance.pdist(positions))}/{np.min(scipy.spatial.distance.pdist(positions))} with target {max_dist}/{min_dist}"
+                f"After {scaling=}, max/min is "
+                f"{np.max(distances)/np.min(distances)} with target {max_dist}/{min_dist}"
             )
         assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
 
@@ -484,7 +489,8 @@ def em_blade(
         output_ratio = max_radial_dist / min_atom_dist
         if output_ratio > max_min_dist_ratio:
             print(
-                f"[Warning] Output ratio {output_ratio} is higher than required {max_min_dist_ratio}"
+                f"[Warning] Output ratio {output_ratio}"
+                f" is higher than required {max_min_dist_ratio}"
             )
 
     return positions
@@ -507,7 +513,8 @@ def em_blade_for_device(
     starting_ratio_factor: int = 2,
 ) -> np.ndarray:
     """
-    Calls `em_blade` and adapts to the device's constraints
+    Calls `em_blade` and adapts to the device's constraints.
+
     and interaction coefficient.
 
     device: Used for its interaction coefficient, and for its minimum and
