@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Callable
+
 import numpy as np
 
 from qoolqit.embedding.base_embedder import EmbeddingConfig
-from typing import Callable
 
 
 @dataclass
