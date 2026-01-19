@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import numpy as np
 
+from qoolqit.embedding.algorithms.blade.blade import em_blade
+from qoolqit.embedding.algorithms.blade_embedding import BladeEmbeddingConfig
 from qoolqit.graphs import DataGraph
 from qoolqit.utils import ATOL_32
 
@@ -39,3 +41,10 @@ class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbeddingConfig]):
 
     def __init__(self) -> None:
         super().__init__(interaction_embedding, InteractionEmbeddingConfig())
+
+
+class BladeEmbedder(MatrixToGraphEmbedder[BladeEmbeddingConfig]):
+    """A matrix to graph embedder using the blade embedding algorithm."""
+
+    def __init__(self) -> None:
+        super().__init__(em_blade, BladeEmbeddingConfig())
