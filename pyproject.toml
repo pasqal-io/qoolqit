@@ -34,6 +34,8 @@ classifiers = [
 dependencies = [
   "pulser[torch]~=1.6.3",
   "networkx~=3.4",
+  "scikit-learn",
+  "seaborn",
 ]
 
 [project.optional-dependencies]
