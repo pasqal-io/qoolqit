@@ -550,7 +550,7 @@ def blade_embedding_for_device(
 
 @dataclass
 class BladeEmbeddingConfig(EmbeddingConfig):
-    """Configuration parameters for the interaction embedding."""
+    """Configuration parameters for the blade embedding."""
 
     max_min_dist_ratio: float | None = None
     draw_steps: bool | list[int] = False

@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import numpy as np
 
-from qoolqit.embedding.algorithms.blade_embedding.blade_embedding import (
-    BladeEmbeddingConfig,
-    blade_embedding,
-)
 from qoolqit.graphs import DataGraph
 
-from .algorithms import InteractionEmbeddingConfig, interaction_embedding
+from .algorithms import (
+    BladeEmbeddingConfig,
+    InteractionEmbeddingConfig,
+    blade_embedding,
+    interaction_embedding,
+)
 from .base_embedder import BaseEmbedder, ConfigType
 
 
