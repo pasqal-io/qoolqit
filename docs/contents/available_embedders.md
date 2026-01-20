@@ -115,7 +115,7 @@ print(embedded_graph_2.is_ud_graph()) # markdown-exec: hide
 ```
 While the algorithm converged and assigned positions to each node, the resulting embedded graph fails the unit-disk graph test.
 
-However, in both cases, we have embedded the original data into a graph with coordinates, which is an object that is compatible with the Rydberg analog model. As such, we can directly intantiate a register of qubits from these graphs.
+However, in both cases, we have embedded the original data into a graph with coordinates, which is an object that is compatible with the Rydberg analog model. As such, we can directly instantiate a register of qubits from these graphs.
 
 ```python exec="on" source="material-block" html="1" session="embedding"
 from qoolqit import Register
