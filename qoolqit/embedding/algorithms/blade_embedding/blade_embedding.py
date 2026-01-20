@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from dataclasses import dataclass
 from typing import Callable, Optional
 
 import matplotlib.pyplot as plt
@@ -12,6 +13,7 @@ from pulser.devices._device_datacls import BaseDevice
 from sklearn.decomposition import PCA
 
 from qoolqit.devices.device import Device
+from qoolqit.embedding.base_embedder import EmbeddingConfig
 
 from ._dimension_shrinker import DimensionShrinker
 from ._dist_constraints_forces import (
@@ -23,12 +25,6 @@ from ._helpers import distance_matrix_from_positions
 from ._interactions_forces import compute_interaction_forces
 from ._qubo_mapper import Qubo
 from .drawing import draw_graph_including_actual_weights
-
-
-from dataclasses import dataclass
-
-
-from qoolqit.embedding.base_embedder import EmbeddingConfig
 
 logger = logging.getLogger(__name__)
 
