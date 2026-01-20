@@ -5,13 +5,10 @@ from dataclasses import dataclass
 import numpy as np
 import pytest
 
-from qoolqit.embedding import (
-    EmbeddingConfig,
-    GraphToGraphEmbedder,
-    InteractionEmbedder,
-    MatrixToGraphEmbedder,
-    SpringLayoutEmbedder,
-)
+from qoolqit.embedding import InteractionEmbedder, SpringLayoutEmbedder
+from qoolqit.embedding.base_embedder import EmbeddingConfig
+from qoolqit.embedding.graph_embedder import GraphToGraphEmbedder
+from qoolqit.embedding.matrix_embedder import MatrixToGraphEmbedder
 from qoolqit.graphs import DataGraph
 
 
@@ -34,7 +31,7 @@ def test_spring_layout_embedding(n_qubits: int) -> None:
 
     with pytest.raises(TypeError):
         matrix = np.random.rand(n_qubits, n_qubits)
-        embedder.embed(matrix)
+        embedder.embed(matrix)  # type: ignore
 
 
 @pytest.mark.parametrize("n_qubits", [3, 4, 5])
@@ -69,7 +66,7 @@ def test_interaction_embedding(n_qubits: int) -> None:
 
     with pytest.raises(TypeError):
         graph = DataGraph.random_er(n=n_qubits, p=0.2)
-        embedder.embed(graph)
+        embedder.embed(graph)  # type: ignore
 
 
 def test_custom_embedders() -> None:
@@ -77,7 +74,7 @@ def test_custom_embedders() -> None:
     def some_embedding_algo(data: DataGraph, param1: float) -> DataGraph:
         return data
 
-    ### Config does not inherit from EmbeddingConfig
+    # Config does not inherit from EmbeddingConfig
     @dataclass
     class SomeConfig:
         param1: float = 1.0
@@ -85,7 +82,7 @@ def test_custom_embedders() -> None:
     with pytest.raises(TypeError):
         embedder = GraphToGraphEmbedder(some_embedding_algo, SomeConfig())  # type: ignore
 
-    ### Config params don't match algo params
+    # Config params don't match algo params
     @dataclass
     class SomeConfig(EmbeddingConfig):  # type: ignore
         param2: float = 1.0
@@ -93,7 +90,7 @@ def test_custom_embedders() -> None:
     with pytest.raises(KeyError):
         embedder = GraphToGraphEmbedder(some_embedding_algo, SomeConfig())  # type: ignore
 
-    ### Embedding function returns unexpected data
+    # Embedding function returns unexpected data
     @dataclass
     class SomeConfig(EmbeddingConfig):  # type: ignore
         param1: float = 1.0
