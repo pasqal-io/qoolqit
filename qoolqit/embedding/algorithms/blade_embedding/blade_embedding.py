@@ -554,7 +554,7 @@ class BladeEmbeddingConfig(EmbeddingConfig):
 
     max_min_dist_ratio: float | None = None
     draw_steps: bool | list[int] = False
-    dimensions: tuple = (5, 4, 3, 2, 2, 2)
+    dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2)
     starting_positions: np.ndarray | None = None
     pca: bool = False
     steps_per_round: int = 200
