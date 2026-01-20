@@ -7,7 +7,6 @@ from qoolqit.embedding.algorithms.blade_embedding.blade_embedding import (
     blade_embedding,
 )
 from qoolqit.graphs import DataGraph
-from qoolqit.utils import ATOL_32
 
 from .algorithms import InteractionEmbeddingConfig, interaction_embedding
 from .base_embedder import BaseEmbedder, ConfigType
@@ -27,7 +26,7 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
             )
         if data.ndim != 2:
             raise ValueError("Data must be a 2D matrix.")
-        if not np.allclose(data, data.T, rtol=0.0, atol=ATOL_32):
+        if not np.allclose(data, data.T, rtol=0.0, atol=1e-7):
             raise ValueError("Data must be a symmetric matrix.")
 
     def validate_output(self, result: DataGraph) -> None:
@@ -48,5 +47,17 @@ class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbeddingConfig]):
 class BladeEmbedder(MatrixToGraphEmbedder[BladeEmbeddingConfig]):
     """A matrix to graph embedder using the blade embedding algorithm."""
 
-    def __init__(self) -> None:
-        super().__init__(blade_embedding, BladeEmbeddingConfig())
+    def embed(self, data: np.ndarray) -> DataGraph:
+        """Validates the input, runs the embedding algorithm, and validates the output.
+
+        Arguments:
+            data: the data to embed.
+        """
+        self.validate_input(data)
+        positions = self.algorithm(data, **self.config.dict())
+        centered_coords = positions - np.mean(positions, axis=0)
+        graph = DataGraph.from_coordinates(centered_coords.tolist())
+        return graph
+
+    def __init__(self, config: BladeEmbeddingConfig = BladeEmbeddingConfig()) -> None:
+        super().__init__(blade_embedding, config=config)
