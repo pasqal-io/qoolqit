@@ -24,8 +24,8 @@ The final level is defining concrete embedders, such as the ones we have used in
 Let's exemplify the case of defining a custom embedder in the family of graph to graph embedders.
 
 ```python exec="on" source="material-block" result="json" session="embedding"
-from qoolqit.embedding import GraphToGraphEmbedder
-from qoolqit.embedding import EmbeddingConfig
+from qoolqit.embedding.graph_embedder import GraphToGraphEmbedder
+from qoolqit.embedding.base_embedder import EmbeddingConfig
 from qoolqit import DataGraph
 from dataclasses import dataclass
 
