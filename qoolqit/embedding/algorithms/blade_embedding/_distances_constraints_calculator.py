@@ -88,7 +88,7 @@ def compute_best_scaling_for_pos(
 
 
 @dataclasses.dataclass
-class DistancesContraintsCalculator:
+class DistancesConstraintsCalculator:
     target_qubo: np.ndarray
     starting_min: float | None
     starting_ratio: float | None

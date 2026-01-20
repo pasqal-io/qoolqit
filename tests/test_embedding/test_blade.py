@@ -7,8 +7,15 @@ import numpy as np
 import pytest
 from pulser.devices import AnalogDevice
 
-from qoolqit.embedding.algorithms.blade._helpers import normalized_best_dist, normalized_interaction
-from qoolqit.embedding.algorithms.blade.blade import em_blade, em_blade_for_device, update_positions
+from qoolqit.embedding.algorithms.blade_embedding._helpers import (
+    normalized_best_dist,
+    normalized_interaction,
+)
+from qoolqit.embedding.algorithms.blade_embedding.blade_embedding import (
+    blade_embedding,
+    blade_embedding_for_device,
+    update_positions,
+)
 
 
 @pytest.mark.parametrize(
@@ -117,12 +124,12 @@ def test_force_based_embedding() -> None:
         ]
     )
 
-    positions = em_blade(
+    positions = blade_embedding(
         qubo=qubo,
         max_min_dist_ratio=max_dist / min_dist,
         steps_per_round=1000,
         starting_positions=np.array([[-1, 1], [1, 1], [1, -1], [-1, -1]]) * max_dist / 3,
-        dimensions=[2, 2],
+        dimensions=(2, 2),
     )
 
     new_min_dist = np.linalg.norm(positions[0] - positions[1])
@@ -176,7 +183,7 @@ def test_high_dimension_increase_after_equilibrium() -> None:
             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         ]
     )
-    em_blade(qubo, dimensions=[2, 2, 10], steps_per_round=100)
+    blade_embedding(qubo, dimensions=(2, 2, 10), steps_per_round=100)
 
 
 def test_drawing() -> None:
@@ -216,7 +223,9 @@ def test_with_device() -> None:
             [0, 0],
         ]
     )
-    positions = em_blade_for_device(qubo, device=device, dimensions=[2, 2], steps_per_round=100)
+    positions = blade_embedding_for_device(
+        qubo, device=device, dimensions=(2, 2), steps_per_round=100
+    )
     distances = np.triu(
         np.linalg.norm(positions[np.newaxis, :, :] - positions[:, np.newaxis, :], axis=-1), k=1
     )

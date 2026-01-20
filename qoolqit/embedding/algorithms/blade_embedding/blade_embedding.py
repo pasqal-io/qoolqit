@@ -18,11 +18,17 @@ from ._dist_constraints_forces import (
     compute_max_dist_constraint_forces,
     compute_min_dist_constraint_forces,
 )
-from ._distances_constraints_calculator import DistancesContraintsCalculator
+from ._distances_constraints_calculator import DistancesConstraintsCalculator
 from ._helpers import distance_matrix_from_positions
 from ._interactions_forces import compute_interaction_forces
 from ._qubo_mapper import Qubo
 from .drawing import draw_graph_including_actual_weights
+
+
+from dataclasses import dataclass
+
+
+from qoolqit.embedding.base_embedder import EmbeddingConfig
 
 logger = logging.getLogger(__name__)
 
@@ -234,7 +240,7 @@ def evolve_with_forces_through_dim_change(
     dim_shrinker = DimensionShrinker(
         dimensions_to_remove=starting_dimensions - final_dimensions, steps=nb_steps
     )
-    dist_constr_calc = DistancesContraintsCalculator(
+    dist_constr_calc = DistancesConstraintsCalculator(
         target_qubo=Qubo.from_graph(qubo_graph).as_matrix(),
         starting_min=starting_min,
         starting_ratio=start_ratio,
@@ -291,7 +297,7 @@ def evolve_with_dimension_transition(
     qubo: np.ndarray,
     *,
     draw_steps: bool | list[int],
-    dimensions: list[int],
+    dimensions: tuple[int, ...],
     starting_min: float | None,
     pca: bool,
     steps_per_round: int,
@@ -367,13 +373,13 @@ def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
     return np.min(distance_matrix[upper_diagonal_mask])  # type: ignore
 
 
-def em_blade(
+def blade_embedding(
     qubo: np.ndarray,
     *,
-    max_min_dist_ratio: Optional[float] = None,
+    max_min_dist_ratio: float | None = None,
     draw_steps: bool | list[int] = False,
-    dimensions: list[int] = [5, 4, 3, 2, 2, 2],
-    starting_positions: Optional[np.ndarray] = None,
+    dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2),
+    starting_positions: np.ndarray | None = None,
     pca: bool = False,
     steps_per_round: int = 200,
     compute_weight_relative_threshold: Callable[[float], float] = (lambda _: 0.1),
@@ -430,7 +436,7 @@ def em_blade(
     """
 
     if len(dimensions) == 1:
-        dimensions = [dimensions[0], dimensions[0]]
+        dimensions = (dimensions[0], dimensions[0])
 
     assert len(dimensions) >= 2
 
@@ -496,13 +502,13 @@ def em_blade(
     return positions
 
 
-def em_blade_for_device(
+def blade_embedding_for_device(
     qubo: np.ndarray,
     *,
     device: BaseDevice | Device,
     follow_max_min_dist_ratio: bool = True,
     draw_steps: bool | list[int] = False,
-    dimensions: list[int] = [5, 4, 3, 2, 2, 2],
+    dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2),
     starting_positions: Optional[np.ndarray] = None,
     pca: bool = False,
     steps_per_round: int = 200,
@@ -513,7 +519,7 @@ def em_blade_for_device(
     starting_ratio_factor: int = 2,
 ) -> np.ndarray:
     """
-    Calls `em_blade` and adapts to the device's constraints.
+    Calls `blade_embedding` and adapts to the device's constraints.
 
     and interaction coefficient.
 
@@ -530,7 +536,7 @@ def em_blade_for_device(
         else device.max_radial_distance / device.min_atom_distance
     )
 
-    positions = em_blade(
+    positions = blade_embedding(
         qubo=qubo,
         max_min_dist_ratio=max_min_dist_ratio,
         draw_steps=draw_steps,
@@ -544,3 +550,20 @@ def em_blade_for_device(
     )
 
     return positions * device.interaction_coeff ** (1 / 6)
+
+
+@dataclass
+class BladeEmbeddingConfig(EmbeddingConfig):
+    """Configuration parameters for the interaction embedding."""
+
+    max_min_dist_ratio: float | None = None
+    draw_steps: bool | list[int] = False
+    dimensions: tuple = (5, 4, 3, 2, 2, 2)
+    starting_positions: np.ndarray | None = None
+    pca: bool = False
+    steps_per_round: int = 200
+    compute_weight_relative_threshold: Callable[[float], float] = lambda _: 0.1
+    compute_max_distance_to_walk: Callable[
+        [float, float | None], float | tuple[float, float, float]
+    ] = lambda x, max_radial_dist: np.inf
+    starting_ratio_factor: int = 2
