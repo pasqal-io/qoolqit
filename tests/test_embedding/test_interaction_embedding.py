@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from qoolqit.graphs import DataGraph
-from qoolqit.embedding import InteractionEmbedder
-
-import pytest
 import numpy as np
+import pytest
+
+from qoolqit.embedding import InteractionEmbedder
+from qoolqit.graphs import DataGraph
 
 
 @pytest.mark.parametrize("n_qubits", [3, 4, 5])

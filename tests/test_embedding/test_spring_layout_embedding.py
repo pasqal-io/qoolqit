@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from qoolqit.graphs import DataGraph
-from qoolqit.embedding import SpringLayoutEmbedder
-
-import pytest
 import numpy as np
+import pytest
+
+from qoolqit.embedding import SpringLayoutEmbedder
+from qoolqit.graphs import DataGraph
 
 
 @pytest.mark.parametrize("n_qubits", [3, 5, 10])

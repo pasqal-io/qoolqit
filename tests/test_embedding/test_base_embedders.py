@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from qoolqit.graphs import DataGraph
+
+import numpy as np
+import pytest
+
+from qoolqit.embedding.base_embedder import EmbeddingConfig
 from qoolqit.embedding.graph_embedder import GraphToGraphEmbedder
 from qoolqit.embedding.matrix_embedder import MatrixToGraphEmbedder
-from qoolqit.embedding.base_embedder import EmbeddingConfig
-
-import pytest
-import numpy as np
+from qoolqit.graphs import DataGraph
 
 
 def test_custom_embedders() -> None:
@@ -21,7 +22,7 @@ def test_custom_embedders() -> None:
         param1: float = 1.0
 
     with pytest.raises(TypeError):
-        embedder = GraphToGraphEmbedder(some_embedding_algo, WrongTypeConfig())  # type: ignore
+        GraphToGraphEmbedder(some_embedding_algo, WrongTypeConfig())  # type: ignore
 
     # Config params don't match algo params
     @dataclass
@@ -29,7 +30,7 @@ def test_custom_embedders() -> None:
         param2: float = 1.0
 
     with pytest.raises(KeyError):
-        embedder = GraphToGraphEmbedder(some_embedding_algo, WrongParamConfig())
+        GraphToGraphEmbedder(some_embedding_algo, WrongParamConfig())
 
     # Embedding function returns unexpected data
     @dataclass
@@ -39,15 +40,13 @@ def test_custom_embedders() -> None:
     def some_wrong_embedding_algo(data: DataGraph, param1: float) -> float:
         return 2.0
 
-    embedder = GraphToGraphEmbedder(some_wrong_embedding_algo, SomeConfig())
-
+    embedder_g2g = GraphToGraphEmbedder(some_wrong_embedding_algo, SomeConfig())
     with pytest.raises(TypeError):
         graph = DataGraph.random_er(5, 0.5)
-        embedder.embed(graph)
+        embedder_g2g.embed(graph)
 
-    embedder = MatrixToGraphEmbedder(some_wrong_embedding_algo, SomeConfig())
-
+    embedder_m2g = MatrixToGraphEmbedder(some_wrong_embedding_algo, SomeConfig())
     with pytest.raises(TypeError):
         matrix = np.random.rand(5, 5)
         matrix = matrix + matrix.T
-        embedder.embed(matrix)
+        embedder_m2g.embed(matrix)
