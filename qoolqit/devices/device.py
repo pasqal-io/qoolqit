@@ -85,6 +85,7 @@ class Device:
         self._max_amp = self._pulser_device.channels["rydberg_global"].max_amp
         self._max_det = self._pulser_device.channels["rydberg_global"].max_abs_detuning
         self._min_distance = self._pulser_device.min_atom_distance
+        self._max_radial_distance = self._pulser_device.max_radial_distance
 
         # layouts
         self._requires_layout = self._pulser_device.requires_layout

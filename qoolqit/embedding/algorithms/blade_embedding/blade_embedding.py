@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
+from dataclasses import InitVar, dataclass
 from typing import Callable, Optional
 
 import matplotlib.pyplot as plt
@@ -9,7 +9,6 @@ import networkx as nx
 import numpy as np
 import scipy
 import torch
-from pulser.devices._device_datacls import BaseDevice
 from sklearn.decomposition import PCA
 
 from qoolqit.devices.device import Device
@@ -390,7 +389,6 @@ def blade_embedding(
     Compute positions for nodes so that their interactions
     approach the desired values at best. The interactions assume that the
     interaction coefficient of the device is set to 1.
-    The result can be used as an embedding.
     Its prior target is on interaction matrices or QUBOs, but it can also be used
     for MIS with limitations if the adjacency matrix is converted into a QUBO.
     The general principle is based on the Fruchterman-Reingold algorithm.
@@ -501,7 +499,7 @@ def blade_embedding(
 def blade_embedding_for_device(
     qubo: np.ndarray,
     *,
-    device: BaseDevice | Device,
+    device: Device,
     follow_max_min_dist_ratio: bool = True,
     draw_steps: bool | list[int] = False,
     dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2),
@@ -523,13 +521,10 @@ def blade_embedding_for_device(
         maximum distances if `follow_max_min_dist_ratio` is enabled.
     """
 
-    if isinstance(device, Device):
-        device = device._device
-
     max_min_dist_ratio = (
         None
-        if device.max_radial_distance is None or not follow_max_min_dist_ratio
-        else device.max_radial_distance / device.min_atom_distance
+        if device._max_radial_distance is None or not follow_max_min_dist_ratio
+        else device._max_radial_distance / device._min_distance
     )
 
     positions = blade_embedding(
@@ -545,7 +540,7 @@ def blade_embedding_for_device(
         starting_ratio_factor=starting_ratio_factor,
     )
 
-    return positions * device.interaction_coeff ** (1 / 6)
+    return positions * device._C6 ** (1 / 6)
 
 
 @dataclass
@@ -553,7 +548,6 @@ class BladeEmbeddingConfig(EmbeddingConfig):
     """Configuration parameters for the blade embedding."""
 
     max_min_dist_ratio: float | None = None
-    draw_steps: bool | list[int] = False
     dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2)
     starting_positions: np.ndarray | None = None
     pca: bool = False
@@ -563,3 +557,14 @@ class BladeEmbeddingConfig(EmbeddingConfig):
         [float, float | None], float | tuple[float, float, float]
     ] = lambda x, max_radial_dist: np.inf
     starting_ratio_factor: int = 2
+    draw_steps: bool | list[int] = False
+    device: InitVar[Device | None] = None
+
+    def __post_init__(self, device: Device | None) -> None:
+        if device:
+            min_distance = device._min_distance
+            max_radial_distance = device._max_radial_distance
+            if max_radial_distance and min_distance:
+                if self.max_min_dist_ratio:
+                    logger.warning("`max_min_dist_ratio`")
+                self.max_min_dist_ratio = max_radial_distance / min_distance
