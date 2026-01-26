@@ -6,7 +6,6 @@ from .graph_embedder import GraphToGraphEmbedder, SpringLayoutEmbedder
 from .matrix_embedder import BladeEmbedder, InteractionEmbedder, MatrixToGraphEmbedder
 
 __all__ = [
-    "SpringLayoutEmbedder",
     "BaseEmbedder",
     "EmbeddingConfig",
     "GraphToGraphEmbedder",
