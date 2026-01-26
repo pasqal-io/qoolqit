@@ -2561,50 +2561,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#qoolqit.embedding.SpringLayoutEmbedder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SpringLayoutEmbedder
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#qoolqit.embedding.InteractionEmbedder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        InteractionEmbedder
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#qoolqit.embedding.InteractionEmbeddingConfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        InteractionEmbeddingConfig
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#qoolqit.embedding.SpringLayoutConfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SpringLayoutConfig
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#qoolqit.embedding.BaseEmbedder" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2793,6 +2749,50 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#qoolqit.embedding.InteractionEmbeddingConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InteractionEmbeddingConfig
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qoolqit.embedding.InteractionEmbedder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InteractionEmbedder
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qoolqit.embedding.SpringLayoutConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SpringLayoutConfig
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qoolqit.embedding.SpringLayoutEmbedder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SpringLayoutEmbedder
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2831,7 +2831,13 @@
 <span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
 <span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
 <span class="normal"><a href="#__codelineno-0-10">10</a></span>
-<span class="normal"><a href="#__codelineno-0-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.algorithms</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractionEmbeddingConfig</span><span class="p">,</span> <span class="n">SpringLayoutConfig</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.base_embedder</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEmbedder</span><span class="p">,</span> <span class="n">EmbeddingConfig</span>
@@ -2839,9 +2845,15 @@
 <a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.matrix_embedder</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractionEmbedder</span><span class="p">,</span> <span class="n">MatrixToGraphEmbedder</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="s2">&quot;SpringLayoutEmbedder&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="s2">&quot;InteractionEmbedder&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="p">]</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="s2">&quot;BaseEmbedder&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="s2">&quot;EmbeddingConfig&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a>    <span class="s2">&quot;GraphToGraphEmbedder&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a>    <span class="s2">&quot;MatrixToGraphEmbedder&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a>    <span class="s2">&quot;InteractionEmbeddingConfig&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="s2">&quot;InteractionEmbedder&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="s2">&quot;SpringLayoutConfig&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="s2">&quot;SpringLayoutEmbedder&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
 
 
