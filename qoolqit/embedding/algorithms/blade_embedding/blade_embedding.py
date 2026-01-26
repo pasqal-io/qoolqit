@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import InitVar, dataclass
-from typing import Callable, Optional
+from typing import Callable
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -494,53 +494,6 @@ def blade_embedding(
             )
 
     return positions
-
-
-def blade_embedding_for_device(
-    qubo: np.ndarray,
-    *,
-    device: Device,
-    follow_max_min_dist_ratio: bool = True,
-    draw_steps: bool | list[int] = False,
-    dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2),
-    starting_positions: Optional[np.ndarray] = None,
-    pca: bool = False,
-    steps_per_round: int = 200,
-    compute_weight_relative_threshold: Callable[[float], float] = (lambda _: 0.1),
-    compute_max_distance_to_walk: Callable[
-        [float, float | None], float | tuple[float, float, float]
-    ] = (lambda x, max_radial_dist: np.inf),
-    starting_ratio_factor: int = 2,
-) -> np.ndarray:
-    """
-    Calls `blade_embedding` and adapts to the device's constraints.
-
-    and interaction coefficient.
-
-    device: Used for its interaction coefficient, and for its minimum and
-        maximum distances if `follow_max_min_dist_ratio` is enabled.
-    """
-
-    max_min_dist_ratio = (
-        None
-        if device._max_radial_distance is None or not follow_max_min_dist_ratio
-        else device._max_radial_distance / device._min_distance
-    )
-
-    positions = blade_embedding(
-        qubo=qubo,
-        max_min_dist_ratio=max_min_dist_ratio,
-        draw_steps=draw_steps,
-        dimensions=dimensions,
-        starting_positions=starting_positions,
-        pca=pca,
-        steps_per_round=steps_per_round,
-        compute_weight_relative_threshold=compute_weight_relative_threshold,
-        compute_max_distance_to_walk=compute_max_distance_to_walk,
-        starting_ratio_factor=starting_ratio_factor,
-    )
-
-    return positions * device._C6 ** (1 / 6)
 
 
 @dataclass

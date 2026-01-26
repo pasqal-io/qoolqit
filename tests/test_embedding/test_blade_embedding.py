@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-import dataclasses
-
 import networkx as nx
 import numpy as np
 import pytest
-from pulser.devices import AnalogDevice
 
 from qoolqit.embedding.algorithms.blade_embedding._helpers import (
     normalized_best_dist,
@@ -13,7 +10,6 @@ from qoolqit.embedding.algorithms.blade_embedding._helpers import (
 )
 from qoolqit.embedding.algorithms.blade_embedding.blade_embedding import (
     blade_embedding,
-    blade_embedding_for_device,
     update_positions,
 )
 
@@ -210,28 +206,16 @@ def test_drawing() -> None:
 
 
 def test_with_device() -> None:
-    device = dataclasses.replace(
-        AnalogDevice,
-        rydberg_level=70,
-        max_radial_distance=50,
-        min_atom_distance=4,
-    )
-
     qubo = np.array(
         [
             [0, 2],
             [0, 0],
         ]
     )
-    positions = blade_embedding_for_device(
-        qubo, device=device, dimensions=(2, 2), steps_per_round=100
-    )
+    positions = blade_embedding(qubo, dimensions=(2, 2), steps_per_round=100)
     distances = np.triu(
         np.linalg.norm(positions[np.newaxis, :, :] - positions[:, np.newaxis, :], axis=-1), k=1
     )
 
-    def best_dist(weight: float) -> float:
-        return device.rydberg_blockade_radius(weight)  # type: ignore
-
-    expected_distances = np.triu(np.vectorize(best_dist, signature="(m,n)->(m,n)")(qubo), k=1)
+    expected_distances = np.array([[0, 2 ** (-1 / 6)], [0, 0]])
     assert np.allclose(distances, expected_distances)
