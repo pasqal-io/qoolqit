@@ -302,10 +302,10 @@ def evolve_with_dimension_transition(
     ],
     qubo_graph: nx.Graph,
     positions: np.ndarray,
-    final_ratio: float,
+    final_ratio: float | None,
     total_steps: int,
     dim_idx: int,
-    start_ratio: float,
+    start_ratio: float | None,
 ) -> tuple[np.ndarray, float | None]:
 
     starting_dimensions = dimensions[dim_idx]
