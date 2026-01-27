@@ -305,12 +305,34 @@ def test_base_waveform_to_pulser() -> None:
     assert np.allclose(pulser_wf._values, expected_values)
 
 
-def test_composite_waveform_to_pulser_sub_ns_delay() -> None:
-    # add a 0.4 ns delay
-    composite_waveform = CompositeWaveform(Constant(0.83, 0.5), Delay(0.004))
-    pulser_composite_waveform = composite_waveform._to_pulser(duration=100)
+def test_to_pulser_sub_ns_delay_single_wf() -> None:
+    # add a sub ns delay, i.e. delay_duration*pulser_duration < 1
+    delay_duration = 0.004
+    pulser_duration = 100
+    assert delay_duration * pulser_duration < 1
+
+    composite_waveform = CompositeWaveform(Constant(2.83, 0.5), Delay(delay_duration))
+    pulser_waveform = composite_waveform._to_pulser(duration=pulser_duration)
 
     # assert that it is ignored when compiled to a pulser waveform
     # since sub-ns waveforms are not supported
-    assert isinstance(pulser_composite_waveform, pulser.ConstantWaveform)
-    assert pulser_composite_waveform.duration == 100
+    assert isinstance(pulser_waveform, pulser.ConstantWaveform)
+    assert pulser_waveform.duration == 100
+
+
+def test_to_pulser_sub_ns_delay_composite_wf() -> None:
+    # add a sub ns delay, i.e. delay_duration*pulser_duration < 1
+    delay_duration = 3.0e-4
+    pulser_duration = 1223
+    assert delay_duration * pulser_duration < 1
+
+    composite_waveform = CompositeWaveform(
+        Constant(2.83, 0.5), Ramp(10.0, -1.0, 1.3), Delay(delay_duration)
+    )
+    pulser_waveform = composite_waveform._to_pulser(duration=pulser_duration)
+
+    # assert that it is ignored when compiled to a pulser waveform
+    # since sub-ns waveforms are not supported
+    assert isinstance(pulser_waveform, pulser.CompositeWaveform)
+    assert len(pulser_waveform.waveforms) == 2
+    assert pulser_waveform.duration == 1223
