@@ -281,6 +281,11 @@ class CompositeWaveform(Waveform):
         Pulser only supports integer duration, so the sum of rounded
         durations of each waveform needs to add up to the rounded duration
         of the composite waveform.
+
+        If the duration of a waveform in ns is rounded to zero, it will be ignored.
+
+        Args:
+            duration (int): the new duration fo the Pulser waveform in ns.
         """
         ratio = duration / self.duration
         new_durations = round_to_sum([ratio * wd for wd in self.durations])
