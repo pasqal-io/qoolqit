@@ -312,3 +312,5 @@ def test_composite_waveform_to_pulser_sub_ns_delay() -> None:
 
     # assert that it is ignored when compiled to a pulser waveform
     # since sub-ns waveforms are not supported
+    assert isinstance(pulser_composite_waveform, pulser.ConstantWaveform)
+    assert pulser_composite_waveform.duration == 100
