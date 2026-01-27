@@ -13,6 +13,7 @@ from qoolqit.exceptions import CompilationError
 from qoolqit.execution import CompilerProfile
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
+from qoolqit.waveforms import Constant
 
 QOOLQIT_DEFAULT_DEVICES = [AnalogDevice, DigitalAnalogDevice, MockDevice]
 
@@ -85,3 +86,18 @@ def test_compiled_sequence_metadata(random_program: Callable[[], QuantumProgram]
     compiled_seq_metadata = compiled_seq_repr["metadata"]
     expected_metadata = {"package_versions": {"qoolqit": qoolqit_version}, "extra": {}}
     assert compiled_seq_metadata == expected_metadata
+
+
+def test_compiled_sequence_with_delays() -> None:
+    """
+    Test that the added delay is not compiled into the.
+
+    pulser sequence if smaller that 1 ns.
+    """
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
+    drive = Drive(amplitude=Constant(1.0, 1.0), detuning=Constant(1.005, 1.0))
+    program = QuantumProgram(register=register, drive=drive)
+    program.compile_to(device=AnalogDevice())
+
+    pulser_duration = program.compiled_sequence.get_duration()
+    assert pulser_duration == 80

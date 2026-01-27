@@ -303,3 +303,12 @@ def test_base_waveform_to_pulser() -> None:
     expected_values = (200.0 * expected_times) ** 2
     assert np.allclose(pulser_wf._times, expected_times)
     assert np.allclose(pulser_wf._values, expected_values)
+
+
+def test_composite_waveform_to_pulser_sub_ns_delay() -> None:
+    # add a 0.4 ns delay
+    composite_waveform = CompositeWaveform(Constant(0.83, 0.5), Delay(0.004))
+    pulser_composite_waveform = composite_waveform._to_pulser(duration=100)
+
+    # assert that it is ignored when compiled to a pulser waveform
+    # since sub-ns waveforms are not supported
