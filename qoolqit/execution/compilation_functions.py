@@ -223,13 +223,14 @@ def _validate_program(
         )
         raise CompilationError(msg + device_specs_msg)
 
-    min_distance = register.min_distance() * DISTANCE
-    if specs["min_distance"] and (min_distance < specs["min_distance"]):
-        msg = (
-            f"The register minimum distance between two qubits {min_distance} "
-            "goes below the minimum allowed for the chosen device:\n"
-        )
-        raise CompilationError(msg + device_specs_msg)
+    if register.n_qubits > 1:
+        min_distance = register.min_distance() * DISTANCE
+        if specs["min_distance"] and (min_distance < specs["min_distance"]):
+            msg = (
+                f"The register minimum distance between two qubits {min_distance} "
+                "goes below the minimum allowed for the chosen device:\n"
+            )
+            raise CompilationError(msg + device_specs_msg)
 
     max_radial_distance = register.max_radial_distance() * DISTANCE
     if specs["max_radial_distance"] and (max_radial_distance > specs["max_radial_distance"]):
