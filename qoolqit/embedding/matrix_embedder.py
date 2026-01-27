@@ -3,7 +3,6 @@ from __future__ import annotations
 import numpy as np
 
 from qoolqit.graphs import DataGraph
-from qoolqit.utils import ATOL_32
 
 from .algorithms import InteractionEmbeddingConfig, interaction_embedding
 from .base_embedder import BaseEmbedder, ConfigType
@@ -23,7 +22,7 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
             )
         if data.ndim != 2:
             raise ValueError("Data must be a 2D matrix.")
-        if not np.allclose(data, data.T, rtol=0.0, atol=ATOL_32):
+        if not np.allclose(data, data.T, rtol=0.0, atol=1e-7):
             raise ValueError("Data must be a symmetric matrix.")
 
     def validate_output(self, result: DataGraph) -> None:
