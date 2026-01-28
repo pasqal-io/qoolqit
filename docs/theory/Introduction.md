@@ -9,6 +9,7 @@ Programming neutral-atom quantum computers requires specifying physical paramete
 !!! tip "Dimensionless reference frame"
 
     QoolQit introduces a **dimensionless reference frame** where:
+
     - Distances are measured relative to the closest atom pair (minimum distance = 1)
     - Energies are measured relative to the maximum interaction strength
     - Times are measured relative to the interaction timescale
@@ -24,11 +25,9 @@ This means you can write the quantum evolution you want your system to follow (y
 !!! definition "The Dimensionless Hamiltonian"
 
     At the heart of QoolQit is a dimensionless formulation of the Rydberg Hamiltonian. Your system evolves under:
-
     $$
-    \tilde{H}(t) = \sum_{i<j} \tilde{J}_{ij} \hat{n}_i \hat{n}_j + \sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t) \, \hat{\sigma}^x_i - \sin\phi(t) \, \hat{\sigma}^y_i \right) - \sum_i \left( \tilde{\delta}(t) + \epsilon_i \tilde{\Delta}(t) \right) \hat{n}_i
+    \tilde{H}(t) = \sum_{i<j} \tilde{J}_{ij} \hat{n}_i \hat{n}_j + \sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t) \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right) - \sum_i \left( \tilde{\delta}(t) + \epsilon_i \tilde{\Delta}(t) \right) \hat{n}_i
     $$
-
     where all quantities with tildes ($\tilde{\phantom{x}}$) are dimensionless.
 
 **Interactions** ($\tilde{J}_{ij}$): Follow the $1/r^6$ Rydberg scaling, normalized so the maximum is 1:
