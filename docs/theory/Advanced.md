@@ -88,7 +88,7 @@ If compilation fails, the program simply cannot fit the device under any valid a
 Since QoolQit used an adimensional Hamiltonian defined with respect to a reference **energy scale** $J_0$, time must also be measured relative to that same scale. The reason is simply the Schrödinger equation that describes the dynamics of the quantum system.
 
 $$
-i\hbar \frac{d}{dt}|\psi(t)\rangle = H(t)\,|\psi(t)\rangle
+i\hbar \frac{d}{dt}|\psi(t)\rangle = H(t)|\psi(t)\rangle
 $$
 
 We require the physical and dimensionless descriptions to generate the **same unitary evolution**:
@@ -99,7 +99,7 @@ U(t)\equiv \mathcal{T}\exp\!\left(-\frac{i}{\hbar}\int_0^{t} H(t')dt'\right)
 \tilde U(\tilde t)\equiv \mathcal{T}\exp{\left(-i \int_0^{\tilde{t}}\tilde H(\tilde t')d\tilde{t}'\right).
 $$
 
-Using the definition of the dimensionless Hamiltonian $H(t)=J_0\,\tilde H(\tilde t)$, this matching is only possible if the integration variables satisfy:
+Using the definition of the dimensionless Hamiltonian $H(t)=J_0 \tilde H(\tilde t)$, this matching is only possible if the integration variables satisfy:
 
 $$
 \frac{J_0}{\hbar}dt = d\tilde{t}
@@ -110,5 +110,5 @@ $$
 With this choice, the Schrödinger equation becomes:
 
 $$
-i\frac{d}{d\tilde{t}}|\psi(\tilde{t})\rangle  = \tilde H(\tilde{t})\,|\psi(\tilde{t})\rangle.
+i\frac{d}{d\tilde{t}}|\psi(\tilde{t})\rangle  = \tilde H(\tilde{t})|\psi(\tilde{t})\rangle.
 $$
