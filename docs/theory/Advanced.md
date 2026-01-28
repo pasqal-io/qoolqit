@@ -7,7 +7,9 @@ This section explains how QoolQit's dimensionless formulation relates to physica
 In physical units, the Rydberg Hamiltonian is:
 
 $$
-H = \sum_{i<j} \frac{C_6}{r_{ij}^6} \hat{n}_i \hat{n}_j + \frac{\Omega(t)}{2} \sum_i \hat{\sigma}^x_i - \delta(t) \sum_i \hat{n}_i
+H = \sum_{i<j} \frac{C_6}{r_{ij}^6}\,\hat{n}_i \hat{n}_j
++ \frac{\Omega(t)}{2}\sum_i \hat{\sigma}_i^x
+- \delta(t)\sum_i \hat{n}_i
 $$
 
 where:
@@ -94,28 +96,27 @@ If compilation fails, the program simply cannot fit the device under any valid a
 Since QoolQit used an adimensional Hamiltonian defined with respect to a reference **energy scale** $J_0$, time must also be measured relative to that same scale. The reason is simply the Schrödinger equation that describes the dynamics of the quantum system.
 
 $$
-i\hbar \frac{d}{dt}|\psi(t)> = H(t)\,|\psi(t)>
+i\hbar \frac{d}{dt}|\psi(t)\rangle = H(t)\,|\psi(t)\rangle
 $$
-
 
 We require the physical and dimensionless descriptions to generate the **same unitary evolution**:
 
 $$
-U(t)\equiv \mathcal{T}\exp\!\left(-\frac{i}{\hbar}\int_0^{t} H(t')\,dt'\right)
-\;=\;
-\tilde U(\tilde t)\equiv \mathcal{T}\exp\!\left(-i\int_0^{\tilde t}\tilde H(\tilde t')\,d\tilde t'\right).
+U(t)\equiv \mathcal{T}\exp\!\left(-\frac{i}{\hbar}\int_0^{t} H(t')dt'\right)
+=
+\tilde U(\tilde t)\equiv \mathcal{T}\exp\!\left(-i\int_0^{\tilde t}\tilde H(\tilde t')d\tilde t'\right).
 $$
 
 Using the definition of the dimensionless Hamiltonian $H(t)=J_0\,\tilde H(\tilde t)$, this matching is only possible if the integration variables satisfy:
 
 $$
-\frac{J_0}{\hbar}\,dt = d\tilde t
+\frac{J_0}{\hbar}dt = d\tilde t
 \qquad\Longrightarrow\qquad
-\tilde t \equiv \frac{J_0}{\hbar}\,t.
+\tilde t \equiv \frac{J_0}{\hbar}t.
 $$
 
 With this choice, the Schrödinger equation becomes:
 
 $$
-i\,\frac{d}{d\tilde t}|\psi(\tilde t)>  = \tilde H(\tilde t)\,|\psi(\tilde t)>.
+i\frac{d}{d\tilde{t}}|\psi(\tilde{t})\rangle  = \tilde H(\tilde{t})\,|\psi(\tilde{t})\rangle.
 $$
