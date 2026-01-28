@@ -8,11 +8,8 @@ In physical units, the Rydberg Hamiltonian is:
 
 $$
 H(t) =
-\underbrace{\sum_{i<j} \frac{C_6}{r_{ij}} \hat{n}_i \hat{n}_j}_{\text{interactions}}
-\+\
-\underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\hat{\sigma}_i^y\right)}_{\text{global drive}}
-\-\
-\underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i}_{\text{detuning}}
+\underbrace{\sum_{i<j} \frac{C_6}{r_{ij}} \hat{n}_i \hat{n}_j}_{\text{interactions}}+
+\underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\hat{\sigma}_i^y\right)}_{\text{global drive}}-\underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i}_{\text{detuning}}
 $$
 
 where $\hat{n}=\frac{1}{2}\left(1-\hat{\sigma}^z\right)$ is the Rydberg occupation operator.

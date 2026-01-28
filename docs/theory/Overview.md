@@ -60,9 +60,9 @@ $$
 
 where $\tilde{r}_{ij}$ is the dimensionless distance between qubits $i$ and $j$.
 
-> 📖 Check [Registers](registers.md) for all available register creation methods and options.
+> 📖 Check [Registers](../contents/registers.md) for all available register creation methods and options.
 
-> 📖 Check [Problem embedding](available_embedder.md) for embedding data and problems into the Rydberg analog model.
+> 📖 Check [Problem embedding](../contents/available_embedder.md) for embedding data and problems into the Rydberg analog model.
 
 ## Waveforms and Drives
 
@@ -96,9 +96,9 @@ The dimensionless drive $\tilde{\Omega}$ is expressed relative to the maximum in
 | Balanced | $\tilde{\Omega} \sim 1$ | Comparable energy scales |
 | Weak drive | $\tilde{\Omega} \ll 1$ | Interactions dominate |
 
-> 📖 See [Waveforms](waveforms.md) for all waveform types and options.
+> 📖 See [Waveforms](../contents/waveforms.md) for all waveform types and options.
 
-> 📖 See [Drive Hamiltonian](drives.md) for details on combining waveforms into drives.
+> 📖 See [Drive Hamiltonian](../contents/drives.md) for details on combining waveforms into drives.
 
 ## Building a Program
 
@@ -115,7 +115,7 @@ program = Program(
 
 The initial state of the system is always $|0\rangle^{\otimes N}$.
 
-> 📖 See [Quantum Programs](programs.md) for more details.
+> 📖 See [Quantum Programs](../contents/programs.md) for more details.
 
 ## Compilation and Execution
 
@@ -135,9 +135,9 @@ sequence = program.compile(device)
 result = sequence.run()
 ```
 
-> 📖 See [Devices](devices.md) for available devices and their specifications.
+> 📖 See [Devices](../contents/devices.md) for available devices and their specifications.
 
-> 📖 See [Execution](execution.md) for running programs and handling results.
+> 📖 See [Execution](../contents/execution.md) for running programs and handling results.
 
 ## Time Handling
 
@@ -159,7 +159,7 @@ With specific applications in mind, a user can optionally define a reference tim
 sequence = program.compile(device, t_ref=kappa * device.max_duration)
 ```
 
-### Example
+### Example (to be defined)
 
 Suppose you define three waveforms with dimensionless durations:
 
