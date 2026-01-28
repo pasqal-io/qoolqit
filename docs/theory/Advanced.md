@@ -44,9 +44,7 @@ Dividing the full Hamiltonian by $J_0$ gives the **dimensionless QoolQit Hamilto
 
 $$
 H(t) =
-\sum_{i<j} \frac{C_6}{r_{ij}^6}\,\hat{n}_i \hat{n}_j
-+ \sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\,\hat{\sigma}_i^y\right)
-- \sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i
+\sum_{i<j} \frac{C_6}{r_{ij}^6}\,\hat{n}_i \hat{n}_j + \sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\,\hat{\sigma}_i^y\right) - \sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i
 $$
 
 **Key convention:** In QoolQit, the minimum dimensionless distance is $\min(\tilde{r}_{ij}) = 1$, which means the maximum interaction is 1 as well.
