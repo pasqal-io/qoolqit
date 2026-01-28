@@ -306,33 +306,49 @@ def test_base_waveform_to_pulser() -> None:
 
 
 def test_to_pulser_sub_ns_delay_single_wf() -> None:
-    # add a sub ns delay, i.e. delay_duration*pulser_duration < 1
-    delay_duration = 0.004
-    pulser_duration = 100
-    assert delay_duration * pulser_duration < 1
+    """
+    Add a delay to a Waveform and test conversion to Pulser.
 
-    composite_waveform = CompositeWaveform(Constant(2.83, 0.5), Delay(delay_duration))
+    Check that, when translated, the delay is ignored if lasts less than 1 ns.
+    """
+    qoolqit_duration = 2.83
+    qoolqit_delay_duration = 0.004
+    pulser_duration = 100
+
+    # check that the added delay will be translated into a < 1 ns pulser delay
+    pulser_delay_duration = (qoolqit_delay_duration / qoolqit_duration) * pulser_duration
+    assert pulser_delay_duration < 1
+
+    composite_waveform = CompositeWaveform(Constant(2.83, 0.5), Delay(qoolqit_delay_duration))
     pulser_waveform = composite_waveform._to_pulser(duration=pulser_duration)
 
-    # assert that it is ignored when compiled to a pulser waveform
-    # since sub-ns waveforms are not supported
+    # assert that it is ignored when compiled to a pulser.Waveform without the delay
     assert isinstance(pulser_waveform, pulser.ConstantWaveform)
     assert pulser_waveform.duration == 100
 
 
 def test_to_pulser_sub_ns_delay_composite_wf() -> None:
-    # add a sub ns delay, i.e. delay_duration*pulser_duration < 1
-    delay_duration = 3.0e-4
+    """
+    Add a delay to a CompositeWaveform and test conversion to Pulser.
+
+    Check that, when translated, the delay is ignored if lasts less than 1 ns.
+    """
+    qoolqit_duration = 10.0
+    qoolqit_delay_duration = 3.0e-4
     pulser_duration = 1223
-    assert delay_duration * pulser_duration < 1
+
+    # check that the added delay will be translated into a < 1 ns pulser delay
+    pulser_delay_duration = (qoolqit_delay_duration / qoolqit_duration) * pulser_duration
+    assert pulser_delay_duration < 1
 
     composite_waveform = CompositeWaveform(
-        Constant(2.83, 0.5), Ramp(10.0, -1.0, 1.3), Delay(delay_duration)
+        Constant(qoolqit_duration / 5, 0.5),
+        Ramp(4 * qoolqit_duration / 5, -1.0, 1.3),
+        Delay(qoolqit_delay_duration),
     )
     pulser_waveform = composite_waveform._to_pulser(duration=pulser_duration)
 
-    # assert that it is ignored when compiled to a pulser waveform
-    # since sub-ns waveforms are not supported
+    # assert that it is ignored when compiled to a pulser.CompositeWaveform without the delay
     assert isinstance(pulser_waveform, pulser.CompositeWaveform)
     assert len(pulser_waveform.waveforms) == 2
     assert pulser_waveform.duration == 1223
