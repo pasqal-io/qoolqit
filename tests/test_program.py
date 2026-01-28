@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from typing import Callable
 
+import numpy as np
 import pytest
 from pulser.sequence import Sequence as PulserSequence
 
@@ -14,6 +15,7 @@ from qoolqit.execution import CompilerProfile
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import Constant
+from qoolqit.waveforms.base_waveforms import CompositeWaveform
 
 QOOLQIT_DEFAULT_DEVICES = [AnalogDevice, DigitalAnalogDevice, MockDevice]
 
@@ -101,3 +103,30 @@ def test_compiled_sequence_with_delays() -> None:
 
     pulser_duration = program.compiled_sequence.get_duration()
     assert pulser_duration == 80
+
+
+def test_compiler_profile_max_duration_roundoff_error() -> None:
+    amp_durations = [
+        0.5343055070957703,
+        0.5421667817326633,
+        0.13096321648808137,
+        0.9571593080277384,
+        0.4783565802435945,
+        0.479137595409575,
+    ]
+    det_durations = 0.7172753369271352
+
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
+    amplitude = CompositeWaveform(*(Constant(d, 0.5) for d in amp_durations))
+    detuning = Constant(det_durations, -1.5)
+    drive = Drive(amplitude=amplitude, detuning=detuning)
+
+    # test that close-by durations in amp/det compile to a single duration in pulser
+    assert drive.amplitude.duration != drive.detuning.duration
+    assert np.isclose(drive._amplitude.duration, drive._detuning.duration)
+
+    program = QuantumProgram(register=register, drive=drive)
+    program.compile_to(device=AnalogDevice(), profile=CompilerProfile.MAX_DURATION)
+
+    pulser_duration = program.compiled_sequence.get_duration()
+    assert pulser_duration == 6000
