@@ -26,7 +26,7 @@ This means you can write the quantum evolution you want your system to follow (y
 
     At the heart of QoolQit is a dimensionless formulation of the Rydberg Hamiltonian. Your system evolves under:
     $$
-    \tilde{H}(t) = \sum_{i<j} \tilde{J}_{ij} \hat{n}_i \hat{n}_j + \sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t) \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right) - \sum_i \left( \tilde{\delta}(t) + \epsilon_i \tilde{\Delta}(t) \right) \hat{n}_i
+    \tilde{H}(t) = \underbrace{\sum_{i<j} \tilde{J}_{ij}  \hat{n}_i \hat{n}_j}_{\text{interactions}} + \underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t)  \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right)}_{\text{global drive}} - \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}
     $$
     where all quantities with tildes ($\tilde{\phantom{x}}$) are dimensionless.
 
