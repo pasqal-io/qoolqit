@@ -15,7 +15,7 @@ QoolQit uses a **dimensionless reference frame** where all quantities are expres
 Your system evolves under the following Hamiltonian:
 
 $$
-\tilde{H}(t) = \underbrace{\sum_{i<j} \tilde{J}_{ij}  \hat{n}_i \hat{n}_j}_{\text{interactions}} + \underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t) \, \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right)}_{\text{global drive}} - \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}
+\tilde{H}(t) = \underbrace{\sum_{i<j} \tilde{J}_{ij}  \hat{n}_i \hat{n}_j}_{\text{interactions}} + \underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t)  \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right)}_{\text{global drive}} - \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}
 $$
 
 where $\hat{n} = \frac{1}{2}(1 - \hat{\sigma}^z)$ is the Rydberg occupation operator.
