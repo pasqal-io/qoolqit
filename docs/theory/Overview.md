@@ -1,4 +1,4 @@
-# Overview
+# Qoolqit
 
 This page explains how QoolQit represents quantum programs using a dimensionless Hamiltonian framework built on Rydberg atom physics.
 

@@ -4,7 +4,9 @@ repo_name: "QoolQit"
 
 nav:
   - Home: index.md
-  - Rydberg Model: theory/rydberg_model.md
+  - Overview:
+    - Qoolqit overview: theory/Overview.md
+    - (Advanced) From Physical Units to QoolQit: theory/Advanced.md
   - Contents:
     - Problem generation:
       - Graphs: contents/graphs.md
