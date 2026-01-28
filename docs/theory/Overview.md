@@ -1,8 +1,6 @@
-# Hamiltonian Formulation
+## Overview
 
 This page explains how QoolQit represents quantum programs using a dimensionless Hamiltonian framework built on Rydberg atom physics.
-
-## Overview
 
 QoolQit uses a **dimensionless reference frame** where all quantities are expressed relative to a reference interaction strength. This makes your programs device-agnostic at definition time and portable across different hardware configurations.
 
