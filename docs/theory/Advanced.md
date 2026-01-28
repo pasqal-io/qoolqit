@@ -94,7 +94,7 @@ If compilation fails, the program simply cannot fit the device under any valid a
 Since QoolQit used an adimensional Hamiltonian defined with respect to a reference **energy scale** $J_0$, time must also be measured relative to that same scale. The reason is simply the Schrödinger equation that describes the dynamics of the quantum system.
 
 $$
-i\hbar \frac{d}{dt}|\psi(t)\rangle = H(t)\,|\psi(t)\rangle
+i\hbar \frac{d}{dt}|\psi(t)> = H(t)\,|\psi(t)>
 $$
 
 
@@ -117,5 +117,5 @@ $$
 With this choice, the Schrödinger equation becomes:
 
 $$
-i\,\frac{d}{d\tilde t}|\psi(\tilde t)\rangle = \tilde H(\tilde t)\,|\psi(\tilde t)\rangle.
+i\,\frac{d}{d\tilde t}|\psi(\tilde t)>  = \tilde H(\tilde t)\,|\psi(\tilde t)>.
 $$
