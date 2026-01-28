@@ -7,15 +7,26 @@ This section explains how QoolQit's dimensionless formulation relates to physica
 In physical units, the Rydberg Hamiltonian is:
 
 $$
-\tilde{H}(t) = \sum_{i<j} \frac{C_6}{r_{ij}^6}  \hat{n}_i \hat{n}_j + \sum_i \frac{\Omega (t)}{2} \left( \cos\phi(t) \, \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right) - \sum_i \left(\delta (t) + \epsilon_i  \Delta(t) \right) \hat{n}_i
+H(t) =
+\underbrace{\sum_{i<j} J_{ij}\, \hat{n}_i \hat{n}_j}_{\text{interactions}}
+\;+\;
+\underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\,\hat{\sigma}_i^y\right)}_{\text{global drive}}
+\;-\;
+\underbrace{\sum_i \left(\delta(t) + \epsilon_i\,\Delta(t)\right)\hat{n}_i}_{\text{detuning}}
 $$
 
-where:
+where $\hat{n}=\frac{1}{2}\left(1-\hat{\sigma}^z\right)$ is the Rydberg occupation operator.
 
-- $C_6$ is a device-dependent coefficient (set by the Rydberg level)
-- $r_{ij}$ is the physical distance between atoms (in µm)
-- $\Omega(t)$ is the Rabi frequency (in rad/µs or MHz)
-- $\delta(t)$ is the detuning (in rad/µs or MHz)
+#### Components
+
+| Symbol | Description | Typical units |
+|--------|-------------|---------------|
+| $J_{ij}=\frac{C_6}{r_{ij}^6}$ | Coupling between atoms $i$ and $j$ | rad/s (or MHz) |
+| $\Omega(t)$ | Global Rabi frequency (drive amplitude) | rad/s (or MHz) |
+| $\delta(t)$ | Global detuning | rad/s (or MHz) |
+| $\Delta(t)$ | Local detuning amplitude | rad/s (or MHz) |
+| $\phi(t)$ | Drive phase | $[0,2\pi)$ |
+| $\epsilon_i$ | Local detuning weight | $[0,1]$ |
 
 ## Introducing the Reference Interaction $J_0$
 
