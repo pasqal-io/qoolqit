@@ -3263,6 +3263,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#qoolqit.Register.radial_distances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        radial_distances
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Register.max_radial_distance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        max_radial_distance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#qoolqit.Register.interactions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5718,6 +5740,16 @@ Distance between each qubit pair.</p>
 Minimum distance between all qubit pairs.</p>
 </li>
 <li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.Register.radial_distances" title="qoolqit.Register.radial_distances">radial_distances</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+Radial distance of each qubit from the origin.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.Register.max_radial_distance" title="qoolqit.Register.max_radial_distance">max_radial_distance</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+Maximum radial distance between all qubits.</p>
+</li>
+<li>
 <p><span class="mkapi-item-name"><a href="./#qoolqit.Register.interactions" title="qoolqit.Register.interactions">interactions</a></span>
  <span class="mkapi-dash">&mdash;</span>
 Interaction 1/r^6 between each qubit pair.</p>
@@ -5912,6 +5944,40 @@ a list of coordinates [(x, y), ...]</p>
 </p>
 <div class="mkapi-document">
 <p>Minimum distance between all qubit pairs.</p>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Register.radial_distances">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="register/#qoolqit.register.Register.radial_distances" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/register/#qoolqit.register.Register.radial_distances" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Register" title="qoolqit.Register">Register</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Register.radial_distances" title="qoolqit.Register.radial_distances">radial_distances</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">dict</span></span>
+</p>
+<div class="mkapi-document">
+<p>Radial distance of each qubit from the origin.</p>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Register.max_radial_distance">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="register/#qoolqit.register.Register.max_radial_distance" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/register/#qoolqit.register.Register.max_radial_distance" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Register" title="qoolqit.Register">Register</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Register.max_radial_distance" title="qoolqit.Register.max_radial_distance">max_radial_distance</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">float</span></span>
+</p>
+<div class="mkapi-document">
+<p>Maximum radial distance between all qubits.</p>
 </div>
 <p class="mkapi-object mkapi-page-source" id="qoolqit.Register.interactions">
 <span class="mkapi-object-link">
@@ -6391,7 +6457,7 @@ The compiler profile to use.</p>
 <div class="mkapi-section-content">
 <ul class="mkapi-item-list">
 <li>
-<p><span class="mkapi-item-type">ValueError</span></p>
+<p><span class="mkapi-item-type">error</span></p>
 </li>
 <li>
 <p><span class="mkapi-item-type"><a href="exceptions/#qoolqit.exceptions.CompilationError" title="qoolqit.exceptions.CompilationError">CompilationError</a></span></p>
@@ -6440,7 +6506,7 @@ The compiler profile to use.</p>
 <ul class="mkapi-item-list">
 <li>
 <p><span class="mkapi-item-name">specs</span> : 
-<span class="mkapi-item-type">dict</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | None]</span> <span class="mkapi-dash">&mdash;</span>
 Return the device specification constrains.</p>
 </li>
 </ul>
@@ -6473,7 +6539,7 @@ Return the device specification constrains.</p>
 <ul class="mkapi-item-list">
 <li>
 <p><span class="mkapi-item-name">specs</span> : 
-<span class="mkapi-item-type">dict</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | None]</span> <span class="mkapi-dash">&mdash;</span>
 Return the device specification constrains.</p>
 </li>
 </ul>
@@ -6506,7 +6572,7 @@ Return the device specification constrains.</p>
 <ul class="mkapi-item-list">
 <li>
 <p><span class="mkapi-item-name">specs</span> : 
-<span class="mkapi-item-type">dict</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | None]</span> <span class="mkapi-dash">&mdash;</span>
 Return the device specification constrains.</p>
 </li>
 </ul>
@@ -6602,7 +6668,7 @@ maximum allowed amplitude by the device.</p>
 <ul class="mkapi-item-list">
 <li>
 <p><span class="mkapi-item-name">specs</span> : 
-<span class="mkapi-item-type">dict</span> <span class="mkapi-dash">&mdash;</span>
+<span class="mkapi-item-type">dict[str, float | None]</span> <span class="mkapi-dash">&mdash;</span>
 Return the device specification constrains.</p>
 </li>
 </ul>
@@ -6745,7 +6811,7 @@ Return the specified device from the selected device from a connection.</p>
 </span>
 </span><span class="mkapi-object-kind">property</span>
 <span class="mkapi-object-parent">
-<a href="./#qoolqit.Device" title="qoolqit.Device">Device</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Device.specs" title="qoolqit.Device.specs">specs</a></span><span class="mkapi-signature"><span class="mkapi-colon">: </span><span class="mkapi-return">dict</span></span>
+<a href="./#qoolqit.Device" title="qoolqit.Device">Device</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Device.specs" title="qoolqit.Device.specs">specs</a></span><span class="mkapi-signature"><span class="mkapi-colon">: </span><span class="mkapi-return">dict[str, float | None]</span></span>
 </p>
 <div class="mkapi-document">
 <p>Return the device specification constrains.</p>
