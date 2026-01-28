@@ -13,6 +13,12 @@ Programming neutral-atom quantum computers requires specifying physical paramete
     - Energies are measured relative to the maximum interaction strength
     - Times are measured relative to the interaction timescale
 
+    **Key benefits:**
+
+    - Programs are hardware-independent until compilation
+    - Drive strengths are naturally expressed as "multiples of interactions"
+    - The same program can be compiled to different devices without modification
+
 This means you can write the quantum evolution you want your system to follow (your QuantumProgram) and a compilation routine will automatically map your dimensionless program to physical values that fit the target device.
 
 !!! definition "The Dimensionless Hamiltonian"

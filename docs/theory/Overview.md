@@ -2,17 +2,7 @@
 
 This page explains how QoolQit represents quantum programs using a dimensionless Hamiltonian framework built on Rydberg atom physics.
 
-QoolQit uses a **dimensionless reference frame** where all quantities are expressed relative to a reference interaction strength. This makes your programs device-agnostic at definition time and portable across different hardware configurations.
-
-**Key benefits:**
-
-- Programs are hardware-independent until compilation
-- Drive strengths are naturally expressed as "multiples of interactions"
-- The same program can be compiled to different devices without modification
-
-## The QoolQit Hamiltonian
-
-Your system evolves under the following Hamiltonian:
+As defined in the [Introduction](./Introduction.md), the system evolves under the following Hamiltonian:
 
 $$
 \tilde{H}(t) = \underbrace{\sum_{i<j} \tilde{J}_{ij}  \hat{n}_i \hat{n}_j}_{\text{interactions}} + \underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t)  \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right)}_{\text{global drive}} - \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}
