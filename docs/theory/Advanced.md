@@ -106,13 +106,13 @@ $$
 
 We require the physical and dimensionless descriptions to generate the **same unitary evolution**:
 
-$$ U(t)  = \tilde U(\tilde t)\doublearrow \int_0^{t} H(t')dt'=\int_0^{\tilde{t}} \tilde{H}(\tilde{t}')d\tilde{t}'$$
+$$ U(t)  = \tilde U(\tilde t) \rightarrow \int_0^{t} H(t')dt'=\int_0^{\tilde{t}} \tilde{H}(\tilde{t}')d\tilde{t}'$$
 
 Therefore
 
-$$\int_0^{t} H(t')dt' = \int_0^{t} J_0 \tilde{H}(t') t_0 d\tilde{t}' = \int_0^{t} J_0 t_0 \tilde{H}(\tilde{t}')  d\tilde{t}' \doublearrow J_0 t_0=1$$
+$$\int_0^{t} H(t')dt' = \int_0^{t} J_0 \tilde{H}(t') t_0 d\tilde{t}' = \int_0^{t} J_0 t_0 \tilde{H}(\tilde{t}')  d\tilde{t}' \doublerightearrow J_0 t_0=1$$
 
-where we defined the adimensional time $\tilde{t}=\frac{t}{t_0}.
+where we defined the adimensional time $\tilde{t}=\frac{t}{t_0}$.
 
 !!! note "Pulser behavior"
     In Pulser, energies are measured in rad/$\mu s$ (or MHz) but times are measured in $ns$ creating an artificial discrepancy of $10^3$ for convenience in terms of rounding and displaying. To keep track of this, also the invariant written before has to be rescaled according to $J_0 t_0=100$ and this is the value used in QoolQit.
