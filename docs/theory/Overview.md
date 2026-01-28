@@ -2,7 +2,6 @@
 
 This page explains how QoolQit represents quantum programs using a dimensionless Hamiltonian framework built on Rydberg atom physics.
 
----
 
 ## Overview
 
@@ -14,14 +13,14 @@ QoolQit uses a **dimensionless reference frame** where all quantities are expres
 - Drive strengths are naturally expressed as "multiples of interactions"
 - The same program can be compiled to different devices without modification
 
----
+
 
 ## The QoolQit Hamiltonian
 
 Your system evolves under the following Hamiltonian:
 
 $$
-\tilde{H}(t) = \underbrace{\sum_{i<j} \tilde{J}_{ij} \, \hat{n}_i \hat{n}_j}_{\text{interactions}} + \underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t) \, \hat{\sigma}^x_i - \sin\phi(t) \, \hat{\sigma}^y_i \right)}_{\text{global drive}} - \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i \, \tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}
+\tilde{H}(t) = \underbrace{\sum_{i<j} \tilde{J}_{ij}  \hat{n}_i \hat{n}_j}_{\text{interactions}} + \underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t) \, \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right)}_{\text{global drive}} - \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}
 $$
 
 where $\hat{n} = \frac{1}{2}(1 - \hat{\sigma}^z)$ is the Rydberg occupation operator.
@@ -37,7 +36,7 @@ where $\hat{n} = \frac{1}{2}(1 - \hat{\sigma}^z)$ is the Rydberg occupation oper
 | $\phi(t)$ | Drive phase | $[0, 2\pi)$ |
 | $\epsilon_i$ | Local detuning weight for qubit $i$ | $[0, 1]$ |
 
----
+
 
 ## Register
 
@@ -60,12 +59,11 @@ register = Register.triangular(3)  # triangular lattice
 
 **Convention:** Use unit spacing—the closest pair of qubits should be at distance 1.
 
-> 📖 See [Registers](registers.md) for all available register creation methods and options.
-> 📖 See [Problem embedding](available_embedder.md) for embedding data and problems into the Rydberg analog model.
+> 📖 Check [Registers](registers.md) for all available register creation methods and options.\\
+> 📖 Check [Problem embedding](available_embedder.md) for embedding data and problems into the Rydberg analog model.
 
-### Interaction Strength
 
-Qubit interactions follow the Rydberg $1/r^6$ scaling:
+Qubit interactions follow the positions of the atoms according to the Rydberg $1/\tilde{r}^6$ scaling:
 
 $$
 \tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6}
@@ -73,7 +71,7 @@ $$
 
 where $\tilde{r}_{ij}$ is the dimensionless distance between qubits $i$ and $j$.
 
----
+
 
 ## Waveforms and Drives
 
@@ -99,12 +97,10 @@ drive = Drive(
 )
 ```
 
-> 📖 See [Waveforms](waveforms.md) for all waveform types and interpolation options.
+> 📖 See [Waveforms](waveforms.md) for all waveform types and options.\\
 > 📖 See [Drive Hamiltonian](drives.md) for details on combining waveforms into drives.
 
-### Interpreting Drive Strength
-
-The dimensionless drive $\tilde{\Omega}$ is expressed relative to the maximum interaction:
+The dimensionless drive $\tilde{\Omega}$ is expressed relative to the maximum interaction $\max{\tilde{J}_{ij}}$:
 
 | Regime | Condition | Physical Meaning |
 |--------|-----------|------------------|
@@ -112,7 +108,7 @@ The dimensionless drive $\tilde{\Omega}$ is expressed relative to the maximum in
 | Balanced | $\tilde{\Omega} \sim 1$ | Comparable energy scales |
 | Weak drive | $\tilde{\Omega} \ll 1$ | Interactions dominate |
 
----
+
 
 ## Building a Program
 
@@ -127,11 +123,11 @@ program = Program(
 )
 ```
 
-The initial state is always $|0\rangle^{\otimes N}$.
+The initial state of the system is always $|0\rangle^{\otimes N}$.
 
-> 📖 See [Quantum Programs](programs.md) for advanced program configuration options.
+> 📖 See [Quantum Programs](programs.md) for more details.
 
----
+
 
 ## Compilation and Execution
 
@@ -154,24 +150,20 @@ result = sequence.run()
 > 📖 See [Devices](devices.md) for available devices and their specifications.
 > 📖 See [Execution](execution.md) for running programs and handling results.
 
----
+## Time Handling
 
-## Time Handling (Temporary)
+Time in QoolQit is also dimensionless. The dimensionless time $\tilde{t}$ measures duration relative to the interaction timescale.
 
-Time in QoolQit is expressed relative to $J_0$:
+The value of $\tilde{t}$ tells you how many "interaction cycles" your program runs:
 
-$$\tilde{t} = t / J_0$$
+| Regime | Condition | Physical Meaning |
+|--------|-----------|------------------|
+| Short time | $\tilde{t} \ll 1$ | Evolution time is short compared to interaction timescale; interactions have little effect |
+| Long time | $\tilde{t} \gg 1$ | Many interaction cycles; dynamics fully explore the interacting Hilbert space |
 
-By default, compilation uses the program's time values directly. However, you can optionally specify a **reference time** to reinterpret all durations as fractions of a maximum.
+For adiabatic algorithms, you typically need $\tilde{t} \gg 1$ to allow the system to follow the ground state.
 
-### Default compilation
-
-```python
-# Durations are used as-is (in dimensionless units)
-sequence = program.compile(device)
-```
-
-### Compilation with reference time
+With specific applications in mind, a user can optionally define a reference time at compilation stage.
 
 ```python
 # Durations are interpreted as fractions of t_ref
@@ -200,9 +192,8 @@ With `compile(device, t_ref=40)`, the durations are interpreted as fractions of 
 | 10 | 0.25 × t_ref |
 | 20 | 0.50 × t_ref |
 
-This allows you to define programs in relative terms and scale them to the device's maximum duration at compile time.
+This allows you to define programs in relative terms and scale them, e.g., to the device's maximum duration at compile time.
 
----
 
 ## Example: Rydberg Blockade Demonstration
 
@@ -245,18 +236,59 @@ result_no_blockade = program_no_blockade.compile(device).run()
 
 ---
 
-## Advanced: How Compilation Works
+## Advanced: From Physical Units to QoolQit
 
-Compilation assigns a physical value to the reference interaction $J_0$. This is done automatically based on the program and device constraints.
+This section explains how QoolQit's dimensionless formulation relates to physical quantities and how compilation maps abstract programs back to real hardware.
+
+### The Physical Hamiltonian
+
+In physical units, the Rydberg Hamiltonian is:
+
+$$
+H = \sum_{i<j} \frac{C_6}{r_{ij}^6} \hat{n}_i \hat{n}_j + \frac{\Omega(t)}{2} \sum_i \hat{\sigma}^x_i - \delta(t) \sum_i \hat{n}_i
+$$
+
+where:
+
+- $C_6$ is a device-dependent coefficient (set by the Rydberg level)
+- $r_{ij}$ is the physical distance between atoms (in µm)
+- $\Omega(t)$ is the Rabi frequency (in rad/µs or MHz)
+- $\delta(t)$ is the detuning (in rad/µs or MHz)
+
+### Introducing the Reference Interaction $J_0$
+
+To make programs device-agnostic, we define an arbitrary **reference distance** $r_0$ and a corresponding **reference interaction**:
+
+$$
+J_0 = \frac{C_6}{r_0^6}
+$$
+
+This $J_0$ sets the energy scale for the problem. We then express all quantities relative to it:
+
+$$
+\tilde{r}_{ij} = \frac{r_{ij}}{r_0}, \qquad \tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6}, \qquad \tilde{\Omega} = \frac{\Omega}{J_0}, \qquad \tilde{\delta} = \frac{\delta}{J_0}
+$$
+
+Dividing the full Hamiltonian by $J_0$ gives the **dimensionless QoolQit Hamiltonian**:
+
+$$
+\tilde{H} = \frac{H}{J_0} = \sum_{i<j} \tilde{J}_{ij} \hat{n}_i \hat{n}_j + \frac{\tilde{\Omega}(t)}{2} \sum_i \hat{\sigma}^x_i - \tilde{\delta}(t) \sum_i \hat{n}_i
+$$
+
+**Key convention:** In QoolQit, the minimum dimensionless distance is $\min(\tilde{r}_{ij}) = 1$, which means the maximum interaction is $\max(\tilde{J}_{ij}) = 1$.
+
+### What Compilation Does
+
+When you write a QoolQit program, you specify dimensionless ratios like $\tilde{\Omega}/\tilde{J}$. Compilation chooses a concrete value for $J_0$ that maps these ratios to physical values within the device's capabilities.
 
 The key insight is:
 
-- A **program** is defined by a ratio $\tilde{\Omega}/\tilde{J}$, which corresponds to a **line** through the origin
-- A **device** defines a box of allowed values: $[0, \Omega_{\max}] \times [0, J_{\max}]$
+- A **program** defines a ratio $\tilde{\Omega}/\tilde{J}$, which corresponds to a **line** through the origin in $(\Omega, J)$ space
+- A **device** defines a box of allowed physical values: $[0, \Omega_{\max}] \times [0, J_{\max}]$
 
-![Compilation strategy](./assets/compilation.png)
+![Compilation strategy](./compilation.png)
 
-All points on a program line that fall within the device box are valid compilations. Choosing a reference $J_0$ is equivalent to selecting which point on the line to use.
+All points on the program line that fall within the device box are valid compilations. Choosing $J_0$ is equivalent to selecting which point on the line to use.
 
 In practice, **programs with higher amplitude perform better on hardware**, so QoolQit automatically selects the point that maximizes amplitude while staying within device constraints.
 
@@ -287,13 +319,6 @@ This approach guarantees that compiled programs:
 
 - **Fit within device specs** (if compilation succeeds)
 - **Use the maximum amplitude possible** for the user-defined program
-
-### Compilation Outcomes
-
-| Result | Meaning |
-|--------|---------|
-| Success | Program fits within device constraints |
-| Failure | Program cannot be realized on this device |
 
 If compilation fails, the program simply cannot fit the device under any valid assignment of $J_0$.
 
