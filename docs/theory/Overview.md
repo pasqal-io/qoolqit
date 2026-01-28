@@ -52,7 +52,8 @@ register = Register.triangular(3)  # triangular lattice
 
 **Convention:** Use unit spacing—the closest pair of qubits should be at distance 1.
 
-> 📖 Check [Registers](registers.md) for all available register creation methods and options.\\
+> 📖 Check [Registers](registers.md) for all available register creation methods and options.
+
 > 📖 Check [Problem embedding](available_embedder.md) for embedding data and problems into the Rydberg analog model.
 
 Qubit interactions follow the positions of the atoms according to the Rydberg $1/\tilde{r}^6$ scaling:
@@ -87,7 +88,8 @@ drive = Drive(
 )
 ```
 
-> 📖 See [Waveforms](waveforms.md) for all waveform types and options.\\
+> 📖 See [Waveforms](waveforms.md) for all waveform types and options.
+
 > 📖 See [Drive Hamiltonian](drives.md) for details on combining waveforms into drives.
 
 The dimensionless drive $\tilde{\Omega}$ is expressed relative to the maximum interaction $\max{\tilde{J}_{ij}}$:
