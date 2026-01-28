@@ -3041,7 +3041,18 @@
 <span class="normal"><a href="#__codelineno-0-285">285</a></span>
 <span class="normal"><a href="#__codelineno-0-286">286</a></span>
 <span class="normal"><a href="#__codelineno-0-287">287</a></span>
-<span class="normal"><a href="#__codelineno-0-288">288</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="normal"><a href="#__codelineno-0-288">288</a></span>
+<span class="normal"><a href="#__codelineno-0-289">289</a></span>
+<span class="normal"><a href="#__codelineno-0-290">290</a></span>
+<span class="normal"><a href="#__codelineno-0-291">291</a></span>
+<span class="normal"><a href="#__codelineno-0-292">292</a></span>
+<span class="normal"><a href="#__codelineno-0-293">293</a></span>
+<span class="normal"><a href="#__codelineno-0-294">294</a></span>
+<span class="normal"><a href="#__codelineno-0-295">295</a></span>
+<span class="normal"><a href="#__codelineno-0-296">296</a></span>
+<span class="normal"><a href="#__codelineno-0-297">297</a></span>
+<span class="normal"><a href="#__codelineno-0-298">298</a></span>
+<span class="normal"><a href="#__codelineno-0-299">299</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">overload</span>
@@ -3316,19 +3327,30 @@
 <a id="__codelineno-0-273" name="__codelineno-0-273"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <a id="__codelineno-0-274" name="__codelineno-0-274"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr_header__</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__repr_content__</span><span class="p">()</span>
 <a id="__codelineno-0-275" name="__codelineno-0-275"></a>
-<a id="__codelineno-0-276" name="__codelineno-0-276"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_to_pulser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParamObj</span> <span class="o">|</span> <span class="n">pulser</span><span class="o">.</span><span class="n">CompositeWaveform</span><span class="p">:</span>
-<a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a CompositeWaveform from QoolQit to Pulser.</span>
-<a id="__codelineno-0-278" name="__codelineno-0-278"></a>
-<a id="__codelineno-0-279" name="__codelineno-0-279"></a><span class="sd">        Pulser only supports integer duration, so the sum of rounded</span>
-<a id="__codelineno-0-280" name="__codelineno-0-280"></a><span class="sd">        durations of each waveform needs to add up to the rounded duration</span>
-<a id="__codelineno-0-281" name="__codelineno-0-281"></a><span class="sd">        of the composite waveform.</span>
-<a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-283" name="__codelineno-0-283"></a>        <span class="n">ratio</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span>
-<a id="__codelineno-0-284" name="__codelineno-0-284"></a>        <span class="n">new_durations</span> <span class="o">=</span> <span class="n">round_to_sum</span><span class="p">([</span><span class="n">ratio</span> <span class="o">*</span> <span class="n">wd</span> <span class="k">for</span> <span class="n">wd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">durations</span><span class="p">])</span>
-<a id="__codelineno-0-285" name="__codelineno-0-285"></a>        <span class="n">pulser_waveforms</span> <span class="o">=</span> <span class="p">(</span>
-<a id="__codelineno-0-286" name="__codelineno-0-286"></a>            <span class="n">w</span><span class="o">.</span><span class="n">_to_pulser</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">duration</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span><span class="p">,</span> <span class="n">new_durations</span><span class="p">)</span>
-<a id="__codelineno-0-287" name="__codelineno-0-287"></a>        <span class="p">)</span>
-<a id="__codelineno-0-288" name="__codelineno-0-288"></a>        <span class="k">return</span> <span class="n">pulser</span><span class="o">.</span><span class="n">CompositeWaveform</span><span class="p">(</span><span class="o">*</span><span class="n">pulser_waveforms</span><span class="p">)</span>
+<a id="__codelineno-0-276" name="__codelineno-0-276"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_to_pulser</span><span class="p">(</span>
+<a id="__codelineno-0-277" name="__codelineno-0-277"></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">int</span>
+<a id="__codelineno-0-278" name="__codelineno-0-278"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParamObj</span> <span class="o">|</span> <span class="n">pulser</span><span class="o">.</span><span class="n">waveforms</span><span class="o">.</span><span class="n">Waveform</span> <span class="o">|</span> <span class="n">pulser</span><span class="o">.</span><span class="n">CompositeWaveform</span><span class="p">:</span>
+<a id="__codelineno-0-279" name="__codelineno-0-279"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a CompositeWaveform from QoolQit to Pulser.</span>
+<a id="__codelineno-0-280" name="__codelineno-0-280"></a>
+<a id="__codelineno-0-281" name="__codelineno-0-281"></a><span class="sd">        Pulser only supports integer duration, so the sum of rounded</span>
+<a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="sd">        durations of each waveform needs to add up to the rounded duration</span>
+<a id="__codelineno-0-283" name="__codelineno-0-283"></a><span class="sd">        of the composite waveform.</span>
+<a id="__codelineno-0-284" name="__codelineno-0-284"></a>
+<a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="sd">        If the duration of a waveform in ns is rounded to zero, it will be ignored.</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a>
+<a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="sd">        Args:</span>
+<a id="__codelineno-0-288" name="__codelineno-0-288"></a><span class="sd">            duration (int): the new duration fo the Pulser waveform in ns.</span>
+<a id="__codelineno-0-289" name="__codelineno-0-289"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-290" name="__codelineno-0-290"></a>        <span class="n">ratio</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span>
+<a id="__codelineno-0-291" name="__codelineno-0-291"></a>        <span class="n">new_durations</span> <span class="o">=</span> <span class="n">round_to_sum</span><span class="p">([</span><span class="n">ratio</span> <span class="o">*</span> <span class="n">wd</span> <span class="k">for</span> <span class="n">wd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">durations</span><span class="p">])</span>
+<a id="__codelineno-0-292" name="__codelineno-0-292"></a>        <span class="n">pulser_waveforms</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-0-293" name="__codelineno-0-293"></a>            <span class="n">w</span><span class="o">.</span><span class="n">_to_pulser</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span>
+<a id="__codelineno-0-294" name="__codelineno-0-294"></a>            <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">duration</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span><span class="p">,</span> <span class="n">new_durations</span><span class="p">)</span>
+<a id="__codelineno-0-295" name="__codelineno-0-295"></a>            <span class="k">if</span> <span class="n">duration</span>
+<a id="__codelineno-0-296" name="__codelineno-0-296"></a>        <span class="p">]</span>
+<a id="__codelineno-0-297" name="__codelineno-0-297"></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pulser_waveforms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<a id="__codelineno-0-298" name="__codelineno-0-298"></a>            <span class="k">return</span> <span class="n">pulser_waveforms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-0-299" name="__codelineno-0-299"></a>        <span class="k">return</span> <span class="n">pulser</span><span class="o">.</span><span class="n">CompositeWaveform</span><span class="p">(</span><span class="o">*</span><span class="n">pulser_waveforms</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
 
 
