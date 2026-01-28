@@ -1,4 +1,4 @@
-#From Physical Units to QoolQit
+# From Physical Units to QoolQit
 
 This section explains how QoolQit's dimensionless formulation relates to physical quantities and how compilation maps abstract programs back to real hardware.
 
@@ -6,7 +6,7 @@ This section explains how QoolQit's dimensionless formulation relates to physica
 
 In physical units, the Rydberg Hamiltonian is:
 
-$H(t) = \sum_{i<j} \frac{C_6}{r_{ij}^6}\hat{n}_i \hat{n}_j + \frac{\Omega(t)}{2}\sum_i \hat{\sigma}_i^x - \delta(t)\sum_i \hat{n}_i$
+$$ H(t) = \sum_{i<j} \frac{C_6}{r_{ij}^6}\hat{n}_i \hat{n}_j + \frac{\Omega(t)}{2}\sum_i \hat{\sigma}_i^x - \delta(t)\sum_i \hat{n}_i $$
 
 where:
 
@@ -32,7 +32,7 @@ $$
 Dividing the full Hamiltonian by $J_0$ gives the **dimensionless QoolQit Hamiltonian**:
 
 $$
-\tilde{H}(t) = \sum_{i<j} \tilde{J}_{ij}  \hat{n}_i \hat{n}_j + sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t) \, \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right) - \sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i
+\tilde{H}(t) = \sum_{i<j} \tilde{J}_{ij} \hat{n}_i \hat{n}_j + \sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t)\hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right) - \sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i
 $$
 
 **Key convention:** In QoolQit, the minimum dimensionless distance is $\min(\tilde{r}_{ij}) = 1$, which means the maximum interaction is $\max(\tilde{J}_{ij}) = 1$.
