@@ -50,3 +50,11 @@ def test_register_from_graph(n_nodes: int) -> None:
     with pytest.raises(ValueError):
         graph = DataGraph()
         register = Register.from_graph(graph)
+
+
+def test_radial_distances() -> None:
+    coords = [(-0.3, -0.3), (-0.3, 0.3), (0.3, 0.3)]
+    register = Register.from_coordinates(coords)
+    radial_dists = register.radial_distances()
+    expected_radial_distances = {i: 0.3 * np.sqrt(2) for i in range(3)}
+    assert radial_dists == expected_radial_distances

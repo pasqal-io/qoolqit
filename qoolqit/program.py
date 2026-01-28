@@ -25,10 +25,13 @@ class QuantumProgram:
         drive: Drive,
     ) -> None:
 
+        if not isinstance(register, Register):
+            raise TypeError("`register` must be of type Register.")
         self._register = register
+        if not isinstance(drive, Drive):
+            raise TypeError("`drive` must be of type Drive.")
         self._drive = drive
         self._compiled_sequence: PulserSequence | None = None
-        self._device: Device | None = None
         for detuning in drive.weighted_detunings:
             for key in detuning.weights.keys():
                 if key not in register.qubits:

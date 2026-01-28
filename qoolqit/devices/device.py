@@ -9,11 +9,6 @@ from pulser.devices._device_datacls import BaseDevice
 
 from .unit_converter import UnitConverter
 
-UPPER_DURATION = 6000
-UPPER_AMP = 4.0 * pi
-UPPER_DET = 4.0 * pi
-LOWER_DISTANCE = 5.0
-
 
 class Device:
     """
@@ -83,17 +78,12 @@ class Device:
         # Relevant limits from the underlying device (float or None)
         self._max_duration = self._pulser_device.max_sequence_duration
         self._max_amp = self._pulser_device.channels["rydberg_global"].max_amp
-        self._max_det = self._pulser_device.channels["rydberg_global"].max_abs_detuning
+        self._max_abs_det = self._pulser_device.channels["rydberg_global"].max_abs_detuning
         self._min_distance = self._pulser_device.min_atom_distance
+        self._max_radial_distance = self._pulser_device.max_radial_distance
 
         # layouts
         self._requires_layout = self._pulser_device.requires_layout
-
-        # Values to use when limits do not exist
-        self._upper_duration = self._max_duration or UPPER_DURATION
-        self._upper_amp = self._max_amp or UPPER_AMP
-        self._upper_det = self._max_det or UPPER_DET
-        self._lower_distance = self._min_distance or LOWER_DISTANCE
 
         if default_converter is not None:
             # Snapshot the caller-provided factors so reset() reproduces them exactly.
@@ -102,8 +92,11 @@ class Device:
                 self._C6, t0, e0, d0
             )
         else:
-            # Default from energy using C6 and the "upper" amplitude.
-            self._default_factory = lambda: UnitConverter.from_energy(self._C6, self._upper_amp)
+            # Default from energy using C6 and max amplitude.
+            # On MockDevice there is no max_amp so the reasonable reference is 4.0 * pi
+            self._default_factory = lambda: UnitConverter.from_energy(
+                self._C6, self._max_amp or 4.0 * pi
+            )
 
         self.reset_converter()
 
@@ -140,14 +133,22 @@ class Device:
         self.converter.factors = self.converter.factors_from_distance(distance)
 
     @property
-    def specs(self) -> dict:
+    def specs(self) -> dict[str, float | None]:
         """Return the device specification constrains."""
         TIME, ENERGY, DISTANCE = self.converter.factors
+        max_duration = self._max_duration / TIME if self._max_duration else None
+        max_amplitude = self._max_amp / ENERGY if self._max_amp else None
+        max_abs_detuning = self._max_abs_det / ENERGY if self._max_abs_det else None
+        min_distance = self._min_distance / DISTANCE if self._min_distance else None
+        max_radial_distance = (
+            self._max_radial_distance / DISTANCE if self._max_radial_distance else None
+        )
         return {
-            "max_duration": self._max_duration / TIME if self._max_duration else None,
-            "max_amplitude": self._max_amp / ENERGY if self._max_amp else None,
-            "max_detuning": self._max_det / ENERGY if self._max_det else None,
-            "min_distance": self._min_distance / DISTANCE if self._min_distance else None,
+            "max_duration": max_duration,
+            "max_amplitude": max_amplitude,
+            "max_abs_detuning": max_abs_detuning,
+            "min_distance": min_distance,
+            "max_radial_distance": max_radial_distance,
         }
 
     @property
