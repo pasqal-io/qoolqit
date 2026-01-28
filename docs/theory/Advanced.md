@@ -93,11 +93,7 @@ $$
 
 We require the physical and dimensionless descriptions to generate the **same unitary evolution**:
 
-$$
-U(t)\equiv \mathcal{T} \exp{\left(-\frac{i}{\hbar}\int_0^{t} H(t')dt'\right)}
-=
-\tilde U(\tilde t)\equiv \mathcal{T}\exp{\left(-i \int_0^{\tilde{t}}\tilde H(\tilde t')d\tilde{t}'\right)}.
-$$
+$$ U(t)\equiv \mathcal{T} \exp{\left(-\frac{i}{\hbar}\int_0^{t} H(t')dt'\right)} = \tilde U(\tilde t)\equiv \mathcal{T}\exp{\left(-i \int_0^{\tilde{t}}\tilde H(\tilde t')d\tilde{t}'\right)}. $$
 
 Using the definition of the dimensionless Hamiltonian $H(t)=J_0 \tilde H(\tilde t)$, this matching is only possible if the integration variables satisfy:
 
