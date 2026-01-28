@@ -46,7 +46,7 @@ The key insight is:
 - A **program** defines a ratio $\tilde{\Omega}/\tilde{J}$, which corresponds to a **line** through the origin in $(\Omega, J)$ space
 - A **device** defines a box of allowed physical values: $[0, \Omega_{\max}] \times [0, J_{\max}]$
 
-![Compilation strategy](../assets/figures/compilation.png)
+![Compilation strategy](../extras/assets/figures/compilation.png)
 
 All points on the program line that fall within the device box are valid compilations. Choosing $J_0$ is equivalent to selecting which point on the line to use.
 
