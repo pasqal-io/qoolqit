@@ -61,6 +61,7 @@ register = Register.triangular(3)  # triangular lattice
 **Convention:** Use unit spacing—the closest pair of qubits should be at distance 1.
 
 > 📖 See [Registers](registers.md) for all available register creation methods and options.
+> 📖 See [Problem embedding](available_embedder.md) for embedding data and problems into the Rydberg analog model.
 
 ### Interaction Strength
 
@@ -71,13 +72,6 @@ $$
 $$
 
 where $\tilde{r}_{ij}$ is the dimensionless distance between qubits $i$ and $j$.
-
-| Distance | Interaction Strength |
-|----------|---------------------|
-| 1.0 | 1.000 |
-| 1.5 | 0.088 |
-| 2.0 | 0.016 |
-| 2.5 | 0.004 |
 
 ---
 
@@ -117,23 +111,6 @@ The dimensionless drive $\tilde{\Omega}$ is expressed relative to the maximum in
 | Strong drive | $\tilde{\Omega} \gg 1$ | Drive dominates interactions |
 | Balanced | $\tilde{\Omega} \sim 1$ | Comparable energy scales |
 | Weak drive | $\tilde{\Omega} \ll 1$ | Interactions dominate |
-
-### Local Detuning (Optional)
-
-For problems requiring site-dependent fields, define a detuning map with weights for each qubit:
-
-```python
-# Define local detuning weights (values between 0 and 1)
-detuning_map = register.define_detuning_map({
-    0: 1.0,  # full local detuning
-    1: 0.5,  # half local detuning
-    2: 0.0   # no local detuning
-})
-```
-
-The local detuning amplitude $\tilde{\Delta}(t)$ must be **negative**.
-
-> 📖 See [Drive Hamiltonian](drives.md) for more on local detuning and weighted detuning maps.
 
 ---
 
@@ -176,73 +153,6 @@ result = sequence.run()
 
 > 📖 See [Devices](devices.md) for available devices and their specifications.
 > 📖 See [Execution](execution.md) for running programs and handling results.
-
-### How Compilation Works
-
-Compilation assigns a physical value to the reference interaction $J_0$. This is done automatically based on the program and device constraints.
-
-The key insight is:
-
-- A **program** is defined by a ratio $\tilde{\Omega}/\tilde{J}$, which corresponds to a **line** through the origin
-- A **device** defines a box of allowed values: $[0, \Omega_{\max}] \times [0, J_{\max}]$
-
-![Compilation strategy](./compilation.png)
-
-All points on a program line that fall within the device box are valid compilations. Choosing a reference $J_0$ is equivalent to selecting which point on the line to use.
-
-In practice, **programs with higher amplitude perform better on hardware**, so QoolQit automatically selects the point that maximizes amplitude while staying within device constraints.
-
-### Case 1: Drive-limited compilation
-
-When the user chooses $\tilde{\Omega}/\tilde{J} = 1$ (blue line in the plot):
-
-The program line hits the maximum amplitude $\Omega_{\max}$ before reaching $J_{\max}$. The compiler sets:
-
-$$J_0 = \Omega_{\max}$$
-
-and calculates the corresponding reference distance, which will fit within device specs.
-
-### Case 2: Interaction-limited compilation
-
-When the user chooses $\tilde{\Omega}/\tilde{J} = 0.05$ (green line in the plot):
-
-The program line hits the maximum interaction $J_{\max}$ before reaching $\Omega_{\max}$. The compiler sets:
-
-$$J_0 = J_{\max}$$
-
-This is equivalent to placing the closest pair of atoms at the minimum allowed distance. The compiler then calculates the corresponding $\Omega$ value.
-
-!!! note "Previous behavior"
-    In earlier versions of QoolQit, setting $J_0 = \Omega_{\max}$ for low-$\Omega$ programs would fail because atoms ended up below the minimum distance. The current strategy automatically handles this case.
-
-This approach guarantees that compiled programs:
-
-- **Fit within device specs** (if compilation succeeds)
-- **Use the maximum amplitude possible** for the user-defined program
-
-### Compilation Outcomes
-
-| Result | Meaning |
-|--------|---------|
-| Success | Program fits within device constraints |
-| Failure | Program cannot be realized on this device |
-
-If compilation fails, the program simply cannot fit the device under any valid assignment of $J_0$.
-
-!!! tip "Future extensions"
-    - QoolQit can suggest **approximations** of incompatible programs that would compile
-    - A "force compilation" strategy may be added in future versions
-
-### Device Specifications
-
-Check device constraints with:
-
-```python
-print(device.specs)
-# Returns: max_duration, max_amplitude, max_detuning, min_distance, etc.
-```
-
-> 📖 See [Devices](devices.md) for a full list of device parameters and constraints.
 
 ---
 
@@ -292,8 +202,6 @@ With `compile(device, t_ref=40)`, the durations are interpreted as fractions of 
 
 This allows you to define programs in relative terms and scale them to the device's maximum duration at compile time.
 
-> 📖 See the [Understanding Unit Conversions](../tutorials/unit_conversion.md) tutorial for more on time scaling and compilation strategies.
-
 ---
 
 ## Example: Rydberg Blockade Demonstration
@@ -333,5 +241,62 @@ result_blockade = program_blockade.compile(device).run()
 result_no_blockade = program_no_blockade.compile(device).run()
 ```
 
-> 📖 See the [Understanding Unit Conversions](../tutorials/unit_conversion.md) tutorial for a detailed walkthrough of blockade dynamics.
 > 📖 See [Solving a Basic QUBO Problem](../tutorials/basic_qubo.md) for a complete application example.
+
+---
+
+## Advanced: How Compilation Works
+
+Compilation assigns a physical value to the reference interaction $J_0$. This is done automatically based on the program and device constraints.
+
+The key insight is:
+
+- A **program** is defined by a ratio $\tilde{\Omega}/\tilde{J}$, which corresponds to a **line** through the origin
+- A **device** defines a box of allowed values: $[0, \Omega_{\max}] \times [0, J_{\max}]$
+
+![Compilation strategy](./assets/compilation.png)
+
+All points on a program line that fall within the device box are valid compilations. Choosing a reference $J_0$ is equivalent to selecting which point on the line to use.
+
+In practice, **programs with higher amplitude perform better on hardware**, so QoolQit automatically selects the point that maximizes amplitude while staying within device constraints.
+
+### Case 1: Drive-limited compilation
+
+When the user chooses $\tilde{\Omega}/\tilde{J} = 1$ (blue line in the plot):
+
+The program line hits the maximum amplitude $\Omega_{\max}$ before reaching $J_{\max}$. The compiler sets:
+
+$$J_0 = \Omega_{\max}$$
+
+and calculates the corresponding reference distance, which will fit within device specs.
+
+### Case 2: Interaction-limited compilation
+
+When the user chooses $\tilde{\Omega}/\tilde{J} = 0.05$ (green line in the plot):
+
+The program line hits the maximum interaction $J_{\max}$ before reaching $\Omega_{\max}$. The compiler sets:
+
+$$J_0 = J_{\max}$$
+
+This is equivalent to placing the closest pair of atoms at the minimum allowed distance. The compiler then calculates the corresponding $\Omega$ value.
+
+!!! note "Previous behavior"
+    In earlier versions of QoolQit, setting $J_0 = \Omega_{\max}$ for low-$\Omega$ programs would fail because atoms ended up below the minimum distance. The current strategy automatically handles this case.
+
+This approach guarantees that compiled programs:
+
+- **Fit within device specs** (if compilation succeeds)
+- **Use the maximum amplitude possible** for the user-defined program
+
+### Compilation Outcomes
+
+| Result | Meaning |
+|--------|---------|
+| Success | Program fits within device constraints |
+| Failure | Program cannot be realized on this device |
+
+If compilation fails, the program simply cannot fit the device under any valid assignment of $J_0$.
+
+!!! tip "Future extensions"
+    - QoolQit can suggest **approximations** of incompatible programs that would compile
+    - A "force compilation" strategy may be added in future versions
