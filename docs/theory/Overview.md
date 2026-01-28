@@ -2,7 +2,6 @@
 
 This page explains how QoolQit represents quantum programs using a dimensionless Hamiltonian framework built on Rydberg atom physics.
 
-
 ## Overview
 
 QoolQit uses a **dimensionless reference frame** where all quantities are expressed relative to a reference interaction strength. This makes your programs device-agnostic at definition time and portable across different hardware configurations.
@@ -12,8 +11,6 @@ QoolQit uses a **dimensionless reference frame** where all quantities are expres
 - Programs are hardware-independent until compilation
 - Drive strengths are naturally expressed as "multiples of interactions"
 - The same program can be compiled to different devices without modification
-
-
 
 ## The QoolQit Hamiltonian
 
@@ -35,8 +32,6 @@ where $\hat{n} = \frac{1}{2}(1 - \hat{\sigma}^z)$ is the Rydberg occupation oper
 | $\tilde{\Delta}(t)$ | Local detuning amplitude | $\leq 0$ |
 | $\phi(t)$ | Drive phase | $[0, 2\pi)$ |
 | $\epsilon_i$ | Local detuning weight for qubit $i$ | $[0, 1]$ |
-
-
 
 ## Register
 
@@ -62,7 +57,6 @@ register = Register.triangular(3)  # triangular lattice
 > 📖 Check [Registers](registers.md) for all available register creation methods and options.\\
 > 📖 Check [Problem embedding](available_embedder.md) for embedding data and problems into the Rydberg analog model.
 
-
 Qubit interactions follow the positions of the atoms according to the Rydberg $1/\tilde{r}^6$ scaling:
 
 $$
@@ -70,8 +64,6 @@ $$
 $$
 
 where $\tilde{r}_{ij}$ is the dimensionless distance between qubits $i$ and $j$.
-
-
 
 ## Waveforms and Drives
 
@@ -108,8 +100,6 @@ The dimensionless drive $\tilde{\Omega}$ is expressed relative to the maximum in
 | Balanced | $\tilde{\Omega} \sim 1$ | Comparable energy scales |
 | Weak drive | $\tilde{\Omega} \ll 1$ | Interactions dominate |
 
-
-
 ## Building a Program
 
 A complete QoolQit program combines register and drive specifications.
@@ -126,8 +116,6 @@ program = Program(
 The initial state of the system is always $|0\rangle^{\otimes N}$.
 
 > 📖 See [Quantum Programs](programs.md) for more details.
-
-
 
 ## Compilation and Execution
 
@@ -193,7 +181,6 @@ With `compile(device, t_ref=40)`, the durations are interpreted as fractions of 
 | 20 | 0.50 × t_ref |
 
 This allows you to define programs in relative terms and scale them, e.g., to the device's maximum duration at compile time.
-
 
 ## Example: Rydberg Blockade Demonstration
 
