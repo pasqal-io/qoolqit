@@ -8,11 +8,11 @@ In physical units, the Rydberg Hamiltonian is:
 
 $$
 H(t) =
-\underbrace{\sum_{i<j} J_{ij}\, \hat{n}_i \hat{n}_j}_{\text{interactions}}
-\;+\;
-\underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\,\hat{\sigma}_i^y\right)}_{\text{global drive}}
-\;-\;
-\underbrace{\sum_i \left(\delta(t) + \epsilon_i\,\Delta(t)\right)\hat{n}_i}_{\text{detuning}}
+\underbrace{\sum_{i<j} J_{ij} \hat{n}_i \hat{n}_j}_{\text{interactions}}
++
+\underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\hat{\sigma}_i^y\right)}_{\text{global drive}}
+-
+\underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i}_{\text{detuning}}
 $$
 
 where $\hat{n}=\frac{1}{2}\left(1-\hat{\sigma}^z\right)$ is the Rydberg occupation operator.
@@ -42,7 +42,9 @@ $$\tilde{r}_{ij} = \frac{r_{ij}}{r_0}, \qquad \tilde{J}_{ij} = \frac{1}{\tilde{r
 
 Dividing the full Hamiltonian by $J_0$ gives the **dimensionless QoolQit Hamiltonian**:
 
-$$\tilde{H}(t) = \sum_{i<j} \tilde{J}_{ij} \hat{n}_i \hat{n}_j + \sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t)\hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right) - \sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i$$
+$$
+\tilde{H}(t) = \sum_{i<j} \tilde{J}_{ij}  \hat{n}_i \hat{n}_j + \sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t) \, \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right) - \sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i
+$$
 
 **Key convention:** In QoolQit, the minimum dimensionless distance is $\min(\tilde{r}_{ij}) = 1$, which means the maximum interaction is $\max(\tilde{J}_{ij}) = 1$.
 
