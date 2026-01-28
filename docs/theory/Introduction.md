@@ -25,9 +25,13 @@ This means you can write the quantum evolution you want your system to follow (y
 !!! definition "The Dimensionless Hamiltonian"
 
     At the heart of QoolQit is a dimensionless formulation of the Rydberg Hamiltonian. Your system evolves under:
+
     $$
-    \tilde{H}(t) = \underbrace{\sum_{i<j} \tilde{J}_{ij}  \hat{n}_i \hat{n}_j}_{\text{interactions}} + \underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t)  \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right)}_{\text{global drive}} - \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}
+    H(t) =
+    \underbrace{\sum_{i<j} \frac{C_6}{r_{ij}} \hat{n}_i \hat{n}_j}_{\text{interactions}}+
+    \underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\hat{\sigma}_i^y\right)}_{\text{global drive}}-\underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i}_{\text{detuning}}
     $$
+
     where all quantities with tildes ($\tilde{\phantom{x}}$) are dimensionless.
 
 **Interactions** ($\tilde{J}_{ij}$): Follow the $1/r^6$ Rydberg scaling, normalized so the maximum is 1:
