@@ -91,11 +91,7 @@ def test_compiled_sequence_metadata(random_program: Callable[[], QuantumProgram]
 
 
 def test_compiled_sequence_with_delays() -> None:
-    """
-    Test that the added delay is not compiled into the.
-
-    pulser sequence if smaller that 1 ns.
-    """
+    """Test that the added delay is not compiled into the pulser sequence if smaller that 1 ns."""
     register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
     drive = Drive(amplitude=Constant(1.0, 1.0), detuning=Constant(1.005, 1.0))
     program = QuantumProgram(register=register, drive=drive)
