@@ -273,16 +273,27 @@ class CompositeWaveform(Waveform):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
-    def _to_pulser(self, duration: int) -> ParamObj | pulser.CompositeWaveform:
+    def _to_pulser(
+        self, duration: int
+    ) -> ParamObj | pulser.waveforms.Waveform | pulser.CompositeWaveform:
         """Converts a CompositeWaveform from QoolQit to Pulser.
 
         Pulser only supports integer duration, so the sum of rounded
         durations of each waveform needs to add up to the rounded duration
         of the composite waveform.
+
+        If the duration of a waveform in ns is rounded to zero, it will be ignored.
+
+        Args:
+            duration (int): the new duration fo the Pulser waveform in ns.
         """
         ratio = duration / self.duration
         new_durations = round_to_sum([ratio * wd for wd in self.durations])
-        pulser_waveforms = (
-            w._to_pulser(duration=duration) for w, duration in zip(self.waveforms, new_durations)
-        )
+        pulser_waveforms = [
+            w._to_pulser(duration=duration)
+            for w, duration in zip(self.waveforms, new_durations)
+            if duration
+        ]
+        if len(pulser_waveforms) == 1:
+            return pulser_waveforms[0]
         return pulser.CompositeWaveform(*pulser_waveforms)

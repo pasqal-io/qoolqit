@@ -53,7 +53,7 @@ class WaveformConverter:
 
     def _pulser_duration(self, waveform: Waveform) -> int:
         """Return the new duration of the converted pulser waveform."""
-        converted_duration = int(waveform.duration * self._time)
+        converted_duration = round(waveform.duration * self._time)
         cp = self._clock_period
         rm = converted_duration % cp
         pulser_duration = converted_duration + (cp - rm) if rm != 0 else converted_duration
