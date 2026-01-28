@@ -7,7 +7,7 @@ This section explains how QoolQit's dimensionless formulation relates to physica
 In physical units, the Rydberg Hamiltonian is:
 
 $$
-\tilde{H}(t) = \sum_{i<j} \frac{C_6}{r_{ij}^6}  \hat{n}_i \hat{n}_j + \underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t) \, \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right)}_{\text{global drive}} - \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i  \tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}
+\tilde{H}(t) = \sum_{i<j} \frac{C_6}{r_{ij}^6}  \hat{n}_i \hat{n}_j + \sum_i \frac{\Omega (t)}{2} \left( \cos\phi(t) \, \hat{\sigma}^x_i - \sin\phi(t) \hat{\sigma}^y_i \right) - \sum_i \left(\delta (t) + \epsilon_i  \Delta(t) \right) \hat{n}_i
 $$
 
 where:
