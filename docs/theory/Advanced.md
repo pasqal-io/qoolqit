@@ -6,7 +6,7 @@ This section explains how QoolQit's dimensionless formulation relates to physica
 
 In physical units, the Rydberg Hamiltonian is:
 
-$$ H = \sum_{i<j} \frac{C_6}{r_{ij}^6}\,\hat{n}_i \hat{n}_j + \frac{\Omega(t)}{2}\sum_i \hat{\sigma}_i^x - \delta(t)\sum_i \hat{n}_i $$
+$H(t) = \sum_{i<j} \frac{C_6}{r_{ij}^6}\hat{n}_i \hat{n}_j + \frac{\Omega(t)}{2}\sum_i \hat{\sigma}_i^x - \delta(t)\sum_i \hat{n}_i$
 
 where:
 
