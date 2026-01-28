@@ -136,6 +136,7 @@ result = sequence.run()
 ```
 
 > 📖 See [Devices](devices.md) for available devices and their specifications.
+
 > 📖 See [Execution](execution.md) for running programs and handling results.
 
 ## Time Handling
@@ -146,7 +147,7 @@ The value of $\tilde{t}$ tells you how many "interaction cycles" your program ru
 
 | Regime | Condition | Physical Meaning |
 |--------|-----------|------------------|
-| Short time | $\tilde{t} \ll 1$ | Evolution time is short compared to interaction timescale; interactions have little effect |
+| Short time | $\tilde{t} \ll 1$ | Evolution time is short compared to interaction timescale; interactions have little effect on the initial state|
 | Long time | $\tilde{t} \gg 1$ | Many interaction cycles; dynamics fully explore the interacting Hilbert space |
 
 For adiabatic algorithms, you typically need $\tilde{t} \gg 1$ to allow the system to follow the ground state.
@@ -312,3 +313,35 @@ If compilation fails, the program simply cannot fit the device under any valid a
 !!! tip "Future extensions"
     - QoolQit can suggest **approximations** of incompatible programs that would compile
     - A "force compilation" strategy may be added in future versions
+
+
+## Advanced: Time scaling
+
+Since QoolQit used an adimensional Hamiltonian defined with respect to a reference **energy scale** $J_0$, time must also be measured relative to that same scale. The reason is simply the Schrödinger equation that describes the dynamics of the quantum system.
+
+$$
+i\hbar \frac{d}{dt}|\psi(t)\rangle = H(t)\,|\psi(t)\rangle
+$$
+
+
+We require the physical and dimensionless descriptions to generate the **same unitary evolution**:
+
+$$
+U(t)\equiv \mathcal{T}\exp\!\left(-\frac{i}{\hbar}\int_0^{t} H(t')\,dt'\right)
+\;=\;
+\tilde U(\tilde t)\equiv \mathcal{T}\exp\!\left(-i\int_0^{\tilde t}\tilde H(\tilde t')\,d\tilde t'\right).
+$$
+
+Using the definition of the dimensionless Hamiltonian $H(t)=J_0\,\tilde H(\tilde t)$, this matching is only possible if the integration variables satisfy:
+
+$$
+\frac{J_0}{\hbar}\,dt = d\tilde t
+\qquad\Longrightarrow\qquad
+\tilde t \equiv \frac{J_0}{\hbar}\,t.
+$$
+
+With this choice, the Schrödinger equation becomes:
+
+$$
+i\,\frac{d}{d\tilde t}|\psi(\tilde t)\rangle = \tilde H(\tilde t)\,|\psi(\tilde t)\rangle.
+$$
