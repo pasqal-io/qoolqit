@@ -5,7 +5,7 @@ repo_name: "QoolQit"
 nav:
   - Home: index.md
   - Overview:
-    - Introduction
+    - Introduction: theory/Introduction.md
     - QoolQit overview: theory/Overview.md
     - From Physical Units to QoolQit: theory/Advanced.md
   - Contents:
