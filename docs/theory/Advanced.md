@@ -21,7 +21,7 @@ where $\hat{n}=\frac{1}{2}\left(1-\hat{\sigma}^z\right)$ is the Rydberg occupati
 
 | Symbol | Description | Typical units |
 |--------|-------------|---------------|
-| $C_6$ | Interaction coefficient (dependent on the Rydberg level) | rad/s (or MHz) |
+| $C_6(n)$ | Interaction coefficient (Rydberg level $n$) | rad/s (or MHz) $\times \mu m^6$ |
 | $\Omega(t)$ | Global Rabi frequency (drive amplitude) | rad/s (or MHz) |
 | $\delta(t)$ | Global detuning | rad/s (or MHz) |
 | $\Delta(t)$ | Local detuning amplitude | rad/s (or MHz) |
