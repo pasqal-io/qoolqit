@@ -18,10 +18,10 @@ where $\hat{n}=\frac{1}{2}\left(1-\hat{\sigma}^z\right)$ is the Rydberg occupati
 
 | Symbol | Description | Typical units |
 |--------|-------------|---------------|
-| $C_6(n)$ | Interaction coefficient (Rydberg level $n$) | rad/s (or MHz) $\times \mu m^6$ |
-| $\Omega(t)$ | Global Rabi frequency (drive amplitude) | rad/s (or MHz) |
-| $\delta(t)$ | Global detuning | rad/s (or MHz) |
-| $\Delta(t)$ | Local detuning amplitude | rad/s (or MHz) |
+| $C_6(n)$ | Interaction coefficient (Rydberg level $n$) | rad/$\mu s$ (or MHz) $\times \mu m^6$ |
+| $\Omega(t)$ | Global Rabi frequency (drive amplitude) | rad/$\mu s$ (or MHz) |
+| $\delta(t)$ | Global detuning | rad/$\mu s$ (or MHz) |
+| $\Delta(t)$ | Local detuning amplitude | rad/$\mu s$ (or MHz) |
 | $\phi(t)$ | Drive phase | $[0,2\pi)$ |
 | $\epsilon_i$ | Local detuning weight | $[0,1]$ |
 
@@ -106,18 +106,13 @@ $$
 
 We require the physical and dimensionless descriptions to generate the **same unitary evolution**:
 
-$$ U(t)\equiv \mathcal{T} \exp{\left(-\frac{i}{\hbar}\int_0^{t} H(t')dt'\right)} = \tilde U(\tilde t)\equiv \mathcal{T}\exp{\left(-i \int_0^{\tilde{t}}\tilde H(\tilde t')d\tilde{t}'\right)}. $$
+$$ U(t)  = \tilde U(\tilde t)\doublearrow \int_0^{t} H(t')dt'=\int_0^{\tilde{t}} \tilde{H}(\tilde{t}')d\tilde{t}'$$
 
-Using the definition of the dimensionless Hamiltonian $H(t)=J_0 \tilde H(\tilde t)$, this matching is only possible if the integration variables satisfy:
+Therefore
 
-$$
-\frac{J_0}{\hbar}dt = d\tilde{t}
-\qquad\Longrightarrow\qquad
-\tilde t \equiv \frac{J_0}{\hbar}t.
-$$
+$$\int_0^{t} H(t')dt' = \int_0^{t} J_0 \tilde{H}(t') t_0 d\tilde{t}' = \int_0^{t} J_0 t_0 \tilde{H}(\tilde{t}')  d\tilde{t}' \doublearrow J_0 t_0=1$$
 
-With this choice, the Schrödinger equation becomes:
+where we defined the adimensional time $\tilde{t}=\frac{t}{t_0}.
 
-$$
-i\frac{d}{d\tilde{t}}|\psi(\tilde{t})\rangle  = \tilde H(\tilde{t})|\psi(\tilde{t})\rangle.
-$$
+!!! note "Pulser behavior"
+    In Pulser, energies are measured in rad/$\mu s$ (or MHz) but times are measured in $ns$ creating an artificial discrepancy of $10^3$ for convenience in terms of rounding and displaying. To keep track of this, also the invariant written before has to be rescaled according to $J_0 t_0=100$ and this is the value used in QoolQit.
