@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
+from qoolqit.graphs.utils import radial_distances
 
 __all__ = ["Register"]
 
@@ -81,6 +82,15 @@ class Register:
         """Minimum distance between all qubit pairs."""
         distance: float = min(self.distances().values())
         return distance
+
+    def radial_distances(self) -> dict:
+        """Radial distance of each qubit from the origin."""
+        return radial_distances(self.qubits)
+
+    def max_radial_distance(self) -> float:
+        """Maximum radial distance between all qubits."""
+        max_radial_distance: float = max(self.radial_distances().values())
+        return max_radial_distance
 
     def interactions(self) -> dict:
         """Interaction 1/r^6 between each qubit pair."""
