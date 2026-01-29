@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
-from matplotlib.axes import Axes
 from numpy import format_float_scientific
 
 from ._helpers import normalized_interaction
@@ -23,30 +22,20 @@ def eformat(f: Any) -> str:
     return format_float_scientific(f, exp_digits=1, precision=0)  # type: ignore
 
 
-def get_ax(ax: Axes | None) -> Axes:
-    if ax is None:
-        return plt.gca()
-    return ax
-
-
 def draw_weighted_graph(
     graph: nx.Graph,
-    thresholds: list = [0, 0.3, 0.6],
-    edge_labels: Optional[dict] = None,
-    ax: Axes | None = None,
+    thresholds: tuple[float, float, float] = (0.0, 0.3, 0.6),
+    edge_labels: dict | None = None,
 ) -> None:
-    plt.figure(1, figsize=(30, 12), dpi=60)
-    ax = get_ax(ax)
+    fig, ax = plt.subplots(figsize=(30, 12), dpi=60)
 
     print(f"{thresholds=}")
     t0, t1, t2 = thresholds
-    elarge = [(u, v) for (u, v, w) in graph.edges.data("weight") if t2 < w]  # type: ignore
-    esmall = [
-        (u, v) for (u, v, w) in graph.edges.data("weight") if t1 < w <= t2 and t0 < w  # type: ignore
-    ]
-    etiny = [(u, v) for (u, v, w) in graph.edges.data("weight") if t0 <= w <= t1]  # type: ignore
+    elarge = [(u, v) for (u, v, w) in graph.edges.data("weight") if t2 < w]
+    esmall = [(u, v) for (u, v, w) in graph.edges.data("weight") if t1 < w <= t2 and t0 < w]
+    etiny = [(u, v) for (u, v, w) in graph.edges.data("weight") if t0 <= w <= t1]
 
-    pos_all_dims = dict(graph.nodes.data("pos"))  # type: ignore
+    pos_all_dims = dict(graph.nodes.data("pos"))
     pos = {k: v[0:2] for k, v in pos_all_dims.items()}
 
     ax.set_aspect("equal", adjustable="box")
@@ -106,7 +95,7 @@ def draw_weighted_graph(
 
 
 def draw_set_graph_coords(
-    graph: nx.Graph, coords: np.ndarray, edge_labels: Optional[dict] = None
+    graph: nx.Graph, coords: np.ndarray, edge_labels: dict | None = None
 ) -> None:
     """Coords are positions in numerical order of the nodes."""
     nx.set_node_attributes(graph, dict(enumerate(coords)), "pos")
