@@ -4,6 +4,8 @@ import networkx as nx
 import numpy as np
 import pytest
 
+from qoolqit import AnalogDevice, BladeEmbeddingConfig, DigitalAnalogDevice, MockDevice
+from qoolqit.devices import Device
 from qoolqit.embedding.algorithms.blade_embedding._helpers import (
     normalized_best_dist,
     normalized_interaction,
@@ -219,3 +221,12 @@ def test_with_device() -> None:
 
     expected_distances = np.array([[0, 2 ** (-1 / 6)], [0, 0]])
     assert np.allclose(distances, expected_distances)
+
+
+@pytest.mark.parametrize(
+    "device, expected_max_min_ratio",
+    [(AnalogDevice(), 7.6), (DigitalAnalogDevice(), 12.5), (MockDevice(), None)],
+)
+def test_embedding_config_from_device(device: Device, expected_max_min_ratio: float | None) -> None:
+    config = BladeEmbeddingConfig(device=device)
+    assert config.max_min_dist_ratio == expected_max_min_ratio
