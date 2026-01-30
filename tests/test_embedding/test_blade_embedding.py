@@ -88,7 +88,8 @@ def test_min_dist_constraint_limited() -> None:
         max_distance_to_walk=(0, 2, 0),
     )
 
-    assert (new_positions == np.array([[-3, 0], [3, 0]])).all()
+    expected_positions = np.array([[-3, 0], [3, 0]])
+    assert np.allclose(new_positions, expected_positions)
 
 
 def test_max_dist_constraint_limited() -> None:
@@ -103,7 +104,8 @@ def test_max_dist_constraint_limited() -> None:
         max_distance_to_walk=(0, 0, 1),
     )
 
-    assert (new_positions == np.array([[-9, 0], [9, 0]])).all()
+    expected_positions = np.array([[-9, 0], [9, 0]])
+    assert np.allclose(new_positions, expected_positions)
 
 
 def test_force_based_embedding() -> None:
