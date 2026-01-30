@@ -9,6 +9,7 @@ import networkx as nx
 import numpy as np
 import scipy
 import torch
+from matplotlib.patches import Circle
 from sklearn.decomposition import PCA
 
 from qoolqit.devices.device import Device
@@ -32,20 +33,17 @@ def update_positions(
     *,
     positions: np.ndarray,
     qubo_graph: nx.Graph,
-    draw_step: bool = False,
     weight_relative_threshold: float = 0.0,
     min_dist: float | None = None,
     max_dist: float | None = None,
     max_distance_to_walk: float | tuple[float, float, float] = np.inf,
+    draw_step: bool = False,
 ) -> np.ndarray:
     """
-    Compute vector moves and apply them on the positions of the nodes to make.
-
-    their interactions closer to the target QUBO.
+    Compute vector moves to adjust node positions toward target interactions.
 
     positions: Starting positions of the nodes.
     qubo_graph: Desired QUBO.
-    draw_steps: Whether to draw the nodes and the forces.
     weight_relative_threshold: It is used to compute a weight difference
         threshold defining which weights differences are significant and should
         be considered. For this purpose, it is multiplied by the higher weight difference.
@@ -59,6 +57,7 @@ def update_positions(
         when the forces are applied. It impacts the priorities
         of the forces because they only consider the slope of the differences
         in weights that can be targeting with this ceiling.
+    draw_steps: Whether to draw the nodes and the forces.
     """
 
     n = nx.number_of_nodes(qubo_graph)
@@ -192,7 +191,7 @@ def update_positions(
         plt.gca().set_aspect("equal", "box")
 
         if max_dist is not None:
-            circle = plt.Circle((0, 0), max_dist / 2, color="r", fill=False, clip_on=True)
+            circle = Circle((0, 0), max_dist / 2, color="r", fill=False, clip_on=True)
             ax = plt.gca()
             ax.add_patch(circle)
         plt.show()
@@ -372,7 +371,6 @@ def blade_embedding(
     qubo: np.ndarray,
     *,
     max_min_dist_ratio: float | None = None,
-    draw_steps: bool | list[int] = False,
     dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2),
     starting_positions: np.ndarray | None = None,
     pca: bool = False,
@@ -382,21 +380,21 @@ def blade_embedding(
         [float, float | None], float | tuple[float, float, float]
     ] = (lambda x, max_radial_dist: np.inf),
     starting_ratio_factor: int = 2,
+    draw_steps: bool | list[int] = False,
 ) -> np.ndarray:
     """
-    Embed a problem using the BLaDE algorithm.
+    Embed a QUBO/interaction matrix with the BLaDE algorithm.
 
     Compute positions for nodes so that their interactions
-    approach the desired values at best. The interactions assume that the
+    approach the desired values. The interactions assume that the
     interaction coefficient of the device is set to 1.
     Its prior target is on interaction matrices or QUBOs, but it can also be used
     for MIS with limitations if the adjacency matrix is converted into a QUBO.
     The general principle is based on the Fruchterman-Reingold algorithm.
 
-    qubo: QUBO matrix
-    max_min_dist_ratio: If present, ratio that must not be overcome between
+    qubo: QUBO/interaction matrix.
+    max_min_dist_ratio: If present, set the maximum ratio between
         the maximum radial distance and the minimum pairwise distances.
-    draw_steps: Whether to draw the nodes and the forces.
     dimensions: List of numbers of dimensions to explore one
         after the other. A list with one value is equivalent to a list containing
         twice the same value. For a 2D embedding, the last value should be 2.
@@ -427,6 +425,7 @@ def blade_embedding(
     starting_ratio_factor: When `max_min_dist_ratio` is enabled,
         defines a multiplying factor on the target ratio to start the evolution
         on a larger ratio, to let more flexibility in the beginning.
+    draw_steps: Whether to draw the nodes and the forces.
     """
 
     if len(dimensions) == 1:
@@ -514,6 +513,15 @@ class BladeEmbeddingConfig(EmbeddingConfig):
     device: InitVar[Device | None] = None
 
     def __post_init__(self, device: Device | None) -> None:
+        """Post initialization of the `BladeEmbeddingConfig` dataclass.
+
+        Set the `max_min_dist_ratio` argument of the `blade_embedding` algorithm
+        based on the specification of the selected device.
+
+        Args:
+            device (Device): the QoolQit device to use to set the maximum ratio between the maximum
+                radial distance and the minimum pairwise distance between atoms.
+        """
         if device:
             min_distance = device._min_distance
             max_radial_distance = device._max_radial_distance
