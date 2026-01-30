@@ -379,6 +379,7 @@ def blade_embedding(
         defines a multiplying factor on the target ratio to start the evolution
         on a larger ratio, to let more flexibility in the beginning.
     draw_steps: Whether to draw the nodes and the forces.
+        Requires installing the seaborn library.
     """
 
     if len(dimensions) == 1:

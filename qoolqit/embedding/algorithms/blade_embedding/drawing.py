@@ -8,7 +8,6 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import scipy
-import seaborn as sns
 from matplotlib.patches import Circle
 from numpy import format_float_scientific
 
@@ -133,6 +132,10 @@ def draw_graph_including_actual_weights(qubo_graph: nx.Graph, positions: np.ndar
 
 
 def plot_differences(target_qubo: np.ndarray, differences: np.ndarray) -> None:
+    try:
+        import seaborn
+    except ImportError:
+        raise ModuleNotFoundError("Please install seaborn.")
 
     percent = 100 - 2 / (len(target_qubo) - 1) * 10
     percentile = np.percentile(differences, percent)
@@ -142,10 +145,10 @@ def plot_differences(target_qubo: np.ndarray, differences: np.ndarray) -> None:
 
     print(f"{percent=}, {percentile=}, {difference_ceiling=}, {max(limited_differences)=}")
 
-    ax = sns.violinplot(
+    ax = seaborn.violinplot(
         {"differences": differences, "limited_differences": limited_differences}, inner=None
     )
-    sns.stripplot(
+    seaborn.stripplot(
         {"differences": differences, "limited_differences": limited_differences},
         edgecolor="black",
         linewidth=1,
@@ -154,8 +157,8 @@ def plot_differences(target_qubo: np.ndarray, differences: np.ndarray) -> None:
     )
     plt.show()
 
-    ax = sns.violinplot({"limited_differences": limited_differences}, inner=None)
-    sns.stripplot(
+    ax = seaborn.violinplot({"limited_differences": limited_differences}, inner=None)
+    seaborn.stripplot(
         {"limited_differences": limited_differences},
         edgecolor="black",
         linewidth=1,
