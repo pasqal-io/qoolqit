@@ -5,7 +5,6 @@ from typing import Mapping, Optional, Sequence, Union
 
 import networkx as nx
 import numpy as np
-from pulser.register.base_register import BaseRegister
 
 VariableId = Union[str, int]
 
@@ -29,11 +28,9 @@ class Qubo:
         self,
         terms: Sequence[tuple[VariableId, VariableId]],
         coeffs: list[float],
-        register: Optional[BaseRegister] = None,
     ):
         self._terms = list(terms)
         self._coeffs = coeffs
-        self._register = register
 
     @property
     def terms(self) -> list[tuple[VariableId, VariableId]]:

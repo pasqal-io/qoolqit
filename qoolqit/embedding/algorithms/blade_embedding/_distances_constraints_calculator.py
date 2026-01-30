@@ -3,11 +3,10 @@ from __future__ import annotations
 import dataclasses
 from typing import Any, Optional
 
-import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
 
 from ._helpers import distance_matrix_from_positions, normalized_interaction
+from .drawing import plot_differences
 
 
 def compute_best_scaling_for_qubo(
@@ -24,45 +23,22 @@ def compute_best_scaling_for_qubo(
     percent = 100 - 2 / (len(target_qubo) - 1) * 10
     percentile = np.percentile(differences, percent)
 
-    difference_ceiling = max(0.0, percentile)  # type: ignore
+    difference_ceiling = np.maximum(0.0, percentile)
     limited_differences = np.minimum(differences, difference_ceiling)
 
     if plot:
-        print(f"{percent=}, {percentile=}, {difference_ceiling=}, {max(limited_differences)=}")
-
-        ax = sns.violinplot(
-            {"differences": differences, "limited_differences": limited_differences}, inner=None
-        )
-        sns.stripplot(
-            {"differences": differences, "limited_differences": limited_differences},
-            edgecolor="black",
-            linewidth=1,
-            palette=["white"] * 1,
-            ax=ax,
-        )
-        plt.show()
-
-        ax = sns.violinplot({"limited_differences": limited_differences}, inner=None)
-        sns.stripplot(
-            {"limited_differences": limited_differences},
-            edgecolor="black",
-            linewidth=1,
-            palette=["white"] * 1,
-            ax=ax,
-        )
-        plt.show()
+        plot_differences(target_qubo, differences)
 
     if filter_differences:
         # when no visible differences, use the input value to avoid rounding issues
-        filtered_embedded_qubo_triu = np.where(
+        embedded_qubo_triu = np.where(
             differences == limited_differences,
             embedded_qubo_triu,
             target_qubo_triu + limited_differences,
         )
 
     best_scaling = (
-        np.sum(filtered_embedded_qubo_triu**2)
-        / np.sum(filtered_embedded_qubo_triu * target_qubo_triu)
+        np.sum(embedded_qubo_triu**2) / np.sum(embedded_qubo_triu * target_qubo_triu)
     ) ** (1 / 6)
 
     assert not np.isnan(best_scaling)

@@ -4,12 +4,10 @@ import logging
 from dataclasses import InitVar, dataclass
 from typing import Callable
 
-import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import scipy
 import torch
-from matplotlib.patches import Circle
 from sklearn.decomposition import PCA
 
 from qoolqit.devices.device import Device
@@ -24,7 +22,7 @@ from ._distances_constraints_calculator import DistancesConstraintsCalculator
 from ._helpers import distance_matrix_from_positions
 from ._interactions_forces import compute_interaction_forces
 from ._qubo_mapper import Qubo
-from .drawing import draw_graph_including_actual_weights
+from .drawing import draw_graph_including_actual_weights, draw_update_positions_step
 
 logger = logging.getLogger(__name__)
 
@@ -142,59 +140,14 @@ def update_positions(
     assert not np.any(np.isinf(max_constr_resulting_forces)) and not np.any(np.isnan(positions))
 
     if draw_step:
-
-        def keep_2_dims(a: np.ndarray) -> np.ndarray:
-            return a[0:2]
-
-        logger.debug(
-            "Step that will be applied" + (" keeping only 2 dims" if positions.shape[1] > 2 else "")
+        draw_update_positions_step(
+            positions,
+            interaction_resulting_forces,
+            min_constr_resulting_forces,
+            max_constr_resulting_forces,
+            resulting_forces_vectors,
+            max_dist,
         )
-        plt.scatter(positions[:, 0], positions[:, 1])
-
-        base_arrow_width = np.max(scipy.spatial.distance.pdist(positions)) / 100
-
-        for u, force in enumerate(interaction_resulting_forces):
-            if np.any(force):
-                plt.arrow(
-                    *keep_2_dims(positions[u]),
-                    *keep_2_dims(force),
-                    color="blue",
-                    width=base_arrow_width,
-                )
-
-        for u, force in enumerate(min_constr_resulting_forces):
-            if np.any(force):
-                plt.arrow(
-                    *keep_2_dims(positions[u]),
-                    *keep_2_dims(force),
-                    color="green",
-                    width=base_arrow_width,
-                )
-
-        for u, force in enumerate(max_constr_resulting_forces):
-            if np.any(force):
-                plt.arrow(
-                    *keep_2_dims(positions[u]),
-                    *keep_2_dims(force),
-                    color="black",
-                    width=base_arrow_width,
-                )
-
-        for position, force in zip(positions, resulting_forces_vectors):
-            plt.arrow(
-                *keep_2_dims(position),
-                *keep_2_dims(force),
-                color="red",
-                width=base_arrow_width * 0.4,
-            )
-
-        plt.gca().set_aspect("equal", "box")
-
-        if max_dist is not None:
-            circle = Circle((0, 0), max_dist / 2, color="r", fill=False, clip_on=True)
-            ax = plt.gca()
-            ax.add_patch(circle)
-        plt.show()
 
     for u, force in enumerate(resulting_forces_vectors):
         positions[u] += force
@@ -290,7 +243,6 @@ def generate_random_positions(qubo: np.ndarray, dimension: int) -> np.ndarray:
 def evolve_with_dimension_transition(
     qubo: np.ndarray,
     *,
-    draw_steps: bool | list[int],
     dimensions: tuple[int, ...],
     starting_min: float | None,
     pca: bool,
@@ -305,6 +257,7 @@ def evolve_with_dimension_transition(
     total_steps: int,
     dim_idx: int,
     start_ratio: float | None,
+    draw_steps: bool | list[int],
 ) -> tuple[np.ndarray, float | None]:
 
     starting_dimensions = dimensions[dim_idx]

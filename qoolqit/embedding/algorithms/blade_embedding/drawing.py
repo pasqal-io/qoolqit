@@ -1,14 +1,20 @@
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
+import scipy
+import seaborn as sns
+from matplotlib.patches import Circle
 from numpy import format_float_scientific
 
 from ._helpers import normalized_interaction
+
+logger = logging.getLogger(__name__)
 
 
 def eformat(f: Any) -> str:
@@ -124,3 +130,98 @@ def draw_graph_including_actual_weights(qubo_graph: nx.Graph, positions: np.ndar
         graph=qubo_graph,
         coords=positions,
     )
+
+
+def plot_differences(target_qubo: np.ndarray, differences: np.ndarray) -> None:
+
+    percent = 100 - 2 / (len(target_qubo) - 1) * 10
+    percentile = np.percentile(differences, percent)
+
+    difference_ceiling = np.maximum(0.0, percentile)
+    limited_differences = np.minimum(differences, difference_ceiling)
+
+    print(f"{percent=}, {percentile=}, {difference_ceiling=}, {max(limited_differences)=}")
+
+    ax = sns.violinplot(
+        {"differences": differences, "limited_differences": limited_differences}, inner=None
+    )
+    sns.stripplot(
+        {"differences": differences, "limited_differences": limited_differences},
+        edgecolor="black",
+        linewidth=1,
+        palette=["white"] * 1,
+        ax=ax,
+    )
+    plt.show()
+
+    ax = sns.violinplot({"limited_differences": limited_differences}, inner=None)
+    sns.stripplot(
+        {"limited_differences": limited_differences},
+        edgecolor="black",
+        linewidth=1,
+        palette=["white"] * 1,
+        ax=ax,
+    )
+    plt.show()
+
+
+def draw_update_positions_step(
+    positions: np.ndarray,
+    interaction_resulting_forces: np.ndarray,
+    min_constr_resulting_forces: np.ndarray,
+    max_constr_resulting_forces: np.ndarray,
+    resulting_forces_vectors: np.ndarray,
+    max_dist: float | None,
+) -> None:
+    def keep_2_dims(a: np.ndarray) -> np.ndarray:
+        return a[0:2]
+
+    logger.debug(
+        "Step that will be applied" + (" keeping only 2 dims" if positions.shape[1] > 2 else "")
+    )
+    plt.scatter(positions[:, 0], positions[:, 1])
+
+    base_arrow_width = np.max(scipy.spatial.distance.pdist(positions)) / 100
+
+    for u, force in enumerate(interaction_resulting_forces):
+        if np.any(force):
+            plt.arrow(
+                *keep_2_dims(positions[u]),
+                *keep_2_dims(force),
+                color="blue",
+                width=base_arrow_width,
+            )
+
+    for u, force in enumerate(min_constr_resulting_forces):
+        if np.any(force):
+            plt.arrow(
+                *keep_2_dims(positions[u]),
+                *keep_2_dims(force),
+                color="green",
+                width=base_arrow_width,
+            )
+
+    for u, force in enumerate(max_constr_resulting_forces):
+        if np.any(force):
+            plt.arrow(
+                *keep_2_dims(positions[u]),
+                *keep_2_dims(force),
+                color="black",
+                width=base_arrow_width,
+            )
+
+    for position, force in zip(positions, resulting_forces_vectors):
+        plt.arrow(
+            *keep_2_dims(position),
+            *keep_2_dims(force),
+            color="red",
+            width=base_arrow_width * 0.4,
+        )
+
+    plt.gca().set_aspect("equal", "box")
+
+    if max_dist is not None:
+        circle = Circle((0, 0), max_dist / 2, color="r", fill=False, clip_on=True)
+        ax = plt.gca()
+        ax.add_patch(circle)
+    plt.show()

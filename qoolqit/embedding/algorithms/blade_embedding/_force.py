@@ -43,7 +43,7 @@ class Force:
         forces[self.weighted_vectors == 0] = 0
         return forces
 
-    def get_resulting_forces(self, temperature: float) -> Any | np.ndarray:
+    def get_resulting_forces(self, temperature: float) -> np.ndarray:
         forces = self.get_forces(temperature)
 
         if self.get_nb_dims() == 3:

@@ -16,7 +16,7 @@ def shrink_dimensions(*, positions: np.ndarray, dimensions_lengths: np.ndarray) 
 
     new_minima = minima_per_dim + lengths_to_remove / 2
     new_maxima = maxima_per_dim - lengths_to_remove / 2
-    shrinked_positions = np.maximum(new_minima, np.minimum(new_maxima, positions))
+    shrinked_positions = np.clip(positions, min=new_minima, max=new_maxima)
     normalized_positions = shrinked_positions - np.median(shrinked_positions, axis=0)
     assert not np.any(np.isnan(normalized_positions))
 
