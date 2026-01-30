@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import random
-from typing import Mapping, Optional, Sequence, Union
+from typing import Mapping, Sequence, Union
 
 import networkx as nx
 import numpy as np
 
-VariableId = Union[str, int]
+NodeId = Union[str, int]
 
 
 class Qubo:
@@ -17,30 +16,29 @@ class Qubo:
     and coefficients
 
     Attributes:
-        terms (list[tuple[VariableId, VariableId]]): a set of non-zero Qubo
-            terms. This is a list
-            of 2-dimensional indices corresponding to the binary variables
+        terms (list[tuple[NodeId, NodeId]]): a set of non-zero Qubo terms.
+            This is a list of 2-dimensional indices corresponding to the binary variables
             appearing in the Qubo
         coeffs (list[float]): the coefficients in front of each term of the Qubo
     """
 
     def __init__(
         self,
-        terms: Sequence[tuple[VariableId, VariableId]],
+        terms: Sequence[tuple[NodeId, NodeId]],
         coeffs: list[float],
     ):
         self._terms = list(terms)
         self._coeffs = coeffs
 
     @property
-    def terms(self) -> list[tuple[VariableId, VariableId]]:
+    def terms(self) -> list[tuple[NodeId, NodeId]]:
         return self._terms
 
     @property
     def coeffs(self) -> list[float]:
         return self._coeffs
 
-    def as_matrix(self, variables: Optional[list[VariableId]] = None) -> np.ndarray:
+    def as_matrix(self) -> np.ndarray:
         """Return the dense upper triangular matrix corresponding to the Qubo instance.
 
         The matrix is triangular and constructed in such a way that the row
@@ -55,25 +53,17 @@ class Qubo:
 
         Notice that the resulting matrix is always upper triangular.
 
-        Args:
-            variables: If present, the returned matrix will follow the same
-                order as the variable ids in this list. There can even be
-                variable ids that are not used in the terms, in which case it
-                will pad the matrix with zeros. If absent, it will follow the
-                order given by the `variables()` method.
-
         Returns:
             np.ndarray: the upper triangular matrix corresponding to
                 the Qubo problem
         """
 
-        if variables is None:
-            variables = self.variables()
-        size = len(variables)
+        nodes = self.nodes()
+        size = len(nodes)
         matrix = np.zeros((size, size))
 
         for terms, value in zip(self.terms, self.coeffs):
-            positions = [variables.index(term) for term in terms]
+            positions = [nodes.index(term) for term in terms]
             matrix[min(positions)][max(positions)] += value
 
         return np.triu(matrix)
@@ -89,13 +79,11 @@ class Qubo:
 
         return graph
 
-    def variables(self) -> list[VariableId]:
+    def nodes(self) -> list[NodeId]:
         """
-        Returns:
+        Return all the node names that are used in the Qubo formulation.
 
-            List of all the variables' names that are used in the Qubo
-                formulation. It is sorted by ascending order of integers, then
-                alphabetically for strings.
+        It is sorted by ascending order of integers, then alphabetically for strings.
         """
 
         result = set()
@@ -105,16 +93,16 @@ class Qubo:
 
         return sorted(list(result), key=lambda x: (not isinstance(x, int), x))
 
-    def node_coeffs(self, include_absent: bool = False) -> dict[VariableId, float]:
+    def node_coeffs(self, include_absent: bool = False) -> dict[NodeId, float]:
         """
         Args:
 
-            include_absent: If `True`, include in the dictionary the variables
+            include_absent: If `True`, include in the dictionary the nodes
                 that don't have any linear coefficients. In that case, the
                 coefficient 0 will apply.
 
         Returns:
-            A dictionary where the keys are the variables' names, and the
+            A dictionary where the keys are the node names, and the
                 values their linear coefficients. Note that it excludes
                 quadratic terms.
         """
@@ -124,20 +112,19 @@ class Qubo:
         }
 
         if include_absent:
-            for term in self.variables():
+            for term in self.nodes():
                 coeffs[term] = coeffs.get(term, 0)
 
         return coeffs
 
-    def evaluate(self, values: Mapping[VariableId, float]) -> float:
+    def evaluate(self, values: Mapping[NodeId, float]) -> float:
         """
         Args:
 
-            values: Values to attribute to the variables.
+            values: Values to attribute to the node.
 
         Returns:
-            Result of the Qubo formula given the provided values to the
-                variables.
+            Result of the Qubo formula given the provided values to the nodes.
         """
 
         values = dict(values)
@@ -150,7 +137,7 @@ class Qubo:
     def from_matrix(matrix: np.ndarray | list) -> Qubo:
         """Return a QUBO instance from a matrix representation.
 
-        The matrix must be 2-dimensional and either symmetric or traingular.
+        The matrix must be 2-dimensional and either symmetric or triangular.
         The matrix is constructed in such a way that the row and column indices
         of each element correspond to the term and the element value is
         the coefficients. For instance, the following QUBO problem:
@@ -205,7 +192,7 @@ class Qubo:
         return Qubo(terms=terms, coeffs=coeffs)
 
     @staticmethod
-    def from_terms(terms: Mapping[tuple[VariableId, VariableId] | VariableId, float]) -> Qubo:
+    def from_terms(terms: Mapping[tuple[NodeId, NodeId] | NodeId, float]) -> Qubo:
         """Generate a QUBO instance or a matrix from a set of terms.
 
         Terms are given as a dictionary with the following form:
@@ -268,29 +255,3 @@ def tri_lower_to_upper(matrix: np.ndarray) -> np.ndarray:
     if np.allclose(matrix, np.tril(matrix)):
         matrix = matrix + matrix.T - np.diag(np.diag(matrix))
     return matrix
-
-
-def random_qubo(size: int, density: float = 1.0, bounds: tuple[int, int] = (-10, 10)) -> Qubo:
-    """Generates a NxN symetric matrix with uniform random coefficients between.
-
-    lower_bound (default = -10) and upper_bound (default = 10) given a certain
-    density of the matrix determined by the density argument (default = 1.0)
-
-    Args:
-        size (int): the first dimension of the square QUBO matrix
-        density (float, optional): determine density of the resulting QUBO matrix
-        bounds (tuple[int, int], optional): bounds for the values of the coefficients
-
-    Returns:
-        Qubo: the generated QUBO instance
-    """
-
-    matrix = np.zeros((size, size))
-
-    for i in range(size):
-        matrix[i][i] = random.uniform(*bounds)
-        for j in range(i + 1, size):
-            if random.random() <= density:
-                matrix[i][j] = random.uniform(*bounds)
-
-    return Qubo.from_matrix(matrix)
