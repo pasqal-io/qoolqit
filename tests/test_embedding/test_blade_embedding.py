@@ -40,7 +40,9 @@ def test_update_positions(
         max_distance_to_walk=max_distance_to_walk,
     )
 
-    assert np.isclose(np.linalg.norm(new_positions[0] - new_positions[1]), expected_distance)
+    np.testing.assert_allclose(
+        np.linalg.norm(new_positions[0] - new_positions[1]), expected_distance
+    )
 
 
 def test_max_dist_constraint() -> None:
@@ -56,7 +58,7 @@ def test_max_dist_constraint() -> None:
         max_dist=max_radial_dist,
     )
 
-    assert np.isclose(
+    np.testing.assert_allclose(
         np.linalg.norm(new_positions[0] - new_positions[1]), 2 * max_radial_dist, rtol=1e-2
     )
 
@@ -72,9 +74,7 @@ def test_min_dist_constraint() -> None:
         min_dist=30,
     )
 
-    assert np.isclose(
-        np.linalg.norm(new_positions[0] - new_positions[1]), 30, rtol=1e-2
-    ), f"{np.linalg.norm(new_positions[0] - new_positions[1])} != 30"
+    np.testing.assert_allclose(np.linalg.norm(new_positions[0] - new_positions[1]), 30, rtol=1e-2)
 
 
 def test_min_dist_constraint_limited() -> None:
@@ -90,7 +90,7 @@ def test_min_dist_constraint_limited() -> None:
     )
 
     expected_positions = np.array([[-3, 0], [3, 0]])
-    assert np.allclose(new_positions, expected_positions)
+    np.testing.assert_allclose(new_positions, expected_positions)
 
 
 def test_max_dist_constraint_limited() -> None:
@@ -106,7 +106,7 @@ def test_max_dist_constraint_limited() -> None:
     )
 
     expected_positions = np.array([[-9, 0], [9, 0]])
-    assert np.allclose(new_positions, expected_positions)
+    np.testing.assert_allclose(new_positions, expected_positions)
 
 
 def test_force_based_embedding() -> None:
@@ -137,9 +137,8 @@ def test_force_based_embedding() -> None:
     new_max_dist = new_min_dist * (max_dist / min_dist)
     new_max_diameter_dist = 2 * new_max_dist
 
-    assert np.isclose(
-        np.linalg.norm(positions[0] - positions[1]), new_min_dist
-    ), f"{np.linalg.norm(positions[0] - positions[1])} != {new_min_dist}"
+    np.testing.assert_allclose(np.linalg.norm(positions[0] - positions[1]), new_min_dist)
+
     assert (
         (new_max_diameter_dist - new_min_dist)
         < np.linalg.norm(positions[0] - positions[2])
@@ -162,11 +161,8 @@ def test_force_based_embedding() -> None:
         < new_max_diameter_dist
     )
 
-    assert np.isclose(
-        np.linalg.norm(positions[2] - positions[3]),
-        new_min_dist * factor_dist_2_3 / factor_dist_0_1,
-        rtol=1e-1,
-    )
+    expected_dist = new_min_dist * factor_dist_2_3 / factor_dist_0_1
+    np.testing.assert_allclose(np.linalg.norm(positions[2] - positions[3]), expected_dist, rtol=0.1)
 
 
 def test_high_dimension_increase_after_equilibrium() -> None:
@@ -223,7 +219,7 @@ def test_with_device() -> None:
     )
 
     expected_distances = np.array([[0, 2 ** (-1 / 6)], [0, 0]])
-    assert np.allclose(distances, expected_distances)
+    np.testing.assert_allclose(distances, expected_distances)
 
 
 @pytest.mark.parametrize(
