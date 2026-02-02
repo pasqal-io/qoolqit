@@ -8,7 +8,6 @@ import networkx as nx
 import numpy as np
 import scipy
 import torch
-from sklearn.decomposition import PCA
 
 from qoolqit.devices.device import Device
 from qoolqit.embedding.base_embedder import EmbeddingConfig
@@ -278,7 +277,14 @@ def evolve_with_dimension_transition(
         return compute_max_distance_to_walk(progress, max_radial_dist)
 
     if final_dimensions < starting_dimensions and pca:
-        pca_inst = PCA(n_components=starting_dimensions)
+        try:
+            import sklearn
+        except ImportError:
+            raise ModuleNotFoundError(
+                "To use `pca=True` in the blade embedding algorithm, "
+                "please install the `scikit-learn` library."
+            )
+        pca_inst = sklearn.decompositions.PCA(n_components=starting_dimensions)
         positions = pca_inst.fit_transform(positions)
 
     if final_dimensions > starting_dimensions:

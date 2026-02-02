@@ -34,7 +34,6 @@ classifiers = [
 dependencies = [
   "pulser[torch]~=1.6.3",
   "networkx~=3.4",
-  "scikit-learn",
 ]
 
 [project.optional-dependencies]
@@ -43,6 +42,7 @@ extras = [
   "emu_mps",
   "torch_geometric",
   "seaborn",
+  "scikit-learn",
 ]
 dev = [
   "qoolqit[extras]",

@@ -135,7 +135,10 @@ def plot_differences(target_qubo: np.ndarray, differences: np.ndarray) -> None:
     try:
         import seaborn
     except ImportError:
-        raise ModuleNotFoundError("Please install seaborn.")
+        raise ModuleNotFoundError(
+            "To use `draw_steps=True` in the blade embedding algorithm, "
+            "please install the `seaborn` library."
+        )
 
     percent = 100 - 2 / (len(target_qubo) - 1) * 10
     percentile = np.percentile(differences, percent)
