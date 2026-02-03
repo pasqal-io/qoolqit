@@ -482,9 +482,9 @@ class BladeEmbeddingConfig(EmbeddingConfig):
                 radial distance and the minimum pairwise distance between atoms.
         """
         if device:
+            if self.max_min_dist_ratio:
+                logger.warning("`max_min_dist_ratio` and `device` attributes should not be set simultaneously")
             min_distance = device._min_distance
             max_radial_distance = device._max_radial_distance
             if max_radial_distance and min_distance:
-                if self.max_min_dist_ratio:
-                    logger.warning("`max_min_dist_ratio`")
                 self.max_min_dist_ratio = max_radial_distance / min_distance
