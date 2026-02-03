@@ -8,6 +8,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import scipy
+from matplotlib.axes import Axes
 from matplotlib.patches import Circle
 from numpy import format_float_scientific
 
@@ -31,8 +32,11 @@ def draw_weighted_graph(
     graph: nx.Graph,
     thresholds: tuple[float, float, float] = (0.0, 0.3, 0.6),
     edge_labels: dict | None = None,
+    ax: Axes | None = None,
 ) -> None:
-    fig, ax = plt.subplots(figsize=(30, 12), dpi=60)
+    plt.figure(figsize=(30, 12), dpi=60)
+    if ax is None:
+        ax = plt.gca()
 
     print(f"{thresholds=}")
     t0, t1, t2 = thresholds
