@@ -233,9 +233,10 @@ class Qubo:
 
     @staticmethod
     def from_graph(graph: nx.Graph) -> Qubo:
-        """Construct a Qubo problem from a graph, possibly having.
+        """Construct a Qubo problem from a graph.
 
-        "weight" attributes on its nodes and edges.
+        The graph's "weight" attributes on its nodes and edges are used to set the terms.
+        A node's weight is defaulted to 0 if absent.
         """
 
         terms = dict()
