@@ -1,10 +1,14 @@
+from __future__ import annotations
+
 import json
-from pulser import __version__ as pulser_version
-from packaging.version import Version
-from qoolqit import __version__ as qoolqit_version
-from qoolqit.program import QuantumProgram
-from qoolqit.devices import MockDevice
 from typing import Callable
+
+from packaging.version import Version
+from pulser import __version__ as pulser_version
+
+from qoolqit import __version__ as qoolqit_version
+from qoolqit.devices import MockDevice
+from qoolqit.program import QuantumProgram
 
 
 def test_compiled_sequence_metadata(random_program: Callable[[], QuantumProgram]) -> None:
