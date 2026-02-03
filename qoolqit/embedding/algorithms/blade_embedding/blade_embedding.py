@@ -483,7 +483,9 @@ class BladeEmbeddingConfig(EmbeddingConfig):
         """
         if device:
             if self.max_min_dist_ratio:
-                logger.warning("`max_min_dist_ratio` and `device` attributes should not be set simultaneously")
+                logger.warning(
+                    "`max_min_dist_ratio` and `device` attributes should not be set simultaneously."
+                )
             min_distance = device._min_distance
             max_radial_distance = device._max_radial_distance
             if max_radial_distance and min_distance:
