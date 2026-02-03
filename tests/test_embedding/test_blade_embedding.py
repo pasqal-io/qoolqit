@@ -206,7 +206,7 @@ def test_drawing() -> None:
     plt.close("all")
 
 
-def test_with_device() -> None:
+def test_blade_embedding_positions() -> None:
     qubo = np.array(
         [
             [0, 2],
@@ -226,7 +226,9 @@ def test_with_device() -> None:
     "device, expected_max_min_ratio",
     [(AnalogDevice(), 7.6), (DigitalAnalogDevice(), 12.5), (MockDevice(), None)],
 )
-def test_embedding_config_from_device(device: Device, expected_max_min_ratio: float | None) -> None:
+def test_blade_embedding_config_from_device(
+    device: Device, expected_max_min_ratio: float | None
+) -> None:
     config = BladeEmbeddingConfig(device=device)
     assert config.max_min_dist_ratio == expected_max_min_ratio
 
