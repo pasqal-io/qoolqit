@@ -33,7 +33,7 @@ classifiers = [
 
 dependencies = [
   "pulser[torch]~=1.6.3",
-  "networkx~=3.5",
+  "networkx~=3",
 ]
 
 [project.optional-dependencies]
