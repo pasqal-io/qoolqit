@@ -379,7 +379,7 @@ def blade_embedding(
         `max_min_dist_ratio` is not enabled, otherwise, it is set to
         the maximum radial distance for the current step.
         It must return a float number that limits the distances
-        nodes can move at one step  (seen`update_positions` to learn more).
+        nodes can move at one step  (see `update_positions` to learn more).
     starting_ratio_factor: When `max_min_dist_ratio` is enabled,
         defines a multiplying factor on the target ratio to start the evolution
         on a larger ratio, to let more flexibility in the beginning.
