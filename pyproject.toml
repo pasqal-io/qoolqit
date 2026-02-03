@@ -18,7 +18,8 @@ authors = [
   { name = "David Teller", email = "david.teller@pasqal.com" },
   { name = "Manu Lahariya", email = "manu.lahariya@pasqal.com" },
   { name = "Charles MOUSSA", email = "charles.moussa@pasqal.com" },
-  { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" }
+  { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
+  { name = "Clément de Terrasson de Montleau", email = "clement.de-terrasson@pasqal.com" }
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
