@@ -156,7 +156,7 @@ def update_positions(
     if draw_step:
         logger.debug(f"Resulting positions = {dict(enumerate(positions))}")
         print(f"Current number of dimensions is {positions.shape[-1]}")
-        distances = np.min(distance_matrix[np.triu_indices_from(distance_matrix, k=1)])
+        distances = distance_matrix[np.triu_indices_from(distance_matrix, k=1)]
         print(
             f"{min_dist=}, {max_dist=}, "
             f"current min dist = {np.min(distances)}, "
