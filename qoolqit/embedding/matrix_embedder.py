@@ -66,6 +66,5 @@ class BladeEmbedder(MatrixToGraphEmbedder[BladeEmbeddingConfig]):
         """
         self.validate_input(data)
         positions = self.algorithm(data, **self.config.dict())
-        centered_coords = positions - np.mean(positions, axis=0)
-        graph = DataGraph.from_coordinates(centered_coords.tolist())
+        graph = DataGraph.from_coordinates(positions.tolist())
         return graph
