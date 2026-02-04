@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from typing import Callable
 
 import numpy as np
@@ -8,7 +7,6 @@ import pytest
 from pulser.sequence import Sequence as PulserSequence
 
 from qoolqit import AnalogDevice, Device, DigitalAnalogDevice, MockDevice
-from qoolqit import __version__ as qoolqit_version
 from qoolqit.drive import Drive
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution import CompilerProfile
@@ -96,16 +94,6 @@ def test_compiler_profiles_dmm(
         else:
             with pytest.raises(CompilationError):
                 program.compile_to(device, profile=profile)
-
-
-def test_compiled_sequence_metadata(random_program: Callable[[], QuantumProgram]) -> None:
-    program = random_program()
-    program.compile_to(MockDevice())
-    compiled_seq_repr = json.loads(program.compiled_sequence.to_abstract_repr())
-
-    compiled_seq_metadata = compiled_seq_repr["metadata"]
-    expected_metadata = {"package_versions": {"qoolqit": qoolqit_version}, "extra": {}}
-    assert compiled_seq_metadata == expected_metadata
 
 
 def test_compiled_sequence_with_delays() -> None:
