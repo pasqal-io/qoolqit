@@ -140,7 +140,7 @@ def plot_differences(target_qubo: np.ndarray, differences: np.ndarray) -> None:
         import seaborn
     except ImportError:
         raise ModuleNotFoundError(
-            "To use `draw_steps=True` in the blade embedding algorithm, "
+            "To use `draw_steps=True` in the BLaDE algorithm, "
             "please install the `seaborn` library."
         )
 

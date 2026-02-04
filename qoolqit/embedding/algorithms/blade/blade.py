@@ -281,7 +281,7 @@ def evolve_with_dimension_transition(
             import sklearn
         except ImportError:
             raise ModuleNotFoundError(
-                "To use `pca=True` in the blade embedding algorithm, "
+                "To use `pca=True` in the BLaDE algorithm, "
                 "please install the `scikit-learn` library."
             )
         pca_inst = sklearn.decompositions.PCA(n_components=starting_dimensions)
@@ -326,8 +326,8 @@ def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
     return np.min(distance_matrix[upper_diagonal_mask])  # type: ignore
 
 
-def blade_embedding(
-    qubo: np.ndarray,
+def blade(
+    matrix: np.ndarray,
     *,
     max_min_dist_ratio: float | None = None,
     dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2),
@@ -342,16 +342,17 @@ def blade_embedding(
     draw_steps: bool | list[int] = False,
 ) -> np.ndarray:
     """
-    Embed a QUBO/interaction matrix with the BLaDE algorithm.
+    Embed an interaction matrix or QUBO with the BLaDE algorithm.
 
-    Compute positions for nodes so that their interactions
+    BLaDE stands for Balanced Latently Dimensional Embedder.
+    It compute positions for nodes so that their interactions
     approach the desired values. The interactions assume that the
     interaction coefficient of the device is set to 1.
     Its prior target is on interaction matrices or QUBOs, but it can also be used
     for MIS with limitations if the adjacency matrix is converted into a QUBO.
     The general principle is based on the Fruchterman-Reingold algorithm.
 
-    qubo: QUBO/interaction matrix.
+    matrix: an objective interaction matrix or QUBO.
     max_min_dist_ratio: If present, set the maximum ratio between
         the maximum radial distance and the minimum pairwise distances.
     dimensions: List of numbers of dimensions to explore one
@@ -392,16 +393,16 @@ def blade_embedding(
 
     assert len(dimensions) >= 2
 
-    if isinstance(qubo, np.ndarray):
-        assert not np.all(qubo == 0)
+    if isinstance(matrix, np.ndarray):
+        assert not np.all(matrix == 0)
     else:
-        assert not torch.all(qubo == 0)
+        assert not torch.all(matrix == 0)
 
-    qubo_obj = Qubo.from_matrix(qubo)
+    qubo_obj = Qubo.from_matrix(matrix)
     qubo_graph = qubo_obj.as_graph()
 
     if starting_positions is None:
-        positions = generate_random_positions(qubo=qubo, dimension=dimensions[0])
+        positions = generate_random_positions(qubo=matrix, dimension=dimensions[0])
     else:
         positions = starting_positions
 
@@ -425,7 +426,7 @@ def blade_embedding(
         range(len(dimensions) - 1), steps_ratios[:-1], steps_ratios[1:]
     ):
         positions, starting_min = evolve_with_dimension_transition(
-            qubo=qubo,
+            qubo=matrix,
             draw_steps=draw_steps,
             dimensions=dimensions,
             starting_min=starting_min,
@@ -455,8 +456,8 @@ def blade_embedding(
 
 
 @dataclass
-class BladeEmbeddingConfig(EmbeddingConfig):
-    """Configuration parameters for the blade embedding."""
+class BladeConfig(EmbeddingConfig):
+    """Configuration parameters to embed with BLaDE."""
 
     max_min_dist_ratio: float | None = None
     dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2)
@@ -472,7 +473,7 @@ class BladeEmbeddingConfig(EmbeddingConfig):
     device: InitVar[Device | None] = None
 
     def __post_init__(self, device: Device | None) -> None:
-        """Post initialization of the `BladeEmbeddingConfig` dataclass.
+        """Post initialization of the `BladeConfig` dataclass.
 
         Set the `max_min_dist_ratio` argument of the `blade_embedding` algorithm
         based on the specification of the selected device.

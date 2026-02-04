@@ -5,9 +5,9 @@ import numpy as np
 from qoolqit.graphs import DataGraph
 
 from .algorithms import (
-    BladeEmbeddingConfig,
+    BladeConfig,
     InteractionEmbeddingConfig,
-    blade_embedding,
+    blade,
     interaction_embedding,
 )
 from .base_embedder import BaseEmbedder, ConfigType
@@ -45,16 +45,16 @@ class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbeddingConfig]):
         super().__init__(interaction_embedding, InteractionEmbeddingConfig())
 
 
-class BladeEmbedder(MatrixToGraphEmbedder[BladeEmbeddingConfig]):
-    """A matrix to graph embedder using the blade embedding algorithm."""
+class Blade(MatrixToGraphEmbedder[BladeConfig]):
+    """A matrix to graph embedder using the BLaDE algorithm."""
 
-    def __init__(self, config: BladeEmbeddingConfig = BladeEmbeddingConfig()) -> None:
-        """Inits BladeEmbedder.
+    def __init__(self, config: BladeConfig = BladeConfig()) -> None:
+        """Inits Blade.
 
         Args:
-            config (BladeEmbeddingConfig): configuration object for the blade embedding algorithm.
+            config (BladeConfig): configuration object for the BLaDE algorithm.
         """
-        super().__init__(blade_embedding, config=config)
+        super().__init__(blade, config=config)
 
     def embed(self, data: np.ndarray) -> DataGraph:
         """Return a DataGraph with coordinates that embeds the input matrix.

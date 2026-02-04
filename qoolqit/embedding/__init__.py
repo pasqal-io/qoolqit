@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from .algorithms import BladeEmbeddingConfig, InteractionEmbeddingConfig, SpringLayoutConfig
+from .algorithms import BladeConfig, InteractionEmbeddingConfig, SpringLayoutConfig
 from .base_embedder import BaseEmbedder, EmbeddingConfig
 from .graph_embedder import GraphToGraphEmbedder, SpringLayoutEmbedder
-from .matrix_embedder import BladeEmbedder, InteractionEmbedder, MatrixToGraphEmbedder
+from .matrix_embedder import Blade, InteractionEmbedder, MatrixToGraphEmbedder
 
 __all__ = [
     "BaseEmbedder",
@@ -14,6 +14,6 @@ __all__ = [
     "InteractionEmbedder",
     "SpringLayoutConfig",
     "SpringLayoutEmbedder",
-    "BladeEmbeddingConfig",
-    "BladeEmbedder",
+    "BladeConfig",
+    "Blade",
 ]

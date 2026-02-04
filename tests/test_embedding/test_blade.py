@@ -4,15 +4,15 @@ import networkx as nx
 import numpy as np
 import pytest
 
-from qoolqit import AnalogDevice, BladeEmbeddingConfig, DigitalAnalogDevice, MockDevice
+from qoolqit import AnalogDevice, BladeConfig, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
-from qoolqit.embedding.algorithms.blade_embedding._helpers import (
+from qoolqit.embedding.algorithms.blade._helpers import (
     normalized_best_dist,
     normalized_interaction,
 )
-from qoolqit.embedding.algorithms.blade_embedding._qubo_mapper import Qubo
-from qoolqit.embedding.algorithms.blade_embedding.blade_embedding import (
-    blade_embedding,
+from qoolqit.embedding.algorithms.blade._qubo_mapper import Qubo
+from qoolqit.embedding.algorithms.blade.blade import (
+    blade,
     update_positions,
 )
 
@@ -125,8 +125,8 @@ def test_force_based_embedding() -> None:
         ]
     )
 
-    positions = blade_embedding(
-        qubo=qubo,
+    positions = blade(
+        matrix=qubo,
         max_min_dist_ratio=max_dist / min_dist,
         steps_per_round=1000,
         starting_positions=np.array([[-1, 1], [1, 1], [1, -1], [-1, -1]]) * max_dist / 3,
@@ -180,7 +180,7 @@ def test_high_dimension_increase_after_equilibrium() -> None:
             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         ]
     )
-    blade_embedding(qubo, dimensions=(2, 2, 10), steps_per_round=100)
+    blade(qubo, dimensions=(2, 2, 10), steps_per_round=100)
 
 
 def test_drawing() -> None:
@@ -206,14 +206,14 @@ def test_drawing() -> None:
     plt.close("all")
 
 
-def test_blade_embedding_positions() -> None:
+def test_simple_positions() -> None:
     qubo = np.array(
         [
             [0, 2],
             [0, 0],
         ]
     )
-    positions = blade_embedding(qubo, dimensions=(2, 2), steps_per_round=100)
+    positions = blade(qubo, dimensions=(2, 2), steps_per_round=100)
     distances = np.triu(
         np.linalg.norm(positions[np.newaxis, :, :] - positions[:, np.newaxis, :], axis=-1), k=1
     )
@@ -226,10 +226,8 @@ def test_blade_embedding_positions() -> None:
     "device, expected_max_min_ratio",
     [(AnalogDevice(), 7.6), (DigitalAnalogDevice(), 12.5), (MockDevice(), None)],
 )
-def test_blade_embedding_config_from_device(
-    device: Device, expected_max_min_ratio: float | None
-) -> None:
-    config = BladeEmbeddingConfig(device=device)
+def test_config_from_device(device: Device, expected_max_min_ratio: float | None) -> None:
+    config = BladeConfig(device=device)
     assert config.max_min_dist_ratio == expected_max_min_ratio
 
 
