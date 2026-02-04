@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
-import torch
 from matplotlib.figure import Figure
 
 from .utils import (
@@ -104,12 +103,6 @@ class BaseGraph(nx.Graph):
         num_nodes = len(g.nodes)
         num_edges = len(g.edges)
 
-        # validate node attributes
-        for name, data in g.nodes.data():
-            unexpected_keys = set(data) - {"weight", "pos"}
-            if unexpected_keys:
-                raise ValueError(f"{unexpected_keys} not allowed in node attributes.")
-
         node_pos = nx.get_node_attributes(g, "pos")
         if node_pos:
             if len(node_pos) != num_nodes:
@@ -134,11 +127,6 @@ class BaseGraph(nx.Graph):
                         ""
                     )
 
-        # validate edge attributes
-        for u, v, data in g.edges.data():
-            unexpected_keys = set(data) - {"weight"}
-            if unexpected_keys:
-                raise ValueError(f"{unexpected_keys} not allowed in edge attributes.")
         edge_weights = nx.get_edge_attributes(g, "weight")
         if edge_weights:
             if len(edge_weights) != num_edges:
@@ -152,8 +140,8 @@ class BaseGraph(nx.Graph):
 
         # build the instance of the graph
         graph = cls()
-        graph.add_nodes_from(g.nodes)
-        graph.add_edges_from(g.edges)
+        graph.add_nodes_from(g.nodes(data=True))
+        graph.add_edges_from(g.edges(data=True))
         graph._node_weights = nx.get_node_attributes(g, "weight", default=None)
         graph._coords = nx.get_node_attributes(g, "pos", default=None)
         graph._edge_weights = nx.get_edge_attributes(g, "weight", default=None)
@@ -165,15 +153,6 @@ class BaseGraph(nx.Graph):
         """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
 
         This method requires installing the `torch_geometric` package.
-        The input `torch_geometric.data.Data` object must be defined only with the following
-        allowed attributes:
-            x (torch.Tensor): node weights as a matrix with shape (num_nodes, 1).
-            edge_index (torch.Tensor): graph connectivity as a matrix with shape (2, num_edges).
-            num_nodes (int): minimum number of nodes. The total number of nodes will be inferred
-                from this number and from the edges of the graph.
-            pos (torch.Tensor): node 2D positions as a matrix with shape (num_nodes, 2)
-            edge_attr (torch.Tensor): edge weights as a matrix with shape (num_edges, 1).
-
         If the graph is defined only through the `edge_index` attribute, `num_nodes` is required.
         The input graph will be converted to a unidirectional graph.
         """
@@ -185,13 +164,6 @@ class BaseGraph(nx.Graph):
         if not isinstance(g, torch_geometric.data.Data):
             raise TypeError("Input must be a torch_geometric.data.Data object.")
 
-        expected_attrs = {"x", "edge_index", "pos", "edge_attr", "num_nodes"}
-        unexpected_attrs = set(g.keys()) - expected_attrs
-        if unexpected_attrs:
-            raise AttributeError(
-                f"""Input Data graph has the following unexpected attributes: {unexpected_attrs}"""
-            )
-
         if not g.node_attrs():
             if "num_nodes" not in g.keys():
                 raise AttributeError(
@@ -199,41 +171,11 @@ class BaseGraph(nx.Graph):
                     attribute: `x`, `pos`, `num_nodes`."""
                 )
 
-        num_nodes = g.num_nodes
-        num_edges = g.num_edges
-        expected_shape = {
-            "x": (num_nodes, 1),
-            "edge_index": (2, num_edges),
-            "pos": (num_nodes, 2),
-            "edge_attr": (num_edges, 1),
-        }
-
-        for attr_key, shape in expected_shape.items():
-            if attr_key in g:
-                attr = g[attr_key]
-                if not isinstance(attr, torch.Tensor):
-                    raise TypeError(f"Data attribute {attr_key} must be a tensor.")
-                # add that has to be a tensor of real numbers
-                if attr.shape != shape:
-                    raise ValueError(
-                        f"Data attribute {attr_key} must be a 2D tensor of shape {shape}."
-                    )
-                if not attr.isreal().all():
-                    raise ValueError(
-                        f"Data attribute {attr_key} must be a 2D tensor of real numbers."
-                    )
-
         # g.edge_attrs() also returns "edge_index" which should not be passed to to_networkx
         edge_attrs = ["edge_attr"] if "edge_attr" in g else None
         data_nx = torch_geometric.utils.to_networkx(
             g, node_attrs=g.node_attrs(), edge_attrs=edge_attrs, to_undirected=True
         )
-        if "edge_attr" in g:
-            for u, v, edge in data_nx.edges(data=True):
-                edge["weight"] = edge.pop("edge_attr")[0]
-        if "x" in g:
-            for u, node in data_nx.nodes(data=True):
-                node["weight"] = node.pop("x")[0]
 
         return cls.from_nx(data_nx)
 
