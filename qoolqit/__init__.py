@@ -13,6 +13,8 @@ from qoolqit.devices import (
 )
 from qoolqit.drive import Drive
 from qoolqit.embedding import (
+    Blade,
+    BladeConfig,
     InteractionEmbedder,
     InteractionEmbeddingConfig,
     SpringLayoutConfig,
@@ -30,6 +32,8 @@ __all__ = [
     "InteractionEmbeddingConfig",
     "SpringLayoutConfig",
     "SpringLayoutEmbedder",
+    "BladeConfig",
+    "Blade",
     "Blackman",
     "Constant",
     "Delay",
