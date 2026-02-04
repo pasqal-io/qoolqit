@@ -1491,6 +1491,8 @@
       
         
       
+        
+      
     
     
     
@@ -1542,6 +1544,135 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2_1_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../api/qoolqit/embedding/algorithms/blade/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.embedding.algorithms.blade
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5_2_1_1" id="__nav_5_2_1_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_5_2_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    qoolqit.embedding.algorithms.blade
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/qoolqit/embedding/algorithms/blade/blade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.embedding.algorithms.blade.blade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/qoolqit/embedding/algorithms/blade/drawing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.embedding.algorithms.blade.drawing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
             
               
                 
@@ -2776,6 +2907,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qoolqit.BladeConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BladeConfig
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qoolqit.Blade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blade
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Blade">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Blade.embed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        embed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#qoolqit.Blackman" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3693,7 +3863,11 @@
 <span class="normal"><a href="#__codelineno-0-52">52</a></span>
 <span class="normal"><a href="#__codelineno-0-53">53</a></span>
 <span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="sd">&quot;&quot;&quot;A Python library for algorithm development in the Rydberg Analog Model.&quot;&quot;&quot;</span>
+<span class="normal"><a href="#__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#__codelineno-0-58">58</a></span>
+<span class="normal"><a href="#__codelineno-0-59">59</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="sd">&quot;&quot;&quot;A Python library for algorithm development in the Rydberg Analog Model.&quot;&quot;&quot;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4"></a>
@@ -3708,46 +3882,50 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="p">)</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">Drive</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.embedding</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">InteractionEmbedder</span><span class="p">,</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">InteractionEmbeddingConfig</span><span class="p">,</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="n">SpringLayoutConfig</span><span class="p">,</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="n">SpringLayoutEmbedder</span><span class="p">,</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="p">)</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompilerProfile</span><span class="p">,</span> <span class="n">SequenceCompiler</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.graphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGraph</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.program</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantumProgram</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.register</span><span class="w"> </span><span class="kn">import</span> <span class="n">Register</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Blackman</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">Delay</span><span class="p">,</span> <span class="n">Interpolated</span><span class="p">,</span> <span class="n">PiecewiseLinear</span><span class="p">,</span> <span class="n">Ramp</span><span class="p">,</span> <span class="n">Sin</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="s2">&quot;DataGraph&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="s2">&quot;InteractionEmbedder&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="s2">&quot;InteractionEmbeddingConfig&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="s2">&quot;SpringLayoutConfig&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="s2">&quot;SpringLayoutEmbedder&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="s2">&quot;Blackman&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="s2">&quot;Constant&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="s2">&quot;Delay&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="s2">&quot;Interpolated&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="s2">&quot;PiecewiseLinear&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="s2">&quot;Ramp&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="s2">&quot;Sin&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="s2">&quot;Drive&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="s2">&quot;Register&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="s2">&quot;QuantumProgram&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="s2">&quot;CompilerProfile&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="s2">&quot;SequenceCompiler&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="s2">&quot;available_default_devices&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="s2">&quot;AnalogDevice&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="s2">&quot;DigitalAnalogDevice&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="s2">&quot;MockDevice&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="s2">&quot;Device&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="p">]</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.3.3&quot;</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="n">pulser_sequence</span><span class="o">.</span><span class="n">store_package_version_metadata</span><span class="p">(</span><span class="s2">&quot;qoolqit&quot;</span><span class="p">,</span> <span class="n">__version__</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">Blade</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">BladeConfig</span><span class="p">,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="n">InteractionEmbedder</span><span class="p">,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="n">InteractionEmbeddingConfig</span><span class="p">,</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="n">SpringLayoutConfig</span><span class="p">,</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="n">SpringLayoutEmbedder</span><span class="p">,</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompilerProfile</span><span class="p">,</span> <span class="n">SequenceCompiler</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.graphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGraph</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.program</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuantumProgram</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.register</span><span class="w"> </span><span class="kn">import</span> <span class="n">Register</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Blackman</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">Delay</span><span class="p">,</span> <span class="n">Interpolated</span><span class="p">,</span> <span class="n">PiecewiseLinear</span><span class="p">,</span> <span class="n">Ramp</span><span class="p">,</span> <span class="n">Sin</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="s2">&quot;DataGraph&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="s2">&quot;InteractionEmbedder&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="s2">&quot;InteractionEmbeddingConfig&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="s2">&quot;SpringLayoutConfig&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="s2">&quot;SpringLayoutEmbedder&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="s2">&quot;BladeConfig&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="s2">&quot;Blade&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="s2">&quot;Blackman&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="s2">&quot;Constant&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="s2">&quot;Delay&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="s2">&quot;Interpolated&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="s2">&quot;PiecewiseLinear&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="s2">&quot;Ramp&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="s2">&quot;Sin&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="s2">&quot;Drive&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="s2">&quot;Register&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="s2">&quot;QuantumProgram&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="s2">&quot;CompilerProfile&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="s2">&quot;SequenceCompiler&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="s2">&quot;available_default_devices&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="s2">&quot;AnalogDevice&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="s2">&quot;DigitalAnalogDevice&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="s2">&quot;MockDevice&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="s2">&quot;Device&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="p">]</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.3.3&quot;</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="n">pulser_sequence</span><span class="o">.</span><span class="n">store_package_version_metadata</span><span class="p">(</span><span class="s2">&quot;qoolqit&quot;</span><span class="p">,</span> <span class="n">__version__</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
 
 

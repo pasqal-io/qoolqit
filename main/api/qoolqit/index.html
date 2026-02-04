@@ -1508,6 +1508,8 @@
       
         
       
+        
+      
     
     
     
@@ -1559,6 +1561,135 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2_1_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="embedding/algorithms/blade/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.embedding.algorithms.blade
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5_2_1_1" id="__nav_5_2_1_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_5_2_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    qoolqit.embedding.algorithms.blade
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="embedding/algorithms/blade/blade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.embedding.algorithms.blade.blade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="embedding/algorithms/blade/drawing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.embedding.algorithms.blade.drawing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
             
               
                 
@@ -2802,6 +2933,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qoolqit.BladeConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BladeConfig
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qoolqit.Blade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blade
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Blade">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.Blade.embed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        embed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#qoolqit.Blackman" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3703,6 +3873,16 @@ Configuration parameters for the spring-layout embedding.</p>
 A graph to graph embedder using the spring layout algorithm.</p>
 </li>
 <li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.BladeConfig" title="qoolqit.BladeConfig">BladeConfig</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+Configuration parameters to embed with BLaDE.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.Blade" title="qoolqit.Blade">Blade</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+A matrix to graph embedder using the BLaDE algorithm.</p>
+</li>
+<li>
 <p><span class="mkapi-item-name"><a href="./#qoolqit.Blackman" title="qoolqit.Blackman">Blackman</a></span>
  <span class="mkapi-dash">&mdash;</span>
 A Blackman window of a specified duration and area under the curve.</p>
@@ -4589,6 +4769,135 @@ Returns the callable to the embedding algorithm.</p>
 <p><span class="mkapi-item-name">info</span> : 
 <span class="mkapi-item-type">str</span> <span class="mkapi-dash">&mdash;</span>
 Prints info about the embedding algorithm.</p>
+</li>
+</ul>
+</div>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.BladeConfig">
+<span class="mkapi-object-link">
+
+<span class="mkapi-definition-link"><a href="embedding/algorithms/blade/blade/#qoolqit.embedding.algorithms.blade.blade.BladeConfig" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/embedding/algorithms/blade/blade/#qoolqit.embedding.algorithms.blade.blade.BladeConfig" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">dataclass</span>
+<span class="mkapi-object-name"><a href="./#qoolqit.BladeConfig" title="qoolqit.BladeConfig">BladeConfig</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">max_min_dist_ratio</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">dimensions</span><span class="mkapi-colon">: </span><span class="mkapi-ann">tuple[int, ...]</span><span class="mkapi-equal"> = </span><span class="mkapi-default">(5, 4, 3, 2, 2, 2)</span><span class="mkapi-comma">, </span><span class="mkapi-arg">starting_positions</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span> | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">pca</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool</span><span class="mkapi-equal"> = </span><span class="mkapi-default">False</span><span class="mkapi-comma">, </span><span class="mkapi-arg">steps_per_round</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default">200</span><span class="mkapi-comma">, </span><span class="mkapi-arg">compute_weight_relative_threshold</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Callable">Callable</span>[[float], float]</span><span class="mkapi-equal"> = </span><span class="mkapi-default">lambda _: 0.1</span><span class="mkapi-comma">, </span><span class="mkapi-arg">compute_max_distance_to_walk</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Callable">Callable</span>[[float, float | None], float | tuple[float, float, float]]</span><span class="mkapi-equal"> = </span><span class="mkapi-default">lambda x, max_radial_dist: <span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.numeric.inf">inf</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">starting_ratio_factor</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-equal"> = </span><span class="mkapi-default">2</span><span class="mkapi-comma">, </span><span class="mkapi-arg">draw_steps</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool | list[int]</span><span class="mkapi-equal"> = </span><span class="mkapi-default">False</span><span class="mkapi-comma">, </span><span class="mkapi-arg">device</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="dataclasses.InitVar">InitVar</span>[<a href="devices/device/#qoolqit.devices.device.Device" title="qoolqit.devices.device.Device">Device</a> | None]</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-paren">)</span></span>
+</p>
+<div class="mkapi-document">
+<p class="mkapi-bases">Bases :
+<span class="mkapi-base"><a href="embedding/base_embedder/#qoolqit.embedding.base_embedder.EmbeddingConfig" title="qoolqit.embedding.base_embedder.EmbeddingConfig">EmbeddingConfig</a></span></p>
+<p>Configuration parameters to embed with BLaDE.</p>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Blade">
+<span class="mkapi-object-link">
+
+<span class="mkapi-definition-link"><a href="embedding/matrix_embedder/#qoolqit.embedding.matrix_embedder.Blade" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/embedding/matrix_embedder/#qoolqit.embedding.matrix_embedder.Blade" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">class</span>
+<span class="mkapi-object-name"><a href="./#qoolqit.Blade" title="qoolqit.Blade">Blade</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">config</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><a href="embedding/algorithms/blade/blade/#qoolqit.embedding.algorithms.blade.blade.BladeConfig" title="qoolqit.embedding.algorithms.blade.blade.BladeConfig">BladeConfig</a></span><span class="mkapi-equal"> = </span><span class="mkapi-default"><a href="embedding/algorithms/blade/blade/#qoolqit.embedding.algorithms.blade.blade.BladeConfig" title="qoolqit.embedding.algorithms.blade.blade.BladeConfig">BladeConfig</a>()</span><span class="mkapi-paren">)</span></span>
+</p>
+<div class="mkapi-document">
+<p class="mkapi-bases">Bases :
+<span class="mkapi-base"><a href="embedding/matrix_embedder/#qoolqit.embedding.matrix_embedder.MatrixToGraphEmbedder" title="qoolqit.embedding.matrix_embedder.MatrixToGraphEmbedder">MatrixToGraphEmbedder</a>[<a href="embedding/algorithms/blade/blade/#qoolqit.embedding.algorithms.blade.blade.BladeConfig" title="qoolqit.embedding.algorithms.blade.blade.BladeConfig">BladeConfig</a>]</span></p>
+<p>A matrix to graph embedder using the BLaDE algorithm.</p>
+<p>Inits Blade.</p>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle parameters">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Parameters</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name">config</span> : 
+<span class="mkapi-item-type"><a href="embedding/algorithms/blade/blade/#qoolqit.embedding.algorithms.blade.blade.BladeConfig" title="qoolqit.embedding.algorithms.blade.blade.BladeConfig">BladeConfig</a></span> <span class="mkapi-dash">&mdash;</span>
+configuration object for the BLaDE algorithm.</p>
+</li>
+</ul>
+</div>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle attributes">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Attributes</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name">config</span> : 
+<span class="mkapi-item-type"><span class="mkapi-tooltip" title="qoolqit.embedding.base_embedder.ConfigType">ConfigType</span></span> <span class="mkapi-dash">&mdash;</span>
+Returns the config for the embedding algorithm.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name">algorithm</span> : 
+<span class="mkapi-item-type">Callable</span> <span class="mkapi-dash">&mdash;</span>
+Returns the callable to the embedding algorithm.</p>
+</li>
+<li>
+<p><span class="mkapi-item-name">info</span> : 
+<span class="mkapi-item-type">str</span> <span class="mkapi-dash">&mdash;</span>
+Prints info about the embedding algorithm.</p>
+</li>
+</ul>
+</div>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle methods">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Methods</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.Blade.embed" title="qoolqit.Blade.embed">embed</a></span>
+ <span class="mkapi-dash">&mdash;</span>
+Return a DataGraph with coordinates that embeds the input matrix.</p>
+</li>
+</ul>
+</div>
+</div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.Blade.embed">
+<span class="mkapi-object-link">
+<span class="mkapi-parent-toggle" title="Toggle class names">
+<i class="fa-solid fa-square-plus"></i>
+</span>
+<span class="mkapi-definition-link"><a href="embedding/matrix_embedder/#qoolqit.embedding.matrix_embedder.Blade.embed" title="Go to definition"><i class="fa-solid fa-square-arrow-up-right"></i></a></span>
+<a href="../../src/qoolqit/embedding/matrix_embedder/#qoolqit.embedding.matrix_embedder.Blade.embed" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span><span class="mkapi-object-kind">method</span>
+<span class="mkapi-object-parent">
+<a href="./#qoolqit.Blade" title="qoolqit.Blade">Blade</a><span class="mkapi-dot">.</span></span><span class="mkapi-object-name"><a href="./#qoolqit.Blade.embed" title="qoolqit.Blade.embed">embed</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">data</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return"><a href="graphs/data_graph/#qoolqit.graphs.data_graph.DataGraph" title="qoolqit.graphs.data_graph.DataGraph">DataGraph</a></span></span>
+</p>
+<div class="mkapi-document">
+<p>Return a DataGraph with coordinates that embeds the input matrix.</p>
+<p>Validates the input, runs the embedding algorithm, and validates the output.</p>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle parameters">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Parameters</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-name">data</span> : 
+<span class="mkapi-item-type"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span> <span class="mkapi-dash">&mdash;</span>
+the matrix to embed into a DataGraph with coordinates.</p>
 </li>
 </ul>
 </div>
