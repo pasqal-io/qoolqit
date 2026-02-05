@@ -172,21 +172,22 @@ class BaseGraph(nx.Graph):
         """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
 
         This method requires installing the `torch_geometric` package.
-        Uses PyG's to_networkx internally. Only explicitly specified attributes
-        are copied, plus default PyG attributes (x, edge_attr, y) and QoolQit
-        attributes (pos, weight, edge_weight).
+        Uses PyG's to_networkx internally. Standard PyG attributes (x, edge_attr, y, pos)
+        and QoolQit attributes (weight, edge_weight) are automatically transferred.
+        Additional attributes can be specified via the parameters.
 
         Arguments:
             data: PyTorch Geometric Data object.
-            node_attrs: Node attributes to copy (in addition to defaults).
-            edge_attrs: Edge attributes to copy (in addition to defaults).
-            graph_attrs: Graph-level attributes to copy as graph attributes.
+            node_attrs: Additional node attributes to copy.
+            edge_attrs: Additional edge attributes to copy.
+            graph_attrs: Additional graph-level attributes to copy.
 
         Returns:
             BaseGraph instance.
 
         Notes:
             The input graph will be converted to an undirected graph.
+            pos is mapped to _coords, weight to _node_weights, edge_weight to _edge_weights.
         """
         try:
             from torch_geometric.data import Data
@@ -265,17 +266,20 @@ class BaseGraph(nx.Graph):
     ) -> torch_geometric.data.Data:
         """Convert the BaseGraph to a PyTorch Geometric Data object.
 
-        Uses PyG's from_networkx internally. Only explicitly specified attributes
-        are exported, plus default PyG attributes (x, edge_attr, y) and QoolQit
-        internal attributes (pos, weight, edge_weight).
+        Uses PyG's from_networkx internally. Standard PyG attributes (x, edge_attr, y, pos)
+        and QoolQit attributes (weight, edge_weight) are automatically exported.
+        Additional attributes can be specified via the parameters.
 
         Arguments:
-            node_attrs: Node attributes to export (in addition to defaults).
-            edge_attrs: Edge attributes to export (in addition to defaults).
-            graph_attrs: Graph-level attributes to copy to the Data object.
+            node_attrs: Additional node attributes to export.
+            edge_attrs: Additional edge attributes to export.
+            graph_attrs: Additional graph-level attributes to export.
 
         Returns:
             PyTorch Geometric Data object with edge_index and requested attributes.
+
+        Notes:
+            _coords is exported as pos, _node_weights as weight, _edge_weights as edge_weight.
         """
         try:
             from torch_geometric.utils import from_networkx
