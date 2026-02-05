@@ -289,15 +289,15 @@ def test_from_pyg_only_edges() -> None:
     assert all(v is None for v in g._edge_weights.values())
 
 
-def test_from_pyg() -> None:
-    """Test importing a PyG Data object with node and edge attributes."""
-    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.float64)  # (0->1, 1->2, 2->0)
+def test_from_pyg_with_qoolqit_attrs() -> None:
+    """Test importing a PyG Data object with QoolQit attributes (weight, pos, edge_weight)."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
 
-    x = torch.tensor([[1.0], [2.0], [3.0]], dtype=torch.float64)  # node weights
+    weight = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)  # node weights
     pos = torch.tensor([[0.0, 0.0], [1.0, 0.0], [0.5, 1.0]], dtype=torch.float64)  # positions
-    edge_attr = torch.tensor([[0.1], [0.2], [0.3]], dtype=torch.float64)  # edge weights
+    edge_weight = torch.tensor([0.1, 0.2, 0.3], dtype=torch.float64)  # edge weights
 
-    data = Data(x=x, pos=pos, edge_index=edge_index, edge_attr=edge_attr)
+    data = Data(weight=weight, pos=pos, edge_index=edge_index, edge_weight=edge_weight)
 
     g = BaseGraph.from_pyg(data)
 
@@ -306,43 +306,131 @@ def test_from_pyg() -> None:
     assert g._coords == {0: [0.0, 0.0], 1: [1.0, 0.0], 2: [0.5, 1.0]}
 
 
-def test_from_pyg_wrong_shape_x() -> None:
-    """Test that invalid tensor shapes raise ValueError."""
-    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.float64)
-    x = torch.tensor(
-        [[1.0, 2.0], [2.0, 1.0]], dtype=torch.float64
-    )  # wrong shape: should be (num_nodes,1)
-    data = Data(x=x, edge_index=edge_index)
+def test_from_pyg_with_pyg_attrs() -> None:
+    """Test importing a PyG Data object with standard PyG attributes (x, edge_attr)."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
 
-    with pytest.raises(ValueError, match="x"):
-        BaseGraph.from_pyg(data)
+    x = torch.tensor([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]], dtype=torch.float64)  # multi-dim x
+    edge_attr = torch.tensor([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]], dtype=torch.float64)
 
+    data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
 
-def test_from_pyg_wrong_shape_pos() -> None:
-    """Test that non-numeric tensors raise TypeError."""
-    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.float64)
-    pos = torch.tensor([[0, 1, 1], [1, 0, 0]], dtype=torch.float64)
-    data = Data(edge_index=edge_index, pos=pos)
+    g = BaseGraph.from_pyg(data)
 
-    with pytest.raises(ValueError, match="pos"):
-        BaseGraph.from_pyg(data)
+    # x and edge_attr should be stored as node/edge attributes
+    assert g.nodes[0]["x"] == [1.0, 2.0]
+    assert g.nodes[1]["x"] == [3.0, 4.0]
+    assert g.nodes[2]["x"] == [5.0, 6.0]
+    assert g.edges[0, 1]["edge_attr"] == [0.1, 0.2]
 
 
-def test_from_pyg_edge_attr_num_edges() -> None:
-    """Test that edge_attr with wrong number of rows raises ValueError."""
-    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]])  # 3 edges
-    edge_attr = torch.tensor([[0.1], [0.2]])  # only 2 edge attributes
-    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
+def test_from_pyg_with_y_graph_attr() -> None:
+    """Test that y is stored as a graph attribute."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
+    y = torch.tensor([1], dtype=torch.int64)
 
-    with pytest.raises(ValueError, match=r"edge_attr"):
-        BaseGraph.from_pyg(data)
+    data = Data(edge_index=edge_index, y=y, num_nodes=2)
+
+    g = BaseGraph.from_pyg(data)
+
+    assert "y" in g.graph
+    assert g.graph["y"] == [1]  # to_networkx converts tensor to list
 
 
-def test_from_pyg_wrong_edge_shape() -> None:
-    """Test that non-tensor edge_attr raises TypeError."""
-    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]])  # 3 edges
-    edge_attr = torch.tensor([[0.1, 0.2], [0.1, 0.2], [0.1, 0.2]])  # shape mismatch
-    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
+def test_to_pyg_basic() -> None:
+    """Test converting a BaseGraph to PyG Data object."""
+    G = nx.Graph()
+    G.add_node(0, weight=1.0, pos=(0.0, 0.0))
+    G.add_node(1, weight=2.0, pos=(1.0, 0.0))
+    G.add_node(2, weight=3.0, pos=(0.5, 1.0))
+    G.add_edge(0, 1, weight=0.1)
+    G.add_edge(1, 2, weight=0.2)
+    G.add_edge(0, 2, weight=0.3)
 
-    with pytest.raises(ValueError, match=r"edge_attr"):
-        BaseGraph.from_pyg(data)
+    g = BaseGraph.from_nx(G)
+    data = g.to_pyg()
+
+    # Check that pos is exported
+    assert hasattr(data, "pos")
+    assert data.pos.shape == (3, 2)
+
+    # Check that weight is exported
+    assert hasattr(data, "weight")
+    assert data.weight.tolist() == [1.0, 2.0, 3.0]
+
+    # Check that edge_weight is exported
+    assert hasattr(data, "edge_weight")
+
+
+def test_to_pyg_with_graph_attr_y() -> None:
+    """Test that graph attribute y is exported to Data.y as tensor."""
+    G = nx.Graph()
+    G.add_edge(0, 1)
+    G.add_edge(1, 2)
+
+    g = BaseGraph.from_nx(G)
+    g.graph["y"] = [42]  # stored as Python list
+
+    data = g.to_pyg()
+
+    assert hasattr(data, "y")
+    assert torch.equal(data.y, torch.tensor([42]))
+
+
+def test_pyg_roundtrip_qoolqit_attrs() -> None:
+    """Test that from_pyg -> to_pyg preserves QoolQit attributes (weight, pos, edge_weight, y)."""
+    edge_index = torch.tensor([[0, 1, 2, 1, 2, 0], [1, 2, 0, 0, 1, 2]], dtype=torch.int64)
+    weight = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)
+    pos = torch.tensor([[0.0, 0.0], [1.0, 0.0], [0.5, 1.0]], dtype=torch.float64)
+    edge_weight = torch.tensor([0.1, 0.2, 0.3, 0.1, 0.2, 0.3], dtype=torch.float64)
+    y = torch.tensor([1], dtype=torch.int64)
+
+    original_data = Data(
+        edge_index=edge_index, weight=weight, pos=pos, edge_weight=edge_weight, y=y, num_nodes=3
+    )
+
+    g = BaseGraph.from_pyg(original_data)
+    roundtrip_data = g.to_pyg()
+
+    # Check structure
+    assert roundtrip_data.num_nodes == 3
+
+    # Check pos preserved
+    assert torch.allclose(roundtrip_data.pos, pos)
+
+    # Check weight preserved
+    assert torch.allclose(roundtrip_data.weight, weight)
+
+    # Check edge_weight preserved (values may be reordered due to edge_index)
+    assert hasattr(roundtrip_data, "edge_weight")
+    assert roundtrip_data.edge_weight.shape[0] == edge_index.shape[1]
+
+    # Check y preserved as tensor
+    assert torch.equal(roundtrip_data.y, torch.tensor([1]))
+
+
+def test_pyg_roundtrip_pyg_attrs() -> None:
+    """Test that from_pyg -> to_pyg preserves standard PyG attributes (x, edge_attr)."""
+    edge_index = torch.tensor([[0, 1, 2, 1, 2, 0], [1, 2, 0, 0, 1, 2]], dtype=torch.int64)
+    x = torch.tensor([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]], dtype=torch.float64)
+    edge_attr = torch.tensor(
+        [[0.1, 0.2], [0.3, 0.4], [0.5, 0.6], [0.1, 0.2], [0.3, 0.4], [0.5, 0.6]],
+        dtype=torch.float64,
+    )
+
+    original_data = Data(edge_index=edge_index, x=x, edge_attr=edge_attr)
+
+    g = BaseGraph.from_pyg(original_data)
+    roundtrip_data = g.to_pyg()
+
+    # Check structure
+    assert roundtrip_data.num_nodes == 3
+
+    # Check x preserved with same shape and values (dtype may differ due to from_networkx)
+    assert hasattr(roundtrip_data, "x")
+    assert roundtrip_data.x.shape == x.shape
+    assert torch.allclose(roundtrip_data.x.double(), x)
+
+    # Check edge_attr preserved with same shape
+    assert hasattr(roundtrip_data, "edge_attr")
+    assert roundtrip_data.edge_attr.shape == edge_attr.shape
