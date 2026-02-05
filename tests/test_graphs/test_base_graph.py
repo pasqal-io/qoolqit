@@ -377,14 +377,17 @@ def test_to_pyg_with_graph_attr_y() -> None:
     assert torch.equal(data.y, torch.tensor([42]))
 
 
-def test_pyg_roundtrip() -> None:
-    """Test that from_pyg -> to_pyg preserves the graph structure and attributes."""
+def test_pyg_roundtrip_qoolqit_attrs() -> None:
+    """Test that from_pyg -> to_pyg preserves QoolQit attributes (weight, pos, edge_weight, y)."""
     edge_index = torch.tensor([[0, 1, 2, 1, 2, 0], [1, 2, 0, 0, 1, 2]], dtype=torch.int64)
     weight = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)
     pos = torch.tensor([[0.0, 0.0], [1.0, 0.0], [0.5, 1.0]], dtype=torch.float64)
+    edge_weight = torch.tensor([0.1, 0.2, 0.3, 0.1, 0.2, 0.3], dtype=torch.float64)
     y = torch.tensor([1], dtype=torch.int64)
 
-    original_data = Data(edge_index=edge_index, weight=weight, pos=pos, y=y, num_nodes=3)
+    original_data = Data(
+        edge_index=edge_index, weight=weight, pos=pos, edge_weight=edge_weight, y=y, num_nodes=3
+    )
 
     g = BaseGraph.from_pyg(original_data)
     roundtrip_data = g.to_pyg()
@@ -398,5 +401,36 @@ def test_pyg_roundtrip() -> None:
     # Check weight preserved
     assert torch.allclose(roundtrip_data.weight, weight)
 
+    # Check edge_weight preserved (values may be reordered due to edge_index)
+    assert hasattr(roundtrip_data, "edge_weight")
+    assert roundtrip_data.edge_weight.shape[0] == edge_index.shape[1]
+
     # Check y preserved as tensor
     assert torch.equal(roundtrip_data.y, torch.tensor([1]))
+
+
+def test_pyg_roundtrip_pyg_attrs() -> None:
+    """Test that from_pyg -> to_pyg preserves standard PyG attributes (x, edge_attr)."""
+    edge_index = torch.tensor([[0, 1, 2, 1, 2, 0], [1, 2, 0, 0, 1, 2]], dtype=torch.int64)
+    x = torch.tensor([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]], dtype=torch.float64)
+    edge_attr = torch.tensor(
+        [[0.1, 0.2], [0.3, 0.4], [0.5, 0.6], [0.1, 0.2], [0.3, 0.4], [0.5, 0.6]],
+        dtype=torch.float64,
+    )
+
+    original_data = Data(edge_index=edge_index, x=x, edge_attr=edge_attr)
+
+    g = BaseGraph.from_pyg(original_data)
+    roundtrip_data = g.to_pyg()
+
+    # Check structure
+    assert roundtrip_data.num_nodes == 3
+
+    # Check x preserved with same shape and values (dtype may differ due to from_networkx)
+    assert hasattr(roundtrip_data, "x")
+    assert roundtrip_data.x.shape == x.shape
+    assert torch.allclose(roundtrip_data.x.double(), x)
+
+    # Check edge_attr preserved with same shape
+    assert hasattr(roundtrip_data, "edge_attr")
+    assert roundtrip_data.edge_attr.shape == edge_attr.shape

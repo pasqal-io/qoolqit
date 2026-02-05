@@ -266,8 +266,8 @@ class BaseGraph(nx.Graph):
         """Convert the BaseGraph to a PyTorch Geometric Data object.
 
         Uses PyG's from_networkx internally. Only explicitly specified attributes
-        are exported, plus default attributes (x, edge_attr, pos) and QoolQit
-        attributes (weight, edge_weight).
+        are exported, plus default PyG attributes (x, edge_attr, y) and QoolQit
+        internal attributes (pos, weight, edge_weight).
 
         Arguments:
             node_attrs: Node attributes to export (in addition to defaults).
