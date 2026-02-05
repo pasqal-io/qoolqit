@@ -82,6 +82,10 @@ class Device:
         self._min_distance = self._pulser_device.min_atom_distance
         self._max_radial_distance = self._pulser_device.max_radial_distance
 
+        self._energy_ratio = None
+        if self._max_amp and self._min_distance:
+            self._energy_ratio = (self._max_amp * self._min_distance**6) / self._C6
+
         # layouts
         self._requires_layout = self._pulser_device.requires_layout
 

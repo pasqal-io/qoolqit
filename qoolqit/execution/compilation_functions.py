@@ -61,6 +61,23 @@ def basic_compilation(
     profile: CompilerProfile,
 ) -> PulserSequence:
 
+    device_energy_ratio: float | None = None
+    dev_specs = device.specs
+    dev_max_amplitude = dev_specs["max_amplitude"]
+    dev_min_distance = dev_specs["min_distance"]
+    if dev_max_amplitude and dev_min_distance:
+        device_energy_ratio = dev_max_amplitude * dev_min_distance**6
+
+    program_max_amplitude = drive.amplitude.max()
+    program_min_distance = register.min_distance()
+    program_energy_ratio = program_max_amplitude * program_min_distance**6
+
+    if device_energy_ratio:
+        if program_energy_ratio > device_energy_ratio:
+            print("Use MAX_AMPLITUDE")
+        else:
+            print("Use MIN_DISTANCE")
+
     _validate_program(register, drive, device, profile)
 
     # strategies are applied only if the device has the corresponding extrema value
@@ -177,7 +194,7 @@ def _validate_program(
     """
     specs = device.specs
 
-    # just get profile new factors in the adimensional basis, not conversion factors to pulser
+    # Get profile factors in the adimensional basis, not conversion factors to pulser
     # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
     # this part can be removed when compilation return a QuantumProgram that can be directly checked
     if profile == CompilerProfile.DEFAULT:
