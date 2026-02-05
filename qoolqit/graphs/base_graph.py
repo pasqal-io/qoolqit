@@ -46,8 +46,9 @@ class BaseGraph(nx.Graph):
         self._reset_dicts()
 
     def _reset_dicts(self) -> None:
-        """Placeholder method to reset attribute dictionaries."""
-        ...
+        """Reset the default weight dictionaries."""
+        self._node_weights = {n: None for n in self.nodes}
+        self._edge_weights = {e: None for e in self.sorted_edges}
 
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
@@ -319,16 +320,12 @@ class BaseGraph(nx.Graph):
             data.pos = torch.tensor(positions, dtype=torch.float64)
 
         # Export node_weights -> weight
-        if hasattr(self, "_node_weights") and any(
-            v is not None for v in self._node_weights.values()
-        ):
+        if self.has_node_weights:
             weights = [self._node_weights.get(n, 0.0) or 0.0 for n in sorted(self.nodes())]
             data.weight = torch.tensor(weights, dtype=torch.float64)
 
         # Export edge_weights -> edge_weight
-        if hasattr(self, "_edge_weights") and any(
-            v is not None for v in self._edge_weights.values()
-        ):
+        if self.has_edge_weights:
             edge_weights = []
             for i in range(data.edge_index.shape[1]):
                 u, v = int(data.edge_index[0, i].item()), int(data.edge_index[1, i].item())
@@ -365,6 +362,22 @@ class BaseGraph(nx.Graph):
     def has_edges(self) -> bool:
         """Check if the graph has edges."""
         return len(self.edges) > 0
+
+    @property
+    def has_node_weights(self) -> bool:
+        """Check if the graph has node weights.
+
+        Requires all nodes to have a weight.
+        """
+        return not ((None in self._node_weights.values()) or len(self._node_weights) == 0)
+
+    @property
+    def has_edge_weights(self) -> bool:
+        """Check if the graph has edge weights.
+
+        Requires all edges to have a weight.
+        """
+        return not ((None in self._edge_weights.values()) or len(self._edge_weights) == 0)
 
     @property
     def coords(self) -> dict:
