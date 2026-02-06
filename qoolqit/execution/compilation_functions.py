@@ -61,6 +61,18 @@ def basic_compilation(
     profile: CompilerProfile,
 ) -> PulserSequence:
 
+    # fix compilation strategy according to the program energy ratio Ω_max/J_max
+    program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
+    if device.energy_ratio:
+        if program_energy_ratio > device.energy_ratio:
+            # fallback to MAX_AMPLITUDE
+            if profile == CompilerProfile.MIN_DISTANCE:
+                profile = CompilerProfile.MAX_AMPLITUDE
+        else:
+            # fallback to MIN_DISTANCE
+            if profile == CompilerProfile.MAX_AMPLITUDE:
+                profile = CompilerProfile.MIN_DISTANCE
+
     _validate_program(register, drive, device, profile)
 
     # strategies are applied only if the device has the corresponding extrema value
@@ -177,7 +189,7 @@ def _validate_program(
     """
     specs = device.specs
 
-    # just get profile new factors in the adimensional basis, not conversion factors to pulser
+    # Get profile factors in the adimensional basis, not conversion factors to pulser
     # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
     # this part can be removed when compilation return a QuantumProgram that can be directly checked
     if profile == CompilerProfile.DEFAULT:
@@ -203,7 +215,7 @@ def _validate_program(
     if specs["max_amplitude"] and (max_amplitude > specs["max_amplitude"]):
         msg = (
             f"The drive's maximum amplitude {max_amplitude} "
-            "goes over the maximum value allowed for the chosen device:\n."
+            "goes over the maximum value allowed for the chosen device:\n"
         )
         raise CompilationError(msg + device_specs_msg)
 
@@ -211,7 +223,7 @@ def _validate_program(
     if specs["max_abs_detuning"] and (max_abs_detuning > specs["max_abs_detuning"]):
         msg = (
             f"The drive's maximum absolute detuning {max_abs_detuning} "
-            "goes over the maximum value allowed for the chosen device:\n."
+            "goes over the maximum value allowed for the chosen device:\n"
         )
         raise CompilationError(msg + device_specs_msg)
 
