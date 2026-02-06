@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import random
-from typing import Callable
 
 import numpy as np
 import pytest
@@ -9,8 +8,6 @@ from pulser_pasqal import PasqalCloud
 
 from qoolqit import AnalogDevice, Device, DigitalAnalogDevice, MockDevice
 from qoolqit.devices.unit_converter import UnitConverter
-
-QOOLQIT_DEFAULT_DEVICES = [AnalogDevice, DigitalAnalogDevice, MockDevice]
 
 
 def _validate_invariants(c6: float, t: float, e: float, d: float) -> np.bool:
@@ -55,9 +52,8 @@ def test_unit_converter() -> None:
         converter.factors = (random.random(), random.random(), random.random())
 
 
-@pytest.mark.parametrize("device_class", QOOLQIT_DEFAULT_DEVICES)
-def test_device_init_and_units(device_class: Callable) -> None:
-    device = device_class()
+@pytest.mark.parametrize("device", [AnalogDevice(), DigitalAnalogDevice(), MockDevice()])
+def test_device_init_and_units(device: Device) -> None:
 
     TIME_ORIG, ENERGY_ORIG, DISTANCE_ORIG = device.converter.factors
     assert _validate_invariants(device._C6, *device.converter.factors)
