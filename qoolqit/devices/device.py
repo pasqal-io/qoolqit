@@ -156,6 +156,11 @@ class Device:
         }
 
     @property
+    def energy_ratio(self) -> float | None:
+        """Return the ratio between the max amplitude and max interaction energy on this device."""
+        return self._energy_ratio
+
+    @property
     def name(self) -> str:
         return self._name
 
