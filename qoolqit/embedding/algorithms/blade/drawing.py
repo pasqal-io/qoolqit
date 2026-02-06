@@ -6,7 +6,6 @@ from typing import Any
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
-import pandas as pd
 import scipy
 from matplotlib.axes import Axes
 from matplotlib.patches import Circle
@@ -113,19 +112,30 @@ def draw_set_graph_coords(
 
 
 def draw_graph_including_actual_weights(qubo_graph: nx.Graph, positions: np.ndarray) -> None:
-    from IPython.display import display
+    try:
+        import pandas as pd
+        from IPython.display import display
+    except ImportError:
+        raise ModuleNotFoundError(
+            "To use `draw_steps=True` in the Blade algorithm, "
+            "please install the `pandas` and `IPython` library."
+        )
 
     new_weights_matrix = np.full((len(qubo_graph), len(qubo_graph)), fill_value="", dtype=object)
-    new_weights = dict()
     for u, v in qubo_graph.edges:
-        dist = np.linalg.norm(positions[u] - positions[v])
-        new_weights[(u, v)] = normalized_interaction(dist=float(dist))
-        new_weights_matrix[min(u, v), max(u, v)] = eformat(new_weights[(u, v)])
+        dist = np.linalg.norm(positions[u] - positions[v]).item()
+        interaction = normalized_interaction(dist)
+        new_weights_matrix[min(u, v), max(u, v)] = f"{interaction:.3f}"
 
     df = pd.DataFrame(new_weights_matrix)
 
     with pd.option_context(
-        "display.max_rows", None, "display.max_columns", None, "max_colwidth", None
+        "display.max_rows",
+        None,
+        "display.max_columns",
+        None,
+        "max_colwidth",
+        None,
     ):
         display(df)
 
@@ -140,7 +150,7 @@ def plot_differences(target_qubo: np.ndarray, differences: np.ndarray) -> None:
         import seaborn
     except ImportError:
         raise ModuleNotFoundError(
-            "To use `draw_steps=True` in the BLaDE algorithm, "
+            "To use `draw_steps=True` in the Blade algorithm, "
             "please install the `seaborn` library."
         )
 
