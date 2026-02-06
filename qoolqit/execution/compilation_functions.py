@@ -61,13 +61,10 @@ def basic_compilation(
     profile: CompilerProfile,
 ) -> PulserSequence:
 
-    program_max_amplitude = drive.amplitude.max()
-    program_min_distance = register.min_distance()
-    program_energy_ratio = program_max_amplitude * program_min_distance**6
-
-    device_energy_ratio = device._energy_ratio
-    if device_energy_ratio:
-        if program_energy_ratio > device_energy_ratio:
+    # fix compilation strategy according to the program energy ratio Ω_max/J_max
+    program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
+    if device.energy_ratio:
+        if program_energy_ratio > device.energy_ratio:
             # fallback to MAX_AMPLITUDE
             if profile == CompilerProfile.MIN_DISTANCE:
                 profile = CompilerProfile.MAX_AMPLITUDE
