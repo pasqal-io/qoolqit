@@ -130,12 +130,7 @@ def draw_graph_including_actual_weights(qubo_graph: nx.Graph, positions: np.ndar
     df = pd.DataFrame(new_weights_matrix)
 
     with pd.option_context(
-        "display.max_rows",
-        None,
-        "display.max_columns",
-        None,
-        "max_colwidth",
-        None,
+        "display.max_rows", None, "display.max_columns", None, "max_colwidth", None
     ):
         display(df)
 
