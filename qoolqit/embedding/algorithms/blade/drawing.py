@@ -117,8 +117,8 @@ def draw_graph_including_actual_weights(qubo_graph: nx.Graph, positions: np.ndar
         from IPython.display import display
     except ImportError:
         raise ModuleNotFoundError(
-            "To use `draw_steps=True` in the Blade algorithm, "
-            "please install the `pandas` and `IPython` library."
+            "To use `draw_steps=True` in the BLaDE algorithm, "
+            "please install the `pandas` and `IPython` libraries."
         )
 
     new_weights_matrix = np.full((len(qubo_graph), len(qubo_graph)), fill_value="", dtype=object)
@@ -145,7 +145,7 @@ def plot_differences(target_qubo: np.ndarray, differences: np.ndarray) -> None:
         import seaborn
     except ImportError:
         raise ModuleNotFoundError(
-            "To use `draw_steps=True` in the Blade algorithm, "
+            "To use `draw_steps=True` in the BLaDE algorithm, "
             "please install the `seaborn` library."
         )
 
