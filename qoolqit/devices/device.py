@@ -82,6 +82,11 @@ class Device:
         self._min_distance = self._pulser_device.min_atom_distance
         self._max_radial_distance = self._pulser_device.max_radial_distance
 
+        # ratio between maximum amplitude and maximum interaction energy J_max = C6/r_min^6
+        self._energy_ratio = None
+        if self._max_amp and self._min_distance:
+            self._energy_ratio = (self._max_amp * self._min_distance**6) / self._C6
+
         # layouts
         self._requires_layout = self._pulser_device.requires_layout
 
@@ -150,6 +155,11 @@ class Device:
             "min_distance": min_distance,
             "max_radial_distance": max_radial_distance,
         }
+
+    @property
+    def energy_ratio(self) -> float | None:
+        """Return the ratio between the max amplitude and max interaction energy on this device."""
+        return self._energy_ratio
 
     @property
     def name(self) -> str:

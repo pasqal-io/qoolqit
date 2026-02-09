@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import random
-from typing import Callable
 
 import numpy as np
 import pytest
@@ -9,8 +8,6 @@ from pulser_pasqal import PasqalCloud
 
 from qoolqit import AnalogDevice, Device, DigitalAnalogDevice, MockDevice
 from qoolqit.devices.unit_converter import UnitConverter
-
-QOOLQIT_DEFAULT_DEVICES = [AnalogDevice, DigitalAnalogDevice, MockDevice]
 
 
 def _validate_invariants(c6: float, t: float, e: float, d: float) -> np.bool:
@@ -55,9 +52,8 @@ def test_unit_converter() -> None:
         converter.factors = (random.random(), random.random(), random.random())
 
 
-@pytest.mark.parametrize("device_class", QOOLQIT_DEFAULT_DEVICES)
-def test_device_init_and_units(device_class: Callable) -> None:
-    device = device_class()
+@pytest.mark.parametrize("device", [AnalogDevice(), DigitalAnalogDevice(), MockDevice()])
+def test_device_init_and_units(device: Device) -> None:
 
     TIME_ORIG, ENERGY_ORIG, DISTANCE_ORIG = device.converter.factors
     assert _validate_invariants(device._C6, *device.converter.factors)
@@ -88,6 +84,7 @@ def test_default_device_specs() -> None:
         "max_radial_distance": None,
     }
     assert mock_device.specs == expected_mock_specs
+    assert mock_device.energy_ratio is None
 
     analog_device = AnalogDevice()
     expected_analog_specs = {
@@ -98,6 +95,7 @@ def test_default_device_specs() -> None:
         "max_radial_distance": 5.935018535933708,
     }
     assert analog_device.specs == expected_analog_specs
+    assert analog_device.energy_ratio == 0.22680411206965717
 
     digital_analog_device = DigitalAnalogDevice()
     expected_digital_analog_specs = {
@@ -108,6 +106,7 @@ def test_default_device_specs() -> None:
         "max_radial_distance": 5.970187704088701,
     }
     assert digital_analog_device.specs == expected_digital_analog_specs
+    assert digital_analog_device.energy_ratio == 0.011870467845064849
 
 
 def test_device_from_connection() -> None:
@@ -123,6 +122,7 @@ def test_device_from_connection() -> None:
     }
 
     assert fresnel_device.specs == expected_fresnel_specs
+    assert fresnel_device.energy_ratio == 0.20412370086269147
 
 
 def test_device_from_connection_not_available() -> None:
