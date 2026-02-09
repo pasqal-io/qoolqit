@@ -1,0 +1,493 @@
+from __future__ import annotations
+
+import logging
+from dataclasses import InitVar, dataclass
+from typing import Callable
+
+import networkx as nx
+import numpy as np
+import scipy
+import torch
+
+from qoolqit.devices.device import Device
+from qoolqit.embedding.base_embedder import EmbeddingConfig
+
+from ._dimension_shrinker import DimensionShrinker
+from ._dist_constraints_forces import (
+    compute_max_dist_constraint_forces,
+    compute_min_dist_constraint_forces,
+)
+from ._distances_constraints_calculator import DistancesConstraintsCalculator
+from ._helpers import distance_matrix_from_positions
+from ._interactions_forces import compute_interaction_forces
+from ._qubo_mapper import Qubo
+from .drawing import draw_graph_including_actual_weights, draw_update_positions_step
+
+logger = logging.getLogger(__name__)
+
+
+def update_positions(
+    *,
+    positions: np.ndarray,
+    qubo_graph: nx.Graph,
+    weight_relative_threshold: float = 0.0,
+    min_dist: float | None = None,
+    max_dist: float | None = None,
+    max_distance_to_walk: float | tuple[float, float, float] = np.inf,
+    draw_step: bool = False,
+) -> np.ndarray:
+    """
+    Compute vector moves to adjust node positions toward target interactions.
+
+    positions: Starting positions of the nodes.
+    qubo_graph: Desired QUBO.
+    weight_relative_threshold: It is used to compute a weight difference
+        threshold defining which weights differences are significant and should
+        be considered. For this purpose, it is multiplied by the higher weight difference.
+        It is also used to reduce the precision when targeting
+        the objective weights.
+    min_dist: If set, defined the minimum distance that should be met, and
+        creates forces to enforce the constraint.
+    max_dist: If set, defined the maximum distance that should be met, and
+        creates forces to enforce the constraint.
+    max_distance_to_walk: It set, limits the distance that nodes can walk
+        when the forces are applied. It impacts the priorities
+        of the forces because they only consider the slope of the differences
+        in weights that can be targeting with this ceiling.
+    draw_steps: Whether to draw the nodes and the forces.
+    """
+
+    n = nx.number_of_nodes(qubo_graph)
+    positions = np.array(positions, dtype=float)
+    nb_positions, space_dimension = positions.shape
+
+    if isinstance(max_distance_to_walk, tuple):
+        max_distance_to_walk, min_constr_max_distance_to_walk, max_constr_max_distance_to_walk = (
+            max_distance_to_walk
+        )
+    else:
+        min_constr_max_distance_to_walk = np.inf
+        max_constr_max_distance_to_walk = np.inf
+
+    assert nb_positions == n
+
+    position_differences = positions[np.newaxis, :] - positions[:, np.newaxis]
+    distance_matrix = np.linalg.norm(position_differences, axis=2)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        unitary_vectors = position_differences / distance_matrix[:, :, np.newaxis]
+    unitary_vectors[range(n), range(n)] = np.zeros(space_dimension)
+    logger.debug(f"{unitary_vectors=}")
+
+    interaction_force = compute_interaction_forces(
+        distance_matrix=distance_matrix,
+        unitary_vectors=unitary_vectors,
+        qubo_graph=qubo_graph,
+        weight_relative_threshold=weight_relative_threshold,
+        max_distance_to_walk=max_distance_to_walk,
+    )
+    min_constr_force = compute_min_dist_constraint_forces(
+        min_dist=min_dist,
+        distance_matrix=distance_matrix,
+        unitary_vectors=unitary_vectors,
+    )
+    max_constr_force = compute_max_dist_constraint_forces(
+        positions=positions,
+        max_dist=max_dist,
+    )
+
+    interaction_resulting_forces = interaction_force.get_resulting_forces(
+        interaction_force.get_temperature()
+    )
+
+    min_constr_resulting_forces = min_constr_force.get_resulting_forces(
+        min_constr_force.get_temperature()
+    )
+    limited_min_constr_resulting_forces = (
+        min_constr_resulting_forces
+        * np.minimum(
+            1,
+            min_constr_max_distance_to_walk / np.linalg.norm(min_constr_resulting_forces, axis=-1),
+        )[:, np.newaxis]
+    )
+    limited_min_constr_resulting_forces[min_constr_resulting_forces == 0] = 0
+
+    max_constr_resulting_forces = max_constr_force.get_resulting_forces(
+        max_constr_force.get_temperature()
+    )
+    limited_max_constr_resulting_forces = (
+        max_constr_resulting_forces
+        * np.minimum(
+            1,
+            max_constr_max_distance_to_walk / np.linalg.norm(max_constr_resulting_forces, axis=-1),
+        )[:, np.newaxis]
+    )
+    limited_max_constr_resulting_forces[max_constr_resulting_forces == 0] = 0
+
+    resulting_forces_vectors = (
+        interaction_resulting_forces
+        + limited_min_constr_resulting_forces
+        + limited_max_constr_resulting_forces
+    )
+    logger.debug(f"{resulting_forces_vectors=}")
+
+    assert not np.any(np.isinf(interaction_resulting_forces)) and not np.any(
+        np.isnan(interaction_resulting_forces)
+    )
+    assert not np.any(np.isinf(min_constr_resulting_forces)) and not np.any(
+        np.isnan(min_constr_resulting_forces)
+    )
+    assert not np.any(np.isinf(max_constr_resulting_forces)) and not np.any(np.isnan(positions))
+
+    if draw_step:
+        draw_update_positions_step(
+            positions,
+            interaction_resulting_forces,
+            min_constr_resulting_forces,
+            max_constr_resulting_forces,
+            resulting_forces_vectors,
+            max_dist,
+        )
+
+    for u, force in enumerate(resulting_forces_vectors):
+        positions[u] += force
+
+    assert not np.any(np.isnan(positions))
+
+    if draw_step:
+        logger.debug(f"Resulting positions = {dict(enumerate(positions))}")
+        print(f"Current number of dimensions is {positions.shape[-1]}")
+        distances = distance_matrix[np.triu_indices_from(distance_matrix, k=1)]
+        print(
+            f"{min_dist=}, {max_dist=}, "
+            f"current min dist = {np.min(distances)}, "
+            f"current max dist = {np.max(distances)}"
+        )
+        draw_graph_including_actual_weights(qubo_graph=qubo_graph, positions=positions)
+
+    return positions
+
+
+def evolve_with_forces_through_dim_change(
+    *,
+    qubo_graph: nx.Graph,
+    draw_steps: bool = False,
+    starting_dimensions: int,
+    final_dimensions: int,
+    nb_steps: int,
+    positions: np.ndarray,
+    starting_min: float | None = None,
+    start_ratio: float | None = None,
+    final_ratio: float | None = None,
+    compute_weight_relative_threshold_by_step: Callable[[int], float],
+    compute_max_distance_to_walk_by_step: Callable[
+        [int, float | None], float | tuple[float, float, float]
+    ],
+) -> tuple[np.ndarray, float | None]:
+    dim_shrinker = DimensionShrinker(
+        dimensions_to_remove=starting_dimensions - final_dimensions, steps=nb_steps
+    )
+    dist_constr_calc = DistancesConstraintsCalculator(
+        target_qubo=Qubo.from_graph(qubo_graph).as_matrix(),
+        starting_min=starting_min,
+        starting_ratio=start_ratio,
+        final_ratio=final_ratio,
+    )
+    assert np.unique(positions, axis=0).shape == positions.shape
+
+    for step in range(0, nb_steps):
+        draw_step = draw_steps is True or (isinstance(draw_steps, list) and step in draw_steps)
+
+        if draw_step:
+            print(f"{step=}")
+        scaling, min_dist, max_dist = dist_constr_calc.compute_scaling_min_max(
+            positions=positions,
+            step_cursor=(step + 1) / nb_steps,
+            plot=draw_step,
+        )
+        assert np.unique(positions, axis=0).shape == positions.shape
+        positions = scaling * positions
+        if draw_step:
+            distances = scipy.spatial.distance.pdist(positions)
+            print(
+                f"After {scaling=}, max/min is "
+                f"{np.max(distances)/np.min(distances)} with target {max_dist}/{min_dist}"
+            )
+        assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
+
+        positions = update_positions(
+            positions=positions,
+            qubo_graph=qubo_graph,
+            draw_step=draw_step,
+            weight_relative_threshold=compute_weight_relative_threshold_by_step(step),
+            min_dist=min_dist,
+            max_dist=max_dist,
+            max_distance_to_walk=compute_max_distance_to_walk_by_step(step, max_dist),
+        )
+        assert np.unique(positions, axis=0).shape == positions.shape
+        assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
+        positions = dim_shrinker.applied_step(positions)
+
+    removed_position_dims = positions[:, final_dimensions:]
+    assert np.all(
+        np.isclose(removed_position_dims, 0)
+    ), f"Shrunk dimensions {removed_position_dims=} should only contain zeros"
+
+    return positions[:, :final_dimensions], min_dist
+
+
+def generate_random_positions(qubo: np.ndarray, dimension: int) -> np.ndarray:
+    return np.random.uniform(size=(len(qubo), dimension))
+
+
+def evolve_with_dimension_transition(
+    qubo: np.ndarray,
+    *,
+    dimensions: tuple[int, ...],
+    starting_min: float | None,
+    pca: bool,
+    steps_per_round: int,
+    compute_weight_relative_threshold: Callable[[float], float],
+    compute_max_distance_to_walk: Callable[
+        [float, float | None], float | tuple[float, float, float]
+    ],
+    qubo_graph: nx.Graph,
+    positions: np.ndarray,
+    final_ratio: float | None,
+    total_steps: int,
+    dim_idx: int,
+    start_ratio: float | None,
+    draw_steps: bool | list[int],
+) -> tuple[np.ndarray, float | None]:
+
+    starting_dimensions = dimensions[dim_idx]
+    final_dimensions = dimensions[dim_idx + 1]
+    performed_steps = dim_idx * steps_per_round
+    target_performed_steps = (dim_idx + 1) * steps_per_round
+
+    curr_starting_step_idx = dim_idx * steps_per_round
+
+    def compute_weight_relative_threshold_by_step(steps: int) -> float:
+        progress = (min(performed_steps, target_performed_steps) + steps) / total_steps
+        return compute_weight_relative_threshold(progress)
+
+    def compute_max_distance_to_walk_by_step(
+        steps: int, max_radial_dist: float | None
+    ) -> float | tuple[float, float, float]:
+        progress = (min(performed_steps, target_performed_steps) + steps) / total_steps
+        return compute_max_distance_to_walk(progress, max_radial_dist)
+
+    if final_dimensions < starting_dimensions and pca:
+        try:
+            import sklearn
+        except ImportError:
+            raise ModuleNotFoundError(
+                "To use `pca=True` in the BLaDE algorithm, "
+                "please install the `scikit-learn` library."
+            )
+        pca_inst = sklearn.decompositions.PCA(n_components=starting_dimensions)
+        positions = pca_inst.fit_transform(positions)
+
+    if final_dimensions > starting_dimensions:
+        quantiles = np.quantile(positions, q=0.75, axis=0) - np.quantile(positions, q=0.5, axis=0)
+        volume_per_point = np.prod(quantiles) / positions.shape[0]
+        edge = volume_per_point ** (1 / positions.shape[1])
+        positions_noise = np.random.uniform(
+            low=-edge / 2,
+            high=edge / 2,
+            size=(len(qubo), final_dimensions - starting_dimensions),
+        )
+        positions = np.concatenate((positions, positions_noise), axis=1)
+        starting_dimensions = final_dimensions
+
+    positions, starting_min = evolve_with_forces_through_dim_change(
+        qubo_graph=qubo_graph,
+        draw_steps=(
+            draw_steps
+            if isinstance(draw_steps, bool)
+            else (np.array(draw_steps) - curr_starting_step_idx).tolist()
+        ),
+        starting_dimensions=starting_dimensions,
+        final_dimensions=final_dimensions,
+        positions=positions,
+        nb_steps=steps_per_round,
+        starting_min=starting_min,
+        start_ratio=start_ratio,
+        final_ratio=final_ratio,
+        compute_weight_relative_threshold_by_step=compute_weight_relative_threshold_by_step,
+        compute_max_distance_to_walk_by_step=compute_max_distance_to_walk_by_step,
+    )
+
+    return positions, starting_min
+
+
+def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
+    distance_matrix = distance_matrix_from_positions(positions)
+    upper_diagonal_mask = np.triu(np.ones(distance_matrix.shape), k=1).astype(bool)
+    return np.min(distance_matrix[upper_diagonal_mask])  # type: ignore
+
+
+def blade(
+    matrix: np.ndarray,
+    *,
+    max_min_dist_ratio: float | None = None,
+    dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2),
+    starting_positions: np.ndarray | None = None,
+    pca: bool = False,
+    steps_per_round: int = 200,
+    compute_weight_relative_threshold: Callable[[float], float] = (lambda _: 0.1),
+    compute_max_distance_to_walk: Callable[
+        [float, float | None], float | tuple[float, float, float]
+    ] = (lambda x, max_radial_dist: np.inf),
+    starting_ratio_factor: int = 2,
+    draw_steps: bool | list[int] = False,
+) -> np.ndarray:
+    """
+    Embed an interaction matrix or QUBO with the BLaDE algorithm.
+
+    BLaDE stands for Balanced Latently Dimensional Embedder.
+    It compute positions for nodes so that their interactions
+    approach the desired values. The interactions assume that the
+    interaction coefficient of the device is set to 1.
+    Its prior target is on interaction matrices or QUBOs, but it can also be used
+    for MIS with limitations if the adjacency matrix is converted into a QUBO.
+    The general principle is based on the Fruchterman-Reingold algorithm.
+
+    matrix: an objective interaction matrix or QUBO.
+    max_min_dist_ratio: If present, set the maximum ratio between
+        the maximum radial distance and the minimum pairwise distances.
+    dimensions: List of numbers of dimensions to explore one
+        after the other. A list with one value is equivalent to a list containing
+        twice the same value. For a 2D embedding, the last value should be 2.
+        Increasing the number of intermediate dimensions can help to escape
+        from local minima.
+    starting_positions: If provided, initial positions to start from. Otherwise,
+        random positions will be generated.
+    pca: Whether to apply Principal Component Analysis to prioritize dimensions
+        to keep when transitioning from a space to a space with fewer dimensions.
+        It is disabled by default because it can raise an error when there are
+        too many dimensions compared to the number of nodes.
+    steps_per_round: Number of elementary steps to perform for each dimension
+        transition, where at each step move vectors are computed and applied
+        on the nodes.
+    compute_weight_relative_threshold: Function that is called at each step.
+        It takes a float number between 0 and 1 that represents the progress
+        on the steps. It must return a float number between 0 and 1 that gives
+        a threshold determining which weights are significant (see
+        `update_positions` to learn more).
+    compute_max_distance_to_walk: Function that is called at each step.
+        It takes a float number between 0 and 1 that represents the progress
+        on the steps, and takes another argument that is set to `None` when
+        `max_min_dist_ratio` is not enabled, otherwise, it is set to
+        the maximum radial distance for the current step.
+        It must return a float number that limits the distances
+        nodes can move at one step  (see `update_positions` to learn more).
+    starting_ratio_factor: When `max_min_dist_ratio` is enabled,
+        defines a multiplying factor on the target ratio to start the evolution
+        on a larger ratio, to let more flexibility in the beginning.
+    draw_steps: Whether to draw the nodes and the forces.
+        Requires installing the seaborn library.
+    """
+
+    if len(dimensions) == 1:
+        dimensions = (dimensions[0], dimensions[0])
+
+    assert len(dimensions) >= 2
+
+    if isinstance(matrix, np.ndarray):
+        assert not np.all(matrix == 0)
+    else:
+        assert not torch.all(matrix == 0)
+
+    qubo_obj = Qubo.from_matrix(matrix)
+    qubo_graph = qubo_obj.as_graph()
+
+    if starting_positions is None:
+        positions = generate_random_positions(qubo=matrix, dimension=dimensions[0])
+    else:
+        positions = starting_positions
+
+    for u, v in nx.non_edges(qubo_graph):
+        qubo_graph.add_edge(u, v, weight=0)
+
+    if max_min_dist_ratio is not None:
+        steps_ratios = np.linspace(
+            starting_ratio_factor * max_min_dist_ratio, max_min_dist_ratio, len(dimensions)
+        )
+        starting_min = _compute_min_pairwise_distance(positions)
+    else:
+        steps_ratios = [None] * len(dimensions)
+        starting_min = None
+
+    total_steps = steps_per_round * (len(dimensions) - 1)
+
+    assert len(dimensions) == len(steps_ratios)
+
+    for dim_idx, start_ratio, final_ratio in zip(
+        range(len(dimensions) - 1), steps_ratios[:-1], steps_ratios[1:]
+    ):
+        positions, starting_min = evolve_with_dimension_transition(
+            qubo=matrix,
+            draw_steps=draw_steps,
+            dimensions=dimensions,
+            starting_min=starting_min,
+            pca=pca,
+            steps_per_round=steps_per_round,
+            compute_weight_relative_threshold=compute_weight_relative_threshold,
+            compute_max_distance_to_walk=compute_max_distance_to_walk,
+            qubo_graph=qubo_graph,
+            positions=positions,
+            final_ratio=final_ratio,
+            total_steps=total_steps,
+            dim_idx=dim_idx,
+            start_ratio=start_ratio,
+        )
+
+    if max_min_dist_ratio is not None:
+        max_radial_dist = max(np.linalg.norm(positions, axis=-1))
+        min_atom_dist = _compute_min_pairwise_distance(positions)
+        output_ratio = max_radial_dist / min_atom_dist
+        if output_ratio > max_min_dist_ratio:
+            print(
+                f"[Warning] Output ratio {output_ratio}"
+                f" is higher than required {max_min_dist_ratio}"
+            )
+
+    return positions
+
+
+@dataclass
+class BladeConfig(EmbeddingConfig):
+    """Configuration parameters to embed with BLaDE."""
+
+    max_min_dist_ratio: float | None = None
+    dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2)
+    starting_positions: np.ndarray | None = None
+    pca: bool = False
+    steps_per_round: int = 200
+    compute_weight_relative_threshold: Callable[[float], float] = lambda _: 0.1
+    compute_max_distance_to_walk: Callable[
+        [float, float | None], float | tuple[float, float, float]
+    ] = lambda x, max_radial_dist: np.inf
+    starting_ratio_factor: int = 2
+    draw_steps: bool | list[int] = False
+    device: InitVar[Device | None] = None
+
+    def __post_init__(self, device: Device | None) -> None:
+        """Post initialization of the `BladeConfig` dataclass.
+
+        Set the `max_min_dist_ratio` argument of the `blade_embedding` algorithm
+        based on the specification of the selected device.
+
+        Args:
+            device (Device): the QoolQit device to use to set the maximum ratio between the maximum
+                radial distance and the minimum pairwise distance between atoms.
+        """
+        if device:
+            if self.max_min_dist_ratio:
+                logger.warning(
+                    "`max_min_dist_ratio` and `device` attributes should not be set simultaneously."
+                )
+            min_distance = device._min_distance
+            max_radial_distance = device._max_radial_distance
+            if max_radial_distance and min_distance:
+                self.max_min_dist_ratio = max_radial_distance / min_distance

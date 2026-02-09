@@ -57,16 +57,11 @@ def test_program_init_and_compilation(
 def test_compiler_profiles(
     device_class: Callable, profile: CompilerProfile, random_program: Callable[[], QuantumProgram]
 ) -> None:
-
-    # FIXME: Reactivate the min_distance profile once we implement safe-mode compilation
-    # Currently trying to set the atoms at the min distance will very often cause the
-    # amplitude to go over the limit allowed for the channel, which will fail the compilation.
-    if profile != CompilerProfile.MIN_DISTANCE:
-        program = random_program()
-        device = device_class()
-        program.compile_to(device, profile=profile)
-        assert program.is_compiled
-        assert isinstance(program.compiled_sequence, PulserSequence)
+    program = random_program()
+    device = device_class()
+    program.compile_to(device, profile=profile)
+    assert program.is_compiled
+    assert isinstance(program.compiled_sequence, PulserSequence)
 
 
 @pytest.mark.parametrize(
@@ -83,17 +78,15 @@ def test_compiler_profiles_dmm(
     profile: CompilerProfile,
     dmm_program: Callable[[], QuantumProgram],
 ) -> None:
-
-    if profile != CompilerProfile.MIN_DISTANCE:
-        program = dmm_program()
-        device = device_class()
-        if device._device.dmm_channels:
+    program = dmm_program()
+    device = device_class()
+    if device._device.dmm_channels:
+        program.compile_to(device, profile=profile)
+        assert program.is_compiled
+        assert isinstance(program.compiled_sequence, PulserSequence)
+    else:
+        with pytest.raises(CompilationError):
             program.compile_to(device, profile=profile)
-            assert program.is_compiled
-            assert isinstance(program.compiled_sequence, PulserSequence)
-        else:
-            with pytest.raises(CompilationError):
-                program.compile_to(device, profile=profile)
 
 
 def test_compiled_sequence_with_delays() -> None:
