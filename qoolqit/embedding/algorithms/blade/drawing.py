@@ -125,7 +125,7 @@ def draw_graph_including_actual_weights(qubo_graph: nx.Graph, positions: np.ndar
     for u, v in qubo_graph.edges:
         dist = np.linalg.norm(positions[u] - positions[v]).item()
         interaction = normalized_interaction(dist)
-        new_weights_matrix[min(u, v), max(u, v)] = f"{interaction:.3f}"
+        new_weights_matrix[min(u, v), max(u, v)] = eformat(interaction)
 
     df = pd.DataFrame(new_weights_matrix)
 
