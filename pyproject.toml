@@ -33,7 +33,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "pulser[torch]~=1.6.3",
+  "pulser[torch]~=1.6.2",
   "networkx~=3.4",
 ]
 
@@ -94,13 +94,8 @@ testpaths = ["tests"]
 addopts = """-vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs"""
 xfail_strict = true
 filterwarnings = [
-  "ignore:Call to deprecated create function FieldDescriptor",
-  "ignore:Call to deprecated create function Descriptor",
-  "ignore:Call to deprecated create function EnumDescriptor",
-  "ignore:Call to deprecated create function EnumValueDescriptor",
-  "ignore:Call to deprecated create function FileDescriptor",
-  "ignore:Call to deprecated create function OneofDescriptor",
-  "ignore:distutils Version classes are deprecated.",
+  "ignore:`torch_geometric.distributed` has been deprecated since 2.7.0 and will no longer be maintained.:DeprecationWarning",
+  "ignore:`torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.:DeprecationWarning",
 ]
 
 [tool.hatch.envs.docs]
