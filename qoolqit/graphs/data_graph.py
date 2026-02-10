@@ -29,11 +29,6 @@ class DataGraph(BaseGraph):
         """
         super().__init__(edges)
 
-    def _reset_dicts(self) -> None:
-        """Reset the default weight dictionaries."""
-        self._node_weights = {n: None for n in self.nodes}
-        self._edge_weights = {e: None for e in self.sorted_edges}
-
     # classmethods
 
     @classmethod
@@ -345,22 +340,6 @@ class DataGraph(BaseGraph):
                 )
             weights_dict = weights
         self._edge_weights = weights_dict
-
-    @property
-    def has_node_weights(self) -> bool:
-        """Check if the graph has node weights.
-
-        Requires all nodes to have a weight.
-        """
-        return not ((None in self._node_weights.values()) or len(self._node_weights) == 0)
-
-    @property
-    def has_edge_weights(self) -> bool:
-        """Check if the graph has edge weights.
-
-        Requires all edges to have a weight.
-        """
-        return not ((None in self._edge_weights.values()) or len(self._edge_weights) == 0)
 
     def set_ud_edges(self, radius: float) -> None:
         """Reset the set of edges to be equal to the set of unit-disk edges."""

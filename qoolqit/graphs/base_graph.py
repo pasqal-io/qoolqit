@@ -46,8 +46,9 @@ class BaseGraph(nx.Graph):
         self._reset_dicts()
 
     def _reset_dicts(self) -> None:
-        """Placeholder method to reset attribute dictionaries."""
-        ...
+        """Reset the default weight dictionaries."""
+        self._node_weights = {n: None for n in self.nodes}
+        self._edge_weights = {e: None for e in self.sorted_edges}
 
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
@@ -161,81 +162,183 @@ class BaseGraph(nx.Graph):
         return graph
 
     @classmethod
-    def from_pyg(cls, g: torch_geometric.data.Data) -> BaseGraph:
+    def from_pyg(
+        cls,
+        data: torch_geometric.data.Data,
+        node_attrs: Iterable[str] | None = None,
+        edge_attrs: Iterable[str] | None = None,
+        graph_attrs: Iterable[str] | None = None,
+    ) -> BaseGraph:
         """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
 
         This method requires installing the `torch_geometric` package.
-        The input `torch_geometric.data.Data` object must be defined only with the following
-        allowed attributes:
-            x (torch.Tensor): node weights as a matrix with shape (num_nodes, 1).
-            edge_index (torch.Tensor): graph connectivity as a matrix with shape (2, num_edges).
-            num_nodes (int): minimum number of nodes. The total number of nodes will be inferred
-                from this number and from the edges of the graph.
-            pos (torch.Tensor): node 2D positions as a matrix with shape (num_nodes, 2)
-            edge_attr (torch.Tensor): edge weights as a matrix with shape (num_edges, 1).
+        Uses PyG's to_networkx internally. Standard PyG attributes (x, edge_attr, y, pos)
+        and QoolQit attributes (weight, edge_weight) are automatically transferred.
+        Additional attributes can be specified via the parameters.
 
-        If the graph is defined only through the `edge_index` attribute, `num_nodes` is required.
-        The input graph will be converted to a unidirectional graph.
+        Arguments:
+            data: PyTorch Geometric Data object.
+            node_attrs: Additional node attributes to copy.
+            edge_attrs: Additional edge attributes to copy.
+            graph_attrs: Additional graph-level attributes to copy.
+
+        Returns:
+            BaseGraph instance.
+
+        Notes:
+            The input graph will be converted to an undirected graph.
+            pos is mapped to _coords, weight to _node_weights, edge_weight to _edge_weights.
         """
         try:
-            import torch_geometric
+            from torch_geometric.data import Data
+            from torch_geometric.utils import to_networkx
         except ImportError as e:
             raise ImportError("Please, install the `torch_geometric` package.") from e
 
-        if not isinstance(g, torch_geometric.data.Data):
+        if not isinstance(data, Data):
             raise TypeError("Input must be a torch_geometric.data.Data object.")
 
-        expected_attrs = {"x", "edge_index", "pos", "edge_attr", "num_nodes"}
-        unexpected_attrs = set(g.keys()) - expected_attrs
-        if unexpected_attrs:
-            raise AttributeError(
-                f"""Input Data graph has the following unexpected attributes: {unexpected_attrs}"""
-            )
+        node_attrs_list = list(node_attrs) if node_attrs else []
+        edge_attrs_list = list(edge_attrs) if edge_attrs else []
+        graph_attrs_list = list(graph_attrs) if graph_attrs else []
 
-        if not g.node_attrs():
-            if "num_nodes" not in g.keys():
-                raise AttributeError(
-                    """Data object must have at least one of the following
-                    attribute: `x`, `pos`, `num_nodes`."""
-                )
+        # Add default PyG attributes to the lists if present
+        if hasattr(data, "x") and data.x is not None:
+            node_attrs_list.append("x")
+        if hasattr(data, "edge_attr") and data.edge_attr is not None:
+            edge_attrs_list.append("edge_attr")
+        if hasattr(data, "y") and data.y is not None:
+            graph_attrs_list.append("y")
 
-        num_nodes = g.num_nodes
-        num_edges = g.num_edges
-        expected_shape = {
-            "x": (num_nodes, 1),
-            "edge_index": (2, num_edges),
-            "pos": (num_nodes, 2),
-            "edge_attr": (num_edges, 1),
-        }
-
-        for attr_key, shape in expected_shape.items():
-            if attr_key in g:
-                attr = g[attr_key]
-                if not isinstance(attr, torch.Tensor):
-                    raise TypeError(f"Data attribute {attr_key} must be a tensor.")
-                # add that has to be a tensor of real numbers
-                if attr.shape != shape:
-                    raise ValueError(
-                        f"Data attribute {attr_key} must be a 2D tensor of shape {shape}."
-                    )
-                if not attr.isreal().all():
-                    raise ValueError(
-                        f"Data attribute {attr_key} must be a 2D tensor of real numbers."
-                    )
-
-        # g.edge_attrs() also returns "edge_index" which should not be passed to to_networkx
-        edge_attrs = ["edge_attr"] if "edge_attr" in g else None
-        data_nx = torch_geometric.utils.to_networkx(
-            g, node_attrs=g.node_attrs(), edge_attrs=edge_attrs, to_undirected=True
+        # Convert via PyG's to_networkx
+        nx_graph = to_networkx(
+            data,
+            node_attrs=node_attrs_list or None,
+            edge_attrs=edge_attrs_list or None,
+            graph_attrs=graph_attrs_list or None,
+            to_undirected=True,
         )
-        if "edge_attr" in g:
-            for u, v, edge in data_nx.edges(data=True):
-                edge["weight"] = edge.pop("edge_attr")[0]
-        if "x" in g:
-            for u, node in data_nx.nodes(data=True):
-                node["weight"] = node.pop("x")[0]
 
-        return cls.from_nx(data_nx)
+        # Build the graph instance
+        graph = cls()
+        graph.add_nodes_from(nx_graph.nodes)
+        graph.add_edges_from(nx_graph.edges)
+
+        # Initialize internal attributes (same as from_nx)
+        graph._coords = {i: None for i in graph.nodes}
+        graph._node_weights = {n: None for n in graph.nodes}
+        graph._edge_weights = {e: None for e in graph.sorted_edges}
+
+        # Copy attributes from nx_graph
+        for node, node_data in nx_graph.nodes(data=True):
+            for key, value in node_data.items():
+                graph.nodes[node][key] = value
+        for u, v, edge_data in nx_graph.edges(data=True):
+            for key, value in edge_data.items():
+                graph.edges[u, v][key] = value
+        for key, value in nx_graph.graph.items():
+            graph.graph[key] = value
+
+        # Handle QoolQit attributes: pos -> coords, weight -> node_weights, edge_weight
+        if hasattr(data, "pos") and data.pos is not None:
+            for i in range(data.num_nodes):
+                graph._coords[i] = data.pos[i].tolist()
+        if hasattr(data, "weight") and data.weight is not None:
+            for i in range(data.num_nodes):
+                graph._node_weights[i] = data.weight[i].item()
+        if hasattr(data, "edge_weight") and data.edge_weight is not None:
+            edge_index = data.edge_index
+            seen_edges: set = set()
+            for idx in range(edge_index.shape[1]):
+                u, v = int(edge_index[0, idx].item()), int(edge_index[1, idx].item())
+                edge_key = (min(u, v), max(u, v))
+                if edge_key not in seen_edges:
+                    graph._edge_weights[edge_key] = data.edge_weight[idx].item()
+                    seen_edges.add(edge_key)
+
+        return graph
+
+    def to_pyg(
+        self,
+        node_attrs: Iterable[str] | None = None,
+        edge_attrs: Iterable[str] | None = None,
+        graph_attrs: Iterable[str] | None = None,
+    ) -> torch_geometric.data.Data:
+        """Convert the BaseGraph to a PyTorch Geometric Data object.
+
+        Uses PyG's from_networkx internally. Standard PyG attributes (x, edge_attr, y, pos)
+        and QoolQit attributes (weight, edge_weight) are automatically exported.
+        Additional attributes can be specified via the parameters.
+
+        Arguments:
+            node_attrs: Additional node attributes to export.
+            edge_attrs: Additional edge attributes to export.
+            graph_attrs: Additional graph-level attributes to export.
+
+        Returns:
+            PyTorch Geometric Data object with edge_index and requested attributes.
+
+        Notes:
+            _coords is exported as pos, _node_weights as weight, _edge_weights as edge_weight.
+        """
+        try:
+            from torch_geometric.utils import from_networkx
+        except ImportError as e:
+            raise ImportError("Please, install the `torch_geometric` package.") from e
+
+        node_attrs_set = set(node_attrs) if node_attrs else set()
+        edge_attrs_set = set(edge_attrs) if edge_attrs else set()
+        graph_attrs_list = list(graph_attrs) if graph_attrs else []
+
+        # Add default PyG attributes to the sets if present
+        if any("x" in d for _, d in self.nodes(data=True)):
+            node_attrs_set.add("x")
+        if any("edge_attr" in d for _, _, d in self.edges(data=True)):
+            edge_attrs_set.add("edge_attr")
+        if "y" in self.graph:
+            graph_attrs_list.append("y")
+
+        # Create a filtered copy of the graph with only requested attributes
+        filtered_graph = nx.Graph()
+        filtered_graph.add_nodes_from(self.nodes())
+        filtered_graph.add_edges_from(self.edges())
+
+        for node, node_data in self.nodes(data=True):
+            for key, value in node_data.items():
+                if key in node_attrs_set:
+                    filtered_graph.nodes[node][key] = value
+        for u, v, edge_data in self.edges(data=True):
+            for key, value in edge_data.items():
+                if key in edge_attrs_set:
+                    filtered_graph.edges[u, v][key] = value
+        for attr in graph_attrs_list:
+            if attr in self.graph:
+                filtered_graph.graph[attr] = self.graph[attr]
+
+        # Convert via PyG's from_networkx
+        data = from_networkx(filtered_graph)
+
+        # Export QoolQit internal attributes: coords -> pos
+        if self.has_coords:
+            positions = [self._coords[n] for n in sorted(self.nodes())]
+            data.pos = torch.tensor(positions, dtype=torch.float64)
+
+        # Export node_weights -> weight
+        if self.has_node_weights:
+            weights = [self._node_weights.get(n, 0.0) or 0.0 for n in sorted(self.nodes())]
+            data.weight = torch.tensor(weights, dtype=torch.float64)
+
+        # Export edge_weights -> edge_weight
+        if self.has_edge_weights:
+            edge_weights = []
+            for i in range(data.edge_index.shape[1]):
+                u, v = int(data.edge_index[0, i].item()), int(data.edge_index[1, i].item())
+                edge_key = (min(u, v), max(u, v))
+                weight = self._edge_weights.get(edge_key, 0.0) or 0.0
+                edge_weights.append(weight)
+            data.edge_weight = torch.tensor(edge_weights, dtype=torch.float64)
+
+        return data
 
     @property
     def sorted_edges(self) -> set:
@@ -263,6 +366,22 @@ class BaseGraph(nx.Graph):
     def has_edges(self) -> bool:
         """Check if the graph has edges."""
         return len(self.edges) > 0
+
+    @property
+    def has_node_weights(self) -> bool:
+        """Check if the graph has node weights.
+
+        Requires all nodes to have a weight.
+        """
+        return not ((None in self._node_weights.values()) or len(self._node_weights) == 0)
+
+    @property
+    def has_edge_weights(self) -> bool:
+        """Check if the graph has edge weights.
+
+        Requires all edges to have a weight.
+        """
+        return not ((None in self._edge_weights.values()) or len(self._edge_weights) == 0)
 
     @property
     def coords(self) -> dict:
