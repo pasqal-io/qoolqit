@@ -42,6 +42,7 @@ extras = [
   "emu_sv",
   "emu_mps",
   "torch_geometric",
+  "pandas",
   "seaborn",
   "scikit-learn",
 ]

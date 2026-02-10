@@ -278,13 +278,13 @@ def evolve_with_dimension_transition(
 
     if final_dimensions < starting_dimensions and pca:
         try:
-            import sklearn
+            from sklearn.decomposition import PCA
         except ImportError:
             raise ModuleNotFoundError(
                 "To use `pca=True` in the BLaDE algorithm, "
                 "please install the `scikit-learn` library."
             )
-        pca_inst = sklearn.decompositions.PCA(n_components=starting_dimensions)
+        pca_inst = PCA(n_components=starting_dimensions)
         positions = pca_inst.fit_transform(positions)
 
     if final_dimensions > starting_dimensions:
