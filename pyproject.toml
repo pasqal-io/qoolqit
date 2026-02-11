@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "0.3.3"
+version = "0.3.4"
 requires-python = ">=3.10"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
@@ -49,7 +49,6 @@ extras = [
 dev = [
   "qoolqit[extras]",
   "jupyter",
-  "flaky",
   "pytest",
   "pytest-cov",
   "pytest-markdown-docs",
@@ -91,11 +90,12 @@ test_tutorials = "pytest --nbmake docs/tutorials"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = """-vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs"""
+addopts = "-vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs"
 xfail_strict = true
 filterwarnings = [
-  "ignore:`torch_geometric.distributed` has been deprecated since 2.7.0 and will no longer be maintained.:DeprecationWarning",
-  "ignore:`torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.:DeprecationWarning",
+  "ignore:`torch_geometric.distributed` has been deprecated since 2.7.0 and will no longer be maintained:DeprecationWarning",
+  "ignore:`torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`:DeprecationWarning",
+  "ignore:`torch.jit.script` is not supported in Python 3.14:DeprecationWarning",
 ]
 
 [tool.hatch.envs.docs]

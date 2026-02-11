@@ -15,11 +15,8 @@ from qoolqit.register import Register
 from qoolqit.waveforms import Constant, Ramp
 from qoolqit.waveforms.base_waveforms import CompositeWaveform
 
-QOOLQIT_DEFAULT_DEVICES = [AnalogDevice, DigitalAnalogDevice, MockDevice]
 
-
-@pytest.mark.flaky(max_runs=2)
-@pytest.mark.parametrize("device_class", QOOLQIT_DEFAULT_DEVICES)
+@pytest.mark.parametrize("device_class", [AnalogDevice, DigitalAnalogDevice, MockDevice])
 def test_program_init_and_compilation(
     device_class: Callable,
     random_linear_register: Callable[[], Register],
@@ -40,7 +37,6 @@ def test_program_init_and_compilation(
     assert isinstance(program.compiled_sequence, PulserSequence)
 
 
-@pytest.mark.flaky(max_runs=2)
 @pytest.mark.parametrize(
     "device_class, profile",
     [
