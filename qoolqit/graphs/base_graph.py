@@ -194,10 +194,8 @@ class BaseGraph(nx.Graph):
 
         if not g.node_attrs():
             if "num_nodes" not in g.keys():
-                raise AttributeError(
-                    """Data object must have at least one of the following
-                    attribute: `x`, `pos`, `num_nodes`."""
-                )
+                raise AttributeError("""Data object must have at least one of the following
+                    attribute: `x`, `pos`, `num_nodes`.""")
 
         num_nodes = g.num_nodes
         num_edges = g.num_edges
