@@ -66,10 +66,6 @@ dev = [
   "markdown-exec",
   "mike",
   "nbconvert",
-  "black",
-  "flake8",
-  "isort",
-  "ruff",
 ]
 
 [project.urls]
