@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "0.3.3"
+version = "0.3.4"
 requires-python = ">=3.10"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
@@ -49,12 +49,11 @@ extras = [
 dev = [
   "qoolqit[extras]",
   "jupyter",
-  "flaky",
   "pytest",
   "pytest-cov",
   "pytest-markdown-docs",
-  "ipykernel",
   "pre-commit",
+  "ipykernel",
   "nbmake",
   "mkdocs",
   "mkdocs-material",
@@ -67,10 +66,6 @@ dev = [
   "markdown-exec",
   "mike",
   "nbconvert",
-  "black",
-  "flake8",
-  "isort",
-  "ruff",
 ]
 
 [project.urls]
@@ -91,11 +86,12 @@ test_tutorials = "pytest --nbmake docs/tutorials"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = """-vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs"""
+addopts = "-vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs"
 xfail_strict = true
 filterwarnings = [
-  "ignore:`torch_geometric.distributed` has been deprecated since 2.7.0 and will no longer be maintained.:DeprecationWarning",
-  "ignore:`torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.:DeprecationWarning",
+  "ignore:`torch_geometric.distributed` has been deprecated since 2.7.0 and will no longer be maintained:DeprecationWarning",
+  "ignore:`torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`:DeprecationWarning",
+  "ignore:`torch.jit.script` is not supported in Python 3.14:DeprecationWarning",
 ]
 
 [tool.hatch.envs.docs]
@@ -123,15 +119,10 @@ packages = ["qoolqit"]
 [tool.coverage.run]
 branch = true
 parallel = true
-# uncomment to omit any file from the
-# coverage. Regexps can be used
-# to select all files from a folder
-#omit = [
-#  "template_python/to_omit.py",
-#]
+omit = ["*__init__.py"]
 
 [tool.coverage.report]
-exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+exclude_lines = ["if TYPE_CHECKING:"]
 exclude_also = [
   "def __str__",
   "def __repr__",

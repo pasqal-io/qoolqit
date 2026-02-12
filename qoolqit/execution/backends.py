@@ -79,10 +79,8 @@ class PulserRemoteBackend:
         error easier to understand.
         """
         if not isinstance(connection, RemoteConnection):
-            raise TypeError(
-                f"""Error in `PulserRemoteBackend`:
-                `connection` must be of type {RemoteConnection}."""
-            )
+            raise TypeError(f"""Error in `PulserRemoteBackend`:
+                `connection` must be of type {RemoteConnection}.""")
         return connection
 
 

@@ -108,10 +108,8 @@ class TestBackends:
         connection = backend.validate_connection(self.mock_connection)
         assert connection is self.mock_connection
 
-        with pytest.raises(
-            match=f"""Error in `PulserRemoteBackend`:
-                `connection` must be of type {RemoteConnection}."""
-        ):
+        with pytest.raises(match=f"""Error in `PulserRemoteBackend`:
+                `connection` must be of type {RemoteConnection}."""):
             backend.validate_connection(4.0)
 
     def test_local_emulator_run(self) -> None:
