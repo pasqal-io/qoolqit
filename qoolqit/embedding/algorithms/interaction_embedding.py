@@ -6,8 +6,6 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.spatial.distance import pdist, squareform
 
-from qoolqit.graphs import DataGraph
-
 from ..base_embedder import EmbeddingConfig
 
 
@@ -29,21 +27,19 @@ def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: fl
     Check the documentation for scipy.minimize for more information about each parameter:
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
 
-    Arguments:
+    Args:
         matrix: the matrix to embed.
         method: the method used by scipy.minimize.
         maxiter: maximum number of iterations.
         tol: tolerance for termination.
     """
 
-    def cost_function(new_coords: np.ndarray, matrix: np.ndarray) -> np.float:
+    def cost_function(new_coords: np.ndarray, matrix: np.ndarray) -> np.floating:
         """Cost function."""
         new_coords = np.reshape(new_coords, (len(matrix), 2))
         # Cost based on minimizing the distance between the matrix and the interaction 1/r^6
         new_matrix = squareform(1.0 / (pdist(new_coords) ** 6))
         return np.linalg.norm(new_matrix - matrix)
-
-    np.random.seed(0)
 
     # Initial guess for the coordinates
     x0 = np.random.random(len(matrix) * 2)
@@ -58,9 +54,5 @@ def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: fl
     )
 
     coords = np.reshape(res.x, (len(matrix), 2))
-
     centered_coords = coords - np.mean(coords, axis=0)
-
-    graph = DataGraph.from_coordinates(centered_coords.tolist())
-
-    return graph
+    return centered_coords
