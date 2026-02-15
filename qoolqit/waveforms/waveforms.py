@@ -5,6 +5,7 @@ from typing import Any, Optional
 
 import numpy as np
 import pulser
+import torch
 from numpy.typing import ArrayLike
 from pulser.parametrized import ParamObj
 from scipy import interpolate
@@ -272,3 +273,31 @@ class Sin(Waveform):
 
     def function(self, t: float) -> float:
         return self.amplitude * math.sin(self.omega * t + self.phi) + self.shift
+
+
+class Blackman(Waveform):
+    """A Blackman window of a specified duration and area.
+
+    Args:
+        duration: The waveform duration.
+        area: The integral of the waveform.
+    """
+
+    area: float | torch.Tensor
+
+    def __init__(self, duration: float, area: float | torch.Tensor) -> None:
+        super().__init__(duration, area=area)
+
+    def function(self, t: float) -> float | torch.Tensor:
+        alpha = 2 * np.pi / self.duration
+        area_factor = self.area / (0.42 * self.duration)
+        return (0.42 - 0.5 * np.cos(alpha * t) + 0.08 * np.cos(2 * alpha * t)) * area_factor
+
+    def max(self) -> float | torch.Tensor:
+        return self.area / (0.42 * self.duration)
+
+    def min(self) -> float:
+        return 0.0
+
+    def _to_pulser(self, duration: int) -> ParamObj | pulser.BlackmanWaveform:
+        return pulser.BlackmanWaveform(duration, self.area)
