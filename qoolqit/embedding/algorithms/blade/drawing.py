@@ -111,7 +111,7 @@ def draw_set_graph_coords(
     plt.show()
 
 
-def draw_graph_including_actual_weights(qubo_graph: nx.Graph, positions: np.ndarray) -> None:
+def draw_graph_including_actual_weights(target_interactions_graph: nx.Graph, positions: np.ndarray) -> None:
     try:
         import pandas as pd
         from IPython.display import display
@@ -121,8 +121,8 @@ def draw_graph_including_actual_weights(qubo_graph: nx.Graph, positions: np.ndar
             "please install the `pandas` and `IPython` libraries."
         )
 
-    new_weights_matrix = np.full((len(qubo_graph), len(qubo_graph)), fill_value="", dtype=object)
-    for u, v in qubo_graph.edges:
+    new_weights_matrix = np.full((len(target_interactions_graph), len(target_interactions_graph)), fill_value="", dtype=object)
+    for u, v in target_interactions_graph.edges:
         dist = np.linalg.norm(positions[u] - positions[v]).item()
         interaction = normalized_interaction(dist)
         new_weights_matrix[min(u, v), max(u, v)] = eformat(interaction)
@@ -135,12 +135,12 @@ def draw_graph_including_actual_weights(qubo_graph: nx.Graph, positions: np.ndar
         display(df)
 
     draw_set_graph_coords(
-        graph=qubo_graph,
+        graph=target_interactions_graph,
         coords=positions,
     )
 
 
-def plot_differences(target_qubo: np.ndarray, differences: np.ndarray) -> None:
+def plot_differences(target_interactions: np.ndarray, differences: np.ndarray) -> None:
     try:
         import seaborn
     except ImportError:
@@ -149,7 +149,7 @@ def plot_differences(target_qubo: np.ndarray, differences: np.ndarray) -> None:
             "please install the `seaborn` library."
         )
 
-    percent = 100 - 2 / (len(target_qubo) - 1) * 10
+    percent = 100 - 2 / (len(target_interactions) - 1) * 10
     percentile = np.percentile(differences, percent)
 
     difference_ceiling = np.maximum(0.0, percentile)
