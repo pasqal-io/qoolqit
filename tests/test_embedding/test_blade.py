@@ -183,6 +183,22 @@ def test_high_dimension_increase_after_equilibrium() -> None:
     blade(qubo, dimensions=(2, 2, 10), steps_per_round=100)
 
 
+def test_initial_positions_with_fewer_dimensions_than_starting_dimensions() -> None:
+    qubo = np.array(
+        [
+            [0, 1, 0, 1],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+            [0, 0, 0, 0],
+        ]
+    )
+
+    positions = blade(qubo)
+    positions = blade(qubo, starting_positions=positions)
+
+    assert np.all(positions)
+
+
 def test_drawing() -> None:
     import matplotlib
 
