@@ -111,7 +111,9 @@ def draw_set_graph_coords(
     plt.show()
 
 
-def draw_graph_including_actual_weights(target_interactions_graph: nx.Graph, positions: np.ndarray) -> None:
+def draw_graph_including_actual_weights(
+    target_interactions_graph: nx.Graph, positions: np.ndarray
+) -> None:
     try:
         import pandas as pd
         from IPython.display import display
@@ -121,7 +123,11 @@ def draw_graph_including_actual_weights(target_interactions_graph: nx.Graph, pos
             "please install the `pandas` and `IPython` libraries."
         )
 
-    new_weights_matrix = np.full((len(target_interactions_graph), len(target_interactions_graph)), fill_value="", dtype=object)
+    new_weights_matrix = np.full(
+        (len(target_interactions_graph), len(target_interactions_graph)),
+        fill_value="",
+        dtype=object,
+    )
     for u, v in target_interactions_graph.edges:
         dist = np.linalg.norm(positions[u] - positions[v]).item()
         interaction = normalized_interaction(dist)

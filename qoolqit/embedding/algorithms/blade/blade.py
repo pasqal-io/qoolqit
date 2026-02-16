@@ -162,7 +162,9 @@ def update_positions(
             f"current min dist = {np.min(distances)}, "
             f"current max dist = {np.max(distances)}"
         )
-        draw_graph_including_actual_weights(target_interactions_graph=target_interactions_graph, positions=positions)
+        draw_graph_including_actual_weights(
+            target_interactions_graph=target_interactions_graph, positions=positions
+        )
 
     return positions
 
@@ -420,7 +422,9 @@ def blade(
         )
     else:
         raise ValueError(
-            f"The number of dimensions in the starting positions {starting_positions.shape[1]} is greater than the starting number of dimensions {dimensions[0]}."
+            f"The number of dimensions in the starting positions "
+            f"{starting_positions.shape[1]} is greater than the starting "
+            f"number of dimensions {dimensions[0]}."
         )
 
     for u, v in nx.non_edges(target_interactions_graph):

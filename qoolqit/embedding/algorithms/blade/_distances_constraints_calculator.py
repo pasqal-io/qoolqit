@@ -15,7 +15,9 @@ def compute_best_scaling_for_qubo(
     filter_differences: bool = True,
     plot: bool = False,
 ) -> Any:
-    embedded_interactions_triu = embedded_interactions[np.triu_indices_from(embedded_interactions, k=1)]
+    embedded_interactions_triu = embedded_interactions[
+        np.triu_indices_from(embedded_interactions, k=1)
+    ]
     target_interactions_triu = target_interactions[np.triu_indices_from(target_interactions, k=1)]
 
     differences = embedded_interactions_triu - target_interactions_triu
@@ -38,7 +40,8 @@ def compute_best_scaling_for_qubo(
         )
 
     best_scaling = (
-        np.sum(embedded_interactions_triu**2) / np.sum(embedded_interactions_triu * target_interactions_triu)
+        np.sum(embedded_interactions_triu**2)
+        / np.sum(embedded_interactions_triu * target_interactions_triu)
     ) ** (1 / 6)
 
     assert not np.isnan(best_scaling)
