@@ -1733,6 +1733,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qoolqit.embedding.algorithms.blade.blade.augment_dimensions_with_random_values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        augment_dimensions_with_random_values
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#qoolqit.embedding.algorithms.blade.blade.evolve_with_dimension_transition" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2870,6 +2881,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#qoolqit.embedding.algorithms.blade.blade.augment_dimensions_with_random_values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        augment_dimensions_with_random_values
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#qoolqit.embedding.algorithms.blade.blade.evolve_with_dimension_transition" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2970,6 +2992,9 @@ Compute vector moves to adjust node positions toward target interactions.</p>
 <p><span class="mkapi-item-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.generate_random_positions" title="qoolqit.embedding.algorithms.blade.blade.generate_random_positions">generate_random_positions</a></span></p>
 </li>
 <li>
+<p><span class="mkapi-item-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.augment_dimensions_with_random_values" title="qoolqit.embedding.algorithms.blade.blade.augment_dimensions_with_random_values">augment_dimensions_with_random_values</a></span></p>
+</li>
+<li>
 <p><span class="mkapi-item-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.evolve_with_dimension_transition" title="qoolqit.embedding.algorithms.blade.blade.evolve_with_dimension_transition">evolve_with_dimension_transition</a></span></p>
 </li>
 <li>
@@ -2989,12 +3014,12 @@ Embed an interaction matrix or QUBO with the BLaDE algorithm.</p>
 <i class="fa-regular fa-square-minus"></i>
 </span>
 </span>
-<span class="mkapi-object-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.update_positions" title="qoolqit.embedding.algorithms.blade.blade.update_positions">update_positions</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-star">*</span><span class="mkapi-comma">, </span><span class="mkapi-arg">positions</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">qubo_graph</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="networkx">nx</span>.<span class="mkapi-tooltip" title="networkx.classes.graph.Graph">Graph</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">weight_relative_threshold</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-equal"> = </span><span class="mkapi-default">0.0</span><span class="mkapi-comma">, </span><span class="mkapi-arg">min_dist</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">max_dist</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">max_distance_to_walk</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | tuple[float, float, float]</span><span class="mkapi-equal"> = </span><span class="mkapi-default"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.numeric.inf">inf</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">draw_step</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool</span><span class="mkapi-equal"> = </span><span class="mkapi-default">False</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span></span>
+<span class="mkapi-object-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.update_positions" title="qoolqit.embedding.algorithms.blade.blade.update_positions">update_positions</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-star">*</span><span class="mkapi-comma">, </span><span class="mkapi-arg">positions</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">target_interactions_graph</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="networkx">nx</span>.<span class="mkapi-tooltip" title="networkx.classes.graph.Graph">Graph</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">weight_relative_threshold</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float</span><span class="mkapi-equal"> = </span><span class="mkapi-default">0.0</span><span class="mkapi-comma">, </span><span class="mkapi-arg">min_dist</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">max_dist</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">max_distance_to_walk</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | tuple[float, float, float]</span><span class="mkapi-equal"> = </span><span class="mkapi-default"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.numeric.inf">inf</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">draw_step</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool</span><span class="mkapi-equal"> = </span><span class="mkapi-default">False</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span></span>
 </p>
 <div class="mkapi-document">
 <p>Compute vector moves to adjust node positions toward target interactions.</p>
 <p>positions: Starting positions of the nodes.
-qubo_graph: Desired QUBO.
+target_interactions_graph: Desired interactions.
 weight_relative_threshold: It is used to compute a weight difference
     threshold defining which weights differences are significant and should
     be considered. For this purpose, it is multiplied by the higher weight difference.
@@ -3019,7 +3044,7 @@ draw_steps: Whether to draw the nodes and the forces.</p>
 <i class="fa-regular fa-square-minus"></i>
 </span>
 </span>
-<span class="mkapi-object-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.evolve_with_forces_through_dim_change" title="qoolqit.embedding.algorithms.blade.blade.evolve_with_forces_through_dim_change">evolve_with_forces_through_dim_change</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-star">*</span><span class="mkapi-comma">, </span><span class="mkapi-arg">qubo_graph</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="networkx">nx</span>.<span class="mkapi-tooltip" title="networkx.classes.graph.Graph">Graph</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">draw_steps</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool</span><span class="mkapi-equal"> = </span><span class="mkapi-default">False</span><span class="mkapi-comma">, </span><span class="mkapi-arg">starting_dimensions</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">final_dimensions</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">nb_steps</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">positions</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">starting_min</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">start_ratio</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">final_ratio</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">compute_weight_relative_threshold_by_step</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Callable">Callable</span>[[int], float]</span><span class="mkapi-comma">, </span><span class="mkapi-arg">compute_max_distance_to_walk_by_step</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Callable">Callable</span>[[int, float | None], float | tuple[float, float, float]]</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">tuple[<span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>, float | None]</span></span>
+<span class="mkapi-object-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.evolve_with_forces_through_dim_change" title="qoolqit.embedding.algorithms.blade.blade.evolve_with_forces_through_dim_change">evolve_with_forces_through_dim_change</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-star">*</span><span class="mkapi-comma">, </span><span class="mkapi-arg">target_interactions_graph</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="networkx">nx</span>.<span class="mkapi-tooltip" title="networkx.classes.graph.Graph">Graph</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">draw_steps</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool</span><span class="mkapi-equal"> = </span><span class="mkapi-default">False</span><span class="mkapi-comma">, </span><span class="mkapi-arg">starting_dimensions</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">final_dimensions</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">nb_steps</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">positions</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">starting_min</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">start_ratio</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">final_ratio</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-equal"> = </span><span class="mkapi-default">None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">compute_weight_relative_threshold_by_step</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Callable">Callable</span>[[int], float]</span><span class="mkapi-comma">, </span><span class="mkapi-arg">compute_max_distance_to_walk_by_step</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Callable">Callable</span>[[int, float | None], float | tuple[float, float, float]]</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">tuple[<span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>, float | None]</span></span>
 </p>
 <div class="mkapi-document"></div>
 <p class="mkapi-object mkapi-page-source" id="qoolqit.embedding.algorithms.blade.blade.generate_random_positions">
@@ -3031,7 +3056,19 @@ draw_steps: Whether to draw the nodes and the forces.</p>
 <i class="fa-regular fa-square-minus"></i>
 </span>
 </span>
-<span class="mkapi-object-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.generate_random_positions" title="qoolqit.embedding.algorithms.blade.blade.generate_random_positions">generate_random_positions</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">qubo</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">dimension</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span></span>
+<span class="mkapi-object-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.generate_random_positions" title="qoolqit.embedding.algorithms.blade.blade.generate_random_positions">generate_random_positions</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">target_interactions</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">dimension</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span></span>
+</p>
+<div class="mkapi-document"></div>
+<p class="mkapi-object mkapi-page-source" id="qoolqit.embedding.algorithms.blade.blade.augment_dimensions_with_random_values">
+<span class="mkapi-object-link">
+
+
+<a href="../../../../../../src/qoolqit/embedding/algorithms/blade/blade/#qoolqit.embedding.algorithms.blade.blade.augment_dimensions_with_random_values" title="Go to source">source</a>
+<span class="mkapi-document-toggle" title="Toggle all docs">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-object-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.augment_dimensions_with_random_values" title="qoolqit.embedding.algorithms.blade.blade.augment_dimensions_with_random_values">augment_dimensions_with_random_values</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">positions</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-comma">, </span><span class="mkapi-star">*</span><span class="mkapi-comma">, </span><span class="mkapi-arg">new_dimensions</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span></span>
 </p>
 <div class="mkapi-document"></div>
 <p class="mkapi-object mkapi-page-source" id="qoolqit.embedding.algorithms.blade.blade.evolve_with_dimension_transition">
@@ -3043,7 +3080,7 @@ draw_steps: Whether to draw the nodes and the forces.</p>
 <i class="fa-regular fa-square-minus"></i>
 </span>
 </span>
-<span class="mkapi-object-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.evolve_with_dimension_transition" title="qoolqit.embedding.algorithms.blade.blade.evolve_with_dimension_transition">evolve_with_dimension_transition</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-arg">qubo</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-comma">, </span><span class="mkapi-star">*</span><span class="mkapi-comma">, </span><span class="mkapi-arg">dimensions</span><span class="mkapi-colon">: </span><span class="mkapi-ann">tuple[int, ...]</span><span class="mkapi-comma">, </span><span class="mkapi-arg">starting_min</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">pca</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool</span><span class="mkapi-comma">, </span><span class="mkapi-arg">steps_per_round</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">compute_weight_relative_threshold</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Callable">Callable</span>[[float], float]</span><span class="mkapi-comma">, </span><span class="mkapi-arg">compute_max_distance_to_walk</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Callable">Callable</span>[[float, float | None], float | tuple[float, float, float]]</span><span class="mkapi-comma">, </span><span class="mkapi-arg">qubo_graph</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="networkx">nx</span>.<span class="mkapi-tooltip" title="networkx.classes.graph.Graph">Graph</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">positions</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">final_ratio</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">total_steps</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">dim_idx</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">start_ratio</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">draw_steps</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool | list[int]</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">tuple[<span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>, float | None]</span></span>
+<span class="mkapi-object-name"><a href="./#qoolqit.embedding.algorithms.blade.blade.evolve_with_dimension_transition" title="qoolqit.embedding.algorithms.blade.blade.evolve_with_dimension_transition">evolve_with_dimension_transition</a></span><span class="mkapi-signature"><span class="mkapi-paren">(</span><span class="mkapi-star">*</span><span class="mkapi-comma">, </span><span class="mkapi-arg">dimensions</span><span class="mkapi-colon">: </span><span class="mkapi-ann">tuple[int, ...]</span><span class="mkapi-comma">, </span><span class="mkapi-arg">starting_min</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">pca</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool</span><span class="mkapi-comma">, </span><span class="mkapi-arg">steps_per_round</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">compute_weight_relative_threshold</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Callable">Callable</span>[[float], float]</span><span class="mkapi-comma">, </span><span class="mkapi-arg">compute_max_distance_to_walk</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="typing.Callable">Callable</span>[[float, float | None], float | tuple[float, float, float]]</span><span class="mkapi-comma">, </span><span class="mkapi-arg">target_interactions_graph</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="networkx">nx</span>.<span class="mkapi-tooltip" title="networkx.classes.graph.Graph">Graph</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">positions</span><span class="mkapi-colon">: </span><span class="mkapi-ann"><span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span></span><span class="mkapi-comma">, </span><span class="mkapi-arg">final_ratio</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">total_steps</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">dim_idx</span><span class="mkapi-colon">: </span><span class="mkapi-ann">int</span><span class="mkapi-comma">, </span><span class="mkapi-arg">start_ratio</span><span class="mkapi-colon">: </span><span class="mkapi-ann">float | None</span><span class="mkapi-comma">, </span><span class="mkapi-arg">draw_steps</span><span class="mkapi-colon">: </span><span class="mkapi-ann">bool | list[int]</span><span class="mkapi-paren">)</span><span class="mkapi-arrow"> → </span><span class="mkapi-return">tuple[<span class="mkapi-tooltip" title="numpy">np</span>.<span class="mkapi-tooltip" title="numpy._core.ndarray">ndarray</span>, float | None]</span></span>
 </p>
 <div class="mkapi-document">
 <p class="mkapi-section">
@@ -3079,10 +3116,11 @@ draw_steps: Whether to draw the nodes and the forces.</p>
 It compute positions for nodes so that their interactions
 approach the desired values. The interactions assume that the
 interaction coefficient of the device is set to 1.
-Its prior target is on interaction matrices or QUBOs, but it can also be used
+Its typical target is on interaction matrices or QUBOs, but it can also be used
 for MIS with limitations if the adjacency matrix is converted into a QUBO.
 The general principle is based on the Fruchterman-Reingold algorithm.</p>
-<p>matrix: an objective interaction matrix or QUBO.
+<p>matrix: An objective interaction matrix or QUBO between the nodes. It must
+    be either symmetrical or triangular.
 max_min_dist_ratio: If present, set the maximum ratio between
     the maximum radial distance and the minimum pairwise distances.
 dimensions: List of numbers of dimensions to explore one
@@ -3091,7 +3129,10 @@ dimensions: List of numbers of dimensions to explore one
     Increasing the number of intermediate dimensions can help to escape
     from local minima.
 starting_positions: If provided, initial positions to start from. Otherwise,
-    random positions will be generated.
+    random positions will be generated. The number of dimensions of the
+    starting positions must be lower than or equal to the first dimension
+    to explore. If it is lower, it is added dimensions filled with
+    random values.
 pca: Whether to apply Principal Component Analysis to prioritize dimensions
     to keep when transitioning from a space to a space with fewer dimensions.
     It is disabled by default because it can raise an error when there are
@@ -3116,6 +3157,21 @@ starting_ratio_factor: When <code>max_min_dist_ratio</code> is enabled,
     on a larger ratio, to let more flexibility in the beginning.
 draw_steps: Whether to draw the nodes and the forces.
     Requires installing the seaborn library.</p>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle raises">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Raises</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-type">ValueError</span></p>
+</li>
+</ul>
+</div>
 </div>
 <p class="mkapi-object mkapi-page-source" id="qoolqit.embedding.algorithms.blade.blade.BladeConfig">
 <span class="mkapi-object-link">

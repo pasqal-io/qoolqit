@@ -2842,10 +2842,11 @@ Embed an interaction matrix or QUBO with the BLaDE algorithm.</p>
 It compute positions for nodes so that their interactions
 approach the desired values. The interactions assume that the
 interaction coefficient of the device is set to 1.
-Its prior target is on interaction matrices or QUBOs, but it can also be used
+Its typical target is on interaction matrices or QUBOs, but it can also be used
 for MIS with limitations if the adjacency matrix is converted into a QUBO.
 The general principle is based on the Fruchterman-Reingold algorithm.</p>
-<p>matrix: an objective interaction matrix or QUBO.
+<p>matrix: An objective interaction matrix or QUBO between the nodes. It must
+    be either symmetrical or triangular.
 max_min_dist_ratio: If present, set the maximum ratio between
     the maximum radial distance and the minimum pairwise distances.
 dimensions: List of numbers of dimensions to explore one
@@ -2854,7 +2855,10 @@ dimensions: List of numbers of dimensions to explore one
     Increasing the number of intermediate dimensions can help to escape
     from local minima.
 starting_positions: If provided, initial positions to start from. Otherwise,
-    random positions will be generated.
+    random positions will be generated. The number of dimensions of the
+    starting positions must be lower than or equal to the first dimension
+    to explore. If it is lower, it is added dimensions filled with
+    random values.
 pca: Whether to apply Principal Component Analysis to prioritize dimensions
     to keep when transitioning from a space to a space with fewer dimensions.
     It is disabled by default because it can raise an error when there are
@@ -2879,6 +2883,21 @@ starting_ratio_factor: When <code>max_min_dist_ratio</code> is enabled,
     on a larger ratio, to let more flexibility in the beginning.
 draw_steps: Whether to draw the nodes and the forces.
     Requires installing the seaborn library.</p>
+<p class="mkapi-section">
+<span class="mkapi-object-link">
+<span class="mkapi-section-toggle" title="Toggle raises">
+<i class="fa-regular fa-square-minus"></i>
+</span>
+</span>
+<span class="mkapi-section-name">Raises</span>
+</p>
+<div class="mkapi-section-content">
+<ul class="mkapi-item-list">
+<li>
+<p><span class="mkapi-item-type">ValueError</span></p>
+</li>
+</ul>
+</div>
 </div>
 
 
