@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TypeVar
 
 import numpy as np
 
+Value = TypeVar("Value", float, np.ndarray)
 
-def normalized_interaction(dist: float) -> float:
+
+def normalized_interaction(dist: Value) -> Value:
     return 1 / dist**6
 
 
-def normalized_best_dist(weight: float) -> float:
+def normalized_best_dist(weight: Value) -> Value:
     return (1 / weight) ** (1 / 6)  # type: ignore[no-any-return]
 
 

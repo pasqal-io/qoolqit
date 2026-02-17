@@ -3,6 +3,7 @@ from __future__ import annotations
 import networkx as nx
 import numpy as np
 import pytest
+import scipy
 
 from qoolqit import AnalogDevice, BladeConfig, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
@@ -184,19 +185,28 @@ def test_high_dimension_increase_after_equilibrium() -> None:
 
 
 def test_initial_positions_with_fewer_dimensions_than_starting_dimensions() -> None:
-    qubo = np.array(
+    expected_distances = np.array(
         [
-            [0, 1, 0, 1],
-            [0, 0, 1, 0],
+            [0, 1, np.sqrt(2), 1],
+            [0, 0, 1, np.sqrt(2)],
             [0, 0, 0, 1],
             [0, 0, 0, 0],
         ]
     )
+    expected_interactions = np.triu(normalized_interaction(expected_distances), k=1)
 
-    positions = blade(qubo)
-    positions = blade(qubo, starting_positions=positions)
+    starting_positions = np.array([[-1, 1], [1, 1], [1, -1], [-1, -1]])
+    positions = blade(
+        expected_interactions,
+        starting_positions=starting_positions,
+        dimensions=(starting_positions.shape[1] + 2, 2),
+    )
 
-    assert np.all(positions)
+    output_distances = np.triu(
+        scipy.spatial.distance.squareform(scipy.spatial.distance.pdist(positions)), k=1
+    )
+
+    np.testing.assert_allclose(output_distances, expected_distances, rtol=1e-4)
 
 
 def test_drawing() -> None:
