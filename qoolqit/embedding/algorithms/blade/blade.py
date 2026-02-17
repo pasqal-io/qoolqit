@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 def update_positions(
     *,
     positions: np.ndarray,
-    target_interactions_graph: nx.Graph,
+    target_interactions: np.ndarray,
     weight_relative_threshold: float = 0.0,
     min_dist: float | None = None,
     max_dist: float | None = None,
@@ -40,7 +40,7 @@ def update_positions(
     Compute vector moves to adjust node positions toward target interactions.
 
     positions: Starting positions of the nodes.
-    target_interactions_graph: Desired interactions.
+    target_interactions: Desired interactions.
     weight_relative_threshold: It is used to compute a weight difference
         threshold defining which weights differences are significant and should
         be considered. For this purpose, it is multiplied by the higher weight difference.
@@ -57,7 +57,9 @@ def update_positions(
     draw_steps: Whether to draw the nodes and the forces.
     """
 
-    n = nx.number_of_nodes(target_interactions_graph)
+    assert np.array_equal(target_interactions, target_interactions.T)
+    n = len(target_interactions)
+
     positions = np.array(positions, dtype=float)
     nb_positions, space_dimension = positions.shape
 
@@ -81,7 +83,7 @@ def update_positions(
     interaction_force = compute_interaction_forces(
         distance_matrix=distance_matrix,
         unitary_vectors=unitary_vectors,
-        interactions_graph=target_interactions_graph,
+        target_weights=target_interactions,
         weight_relative_threshold=weight_relative_threshold,
         max_distance_to_walk=max_distance_to_walk,
     )
@@ -162,6 +164,7 @@ def update_positions(
             f"current min dist = {np.min(distances)}, "
             f"current max dist = {np.max(distances)}"
         )
+        target_interactions_graph = Qubo.from_matrix(target_interactions).as_graph()
         draw_graph_including_actual_weights(
             target_interactions_graph=target_interactions_graph, positions=positions
         )
@@ -171,7 +174,7 @@ def update_positions(
 
 def evolve_with_forces_through_dim_change(
     *,
-    target_interactions_graph: nx.Graph,
+    target_interactions: np.ndarray,
     draw_steps: bool = False,
     starting_dimensions: int,
     final_dimensions: int,
@@ -189,7 +192,7 @@ def evolve_with_forces_through_dim_change(
         dimensions_to_remove=starting_dimensions - final_dimensions, steps=nb_steps
     )
     dist_constr_calc = DistancesConstraintsCalculator(
-        target_interactions=Qubo.from_graph(target_interactions_graph).as_matrix(),
+        target_interactions=target_interactions,
         starting_min=starting_min,
         starting_ratio=start_ratio,
         final_ratio=final_ratio,
@@ -218,7 +221,7 @@ def evolve_with_forces_through_dim_change(
 
         positions = update_positions(
             positions=positions,
-            target_interactions_graph=target_interactions_graph,
+            target_interactions=target_interactions,
             draw_step=draw_step,
             weight_relative_threshold=compute_weight_relative_threshold_by_step(step),
             min_dist=min_dist,
@@ -265,7 +268,7 @@ def evolve_with_dimension_transition(
     compute_max_distance_to_walk: Callable[
         [float, float | None], float | tuple[float, float, float]
     ],
-    target_interactions_graph: nx.Graph,
+    target_interactions: np.ndarray,
     positions: np.ndarray,
     final_ratio: float | None,
     total_steps: int,
@@ -309,7 +312,7 @@ def evolve_with_dimension_transition(
         starting_dimensions = final_dimensions
 
     positions, starting_min = evolve_with_forces_through_dim_change(
-        target_interactions_graph=target_interactions_graph,
+        target_interactions=target_interactions,
         draw_steps=(
             draw_steps
             if isinstance(draw_steps, bool)
@@ -411,8 +414,10 @@ def blade(
     else:
         assert not torch.all(matrix == 0)
 
-    qubo_obj = Qubo.from_matrix(matrix)
-    target_interactions_graph = qubo_obj.as_graph()
+    graph = Qubo.from_matrix(matrix).as_graph()
+    matrix = np.array(
+        nx.adjacency_matrix(graph, nodelist=list(range(len(matrix))), weight="weight").toarray()
+    )
 
     if starting_positions is None:
         positions = generate_random_positions(target_interactions=matrix, dimension=dimensions[0])
@@ -426,9 +431,6 @@ def blade(
             f"{starting_positions.shape[1]} is greater than the starting "
             f"number of dimensions {dimensions[0]}."
         )
-
-    for u, v in nx.non_edges(target_interactions_graph):
-        target_interactions_graph.add_edge(u, v, weight=0)
 
     if max_min_dist_ratio is not None:
         steps_ratios = np.linspace(
@@ -447,19 +449,19 @@ def blade(
         range(len(dimensions) - 1), steps_ratios[:-1], steps_ratios[1:]
     ):
         positions, starting_min = evolve_with_dimension_transition(
-            draw_steps=draw_steps,
+            target_interactions=matrix,
             dimensions=dimensions,
             starting_min=starting_min,
             pca=pca,
             steps_per_round=steps_per_round,
             compute_weight_relative_threshold=compute_weight_relative_threshold,
             compute_max_distance_to_walk=compute_max_distance_to_walk,
-            target_interactions_graph=target_interactions_graph,
             positions=positions,
             final_ratio=final_ratio,
             total_steps=total_steps,
             dim_idx=dim_idx,
             start_ratio=start_ratio,
+            draw_steps=draw_steps,
         )
 
     if max_min_dist_ratio is not None:

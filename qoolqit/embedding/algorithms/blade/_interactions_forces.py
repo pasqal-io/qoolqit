@@ -3,7 +3,6 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-import networkx as nx
 import numpy as np
 
 from ._force import Force
@@ -49,7 +48,6 @@ def compute_target_weights_by_dist_limit(
 
 def compute_target_weights_distances_by_weight_diff_limit(
     *,
-    n: int,
     distance_matrix: np.ndarray,
     unitary_vectors: np.ndarray,
     current_weights: np.ndarray,
@@ -58,6 +56,7 @@ def compute_target_weights_distances_by_weight_diff_limit(
 ) -> Any:
     with np.errstate(divide="ignore", invalid="ignore"):
         weight_differences = target_weights - current_weights
+    n = len(weight_differences)
     weight_differences[range(n), range(n)] = 0
     logger.debug(f"{weight_differences=}")
     # significant_weight_difference = np.max(np.abs(weight_differences)) / 100
@@ -92,19 +91,14 @@ def compute_interaction_forces(
     *,
     distance_matrix: np.ndarray,
     unitary_vectors: np.ndarray,
-    interactions_graph: nx.Graph,
+    target_weights: np.ndarray,
     weight_relative_threshold: float,
     max_distance_to_walk: float,
 ) -> Force:
-    n = nx.number_of_nodes(interactions_graph)
-
     current_weights = np.vectorize(normalized_interaction, signature="(m,n)->(m,n)")(
         distance_matrix
     )
     logger.debug(f"{current_weights=}")
-    target_weights = np.array(
-        nx.adjacency_matrix(interactions_graph, nodelist=list(range(n)), weight="weight").toarray()
-    )
     logger.debug(f"{target_weights=}")
 
     modulated_target_weights = compute_target_weights_by_dist_limit(
@@ -114,7 +108,6 @@ def compute_interaction_forces(
     )
 
     weighted_vectors, distances_to_walk = compute_target_weights_distances_by_weight_diff_limit(
-        n=n,
         distance_matrix=distance_matrix,
         unitary_vectors=unitary_vectors,
         current_weights=current_weights,
