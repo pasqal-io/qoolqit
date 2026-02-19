@@ -30,14 +30,12 @@ from qoolqit.embedding.algorithms.blade.blade import (
 def test_update_positions(
     max_distance_to_walk: float | int, expected_distance: float | int
 ) -> None:
-    interactions_graph = nx.Graph()
-    interactions_graph.add_nodes_from([i for i in range(2)])
-    weight = 1e-4
-    interactions_graph.add_edge(0, 1, weight=weight)
+    qubo = np.array([[0, 1e-4], [0, 0]])
+    qubo = qubo + qubo.T
 
     new_positions = update_positions(
         positions=np.array([[0, 0], [1, 0]]),
-        target_interactions_graph=interactions_graph,
+        target_interactions=qubo,
         max_distance_to_walk=max_distance_to_walk,
     )
 
@@ -47,15 +45,14 @@ def test_update_positions(
 
 
 def test_max_dist_constraint() -> None:
-    interactions_graph = nx.Graph()
-    interactions_graph.add_nodes_from([i for i in range(2)])
-    interactions_graph.add_edge(0, 1, weight=1)
-
     max_radial_dist = 0.1
+
+    qubo = np.array([[0, 1], [0, 0]])
+    qubo = qubo + qubo.T
 
     new_positions = update_positions(
         positions=np.array([[-0.5, 0], [0.5, 0]]),
-        target_interactions_graph=interactions_graph,
+        target_interactions=qubo,
         max_dist=max_radial_dist,
     )
 
@@ -65,13 +62,12 @@ def test_max_dist_constraint() -> None:
 
 
 def test_min_dist_constraint() -> None:
-    interactions_graph = nx.Graph()
-    interactions_graph.add_nodes_from([i for i in range(2)])
-    interactions_graph.add_edge(0, 1, weight=normalized_interaction(10 * np.sqrt(2)))
+    qubo = np.array([[0, normalized_interaction(10 * np.sqrt(2))], [0, 0]])
+    qubo = qubo + qubo.T
 
     new_positions = update_positions(
         positions=np.array([[-10, 0], [0, 10]]),
-        target_interactions_graph=interactions_graph,
+        target_interactions=qubo,
         min_dist=30,
     )
 
@@ -79,13 +75,12 @@ def test_min_dist_constraint() -> None:
 
 
 def test_min_dist_constraint_limited() -> None:
-    interactions_graph = nx.Graph()
-    interactions_graph.add_nodes_from([i for i in range(2)])
-    interactions_graph.add_edge(0, 1, weight=normalized_interaction(1))
+    qubo = np.array([[0, normalized_interaction(1)], [0, 0]])
+    qubo = qubo + qubo.T
 
     new_positions = update_positions(
         positions=np.array([[-1, 0], [1, 0]]),
-        target_interactions_graph=interactions_graph,
+        target_interactions=qubo,
         min_dist=10,
         max_distance_to_walk=(0, 2, 0),
     )
@@ -95,13 +90,12 @@ def test_min_dist_constraint_limited() -> None:
 
 
 def test_max_dist_constraint_limited() -> None:
-    interactions_graph = nx.Graph()
-    interactions_graph.add_nodes_from([i for i in range(2)])
-    interactions_graph.add_edge(0, 1, weight=normalized_interaction(1))
+    qubo = np.array([[0, normalized_interaction(1)], [0, 0]])
+    qubo = qubo + qubo.T
 
     new_positions = update_positions(
         positions=np.array([[-10, 0], [10, 0]]),
-        target_interactions_graph=interactions_graph,
+        target_interactions=qubo,
         max_dist=1,
         max_distance_to_walk=(0, 0, 1),
     )
@@ -219,11 +213,14 @@ def test_drawing() -> None:
     interactions_graph.add_nodes_from([i for i in range(2)])
     interactions_graph.add_edge(0, 1, weight=normalized_interaction(1))
 
+    qubo = np.array([[0, normalized_interaction(1)], [0, 0]])
+    qubo = qubo + qubo.T
+
     plt.close("all")
     assert len(plt.get_fignums()) == 0
     update_positions(
         positions=np.array([[-10, 0], [10, 0]]),
-        target_interactions_graph=interactions_graph,
+        target_interactions=qubo,
         max_dist=1,
         max_distance_to_walk=(0, 0, 1),
         draw_step=True,
