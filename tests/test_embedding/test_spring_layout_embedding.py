@@ -55,7 +55,7 @@ def test_spring_layout_positions(coords: list | np.ndarray) -> None:
 
     # embed the graph and extract interactions
     threshold = 1e-4
-    iterations = 300  # sufficiently high to do not stop before threshold
+    iterations = 350  # sufficiently high to do not stop before threshold
     seed = 0  # for reproducibility
     embedded_graph = spring_layout_embedding(
         graph, iterations=iterations, threshold=threshold, seed=seed

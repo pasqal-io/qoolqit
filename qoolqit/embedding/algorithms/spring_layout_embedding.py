@@ -14,7 +14,7 @@ from ..base_embedder import EmbeddingConfig
 class SpringLayoutConfig(EmbeddingConfig):
     """Configuration parameters for the spring-layout embedding."""
 
-    iterations: int = 50
+    iterations: int = 100
     threshold: float = 1e-4
     seed: int | None = None
 
