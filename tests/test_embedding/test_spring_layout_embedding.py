@@ -66,6 +66,10 @@ def test_spring_layout_positions(coords: list | np.ndarray) -> None:
     # compare the embedded/expected distance matrices
     # spring_layout sets convergence criteria to |delta_pos| / nnodes < threshold
     expected_tolerance = threshold * len(coords)
+    # TOFIX: older networkx have lower tolerance for the convergence
+    # remove this when dropping python 3.10 and networkx ~3.4 support
+    if nx.__version__ < "3.5":
+        expected_tolerance *= 10
 
     stress = np.linalg.norm(embedded_distances - expected_distances)
     np.testing.assert_allclose(stress, 0.0, atol=expected_tolerance, rtol=0.0)
