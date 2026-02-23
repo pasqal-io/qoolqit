@@ -51,6 +51,8 @@ def test_spring_layout_positions(coords: list | np.ndarray) -> None:
     expected_interactions = squareform(1 / pdist(coords) ** 6)
     expected_distances = squareform(pdist(coords))
     graph = nx.from_numpy_array(expected_interactions, create_using=DataGraph)
+
+    # only weights and no coordinates
     assert not graph.has_coords
 
     # embed the graph and extract interactions
