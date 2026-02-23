@@ -54,7 +54,7 @@ def test_spring_layout_positions(coords: list | np.ndarray) -> None:
     assert not graph.has_coords
 
     # embed the graph and extract interactions
-    threshold = 1e-4
+    threshold = 1e-5
     iterations = 500  # sufficiently high to do not stop before threshold
     seed = 0  # for reproducibility
     embedded_graph = spring_layout_embedding(
@@ -65,9 +65,10 @@ def test_spring_layout_positions(coords: list | np.ndarray) -> None:
 
     # compare the embedded/expected distance matrices
     # spring_layout sets convergence criteria to |delta_pos| / nnodes < threshold
-    expected_tolerance = threshold * len(coords)
+    expected_tolerance = threshold * len(coords) * 10
     np.testing.assert_allclose(
         embedded_distances,
         expected_distances,
         atol=expected_tolerance,
+        rtol=0.0,
     )
