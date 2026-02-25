@@ -13,7 +13,7 @@ The next level is to define the concrete data types involved in the mapping, thu
 - `GraphToGraphEmbedder` which concretizes the `BaseEmbedder` with a `DataGraph` input type and a `DataGraph` output type.
 - `MatrixToGraphEmbedder` which concretizes the `BaseEmbedder` with a `np.ndarray` input type and a `DataGraph` output type.
 
-In both cases, the `validate_input` and `validate_output` are overridden to check the input and output are of the correct type. In the case of the `MatrixToGraphEmbedder` conditions on the input matrix are also checked such as if the array has the right dimensions and is symmetric. Still, at this level, no specific embedding algorithm is defined.
+In both cases, the `validate_input` and `validate_output` are overridden to check the input and output are of the correct type. In the case of the `MatrixToGraphEmbedder`, conditions on the input matrix are also checked such as if the array has the right dimensions and is symmetric. Still, at this level, no specific embedding algorithm is defined.
 
 In the future, more families of embedders can be defined that may require different input and output data types.
 
@@ -86,7 +86,7 @@ except KeyError as error:
     print(error)
 ```
 
-Furthermore, because we are defining an embedder in the `GraphToGraphEmbedder` the input must be an instance of a `DataGraph`:
+Furthermore, because we are defining an embedder in the `GraphToGraphEmbedder`, the input must be an instance of a `DataGraph`:
 
 ```python exec="on" source="material-block" result="json" session="embedding"
 embedder = GraphToGraphEmbedder(my_embedding_function, MyEmbeddingConfig())

@@ -53,7 +53,7 @@ As you can see above it holds an algorithm and a config with a set of default pa
 print(embedder.info)
 ```
 
-In this case, this embedder is a direct wrapper on top of `nx.spring_layout`, and any parameters are the ones directly used by that function. For more information, you can check the [documentation for NetworkX](https://networkx.org/documentation/stable/reference/generated/networkx.drawing.layout.spring_layout.html). The parameters can be directly changed in the config.
+In this case, the embedder is a direct wrapper on top of `nx.spring_layout`, and any parameters are the ones directly used by that function. For more information, you can check the [documentation for NetworkX](https://networkx.org/documentation/stable/reference/generated/networkx.drawing.layout.spring_layout.html). The parameters can be directly changed in the config.
 
 ```python exec="on" source="material-block" result="json" session="embedding"
 embedder.config.iterations = 100
@@ -90,7 +90,7 @@ embedded_graph_1.is_ud_graph()
 print(embedded_graph_1.is_ud_graph()) # markdown-exec: hide
 ```
 
-In this case the embedding was successful and we obtained a unit-disk graph. For more densely connected graphs, the spring layout algorithm tends to struggle with finding a unit-disk graph embedding, if it even exists.
+In this case, the embedding was successful and we obtained a unit-disk graph. For more densely connected graphs, the spring layout algorithm tends to struggle with finding a unit-disk graph embedding, if it even exists.
 
 ```python exec="on" source="material-block" html="1" session="embedding"
 graph_2 = DataGraph.random_er(n = 7, p = 0.8, seed = 3)
