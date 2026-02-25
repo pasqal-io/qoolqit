@@ -5,7 +5,7 @@ Each `Device` in QoolQit wraps a Pulser device and defines the hardware characte
 ```python exec="on" source="material-block" session="devices"
 from qoolqit import MockDevice, AnalogDevice, DigitalAnalogDevice
 
-# An example of an mock device with no hardware constrains
+# An example of a mock device with no hardware constrains
 device_ideal = MockDevice()
 
 # An example of a real device
@@ -96,8 +96,9 @@ print(device_real.converter)  # markdown-exec: hide
 **Notes**
 
 - Advanced users may also pass a prebuilt `default_converter` to the constructor to start in a custom unit system:
-  ```python
+  ```python exec="on" source="material-block" result="json" session="devices"
+  from pulser import AnalogDevice
   from qoolqit import UnitConverter
-  custom_default = UnitConverter.from_energy(C6=device_from_pulser._C6, upper_amp=2.0)
-  device_custom = Device(pulser_device=devices.AnalogDevice, default_converter=custom_default)
+  custom_default = UnitConverter.from_energy(C6=device_from_pulser._C6, energy=2.0)
+  device_custom = Device(pulser_device=AnalogDevice, default_converter=custom_default)
   ```
