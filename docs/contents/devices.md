@@ -5,7 +5,7 @@ Each `Device` in QoolQit wraps a Pulser device and defines the hardware characte
 ```python exec="on" source="material-block" session="devices"
 from qoolqit import MockDevice, AnalogDevice, DigitalAnalogDevice
 
-# An example of a mock device with no hardware constrains
+# An example of a mock device with no hardware constraints
 device_ideal = MockDevice()
 
 # An example of a real device
@@ -37,7 +37,7 @@ print(fresnel_device)   # markdown-exec: hide
 ```
 
 ### Create a QoolQit device from a Pulser device
-A custom QoolQit device can be also built straight from any Pulser device, with any desired specification.
+A custom QoolQit device can also be built straight from any Pulser device, with any desired specification.
 Please, refer to [Pulser documentation](https://docs.pasqal.com/pulser/tutorials/virtual_devices/) to learn how to make a custom device.
 
 ```python exec="on" source="material-block" result="json" session="devices"
@@ -45,7 +45,7 @@ from dataclasses import replace
 from pulser import AnalogDevice
 from qoolqit import Device
 
-# Converting the pulser Device object in a VirtualDevice object
+# Converting the pulser Device object into a VirtualDevice object
 VirtualAnalog = AnalogDevice.to_virtual()
 # Replacing desired values
 ModdedAnalogDevice = replace(VirtualAnalog, max_radial_distance=100, max_sequence_duration=7000)
@@ -92,3 +92,14 @@ You can always restore the default converter:
 device_real.reset_converter()
 print(device_real.converter)  # markdown-exec: hide
 ```
+
+**Notes**
+
+- Advanced users may also pass a prebuilt `default_converter` to the constructor to start in a custom unit system:
+  ```python exec="on" source="material-block" result="json" session="devices"
+  from pulser import AnalogDevice
+  from qoolqit import Device
+  from qoolqit.devices.unit_converter import UnitConverter
+  custom_converter = UnitConverter.from_energy(C6=AnalogDevice.interaction_coeff, energy=2.0)
+  device_custom = Device(pulser_device=AnalogDevice, default_converter=custom_converter)
+  ```
