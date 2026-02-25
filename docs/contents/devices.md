@@ -92,13 +92,3 @@ You can always restore the default converter:
 device_real.reset_converter()
 print(device_real.converter)  # markdown-exec: hide
 ```
-
-**Notes**
-
-- Advanced users may also pass a prebuilt `default_converter` to the constructor to start in a custom unit system:
-  ```python exec="on" source="material-block" result="json" session="devices"
-  from pulser import AnalogDevice
-  from qoolqit import UnitConverter
-  custom_default = UnitConverter.from_energy(C6=device_from_pulser._C6, energy=2.0)
-  device_custom = Device(pulser_device=AnalogDevice, default_converter=custom_default)
-  ```
