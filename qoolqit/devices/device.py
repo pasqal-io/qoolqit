@@ -139,7 +139,7 @@ class Device:
 
     @property
     def specs(self) -> dict[str, float | None]:
-        """Return the device specification constrains."""
+        """Return the device specification constraints."""
         TIME, ENERGY, DISTANCE = self.converter.factors
         max_duration = self._max_duration / TIME if self._max_duration else None
         max_amplitude = self._max_amp / ENERGY if self._max_amp else None
@@ -175,7 +175,7 @@ class Device:
         return output
 
     def info(self) -> None:
-        """Show the device short description and constrains."""
+        """Show the device short description and constraints."""
         print(self)
 
     @classmethod
