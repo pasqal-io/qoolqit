@@ -55,7 +55,7 @@ __all__ = [
 ]
 
 
-__version__ = "0.3.4"
+__version__ = "0.4.0"
 
 # metadata are stored only from pulser 1.6.3
 pulser_version = Version(pulser.__version__)
