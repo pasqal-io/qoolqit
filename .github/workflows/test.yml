@@ -30,13 +30,12 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install Hatch
-      run: |
-        pip install hatch
+    - name: Install QoolQit with development dependencies
+      run: pip install -e .[dev]
     - name: Run tests & tutorials
       run: |
-        hatch -v run test
-        hatch run test_tutorials
+        pytest -vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs
+        pytest --nbmake docs/tutorials
     - name: Upload coverage data
       uses: actions/upload-artifact@v4
       with:
