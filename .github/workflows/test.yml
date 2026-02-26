@@ -35,7 +35,7 @@ jobs:
     - name: Run tests & tutorials
       run: |
         pytest -vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs
-        pytest --nbmake docs/tutorials
+        pytest --no-cov --nbmake docs/tutorials
     - name: Upload coverage data
       uses: actions/upload-artifact@v4
       with:
