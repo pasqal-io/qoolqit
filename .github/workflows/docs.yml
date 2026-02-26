@@ -18,6 +18,8 @@ jobs:
       with:
         python-version: '3.12'
     - name: Install QoolQit with development dependencies
-      run: pip install -e .[dev]
-    - name: Run docs building
-      run: mkdocs build --clean --strict
+      run: |
+        pip install -e .[dev]
+    - name: Build docs
+      run: |
+        mkdocs build --clean --strict
