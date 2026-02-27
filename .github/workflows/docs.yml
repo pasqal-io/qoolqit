@@ -17,9 +17,9 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
-    - name: Install Hatch
+    - name: Install QoolQit with development dependencies
       run: |
-        pip install hatch
-    - name: Run docs building
+        pip install -e .[dev]
+    - name: Build docs
       run: |
-        hatch -v run docs:build
+        mkdocs build --clean --strict
