@@ -63,8 +63,14 @@ def compute_target_weights_distances_by_weight_diff_limit(
 
     weight_difference_threshold = np.max(np.abs(weight_differences)) * weight_relative_threshold
     logger.debug(f"{weight_difference_threshold=}")
-    weight_differences[np.abs(weight_differences) < weight_difference_threshold] = (
-        0.0  # or use exponentially decreasing value
+
+    def compute_reduced_weight(x: np.ndarray) -> np.ndarray:
+        return (1 - np.sin((1 - x) * np.pi / 2)) * np.sign(x)
+
+    weight_differences = np.where(
+        np.abs(weight_differences) < weight_difference_threshold,
+        compute_reduced_weight(weight_differences),
+        weight_differences,
     )
     logger.debug(f"new {weight_differences=}")
 
