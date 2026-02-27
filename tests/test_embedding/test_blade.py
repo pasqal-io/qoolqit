@@ -8,6 +8,7 @@ import scipy
 from qoolqit import AnalogDevice, BladeConfig, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
 from qoolqit.embedding.algorithms.blade._helpers import (
+    interaction_matrix_from_positions,
     normalized_best_dist,
     normalized_interaction,
 )
@@ -264,3 +265,25 @@ def test_qubo_nodes() -> None:
     qubo_nodes = qubo.nodes()
 
     assert qubo_nodes == expected_nodes
+
+
+@pytest.mark.parametrize(
+    "dimensions, steps_per_round",
+    [
+        ((2, 2), 50),
+        ((2, 2), 100),
+        ((3, 2), 150),
+        ((5, 4, 3, 2, 2, 2), 200),
+    ],
+)
+def test_stress_3_nodes(dimensions: tuple[int, ...], steps_per_round: int) -> None:
+    target_positions = np.array([[-1.5, 0.0], [-0.5, 0.0], [6.0, 0.0]], dtype=np.float64)
+    target_interactions = interaction_matrix_from_positions(target_positions)
+    np.fill_diagonal(target_interactions, 0)
+
+    for seed in range(15):
+        np.random.seed(seed)
+        blade_pos = blade(target_interactions)
+        blade_interactions = interaction_matrix_from_positions(blade_pos)
+        quality = np.linalg.norm(target_interactions - blade_interactions)
+        np.testing.assert_allclose(quality, 0.0, atol=1e-2)
