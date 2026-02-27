@@ -276,7 +276,7 @@ def test_qubo_nodes() -> None:
         ((5, 4, 3, 2, 2, 2), 200),
     ],
 )
-def test_stress_3_nodes(dimensions, steps_per_round) -> None:
+def test_stress_3_nodes(dimensions: tuple[int, ...], steps_per_round: int) -> None:
     target_positions = np.array([[-1.5, 0.0], [-0.5, 0.0], [6.0, 0.0]], dtype=np.float64)
     target_interactions = interaction_matrix_from_positions(target_positions)
     np.fill_diagonal(target_interactions, 0)
