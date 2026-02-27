@@ -1,9 +1,9 @@
-name: Publish
+name: Publish QoolQit to PyPI and publish docs
 
 on:
-    release:
-        types:
-            [published]
+  release:
+      types:
+        - published
 
 concurrency:
   group: fast-${{ github.head_ref || github.run_id }}
@@ -27,11 +27,11 @@ jobs:
             python-version: "3.12"
         - name: Install Python dependencies
           run: |
-            python -m pip install --upgrade pip
-            pip install hatch
-        - name: Build and publish package
+            pip install --upgrade pip
+            pip install build
+        - name: Build package
           run: |
-            hatch build
+            python -m build
         - name: Publish to PyPI
           uses: pypa/gh-action-pypi-publish@release/v1
         - name: Confirm deployment
@@ -62,12 +62,12 @@ jobs:
           uses: actions/setup-python@v5
           with:
             python-version: '3.12'
-        - name: Install Hatch
+        - name: Install QoolQit with development dependencies
           run: |
-            pip install hatch
+            pip install -e .[dev]
         - name: Deploy docs
           run: |
             git config user.name "GitHub Actions"
             git config user.email "actions@github.com"
             git fetch origin gh-pages
-            hatch -v run docs:mike deploy --push --update-aliases ${{ github.ref_name }} latest
+            mike deploy --push --update-aliases ${{ github.ref_name }} latest
