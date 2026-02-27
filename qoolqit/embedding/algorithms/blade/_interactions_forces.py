@@ -65,8 +65,11 @@ def compute_target_weights_distances_by_weight_diff_limit(
     logger.debug(f"{weight_difference_threshold=}")
 
     def compute_reduced_weight(x: np.ndarray) -> np.ndarray:
+        """Computes a reduction for values between -1 and 1."""
         return (1 - np.sin((1 - x) * np.pi / 2)) * np.sign(x)
 
+    # Reduce the small weight differences so that they do not prevent
+    # a significant temperature on the other forces
     weight_differences = np.where(
         np.abs(weight_differences) < weight_difference_threshold,
         compute_reduced_weight(weight_differences),
