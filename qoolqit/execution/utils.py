@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from enum import StrEnum
+from enum import Enum
 
 
-class CompilerProfile(StrEnum):
+class CompilerProfile(Enum):
 
     DEFAULT = "Default"
     MAX_AMPLITUDE = "MaxAmplitude"
