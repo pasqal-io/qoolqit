@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from qoolqit.utils import StrEnum
+from enum import StrEnum
 
 
 class CompilerProfile(StrEnum):
 
     DEFAULT = "Default"
     MAX_AMPLITUDE = "MaxAmplitude"
-    MAX_DURATION = "MaxDuration"
     MIN_DISTANCE = "MinDistance"

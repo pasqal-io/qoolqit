@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Callable
 
-import numpy as np
 import pytest
 from pulser.sequence import Sequence as PulserSequence
 
@@ -13,7 +12,6 @@ from qoolqit.execution import CompilerProfile
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import Constant, Ramp
-from qoolqit.waveforms.base_waveforms import CompositeWaveform
 
 
 @pytest.mark.parametrize("device_class", [AnalogDevice, DigitalAnalogDevice, MockDevice])
@@ -42,7 +40,6 @@ def test_program_init_and_compilation(
     [
         (AnalogDevice, CompilerProfile.DEFAULT),
         (AnalogDevice, CompilerProfile.MAX_AMPLITUDE),
-        (AnalogDevice, CompilerProfile.MAX_DURATION),
         (AnalogDevice, CompilerProfile.MIN_DISTANCE),
         (DigitalAnalogDevice, CompilerProfile.DEFAULT),
         (DigitalAnalogDevice, CompilerProfile.MAX_AMPLITUDE),
@@ -94,33 +91,6 @@ def test_compiled_sequence_with_delays() -> None:
 
     pulser_duration = program.compiled_sequence.get_duration()
     assert pulser_duration == 80
-
-
-def test_compiler_profile_max_duration_roundoff_error() -> None:
-    amp_durations = [
-        0.5343055070957703,
-        0.5421667817326633,
-        0.13096321648808137,
-        0.9571593080277384,
-        0.4783565802435945,
-        0.479137595409575,
-    ]
-    det_durations = 0.7172753369271352
-
-    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
-    amplitude = CompositeWaveform(*(Constant(d, 0.5) for d in amp_durations))
-    detuning = Constant(det_durations, -1.5)
-    drive = Drive(amplitude=amplitude, detuning=detuning)
-
-    # test that close-by durations in amp/det compile to a single duration in pulser
-    assert drive.amplitude.duration != drive.detuning.duration
-    assert np.isclose(drive._amplitude.duration, drive._detuning.duration)
-
-    program = QuantumProgram(register=register, drive=drive)
-    program.compile_to(device=AnalogDevice(), profile=CompilerProfile.MAX_DURATION)
-
-    pulser_duration = program.compiled_sequence.get_duration()
-    assert pulser_duration == 6000
 
 
 def test_validate_program_catch_compilation_error_max_amp() -> None:
@@ -196,9 +166,7 @@ def test_validate_program_catch_compilation_error_max_dist() -> None:
     "device, profile",
     [
         (MockDevice(), CompilerProfile.MAX_AMPLITUDE),
-        (MockDevice(), CompilerProfile.MAX_DURATION),
         (MockDevice(), CompilerProfile.MIN_DISTANCE),
-        (DigitalAnalogDevice(), CompilerProfile.MAX_DURATION),
     ],
 )
 def test_validate_program_unsupported_profile(device: Device, profile: CompilerProfile) -> None:

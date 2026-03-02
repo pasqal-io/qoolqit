@@ -84,14 +84,6 @@ fig_compiled = program.draw(compiled = True, return_fig = True) # markdown-exec:
 print(fig_to_html(fig_compiled)) # markdown-exec: hide
 ```
 
-The `CompilerProfile.MAX_DURATION` maps whatever is the duration of your QoolQit program to the device's maximum allowed sequence duration:
-```python exec="on" source="material-block" html="1" session="drives"
-program.compile_to(device, profile = CompilerProfile.MAX_DURATION)
-program.draw(compiled = True)
-fig_compiled = program.draw(compiled = True, return_fig = True) # markdown-exec: hide
-print(fig_to_html(fig_compiled)) # markdown-exec: hide
-```
-
 The `CompilerProfile.MIN_DISTANCE` maps whatever is the minimum distance in the register of your QoolQit program to the device's minimum allowed atom separation:
 ```python exec="on" source="material-block" result="json" session="drives"
 try:

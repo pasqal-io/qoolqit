@@ -12,7 +12,11 @@ from qoolqit.register import Register
 from .compilation_functions import basic_compilation
 from .utils import CompilerProfile
 
-ALL_COMPILER_PROFILES: set = set(CompilerProfile.list())
+ALL_COMPILER_PROFILES = [
+    CompilerProfile.DEFAULT,
+    CompilerProfile.MAX_AMPLITUDE,
+    CompilerProfile.MIN_DISTANCE,
+]
 
 
 class SequenceCompiler:
