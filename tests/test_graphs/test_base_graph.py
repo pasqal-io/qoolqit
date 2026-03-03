@@ -299,7 +299,7 @@ def test_from_pyg_with_qoolqit_attrs() -> None:
 
     data = Data(weight=weight, pos=pos, edge_index=edge_index, edge_weight=edge_weight)
 
-    g = BaseGraph.from_pyg(data)
+    g = BaseGraph.from_pyg(data, node_weights_attr="weight", edge_weights_attr="edge_weight")
 
     assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
     assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
@@ -389,7 +389,9 @@ def test_pyg_roundtrip_qoolqit_attrs() -> None:
         edge_index=edge_index, weight=weight, pos=pos, edge_weight=edge_weight, y=y, num_nodes=3
     )
 
-    g = BaseGraph.from_pyg(original_data)
+    g = BaseGraph.from_pyg(
+        original_data, node_weights_attr="weight", edge_weights_attr="edge_weight"
+    )
     roundtrip_data = g.to_pyg()
 
     # Check structure
@@ -504,28 +506,47 @@ def test_from_pyg_weights_attr_missing() -> None:
     with pytest.raises(AttributeError, match="has no attribute 'nonexistent'"):
         BaseGraph.from_pyg(data, node_weights_attr="nonexistent")
 
+    with pytest.raises(AttributeError, match="has no attribute 'nonexistent'"):
+        BaseGraph.from_pyg(data, edge_weights_attr="nonexistent")
+
 
 def test_from_pyg_weights_attr_wrong_size() -> None:
     """Test that a size mismatch raises ValueError."""
     edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
     data = Data(edge_index=edge_index, num_nodes=2)
-    data.bad = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)  # 3 elements, 2 nodes
+    data.bad_node = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)  # 3 elements, 2 nodes
+    data.bad_edge = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)  # 3 elements, 2 edges
 
     with pytest.raises(ValueError, match="has 3 elements, expected 2"):
-        BaseGraph.from_pyg(data, node_weights_attr="bad")
+        BaseGraph.from_pyg(data, node_weights_attr="bad_node")
+
+    with pytest.raises(ValueError, match="has 3 elements, expected 2"):
+        BaseGraph.from_pyg(data, edge_weights_attr="bad_edge")
 
 
-def test_from_pyg_node_weights_attr_overrides_default() -> None:
-    """When both weight and node_weights_attr exist, node_weights_attr takes priority."""
+def test_from_pyg_edge_weights_attr_wrong_shape() -> None:
+    """Test that a multi-column edge attribute raises ValueError."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    edge_attr = torch.tensor(
+        [[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]], dtype=torch.float64
+    )  # shape (3, 2)
+
+    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
+
+    with pytest.raises(ValueError, match="must have shape"):
+        BaseGraph.from_pyg(data, edge_weights_attr="edge_attr")
+
+
+def test_from_pyg_no_auto_weight_detection() -> None:
+    """Without node_weights_attr, weight attribute is NOT auto-mapped to node weights."""
     edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
-    weight = torch.tensor([1.0, 2.0], dtype=torch.float64)  # default mapping
+    weight = torch.tensor([1.0, 2.0], dtype=torch.float64)
     data = Data(edge_index=edge_index, weight=weight)
-    data.custom_w = torch.tensor([10.0, 20.0], dtype=torch.float64)
 
-    g = BaseGraph.from_pyg(data, node_weights_attr="custom_w")
+    g = BaseGraph.from_pyg(data)
 
-    # The custom attribute should win
-    assert g._node_weights == {0: 10.0, 1: 20.0}
+    # weight should NOT be auto-mapped
+    assert all(v is None for v in g._node_weights.values())
 
 
 def test_to_pyg_with_custom_weights_attr() -> None:

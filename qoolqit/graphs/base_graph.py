@@ -185,10 +185,8 @@ class BaseGraph(nx.Graph):
             graph_attrs: Graph-level attributes to copy (in addition to defaults).
             node_weights_attr: Name of the Data attribute to map to node weights.
                 Must be a 1D tensor of shape (num_nodes,) or (num_nodes, 1).
-                Overrides the default ``weight`` mapping when set.
             edge_weights_attr: Name of the Data attribute to map to edge weights.
                 Must be a 1D tensor of shape (num_edges,) or (num_edges, 1).
-                Overrides the default ``edge_weight`` mapping when set.
 
         Returns:
             BaseGraph instance.
@@ -246,16 +244,13 @@ class BaseGraph(nx.Graph):
             for i in range(data.num_nodes):
                 graph._coords[i] = data.pos[i].tolist()
 
-        # Handle node weights: node_weights_attr overrides default "weight"
+        # Handle node weights (only via explicit node_weights_attr)
         if node_weights_attr is not None:
             tensor = cls._validate_weights_attr(data, node_weights_attr, data.num_nodes, "node")
             for i in range(data.num_nodes):
                 graph._node_weights[i] = tensor[i].item()
-        elif hasattr(data, "weight") and data.weight is not None:
-            for i in range(data.num_nodes):
-                graph._node_weights[i] = data.weight[i].item()
 
-        # Handle edge weights: edge_weights_attr overrides default "edge_weight"
+        # Handle edge weights (only via explicit edge_weights_attr)
         if edge_weights_attr is not None:
             tensor = cls._validate_weights_attr(data, edge_weights_attr, data.num_edges, "edge")
             edge_index = data.edge_index
@@ -265,15 +260,6 @@ class BaseGraph(nx.Graph):
                 edge_key = (min(u, v), max(u, v))
                 if edge_key not in seen_edges:
                     graph._edge_weights[edge_key] = tensor[idx].item()
-                    seen_edges.add(edge_key)
-        elif hasattr(data, "edge_weight") and data.edge_weight is not None:
-            edge_index = data.edge_index
-            seen_edges = set()
-            for idx in range(edge_index.shape[1]):
-                u, v = int(edge_index[0, idx].item()), int(edge_index[1, idx].item())
-                edge_key = (min(u, v), max(u, v))
-                if edge_key not in seen_edges:
-                    graph._edge_weights[edge_key] = data.edge_weight[idx].item()
                     seen_edges.add(edge_key)
 
         return graph
