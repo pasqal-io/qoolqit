@@ -434,3 +434,139 @@ def test_pyg_roundtrip_pyg_attrs() -> None:
     # Check edge_attr preserved with same shape
     assert hasattr(roundtrip_data, "edge_attr")
     assert roundtrip_data.edge_attr.shape == edge_attr.shape
+
+
+# --- Tests for node_weights_attr / edge_weights_attr ---
+
+
+def test_from_pyg_with_node_weights_attr() -> None:
+    """Test mapping a PyG x attribute (shape (n, 1)) to node weights."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    x = torch.tensor([[1.0], [2.0], [3.0]], dtype=torch.float64)
+
+    data = Data(x=x, edge_index=edge_index)
+
+    g = BaseGraph.from_pyg(data, node_weights_attr="x")
+
+    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+
+
+def test_from_pyg_with_node_weights_attr_1d() -> None:
+    """Test mapping a 1D PyG attribute to node weights."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    data = Data(edge_index=edge_index, num_nodes=3)
+    data.my_weights = torch.tensor([10.0, 20.0, 30.0], dtype=torch.float64)
+
+    g = BaseGraph.from_pyg(data, node_weights_attr="my_weights")
+
+    assert g._node_weights == {0: 10.0, 1: 20.0, 2: 30.0}
+
+
+def test_from_pyg_with_edge_weights_attr() -> None:
+    """Test mapping edge_attr (shape (m, 1)) to edge weights."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    edge_attr = torch.tensor([[0.1], [0.2], [0.3]], dtype=torch.float64)
+
+    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
+
+    g = BaseGraph.from_pyg(data, edge_weights_attr="edge_attr")
+
+    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
+
+
+def test_from_pyg_with_edge_weights_attr_1d() -> None:
+    """Test mapping a custom 1D attribute to edge weights."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    data = Data(edge_index=edge_index, num_nodes=3)
+    data.my_edge_w = torch.tensor([0.5, 0.6, 0.7], dtype=torch.float64)
+
+    g = BaseGraph.from_pyg(data, edge_weights_attr="my_edge_w")
+
+    assert g._edge_weights == {(0, 1): 0.5, (1, 2): 0.6, (0, 2): 0.7}
+
+
+def test_from_pyg_weights_attr_wrong_shape() -> None:
+    """Test that a multi-column attribute raises ValueError."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
+    x = torch.tensor([[1.0, 2.0], [3.0, 4.0]], dtype=torch.float64)  # shape (2, 2)
+
+    data = Data(x=x, edge_index=edge_index)
+
+    with pytest.raises(ValueError, match="must have shape"):
+        BaseGraph.from_pyg(data, node_weights_attr="x")
+
+
+def test_from_pyg_weights_attr_missing() -> None:
+    """Test that a missing attribute raises AttributeError."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
+    data = Data(edge_index=edge_index, num_nodes=2)
+
+    with pytest.raises(AttributeError, match="has no attribute 'nonexistent'"):
+        BaseGraph.from_pyg(data, node_weights_attr="nonexistent")
+
+
+def test_from_pyg_weights_attr_wrong_size() -> None:
+    """Test that a size mismatch raises ValueError."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
+    data = Data(edge_index=edge_index, num_nodes=2)
+    data.bad = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)  # 3 elements, 2 nodes
+
+    with pytest.raises(ValueError, match="has 3 elements, expected 2"):
+        BaseGraph.from_pyg(data, node_weights_attr="bad")
+
+
+def test_from_pyg_node_weights_attr_overrides_default() -> None:
+    """When both weight and node_weights_attr exist, node_weights_attr takes priority."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
+    weight = torch.tensor([1.0, 2.0], dtype=torch.float64)  # default mapping
+    data = Data(edge_index=edge_index, weight=weight)
+    data.custom_w = torch.tensor([10.0, 20.0], dtype=torch.float64)
+
+    g = BaseGraph.from_pyg(data, node_weights_attr="custom_w")
+
+    # The custom attribute should win
+    assert g._node_weights == {0: 10.0, 1: 20.0}
+
+
+def test_to_pyg_with_custom_weights_attr() -> None:
+    """Test that to_pyg exports weights under custom attribute names."""
+    G = nx.Graph()
+    G.add_node(0, weight=1.0, pos=(0.0, 0.0))
+    G.add_node(1, weight=2.0, pos=(1.0, 0.0))
+    G.add_edge(0, 1, weight=0.5)
+
+    g = BaseGraph.from_nx(G)
+    data = g.to_pyg(node_weights_attr="x", edge_weights_attr="edge_attr")
+
+    # Check that weights are exported under custom names
+    assert hasattr(data, "x")
+    assert data.x.tolist() == [1.0, 2.0]
+
+    assert hasattr(data, "edge_attr")
+    assert data.edge_attr.shape[0] == data.edge_index.shape[1]
+
+    # Default names should NOT be present
+    assert not hasattr(data, "weight") or data.weight is None
+    assert not hasattr(data, "edge_weight") or data.edge_weight is None
+
+
+def test_from_pyg_to_pyg_roundtrip_custom_weights_attr() -> None:
+    """Test roundtrip with custom weights attr names."""
+    edge_index = torch.tensor([[0, 1, 2, 1, 2, 0], [1, 2, 0, 0, 1, 2]], dtype=torch.int64)
+    data = Data(edge_index=edge_index, num_nodes=3)
+    data.my_node_w = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)
+    data.my_edge_w = torch.tensor([0.1, 0.2, 0.3, 0.1, 0.2, 0.3], dtype=torch.float64)
+
+    g = BaseGraph.from_pyg(data, node_weights_attr="my_node_w", edge_weights_attr="my_edge_w")
+
+    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+
+    roundtrip_data = g.to_pyg(node_weights_attr="my_node_w", edge_weights_attr="my_edge_w")
+
+    assert hasattr(roundtrip_data, "my_node_w")
+    assert torch.allclose(
+        roundtrip_data.my_node_w,
+        torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64),
+    )
+    assert hasattr(roundtrip_data, "my_edge_w")
+    assert roundtrip_data.my_edge_w.shape[0] == edge_index.shape[1]

@@ -168,6 +168,8 @@ class BaseGraph(nx.Graph):
         node_attrs: Iterable[str] | None = None,
         edge_attrs: Iterable[str] | None = None,
         graph_attrs: Iterable[str] | None = None,
+        node_weights_attr: str | None = None,
+        edge_weights_attr: str | None = None,
     ) -> BaseGraph:
         """Convert a PyTorch Geometric Data object into a QoolQit graph instance.
 
@@ -178,9 +180,15 @@ class BaseGraph(nx.Graph):
 
         Arguments:
             data: PyTorch Geometric Data object.
-            node_attrs: Additional node attributes to copy.
-            edge_attrs: Additional edge attributes to copy.
-            graph_attrs: Additional graph-level attributes to copy.
+            node_attrs: Node attributes to copy (in addition to defaults).
+            edge_attrs: Edge attributes to copy (in addition to defaults).
+            graph_attrs: Graph-level attributes to copy (in addition to defaults).
+            node_weights_attr: Name of the Data attribute to map to node weights.
+                Must be a 1D tensor of shape (num_nodes,) or (num_nodes, 1).
+                Overrides the default ``weight`` mapping when set.
+            edge_weights_attr: Name of the Data attribute to map to edge weights.
+                Must be a 1D tensor of shape (num_edges,) or (num_edges, 1).
+                Overrides the default ``edge_weight`` mapping when set.
 
         Returns:
             BaseGraph instance.
@@ -198,25 +206,19 @@ class BaseGraph(nx.Graph):
         if not isinstance(data, Data):
             raise TypeError("Input must be a torch_geometric.data.Data object.")
 
-        node_attrs_list = list(node_attrs) if node_attrs else []
-        edge_attrs_list = list(edge_attrs) if edge_attrs else []
-        graph_attrs_list = list(graph_attrs) if graph_attrs else []
+        # Select unique attributes and add default ones
+        node_attrs_set = set(node_attrs or {}) | {"x", "pos"}
+        edge_attrs_set = set(edge_attrs or {}) | {"edge_attr"}
+        graph_attrs_set = set(graph_attrs or {}) | {"y"}
 
-        # Add default PyG attributes to the lists if present
-        if hasattr(data, "x") and data.x is not None:
-            node_attrs_list.append("x")
-        if hasattr(data, "edge_attr") and data.edge_attr is not None:
-            edge_attrs_list.append("edge_attr")
-        if hasattr(data, "y") and data.y is not None:
-            graph_attrs_list.append("y")
-
-        # Convert via PyG's to_networkx
+        # Convert PyG data to NetworkX graph
         nx_graph = to_networkx(
             data,
-            node_attrs=node_attrs_list or None,
-            edge_attrs=edge_attrs_list or None,
-            graph_attrs=graph_attrs_list or None,
+            node_attrs=[k for k in node_attrs_set if k in data],
+            edge_attrs=[k for k in edge_attrs_set if k in data],
+            graph_attrs=[k for k in graph_attrs_set if k in data],
             to_undirected=True,
+            remove_self_loops=True,
         )
 
         # Build the graph instance
@@ -239,16 +241,34 @@ class BaseGraph(nx.Graph):
         for key, value in nx_graph.graph.items():
             graph.graph[key] = value
 
-        # Handle QoolQit attributes: pos -> coords, weight -> node_weights, edge_weight
+        # Handle QoolQit attributes: pos -> coords
         if hasattr(data, "pos") and data.pos is not None:
             for i in range(data.num_nodes):
                 graph._coords[i] = data.pos[i].tolist()
-        if hasattr(data, "weight") and data.weight is not None:
+
+        # Handle node weights: node_weights_attr overrides default "weight"
+        if node_weights_attr is not None:
+            tensor = cls._validate_weights_attr(data, node_weights_attr, data.num_nodes, "node")
+            for i in range(data.num_nodes):
+                graph._node_weights[i] = tensor[i].item()
+        elif hasattr(data, "weight") and data.weight is not None:
             for i in range(data.num_nodes):
                 graph._node_weights[i] = data.weight[i].item()
-        if hasattr(data, "edge_weight") and data.edge_weight is not None:
+
+        # Handle edge weights: edge_weights_attr overrides default "edge_weight"
+        if edge_weights_attr is not None:
+            tensor = cls._validate_weights_attr(data, edge_weights_attr, data.num_edges, "edge")
             edge_index = data.edge_index
             seen_edges: set = set()
+            for idx in range(edge_index.shape[1]):
+                u, v = int(edge_index[0, idx].item()), int(edge_index[1, idx].item())
+                edge_key = (min(u, v), max(u, v))
+                if edge_key not in seen_edges:
+                    graph._edge_weights[edge_key] = tensor[idx].item()
+                    seen_edges.add(edge_key)
+        elif hasattr(data, "edge_weight") and data.edge_weight is not None:
+            edge_index = data.edge_index
+            seen_edges = set()
             for idx in range(edge_index.shape[1]):
                 u, v = int(edge_index[0, idx].item()), int(edge_index[1, idx].item())
                 edge_key = (min(u, v), max(u, v))
@@ -258,11 +278,67 @@ class BaseGraph(nx.Graph):
 
         return graph
 
+    @staticmethod
+    def _validate_weights_attr(
+        data: Any,
+        attr_name: str,
+        expected_size: int,
+        kind: str,
+    ) -> torch.Tensor:
+        """Validate and return a weights attribute tensor from a PyG Data object.
+
+        Arguments:
+            data: PyTorch Geometric Data object.
+            attr_name: Name of the attribute to validate.
+            expected_size: Expected first dimension (num_nodes or num_edges).
+            kind: Either "node" or "edge", used in error messages.
+
+        Returns:
+            1D tensor of shape (expected_size,).
+        """
+        if not hasattr(data, attr_name) or getattr(data, attr_name) is None:
+            raise AttributeError(
+                f"Data object has no attribute '{attr_name}' " f"to use as {kind} weights."
+            )
+
+        tensor = getattr(data, attr_name)
+
+        if not isinstance(tensor, torch.Tensor):
+            raise TypeError(
+                f"The {kind} weights attribute '{attr_name}' must be a torch.Tensor, "
+                f"got {type(tensor)} instead."
+            )
+
+        if not tensor.isreal().all():
+            raise ValueError(
+                f"The {kind} weights attribute '{attr_name}' must contain only " f"real numbers."
+            )
+
+        # Accept (N,) or (N, 1) shapes
+        if tensor.ndim == 2 and tensor.shape[1] == 1:
+            tensor = tensor.squeeze(1)
+        elif tensor.ndim != 1:
+            raise ValueError(
+                f"The {kind} weights attribute '{attr_name}' must have shape "
+                f"({expected_size},) or ({expected_size}, 1), "
+                f"got {tuple(tensor.shape)} instead."
+            )
+
+        if tensor.shape[0] != expected_size:
+            raise ValueError(
+                f"The {kind} weights attribute '{attr_name}' has "
+                f"{tensor.shape[0]} elements, expected {expected_size}."
+            )
+
+        return tensor
+
     def to_pyg(
         self,
         node_attrs: Iterable[str] | None = None,
         edge_attrs: Iterable[str] | None = None,
         graph_attrs: Iterable[str] | None = None,
+        node_weights_attr: str = "weight",
+        edge_weights_attr: str = "edge_weight",
     ) -> torch_geometric.data.Data:
         """Convert the BaseGraph to a PyTorch Geometric Data object.
 
@@ -271,15 +347,20 @@ class BaseGraph(nx.Graph):
         Additional attributes can be specified via the parameters.
 
         Arguments:
-            node_attrs: Additional node attributes to export.
-            edge_attrs: Additional edge attributes to export.
-            graph_attrs: Additional graph-level attributes to export.
+            node_attrs: Node attributes to export (in addition to defaults).
+            edge_attrs: Edge attributes to export (in addition to defaults).
+            graph_attrs: Graph-level attributes to export (in addition to defaults).
+            node_weights_attr: Name of the Data attribute to store node weights.
+                Defaults to ``"weight"``.
+            edge_weights_attr: Name of the Data attribute to store edge weights.
+                Defaults to ``"edge_weight"``.
 
         Returns:
             PyTorch Geometric Data object with edge_index and requested attributes.
 
         Notes:
-            _coords is exported as pos, _node_weights as weight, _edge_weights as edge_weight.
+            _coords is exported as pos, _node_weights as ``node_weights_attr``,
+            _edge_weights as ``edge_weights_attr``.
         """
         try:
             from torch_geometric.utils import from_networkx
@@ -323,12 +404,12 @@ class BaseGraph(nx.Graph):
             positions = [self._coords[n] for n in sorted(self.nodes())]
             data.pos = torch.tensor(positions, dtype=torch.float64)
 
-        # Export node_weights -> weight
+        # Export node_weights -> node_weights_attr
         if self.has_node_weights:
             weights = [self._node_weights.get(n, 0.0) or 0.0 for n in sorted(self.nodes())]
-            data.weight = torch.tensor(weights, dtype=torch.float64)
+            setattr(data, node_weights_attr, torch.tensor(weights, dtype=torch.float64))
 
-        # Export edge_weights -> edge_weight
+        # Export edge_weights -> edge_weights_attr
         if self.has_edge_weights:
             edge_weights = []
             for i in range(data.edge_index.shape[1]):
@@ -336,7 +417,7 @@ class BaseGraph(nx.Graph):
                 edge_key = (min(u, v), max(u, v))
                 weight = self._edge_weights.get(edge_key, 0.0) or 0.0
                 edge_weights.append(weight)
-            data.edge_weight = torch.tensor(edge_weights, dtype=torch.float64)
+            setattr(data, edge_weights_attr, torch.tensor(edge_weights, dtype=torch.float64))
 
         return data
 
