@@ -65,22 +65,17 @@ print(embedder)
 Finally, we can run the embedder with the `embed` method.
 
 ```python exec="on" source="material-block" html="1" session="embedding"
+import matplotlib.pyplot as plt
 from qoolqit import DataGraph
 
 graph_1 = DataGraph.random_er(n = 7, p = 0.3, seed = 3)
-
 embedded_graph_1 = embedder.embed(graph_1)
 
-graph_1.draw()
-embedded_graph_1.draw()
-
-import matplotlib.pyplot as plt # markdown-exec: hide
+fig, axs = plt.subplots(1, 2, figsize=(8,4), dpi=200)
+graph_1.draw(ax=axs[0])
+embedded_graph_1.draw(ax=axs[1])
 from docs.utils import fig_to_html # markdown-exec: hide
-
-fig1 = graph_1.draw(return_fig = True) # markdown-exec: hide
-fig2 = embedded_graph_1.draw(return_fig = True) # markdown-exec: hide
-print(fig_to_html(fig1)) # markdown-exec: hide
-print(fig_to_html(fig2)) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
 Now, we can check if the resulting graph is a unit-disk graph
@@ -94,19 +89,13 @@ In this case, the embedding was successful and we obtained a unit-disk graph. Fo
 
 ```python exec="on" source="material-block" html="1" session="embedding"
 graph_2 = DataGraph.random_er(n = 7, p = 0.8, seed = 3)
-
 embedded_graph_2 = embedder.embed(graph_2)
 
-graph_2.draw()
-embedded_graph_2.draw()
-
-import matplotlib.pyplot as plt # markdown-exec: hide
+fig, axs = plt.subplots(1, 2, figsize=(8,4), dpi=200)
+graph_2.draw(ax=axs[0])
+embedded_graph_2.draw(ax=axs[1])
 from docs.utils import fig_to_html # markdown-exec: hide
-
-fig1 = graph_2.draw(return_fig = True) # markdown-exec: hide
-fig2 = embedded_graph_2.draw(return_fig = True) # markdown-exec: hide
-print(fig_to_html(fig1)) # markdown-exec: hide
-print(fig_to_html(fig2)) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
 ```python exec="on" source="material-block" result="json" session="embedding"
@@ -182,13 +171,11 @@ Finally, running the embedding we obtain a `DataGraph` with coordinates that can
 import numpy as np
 
 embedded_graph = embedder.embed(matrix)
-
 register = Register.from_graph(embedded_graph)
 
-embedded_graph.draw()
+fig1, ax1 = plt.subplots(figsize=(4,4), dpi=200)
+embedded_graph.draw(ax=ax1)
 register.draw()
-
-fig1 = embedded_graph.draw(return_fig = True) # markdown-exec: hide
 fig2 = register.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig1)) # markdown-exec: hide
 print(fig_to_html(fig2)) # markdown-exec: hide

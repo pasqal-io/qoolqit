@@ -19,6 +19,7 @@ nav:
       - Quantum programs: contents/programs.md
       - Execution: contents/execution.md
   - Tutorials:
+    - User journey: tutorials/user_journey.ipynb
     - Solving a basic QUBO: tutorials/basic_qubo.ipynb
     - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
     - Advanced:

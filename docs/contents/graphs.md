@@ -38,8 +38,8 @@ from docs.utils import fig_to_html # markdown-exec: hide
 
 pos = nx.circular_layout(graph)
 
-graph.draw(pos = pos)
-fig = graph.draw(pos = pos, return_fig = True) # markdown-exec: hide
+fig, ax = plt.subplots(figsize=(4,4), dpi=200)  # markdown-exec: hide
+graph.draw(pos=pos)
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -89,8 +89,9 @@ Furthermore, when calling `graph.draw()` the coordinate information will be auto
 ```python exec="on" source="material-block" html="1" session="graphs"
 import matplotlib.pyplot as plt # markdown-exec: hide
 from docs.utils import fig_to_html # markdown-exec: hide
+
+fig, ax = plt.subplots(figsize=(4,4), dpi=200)  # markdown-exec: hide
 graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -211,8 +212,8 @@ graph.set_ud_edges(radius = 1.0)
 
 assert len(graph.edges) > 0
 
+fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -223,8 +224,8 @@ A line graph on n nodes.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 graph = DataGraph.line(n = 10, spacing = 1.0)
+fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -233,8 +234,8 @@ A circle graph on n nodes.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 graph = DataGraph.circle(n = 10, spacing = 1.0, center = (0.0, 0.0))
+fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -243,8 +244,8 @@ A triangular lattice graph with m rows and n columns of triangles.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 graph = DataGraph.triangular(m = 2, n = 2, spacing = 1.0)
+fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -253,8 +254,8 @@ A square lattice graph with m rows and n columns of square.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 graph = DataGraph.square(m = 2, n = 2, spacing = 1.0)
+fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -263,8 +264,8 @@ A Hexagonal lattice graph with m rows and n columns of hexagons.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 graph = DataGraph.hexagonal(m = 2, n = 2, spacing = 1.0)
+fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -273,8 +274,8 @@ An Heavy-Hexagonal lattice graph with m rows and n columns of hexagons where eac
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 graph = DataGraph.heavy_hexagonal(m = 2, n = 2, spacing = 1.0)
+fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -283,8 +284,8 @@ A random unit-disk graph by uniformly sampling points in area of side L.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 graph = DataGraph.random_ud(n = 10, radius = 1.0, L = 2.0)
+fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -295,8 +296,8 @@ A random Erdős–Rényi graph of n nodes.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
 graph = DataGraph.random_er(n = 10, p = 0.5, seed = 1)
+fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
-fig = graph.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
