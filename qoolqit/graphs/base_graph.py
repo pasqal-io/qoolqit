@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any
 import matplotlib.pyplot as plt
 import networkx as nx
 import torch
-from matplotlib.figure import Figure
+from matplotlib.axes import Axes
 
 from .utils import (
     all_node_pairs,
@@ -418,28 +418,26 @@ class BaseGraph(nx.Graph):
         self.remove_edges_from(list(self.edges))
         self.add_edges_from(self.ud_edges(radius))
 
-    def draw(self, return_fig: bool = False, *args: Any, **kwargs: Any) -> Figure | None:
+    def draw(self, ax: Axes | None = None, **kwargs: Any) -> None:
         """Draw the graph.
 
         Uses the draw_networkx function from NetworkX.
 
-        Arguments:
-            *args: arguments to pass to draw_networkx.
+        Args:
+            ax: Axes object to draw on. If None, uses the current Axes.
             **kwargs: keyword-arguments to pass to draw_networkx.
         """
-        fig, ax = plt.subplots(figsize=(4, 4), dpi=250)
-        ax.set_aspect("equal")
         if self.has_coords:
-            ax.set_xlabel("x")
-            ax.set_ylabel("y")
-            ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
-            ax.tick_params(direction="in")
-            ax.set_axisbelow(True)
-
             if "hide_ticks" not in kwargs:
                 kwargs["hide_ticks"] = False
 
-            nx.draw_networkx(self, *args, ax=ax, pos=self.coords, **kwargs)
+            nx.draw_networkx(self, pos=self.coords, ax=ax, **kwargs)
+
+            if ax is None:
+                ax = plt.gca()
+            ax.set_xlabel("x")
+            ax.set_ylabel("y")
+            ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
 
             # minimum ybox
             ylim = ax.get_ylim()
@@ -448,10 +446,4 @@ class BaseGraph(nx.Graph):
                 ax.set_ylim(y_center - 1, y_center + 1)
             plt.tight_layout()
         else:
-            nx.draw_networkx(self, *args, ax=ax, **kwargs)
-
-        if return_fig:
-            plt.close()
-            return fig
-        else:
-            return None
+            nx.draw_networkx(self, ax=ax, **kwargs)
