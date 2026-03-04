@@ -4,25 +4,25 @@ repo_name: "QoolQit"
 
 nav:
   - Overview: index.md
-  - Getting started:
-    - Install: index.md
-    - Programming a neutral atom QPU: theory/rydberg_model.md
+  - Get started:
+    - Install: get_started/install.md
+    - Programming a neutral atom QPU: get_started/rydberg_model.md
     - Tutorials:
       - User journey: tutorials/user_journey.ipynb
       - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
       - Rydberg blockade: tutorials/rydberg_blockade.ipynb
   - Fundamentals:
-    - Problem generation: contents/graphs.md
-    - Problem embedding: contents/available_embedders.md
+    - Problem generation: fundamentals/graphs.md
+    - Problem embedding: fundamentals/available_embedders.md
     - Writing a quantum program:
-      - Registers: contents/registers.md
-      - Waveforms: contents/waveforms.md
-      - Drive Hamiltonian: contents/drives.md
-      - Devices: contents/devices.md
-      - Quantum programs: contents/programs.md
-      - Execution: contents/execution.md
+      - Registers: fundamentals/registers.md
+      - Waveforms: fundamentals/waveforms.md
+      - Drive Hamiltonian: fundamentals/drives.md
+      - Devices: fundamentals/devices.md
+      - Quantum programs: fundamentals/programs.md
+      - Execution: fundamentals/execution.md
   - Extended usage:
-    - Custom embedders: contents/custom_embedders.md
+    - Custom embedders: fundamentals/custom_embedders.md
   - Applications:
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
   - API Reference: $api/qoolqit.***
