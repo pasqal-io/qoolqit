@@ -4,7 +4,7 @@ An essential part of writing programs in the Rydberg analog model is to write th
 
 ## Base waveforms
 
-A full list of the available waveforms can be found in the [API reference](../api/qoolqit/waveforms/waveforms.md).
+A full list of the available waveforms can be found in the [API reference][qoolqit.waveforms].
 
 ```python exec="on" source="material-block" result="json" session="waveforms"
 from qoolqit import Constant, Ramp, Delay
@@ -65,7 +65,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 ### Interpolated waveform
 
 Special waveform to easily fit a set given values with a smooth function.
-For the full set of available options please refer to the [API reference](../api/qoolqit/waveforms/waveforms.md).
+For the full set of available options please refer to the [API reference][qoolqit.waveforms].
 
 ```python exec="on" source="material-block" html="1" session="waveforms"
 from qoolqit import Interpolated

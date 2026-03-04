@@ -99,7 +99,7 @@ plugins:
           filters: public
           heading_level: 1
           inherited_members: true
-          line_length: 100
+          line_length: 90
           merge_init_into_class: true
           parameter_headings: true
           type_parameter_headings: true
@@ -109,7 +109,7 @@ plugins:
           separate_signature: true
           show_bases: false
           show_inheritance_diagram: false
-          show_root_heading: false
+          show_root_heading: true
           show_root_full_path: false
           show_signature_annotations: true
           show_signature_type_parameters: true
