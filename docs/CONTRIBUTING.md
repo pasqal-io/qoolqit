@@ -52,7 +52,7 @@ git push --set-upstream origin <your initials>/<branch name>
   ```sh
   hatch shell
   ```
-  
+
   This will automatically take you into an environment with the necessary dependencies.
 
 ### Useful Things for your workflow: Linting and Testing
