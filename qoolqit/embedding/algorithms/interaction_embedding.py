@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 from scipy.optimize import minimize
 from scipy.spatial.distance import pdist, squareform
-from typing import Any
 
 from qoolqit.graphs import DataGraph
 
