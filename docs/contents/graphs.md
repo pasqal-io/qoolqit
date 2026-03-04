@@ -15,7 +15,7 @@ edges = [(0, 1), (1, 2), (2, 3), (3, 0)]
 graph = DataGraph(edges)
 ```
 
-Later in the [graph constructors](#constructors) section we also describe how to construct graphs from sets of coordinates, or with built-in constructors.
+Later in the [graph constructors](#graph-constructors) section we also describe how to construct graphs from sets of coordinates, or with built-in constructors.
 
 As with any NetworkX graph, the set of nodes and edges can be accessed:
 

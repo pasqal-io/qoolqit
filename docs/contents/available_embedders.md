@@ -30,7 +30,7 @@ In this case, `ConcreteEmbedder` exemplifies an embedder that already has a mapp
 
 ## Unit-disk graph embedding
 
-Unit-disk graph embedding is the problem of finding a suitable function $f_\text{UD}: V\rightarrow\mathbb{R}^2$ that assigns coordinates to each node in the graph, such that the resulting unit-disk graph exactly matches the original graph (see the [graphs page](graphs.md#unit-disk) for the definition of a unit-disk graph). In general, not all graphs can be embedded into unit-disk graphs, and deciding if a graph can be embedded into a unit-disk graph is a NP-Hard problem.
+Unit-disk graph embedding is the problem of finding a suitable function $f_\text{UD}: V\rightarrow\mathbb{R}^2$ that assigns coordinates to each node in the graph, such that the resulting unit-disk graph exactly matches the original graph (see the [graphs page](graphs.md#unit-disk-graphs) for the definition of a unit-disk graph). In general, not all graphs can be embedded into unit-disk graphs, and deciding if a graph can be embedded into a unit-disk graph is a NP-Hard problem.
 
 However, several heuristic algorithms can be developed to tackle the unit-disk graph embedding problem.
 

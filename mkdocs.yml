@@ -3,14 +3,17 @@ repo_url: "https://github.com/pasqal-io/qoolqit"
 repo_name: "QoolQit"
 
 nav:
-  - Home: index.md
-  - Rydberg Model: theory/rydberg_model.md
-  - Contents:
-    - Problem generation:
-      - Graphs: contents/graphs.md
-    - Problem embedding:
-      - Available embedders: contents/available_embedders.md
-      - Custom embedders: contents/custom_embedders.md
+  - Overview: index.md
+  - Getting started:
+    - Install: index.md
+    - Programming a neutral atom QPU: theory/rydberg_model.md
+    - Tutorials:
+      - User journey: tutorials/user_journey.ipynb
+      - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
+      - Rydberg blockade: tutorials/rydberg_blockade.ipynb
+  - Fundamentals:
+    - Problem generation: contents/graphs.md
+    - Problem embedding: contents/available_embedders.md
     - Writing a quantum program:
       - Registers: contents/registers.md
       - Waveforms: contents/waveforms.md
@@ -18,18 +21,17 @@ nav:
       - Devices: contents/devices.md
       - Quantum programs: contents/programs.md
       - Execution: contents/execution.md
-  - Tutorials:
-    - User journey: tutorials/user_journey.ipynb
-    - Solving a basic QUBO: tutorials/basic_qubo.ipynb
-    - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
-    - Advanced:
-      - Understanding unit conversions: tutorials/unit_conversion.ipynb
+  - Extended usage:
+    - Custom embedders: contents/custom_embedders.md
+  - Applications:
+    - Solving a QUBO: tutorials/solving_a_qubo.ipynb
   - API Reference: $api/qoolqit.***
   - Contribute:
     - How to contribute: CONTRIBUTING.md
     - Code of conduct: CODE_OF_CONDUCT.md
     - License: LICENSE.md
     - Contributor Agreement: CONTRIBUTOR_AGREEMENT.md
+
 
 theme:
   name: material
