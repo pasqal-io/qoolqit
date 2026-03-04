@@ -99,7 +99,6 @@ plugins:
           filters: public
           heading_level: 1
           inherited_members: true
-          line_length: 90
           merge_init_into_class: true
           parameter_headings: true
           type_parameter_headings: true
