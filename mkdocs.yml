@@ -3,33 +3,35 @@ repo_url: "https://github.com/pasqal-io/qoolqit"
 repo_name: "QoolQit"
 
 nav:
-  - Home: index.md
-  - Rydberg Model: theory/rydberg_model.md
-  - Contents:
-    - Problem generation:
-      - Graphs: contents/graphs.md
-    - Problem embedding:
-      - Available embedders: contents/available_embedders.md
-      - Custom embedders: contents/custom_embedders.md
+  - Overview: index.md
+  - Get started:
+    - Install: get_started/install.md
+    - Programming a neutral atom QPU: get_started/rydberg_model.md
+    - Tutorials:
+      - User journey: tutorials/user_journey.ipynb
+      - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
+      - Rydberg blockade: tutorials/rydberg_blockade.ipynb
+  - Fundamentals:
+    - Problem generation: fundamentals/graphs.md
+    - Problem embedding: fundamentals/available_embedders.md
     - Writing a quantum program:
-      - Registers: contents/registers.md
-      - Waveforms: contents/waveforms.md
-      - Drive Hamiltonian: contents/drives.md
-      - Devices: contents/devices.md
-      - Quantum programs: contents/programs.md
-      - Execution: contents/execution.md
-  - Tutorials:
-    - User journey: tutorials/user_journey.ipynb
-    - Solving a basic QUBO: tutorials/basic_qubo.ipynb
-    - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
-    - Advanced:
-      - Understanding unit conversions: tutorials/unit_conversion.ipynb
-  - API Reference: $api/qoolqit.***
+      - Registers: fundamentals/registers.md
+      - Waveforms: fundamentals/waveforms.md
+      - Drive Hamiltonian: fundamentals/drives.md
+      - Devices: fundamentals/devices.md
+      - Quantum programs: fundamentals/programs.md
+      - Execution: fundamentals/execution.md
+  - Extended usage:
+    - Custom embedders: fundamentals/custom_embedders.md
+  - Applications:
+    - Solving a QUBO: tutorials/solving_a_qubo.ipynb
+  - API reference: reference/api.md
   - Contribute:
     - How to contribute: CONTRIBUTING.md
     - Code of conduct: CODE_OF_CONDUCT.md
     - License: LICENSE.md
     - Contributor Agreement: CONTRIBUTOR_AGREEMENT.md
+
 
 theme:
   name: material
@@ -86,19 +88,36 @@ plugins:
 - mkdocs-jupyter:
     include: ["./docs/tutorials/*.ipynb"] # only notebooks in tutorials
 - mkdocstrings:
-    default_handler: python
     handlers:
       python:
-        selection:
-          filters:
-            - "!^_"  # exlude all members starting with _
-            - "^__init__$"  # but always include __init__ modules and methods
+        paths: [qoolqit]
         options:
-          show_root_toc_entry: false
-          heading_level: 3
+          backlinks: tree
+          docstring_options:
+            ignore_init_summary: true
+          docstring_section_style: list
+          filters: public
+          heading_level: 1
+          inherited_members: true
           merge_init_into_class: true
-          docstring_section_style: spacy
-- mkapi
+          parameter_headings: true
+          type_parameter_headings: true
+          preload_modules: [qoolqit]
+          relative_crossrefs: true
+          scoped_crossrefs: true
+          separate_signature: true
+          show_bases: false
+          show_inheritance_diagram: false
+          show_root_heading: true
+          show_root_full_path: false
+          show_signature_annotations: true
+          show_signature_type_parameters: true
+          show_source: true
+          show_symbol_type_heading: true
+          show_symbol_type_toc: true
+          signature_crossrefs: true
+          summary: true
+          unwrap_annotated: true
 
 # For mathjax
 extra_javascript:

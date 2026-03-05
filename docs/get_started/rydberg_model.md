@@ -5,7 +5,7 @@ hide:
 
 # **Quantum computing with Rydberg atoms**
 
-This page centralizes the theoretical framework of QoolQit. To start writing programs, [go straight to the contents section](../contents/graphs.md), or [check out the tutorials section](../tutorials/basic_qubo.ipynb).
+This page centralizes the theoretical framework of QoolQit. To start writing programs, [go straight to the contents section](../fundamentals/graphs.md), or [check out the tutorials section](../tutorials/solving_a_qubo.ipynb).
 
 Manipulating Rydberg atomic systems for quantum computing is a complex topic, and in this page we will not cover all aspects of it. The aim of this page is to introduce the underlying computational model when writing analog algorithms with Rydberg atoms, and to abstract away as much as possible the hardware details on how these algorithms are implemented. For a more detailed description on the physics and hardware implementation of quantum computing with Rydberg atoms, [check out the **Pulser** library](https://pulser.readthedocs.io/en/stable/index.html).
 
@@ -114,7 +114,7 @@ $$\Delta_T\,\times\,\Delta_E = 1000,\qquad \Delta_D^6\,\times\,\Delta_E = C_6.$$
 
 This means that it is possible to pick an arbitrary value for **one** of the conversion factors, and the two remaining ones can be automatically calculated from the invariants. As seen from the dependence of the invariants on the interaction coefficient $C_6$, these are calculated specifically for each device, and this is what guarantees that QoolQit programs can be device agnostic.
 
-For details on how to customize the unit conversion in QoolQit check the contents pages on [devices](../contents/devices.md) and [quantum programs](../contents/programs.md). For further examples on understanding the unit conversion check the [unit conversion tutorial](../tutorials/basic_qubo.ipynb).
+For details on how to customize the unit conversion in QoolQit check the contents pages on [devices](../fundamentals/devices.md) and [quantum programs](../fundamentals/programs.md). For further examples on understanding the unit conversion check the [unit conversion tutorial](../tutorials/solving_a_qubo.ipynb).
 
 #### Advantages & disadvantages
 
