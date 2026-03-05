@@ -35,21 +35,25 @@ git push --set-upstream origin <your initials>/<branch name>
 
 1) Clone the [QoolQit GitHub repository](https://github.com/pasqal-io/qoolqit)
 
-```sh
-git clone https://github.com/pasqal-io/qoolqit.git
-```
+  ```sh
+  git clone https://github.com/pasqal-io/qoolqit.git
+  ```
 
-2) Setup an environment for developing. We recommend using [Hatch](https://hatch.pypa.io/latest/). With Hatch installed, you can enter the `qoolqit` repository and run
+2) Setup an environment for developing. From your `qoolqit` folder run:
 
-```sh
-hatch shell
-```
+  ```sh
+  python -m venv .venv
+  source .venv/bin/activate
+  pip install -e .[dev]
+  ```
 
-This will automatically take you into an environment with the necessary dependencies. Alternatively, if you wish to use a different environment manager like `conda` or `venv`, you can instead enter the `qoolqit` repository from within the environment and run
+  Alternatively, you can use [Hatch](https://hatch.pypa.io/latest/):
 
-```sh
-pip install -e .
-```
+  ```sh
+  hatch shell
+  ```
+
+  This will automatically take you into an environment with the necessary dependencies.
 
 ### Useful Things for your workflow: Linting and Testing
 

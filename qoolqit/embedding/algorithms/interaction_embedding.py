@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 from scipy.optimize import minimize
@@ -20,7 +21,7 @@ class InteractionEmbeddingConfig(EmbeddingConfig):
     tol: float = 1e-8
 
 
-def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: float) -> np.ndarray:
+def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: float) -> DataGraph:
     """Matrix embedding into the interaction term of the Rydberg Analog Model.
 
     Uses scipy.minimize to find the optimal set of node coordinates such that the
@@ -36,7 +37,7 @@ def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: fl
         tol: tolerance for termination.
     """
 
-    def cost_function(new_coords: np.ndarray, matrix: np.ndarray) -> np.float:
+    def cost_function(new_coords: np.ndarray, matrix: np.ndarray) -> np.floating[Any]:
         """Cost function."""
         new_coords = np.reshape(new_coords, (len(matrix), 2))
         # Cost based on minimizing the distance between the matrix and the interaction 1/r^6
