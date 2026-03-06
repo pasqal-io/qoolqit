@@ -8,7 +8,7 @@ nav:
     - Install: get_started/install.md
     - Programming a neutral atom QPU: get_started/rydberg_model.md
     - Adimensionalization: get_started/adimensionalization.md
-    - Tutorial: programming with QoolQit tutorials/programming_with_qoolqit.ipynb
+    - Programming with QoolQit: tutorials/programming_with_qoolqit.ipynb
   - Fundamentals:
     - Problem generation: fundamentals/graphs.md
     - Problem embedding: fundamentals/available_embedders.md
