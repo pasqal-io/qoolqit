@@ -65,7 +65,7 @@ The key insight is:
 
 All points on the program line that fall within the device box are valid compilations. Choosing $J_0$ is equivalent to selecting which point on that line to use. In practice, programs running at higher amplitude perform better on hardware, so QoolQit automatically selects the point that maximises amplitude while staying within device constraints.
 
-![Compilation diagram](../extras/assets/compilation.svg.png)
+![Compilation diagram](../extras/assets/compilation.svg)
 
 ### Case 1: Drive-limited compilation
 
