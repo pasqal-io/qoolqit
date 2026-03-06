@@ -12,6 +12,7 @@ nav:
       - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
       - Rydberg blockade: tutorials/rydberg_blockade.ipynb
   - Fundamentals:
+    - Overview: fundamentals/overview.md
     - Problem generation: fundamentals/graphs.md
     - Problem embedding: fundamentals/available_embedders.md
     - Writing a quantum program:
