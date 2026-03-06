@@ -81,7 +81,7 @@ register = Register.from_graph(embedded_graph)
 
 > 📖 See [Programming a neutral atom QPU](registers.md). for all available register creation methods and options.
 >
-> 📖 See [Problem embedding](../fundamentals/problem_embedding.md) for embedding data and problems into the Rydberg analog model.
+> 📖 See [Problem embedding](problem_embedding.md) for embedding data and problems into the Rydberg analog model.
 
 ---
 
@@ -141,7 +141,7 @@ program = QuantumProgram(
 
 The initial state is always $|0\rangle^{\otimes N}$, so every program describes how the drive and interactions evolve this fixed initial state.
 
-> 📖 See [Quantum programs](fundamentals/programs.md) for more details.
+> 📖 See [Quantum programs](programs.md) for more details.
 
 ---
 
@@ -175,6 +175,6 @@ The three stages map cleanly onto three concepts:
 - **Sequence** — what you *will* run (device-compatible instructions).
 - **Result** — what you *observed* (samples, probabilities, observables, etc.).
 
-> 📖 See [Devices](../fundamentals/devices.md) for available devices and their specifications.
+> 📖 See [Devices](devices.md) for available devices and their specifications.
 >
-> 📖 See [Execution](fundamentals/execution.md) for running programs and handling different result types.
+> 📖 See [Execution](execution.md) for running programs and handling different result types.
