@@ -50,7 +50,7 @@ $$
 $$
 
 !!! note "Key convention"
-    In QoolQit, the minimum dimensionless distance is fixed at $\min(\tilde{r}_{ij}) = 1$, which means the maximum interaction strength is also 1.
+    In QoolQit, the minimum dimensionless distance is fixed such that $\min(\tilde{r}_{ij}) = 1$, which means the maximum interaction strength is also 1.
 
 ---
 
