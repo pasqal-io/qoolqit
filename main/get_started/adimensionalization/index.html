@@ -79,6 +79,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#adimensionalization" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -1515,6 +1520,88 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#physical-hamiltonian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Hamiltonian
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introducing-the-reference-interaction-j_0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducing the Reference Interaction \(J_0\)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compilation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compilation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#case-1-drive-limited-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case 1: Drive-limited compilation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-2-interaction-limited-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case 2: Interaction-limited compilation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Extensions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1547,9 +1634,107 @@
   
 
 
-  <h1>Adimensionalization</h1>
-
-
+<h1 id="adimensionalization">Adimensionalization</h1>
+<p>This section explains how QoolQit's dimensionless formulation relates to physical quantities, and how compilation maps abstract programs back to real hardware.</p>
+<hr />
+<h2 id="physical-hamiltonian">Physical Hamiltonian</h2>
+<p>In physical units, the Rydberg Hamiltonian is:</p>
+<div class="arithmatex">\[
+H(t) = \underbrace{\sum_{i&lt;j} \frac{C_6}{r_{ij}^{6}} \hat{n}_i \hat{n}_j}_{\text{interactions}}
++ \underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\,\hat{\sigma}_i^y\right)}_{\text{global drive}}
+- \underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i}_{\text{detuning}}
+\]</div>
+<p>where <span class="arithmatex">\(\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)\)</span> is the Rydberg occupation operator.</p>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Description</th>
+<th>Typical units</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(C_6(n)\)</span></td>
+<td>Interaction coefficient (Rydberg level <span class="arithmatex">\(n\)</span>)</td>
+<td><span class="arithmatex">\(\text{rad/s} \times \mu\text{m}^6\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\Omega(t)\)</span></td>
+<td>Global Rabi frequency (drive amplitude)</td>
+<td>rad/s</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\delta(t)\)</span></td>
+<td>Global detuning</td>
+<td>rad/s</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\Delta(t)\)</span></td>
+<td>Local detuning amplitude</td>
+<td>rad/s</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi(t)\)</span></td>
+<td>Drive phase</td>
+<td><span class="arithmatex">\([0, 2\pi)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\epsilon_i\)</span></td>
+<td>Local detuning weight</td>
+<td><span class="arithmatex">\([0, 1]\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="introducing-the-reference-interaction-j_0">Introducing the Reference Interaction <span class="arithmatex">\(J_0\)</span></h2>
+<p>To make programs device-agnostic, QoolQit defines an arbitrary reference distance <span class="arithmatex">\(r_0\)</span> and a corresponding reference interaction:</p>
+<div class="arithmatex">\[
+J_0 = \frac{C_6}{r_0^6}
+\]</div>
+<p>This <span class="arithmatex">\(J_0\)</span> sets the energy scale for the problem. All quantities are then expressed relative to it:</p>
+<div class="arithmatex">\[
+\tilde{r}_{ij} = \frac{r_{ij}}{r_0}, \qquad \tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6}, \qquad \tilde{\Omega} = \frac{\Omega}{J_0}, \qquad \tilde{\delta} = \frac{\delta}{J_0}
+\]</div>
+<p>Dividing the full Hamiltonian by <span class="arithmatex">\(J_0\)</span> yields the dimensionless QoolQit Hamiltonian:</p>
+<div class="arithmatex">\[
+\tilde{H}(t) = \sum_{i&lt;j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j
++ \sum_i \frac{\tilde{\Omega}(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}^x_i - \sin\phi(t)\,\hat{\sigma}^y_i\right)
+- \sum_i \left(\tilde{\delta}(t) + \epsilon_i\tilde{\Delta}(t)\right)\hat{n}_i
+\]</div>
+<div class="admonition note">
+<p class="admonition-title">Key convention</p>
+<p>In QoolQit, the minimum dimensionless distance is fixed such that <span class="arithmatex">\(\min(\tilde{r}_{ij}) = 1\)</span>, which means the maximum interaction strength is also 1.</p>
+</div>
+<hr />
+<h2 id="compilation">Compilation</h2>
+<p>When you write a QoolQit program, you specify dimensionless ratios like <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span>. Compilation chooses a concrete value for <span class="arithmatex">\(J_0\)</span> that maps these ratios to physical values within a given device's capabilities.</p>
+<p>The key insight is:</p>
+<ul>
+<li>A <strong>program</strong> defines a ratio <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span>, which corresponds to a line through the origin in <span class="arithmatex">\((\Omega, J)\)</span> space.</li>
+<li>A <strong>device</strong> defines a box of allowed physical values: <span class="arithmatex">\([0,\,\Omega_{\max}] \times [0,\,J_{\max}]\)</span>.</li>
+</ul>
+<p>All points on the program line that fall within the device box are valid compilations. Choosing <span class="arithmatex">\(J_0\)</span> is equivalent to selecting which point on that line to use. In practice, programs running at higher amplitude perform better on hardware, so QoolQit automatically selects the point that maximises amplitude while staying within device constraints.</p>
+<p><img alt="Compilation diagram" src="../../extras/assets/compilation.svg" /></p>
+<h3 id="case-1-drive-limited-compilation">Case 1: Drive-limited compilation</h3>
+<p>When the program line hits the maximum amplitude <span class="arithmatex">\(\Omega_{\max}\)</span> before reaching <span class="arithmatex">\(J_{\max}\)</span>, the compiler sets:</p>
+<div class="arithmatex">\[J_0 = \Omega_{\max}\]</div>
+<p>and calculates the corresponding reference distance, which will fit within device specs.</p>
+<h3 id="case-2-interaction-limited-compilation">Case 2: Interaction-limited compilation</h3>
+<p>When the program line hits the maximum interaction <span class="arithmatex">\(J_{\max}\)</span> before reaching <span class="arithmatex">\(\Omega_{\max}\)</span>, the compiler sets:</p>
+<div class="arithmatex">\[J_0 = J_{\max}\]</div>
+<p>This is equivalent to placing the closest pair of atoms at the minimum allowed distance. The compiler then derives the corresponding <span class="arithmatex">\(\Omega\)</span> value.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This strategy guarantees that compiled programs fit within device specs (if compilation succeeds) and use the maximum amplitude possible for the user-defined program.</p>
+</div>
+<p>If compilation fails, the program simply cannot fit the device under any valid assignment of <span class="arithmatex">\(J_0\)</span>.</p>
+<hr />
+<h2 id="future-extensions">Future Extensions</h2>
+<ul>
+<li>QoolQit may suggest approximations of incompatible programs that would otherwise fail to compile.</li>
+<li>A "force compilation" strategy is planned for future versions.</li>
+</ul>
 
 
 
