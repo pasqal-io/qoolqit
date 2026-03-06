@@ -12,10 +12,11 @@ nav:
       - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
       - Rydberg blockade: tutorials/rydberg_blockade.ipynb
   - Fundamentals:
-    - Overview: fundamentals/overview.md
+    - Introduction: fundamentals/introduction.md
     - Problem generation: fundamentals/graphs.md
     - Problem embedding: fundamentals/available_embedders.md
     - Writing a quantum program:
+      - Overview: fundamentals/overview.md
       - Registers: fundamentals/registers.md
       - Waveforms: fundamentals/waveforms.md
       - Drive Hamiltonian: fundamentals/drives.md
