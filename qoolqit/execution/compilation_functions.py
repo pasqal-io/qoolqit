@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import math
-
 from pulser.devices import Device as PulserDevice
 from pulser.parametrized import ParamObj
 from pulser.pulse import Pulse as PulserPulse
@@ -58,44 +56,30 @@ def basic_compilation(
     register: Register,
     drive: Drive,
     device: Device,
-    profile: CompilerProfile,
+    profile: CompilerProfile = CompilerProfile.DEFAULT,
 ) -> PulserSequence:
+
+    TIME, ENERGY, DISTANCE = device.converter.factors
 
     # fix compilation strategy according to the program energy ratio Ω_max/J_max
     program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
-    if device.energy_ratio:
-        if program_energy_ratio > device.energy_ratio:
-            # fallback to MAX_AMPLITUDE
-            if profile == CompilerProfile.MIN_DISTANCE:
-                profile = CompilerProfile.MAX_AMPLITUDE
+    device_energy_ratio = device.energy_ratio
+    if device._max_amp and device._min_distance > 0 and device_energy_ratio:
+        if program_energy_ratio > device_energy_ratio:
+            ENERGY = device._max_amp / drive.amplitude.max()
+            TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
         else:
-            # fallback to MIN_DISTANCE
-            if profile == CompilerProfile.MAX_AMPLITUDE:
-                profile = CompilerProfile.MIN_DISTANCE
+            DISTANCE = (device._min_distance) / register.min_distance()
+            TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
 
-    _validate_program(register, drive, device, profile)
-
-    # strategies are applied only if the device has the corresponding extrema value
-    if profile == CompilerProfile.DEFAULT:
-        TIME, ENERGY, DISTANCE = device.converter.factors
-    elif (profile == CompilerProfile.MAX_AMPLITUDE) and device._max_amp:
-        ENERGY = (device._max_amp) / drive.amplitude.max()
-        TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
-        # round up/down to avoid round-off errors
-        if ENERGY > 1:
-            ENERGY = math.floor(1e12 * ENERGY) / 1e12
-    elif (profile == CompilerProfile.MIN_DISTANCE) and (device._min_distance > 0.0):
-        DISTANCE = (device._min_distance) / register.min_distance()
-        TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
-    else:
-        raise TypeError(f"Compiler profile {profile.value} requested but not implemented.")
+    _validate_program(register, drive, device)
 
     wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
 
     # Build pulser pulse and register
-    amp_wf = wf_converter.convert(drive._amplitude)
-    det_wf = wf_converter.convert(drive._detuning)
-    pulser_pulse = PulserPulse(amp_wf, det_wf, drive.phase)
+    pulser_amp_wf = wf_converter.convert(drive._amplitude)
+    pulser_det_wf = wf_converter.convert(drive._detuning)
+    pulser_pulse = PulserPulse(pulser_amp_wf, pulser_det_wf, drive.phase)
 
     pulser_register = _build_register(register, device, DISTANCE)
 
@@ -118,7 +102,7 @@ def basic_compilation(
 
         # If our device supports reusable channels, we can declare multiple
         # DMM channels with the same specs
-        if device._device.reusable_channels:
+        if pulser_device.reusable_channels:
             # Arbitrarily pick the first channel.
             dmm_id = channels[0]
             for detuning in drive.weighted_detunings:
@@ -162,7 +146,6 @@ def _validate_program(
     register: Register,
     drive: Drive,
     device: Device,
-    profile: CompilerProfile,
 ) -> None:
     """Validate that the program respect the given device specifications.
 
@@ -189,19 +172,20 @@ def _validate_program(
     # Get profile factors in the adimensional basis, not conversion factors to pulser
     # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
     # this part can be removed when compilation return a QuantumProgram that can be directly checked
-    if profile == CompilerProfile.DEFAULT:
-        TIME, ENERGY, DISTANCE = 1.0, 1.0, 1.0
-    elif (profile == CompilerProfile.MAX_AMPLITUDE) and specs["max_amplitude"]:
-        ENERGY = specs["max_amplitude"] / drive.amplitude.max()
-        TIME, ENERGY, DISTANCE = 1 / ENERGY, ENERGY, ENERGY ** (-1 / 6)
-    elif (profile == CompilerProfile.MIN_DISTANCE) and specs["min_distance"]:
-        DISTANCE = specs["min_distance"] / register.min_distance()
-        TIME, ENERGY, DISTANCE = DISTANCE**6, 1 / DISTANCE**6, DISTANCE
-    else:
-        raise CompilationError(
-            f"Compiler profile {profile.value} cannot be used with {device.name} "
-            f"because the target min/max value is not specified in the chosen device: \n {device}"
-        )
+
+    TIME, ENERGY, DISTANCE = 1.0, 1.0, 1.0
+
+    # fix compilation strategy according to the program energy ratio Ω_max/J_max
+    program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
+    device_energy_ratio = device.energy_ratio
+    if specs["max_amplitude"] and specs["min_distance"] and device_energy_ratio:
+
+        if program_energy_ratio > device_energy_ratio:
+            ENERGY = specs["max_amplitude"] / drive.amplitude.max()
+            TIME, DISTANCE = 1 / ENERGY, ENERGY ** (-1 / 6)
+        else:
+            DISTANCE = specs["min_distance"] / register.min_distance()
+            TIME, ENERGY = DISTANCE**6, 1 / DISTANCE**6
 
     device_specs_msg = f"{device}"
 
