@@ -13,8 +13,6 @@ nav:
       - Rydberg blockade: tutorials/rydberg_blockade.ipynb
   - Fundamentals:
     - Introduction: fundamentals/introduction.md
-    - Problem generation: fundamentals/graphs.md
-    - Problem embedding: fundamentals/available_embedders.md
     - Writing a quantum program:
       - Overview: fundamentals/overview.md
       - Registers: fundamentals/registers.md
@@ -23,6 +21,9 @@ nav:
       - Devices: fundamentals/devices.md
       - Quantum programs: fundamentals/programs.md
       - Execution: fundamentals/execution.md
+    - Problem generation: fundamentals/graphs.md
+    - Problem embedding: fundamentals/available_embedders.md
+
   - Extended usage:
     - Custom embedders: fundamentals/custom_embedders.md
   - Applications:
