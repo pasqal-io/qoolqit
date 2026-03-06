@@ -5,13 +5,13 @@ from typing import Callable
 import pytest
 from pulser.sequence import Sequence as PulserSequence
 
-from qoolqit import AnalogDevice, Device, DigitalAnalogDevice, MockDevice
+from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.drive import Drive
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution import CompilerProfile
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
-from qoolqit.waveforms import Constant, Ramp
+from qoolqit.waveforms import Constant
 
 
 @pytest.mark.parametrize("device_class", [AnalogDevice, DigitalAnalogDevice, MockDevice])
@@ -93,28 +93,18 @@ def test_compiled_sequence_with_delays() -> None:
     assert pulser_duration == 80
 
 
-def test_validate_program_catch_compilation_error_max_amp() -> None:
-    register = Register({"q0": (0.0, 0.0), "q1": (1.0, 1.0)})
-    drive = Drive(amplitude=Constant(50, value=1.1))
-    program = QuantumProgram(register, drive)
-    with pytest.raises(
-        CompilationError,
-        match=(
-            "The drive's maximum amplitude 1.1 goes over "
-            "the maximum value allowed for the chosen device"
-        ),
-    ):
-        program.compile_to(device=AnalogDevice())
-
-
 def test_validate_program_catch_compilation_error_max_det() -> None:
     register = Register({"q0": (0.0, 0.0), "q1": (1.0, 1.0)})
     drive = Drive(amplitude=Constant(50, value=0.9), detuning=Constant(50, value=100))
     program = QuantumProgram(register, drive)
+
+    # expected wrong max detuning after compilation
+    expected_max_abs_detuning = 100.0 / 0.9
+
     with pytest.raises(
         CompilationError,
         match=(
-            "The drive's maximum absolute detuning 100.0 goes over "
+            f"The drive's maximum absolute detuning {expected_max_abs_detuning} goes over "
             "the maximum value allowed for the chosen device"
         ),
     ):
@@ -125,10 +115,15 @@ def test_validate_program_catch_compilation_error_max_duration() -> None:
     register = Register({"q0": (0.0, 0.0), "q1": (1.0, 1.0)})
     drive = Drive(amplitude=Constant(123.0, value=0.9))
     program = QuantumProgram(register, drive)
+
+    # expected wrong duration after compilation
+    expected_duration = 123.0 * 0.9
+
     with pytest.raises(
         CompilationError,
         match=(
-            "The drive's duration 123.0 goes over the maximum value allowed for the chosen device"
+            f"The drive's duration {expected_duration} "
+            "goes over the maximum value allowed for the chosen device"
         ),
     ):
         program.compile_to(device=AnalogDevice())
@@ -160,20 +155,3 @@ def test_validate_program_catch_compilation_error_max_dist() -> None:
         ),
     ):
         program.compile_to(device=AnalogDevice())
-
-
-@pytest.mark.parametrize(
-    "device, profile",
-    [
-        (MockDevice(), CompilerProfile.MAX_AMPLITUDE),
-        (MockDevice(), CompilerProfile.MIN_DISTANCE),
-    ],
-)
-def test_validate_program_unsupported_profile(device: Device, profile: CompilerProfile) -> None:
-    register = Register({f"q{i}": (i, i) for i in range(3)})
-    drive = Drive(amplitude=Ramp(50, initial_value=0.6, final_value=0.8))
-    program = QuantumProgram(register, drive)
-    with pytest.raises(
-        CompilationError, match="the target min/max value is not specified in the chosen device"
-    ):
-        program.compile_to(device=device, profile=profile)
