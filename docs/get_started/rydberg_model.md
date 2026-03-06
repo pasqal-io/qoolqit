@@ -1,128 +1,66 @@
----
-hide:
-  - navigation
----
+# Introduction
 
-# **Quantum computing with Rydberg atoms**
+QoolQit lets you write analog quantum programs for neutral-atom platforms in a **dimensionless framework**. Instead of working with physical units, you express your program in terms of ratios and relative scales — the same program can then be compiled to any compatible device.
 
-This page centralizes the theoretical framework of QoolQit. To start writing programs, [go straight to the contents section](../fundamentals/graphs.md), or [check out the tutorials section](../tutorials/solving_a_qubo.ipynb).
-
-Manipulating Rydberg atomic systems for quantum computing is a complex topic, and in this page we will not cover all aspects of it. The aim of this page is to introduce the underlying computational model when writing analog algorithms with Rydberg atoms, and to abstract away as much as possible the hardware details on how these algorithms are implemented. For a more detailed description on the physics and hardware implementation of quantum computing with Rydberg atoms, [check out the **Pulser** library](https://pulser.readthedocs.io/en/stable/index.html).
+This solves a key challenge in programming neutral-atom quantum computers: typically, you must specify physical parameters like atom positions in micrometers, laser amplitudes in MHz, and pulse durations in nanoseconds. These values depend heavily on the specific hardware — different devices have different Rydberg levels, laser power limits, and trap geometries.
 
 ---
 
-## **The Rydberg Analog Model**
+## The QoolQit Dimensionless Hamiltonian
 
-The **Rydberg Analog Model** is a computational model following the Ising-mode operation of Rydberg atoms. Similarly to the circuit-model, it adopts the *qubit* as the basic unit of information. Two characteristics of the Rydberg analog model make it inherently different from the circuit-model:
-
-- It is a **continuous-time** model, meaning all operations are defined as time-evolving processes that continuously alter the state of the qubits.
-
-- The spatial arrangement of the qubits has a direct influence on the operations due to the **always-on physical interaction** of the atoms.
-
-### **Register**
-
-The register defines the qubit resources available to perform the computation.
-
-!!! info "Definition: Register"
-    A register $R$ is a set of qubits, each identified by an index $q_i$ and a position $p_i = (x_i, y_i)$, $R=\{(q_i, p_i)\}$, with size $|R|=N$. A register is assumed to have an initial state $|\psi_R(t=0)\rangle = |0\rangle^{\otimes N}$
-
-### **Interaction**
-
-Once a register is initialized, the physics of Rydberg atoms dictate that the state of the qubits evolves with an always-on interaction Hamiltonian. This background interaction is constant in time, and present during the whole program.
-
-!!! info "Definition: Interaction Hamiltonian"
-    The interaction Hamiltonian is defined as
-
-    $$H^\text{int}=\sum_{i=0}^{N-1}\sum_{j=0}^{i-1}\frac{1}{r^6_{ij}}\hat{n}_i\hat{n}_j,$$
-
-    where $r_{ij}=\sqrt{(x_i-x_j)^2+(y_i-y_j)^2}$ is the distance between qubits $q_i$ and $q_j$, and $\hat{n}=\frac12(1-\hat{\sigma}^z)$ is the number operator.
-
-### **Drive**
-
-A program in the Rydberg analog model is defined as a time-dependent *drive* Hamiltonian that is imposed on the qubits (in addition to the interaction Hamiltonian).
-
-!!! info "Definition: Drive Hamiltonian"
-    The drive Hamiltonian is defined as
-
-    $$
-    H^\text{d}(t)=\sum_{i=0}^{N-1}\frac{\Omega_i(t)}{2}\left(\cos\phi_i(t)\hat{\sigma}^x_i-\sin\phi_i(t)\hat{\sigma}^y_i\right)-\delta_i(t)\hat{n}_i
-    $$
-
-    where $\Omega_i(t)$, $\delta_i(t)$ and $\phi_i(t)$ are time-dependent functions, or waveforms, that encode the program corresponding, respectively, to the amplitude, detuning and phase of the drive on each qubit.
-
-    The drive $D_i(t)$ is the set of functions $D_i(t) = \{\Omega_i(t), \delta_i(t), \phi_i(t)\}$ defined for $t\geq0$ that define the time-dependent Hamiltonian $H^\text{d}_i(t)$ driving qubit $q_i$.
-
-    The drive is global if it is the same for all qubits in the register, $D_i(t)=D(t)~\forall~q_i\in R$.
-
-#### Weighted detuning
-
-In the Rydberg analog model drives are global. However, an extra local detuning term can be added when a weight map is passed $\{q_i: \epsilon_i\}$, where $\epsilon_i\in[0, 1]$ is the weight for each qubit $q_i$. Then, the detuning term changes to
+Your system evolves under the following Hamiltonian:
 
 $$
-H^\text{d}(t)=\sum_{i=0}^{N-1}\frac{\Omega(t)}{2}\left(\cos\phi(t)\hat{\sigma}^x_i-\sin\phi(t)\hat{\sigma}^y_i\right)-\delta_\text{max}(\delta(t)+\epsilon_i\Delta(t))\hat{n}_i
+\tilde{H}(t) = \underbrace{\sum_{i<j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j}_{\text{interactions}} + \underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2} \left( \cos\phi(t)\,\hat{\sigma}^x_i - \sin\phi(t)\,\hat{\sigma}^y_i \right)}_{\text{global drive}} - \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i\,\tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}
 $$
 
-with the condition that the waveform $\Delta(t)$ must be negative.
+where $\hat{n} = \frac{1}{2}(1 + \hat{\sigma}^z)$ is the Rydberg occupation operator, and the Pauli operators are:
 
-### **The full model**
+$$
+\sigma^x=\begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix}, \qquad
+\sigma^y=\begin{pmatrix} 0 & -i\\ i & 0\end{pmatrix}, \qquad
+\sigma^z=\begin{pmatrix} 1 & 0\\ 0 & -1\end{pmatrix}
+$$
 
-!!! info "Definition: Rydberg Analog Model"
-    A register of qubits $R$ is initialized, where each qubit $q_i$ has a position $p_i = (x_i, y_i)$.
+### Parameters
 
-    The local detuning weights are programmed, $\{q_i: \epsilon_i\}$.
+| Symbol | Description | Range | Notes |
+|--------|-------------|-------|-------|
+| $\tilde{J}_{ij}$ | Dimensionless coupling between sites $i$ and $j$ | $(0,\,1]$ | Follows $1/r^6$ Rydberg scaling, normalized so the maximum equals 1: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6},\quad\max(\tilde{J}_{ij})=1$ |
+| $\tilde{\Omega}(t)$ | Global drive amplitude, affecting all sites equally | $\geq 0$ | Expressed relative to the maximum interaction strength in the register (see [Adimensionalization](#)) |
+| $\tilde{\delta}(t)$ | Global detuning, affecting all sites equally | any | |
+| $\tilde{\Delta}(t)$ | Local detuning amplitude | $\leq 0$ | |
+| $\phi(t)$ | Global phase | $[0,\,2\pi)$ | |
+| $\epsilon_i$ | Local detuning weight for site $i$ | $[0,\,1]$ | |
+| $\tilde{t}$ | Dimensionless time | $> 0$ | Measured relative to the interaction timescale: $\tilde{t}\ll 1$ is too short for interactions to matter; $\tilde{t}\gg 1$ is long enough for interactions to influence the dynamics |
 
-    The drive waveforms are programmed, $D(t) = \{\Omega(t), \delta(t), \Delta(t), \phi(t)\}$.
+### Drive regimes
 
-    The system evolves with the Hamiltonian:
+Because $\tilde{\Omega}$ is expressed relative to the maximum interaction strength, strong vs. weak drive regimes are defined independently of the specific geometry:
 
-    $$
-    H(t)=\sum_{i=0}^{N-1}\frac{\Omega(t)}{2}\left(\cos\phi(t)\hat{\sigma}^x_i-\sin\phi(t)\hat{\sigma}^y_i\right)-(\delta(t)+\epsilon_i\Delta(t))\hat{n}_i + \sum_{i=0}^{N-1}\sum_{j=0}^{i-1}\frac{1}{r^6_{ij}}\hat{n}_i\hat{n}_j
-    $$
-
-    The system is measured in the computational basis at some time $t^* > 0$.
-
+| Regime | Condition | Intuition |
+|--------|-----------|-----------|
+| Strong drive | $\tilde{\Omega} \gg 1$ | Controls dominate; interactions are a perturbation |
+| Balanced | $\tilde{\Omega} \sim 1$ | Controls and interactions compete |
+| Weak drive | $\tilde{\Omega} \ll 1$ | Interactions dominate; blockade and correlation effects are strong |
 
 ---
 
-## **Model units**
+## Dimensionless Reference Frame
 
-The **Rydberg Analog Model** as implemented in QoolQit is **adimensional**, which is not the case in [Pulser](https://pulser.readthedocs.io/en/stable/). Below we go over some details on how this works.
+QoolQit introduces a **dimensionless reference frame** with the following conventions:
 
-### Pulser units
+- Distances are rescaled so that the smallest pairwise distance equals 1.
+- $\tilde{\Omega}(t)$ and $\tilde{\delta}(t)$ are measured relative to the maximum interaction strength, which corresponds to 1 in the dimensionless program.
+- Times $\tilde{t}$ are measured relative to the interaction timescale.
 
-Pulser sets $\hbar=1$ and then uses the following units:
+This means programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
 
-$$\text{Time:}~[\text{ns}],\qquad\text{Energy:}~[\text{rad}.\mu\text{s}^{-1}],\qquad\text{Distance:}~[\mu\text{m}]$$
+Once a quantum program is written, a **compilation routine** automatically maps its dimensionless parameters to physical values compatible with the target hardware. For more details, see the Overview page.
 
-Furthermore, Pulser writes the interaction term using a physical coefficient related to the energy level where the qubit is encoded:
+---
 
-$$H^\text{int}_\text{Pulser}=\sum_{i=0}^{N-1}\sum_{j=0}^{i-1}\frac{C_6}{r^6_{ij}}\hat{n}_i\hat{n}_j.$$
+## What's Next
 
-The interaction coefficient $C_6$ has units of $[\text{rad}.\mu\text{s}^{-1}.\mu\text{m}^{6}].$
-
-This seemingly small difference has an important implication: a Pulser sequence is fundamentally device-specific. Pulser has a safety-first design, and does extensive validation when each sequence is created to guarantee it is compatible with the device it is created for, which is very important.
-
-### Unit conversion
-
-QoolQit handles the unit conversion automatically through a compilation layer, and also includes a number of features for more advanced users to customize it. This is done by defining a set of conversion factors for time, energy and distance, $\{\Delta_T$, $\Delta_E$, $\Delta_D\}$, such that:
-
-$$\text{Time[P]}=\Delta_T \times \text{Time[Q]},\quad\text{Energy[P]}=\Delta_E \times \text{Energy[Q]},\quad\text{Distance[P]}=\Delta_D \times \text{Distance[Q]},$$
-
-where $\text{P}$ and $\text{Q}$ refer to the Pulser and QoolQit units, respectively. Defining a valid set of conversion factors between QoolQit and Pulser can be done arbitrarily, as long as **both the time-energy invariant and the energy-distance invariant are respected**:
-
-$$\Delta_T\,\times\,\Delta_E = 1000,\qquad \Delta_D^6\,\times\,\Delta_E = C_6.$$
-
-This means that it is possible to pick an arbitrary value for **one** of the conversion factors, and the two remaining ones can be automatically calculated from the invariants. As seen from the dependence of the invariants on the interaction coefficient $C_6$, these are calculated specifically for each device, and this is what guarantees that QoolQit programs can be device agnostic.
-
-For details on how to customize the unit conversion in QoolQit check the contents pages on [devices](../fundamentals/devices.md) and [quantum programs](../fundamentals/programs.md). For further examples on understanding the unit conversion check the [unit conversion tutorial](../tutorials/solving_a_qubo.ipynb).
-
-#### Advantages & disadvantages
-
-Working with an adimensional model has a few advantages:
-
-- Programs are **more abstract and device agnostic**, and the rules to compile to different devices are clearly defined.
-- Algorithm descriptions are **more unified and consistent**, focusing more on the logic of the algorithm and less on the implementation details.
-- Increases **code portability** between experimental setups, different hardware configurations, and even different hardware calibrations.
-- Program descriptions are **more future-proof**, as the same description today can be valid for future hardware generations.
-
-However, while the above conversion is exact in theory, **in practice real device execution will have sources of errors and discrepancies** that are not accounted for in a simple unit conversion. Abstracting away the finer control over such errors can be seen as a disadvantage, but it is also an opportunity for improvement. The advanced user who understands such discrepancies can work on developing more robust protocols for compilation and noise mitigation and integrating them in the stack.
+- [Fundamentals](../fundamentals/overview.md) — Learn how to build programs with QoolQit: registers, waveforms, drives, and execution.
+- [Adimensionalization — Advanced](./adimensionalization.md) — Understand the connection to physical units and how compilation works.
