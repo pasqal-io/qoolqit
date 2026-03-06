@@ -156,24 +156,6 @@ device = AnalogDevice()
 program.compile_to(device)
 ```
 
-### Optional: Time reference
-
-You can also define a reference time at compilation with the `t_ref` parameter:
-
-```python
-sequence = program.compile(device, t_ref=kappa * device.max_duration)
-```
-
-When `t_ref` is set, waveform durations are interpreted as fractions of `t_ref` rather than absolute dimensionless units. For example, given three waveforms with durations 10, 10, and 20 and `t_ref=40`:
-
-| Original duration | Interpreted as |
-|-------------------|----------------|
-| 10 | $0.25 \times t_{\text{ref}}$ |
-| 10 | $0.25 \times t_{\text{ref}}$ |
-| 20 | $0.50 \times t_{\text{ref}}$ |
-
-This is useful when you want to define a waveform shape once, then scale it to match a device's time budget.
-
 ---
 
 ## 5. Execution
