@@ -192,7 +192,7 @@ def _validate_program(
     max_amplitude = drive.amplitude.max() * ENERGY
     if specs["max_amplitude"] and (max_amplitude > specs["max_amplitude"]):
         msg = (
-            f"The drive's maximum amplitude {max_amplitude} "
+            f"The drive's maximum amplitude {max_amplitude:.3f} "
             "goes over the maximum value allowed for the chosen device:\n"
         )
         raise CompilationError(msg + device_specs_msg)
@@ -200,7 +200,7 @@ def _validate_program(
     max_abs_detuning = max(abs(drive.detuning.min()), abs(drive.detuning.max())) * ENERGY
     if specs["max_abs_detuning"] and (max_abs_detuning > specs["max_abs_detuning"]):
         msg = (
-            f"The drive's maximum absolute detuning {max_abs_detuning} "
+            f"The drive's maximum absolute detuning {max_abs_detuning:.3f} "
             "goes over the maximum value allowed for the chosen device:\n"
         )
         raise CompilationError(msg + device_specs_msg)
@@ -208,7 +208,7 @@ def _validate_program(
     duration = drive.duration * TIME
     if specs["max_duration"] and (duration > specs["max_duration"]):
         msg = (
-            f"The drive's duration {duration} "
+            f"The drive's duration {duration:.3f} "
             "goes over the maximum value allowed for the chosen device:\n"
         )
         raise CompilationError(msg + device_specs_msg)
@@ -217,7 +217,7 @@ def _validate_program(
         min_distance = register.min_distance() * DISTANCE
         if specs["min_distance"] and (min_distance < specs["min_distance"]):
             msg = (
-                f"The register minimum distance between two qubits {min_distance} "
+                f"The register minimum distance between two qubits {min_distance:.3f} "
                 "goes below the minimum allowed for the chosen device:\n"
             )
             raise CompilationError(msg + device_specs_msg)
@@ -225,7 +225,7 @@ def _validate_program(
     max_radial_distance = register.max_radial_distance() * DISTANCE
     if specs["max_radial_distance"] and (max_radial_distance > specs["max_radial_distance"]):
         msg = (
-            f"The register maximum radial distance {max_radial_distance} "
+            f"The register maximum radial distance {max_radial_distance:.3f} "
             "goes over the maximum allowed for the chosen device:\n"
         )
         raise CompilationError(msg + device_specs_msg)
