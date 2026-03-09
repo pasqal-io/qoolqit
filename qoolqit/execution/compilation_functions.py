@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+
 from pulser.devices import Device as PulserDevice
 from pulser.parametrized import ParamObj
 from pulser.pulse import Pulse as PulserPulse
@@ -67,6 +69,8 @@ def basic_compilation(
     if device._max_amp and device._min_distance > 0 and device_energy_ratio:
         if program_energy_ratio > device_energy_ratio:
             ENERGY = device._max_amp / drive.amplitude.max()
+            # avoid round off precision issues
+            ENERGY = math.floor(ENERGY * 1e12) / 1e12
             TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
         else:
             DISTANCE = (device._min_distance) / register.min_distance()
@@ -179,7 +183,6 @@ def _validate_program(
     program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
     device_energy_ratio = device.energy_ratio
     if specs["max_amplitude"] and specs["min_distance"] and device_energy_ratio:
-
         if program_energy_ratio > device_energy_ratio:
             ENERGY = specs["max_amplitude"] / drive.amplitude.max()
             TIME, DISTANCE = 1 / ENERGY, ENERGY ** (-1 / 6)
