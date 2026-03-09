@@ -58,8 +58,31 @@ def basic_compilation(
     register: Register,
     drive: Drive,
     device: Device,
-    profile: CompilerProfile = CompilerProfile.DEFAULT,
+    profile: CompilerProfile = CompilerProfile.DEFAULT,  # to be removed, does nothing now
 ) -> PulserSequence:
+    """Compiles a QoolQit program to a PulserSequence.
+
+    Defines:
+    - program_energy_ratio: the ratio between the maximum amplitude in the drive
+        and the maximum interaction energy.
+    - device_energy_ratio: the ratio between the device's maximum allowed amplitude in the drive
+        and the maximum possible interaction energy.
+
+    If program_energy_ratio > device_energy_ratio the program is scaled to match the device's
+    maximum allowed amplitude.
+    Otherwise, the program is scaled to match the device's minimum allowed pairwise distance.
+
+    If the device requires a layout, it is automatically generated.
+
+    Args:
+        register: QoolQit Register.
+        drive: QoolQit Drive.
+        device: QoolQit Device.
+        profile: CompilerProfile. Defaults to the default profile.
+
+    Returns:
+        PulserSequence: The compiled program as a pulser.Sequence object.
+    """
 
     TIME, ENERGY, DISTANCE = device.converter.factors
 
@@ -68,19 +91,20 @@ def basic_compilation(
     device_energy_ratio = device.energy_ratio
     if device._max_amp and device._min_distance > 0 and device_energy_ratio:
         if program_energy_ratio > device_energy_ratio:
+            # map to the maximum amplitude allowed on the device
             ENERGY = device._max_amp / drive.amplitude.max()
             # avoid round off precision issues
             ENERGY = math.floor(ENERGY * 1e12) / 1e12
             TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
         else:
+            # map to the minimum pairwise distance allowed on the device
             DISTANCE = (device._min_distance) / register.min_distance()
             TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
 
     _validate_program(register, drive, device)
 
-    wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
-
     # Build pulser pulse and register
+    wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
     pulser_amp_wf = wf_converter.convert(drive._amplitude)
     pulser_det_wf = wf_converter.convert(drive._detuning)
     pulser_pulse = PulserPulse(pulser_amp_wf, pulser_det_wf, drive.phase)
@@ -154,7 +178,7 @@ def _validate_program(
     """Validate that the program respect the given device specifications.
 
     Get the rescaling factors from different compilation strategies still in the
-    adimensional frame. The default compilation just preserve ratios.
+    adimensional frame.
     Then compute the new properties of the program:
         - maximum drive amplitude
         - drive duration
@@ -173,13 +197,12 @@ def _validate_program(
     """
     specs = device.specs
 
-    # Get profile factors in the adimensional basis, not conversion factors to pulser
-    # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
-    # this part can be removed when compilation return a QuantumProgram that can be directly checked
-
     TIME, ENERGY, DISTANCE = 1.0, 1.0, 1.0
 
     # fix compilation strategy according to the program energy ratio Ω_max/J_max
+    # Get profile factors in the adimensional basis, not conversion factors to pulser
+    # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
+    # this part can be removed when compilation return a QuantumProgram that can be directly checked
     program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
     device_energy_ratio = device.energy_ratio
     if specs["max_amplitude"] and specs["min_distance"] and device_energy_ratio:
