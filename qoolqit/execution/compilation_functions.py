@@ -78,13 +78,10 @@ def basic_compilation(
         register: QoolQit Register.
         drive: QoolQit Drive.
         device: QoolQit Device.
-        profile: CompilerProfile. Defaults to the default profile.
 
     Returns:
         PulserSequence: The compiled program as a pulser.Sequence object.
     """
-
-    TIME, ENERGY, DISTANCE = device.converter.factors
 
     # fix compilation strategy according to the program energy ratio Ω_max/J_max
     program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
@@ -100,6 +97,9 @@ def basic_compilation(
             # map to the minimum pairwise distance allowed on the device
             DISTANCE = (device._min_distance) / register.min_distance()
             TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
+    else:
+        # if device constraints are not defined, use the default factors
+        TIME, ENERGY, DISTANCE = device.converter.factors
 
     _validate_program(register, drive, device)
 
@@ -195,9 +195,6 @@ def _validate_program(
     Raises:
         CompilationError: if the compiled program does not respect the device specifications.
     """
-    specs = device.specs
-
-    TIME, ENERGY, DISTANCE = 1.0, 1.0, 1.0
 
     # fix compilation strategy according to the program energy ratio Ω_max/J_max
     # Get profile factors in the adimensional basis, not conversion factors to pulser
@@ -205,6 +202,7 @@ def _validate_program(
     # this part can be removed when compilation return a QuantumProgram that can be directly checked
     program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
     device_energy_ratio = device.energy_ratio
+    specs = device.specs
     if specs["max_amplitude"] and specs["min_distance"] and device_energy_ratio:
         if program_energy_ratio > device_energy_ratio:
             ENERGY = specs["max_amplitude"] / drive.amplitude.max()
@@ -212,8 +210,9 @@ def _validate_program(
         else:
             DISTANCE = specs["min_distance"] / register.min_distance()
             TIME, ENERGY = DISTANCE**6, 1 / DISTANCE**6
-
-    device_specs_msg = f"{device}"
+    else:
+        # if device constraints are not defined, use the default factors
+        TIME, ENERGY, DISTANCE = 1.0, 1.0, 1.0
 
     max_amplitude = drive.amplitude.max() * ENERGY
     if specs["max_amplitude"] and (max_amplitude > specs["max_amplitude"]):
@@ -221,7 +220,7 @@ def _validate_program(
             f"The drive's maximum amplitude {max_amplitude:.3f} "
             "goes over the maximum value allowed for the chosen device:\n"
         )
-        raise CompilationError(msg + device_specs_msg)
+        raise CompilationError(msg + f"{device}")
 
     max_abs_detuning = max(abs(drive.detuning.min()), abs(drive.detuning.max())) * ENERGY
     if specs["max_abs_detuning"] and (max_abs_detuning > specs["max_abs_detuning"]):
@@ -229,7 +228,7 @@ def _validate_program(
             f"The drive's maximum absolute detuning {max_abs_detuning:.3f} "
             "goes over the maximum value allowed for the chosen device:\n"
         )
-        raise CompilationError(msg + device_specs_msg)
+        raise CompilationError(msg + f"{device}")
 
     duration = drive.duration * TIME
     if specs["max_duration"] and (duration > specs["max_duration"]):
@@ -237,7 +236,7 @@ def _validate_program(
             f"The drive's duration {duration:.3f} "
             "goes over the maximum value allowed for the chosen device:\n"
         )
-        raise CompilationError(msg + device_specs_msg)
+        raise CompilationError(msg + f"{device}")
 
     if register.n_qubits > 1:
         min_distance = register.min_distance() * DISTANCE
@@ -246,7 +245,7 @@ def _validate_program(
                 f"The register minimum distance between two qubits {min_distance:.3f} "
                 "goes below the minimum allowed for the chosen device:\n"
             )
-            raise CompilationError(msg + device_specs_msg)
+            raise CompilationError(msg + f"{device}")
 
     max_radial_distance = register.max_radial_distance() * DISTANCE
     if specs["max_radial_distance"] and (max_radial_distance > specs["max_radial_distance"]):
@@ -254,4 +253,4 @@ def _validate_program(
             f"The register maximum radial distance {max_radial_distance:.3f} "
             "goes over the maximum allowed for the chosen device:\n"
         )
-        raise CompilationError(msg + device_specs_msg)
+        raise CompilationError(msg + f"{device}")
