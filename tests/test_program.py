@@ -138,7 +138,7 @@ def test_validate_program_catch_compilation_error_min_dist() -> None:
     program = QuantumProgram(register, drive)
     device = AnalogDevice()
 
-    # expected wrong duration after compilation
+    # expected wrong duration after compilation to min distance
     device_min_distance = device.specs["min_distance"]
     assert isinstance(device_min_distance, float)
     expected_wrong_duration = 10.0 * (device_min_distance / min_distance) ** 6
