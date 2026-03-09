@@ -93,7 +93,7 @@ def test_compiled_sequence_with_delays() -> None:
     assert pulser_duration == 80
 
 
-def test_validate_program_catch_compilation_error_max_det() -> None:
+def test_catch_compilation_error_max_det() -> None:
     register = Register({"q0": (0.0, 0.0), "q1": (1.0, 1.0)})
     drive = Drive(amplitude=Constant(50, value=0.9), detuning=Constant(50, value=100))
     program = QuantumProgram(register, drive)
@@ -111,7 +111,7 @@ def test_validate_program_catch_compilation_error_max_det() -> None:
         program.compile_to(device=AnalogDevice())
 
 
-def test_validate_program_catch_compilation_error_max_duration() -> None:
+def test_catch_compilation_error_max_duration() -> None:
     register = Register({"q0": (0.0, 0.0), "q1": (1.0, 1.0)})
     drive = Drive(amplitude=Constant(123.0, value=0.9))
     program = QuantumProgram(register, drive)
@@ -129,7 +129,7 @@ def test_validate_program_catch_compilation_error_max_duration() -> None:
         program.compile_to(device=AnalogDevice())
 
 
-def test_validate_program_catch_compilation_error_min_dist() -> None:
+def test_catch_compilation_error_max_duration_from_min_dist() -> None:
     # this test can be removed once the minimum distance is constrained to
     # be only larger than 1.0
     min_distance = 0.2
@@ -153,7 +153,7 @@ def test_validate_program_catch_compilation_error_min_dist() -> None:
         program.compile_to(device=device)
 
 
-def test_validate_program_catch_compilation_error_max_dist() -> None:
+def test_catch_compilation_error_max_dist() -> None:
     register = Register({"q0": (0.0, 0.0), "q1": (9.0, 0.0)})
     drive = Drive(amplitude=Constant(13.0, 0.2))
     program = QuantumProgram(register, drive)
