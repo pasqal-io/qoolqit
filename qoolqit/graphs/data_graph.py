@@ -18,6 +18,7 @@ from .base_graph import BaseGraph
 from .utils import random_coords
 
 if TYPE_CHECKING:
+    import torch
     import torch_geometric
 
 
@@ -368,19 +369,22 @@ class DataGraph(BaseGraph):
             else None
         )
 
-        # Build attribute sets: include defaults only if present (and not None) in data
-        present = lambda k: getattr(data, k, None) is not None  # noqa: E731
-        node_attrs_set = (
-            {k for k in ("x", "pos") if present(k)}
-            | set(node_attrs or ())
-            | ({node_weights_attr} if node_weights_attr else set())
-        )
-        edge_attrs_set = (
-            ({"edge_attr"} if present("edge_attr") else set())
-            | set(edge_attrs or ())
-            | ({edge_weights_attr} if edge_weights_attr else set())
-        )
-        graph_attrs_set = ({"y"} if present("y") else set()) | set(graph_attrs or ())
+        # Select unique attributes and add default ones only if present in the data
+        node_attrs_set = {k for k in {"x", "pos"} if k in data}
+        if node_attrs is not None:
+            node_attrs_set |= set(node_attrs)
+        if node_weights_attr is not None:
+            node_attrs_set.add(node_weights_attr)
+
+        edge_attrs_set = {k for k in {"edge_attr"} if k in data}
+        if edge_attrs is not None:
+            edge_attrs_set |= set(edge_attrs)
+        if edge_weights_attr is not None:
+            edge_attrs_set.add(edge_weights_attr)
+
+        graph_attrs_set = {k for k in {"y"} if k in data}
+        if graph_attrs is not None:
+            graph_attrs_set |= set(graph_attrs)
 
         # Convert to NetworkX (undirected, no self-loops)
         nx_graph = to_networkx(
@@ -530,7 +534,7 @@ class DataGraph(BaseGraph):
         attr_name: str,
         expected_size: int,
         kind: str,
-    ) -> Any:
+    ) -> torch.Tensor:
         """Validate a weight attribute tensor from a PyG Data object.
 
         Checks that the attribute exists, is a real ``torch.Tensor``, and has
@@ -553,41 +557,41 @@ class DataGraph(BaseGraph):
         """
         import torch
 
-        if getattr(data, attr_name, None) is None:
+        if attr_name not in data:
             raise AttributeError(
                 f"Data object has no attribute '{attr_name}' to use as {kind} weights."
             )
 
-        tensor = getattr(data, attr_name)
+        weights = data[attr_name]
 
-        if not isinstance(tensor, torch.Tensor):
+        if not isinstance(weights, torch.Tensor):
             raise TypeError(
                 f"The {kind} weights attribute '{attr_name}' must be a torch.Tensor, "
-                f"got {type(tensor)} instead."
+                f"got {type(weights)} instead."
             )
 
-        if not tensor.isreal().all():
+        if not weights.isreal().all():
             raise ValueError(
                 f"The {kind} weights attribute '{attr_name}' must contain only real numbers."
             )
 
         # Accept (N,) or (N, 1) — reject anything else
-        if tensor.ndim == 2 and tensor.shape[1] == 1:
-            tensor = tensor.squeeze(1)
-        elif tensor.ndim != 1:
+        if weights.ndim == 2 and weights.shape[1] == 1:
+            weights = weights.squeeze(1)
+        elif weights.ndim != 1:
             raise ValueError(
                 f"The {kind} weights attribute '{attr_name}' must have shape "
                 f"({expected_size},) or ({expected_size}, 1), "
-                f"got {tuple(tensor.shape)} instead."
+                f"got {tuple(weights.shape)} instead."
             )
 
-        if tensor.shape[0] != expected_size:
+        if weights.shape[0] != expected_size:
             raise ValueError(
                 f"The {kind} weights attribute '{attr_name}' has "
-                f"{tensor.shape[0]} elements, expected {expected_size}."
+                f"{weights.shape[0]} elements, expected {expected_size}."
             )
 
-        return tensor
+        return weights
 
     @property
     def node_weights(self) -> dict:
