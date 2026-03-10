@@ -14,8 +14,6 @@ from qoolqit.drive import Drive, Waveform, WeightedDetuning
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
 
-from .utils import CompilerProfile
-
 
 def _build_register(register: Register, device: Device, distance: float) -> PulserRegister:
     """Builds a Pulser Register from a QoolQit Register."""
@@ -31,7 +29,7 @@ def _build_register(register: Register, device: Device, distance: float) -> Puls
 class WaveformConverter:
     """Convert a QoolQit waveform into a equivalent Pulser waveform.
 
-    Requires the new time and energy scales set by the compilation profile.
+    Requires the new time and energy scales set by the compilation.
     Additionally, requires the clock period of the device to round the duration.
     """
 
@@ -58,7 +56,6 @@ def basic_compilation(
     register: Register,
     drive: Drive,
     device: Device,
-    profile: CompilerProfile = CompilerProfile.DEFAULT,  # to be removed, does nothing now
 ) -> PulserSequence:
     """Compiles a QoolQit program to a PulserSequence.
 
@@ -190,7 +187,6 @@ def _validate_program(
         register: the register containing the qubits positions.
         drive: the drive acting on qubits, defining amplitude, detuning and phase.
         device: the selected device to compile to.
-        profile: the compilation strategy.
 
     Raises:
         CompilationError: if the compiled program does not respect the device specifications.

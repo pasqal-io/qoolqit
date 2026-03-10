@@ -8,7 +8,6 @@ from pulser.sequence import Sequence as PulserSequence
 from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.drive import Drive
 from qoolqit.exceptions import CompilationError
-from qoolqit.execution import CompilerProfile
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import Constant
@@ -36,50 +35,22 @@ def test_program_init_and_compilation(
 
 
 @pytest.mark.parametrize(
-    "device_class, profile",
-    [
-        (AnalogDevice, CompilerProfile.DEFAULT),
-        (AnalogDevice, CompilerProfile.MAX_AMPLITUDE),
-        (AnalogDevice, CompilerProfile.MIN_DISTANCE),
-        (DigitalAnalogDevice, CompilerProfile.DEFAULT),
-        (DigitalAnalogDevice, CompilerProfile.MAX_AMPLITUDE),
-        (DigitalAnalogDevice, CompilerProfile.MIN_DISTANCE),
-        (MockDevice, CompilerProfile.DEFAULT),
-    ],
+    "device_class",
+    [DigitalAnalogDevice, MockDevice],
 )
-def test_compiler_profiles(
-    device_class: Callable, profile: CompilerProfile, random_program: Callable[[], QuantumProgram]
-) -> None:
-    program = random_program()
-    device = device_class()
-    program.compile_to(device, profile=profile)
-    assert program.is_compiled
-    assert isinstance(program.compiled_sequence, PulserSequence)
-
-
-@pytest.mark.parametrize(
-    "device_class, profile",
-    [
-        (DigitalAnalogDevice, CompilerProfile.DEFAULT),
-        (DigitalAnalogDevice, CompilerProfile.MAX_AMPLITUDE),
-        (DigitalAnalogDevice, CompilerProfile.MIN_DISTANCE),
-        (MockDevice, CompilerProfile.DEFAULT),
-    ],
-)
-def test_compiler_profiles_dmm(
+def test_compiler_dmm(
     device_class: Callable,
-    profile: CompilerProfile,
     dmm_program: Callable[[], QuantumProgram],
 ) -> None:
     program = dmm_program()
     device = device_class()
     if device._device.dmm_channels:
-        program.compile_to(device, profile=profile)
+        program.compile_to(device)
         assert program.is_compiled
         assert isinstance(program.compiled_sequence, PulserSequence)
     else:
         with pytest.raises(CompilationError):
-            program.compile_to(device, profile=profile)
+            program.compile_to(device)
 
 
 def test_compiled_sequence_with_delays() -> None:
