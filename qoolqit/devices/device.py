@@ -144,7 +144,7 @@ class Device:
         max_duration = self._max_duration / TIME if self._max_duration else None
         max_amplitude = self._max_amp / ENERGY if self._max_amp else None
         max_abs_detuning = self._max_abs_det / ENERGY if self._max_abs_det else None
-        min_distance = self._min_distance / DISTANCE if self._min_distance else None
+        min_distance = self._min_distance / DISTANCE
         max_radial_distance = (
             self._max_radial_distance / DISTANCE if self._max_radial_distance else None
         )

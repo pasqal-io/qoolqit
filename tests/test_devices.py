@@ -80,7 +80,7 @@ def test_default_device_specs() -> None:
         "max_duration": None,
         "max_amplitude": None,
         "max_abs_detuning": None,
-        "min_distance": None,
+        "min_distance": 0,
         "max_radial_distance": None,
     }
     assert mock_device.specs == expected_mock_specs
