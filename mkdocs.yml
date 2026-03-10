@@ -7,12 +7,10 @@ nav:
   - Get started:
     - Install: get_started/install.md
     - Programming a neutral atom QPU: get_started/rydberg_model.md
-    - Tutorials:
-      - User journey: tutorials/user_journey.ipynb
-      - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
-      - Rydberg blockade: tutorials/rydberg_blockade.ipynb
+    - Adimensionalization: get_started/adimensionalization.md
+    - Programming with QoolQit: tutorials/programming_with_qoolqit.ipynb
   - Fundamentals:
-    - Overview: fundamentals/overview.md
+    - Introduction: fundamentals/introduction.md
     - Problem generation: fundamentals/graphs.md
     - Problem embedding: fundamentals/available_embedders.md
     - Writing a quantum program:
@@ -26,6 +24,10 @@ nav:
     - Custom embedders: fundamentals/custom_embedders.md
   - Applications:
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
+  - Tutorials:
+      - User journey: tutorials/user_journey.ipynb
+      - Defining a custom quantum program: tutorials/custom_quantum_program.ipynb
+      - Rydberg blockade: tutorials/rydberg_blockade.ipynb
   - API reference: reference/api.md
   - Contribute:
     - How to contribute: CONTRIBUTING.md
