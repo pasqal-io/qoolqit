@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import networkx as nx
 import numpy as np
 import pytest
+import torch
+from torch_geometric.data import Data
 
 from qoolqit.graphs import DataGraph, random_edge_list
 from qoolqit.utils import ATOL_64
@@ -326,3 +329,300 @@ def test_heavy_hexagonal() -> None:
         (33, 34),
     }
     assert edges == expected_edges
+
+
+# ---------------------------------------------------------------------------
+# PyG conversion tests (from_pyg / to_pyg)
+# ---------------------------------------------------------------------------
+
+
+def test_from_pyg_wrong_input() -> None:
+    with pytest.raises(TypeError, match="Input must be a torch_geometric.data.Data object."):
+        DataGraph.from_pyg("hello")
+
+
+def test_from_pyg_only_edges() -> None:
+    """Test importing a PyG Data with only edge_index (no weights or positions)."""
+    edge_index = torch.tensor([[0, 1, 1, 2], [1, 0, 2, 1]])
+    data = Data(edge_index=edge_index, num_nodes=3)
+
+    g = DataGraph.from_pyg(data)
+
+    assert set(g.nodes) == {0, 1, 2}
+    assert all(v is None for v in g._node_weights.values())
+    assert all(v is None for v in g._coords.values())
+    assert all(v is None for v in g._edge_weights.values())
+
+
+def test_from_pyg_with_qoolqit_attrs() -> None:
+    """Test importing a PyG Data object with QoolQit attributes (weight, pos, edge_weight)."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    weight = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)
+    pos = torch.tensor([[0.0, 0.0], [1.0, 0.0], [0.5, 1.0]], dtype=torch.float64)
+    edge_weight = torch.tensor([0.1, 0.2, 0.3], dtype=torch.float64)
+
+    data = Data(weight=weight, pos=pos, edge_index=edge_index, edge_weight=edge_weight)
+
+    g = DataGraph.from_pyg(data, node_weights_attr="weight", edge_weights_attr="edge_weight")
+
+    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
+    assert g._coords == {0: (0.0, 0.0), 1: (1.0, 0.0), 2: (0.5, 1.0)}
+
+
+def test_from_pyg_with_pyg_attrs() -> None:
+    """Test that standard PyG attributes (x, edge_attr) are stored as graph attributes."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    x = torch.tensor([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]], dtype=torch.float64)
+    edge_attr = torch.tensor([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]], dtype=torch.float64)
+
+    data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
+
+    g = DataGraph.from_pyg(data)
+
+    assert g.nodes[0]["x"] == [1.0, 2.0]
+    assert g.nodes[1]["x"] == [3.0, 4.0]
+    assert g.nodes[2]["x"] == [5.0, 6.0]
+    assert g.edges[0, 1]["edge_attr"] == [0.1, 0.2]
+
+
+def test_from_pyg_with_y_graph_attr() -> None:
+    """Test that y is stored as a graph-level attribute."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
+    y = torch.tensor([1], dtype=torch.int64)
+    data = Data(edge_index=edge_index, y=y, num_nodes=2)
+
+    g = DataGraph.from_pyg(data)
+
+    assert "y" in g.graph
+    assert g.graph["y"] == [1]  # to_networkx converts tensor to list
+
+
+def test_from_pyg_no_auto_weight_detection() -> None:
+    """Without node_weights_attr, weight attribute is NOT auto-mapped to node weights."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
+    weight = torch.tensor([1.0, 2.0], dtype=torch.float64)
+    data = Data(edge_index=edge_index, weight=weight)
+
+    g = DataGraph.from_pyg(data)
+
+    assert all(v is None for v in g._node_weights.values())
+
+
+def test_from_pyg_with_node_weights_attr() -> None:
+    """Test mapping a PyG x attribute (shape (n, 1)) to node weights."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    x = torch.tensor([[1.0], [2.0], [3.0]], dtype=torch.float64)
+    data = Data(x=x, edge_index=edge_index)
+
+    g = DataGraph.from_pyg(data, node_weights_attr="x")
+
+    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+
+
+def test_from_pyg_with_node_weights_attr_1d() -> None:
+    """Test mapping a 1D PyG attribute to node weights."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    data = Data(edge_index=edge_index, num_nodes=3)
+    data.my_weights = torch.tensor([10.0, 20.0, 30.0], dtype=torch.float64)
+
+    g = DataGraph.from_pyg(data, node_weights_attr="my_weights")
+
+    assert g._node_weights == {0: 10.0, 1: 20.0, 2: 30.0}
+
+
+def test_from_pyg_with_edge_weights_attr() -> None:
+    """Test mapping edge_attr (shape (m, 1)) to edge weights."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    edge_attr = torch.tensor([[0.1], [0.2], [0.3]], dtype=torch.float64)
+    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
+
+    g = DataGraph.from_pyg(data, edge_weights_attr="edge_attr")
+
+    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
+
+
+def test_from_pyg_with_edge_weights_attr_1d() -> None:
+    """Test mapping a custom 1D attribute to edge weights."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    data = Data(edge_index=edge_index, num_nodes=3)
+    data.my_edge_w = torch.tensor([0.5, 0.6, 0.7], dtype=torch.float64)
+
+    g = DataGraph.from_pyg(data, edge_weights_attr="my_edge_w")
+
+    assert g._edge_weights == {(0, 1): 0.5, (1, 2): 0.6, (0, 2): 0.7}
+
+
+def test_from_pyg_weights_attr_wrong_shape() -> None:
+    """Test that a multi-column attribute raises ValueError."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
+    x = torch.tensor([[1.0, 2.0], [3.0, 4.0]], dtype=torch.float64)  # shape (2, 2)
+    data = Data(x=x, edge_index=edge_index)
+
+    with pytest.raises(ValueError, match="must have shape"):
+        DataGraph.from_pyg(data, node_weights_attr="x")
+
+
+def test_from_pyg_weights_attr_missing() -> None:
+    """Test that a missing attribute raises AttributeError."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
+    data = Data(edge_index=edge_index, num_nodes=2)
+
+    with pytest.raises(AttributeError, match="has no attribute 'nonexistent'"):
+        DataGraph.from_pyg(data, node_weights_attr="nonexistent")
+
+    with pytest.raises(AttributeError, match="has no attribute 'nonexistent'"):
+        DataGraph.from_pyg(data, edge_weights_attr="nonexistent")
+
+
+def test_from_pyg_weights_attr_wrong_size() -> None:
+    """Test that a size mismatch raises ValueError."""
+    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
+    data = Data(edge_index=edge_index, num_nodes=2)
+    data.bad_node = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)  # 3 elements, 2 nodes
+    data.bad_edge = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)  # 3 elements, 2 edges
+
+    with pytest.raises(ValueError, match="has 3 elements, expected 2"):
+        DataGraph.from_pyg(data, node_weights_attr="bad_node")
+
+    with pytest.raises(ValueError, match="has 3 elements, expected 2"):
+        DataGraph.from_pyg(data, edge_weights_attr="bad_edge")
+
+
+def test_from_pyg_edge_weights_attr_wrong_shape() -> None:
+    """Test that a multi-column edge attribute raises ValueError."""
+    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.int64)
+    edge_attr = torch.tensor(
+        [[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]], dtype=torch.float64
+    )  # shape (3, 2)
+    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
+
+    with pytest.raises(ValueError, match="must have shape"):
+        DataGraph.from_pyg(data, edge_weights_attr="edge_attr")
+
+
+def test_to_pyg_basic() -> None:
+    """Test converting a DataGraph to a PyG Data object."""
+    G = nx.Graph()
+    G.add_node(0, weight=1.0, pos=(0.0, 0.0))
+    G.add_node(1, weight=2.0, pos=(1.0, 0.0))
+    G.add_node(2, weight=3.0, pos=(0.5, 1.0))
+    G.add_edge(0, 1, weight=0.1)
+    G.add_edge(1, 2, weight=0.2)
+    G.add_edge(0, 2, weight=0.3)
+
+    g = DataGraph.from_nx(G)
+    data = g.to_pyg()
+
+    assert hasattr(data, "pos")
+    assert data.pos.shape == (3, 2)
+
+    assert hasattr(data, "weight")
+    assert data.weight.tolist() == [1.0, 2.0, 3.0]
+
+    assert hasattr(data, "edge_weight")
+
+
+def test_to_pyg_with_graph_attr_y() -> None:
+    """Test that graph attribute y is exported to Data.y."""
+    G = nx.Graph()
+    G.add_edge(0, 1)
+    G.add_edge(1, 2)
+
+    g = DataGraph.from_nx(G)
+    g.graph["y"] = [42]
+
+    data = g.to_pyg()
+
+    assert hasattr(data, "y")
+    assert torch.equal(data.y, torch.tensor([42]))
+
+
+def test_to_pyg_with_custom_weights_attr() -> None:
+    """Test that to_pyg exports weights under custom attribute names."""
+    G = nx.Graph()
+    G.add_node(0, weight=1.0, pos=(0.0, 0.0))
+    G.add_node(1, weight=2.0, pos=(1.0, 0.0))
+    G.add_edge(0, 1, weight=0.5)
+
+    g = DataGraph.from_nx(G)
+    data = g.to_pyg(node_weights_attr="x", edge_weights_attr="edge_attr")
+
+    assert hasattr(data, "x")
+    assert data.x.tolist() == [1.0, 2.0]
+
+    assert hasattr(data, "edge_attr")
+    assert data.edge_attr.shape[0] == data.edge_index.shape[1]
+
+    # Default names should NOT be present
+    assert not hasattr(data, "weight") or data.weight is None
+    assert not hasattr(data, "edge_weight") or data.edge_weight is None
+
+
+def test_pyg_roundtrip_qoolqit_attrs() -> None:
+    """Test that from_pyg -> to_pyg preserves QoolQit attributes (weight, pos, edge_weight, y)."""
+    edge_index = torch.tensor([[0, 1, 2, 1, 2, 0], [1, 2, 0, 0, 1, 2]], dtype=torch.int64)
+    weight = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)
+    pos = torch.tensor([[0.0, 0.0], [1.0, 0.0], [0.5, 1.0]], dtype=torch.float64)
+    edge_weight = torch.tensor([0.1, 0.2, 0.3, 0.1, 0.2, 0.3], dtype=torch.float64)
+    y = torch.tensor([1], dtype=torch.int64)
+
+    original_data = Data(
+        edge_index=edge_index, weight=weight, pos=pos, edge_weight=edge_weight, y=y, num_nodes=3
+    )
+
+    g = DataGraph.from_pyg(
+        original_data, node_weights_attr="weight", edge_weights_attr="edge_weight"
+    )
+    roundtrip_data = g.to_pyg()
+
+    assert roundtrip_data.num_nodes == 3
+    assert torch.allclose(roundtrip_data.pos, pos)
+    assert torch.allclose(roundtrip_data.weight, weight)
+    assert hasattr(roundtrip_data, "edge_weight")
+    assert roundtrip_data.edge_weight.shape[0] == edge_index.shape[1]
+    assert torch.equal(roundtrip_data.y, torch.tensor([1]))
+
+
+def test_pyg_roundtrip_pyg_attrs() -> None:
+    """Test that from_pyg -> to_pyg preserves standard PyG attributes (x, edge_attr)."""
+    edge_index = torch.tensor([[0, 1, 2, 1, 2, 0], [1, 2, 0, 0, 1, 2]], dtype=torch.int64)
+    x = torch.tensor([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]], dtype=torch.float64)
+    edge_attr = torch.tensor(
+        [[0.1, 0.2], [0.3, 0.4], [0.5, 0.6], [0.1, 0.2], [0.3, 0.4], [0.5, 0.6]],
+        dtype=torch.float64,
+    )
+
+    original_data = Data(edge_index=edge_index, x=x, edge_attr=edge_attr)
+
+    g = DataGraph.from_pyg(original_data)
+    roundtrip_data = g.to_pyg()
+
+    assert roundtrip_data.num_nodes == 3
+    assert hasattr(roundtrip_data, "x")
+    assert roundtrip_data.x.shape == x.shape
+    assert torch.allclose(roundtrip_data.x.double(), x)
+    assert hasattr(roundtrip_data, "edge_attr")
+    assert roundtrip_data.edge_attr.shape == edge_attr.shape
+
+
+def test_from_pyg_to_pyg_roundtrip_custom_weights_attr() -> None:
+    """Test roundtrip with custom weights attribute names."""
+    edge_index = torch.tensor([[0, 1, 2, 1, 2, 0], [1, 2, 0, 0, 1, 2]], dtype=torch.int64)
+    data = Data(edge_index=edge_index, num_nodes=3)
+    data.my_node_w = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64)
+    data.my_edge_w = torch.tensor([0.1, 0.2, 0.3, 0.1, 0.2, 0.3], dtype=torch.float64)
+
+    g = DataGraph.from_pyg(data, node_weights_attr="my_node_w", edge_weights_attr="my_edge_w")
+
+    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+
+    roundtrip_data = g.to_pyg(node_weights_attr="my_node_w", edge_weights_attr="my_edge_w")
+
+    assert hasattr(roundtrip_data, "my_node_w")
+    assert torch.allclose(
+        roundtrip_data.my_node_w,
+        torch.tensor([1.0, 2.0, 3.0], dtype=torch.float64),
+    )
+    assert hasattr(roundtrip_data, "my_edge_w")
+    assert roundtrip_data.my_edge_w.shape[0] == edge_index.shape[1]

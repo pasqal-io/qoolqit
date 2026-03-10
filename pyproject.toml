@@ -19,7 +19,9 @@ authors = [
   { name = "Manu Lahariya", email = "manu.lahariya@pasqal.com" },
   { name = "Charles MOUSSA", email = "charles.moussa@pasqal.com" },
   { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
-  { name = "Clément de Terrasson de Montleau", email = "clement.de-terrasson@pasqal.com" }
+  { name = "Clément de Terrasson de Montleau", email = "clement.de-terrasson@pasqal.com" },
+  { name = "Mathieu Garrigues", email = "mathieu.garrigues@pasqal.com" }
+
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",

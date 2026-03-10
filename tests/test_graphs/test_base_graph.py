@@ -5,7 +5,6 @@ from typing import Any
 import networkx as nx
 import numpy as np
 import pytest
-import torch
 from torch_geometric.data import Data
 
 from qoolqit.graphs import BaseGraph, random_coords, random_edge_list
@@ -268,81 +267,3 @@ def test_from_nx_wrong_pos_attr(wrong_node_pos: Any) -> None:
         match="In node 0 the `pos` attribute must be a 2D tuple/list of real numbers",
     ):
         BaseGraph.from_nx(G)
-
-
-def test_from_pyg_wrong_input() -> None:
-    with pytest.raises(TypeError, match="Input must be a torch_geometric.data.Data object."):
-        BaseGraph.from_pyg("hello")
-
-
-def test_from_pyg_only_edges() -> None:
-    """Test importing a PyG Data with only edge_index (no weights or positions)."""
-    edge_index = torch.tensor([[0, 1, 1, 2], [1, 0, 2, 1]])  # edges: (0,1), (1,0), (1,2), (2,1)
-    data = Data(edge_index=edge_index, num_nodes=3)
-
-    g = BaseGraph.from_pyg(data)
-
-    # Check that nodes and edges were copied
-    assert set(g.nodes) == {0, 1, 2}
-    assert all(v is None for v in g._node_weights.values())
-    assert all(v is None for v in g._coords.values())
-    assert all(v is None for v in g._edge_weights.values())
-
-
-def test_from_pyg() -> None:
-    """Test importing a PyG Data object with node and edge attributes."""
-    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]], dtype=torch.float64)  # (0->1, 1->2, 2->0)
-
-    x = torch.tensor([[1.0], [2.0], [3.0]], dtype=torch.float64)  # node weights
-    pos = torch.tensor([[0.0, 0.0], [1.0, 0.0], [0.5, 1.0]], dtype=torch.float64)  # positions
-    edge_attr = torch.tensor([[0.1], [0.2], [0.3]], dtype=torch.float64)  # edge weights
-
-    data = Data(x=x, pos=pos, edge_index=edge_index, edge_attr=edge_attr)
-
-    g = BaseGraph.from_pyg(data)
-
-    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
-    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
-    assert g._coords == {0: [0.0, 0.0], 1: [1.0, 0.0], 2: [0.5, 1.0]}
-
-
-def test_from_pyg_wrong_shape_x() -> None:
-    """Test that invalid tensor shapes raise ValueError."""
-    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.float64)
-    x = torch.tensor(
-        [[1.0, 2.0], [2.0, 1.0]], dtype=torch.float64
-    )  # wrong shape: should be (num_nodes,1)
-    data = Data(x=x, edge_index=edge_index)
-
-    with pytest.raises(ValueError, match="x"):
-        BaseGraph.from_pyg(data)
-
-
-def test_from_pyg_wrong_shape_pos() -> None:
-    """Test that non-numeric tensors raise TypeError."""
-    edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.float64)
-    pos = torch.tensor([[0, 1, 1], [1, 0, 0]], dtype=torch.float64)
-    data = Data(edge_index=edge_index, pos=pos)
-
-    with pytest.raises(ValueError, match="pos"):
-        BaseGraph.from_pyg(data)
-
-
-def test_from_pyg_edge_attr_num_edges() -> None:
-    """Test that edge_attr with wrong number of rows raises ValueError."""
-    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]])  # 3 edges
-    edge_attr = torch.tensor([[0.1], [0.2]])  # only 2 edge attributes
-    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
-
-    with pytest.raises(ValueError, match=r"edge_attr"):
-        BaseGraph.from_pyg(data)
-
-
-def test_from_pyg_wrong_edge_shape() -> None:
-    """Test that non-tensor edge_attr raises TypeError."""
-    edge_index = torch.tensor([[0, 1, 2], [1, 2, 0]])  # 3 edges
-    edge_attr = torch.tensor([[0.1, 0.2], [0.1, 0.2], [0.1, 0.2]])  # shape mismatch
-    data = Data(edge_index=edge_index, edge_attr=edge_attr, num_nodes=3)
-
-    with pytest.raises(ValueError, match=r"edge_attr"):
-        BaseGraph.from_pyg(data)
