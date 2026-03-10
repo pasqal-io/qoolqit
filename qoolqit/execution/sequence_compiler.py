@@ -10,13 +10,6 @@ from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
 
 from .compilation_functions import basic_compilation
-from .utils import CompilerProfile
-
-ALL_COMPILER_PROFILES = [
-    CompilerProfile.DEFAULT,
-    CompilerProfile.MAX_AMPLITUDE,
-    CompilerProfile.MIN_DISTANCE,
-]
 
 
 class SequenceCompiler:
@@ -36,7 +29,6 @@ class SequenceCompiler:
         self._device = device
         self._target_device = device._device
         self._compilation_function: Callable = basic_compilation
-        self._profile = CompilerProfile.DEFAULT
 
     @property
     def register(self) -> Register:
@@ -50,36 +42,12 @@ class SequenceCompiler:
     def device(self) -> Device:
         return self._device
 
-    @property
-    def profile(self) -> CompilerProfile:
-        """The compiler profile to use."""
-        return self._profile
-
-    @profile.setter
-    def profile(self, profile: CompilerProfile) -> None:
-        """Set the compiler profile.
-
-        Arguments:
-            profile: the chosen compiler profile.
-        """
-        if profile not in CompilerProfile:
-            raise TypeError(
-                "Unknown profile, please pick one from the CompilerProfile enumeration."
-            )
-        elif profile not in ALL_COMPILER_PROFILES:
-            raise NotImplementedError(
-                f"The requested profile is not implemented for device {self.device.name}"
-            )
-        else:
-            self._profile = profile
-
     def compile_sequence(self) -> PulserSequence:
         try:
             return self._compilation_function(
                 self.register,
                 self.drive,
                 self.device,
-                self.profile,
             )
         except CompilationError as error:
             raise error

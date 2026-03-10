@@ -14,8 +14,6 @@ from qoolqit.drive import Drive, Waveform, WeightedDetuning
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
 
-from .utils import CompilerProfile
-
 
 def _build_register(register: Register, device: Device, distance: float) -> PulserRegister:
     """Builds a Pulser Register from a QoolQit Register."""
@@ -58,7 +56,6 @@ def basic_compilation(
     register: Register,
     drive: Drive,
     device: Device,
-    profile: CompilerProfile = CompilerProfile.DEFAULT,  # to be removed, does nothing now
 ) -> PulserSequence:
     """Compiles a QoolQit program to a PulserSequence.
 
