@@ -59,37 +59,3 @@ program.draw(compiled = True)
 fig_compiled = program.draw(compiled = True, return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig_compiled)) # markdown-exec: hide
 ```
-
-## Compiler profiles
-
-In the example above the `AnalogDevice` was used, and no changes were made to the unit converter. As such, the default was used, which sets the reference energy unit as the maximum amplitude, as described in the [Devices page](devices.md).
-
-When a QoolQit program is compiled to Pulser, several compiler profiles can be used. You can check them in the following enumeration:
-
-```python exec="on" source="material-block" result="json" session="drives"
-from qoolqit import CompilerProfile
-
-print(CompilerProfile)
-```
-
-By default `CompilerProfile.DEFAULT` is used, which directly takes the unit converter present in the device and uses it when converting the values.
-
-Other compiler profiles will ignore the unit converter present in the device and utilize their own logic to determine the best possible conversion to achieve a desired compilation directive.
-
-The `CompilerProfile.MAX_AMPLITUDE` maps whatever is the maximum amplitude in the drive of your QoolQit program to the device's maximum allowed amplitude:
-```python exec="on" source="material-block" html="1" session="drives"
-program.compile_to(device, profile = CompilerProfile.MAX_AMPLITUDE)
-program.draw(compiled = True)
-fig_compiled = program.draw(compiled = True, return_fig = True) # markdown-exec: hide
-print(fig_to_html(fig_compiled)) # markdown-exec: hide
-```
-
-The `CompilerProfile.MIN_DISTANCE` maps whatever is the minimum distance in the register of your QoolQit program to the device's minimum allowed atom separation:
-```python exec="on" source="material-block" result="json" session="drives"
-try:
-    program.compile_to(device, profile = CompilerProfile.MIN_DISTANCE)
-except Exception as error:
-    print(error)
-```
-
-In this case, you can see the compilation failed because putting the atoms that close together for this program would require setting an amplitude that is larger than what the device allows.
