@@ -18,11 +18,9 @@ from pulser.backend.remote import RemoteResults
 
 from qoolqit.execution.backends import QPU, LocalEmulator, RemoteEmulator
 from qoolqit.execution.sequence_compiler import SequenceCompiler
-from qoolqit.execution.utils import CompilerProfile
 
 __all__ = [
     "SequenceCompiler",
-    "CompilerProfile",
     "LocalEmulator",
     "RemoteEmulator",
     "QPU",

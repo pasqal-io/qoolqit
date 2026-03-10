@@ -21,7 +21,7 @@ from qoolqit.embedding import (
     SpringLayoutConfig,
     SpringLayoutEmbedder,
 )
-from qoolqit.execution import CompilerProfile, SequenceCompiler
+from qoolqit.execution import SequenceCompiler
 from qoolqit.graphs import DataGraph
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
@@ -45,7 +45,6 @@ __all__ = [
     "Drive",
     "Register",
     "QuantumProgram",
-    "CompilerProfile",
     "SequenceCompiler",
     "available_default_devices",
     "AnalogDevice",
