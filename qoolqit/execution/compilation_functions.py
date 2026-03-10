@@ -29,7 +29,7 @@ def _build_register(register: Register, device: Device, distance: float) -> Puls
 class WaveformConverter:
     """Convert a QoolQit waveform into a equivalent Pulser waveform.
 
-    Requires the new time and energy scales set by the compilation profile.
+    Requires the new time and energy scales set by the compilation.
     Additionally, requires the clock period of the device to round the duration.
     """
 
@@ -187,7 +187,6 @@ def _validate_program(
         register: the register containing the qubits positions.
         drive: the drive acting on qubits, defining amplitude, detuning and phase.
         device: the selected device to compile to.
-        profile: the compilation strategy.
 
     Raises:
         CompilationError: if the compiled program does not respect the device specifications.
