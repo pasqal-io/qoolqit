@@ -81,7 +81,6 @@ class QuantumProgram:
 
         Arguments:
             device: the Device to compile to.
-            profile: the compiler profile to use during compilation.
         """
         compiler = SequenceCompiler(self.register, self.drive, device)
         self._device = device
