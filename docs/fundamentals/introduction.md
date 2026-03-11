@@ -13,4 +13,4 @@ The second part of this section presents the **building blocks of quantum progra
 
 Finally, the [execution](execution.md) page shows how compiled programs can be run on local emulators, remote emulators, or QPUs, and how to retrieve and interpret the resulting data.
 
-Together, these pages define the standard workflow in QoolQit, from problem specification to hardware-oriented quantum program execution.
+Together, these pages define the standard workflow in QoolQit, from hardware agnostic problem specification to compilation and quantum program execution.
