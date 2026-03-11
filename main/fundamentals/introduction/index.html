@@ -764,7 +764,7 @@
   <span class="md-ellipsis">
     
   
-    Problem generation
+    Problem definition and graphs
   
 
     
@@ -1650,7 +1650,17 @@
 
   <h1>Introduction</h1>
 
-
+<p>This section introduces the core concepts and abstractions used throughout QoolQit. It follows the typical workflow of working with the Rydberg analog model: first defining a problem in a structured form, then embedding it into a geometry compatible with neutral-atom hardware, and finally building, compiling, and executing a quantum program.</p>
+<p>The first part of this section focuses on <strong>problem representation and embedding</strong>. In QoolQit, graphs provide the standard representation for many problems of interest, particularly in optimization and machine learning. The <a href="../graphs/"><code>DataGraph</code></a> class extends the standard NetworkX graph interface with functionality tailored to the Rydberg analog model, including node coordinates, distance-based methods, unit-disk graph logic, and support for node and edge weights.</p>
+<p>Once a problem has been defined, it can be mapped into a hardware-compatible object through the <strong>embedding</strong> interface. The <a href="../available_embedders/">embedding pages</a> introduce the basic embedding workflow in QoolQit and the pre-defined embedders currently available in the library. For more advanced use cases, QoolQit also supports the definition of <a href="../custom_embedders/">custom embedders</a>, allowing users to implement new embedding strategies with their own input types, output types, and configuration parameters.</p>
+<p>The second part of this section presents the <strong>building blocks of quantum programs</strong> in QoolQit. A program is constructed by combining:
+- a <a href="../registers/"><code>Register</code></a>, which defines the qubit positions;
+- a set of <a href="../waveforms/"><code>Waveforms</code></a>, which describe time-dependent controls;
+- a <a href="../drives/"><code>Drive</code></a>, which combines those controls into a drive Hamiltonian;
+- a <a href="../devices/"><code>Device</code></a>, which specifies the hardware constraints and unit conversion rules; and
+- a <a href="../programs/"><code>QuantumProgram</code></a>, which combines the register and drive into an executable program.</p>
+<p>Finally, the <a href="../execution/">execution</a> page shows how compiled programs can be run on local emulators, remote emulators, or QPUs, and how to retrieve and interpret the resulting data.</p>
+<p>Together, these pages define the standard workflow in QoolQit, from hardware agnostic problem specification to compilation and quantum program execution.</p>
 
 
 
