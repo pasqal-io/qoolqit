@@ -11,7 +11,7 @@ nav:
     - Programming with QoolQit: tutorials/programming_with_qoolqit.ipynb
   - Fundamentals:
     - Introduction: fundamentals/introduction.md
-    - Problem generation: fundamentals/graphs.md
+    - Problem definition and graphs: fundamentals/graphs.md
     - Problem embedding: fundamentals/available_embedders.md
     - Writing a quantum program:
       - Registers: fundamentals/registers.md
