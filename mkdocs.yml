@@ -6,7 +6,7 @@ nav:
   - Overview: index.md
   - Get started:
     - Install: get_started/install.md
-    - Programming a neutral atom QPU: get_started/rydberg_model.md
+    - Programming a neutral atom QPU: get_started/qoolqit_model.md
     - Programming with QoolQit: tutorials/programming_with_qoolqit.ipynb
   - Fundamentals:
     - Introduction: fundamentals/introduction.md
