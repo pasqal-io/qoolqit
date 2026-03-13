@@ -1,5 +1,13 @@
 # Creating a quantum program
 
+In this page, you will learn how to:
+
+- create a `QuantumProgram` from a `Register` and a `Drive`,
+- check whether a program has already been compiled,
+- compile a dimensionless program to a target device,
+- inspect the compiled Pulser `Sequence`,
+- visualize both the original program and its compiled version.
+
 A `QuantumProgram` combines a `Register` and a `Drive` and serves as the main interface for compilation and execution.
 
 ```python exec="on" source="material-block" result="json" session="drives"
