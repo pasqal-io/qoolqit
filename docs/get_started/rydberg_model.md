@@ -63,4 +63,4 @@ Once a quantum program is written, a **compilation routine** automatically maps 
 ## What's Next
 
 - [Fundamentals](../fundamentals/introduction.md) — Learn how to build programs with QoolQit: registers, waveforms, drives, and execution.
-- [Adimensionalization — Advanced](./adimensionalization.md) — Understand the connection to physical units and how compilation works.
+- [Adimensionalization — Advanced](../extended_usage/adimensionalization.md) — Understand the connection to physical units and how compilation works.
