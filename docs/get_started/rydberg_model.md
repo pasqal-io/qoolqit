@@ -51,7 +51,7 @@ Because $\tilde{\Omega}$ is expressed relative to the maximum interaction streng
 QoolQit introduces a **dimensionless reference frame** with the following conventions:
 
 - Distances are rescaled so that the smallest pairwise distance equals 1.
-- $\tilde{\Omega}(t)$ and $\tilde{\delta}(t)$ are measured relative to the maximum interaction strength, which corresponds to 1 in the dimensionless program.
+- $\tilde{\Omega}(t)$ and $\tilde{\delta}(t)$ are measured relative to the maximum interaction strength, which is equal to one in the dimensionless program.
 - Times $\tilde{t}$ are measured relative to the interaction timescale.
 
 This means programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
