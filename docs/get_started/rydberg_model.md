@@ -4,6 +4,16 @@ QoolQit lets you write analog quantum programs for neutral-atom platforms in a *
 
 This solves a key challenge in programming neutral-atom quantum computers: typically, you must specify physical parameters like atom positions in micrometers, laser amplitudes in MHz, and pulse durations in nanoseconds. These values depend heavily on the specific hardware — different devices have different Rydberg levels, laser power limits, and trap geometries.
 
+QoolQit introduces a **dimensionless reference frame** with the following conventions:
+
+- Distances are rescaled so that the smallest pairwise distance equals 1.
+- $\tilde{\Omega}(t)$ and $\tilde{\delta}(t)$ are measured relative to the maximum interaction strength, which is equal to one in the dimensionless program.
+- Times $\tilde{t}$ are measured relative to the interaction timescale.
+
+This means programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
+
+Once a quantum program is written, a **compilation routine** automatically maps its dimensionless parameters to physical values compatible with the target hardware. For more details, see the Overview page.
+
 ---
 
 ## The QoolQit Dimensionless Hamiltonian
@@ -44,19 +54,20 @@ Because $\tilde{\Omega}$ is expressed relative to the maximum interaction streng
 | Balanced | $\tilde{\Omega} \sim 1$ | Controls and interactions compete |
 | Weak drive | $\tilde{\Omega} \ll 1$ | Interactions dominate; blockade and correlation effects are strong |
 
----
 
-## Dimensionless Reference Frame
+### Time regimes
 
-QoolQit introduces a **dimensionless reference frame** with the following conventions:
+Time is expressed in QoolQit in units of the maximum interaction energy.
 
-- Distances are rescaled so that the smallest pairwise distance equals 1.
-- $\tilde{\Omega}(t)$ and $\tilde{\delta}(t)$ are measured relative to the maximum interaction strength, which is equal to one in the dimensionless program.
-- Times $\tilde{t}$ are measured relative to the interaction timescale.
+In an interacting many-body system, this gives $\tilde{t}$ a natural physical interpretation: it measures evolution time relative to the timescale on which interactions generate correlations. Roughly speaking, a time $\tilde{t}\sim 1$ is enough for nearest-neighbor sites to begin developing correlations. More generally, $\tilde{t}\sim n$ can be interpreted as the timescale on which correlations may have propagated over a distance of order $n$ lattice spacings.
 
-This means programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
+This makes dimensionless time a convenient, geometry-independent way to describe how long the system evolves relative to its intrinsic interaction dynamics.
 
-Once a quantum program is written, a **compilation routine** automatically maps its dimensionless parameters to physical values compatible with the target hardware. For more details, see the Overview page.
+| Regime | Condition | Intuition |
+|--------|-----------|-----------|
+| Short time | $\tilde{t} \ll 1$ | Evolution is too brief for interactions to significantly build up correlations |
+| Intermediate time | $\tilde{t} \sim 1$ | Interactions begin to visibly affect the dynamics; nearest-neighbor correlations can emerge |
+| Long time | $\tilde{t} \gg 1$ | Correlations and many-body interaction effects have had time to spread across the system |
 
 ---
 
