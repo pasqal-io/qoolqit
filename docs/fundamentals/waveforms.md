@@ -1,5 +1,15 @@
 # Writing time-dependent functions
 
+
+In this page, you will learn how to:
+
+- create and evaluate basic waveforms,
+- draw waveform shapes over time,
+- use interpolated and piecewise-linear waveforms,
+- compose multiple waveforms into a single signal,
+- inspect durations and timing in composite waveforms,
+- define custom waveform classes for specialized pulse shapes.
+
 An essential part of writing programs in the Rydberg analog model is to write the time-dependent functions representing the amplitude and detuning terms in the drive Hamiltonian. For that, QoolQit implements a set of waveforms that can be used directly and/or composed together.
 
 ## Base waveforms

@@ -1,5 +1,13 @@
 # Writing the drive Hamiltonian
 
+In this page, you will learn how to:
+
+- build a `Drive` from waveform components,
+- define amplitude and detuning waveforms,
+- compose drives into longer pulse sequences,
+- inspect the resulting drive object,
+- visualize the drive Hamiltonian.
+
 The `Drive` is a composition of waveforms defining the drive Hamiltonian.
 
 ```python exec="on" source="material-block" result="json" session="drives"

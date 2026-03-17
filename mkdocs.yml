@@ -6,8 +6,7 @@ nav:
   - Overview: index.md
   - Get started:
     - Install: get_started/install.md
-    - Programming a neutral atom QPU: get_started/rydberg_model.md
-    - Adimensionalization: get_started/adimensionalization.md
+    - Programming a neutral atom QPU: get_started/qoolqit_model.md
     - Programming with QoolQit: tutorials/programming_with_qoolqit.ipynb
   - Fundamentals:
     - Introduction: fundamentals/introduction.md
@@ -21,6 +20,7 @@ nav:
       - Quantum programs: fundamentals/programs.md
       - Execution: fundamentals/execution.md
   - Extended usage:
+    - Adimensionalization: extended_usage/adimensionalization.md
     - Custom embedders: fundamentals/custom_embedders.md
   - Applications:
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
