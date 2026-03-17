@@ -1,5 +1,15 @@
 # Executing a quantum program
 
+In this page, you will learn how to:
+
+- run a `QuantumProgram` on local emulators,
+- choose between different emulator backends,
+- configure emulator runs and observables,
+- inspect and extract local execution results,
+- connect to Pasqal Cloud and run programs remotely,
+- submit remote jobs and retrieve their results,
+- execute compiled programs on a QPU.
+
 A `QuantumProgram` can be easily run on multiple backends provided by Pasqal:
 - locally installed emulators
 - remote cloud emulators

@@ -1,5 +1,13 @@
 # Creating a quantum program
 
+In this page, you will learn how to:
+
+- create a `QuantumProgram` from a `Register` and a `Drive`,
+- check whether a program has already been compiled,
+- compile a dimensionless program to a target device,
+- inspect the compiled Pulser `Sequence`,
+- visualize both the original program and its compiled version.
+
 A `QuantumProgram` combines a `Register` and a `Drive` and serves as the main interface for compilation and execution.
 
 ```python exec="on" source="material-block" result="json" session="drives"
@@ -28,7 +36,7 @@ program.is_compiled
 print(program.is_compiled) # markdown-exec: hide
 ```
 
-Now we instantiate a device and compile the program to that device. Compiling in QoolQit means to translate the adimensional values of time, energy, and distance used when defining the program in the Rydberg analog model to a specific set of values that implement the same set of instructions in a Pulser device, taking into account the Pulser units and the specific parameters of that device. More detailed information on this conversion is provided in the [Rydberg analog model page](../get_started/rydberg_model.md).
+Next, we create a device and compile the program for it. In QoolQit, compilation refers to converting the dimensionless time, energy, and distance values used in the Rydberg analog model into concrete values that execute the same instructions on a Pulser device, while accounting for the device’s units and specific parameters. More detailed information on this conversion is provided in the [Rydberg analog model page](../get_started/qoolqit_model.md).
 
 ```python exec="on" source="material-block" result="json" session="drives"
 from qoolqit import AnalogDevice

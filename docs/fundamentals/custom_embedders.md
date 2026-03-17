@@ -1,5 +1,13 @@
 # Defining custom embedders
 
+In this page, you will learn how to:
+
+- understand how the embedding module is structured,
+- define a custom embedder from a function and a config dataclass,
+- work with graph-to-graph and matrix-to-graph embedder families,
+- wrap a custom embedder in a reusable class,
+- use automatic validation for configuration, input, and output types.
+
 In the [available embedders](available_embedders.md) page you saw the usage of some pre-defined embedders. The embedding module in QoolQit is designed to be flexible and extendable to various forms of embedding algorithms developed for the Rydberg analog model, with potentially different inputs and outputs, and different configuration parameters. It is structured in three levels:
 
 **Level 0: Concretizing the interface**

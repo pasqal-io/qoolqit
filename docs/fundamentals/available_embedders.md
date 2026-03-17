@@ -1,5 +1,16 @@
 # The embedding problem
 
+In this page, you will learn how to:
+
+- understand the role of embedding in the Rydberg analog model,
+- use the common interface of QoolQit embedders,
+- apply unit-disk graph embedding methods,
+- check whether a graph embedding satisfies the unit-disk condition,
+- convert embedded graphs into qubit registers,
+- embed symmetric matrices into interaction graphs,
+- inspect how well the resulting embedding matches the original data.
+
+
 Embedding data and problems into the Rydberg analog model is a broad research topic. Typically, an embedding is a structure preserving map $f_\text{embedding}: X \rightarrow Y$, such that an object $X$ is embedded into an object $Y$. Our goal is to define optimal embedding functions such that problem-specific data and definitions are embedded into model-compatible objects with the Rydberg analog model.
 
 In QoolQit, all concrete embedders follow a basic interface set by the `BaseEmbedder` abstract base class:

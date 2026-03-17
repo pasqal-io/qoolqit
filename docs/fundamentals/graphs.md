@@ -1,5 +1,16 @@
 # Standard structure for Graphs
 
+In this page, you will learn how to:
+
+- create and inspect a `DataGraph`,
+- access nodes, edges, and common graph views inherited from NetworkX,
+- draw graphs and use node coordinates for visualization,
+- compute distances and rescale graph coordinates,
+- work with unit-disk graphs and their radius conditions,
+- assign and inspect node and edge weights,
+- build graphs from coordinates, matrices, and built-in constructors.
+
+
 <!-- The `BaseGraph` is meant as a base class, although currenty not abstract, and is not meant to be used directly. Instead, for data manipulation the user should rely on the `DataGraph`, which inherits from the `BaseGraph`, and defines specific constructors and extra logic to deal with node and edge weights. -->
 
 Working with graphs is an essential part of computations with the Rydberg analog model. For that reason, QoolQit implements a specific `DataGraph` class to serve as the basis of all graph creation and manipulation, and setting the logic related to unit-disk graphs. QoolQit integrates with [NetworkX](https://networkx.org/) for many operations, and the `DataGraph` inherits from `nx.Graph`.

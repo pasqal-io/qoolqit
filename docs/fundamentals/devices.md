@@ -1,5 +1,14 @@
 # Initializing quantum devices
 
+In this page, you will learn how to:
+
+- create built-in QoolQit devices,
+- fetch available hardware devices from a connection,
+- build a QoolQit device from a Pulser device,
+- inspect the unit converter associated with a device,
+- customize time, energy, and distance units,
+- restore the default unit conversion settings.
+
 Each `Device` in QoolQit wraps a Pulser device and defines the hardware characteristics that the program will be compiled to and later executed on.
 
 ```python exec="on" source="material-block" session="devices"
@@ -65,7 +74,7 @@ device_real.converter
 print(device_real.converter)  # markdown-exec: hide
 ```
 
-The converter handles the logic of converting the adimensional QoolQit model to Pulser units. For theoretical details on how this conversion works between the Rydberg analog model and the implementation that Pulser uses you can check the [Rydberg analog model page](../get_started/rydberg_model.md).
+The converter handles the logic of converting the adimensional QoolQit model to Pulser units. For theoretical details on how this conversion works between the Rydberg analog model and the implementation that Pulser uses you can check the [Rydberg analog model page](../get_started/qoolqit_model.md).
 
 By default, each device creates a default converter where the **energy unit** is set as that device’s **maximum amplitude**. If you make no changes to the device’s converter, this means that amplitude values in the range \( [0, 1] \) will be converted to values in the range \( [0, \Omega_{\max}] \).
 
