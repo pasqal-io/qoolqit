@@ -12,7 +12,7 @@
         <link rel="prev" href="../install/">
       
       
-        <link rel="next" href="../adimensionalization/">
+        <link rel="next" href="../../tutorials/programming_with_qoolqit/">
       
       
         
@@ -301,7 +301,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../fundamentals/custom_embedders/" class="md-tabs__link">
+        <a href="../../extended_usage/adimensionalization/" class="md-tabs__link">
           
   
   
@@ -488,8 +488,6 @@
       
         
       
-        
-      
     
     
     
@@ -666,19 +664,19 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dimensionless-reference-frame" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#time-regimes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dimensionless Reference Frame
+        Time regimes
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -709,34 +707,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../adimensionalization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Adimensionalization
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../tutorials/programming_with_qoolqit/" class="md-nav__link">
         
   
@@ -744,7 +714,7 @@
   <span class="md-ellipsis">
     
   
-    QoolQit Workflow Overview
+    Tutorial: Programming with QoolQit
   
 
     
@@ -1171,6 +1141,8 @@
       
         
       
+        
+      
     
     
     
@@ -1215,6 +1187,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extended_usage/adimensionalization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adimensionalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1761,19 +1761,19 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dimensionless-reference-frame" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#time-regimes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dimensionless Reference Frame
+        Time regimes
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1805,7 +1805,7 @@
 
 
   
-    <a href="https://github.com/pasqal-io/qoolqit/edit/master/docs/get_started/rydberg_model.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/pasqal-io/qoolqit/edit/master/docs/get_started/qoolqit_model.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1814,7 +1814,7 @@
     
       
     
-    <a href="https://github.com/pasqal-io/qoolqit/raw/master/docs/get_started/rydberg_model.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/pasqal-io/qoolqit/raw/master/docs/get_started/qoolqit_model.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
@@ -1824,6 +1824,14 @@
 <h1 id="introduction">Introduction</h1>
 <p>QoolQit lets you write analog quantum programs for neutral-atom platforms in a <strong>dimensionless framework</strong>. Instead of working with physical units, you express your program in terms of ratios and relative scales — the same program can then be compiled to any compatible device.</p>
 <p>This solves a key challenge in programming neutral-atom quantum computers: typically, you must specify physical parameters like atom positions in micrometers, laser amplitudes in MHz, and pulse durations in nanoseconds. These values depend heavily on the specific hardware — different devices have different Rydberg levels, laser power limits, and trap geometries.</p>
+<p>QoolQit introduces a <strong>dimensionless reference frame</strong> with the following conventions:</p>
+<ul>
+<li>Distances are rescaled so that the smallest pairwise distance equals 1.</li>
+<li><span class="arithmatex">\(\tilde{\Omega}(t)\)</span> and <span class="arithmatex">\(\tilde{\delta}(t)\)</span> are measured relative to the maximum interaction strength, which is equal to one in the dimensionless program.</li>
+<li>Times <span class="arithmatex">\(\tilde{t}\)</span> are measured relative to the interaction timescale.</li>
+</ul>
+<p>This means programs are <strong>hardware-independent until compilation</strong>: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.</p>
+<p>Once a quantum program is written, a <strong>compilation routine</strong> automatically maps its dimensionless parameters to physical values compatible with the target hardware. For more details, see the Overview page.</p>
 <hr />
 <h2 id="the-qoolqit-dimensionless-hamiltonian">The QoolQit Dimensionless Hamiltonian</h2>
 <p>Your system evolves under the following Hamiltonian:</p>
@@ -1919,21 +1927,41 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="dimensionless-reference-frame">Dimensionless Reference Frame</h2>
-<p>QoolQit introduces a <strong>dimensionless reference frame</strong> with the following conventions:</p>
-<ul>
-<li>Distances are rescaled so that the smallest pairwise distance equals 1.</li>
-<li><span class="arithmatex">\(\tilde{\Omega}(t)\)</span> and <span class="arithmatex">\(\tilde{\delta}(t)\)</span> are measured relative to the maximum interaction strength, which corresponds to 1 in the dimensionless program.</li>
-<li>Times <span class="arithmatex">\(\tilde{t}\)</span> are measured relative to the interaction timescale.</li>
-</ul>
-<p>This means programs are <strong>hardware-independent until compilation</strong>: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.</p>
-<p>Once a quantum program is written, a <strong>compilation routine</strong> automatically maps its dimensionless parameters to physical values compatible with the target hardware. For more details, see the Overview page.</p>
+<h3 id="time-regimes">Time regimes</h3>
+<p>Time is expressed in QoolQit in units of the maximum interaction energy.</p>
+<p>In an interacting many-body system, this gives <span class="arithmatex">\(\tilde{t}\)</span> a natural physical interpretation: it measures evolution time relative to the timescale on which interactions generate correlations. Roughly speaking, a time <span class="arithmatex">\(\tilde{t}\sim 1\)</span> is enough for nearest-neighbor sites to begin developing correlations. More generally, <span class="arithmatex">\(\tilde{t}\sim n\)</span> can be interpreted as the timescale on which correlations may have propagated over a distance of order <span class="arithmatex">\(n\)</span> lattice spacings.</p>
+<p>This makes dimensionless time a convenient, geometry-independent way to describe how long the system evolves relative to its intrinsic interaction dynamics.</p>
+<table>
+<thead>
+<tr>
+<th>Regime</th>
+<th>Condition</th>
+<th>Intuition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Short time</td>
+<td><span class="arithmatex">\(\tilde{t} \ll 1\)</span></td>
+<td>Evolution is too brief for interactions to significantly build up correlations</td>
+</tr>
+<tr>
+<td>Intermediate time</td>
+<td><span class="arithmatex">\(\tilde{t} \sim 1\)</span></td>
+<td>Interactions begin to visibly affect the dynamics; nearest-neighbor correlations can emerge</td>
+</tr>
+<tr>
+<td>Long time</td>
+<td><span class="arithmatex">\(\tilde{t} \gg 1\)</span></td>
+<td>Correlations and many-body interaction effects have had time to spread across the system</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="whats-next">What's Next</h2>
 <ul>
 <li><a href="../../fundamentals/introduction/">Fundamentals</a> — Learn how to build programs with QoolQit: registers, waveforms, drives, and execution.</li>
-<li><a href="../adimensionalization/">Adimensionalization — Advanced</a> — Understand the connection to physical units and how compilation works.</li>
+<li><a href="../../extended_usage/adimensionalization/">Adimensionalization — Advanced</a> — Understand the connection to physical units and how compilation works.</li>
 </ul>
 
 

@@ -301,7 +301,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../custom_embedders/" class="md-tabs__link">
+        <a href="../../extended_usage/adimensionalization/" class="md-tabs__link">
           
   
   
@@ -486,8 +486,6 @@
       
         
       
-        
-      
     
     
     
@@ -568,7 +566,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../get_started/rydberg_model/" class="md-nav__link">
+      <a href="../../get_started/qoolqit_model/" class="md-nav__link">
         
   
   
@@ -596,34 +594,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../get_started/adimensionalization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Adimensionalization
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../tutorials/programming_with_qoolqit/" class="md-nav__link">
         
   
@@ -631,7 +601,7 @@
   <span class="md-ellipsis">
     
   
-    QoolQit Workflow Overview
+    Tutorial: Programming with QoolQit
   
 
     
@@ -1176,6 +1146,8 @@
       
         
       
+        
+      
     
     
     
@@ -1220,6 +1192,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extended_usage/adimensionalization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adimensionalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1827,6 +1827,15 @@
 
 
 <h1 id="initializing-quantum-devices">Initializing quantum devices</h1>
+<p>In this page, you will learn how to:</p>
+<ul>
+<li>create built-in QoolQit devices,</li>
+<li>fetch available hardware devices from a connection,</li>
+<li>build a QoolQit device from a Pulser device,</li>
+<li>inspect the unit converter associated with a device,</li>
+<li>customize time, energy, and distance units,</li>
+<li>restore the default unit conversion settings.</li>
+</ul>
 <p>Each <code>Device</code> in QoolQit wraps a Pulser device and defines the hardware characteristics that the program will be compiled to and later executed on.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">MockDevice</span><span class="p">,</span> <span class="n">AnalogDevice</span><span class="p">,</span> <span class="n">DigitalAnalogDevice</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -1898,7 +1907,7 @@ Please, refer to <a href="https://docs.pasqal.com/pulser/tutorials/virtual_devic
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">U</span><span class="kc">n</span><span class="err">i</span><span class="kc">t</span><span class="err">Co</span><span class="kc">n</span><span class="err">ver</span><span class="kc">ter</span><span class="err">(</span><span class="kc">t</span><span class="err">ime</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="mf">79.577</span><span class="p">,</span><span class="w"> </span><span class="err">e</span><span class="kc">ner</span><span class="err">gy</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="mf">12.566</span><span class="p">,</span><span class="w"> </span><span class="err">dis</span><span class="kc">tan</span><span class="err">ce</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="mf">6.403</span><span class="err">)</span>
 </code></pre></div>
 </div>
-<p>The converter handles the logic of converting the adimensional QoolQit model to Pulser units. For theoretical details on how this conversion works between the Rydberg analog model and the implementation that Pulser uses you can check the <a href="../../get_started/rydberg_model/">Rydberg analog model page</a>.</p>
+<p>The converter handles the logic of converting the adimensional QoolQit model to Pulser units. For theoretical details on how this conversion works between the Rydberg analog model and the implementation that Pulser uses you can check the <a href="../../get_started/qoolqit_model/">Rydberg analog model page</a>.</p>
 <p>By default, each device creates a default converter where the <strong>energy unit</strong> is set as that device’s <strong>maximum amplitude</strong>. If you make no changes to the device’s converter, this means that amplitude values in the range <span class="arithmatex">\( [0, 1] \)</span> will be converted to values in the range <span class="arithmatex">\( [0, \Omega_{\max}] \)</span>.</p>
 <h3 id="customizing-units">Customizing units</h3>
 <p>For advanced users, customizing the unit conversion factors is possible.</p>
