@@ -20,8 +20,9 @@ def _build_register(register: Register, device: Device, distance: float) -> Puls
     coords_qoolqit = register.qubits
     coords_pulser = {str(q): (distance * c[0], distance * c[1]) for q, c in coords_qoolqit.items()}
     pulser_register = PulserRegister(coords_pulser)
-    if device._requires_layout:
-        assert isinstance(device._device, PulserDevice)
+
+    # use automatic layout if the device is real and requires it
+    if isinstance(device._device, PulserDevice) and device._requires_layout:
         pulser_register = pulser_register.with_automatic_layout(device=device._device)
     return pulser_register
 
