@@ -3,7 +3,6 @@ from __future__ import annotations
 from random import randint, uniform
 from typing import Callable, Generator
 
-import numpy as np
 import pytest
 
 from qoolqit.drive import Drive, WeightedDetuning
@@ -88,13 +87,3 @@ def dmm_program(
         return QuantumProgram(register, drive)
 
     yield _generate_program
-
-
-@pytest.fixture
-def random_n_qubits() -> int:
-    return randint(1, 8)
-
-
-@pytest.fixture
-def evaluation_times() -> list[float]:
-    return list(np.linspace(0, 1, 101))

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from math import pi
+import math
 from typing import Callable, Optional
 
 import pulser
@@ -17,8 +17,7 @@ class Device:
     Args:
         pulser_device (BaseDevice): a `BaseDevice` to build the QoolQit device from.
         default_converter (Optional[UnitConverter]): optional unit converter to handle
-            unit conversion. Defaults to the unit converter that rescales energies by the
-            maximum allowed amplitude by the device.
+            unit conversion.
 
     Examples:
         From Pulser device:
@@ -78,14 +77,14 @@ class Device:
         # Relevant limits from the underlying device (float or None)
         self._max_duration = self._pulser_device.max_sequence_duration
         self._max_amp = self._pulser_device.channels["rydberg_global"].max_amp
+        self._upper_amp = self._max_amp or 4 * math.pi
         self._max_abs_det = self._pulser_device.channels["rydberg_global"].max_abs_detuning
         self._min_distance = self._pulser_device.min_atom_distance
+        self._lower_distance = self._min_distance or 4.0
         self._max_radial_distance = self._pulser_device.max_radial_distance
 
         # ratio between maximum amplitude and maximum interaction energy J_max = C6/r_min^6
-        self._energy_ratio = None
-        if self._max_amp and self._min_distance:
-            self._energy_ratio = (self._max_amp * self._min_distance**6) / self._C6
+        self._energy_ratio: float = (self._upper_amp * self._lower_distance**6) / self._C6
 
         # layouts
         self._requires_layout = self._pulser_device.requires_layout
@@ -97,10 +96,8 @@ class Device:
                 self._C6, t0, e0, d0
             )
         else:
-            # Default from energy using C6 and max amplitude.
-            # On MockDevice there is no max_amp so the reasonable reference is 4.0 * pi
-            self._default_factory = lambda: UnitConverter.from_energy(
-                self._C6, self._max_amp or 4.0 * pi
+            self._default_factory = lambda: UnitConverter.from_distance(
+                self._C6, self._min_distance or 4.0
             )
 
         self.reset_converter()
@@ -157,7 +154,7 @@ class Device:
         }
 
     @property
-    def energy_ratio(self) -> float | None:
+    def energy_ratio(self) -> float:
         """Return the ratio between the max amplitude and max interaction energy on this device."""
         return self._energy_ratio
 
@@ -189,8 +186,15 @@ class Device:
             connection (RemoteConnection): connection object to fetch the available devices.
             name (str): The name of the desired device.
 
+        Returns:
+            Device: The requested device.
+
+        Raises:
+            ValueError: If the requested device is not available through the provided connection.
+
         Example:
         ```python
+        from pulser_pasqal import PasqalCloud
         fresnel_device = Device.from_connection(connection=PasqalCloud(), name="FRESNEL")
         ```
         """

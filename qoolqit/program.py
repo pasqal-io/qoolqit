@@ -6,6 +6,7 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
 from qoolqit.drive import Drive
+from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.register import Register
 
@@ -76,13 +77,15 @@ class QuantumProgram:
             device = ""
         return header + register + drive + compiled + device
 
-    def compile_to(self, device: Device) -> None:
+    def compile_to(
+        self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT
+    ) -> None:
         """Compiles the given program to a device.
 
         Arguments:
             device: the Device to compile to.
         """
-        compiler = SequenceCompiler(self.register, self.drive, device)
+        compiler = SequenceCompiler(self.register, self.drive, device, profile)
         self._device = device
         self._compiled_sequence = compiler.compile_sequence()
 

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Callable
-
 import numpy as np
 import pytest
 from pulser.backend import Backend, Occupation
@@ -23,10 +21,10 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
     n_qubits = 4
 
     # Create and run a quantum program with different backends
-    duration = 4 * np.pi
+    duration = 500
     drive = Drive(amplitude=Constant(duration, rotation_angle / duration), phase=0)
     # atoms far away, no interaction
-    register = Register.from_coordinates([(x * 100.0, 0.0) for x in np.arange(n_qubits)])
+    register = Register.from_coordinates([(x * 10.0, 0.0) for x in np.arange(n_qubits)])
     program = QuantumProgram(register, drive)
     program.compile_to(MockDevice())
     emulation_config = EmulationConfig(observables=(Occupation(),))
@@ -35,7 +33,7 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
 
     final_r_pop = res.occupation
 
-    assert np.allclose(final_r_pop, expected_r_pop, rtol=1e-3)
+    np.testing.assert_allclose(final_r_pop, expected_r_pop, rtol=1e-3)
 
 
 @pytest.mark.parametrize(
@@ -47,11 +45,13 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
         (BackendType.MPSBackend, AnalogDevice()),
     ],
 )
-def test_results(random_program: Callable, backend_type: Backend, device: Device) -> None:
+def test_results(backend_type: Backend, device: Device) -> None:
     # Just run once and test multiple things for efficiency
 
     # Create a quantum program
-    program = random_program()
+    register = Register.from_coordinates([(x, 0.0) for x in np.arange(4)])
+    drive = Drive(amplitude=Constant(100, 0.2), phase=0)
+    program = QuantumProgram(register, drive)
     program.compile_to(device)
 
     # Run with QUTIP backend as reference
@@ -83,16 +83,15 @@ def test_results(random_program: Callable, backend_type: Backend, device: Device
 
     # Test evaluation times
     qutip_eval_times = qutip_res.get_result_times("occupation")
-    assert np.allclose(qutip_eval_times, evaluation_times, atol=1e-12)
+    np.testing.assert_allclose(qutip_eval_times, evaluation_times, atol=1e-12)
     # Emulators below:
     # - skip the t=0 evaluation time
     # - alter user input evaluation times
     # - will fail for even steps
     # TODO: review this test when https://github.com/pasqal-io/emulators/issues/169 is solved
     other_eval_times = other_res.get_result_times("occupation")
-    if backend_type in (BackendType.SVBackend, BackendType.MPSBackend):
-        assert np.allclose(other_eval_times, evaluation_times[1:], atol=0.05)
+    np.testing.assert_allclose(other_eval_times, evaluation_times[1:], atol=0.01)
 
     # value comparison of result is not fair because of different evaluation times
     # TODO: review this test when https://github.com/pasqal-io/emulators/issues/169 is solved
-    assert np.allclose(qutip_occupation[1:], other_occupation, atol=0.2)
+    np.testing.assert_allclose(qutip_occupation[1:], other_occupation, atol=0.1)

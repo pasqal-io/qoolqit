@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from enum import Enum
 
 from pulser.devices import Device as PulserDevice
 from pulser.parametrized import ParamObj
@@ -13,6 +14,13 @@ from qoolqit.devices import Device
 from qoolqit.drive import Drive, Waveform, WeightedDetuning
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
+
+
+class CompilerProfile(Enum):
+    """Enum for the different compilation profiles."""
+
+    DEFAULT = "default"
+    MAX_ENERGY = "max_energy"
 
 
 def _build_register(register: Register, device: Device, distance: float) -> PulserRegister:
@@ -56,6 +64,7 @@ def basic_compilation(
     register: Register,
     drive: Drive,
     device: Device,
+    profile: CompilerProfile = CompilerProfile.DEFAULT,
 ) -> PulserSequence:
     """Compiles a QoolQit program to a PulserSequence.
 
@@ -79,26 +88,26 @@ def basic_compilation(
     Returns:
         PulserSequence: The compiled program as a pulser.Sequence object.
     """
-
-    # fix compilation strategy according to the program energy ratio Ω_max/J_max
-    program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
-    device_energy_ratio = device.energy_ratio
-    if device._max_amp and device._min_distance > 0 and device_energy_ratio:
+    if profile == CompilerProfile.DEFAULT:
+        TIME, ENERGY, DISTANCE = device.converter.factors
+        _validate_program_default_profile(register, drive, device)
+    elif profile == CompilerProfile.MAX_ENERGY:
+        # fix compilation strategy according to the program energy ratio Ω_max/J_max
+        program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
+        device_energy_ratio = device.energy_ratio
         if program_energy_ratio > device_energy_ratio:
             # map to the maximum amplitude allowed on the device
-            ENERGY = device._max_amp / drive.amplitude.max()
+            ENERGY = device._upper_amp / drive.amplitude.max()
             # avoid round off precision issues
             ENERGY = math.floor(ENERGY * 1e12) / 1e12
             TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
         else:
             # map to the minimum pairwise distance allowed on the device
-            DISTANCE = (device._min_distance) / register.min_distance()
+            DISTANCE = (device._lower_distance) / register.min_distance()
             TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
+        _validate_program_max_energy_profile(register, drive, device)
     else:
-        # if device constraints are not defined, use the default factors
-        TIME, ENERGY, DISTANCE = device.converter.factors
-
-    _validate_program(register, drive, device)
+        raise ValueError(f"Invalid CompilerProfile: {profile}")
 
     # Build pulser pulse and register
     wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
@@ -167,20 +176,75 @@ class _DetuningAdder:
         self._pulser_sequence.add_dmm_detuning(waveform, dmm_id)
 
 
-def _validate_program(
+def _validate_program_default_profile(
+    register: Register,
+    drive: Drive,
+    device: Device,
+) -> None:
+    """Validate that the program respect the device specs.
+
+    Args:
+        register: the register containing the qubits positions.
+        drive: the drive acting on qubits, defining amplitude, detuning and phase.
+        device: the selected device to compile to.
+
+    Raises:
+        CompilationError: if the compiled program does not respect the device specifications.
+    """
+
+    specs = device.specs
+
+    max_amplitude = drive.amplitude.max()
+    if specs["max_amplitude"] and (max_amplitude > specs["max_amplitude"]):
+        msg = (
+            f"The drive's maximum amplitude {max_amplitude:.3f} "
+            "goes over the maximum value allowed for the chosen device:\n"
+        )
+        raise CompilationError(msg + f"{device}")
+
+    max_abs_detuning = max(abs(drive.detuning.min()), abs(drive.detuning.max()))
+    if specs["max_abs_detuning"] and (max_abs_detuning > specs["max_abs_detuning"]):
+        msg = (
+            f"The drive's maximum absolute detuning {max_abs_detuning:.4f} "
+            "goes over the maximum value allowed for the chosen device:\n"
+        )
+        raise CompilationError(msg + f"{device}")
+
+    duration = drive.duration
+    if specs["max_duration"] and (duration > specs["max_duration"]):
+        msg = (
+            f"The drive's duration {duration:.4f} "
+            "goes over the maximum value allowed for the chosen device:\n"
+        )
+        raise CompilationError(msg + f"{device}")
+
+    if register.n_qubits > 1:
+        min_distance = register.min_distance()
+        if specs["min_distance"] and (min_distance < specs["min_distance"]):
+            msg = (
+                f"The register minimum distance between two qubits {min_distance:.4f} "
+                "goes below the minimum allowed for the chosen device:\n"
+            )
+            raise CompilationError(msg + f"{device}")
+
+    max_radial_distance = register.max_radial_distance()
+    if specs["max_radial_distance"] and (max_radial_distance > specs["max_radial_distance"]):
+        msg = (
+            f"The register maximum radial distance {max_radial_distance:.4f} "
+            "goes over the maximum allowed for the chosen device:\n"
+        )
+        raise CompilationError(msg + f"{device}")
+
+
+def _validate_program_max_energy_profile(
     register: Register,
     drive: Drive,
     device: Device,
 ) -> None:
     """Validate that the program respect the given device specifications.
 
-    Get the rescaling factors from different compilation strategies still in the
-    adimensional frame.
-    Then compute the new properties of the program:
-        - maximum drive amplitude
-        - drive duration
-        - register minimum distance between qubits
-        - register maximum radial distance
+    Get the rescaling factors to scale the program to either
+    the maximum allowed amplitude or minimum pairwise distance.
     Finally, check that the new values comply with the device specifications.
 
     Args:
@@ -192,14 +256,14 @@ def _validate_program(
         CompilationError: if the compiled program does not respect the device specifications.
     """
 
-    # fix compilation strategy according to the program energy ratio Ω_max/J_max
     # Get profile factors in the adimensional basis, not conversion factors to pulser
     # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
     # this part can be removed when compilation return a QuantumProgram that can be directly checked
     program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
     device_energy_ratio = device.energy_ratio
     specs = device.specs
-    if specs["max_amplitude"] and specs["min_distance"] and device_energy_ratio:
+    # fix compilation strategy according to the program energy ratio Ω_max/J_max
+    if specs["max_amplitude"] and specs["min_distance"]:
         if program_energy_ratio > device_energy_ratio:
             ENERGY = specs["max_amplitude"] / drive.amplitude.max()
             TIME, DISTANCE = 1 / ENERGY, ENERGY ** (-1 / 6)
@@ -207,46 +271,59 @@ def _validate_program(
             DISTANCE = specs["min_distance"] / register.min_distance()
             TIME, ENERGY = DISTANCE**6, 1 / DISTANCE**6
     else:
-        # if device constraints are not defined, use the default factors
-        TIME, ENERGY, DISTANCE = 1.0, 1.0, 1.0
+        raise ValueError("Either `max_amplitude` and `min_distance` must be provided")
 
     max_amplitude = drive.amplitude.max() * ENERGY
-    if specs["max_amplitude"] and (max_amplitude > specs["max_amplitude"]):
-        msg = (
-            f"The drive's maximum amplitude {max_amplitude:.3f} "
-            "goes over the maximum value allowed for the chosen device:\n"
-        )
-        raise CompilationError(msg + f"{device}")
-
-    max_abs_detuning = max(abs(drive.detuning.min()), abs(drive.detuning.max())) * ENERGY
-    if specs["max_abs_detuning"] and (max_abs_detuning > specs["max_abs_detuning"]):
-        msg = (
-            f"The drive's maximum absolute detuning {max_abs_detuning:.3f} "
-            "goes over the maximum value allowed for the chosen device:\n"
-        )
-        raise CompilationError(msg + f"{device}")
-
-    duration = drive.duration * TIME
-    if specs["max_duration"] and (duration > specs["max_duration"]):
-        msg = (
-            f"The drive's duration {duration:.3f} "
-            "goes over the maximum value allowed for the chosen device:\n"
-        )
-        raise CompilationError(msg + f"{device}")
-
-    if register.n_qubits > 1:
-        min_distance = register.min_distance() * DISTANCE
-        if specs["min_distance"] and (min_distance < specs["min_distance"]):
+    if specs["max_amplitude"]:
+        if max_amplitude > specs["max_amplitude"]:
             msg = (
-                f"The register minimum distance between two qubits {min_distance:.3f} "
-                "goes below the minimum allowed for the chosen device:\n"
+                f"The MAX_ENERGY profile unexpectedly failed to meet the device specifications.\n"
+                f"The target {max_amplitude=} goes over the maximum value allowed for the device:\n"
             )
             raise CompilationError(msg + f"{device}")
 
-    max_radial_distance = register.max_radial_distance() * DISTANCE
-    if specs["max_radial_distance"] and (max_radial_distance > specs["max_radial_distance"]):
-        msg = (
-            f"The register maximum radial distance {max_radial_distance:.3f} "
-            "goes over the maximum allowed for the chosen device:\n"
-        )
-        raise CompilationError(msg + f"{device}")
+    min_distance = register.min_distance() * DISTANCE
+    if specs["min_distance"]:
+        if min_distance < specs["min_distance"]:
+            msg = (
+                f"The MAX_ENERGY profile unexpectedly failed to meet the device specifications.\n"
+                f"The target {min_distance=} goes below the minimum value allowed for the device:\n"
+            )
+            raise CompilationError(msg + f"{device}")
+
+    max_abs_detuning = max(abs(drive.detuning.min()), abs(drive.detuning.max()))
+    if specs["max_abs_detuning"]:
+        max_abs_detuning_to_compile = specs["max_abs_detuning"] / ENERGY
+        if max_abs_detuning > max_abs_detuning_to_compile:
+            msg = (
+                "After rescaling the input program to MAX_ENERGY, the drive's maximum absolute "
+                "detuning went over the maximum value allowed for the selected device.\n"
+                "To successfully compile your program, set the "
+                f"maximum absolute detuning below {max_abs_detuning_to_compile}"
+            )
+            raise CompilationError(msg)
+
+    duration = drive.duration
+    if specs["max_duration"]:
+        max_duration_to_compile = specs["max_duration"] / TIME
+        if duration > max_duration_to_compile:
+            msg = (
+                f"After rescaling the input program to MAX_ENERGY, the drive's duration "
+                f"{duration:.4f} goes over the maximum value allowed for the selected device:\n"
+                "To successfully compile your program, set the "
+                f"maximum duration below {max_duration_to_compile}"
+            )
+            raise CompilationError(msg)
+
+    max_radial_distance = register.max_radial_distance()
+    if specs["max_radial_distance"]:
+        max_radial_distance_to_compile = specs["max_radial_distance"] / DISTANCE
+        if max_radial_distance > max_radial_distance_to_compile:
+            msg = (
+                f"After rescaling the input program to MAX_ENERGY, the register's maximum radial "
+                f"distance {max_radial_distance:.4f} goes over the maximum value allowed for the "
+                "selected device:\n"
+                "To successfully compile your program, set the "
+                f"maximum radial distance below {max_radial_distance_to_compile}"
+            )
+            raise CompilationError(msg)
