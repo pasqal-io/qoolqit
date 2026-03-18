@@ -94,7 +94,7 @@ def basic_compilation(
     elif profile == CompilerProfile.MAX_ENERGY:
         # fix compilation strategy according to the program energy ratio Ω_max/J_max
         program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
-        device_energy_ratio = device.energy_ratio
+        device_energy_ratio = device._energy_ratio
         if program_energy_ratio > device_energy_ratio:
             # map to the maximum amplitude allowed on the device
             ENERGY = device._upper_amp / drive.amplitude.max()
@@ -260,18 +260,15 @@ def _validate_program_max_energy_profile(
     # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
     # this part can be removed when compilation return a QuantumProgram that can be directly checked
     program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
-    device_energy_ratio = device.energy_ratio
+    device_energy_ratio = device._energy_ratio
     specs = device.specs
     # fix compilation strategy according to the program energy ratio Ω_max/J_max
-    if specs["max_amplitude"] and specs["min_distance"]:
-        if program_energy_ratio > device_energy_ratio:
-            ENERGY = specs["max_amplitude"] / drive.amplitude.max()
-            TIME, DISTANCE = 1 / ENERGY, ENERGY ** (-1 / 6)
-        else:
-            DISTANCE = specs["min_distance"] / register.min_distance()
-            TIME, ENERGY = DISTANCE**6, 1 / DISTANCE**6
+    if program_energy_ratio > device_energy_ratio:
+        ENERGY = device._target_amplitude / drive.amplitude.max()
+        TIME, DISTANCE = 1 / ENERGY, ENERGY ** (-1 / 6)
     else:
-        raise ValueError("Either `max_amplitude` and `min_distance` must be provided")
+        DISTANCE = device._target_distance / register.min_distance()
+        TIME, ENERGY = DISTANCE**6, 1 / DISTANCE**6
 
     max_amplitude = drive.amplitude.max() * ENERGY
     if specs["max_amplitude"]:

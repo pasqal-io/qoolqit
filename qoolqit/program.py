@@ -78,7 +78,7 @@ class QuantumProgram:
         return header + register + drive + compiled + device
 
     def compile_to(
-        self, device: Device, profile: CompilerProfile = CompilerProfile.DEFAULT
+        self, device: Device, profile: CompilerProfile = CompilerProfile.MAX_ENERGY
     ) -> None:
         """Compiles the given program to a device.
 

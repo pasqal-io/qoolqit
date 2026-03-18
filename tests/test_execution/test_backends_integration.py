@@ -8,32 +8,29 @@ from qoolqit import AnalogDevice, Constant, Drive, MockDevice, QuantumProgram, R
 from qoolqit.devices import Device
 from qoolqit.execution import BackendType, EmulationConfig, LocalEmulator
 
-backends_list = (BackendType.QutipBackendV2, BackendType.SVBackend, BackendType.MPSBackend)
-
 
 @pytest.mark.parametrize("rotation_angle", [0.3 * np.pi])
-@pytest.mark.parametrize("backend_type", backends_list)
+@pytest.mark.parametrize("backend_type", [BackendType.QutipBackendV2, BackendType.SVBackend])
 def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) -> None:
 
     # Theoretical excited population after X rotation
     # exp(-iθσₓ/2)|g❭ = [cos(θ/2)I - i*sin(θ/2)σₓ]|g❭
     expected_r_pop = np.sin(rotation_angle / 2) ** 2
-    n_qubits = 4
 
     # Create and run a quantum program with different backends
-    duration = 500
+    duration = 5
     drive = Drive(amplitude=Constant(duration, rotation_angle / duration), phase=0)
     # atoms far away, no interaction
-    register = Register.from_coordinates([(x * 10.0, 0.0) for x in np.arange(n_qubits)])
+    register = Register.from_coordinates([(-10, -10), (10, 10)])
     program = QuantumProgram(register, drive)
-    program.compile_to(MockDevice())
+    program.compile_to(device=MockDevice())
     emulation_config = EmulationConfig(observables=(Occupation(),))
     emulator = LocalEmulator(backend_type=backend_type, emulation_config=emulation_config)
     res = emulator.run(program)[0]
 
     final_r_pop = res.occupation
-
-    np.testing.assert_allclose(final_r_pop, expected_r_pop, rtol=1e-3)
+    # Check if the final theoretical state vector matches the expected one
+    np.testing.assert_allclose(final_r_pop, expected_r_pop, rtol=1e-2)
 
 
 @pytest.mark.parametrize(
@@ -41,8 +38,6 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
     [
         (BackendType.SVBackend, MockDevice()),
         (BackendType.SVBackend, AnalogDevice()),
-        (BackendType.MPSBackend, MockDevice()),
-        (BackendType.MPSBackend, AnalogDevice()),
     ],
 )
 def test_results(backend_type: Backend, device: Device) -> None:

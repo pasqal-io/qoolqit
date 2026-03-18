@@ -154,9 +154,16 @@ class Device:
         }
 
     @property
-    def energy_ratio(self) -> float:
-        """Return the ratio between the max amplitude and max interaction energy on this device."""
-        return self._energy_ratio
+    def _target_amplitude(self) -> float:
+        """Return the target maximum amplitude in dimensionless units."""
+        _, ENERGY, _ = self._converter.factors
+        return self._upper_amp / ENERGY
+
+    @property
+    def _target_distance(self) -> float:
+        """Return the target minimum pairwise distance in dimensionless units."""
+        _, _, DISTANCE = self._converter.factors
+        return self._lower_distance / DISTANCE
 
     @property
     def name(self) -> str:
