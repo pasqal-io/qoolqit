@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import math
 from enum import Enum
 
 from pulser.devices import Device as PulserDevice
@@ -97,13 +96,11 @@ def basic_compilation(
         device_energy_ratio = device._energy_ratio
         if program_energy_ratio > device_energy_ratio:
             # map to the maximum amplitude allowed on the device
-            ENERGY = device._upper_amp / drive.amplitude.max()
-            # avoid round off precision issues
-            ENERGY = math.floor(ENERGY * 1e12) / 1e12
+            ENERGY = device._target_amp / drive.amplitude.max()
             TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
         else:
             # map to the minimum pairwise distance allowed on the device
-            DISTANCE = (device._lower_distance) / register.min_distance()
+            DISTANCE = device._target_dist / register.min_distance()
             TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
         _validate_program_max_energy_profile(register, drive, device)
     else:
@@ -264,10 +261,10 @@ def _validate_program_max_energy_profile(
     specs = device.specs
     # fix compilation strategy according to the program energy ratio Ω_max/J_max
     if program_energy_ratio > device_energy_ratio:
-        ENERGY = device._target_amplitude / drive.amplitude.max()
+        ENERGY = device._target_amp_adim / drive.amplitude.max()
         TIME, DISTANCE = 1 / ENERGY, ENERGY ** (-1 / 6)
     else:
-        DISTANCE = device._target_distance / register.min_distance()
+        DISTANCE = device._target_dist_adim / register.min_distance()
         TIME, ENERGY = DISTANCE**6, 1 / DISTANCE**6
 
     max_amplitude = drive.amplitude.max() * ENERGY

@@ -121,11 +121,6 @@ class Device:
         # Create a NEW converter so mutations don't persist.
         self._converter = self._default_converter
 
-    # Unit setters mirror the original behavior
-    def set_time_unit(self, time: float) -> None:
-        """Changes the unit converter according to a reference time unit."""
-        self.converter.factors = self.converter.factors_from_time(time)
-
     def set_energy_unit(self, energy: float) -> None:
         """Changes the unit converter according to a reference energy unit."""
         self.converter.factors = self.converter.factors_from_energy(energy)
@@ -154,13 +149,25 @@ class Device:
         }
 
     @property
-    def _target_amplitude(self) -> float:
-        """Return the target maximum amplitude in dimensionless units."""
-        _, ENERGY, _ = self._converter.factors
-        return self._upper_amp / ENERGY
+    def _target_amp(self) -> float:
+        """Return the target maximum amplitude in Pulser units."""
+        # avoid round-off errors
+        target_amp = math.floor(self._upper_amp * 1e12) / 1e12
+        return target_amp
 
     @property
-    def _target_distance(self) -> float:
+    def _target_amp_adim(self) -> float:
+        """Return the target maximum amplitude in dimensionless units."""
+        _, ENERGY, _ = self._converter.factors
+        return self._target_amp / ENERGY
+
+    @property
+    def _target_dist(self) -> float:
+        """Return the target minimum pairwise distance in Pulser units."""
+        return self._lower_distance
+
+    @property
+    def _target_dist_adim(self) -> float:
         """Return the target minimum pairwise distance in dimensionless units."""
         _, _, DISTANCE = self._converter.factors
         return self._lower_distance / DISTANCE

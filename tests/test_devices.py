@@ -58,9 +58,6 @@ def test_device_init_and_units(device: Device) -> None:
     TIME_ORIG, ENERGY_ORIG, DISTANCE_ORIG = device.converter.factors
     assert _validate_invariants(device._C6, *device.converter.factors)
 
-    device.set_time_unit(10.0)
-    assert _validate_invariants(device._C6, *device.converter.factors)
-
     device.set_energy_unit(10.0)
     assert _validate_invariants(device._C6, *device.converter.factors)
 
