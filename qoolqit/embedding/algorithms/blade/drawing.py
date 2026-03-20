@@ -508,9 +508,7 @@ def draw_update_positions_step(
     draw_force_arrows(ax=ax, pos2d=pos2d, force2d=inter_f2d, color="blue", width=base_arrow_width)
     draw_force_arrows(ax=ax, pos2d=pos2d, force2d=min_f2d, color="green", width=base_arrow_width)
     draw_force_arrows(ax=ax, pos2d=pos2d, force2d=max_f2d, color="black", width=base_arrow_width)
-    draw_force_arrows(
-        ax=ax, pos2d=pos2d, force2d=res_f2d, color="red", width=base_arrow_width, scale=0.4
-    )
+    draw_force_arrows(ax=ax, pos2d=pos2d, force2d=res_f2d, color="red", width=base_arrow_width)
 
     ax.set_aspect("equal", "box")
 
