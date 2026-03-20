@@ -6,9 +6,13 @@ Once a problem has been defined, it can be mapped into a hardware-compatible obj
 
 The second part of this section presents the **building blocks of quantum programs** in QoolQit. A program is constructed by combining:
 - a [`Register`](registers.md), which defines the qubit positions;
+
 - a set of [`Waveforms`](waveforms.md), which describe time-dependent controls;
+
 - a [`Drive`](drives.md), which combines those controls into a drive Hamiltonian;
+
 - a [`Device`](devices.md), which specifies the hardware constraints and unit conversion rules; and
+
 - a [`QuantumProgram`](programs.md), which combines the register and drive into an executable program.
 
 Finally, the [execution](execution.md) page shows how compiled programs can be run on local emulators, remote emulators, or QPUs, and how to retrieve and interpret the resulting data.
