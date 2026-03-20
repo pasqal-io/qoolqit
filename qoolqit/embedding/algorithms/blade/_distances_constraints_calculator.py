@@ -13,7 +13,7 @@ def compute_best_scaling_for_qubo(
     target_interactions: np.ndarray,
     embedded_interactions: np.ndarray,
     filter_differences: bool = True,
-    plot: bool = False,
+    draw_differences: bool = False,
 ) -> Any:
     embedded_interactions_triu = embedded_interactions[
         np.triu_indices_from(embedded_interactions, k=1)
@@ -26,22 +26,22 @@ def compute_best_scaling_for_qubo(
     percentile = np.percentile(differences, percent)
 
     difference_ceiling = np.maximum(0.0, percentile)
-    limited_differences = np.minimum(differences, difference_ceiling)
-
-    if plot:
-        plot_differences(target_interactions, differences)
 
     if filter_differences:
-        # when no visible differences, use the input value to avoid rounding issues
-        embedded_interactions_triu = np.where(
-            differences == limited_differences,
-            embedded_interactions_triu,
-            target_interactions_triu + limited_differences,
+        weights = np.where(
+            differences > difference_ceiling,
+            difference_ceiling / differences,
+            1.0,
         )
+    else:
+        weights = np.ones_like(differences)
+
+    if draw_differences:
+        plot_differences(differences)
 
     best_scaling = (
-        np.sum(embedded_interactions_triu**2)
-        / np.sum(embedded_interactions_triu * target_interactions_triu)
+        np.sum(weights * embedded_interactions_triu**2)
+        / np.sum(weights * embedded_interactions_triu * target_interactions_triu)
     ) ** (1 / 6)
 
     assert not np.isnan(best_scaling)
@@ -52,7 +52,7 @@ def compute_best_scaling_for_qubo(
 
 
 def compute_best_scaling_for_pos(
-    target_interactions: np.ndarray, positions: np.ndarray, plot: bool = False
+    target_interactions: np.ndarray, positions: np.ndarray, draw_differences: bool = False
 ) -> Any:
     distance_matrix = distance_matrix_from_positions(positions)
 
@@ -62,7 +62,9 @@ def compute_best_scaling_for_pos(
     current_weights = np.triu(current_weights, k=1)
 
     return compute_best_scaling_for_qubo(
-        target_interactions=target_interactions, embedded_interactions=current_weights, plot=plot
+        target_interactions=target_interactions,
+        embedded_interactions=current_weights,
+        draw_differences=draw_differences,
     )
 
 
@@ -83,13 +85,15 @@ class DistancesConstraintsCalculator:
             self.current_min = None
 
     def compute_scaling_min_max(
-        self, positions: np.ndarray, step_cursor: float, plot: bool = False
+        self, positions: np.ndarray, step_cursor: float, draw_differences: bool = False
     ) -> tuple[float, Optional[float], Optional[float]]:
         """Step_cursor is between 0 (start) and 1 (end)."""
         assert 0 <= step_cursor <= 1
 
         scaling_factor = compute_best_scaling_for_pos(
-            target_interactions=self.target_interactions, positions=positions, plot=plot
+            target_interactions=self.target_interactions,
+            positions=positions,
+            draw_differences=draw_differences,
         )
 
         if self.final_ratio is None:

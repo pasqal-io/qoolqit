@@ -2,11 +2,66 @@ from __future__ import annotations
 
 import dataclasses
 import logging
+from functools import cached_property
 from typing import Any
 
 import numpy as np
+from numpy.typing import ArrayLike
 
 logger = logging.getLogger(__name__)
+
+
+def configured_increasing_func(
+    x: ArrayLike, *, middle_value: float = 0.5, stiffness: float = 1.0
+) -> np.ndarray:
+    """Increasing function from [0, 1] to [0, 1]."""
+
+    c = 1 / middle_value - 1
+    x = np.asarray(x, dtype=float)
+    return np.power(x, stiffness) / (np.power(x, stiffness) + c * np.power(1 - x, stiffness))
+
+
+def modulate_cursor(
+    *,
+    strong_cursor: ArrayLike,
+    weak_cursor: ArrayLike,
+    center_value: float = 0.25,
+    stiffness: float = 1.0,
+) -> np.ndarray:
+    strong_cursor = np.asarray(strong_cursor, dtype=float)
+    weak_cursor = np.asarray(weak_cursor, dtype=float)
+
+    weak_coeff_multiplier = configured_increasing_func(
+        weak_cursor, middle_value=1 / (1 / center_value - 1), stiffness=stiffness
+    )
+
+    out_mid = (
+        strong_cursor * weak_coeff_multiplier / (1 + strong_cursor * (weak_coeff_multiplier - 1))
+    )
+
+    out = np.where(
+        (strong_cursor == 1) & (weak_cursor == 0),
+        0,
+        out_mid,
+    )
+
+    return out
+
+
+def clip_modulate_cursor(
+    *,
+    strong_cursor: ArrayLike,
+    weak_cursor: ArrayLike,
+    center_value: float = 0.25,
+    stiffness: float = 1.0,
+) -> np.ndarray:
+    value = modulate_cursor(
+        strong_cursor=strong_cursor,
+        weak_cursor=weak_cursor,
+        center_value=center_value,
+        stiffness=stiffness,
+    )
+    return np.clip(value, 0, 1)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -17,17 +72,59 @@ class Force:
     def __post_init__(self) -> None:
         assert self.weighted_vectors.shape[:-1] == self.distances_to_walk.shape
         assert not np.any(np.isnan(self.weighted_vectors))
+        self.maximum_temperatures
 
     def get_nb_dims(self) -> int:
         return len(self.weighted_vectors.shape)
 
-    def get_temperature(self) -> Any | int:
-        vector_weights = np.linalg.norm(self.weighted_vectors, axis=self.get_nb_dims() - 1)
-        logger.debug(f"{vector_weights=}")
-        # remove warning output
+    def _fit_to_dims(self, a: np.ndarray) -> np.ndarray:
+        return a.reshape((*a.shape, *((1,) * (self.get_nb_dims() - len(a.shape)))))
+
+    def regulated(
+        self,
+        regulation_cursor: float = 0,
+    ) -> "Force":
+        min_temperature = np.min(self.maximum_temperatures)
+        temperature_ratios = self.maximum_temperatures / min_temperature
+        weight_ratios = self.vector_weights / np.max(self.vector_weights)
+        used_cursors = clip_modulate_cursor(
+            strong_cursor=regulation_cursor, weak_cursor=weight_ratios
+        )
+        regulated_temperature_ratios = temperature_ratios ** (1 - used_cursors)
+        regulated_weighted_vectors = (
+            self.weighted_vectors
+            * self._fit_to_dims(temperature_ratios)
+            / self._fit_to_dims(regulated_temperature_ratios)
+        )
+        regulated_weighted_vectors[self.weighted_vectors == 0] = 0
+        return Force(
+            weighted_vectors=regulated_weighted_vectors,
+            distances_to_walk=self.distances_to_walk,
+        )
+
+    @cached_property
+    def vector_weights(self) -> np.ndarray:
+        return np.linalg.norm(self.weighted_vectors, axis=self.get_nb_dims() - 1)
+
+    @cached_property
+    def maximum_temperatures(self) -> np.ndarray:
+        vector_weights = self.vector_weights
         with np.errstate(divide="ignore", invalid="ignore"):
             maximum_temperatures = self.distances_to_walk / vector_weights
         maximum_temperatures[vector_weights == 0] = np.inf
+
+        assert np.all(
+            (
+                maximum_temperatures[np.triu_indices_from(maximum_temperatures, k=1)]
+                if maximum_temperatures.ndim == 2
+                else maximum_temperatures
+            )
+            > 0
+        )
+        return maximum_temperatures
+
+    def get_temperature(self) -> Any | int:
+        maximum_temperatures = self.maximum_temperatures
         logger.debug(f"{maximum_temperatures=}")
 
         min_temperature = np.min(maximum_temperatures)
