@@ -136,27 +136,23 @@ Compilation therefore consists of finding a value of \(J_0\) that satisfies all 
 
 ### Geometric interpretation
 
-When describing [QoolQit ,odel](../get_started/qoolqit_model.md) we introduced a geometric picture of this process: fixing the ratio \(\tilde\Omega/\tilde J\) defines a line in the \((\tilde J,\tilde\Omega)\) plane, and compilation moves the program along that line until it reaches the allowed region.
+When describing the [QoolQit model](../get_started/qoolqit_model.md), we introduced a geometric picture of compilation in dimensionless units: fixing the ratio \(\tilde{\Omega}/\tilde{J}\) defines a line in the \((\tilde{J},\tilde{\Omega})\) plane, and compilation moves the program along that line until it reaches the allowed region.
 
-The same idea can be expressed in physical units. For a fixed dimensionless program, varying \(J_0\) moves the physical realization along a line in \((J,\Omega)\) space, because
+The same idea can be translated into physical units. For a fixed dimensionless program, changing the reference scale \(J_0\) rescales both the physical interaction strength and the physical drive amplitude according to
 
 $$
-J = J_0 \tilde J,
+J = J_0 \tilde{J},
 \qquad
-\Omega = J_0 \tilde \Omega.
+\Omega = J_0 \tilde{\Omega}.
 $$
 
-A device then defines a box of allowed physical values, for example
+As a result, all physical realizations of the same dimensionless program lie on a ray in the \((J,\Omega)\) plane. Each ray is therefore associated with a fixed value of the ratio \(\tilde{\Omega}/\tilde{J}\), while different points along the same ray correspond to different choices of the physical reference scale \(J_0\).
 
-$$
-[0,\Omega_{\max}] \times [0,J_{\max}].
-$$
-
-All points on the program line that lie inside the device box are valid compilations. Choosing \(J_0\) is equivalent to selecting one of those points.
+The figure below illustrates this picture. Each straight line corresponds to a different fixed ratio \(\tilde{\Omega}/\tilde{J}\), and therefore to a different dimensionless program. The shaded green region represents the set of parameters allowed by the device, bounded here by the maximum interaction strength \(J_{\max}\) and the maximum drive amplitude \(\Omega_{\max}\).
 
 ![Compilation diagram](../extras/assets/compilation.svg)
 
-In practice, larger values of \(J_0\) are preferable whenever possible: they correspond to larger physical amplitudes and shorter physical runtimes. QoolQit therefore selects the largest valid \(J_0\) compatible with device constraints.
+Compilation consists of selecting, along the ray defined by the program, a point that lies inside this allowed region. Among all such points, QoolQit chooses the largest valid one, corresponding to the largest reference scale \(J_0\) compatible with the hardware constraints. This choice is preferable because it realizes the same dimensionless program with the largest possible physical energy scale, and therefore with the shortest corresponding physical runtime.
 
 ### Drive-limited compilation
 
