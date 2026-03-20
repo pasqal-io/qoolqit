@@ -71,6 +71,49 @@ This makes dimensionless time a convenient, geometry-independent way to describe
 
 ---
 
+## Compilation
+
+
+As described above QoolQit program is written in **adimensional units**. This means that the user specifies the problem in terms of dimensionless quantities, independently of any particular device.
+
+However, the values that can actually be implemented are constrained by the **hardware**. Real devices only allow certain ranges of interaction strengths, drive amplitudes, detunings, and times. Therefore, an important task of QoolQit is to take the adimensional program requested by the user and map it to a set of parameters that can be realized on the chosen hardware: we refer to this as **compilation**.
+
+The purpose of compilation is precisely **to find a physical realization of the same adimensional program whose parameters satisfy the hardware constraints**.
+
+In other words, compilation does not change the program the user wants to implement. Instead, it changes the overall scale used to realize that program on the device, so that all physical parameters remain within the allowed bounds.
+
+A convenient way to understand this is to first work entirely in adimensional units.
+
+The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\frac{\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its adimensional structure.
+
+This means that compilation does **not** change the adimensional physics of the program. Instead, it rescales the program so that it lies inside the region that can be implemented on a given device.
+
+### Example
+
+Suppose the initial adimensional program is $(\tilde{J},\tilde{\Omega}) = (1,1)$, so that $\frac{\tilde{\Omega}}{\tilde{J}} = 1.$
+
+Now assume that the valid compilation region is constrained by $\tilde{J} \leq 1,\; \tilde{\Omega} \leq 0.2$, as in figure.
+
+The point $(1,1)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\tilde{\Omega}/\tilde{J} = 1$. The compiled point must therefore remain on the line $\tilde{\Omega} = \tilde{J}$.
+
+The largest valid point on this line is $(\tilde{J},\tilde{\Omega}) = (0.2,0.2)$.
+
+So the program is rescaled by a factor $0.2$, but its adimensional content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying adimensional problem is the same.
+
+![Compilation in adimensional units](../assets/compilation_adimensional_rescaled.svg)
+
+In this figure, the green rectangle represents the valid compilation region. The diagonal line corresponds to all programs with fixed ratio $\tilde{\Omega}/\tilde{J}=1$. The initial point $(1,1)$ lies outside the allowed region, while the compiled point $(0.2,0.2)$ is the largest point on the same line that fits inside it.
+
+### What changes under compilation?
+
+What remains fixed is the **adimensional program**. What changes is the **reference scale** used to realize it.
+
+If the initial point $(1,1)$ corresponds to choosing the maximum interaction strength as the reference scale, then compiling to $(0.2,0.2)$ means that the program is realized with a smaller reference interaction, equal to $0.2$ times the original one.
+
+In other words, compilation keeps the adimensional problem unchanged, but changes the conversion between adimensional quantities and physical ones.
+
+This is the basic logic behind compilation in QoolQit. The same reasoning is then used to map the program to a real device in physical units, as discussed in [Adimensionalization — Advanced](../extended_usage/adimensionalization.md).
+
 ## What's Next
 
 - [Fundamentals](../fundamentals/introduction.md) — Learn how to build programs with QoolQit: registers, waveforms, drives, and execution.
