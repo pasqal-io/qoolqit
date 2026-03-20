@@ -98,25 +98,25 @@ This means that compilation does **not** change the dimensionless physics of the
 
 ### Example
 
-Suppose the initial dimensionless program is $(\tilde{J},\tilde{\Omega}) = (1,1),$ so that $\frac{\tilde{\Omega}}{\tilde{J}} = 1.$
+Suppose the initial dimensionless program is $(\tilde{J},\tilde{\Omega}) = (1,0.4),$ so that $\frac{\tilde{\Omega}}{\tilde{J}} = 1.$
 
 Now assume that the valid compilation region is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2,$ as shown in the figure below.
 
-The point $(1,1)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\tilde{\Omega}/\tilde{J} = 1$. The compiled point must therefore remain on the line $\tilde{\Omega} = \tilde{J}.$
+The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\tilde{\Omega}/\tilde{J} = 1$. The compiled point must therefore remain on the line $\tilde{\Omega} = \tilde{J}.$
 
-The largest valid point on this line is $(\tilde{J},\tilde{\Omega}) = (0.2,0.2).$
+The largest valid point on this line is $(\tilde{J},\tilde{\Omega}) = (0.5,0.2).$
 
-So the program is rescaled by a factor $0.2$, but its dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying dimensionless problem is the same.
+So the program is rescaled by a factor $0.5$, but its dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying dimensionless problem is the same.
 
 ![Compilation in dimensionless units](../extras/assets/compilation_adimensional_rescaled.svg)
 
-In this figure, the green rectangle represents the valid compilation region. The diagonal line corresponds to all programs with fixed ratio $\tilde{\Omega}/\tilde{J}=1$. The initial point $(1,1)$ lies outside the allowed region, while the compiled point $(0.2,0.2)$ is the largest point on the same line that fits inside it.
+In this figure, the green rectangle represents the valid compilation region. The diagonal line corresponds to all programs with fixed ratio $\tilde{\Omega}/\tilde{J}=1$. The initial point $(1,0.4)$ lies outside the allowed region, while the compiled point $(0.5,0.2)$ is the largest point on the same line that fits inside it.
 
 ### What changes under compilation?
 
 What remains fixed is the **dimensionless program**. What changes is the **reference scale** used to realize it.
 
-If the initial point $(1,1)$ corresponds to choosing the maximum interaction strength as the reference scale, then compiling to $(0.2,0.2)$ means that the program is realized with a smaller reference interaction, equal to $0.2$ times the original one.
+If the initial point $(1,0.4)$ corresponds to choosing the maximum interaction strength as the reference scale, then compiling to $(0.5,0.2)$ means that the program is realized with a smaller reference interaction, equal to $0.5$ times the original one.
 
 In other words, compilation keeps the dimensionless problem unchanged, but changes the conversion between dimensionless quantities and physical ones.
 
@@ -152,7 +152,7 @@ Equivalently, for a fixed dimensionless duration $\tilde{T}$, the physical runti
 
 So if compilation reduces the reference interaction scale by a factor $\alpha$, the physical execution time must increase by a factor $1/\alpha$ in order to preserve the same dimensionless dynamics.
 
-In the example above, compilation maps $(\tilde{J},\tilde{\Omega})=(1,1)$ to $(0.2,0.2)$. This corresponds to reducing the reference interaction scale by a factor $0.2$. As a consequence, the same dimensionless program must run for a physical time that is $5$ times longer.
+In the example above, compilation maps $(\tilde{J},\tilde{\Omega})=(1,0.4)$ to $(0.5,0.2)$. This corresponds to reducing the reference interaction scale by a factor $0.2$. As a consequence, the same dimensionless program must run for a physical time that is $2$ times longer.
 
 In this sense, compilation preserves the dimensionless Hamiltonian and the corresponding dimensionless evolution, while changing the physical energy and time scales used to realize it on hardware.
 
