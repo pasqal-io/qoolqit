@@ -12,7 +12,7 @@ hide:
 
 Instead of writing directly in hardware-dependent physical units, QoolQit lets you describe programs in a **dimensionless framework**. This makes programs easier to reason about, easier to compare across devices, and easier to compile to real hardware.
 
-![QoolQit demo](extras/assets/qoolqit_demo.gif)
+![QoolQit demo](./extras/assets/qoolqit_demo.gif)
 
 With QoolQit you can:
 

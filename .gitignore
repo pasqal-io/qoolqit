@@ -50,3 +50,5 @@ dataset/
 
 # Mkdocs
 site/
+
+docs/extras/assets/make_gif.py
