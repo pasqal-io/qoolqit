@@ -80,7 +80,7 @@ def test_catch_compilation_error_max_det() -> None:
             "the maximum value allowed for the chosen device"
         ),
     ):
-        program.compile_to(device=AnalogDevice(), profile=CompilerProfile.DEFAULT)
+        program.compile_to(device=AnalogDevice(), profile=CompilerProfile.WORKING_POINT)
 
 
 def test_catch_compilation_error_max_duration() -> None:

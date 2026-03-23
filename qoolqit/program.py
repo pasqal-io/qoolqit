@@ -38,7 +38,7 @@ class QuantumProgram:
                     raise ValueError(
                         "In this QuantumProgram, the drive and the register "
                         f"do not match: qubit {key} appears in the drive but "
-                        f"is not defined in the register."
+                        "is not defined in the register."
                     )
 
     @property

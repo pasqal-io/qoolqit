@@ -18,7 +18,7 @@ from qoolqit.register import Register
 class CompilerProfile(Enum):
     """Enum for the different compilation profiles."""
 
-    DEFAULT = "default"
+    WORKING_POINT = "working_point"
     MAX_ENERGY = "max_energy"
 
 
@@ -63,7 +63,7 @@ def basic_compilation(
     register: Register,
     drive: Drive,
     device: Device,
-    profile: CompilerProfile = CompilerProfile.DEFAULT,
+    profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
 ) -> PulserSequence:
     """Compiles a QoolQit program to a PulserSequence.
 
@@ -87,7 +87,7 @@ def basic_compilation(
     Returns:
         PulserSequence: The compiled program as a pulser.Sequence object.
     """
-    if profile == CompilerProfile.DEFAULT:
+    if profile == CompilerProfile.WORKING_POINT:
         TIME, ENERGY, DISTANCE = device.converter.factors
         _validate_program_default_profile(register, drive, device)
     elif profile == CompilerProfile.MAX_ENERGY:
