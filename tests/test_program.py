@@ -8,6 +8,7 @@ from pulser.sequence import Sequence as PulserSequence
 from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.drive import Drive
 from qoolqit.exceptions import CompilationError
+from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import Constant
@@ -79,7 +80,7 @@ def test_catch_compilation_error_max_det() -> None:
             "the maximum value allowed for the chosen device"
         ),
     ):
-        program.compile_to(device=AnalogDevice())
+        program.compile_to(device=AnalogDevice(), profile=CompilerProfile.DEFAULT)
 
 
 def test_catch_compilation_error_max_duration() -> None:
