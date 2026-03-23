@@ -11,7 +11,7 @@ nav:
   - Fundamentals:
     - Introduction: fundamentals/introduction.md
     - Problem definition and graphs: fundamentals/graphs.md
-    - Problem embedding: fundamentals/available_embedders.md
+    - Problem embedding: fundamentals/embedding.md
     - Registers: fundamentals/registers.md
     - Waveforms: fundamentals/waveforms.md
     - Drive Hamiltonian: fundamentals/drives.md
@@ -22,6 +22,7 @@ nav:
     - Adimensionalization: extended_usage/adimensionalization.md
     - Emulation configuration: extended_usage/execution_config.md
     - Custom embedders: extended_usage/custom_embedders.md
+    - Custom waveforms: extended_usage/custom_waveforms.md
   - Applications:
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
   - API reference: reference/api.md

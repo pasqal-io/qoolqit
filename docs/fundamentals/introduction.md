@@ -2,7 +2,7 @@ This section introduces the core concepts and abstractions used throughout QoolQ
 
 The first part of this section focuses on **problem representation and embedding**. In QoolQit, graphs provide the standard representation for many problems of interest, particularly in optimization and machine learning. The [`DataGraph`](graphs.md) class extends the standard NetworkX graph interface with functionality tailored to the Rydberg analog model, including node coordinates, distance-based methods, unit-disk graph logic, and support for node and edge weights.
 
-Once a problem has been defined, it can be mapped into a hardware-compatible object through the **embedding** interface. The [embedding pages](available_embedders.md) introduce the basic embedding workflow in QoolQit and the pre-defined embedders currently available in the library. For more advanced use cases, QoolQit also supports the definition of [custom embedders](../extended_usage/custom_embedders.md), allowing users to implement new embedding strategies with their own input types, output types, and configuration parameters.
+Once a problem has been defined, it can be mapped into a hardware-compatible object through the **embedding** interface. The [embedding pages](embedding.md) introduce the basic embedding workflow in QoolQit and the pre-defined embedders currently available in the library. For more advanced use cases, QoolQit also supports the definition of [custom embedders](../extended_usage/custom_embedders.md), allowing users to implement new embedding strategies with their own input types, output types, and configuration parameters.
 
 The second part of this section presents the **building blocks of quantum programs** in QoolQit. A program is constructed by combining:
 
