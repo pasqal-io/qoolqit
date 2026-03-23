@@ -194,7 +194,7 @@ def _validate_program_default_profile(
     max_amplitude = drive.amplitude.max()
     if specs["max_amplitude"] and (max_amplitude > specs["max_amplitude"]):
         msg = (
-            f"The drive's maximum amplitude {max_amplitude:.3f} "
+            f"The drive's maximum amplitude {max_amplitude:.4f} "
             "goes over the maximum value allowed for the chosen device:\n"
         )
         raise CompilationError(msg + f"{device}")
