@@ -5,6 +5,7 @@ The first part of this section focuses on **problem representation and embedding
 Once a problem has been defined, it can be mapped into a hardware-compatible object through the **embedding** interface. The [embedding pages](available_embedders.md) introduce the basic embedding workflow in QoolQit and the pre-defined embedders currently available in the library. For more advanced use cases, QoolQit also supports the definition of [custom embedders](custom_embedders.md), allowing users to implement new embedding strategies with their own input types, output types, and configuration parameters.
 
 The second part of this section presents the **building blocks of quantum programs** in QoolQit. A program is constructed by combining:
+
 - a [`Register`](registers.md), which defines the qubit positions;
 
 - a set of [`Waveforms`](waveforms.md), which describe time-dependent controls;

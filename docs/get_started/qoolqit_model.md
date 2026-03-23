@@ -153,7 +153,6 @@ Equivalently, for a fixed dimensionless duration $\tilde{T}$, the physical runti
 So if compilation reduces the reference interaction scale by a factor $\alpha$, the physical execution time must increase by a factor $1/\alpha$ in order to preserve the same dimensionless dynamics.
 
 In the example above, compilation maps $(\tilde{J},\tilde{\Omega})=(1,0.4)$ to $(0.5,0.2)$. This corresponds to reducing the reference interaction scale by a factor $0.2$. As a consequence, the same dimensionless program must run for a physical time that is $2$ times longer.
-
 In this sense, compilation preserves the dimensionless Hamiltonian and the corresponding dimensionless evolution, while changing the physical energy and time scales used to realize it on hardware.
 
 This is the basic logic behind compilation in QoolQit: the dimensionless program is preserved, while the physical energy and time scales are adjusted so that it can be realized on hardware. The connection to physical units is discussed in more detail in [Adimensionalization — Advanced](../extended_usage/adimensionalization.md).
