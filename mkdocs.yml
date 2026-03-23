@@ -20,7 +20,8 @@ nav:
     - Execution: fundamentals/execution.md
   - Extended usage:
     - Adimensionalization: extended_usage/adimensionalization.md
-    - Custom embedders: fundamentals/custom_embedders.md
+    - Emulation configuration: extended_usage/execution_config.md
+    - Custom embedders: extended_usage/custom_embedders.md
   - Applications:
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
   - API reference: reference/api.md

@@ -8,7 +8,7 @@ In this page, you will learn how to:
 - wrap a custom embedder in a reusable class,
 - use automatic validation for configuration, input, and output types.
 
-In the [available embedders](available_embedders.md) page you saw the usage of some pre-defined embedders. The embedding module in QoolQit is designed to be flexible and extendable to various forms of embedding algorithms developed for the Rydberg analog model, with potentially different inputs and outputs, and different configuration parameters. It is structured in three levels:
+In the [available embedders](../fundamentals/available_embedders.md) page you saw the usage of some pre-defined embedders. The embedding module in QoolQit is designed to be flexible and extendable to various forms of embedding algorithms developed for the Rydberg analog model, with potentially different inputs and outputs, and different configuration parameters. It is structured in three levels:
 
 **Level 0: Concretizing the interface**
 
@@ -27,7 +27,7 @@ In the future, more families of embedders can be defined that may require differ
 
 **Level 2: Concretizing the algorithms and configurations**
 
-The final level is defining concrete embedders, such as the ones we have used in the [available embedders page](available_embedders.md). Here the requirement is to define a concrete function that maps the input to the output, along with any parameters required, and a config dataclass inheriting from `EmbeddingConfig` holding all the configuration parameters. In the previous examples, we used the `SpringLayoutEmbedder` which is a subclass of a `GraphToGraphEmbedder` and the `InteractionEmbedder` which is a subclass of the `MatrixToGraphEmbedder`.
+The final level is defining concrete embedders, such as the ones we have used in the [available embedders page](../fundamentals/available_embedders.md). Here the requirement is to define a concrete function that maps the input to the output, along with any parameters required, and a config dataclass inheriting from `EmbeddingConfig` holding all the configuration parameters. In the previous examples, we used the `SpringLayoutEmbedder` which is a subclass of a `GraphToGraphEmbedder` and the `InteractionEmbedder` which is a subclass of the `MatrixToGraphEmbedder`.
 
 Let's exemplify the case of defining a custom embedder in the family of graph to graph embedders.
 
