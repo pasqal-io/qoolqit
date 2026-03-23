@@ -98,7 +98,7 @@ This means that compilation does **not** change the dimensionless physics of the
 
 ### Example
 
-Suppose the initial dimensionless program is $(\tilde{J},\tilde{\Omega}) = (1,0.4),$ so that $\frac{\tilde{\Omega}}{\tilde{J}} = 1.$
+Suppose the initial dimensionless program is $(\tilde{J},\tilde{\Omega}) = (1,0.4),$ so that $\frac{\tilde{\Omega}}{\tilde{J}} = 0.4$
 
 Now assume that the valid compilation region is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2,$ as shown in the figure below.
 
