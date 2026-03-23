@@ -1,21 +1,24 @@
-"""Test the MAX_ENERGY compilation profile"""
+"""Test the MAX_ENERGY compilation profile."""
 
-from numpy.random import RandomState, Generator
+from __future__ import annotations
+
 import numpy as np
-from qoolqit import (
-    QuantumProgram,
-    Register,
-    Device,
-    Drive,
-    Ramp,
-    AnalogDevice,
-    MockDevice,
-    DigitalAnalogDevice,
-)
 import pytest
+from numpy.random import Generator, RandomState
 from pulser.sequence import Sequence as PulserSequence
 
+from qoolqit import (
+    AnalogDevice,
+    Device,
+    DigitalAnalogDevice,
+    Drive,
+    MockDevice,
+    QuantumProgram,
+    Ramp,
+    Register,
+)
 from qoolqit.execution.compilation_functions import CompilerProfile
+from qoolqit.waveforms.base_waveforms import Waveform
 
 
 class TestWorkingPointCompilerProfile:
@@ -23,7 +26,7 @@ class TestWorkingPointCompilerProfile:
 
     def random_register(
         self, min_distance: float, seed: int | RandomState | Generator = np.random.default_rng()
-    ):
+    ) -> Register:
         rng = np.random.default_rng(seed)
         n = rng.integers(low=2, high=5)
         start_x = -(n - 1) / 2.0
@@ -36,12 +39,12 @@ class TestWorkingPointCompilerProfile:
         max_value: float,
         max_duration: float,
         seed: int | RandomState | Generator = np.random.default_rng(),
-    ):
+    ) -> Waveform:
         rng = np.random.default_rng(seed)
         n = rng.integers(2, 5)
         durations = rng.uniform(1.0, 2.0, size=n)
         durations *= rng.uniform(0.0, max_duration) / np.sum(durations)
-        wf = Ramp(
+        wf: Waveform = Ramp(
             durations[0],
             initial_value=rng.uniform(min_value, max_value),
             final_value=rng.uniform(min_value, max_value),
@@ -56,7 +59,7 @@ class TestWorkingPointCompilerProfile:
 
     def random_valid_program(
         self, device: Device, seed: int | RandomState | Generator = np.random.default_rng()
-    ):
+    ) -> QuantumProgram:
         rng = np.random.default_rng(seed)
         specs = device.specs
         min_distance = specs["min_distance"] or 1.0
@@ -72,7 +75,7 @@ class TestWorkingPointCompilerProfile:
         return program
 
     @pytest.mark.parametrize("device", [AnalogDevice(), DigitalAnalogDevice(), MockDevice()])
-    def test_program_init_and_compilation(self, device) -> None:
+    def test_program_init_and_compilation(self, device: Device) -> None:
 
         program = self.random_valid_program(device)
         assert not program.is_compiled
