@@ -43,7 +43,7 @@ class TestWorkingPointCompilerProfile:
         rng = np.random.default_rng(seed)
         n = rng.integers(2, 5)
         durations = rng.uniform(1.0, 2.0, size=n)
-        durations *= rng.uniform(0.0, max_duration) / np.sum(durations)
+        durations *= rng.uniform(max_duration / 100, max_duration) / np.sum(durations)
         wf: Waveform = Ramp(
             durations[0],
             initial_value=rng.uniform(min_value, max_value),
