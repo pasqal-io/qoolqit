@@ -32,7 +32,7 @@ Here $\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)$ is the Rydberg occupatio
 
 ---
 
-## Introducing the reference interaction \(J_0\)
+## Introducing the reference energy $J_0$
 
 Because the interaction between Rydberg atoms depends on their separation, QoolQit introduces a reference distance \(r_0\) and the corresponding reference interaction in order to make programs device-agnostic.
 
@@ -112,87 +112,55 @@ So choosing a compilation is equivalent to choosing the physical reference scale
 
 ## Compilation
 
-As discussed in [The QoolQit Model](../get_started/qoolqit_model.md), compilation preserves the same dimensionless program while changing the physical scale used to realize it on hardware.
+The geometric picture of compilation in dimensionless units — where fixing the ratio \(\tilde{\Omega}/\tilde{J}\) defines a ray in the \((\tilde{J},\tilde{\Omega})\) plane and compilation moves the program along that ray until it fits inside the allowed region — is introduced in [The QoolQit Model](../get_started/qoolqit_model.md). Here we translate that picture into physical units.
 
-The key point is that the user specifies **dimensionless ratios**, while the hardware imposes **physical bounds**. Compilation must therefore find a value of \(J_0\) such that the resulting physical parameters remain inside the device limits.
-
-For example, if the target hardware imposes bounds such as
+For a fixed dimensionless program, changing the reference scale \(J_0\) rescales all physical Hamiltonian parameters simultaneously:
 
 $$
-\Omega(t) \le \Omega_{\max},
+\Omega\,[\mathrm{rad/s}] = J_0\,\tilde{\Omega},
 \qquad
-\delta(t) \in [\delta_{\min},\delta_{\max}],
+\delta\,[\mathrm{rad/s}] = J_0\,\tilde{\delta},
 \qquad
-\Delta(t) \in [\Delta_{\min},\Delta_{\max}],
-$$
-
-and if there is also a geometric constraint on the minimum physical spacing \(r_{ij}\), then only certain choices of \(J_0\) are valid.
-
-Using \(\Omega = J_0 \tilde{\Omega}\), the drive bound becomes
-
-$$
-J_0\,\tilde{\Omega}(t) \le \Omega_{\max}.
-$$
-
-Similarly, since \(r_{ij}=r_0\tilde r_{ij}\) and \(r_0=(C_6/J_0)^{1/6}\), any lower bound on physical distances translates into an upper bound on \(J_0\).
-
-Compilation therefore consists of finding a value of \(J_0\) that satisfies all such constraints simultaneously.
-
-### Geometric interpretation
-
-When describing the [QoolQit model](../get_started/qoolqit_model.md), we introduced a geometric picture of compilation in dimensionless units: fixing the ratio \(\tilde{\Omega}/\tilde{J}\) defines a line in the \((\tilde{J},\tilde{\Omega})\) plane, and compilation moves the program along that line until it reaches the allowed region.
-
-The same idea can be translated into physical units. For a fixed dimensionless program, changing the reference scale \(J_0\) rescales both the physical interaction strength and the physical drive amplitude according to
-
-$$
-J = J_0 \tilde{J},
+J_{ij}\,[\mathrm{rad/s}] = J_0\,\tilde{J}_{ij},
 \qquad
-\Omega = J_0 \tilde{\Omega}.
+r_{ij}\,[\mu\mathrm{m}] = r_0\,\tilde{r}_{ij},
 $$
 
-As a result, all physical realizations of the same dimensionless program lie on a ray in the \((J,\Omega)\) plane. Each ray is therefore associated with a fixed value of the ratio \(\tilde{\Omega}/\tilde{J}\), while different points along the same ray correspond to different choices of the physical reference scale \(J_0\).
+where \(r_0 = (C_6/J_0)^{1/6}\,\mu\mathrm{m}\). All physical realizations of the same dimensionless program therefore lie on a ray in the \((J,\Omega)\,[\mathrm{rad/s}]\) plane parameterized by \(J_0\).
 
-The figure below illustrates this picture. Each straight line corresponds to a different fixed ratio \(\tilde{\Omega}/\tilde{J}\), and therefore to a different dimensionless program. The shaded green region represents the set of parameters allowed by the device, bounded here by the maximum interaction strength \(J_{\max}\) and the maximum drive amplitude \(\Omega_{\max}\).
+The figure below illustrates this picture. Each straight line corresponds to a different fixed ratio \(\tilde{\Omega}/\tilde{J}\), and therefore to a different dimensionless program. The shaded green region represents the set of parameters allowed by the device, bounded by the maximum interaction strength \(J_{\max}\,[\mathrm{rad/s}]\) and the maximum drive amplitude \(\Omega_{\max}\,[\mathrm{rad/s}]\).
 
 ![Compilation diagram](../extras/assets/compilation.svg)
 
-Compilation consists of selecting, along the ray defined by the program, a point that lies inside this allowed region. Among all such points, QoolQit chooses the largest valid one, corresponding to the largest reference scale \(J_0\) compatible with the hardware constraints. This choice is preferable because it realizes the same dimensionless program with the largest possible physical energy scale, and therefore with the shortest corresponding physical runtime.
+Compilation consists of selecting, along the ray defined by the program, the largest \(J_0\) whose corresponding physical parameters lie inside the allowed region. A larger \(J_0\) realizes the same dimensionless program with a higher physical amplitude and a shorter physical runtime \(t = \tilde{t}/J_0\,[\mathrm{s}]\), making it the most efficient choice.
+
+Which hardware constraint becomes binding first determines the compilation strategy.
 
 ### Drive-limited compilation
 
-If the drive bound is reached before the interaction bound, then the largest valid implementation is obtained by saturating the drive limit:
+When the drive amplitude bound \(\Omega_{\max}\,[\mathrm{rad/s}]\) is reached before the minimum-spacing constraint, the largest valid \(J_0\) is obtained by saturating the drive limit:
 
 $$
-\Omega = \Omega_{\max}.
-$$
-
-Since \(\Omega = J_0 \tilde{\Omega}\), this fixes
-
-$$
-J_0 = \frac{\Omega_{\max}}{\tilde{\Omega}}.
+\Omega_{\max}\,[\mathrm{rad/s}] = J_0\,\tilde{\Omega}_{\max}
+\qquad\Longrightarrow\qquad
+J_0\,[\mathrm{rad/s}] = \frac{\Omega_{\max}}{\tilde{\Omega}_{\max}}.
 $$
 
 The corresponding reference distance is then
 
 $$
-r_0 = \left(\frac{C_6}{J_0}\right)^{1/6}.
+r_0\,[\mu\mathrm{m}] = \left(\frac{C_6\,[\mathrm{rad/s}\cdot\mu\mathrm{m}^6]}{J_0\,[\mathrm{rad/s}]}\right)^{1/6}.
 $$
 
 ### Interaction-limited compilation
 
-If the interaction bound is reached before the drive limit, then the largest valid implementation is obtained by saturating the interaction limit:
+When the minimum atom spacing \(r_{\min}\,[\mu\mathrm{m}]\) is reached before the drive limit, the largest valid \(J_0\) is obtained by saturating the distance constraint. Since \(r_0 = (C_6/J_0)^{1/6}\) and the closest pair has dimensionless distance \(\tilde{r}_{\min} = 1\), setting \(r_0 = r_{\min}\) gives
 
 $$
-J = J_{\max}.
+J_0\,[\mathrm{rad/s}] = \frac{C_6\,[\mathrm{rad/s}\cdot\mu\mathrm{m}^6]}{r_{\min}^6\,[\mu\mathrm{m}^6]}.
 $$
 
-Since \(J = J_0 \tilde{J}\), this fixes
-
-$$
-J_0 = \frac{J_{\max}}{\tilde{J}}.
-$$
-
-Equivalently, this corresponds to choosing the smallest physical spacing allowed by the device for the relevant pair of atoms.
+This corresponds to placing the closest pair of atoms at the smallest physical spacing the device allows.
 
 !!! note
     Compilation succeeds only if there exists at least one value of \(J_0\) that satisfies all hardware constraints. If multiple valid values exist, QoolQit selects the largest one so as to maximize the physical scale of the implementation.

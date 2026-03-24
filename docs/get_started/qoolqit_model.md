@@ -64,6 +64,8 @@ Because $\tilde{\Omega}$ is expressed relative to the maximum interaction streng
 | Balanced | $\tilde{\Omega} \sim 1$ | Controls and interactions compete |
 | Weak drive | $\tilde{\Omega} \ll 1$ | Interactions dominate; blockade and correlation effects are strong |
 
+---
+
 ### Time regimes
 
 Time is expressed in QoolQit in units of the maximum interaction energy.
@@ -81,7 +83,6 @@ This makes dimensionless time a convenient, geometry-independent way to describe
 ---
 
 ## Compilation
-
 As described above, a QoolQit program is written in **dimensionless units**. This means that the user specifies the problem in terms of dimensionless quantities, independently of any particular device.
 
 However, the values that can actually be implemented are constrained by the **hardware**. Real devices only allow certain ranges of interaction strengths, drive amplitudes, detunings, and evolution times. Therefore, an important task of QoolQit is to take the dimensionless program specified by the user and map it to a set of parameters that can be realized on the chosen hardware. We refer to this step as **compilation**.
