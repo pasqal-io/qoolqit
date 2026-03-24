@@ -53,11 +53,11 @@ $$
 $$
 
 $$
-\tilde{\Omega}(t) = \frac{\Omega(t)}{J_0},
+\tilde{\Omega} = \frac{\Omega}{J_0},
 \qquad
-\tilde{\delta}(t) = \frac{\delta(t)}{J_0},
+\tilde{\delta} = \frac{\delta}{J_0},
 \qquad
-\tilde{\Delta}(t) = \frac{\Delta(t)}{J_0}.
+\tilde{\Delta} = \frac{\Delta}{J_0}.
 $$
 
 Dividing the physical Hamiltonian by \(J_0\) yields the dimensionless QoolQit Hamiltonian:
