@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Callable
 
+import pulser
 import pytest
 from pulser.sequence import Sequence as PulserSequence
 
 from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
+from qoolqit.devices import Device
 from qoolqit.drive import Drive
 from qoolqit.exceptions import CompilationError
 from qoolqit.program import QuantumProgram
@@ -141,3 +144,26 @@ def test_catch_compilation_error_max_dist() -> None:
         ),
     ):
         program.compile_to(device=AnalogDevice())
+
+
+def test_compile_to_virtual_device() -> None:
+    reg = Register.from_coordinates([(0, 0), (1, 0)])
+    drive = Drive(amplitude=Constant(100, 0.2))
+    program = QuantumProgram(reg, drive)
+
+    # Converting the pulser Device object in a VirtualDevice object
+    VirtualAnalog = pulser.AnalogDevice.to_virtual()
+    # Replacing desired values
+    ModdedAnalogDevice = replace(
+        VirtualAnalog,
+        max_radial_distance=100,
+        max_sequence_duration=7000,
+    )
+
+    # Wrap a Pulser device object into a QoolQit Device
+    mod_analog_device = Device(pulser_device=ModdedAnalogDevice)
+
+    # Compiling the QoolQit program to a PulserSequence
+    program.compile_to(device=mod_analog_device)
+    assert program.is_compiled
+    assert isinstance(program.compiled_sequence, PulserSequence)
