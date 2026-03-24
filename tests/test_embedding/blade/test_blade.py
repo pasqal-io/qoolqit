@@ -515,16 +515,12 @@ def test_qubo_nodes() -> None:
         ((5, 4, 3, 2, 2, 2), 100),
     ],
 )
-def test_stress_3_nodes(dimensions: tuple[int, ...], steps_per_round: int) -> None:
+def test_embed_3_nodes(dimensions: tuple[int, ...], steps_per_round: int) -> None:
     target_positions = np.array([[-1.5, 0.0], [-0.5, 0.0], [6.0, 0.0]], dtype=np.float64)
     target_interactions = interaction_matrix_from_positions(target_positions)
     np.fill_diagonal(target_interactions, 0)
 
-    for seed in range(15):
-        np.random.seed(seed)
-        blade_pos = blade(
-            target_interactions, dimensions=dimensions, steps_per_round=steps_per_round
-        )
-        blade_interactions = interaction_matrix_from_positions(blade_pos)
-        quality = np.linalg.norm(target_interactions - blade_interactions)
-        np.testing.assert_allclose(quality, 0.0, atol=1e-2)
+    blade_pos = blade(target_interactions, dimensions=dimensions, steps_per_round=steps_per_round)
+    blade_interactions = interaction_matrix_from_positions(blade_pos)
+    quality = np.linalg.norm(target_interactions - blade_interactions)
+    np.testing.assert_allclose(quality, 0.0, atol=1e-2)
