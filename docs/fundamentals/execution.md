@@ -4,7 +4,6 @@ In this page, you will learn how to:
 
 - run a `QuantumProgram` on local emulators,
 - choose between different emulator backends,
-- configure emulator runs and observables,
 - inspect and extract local execution results,
 - connect to Pasqal Cloud and run programs remotely,
 - submit remote jobs and retrieve their results,
@@ -75,33 +74,6 @@ from qoolqit.execution import LocalEmulator, BackendType
 emulator = LocalEmulator(backend_type=BackendType.QutipBackendV2)
 ```
 
-More experienced users, might also want to configure an emulator.
-To fully exploit the potential of each emulator backend, they can be configured through the generic `EmulationConfig` object. For example, the following configuration,
-
-```python exec="on" source="material-block" session="execution"
-from qoolqit.execution import EmulationConfig, Occupation
-
-observables = (Occupation(evaluation_times=[0.1, 0.5, 1.0]),)
-emulation_config = EmulationConfig(
-    observables=observables,
-    with_modulation=True
-    )
-```
-
-simply asks the backend to compute some observable during runtime and to emulate the hardware more closely by considering finite-bandwidth hardware modulation of the drive.
-
-Finally, to run a program on a configured emulator (local or remote), we can simply pass the configuration as an additional argument to the emulator instance as:
-
-```python exec="on" source="material-block" session="execution"
-from qoolqit.execution import EmulationConfig
-
-emulator = LocalEmulator(emulation_config=emulation_config)
-```
-
-Dedicated and specific configuration for each backend also exist: `QutipConfig`, `SVConfig`, `MPSConfig`. They should be used by pairing them with the corresponding backend type and imported from their respective packages, namely `pulser-simulation`, `emu-sv` and `emu-mps`.
-For more information about how the configuration options, please, refer to [Pulser documentation](https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.EmulationConfig.html).
-
-
 ### Handling local results
 
 The call `emulator.run(program)` will return a `Sequence[Results]` object type. This is where the results of the computation are stored.
@@ -151,19 +123,27 @@ emulator = RemoteEmulator(connection=connection)
 
 As before, also `RemoteEmulator` can be instantiated with:
 - `backend_type`: remote counterpart of local backends, namely `EmuFreeBackendV2` (default), `EmuSVBackend` (not available yet), `EmuMPSBackend`.
-- `emulation_config`: same as before.
+- `emulation_config`: same as before — see [Emulation configuration](../extended_usage/execution_config.md) for details.
 - `runs`: same as before.
 
-As an example, below, we specify to emulate the program with the `EmuMPSBackend`:
+As an example, below, we specify to emulate the program with the `EmuMPSBackend` and a custom `EmulationConfig`:
 
 ```python
-from qoolqit.execution import RemoteEmulator, BackendType
+from qoolqit.execution import (
+    BackendType,
+    EmulationConfig,
+    Occupation,
+    RemoteEmulator,
+)
+
+observables = (Occupation(evaluation_times=[0.5, 1.0]),)
+emulation_config = EmulationConfig(observables=observables, with_modulation=True)
 
 remote_emulator = RemoteEmulator(
-        backend_type=BackendType.EmuMPSBackend,
-        connection=connection,
-        emulation_config = emulation_config
-        runs=200
+    backend_type=BackendType.EmuMPSBackend,
+    connection=connection,
+    emulation_config=emulation_config,
+    runs=1000,
 )
 results = remote_emulator.run(program)
 ```
