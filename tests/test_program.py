@@ -53,7 +53,7 @@ def test_compiler_dmm(
             program.compile_to(device)
 
 
-def test_compiled_sequence_with_delays() -> None:
+def test_compiled_sequence_with_small_delays() -> None:
     """Test that the added delay is not compiled into the pulser sequence if smaller that 1 ns."""
     register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
     drive = Drive(amplitude=Constant(1.0, 1.0), detuning=Constant(1.005, 1.0))
@@ -62,3 +62,17 @@ def test_compiled_sequence_with_delays() -> None:
 
     pulser_duration = program.compiled_sequence.get_duration()
     assert pulser_duration == 80
+
+
+def test_compiled_sequence_with_delays() -> None:
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
+    duration_amp = 20.0
+    duration_detuning = 10.0
+    drive = Drive(amplitude=Constant(duration_amp, 1.0), detuning=Constant(duration_detuning, -1.0))
+    # biggest duration should be used
+    assert drive.duration == duration_amp
+    program = QuantumProgram(register=register, drive=drive)
+    program.compile_to(device=AnalogDevice())
+
+    pulser_duration = program.compiled_sequence.get_duration()
+    assert pulser_duration == 1592
