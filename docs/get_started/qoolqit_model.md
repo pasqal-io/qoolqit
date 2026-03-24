@@ -92,18 +92,18 @@ In other words, compilation does not change the program the user wants to implem
 
 A convenient way to understand this is to first work entirely in dimensionless units.
 
-The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\subscript{\max}{\tilde{t}}\frac{\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure
-(here $\subscript{\max}{\tilde{t}}$ stands for the maximum over time).
+The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\max_{\tilde{t}}\frac{\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure
+(here $\max_{\tilde{t}}$ stands for the maximum over time).
 
 This means that compilation does **not** change the dimensionless physics of the program. Instead, it rescales the program so that it lies inside the region that can be implemented on a given device.
 
 ### Example
 
-The initial dimensionless program is defined by $(\tilde{J},\subscript{\max}{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\subscript{\max}{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$. 
+The initial dimensionless program is defined by $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$.
 
 Now assume that the valid compilation region is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2,$ as shown in the figure below.
 
-The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\subscript{\max}{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1$. The compiled point must therefore remain on the line $\tilde{\Omega} = \tilde{J}.$
+The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1$.
 
 The largest valid point on this line is $(\tilde{J},\tilde{\Omega}) = (0.5,0.2).$
 
