@@ -10,7 +10,7 @@ QoolQit introduces a **dimensionless reference frame** with the following conven
 - $\tilde{\Omega}(t)$ and $\tilde{\delta}(t)$ are measured relative to the maximum interaction strength, which is equal to $1$ in the dimensionless program.
 - Times $\tilde{t}$ are measured relative to the interaction timescale.
 
-This means that programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification. 
+This means that programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
 
 Once a quantum program is written, a **compilation routine** automatically maps its dimensionless parameters to physical values compatible with the target hardware. For more details, see the Overview page.
 
@@ -42,16 +42,16 @@ $$
 \sigma^z=\begin{pmatrix} 1 & 0\\ 0 & -1\end{pmatrix}.
 $$
 
-Here, the interaction follow the $1/r^6$ Rydberg scaling, normalized so that the maximum equals $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$. 
+Here, the interaction follow the $1/r^6$ Rydberg scaling, normalized so that the maximum equals $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
 
 More details are provided in [Adimensionalization](../extended_usage/adimensionalization.md), to understand the connection to physical units and how compilation works.
 
 ### Parameters
 
-| Symbol | Description | Range | 
+| Symbol | Description | Range |
 |--------|-------------|-------|
 | $\tilde{J}_{ij}$ | Dimensionless coupling between sites $i$ and $j$ | $(0,\,1]$ |
-| $\tilde{\Omega}(t)$ | Global drive amplitude, affecting all sites equally | $\geq 0$ | 
+| $\tilde{\Omega}(t)$ | Global drive amplitude, affecting all sites equally | $\geq 0$ |
 | $\tilde{\delta}(t)$ | Global detuning, affecting all sites equally | any real value |
 | $\tilde{\Delta}(t)$ | Local detuning amplitude | $\leq 0$ |
 | $\phi(t)$ | Global phase | $[0,\,2\pi)$ |
