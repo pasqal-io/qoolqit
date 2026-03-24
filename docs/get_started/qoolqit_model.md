@@ -92,13 +92,14 @@ In other words, compilation does not change the program the user wants to implem
 
 A convenient way to understand this is to first work entirely in dimensionless units.
 
-The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\frac{\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure.
+The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\subscript{\max}{\tilde{t}}\frac{\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure
+(here $\subscript{\max}{\tilde{t}}$ stands for the maximum over time).
 
 This means that compilation does **not** change the dimensionless physics of the program. Instead, it rescales the program so that it lies inside the region that can be implemented on a given device.
 
 ### Example
 
-Suppose the initial dimensionless program is define by $(\tilde{J},\subscript{\max}{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\subscript{\max}{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$. 
+The initial dimensionless program is defined by $(\tilde{J},\subscript{\max}{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\subscript{\max}{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$. 
 
 Now assume that the valid compilation region is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2,$ as shown in the figure below.
 
