@@ -17,6 +17,7 @@ nav:
     - Drive Hamiltonian: fundamentals/drives.md
     - Devices: fundamentals/devices.md
     - Quantum programs: fundamentals/programs.md
+    - Compilation: fundamentals/compilation.md
     - Execution: fundamentals/execution.md
   - Extended usage:
     - Adimensionalization: extended_usage/adimensionalization.md
