@@ -1,8 +1,8 @@
 # Adimensionalization
 
-This section explains how QoolQit's dimensionless formulation relates to physical quantities, and how compilation maps abstract programs back to real hardware.
+This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, and how compilation maps an abstract programs onto actual hardware.
 
-The [QoolQit Model](../get_started/qoolqit_model.md) page introduces the main idea of compilation at a conceptual level: the compiler preserves the same dimensionless program while changing the physical scale used to realize it on hardware. Here we make that statement precise by introducing the reference interaction \(J_0\), the corresponding reference distance \(r_0\), and the mapping between dimensionless and physical quantities.
+The [QoolQit Model](../get_started/qoolqit_model.md) page introduces the main idea of compilation at a high level: the compiler keeps the same dimensionless program while setting the reference physical scale used to realize it on hardware. Here, we make that idea precise by defining the reference interaction \(J_0\), the corresponding reference distance \(r_0\), and the mapping between dimensionless and physical quantities.
 
 ---
 
