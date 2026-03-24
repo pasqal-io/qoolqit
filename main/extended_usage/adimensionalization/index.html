@@ -12,7 +12,7 @@
         <link rel="prev" href="../../fundamentals/execution/">
       
       
-        <link rel="next" href="../../fundamentals/custom_embedders/">
+        <link rel="next" href="../execution_config/">
       
       
         
@@ -342,28 +342,6 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../tutorials/user_journey/" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Tutorials
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
     <li class="md-tabs__item">
       <a href="../../reference/api/" class="md-tabs__link">
         
@@ -639,6 +617,18 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -747,7 +737,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../fundamentals/available_embedders/" class="md-nav__link">
+      <a href="../../fundamentals/embedding/" class="md-nav__link">
         
   
   
@@ -767,72 +757,6 @@
   
 
               
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Writing a quantum program
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Writing a quantum program
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -981,6 +905,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../fundamentals/compilation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../fundamentals/execution/" class="md-nav__link">
         
   
@@ -1008,14 +960,6 @@
     </li>
   
 
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
     
       
       
@@ -1027,6 +971,10 @@
   
     
     
+      
+        
+      
+        
       
         
       
@@ -1161,7 +1109,18 @@
   <a href="#introducing-the-reference-interaction-j_0" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Introducing the Reference Interaction \(J_0\)
+        Introducing the reference interaction \(J_0\)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-dimensionless-programs-to-physical-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From dimensionless programs to physical hardware
       
     </span>
   </a>
@@ -1181,10 +1140,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#case-1-drive-limited-compilation" class="md-nav__link">
+  <a href="#geometric-interpretation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 1: Drive-limited compilation
+        Geometric interpretation
       
     </span>
   </a>
@@ -1192,10 +1151,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#case-2-interaction-limited-compilation" class="md-nav__link">
+  <a href="#drive-limited-compilation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 2: Interaction-limited compilation
+        Drive-limited compilation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interaction-limited-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interaction-limited compilation
       
     </span>
   </a>
@@ -1219,10 +1189,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#physical-interpretation-of-dimensionless-time" class="md-nav__link">
+  <a href="#compiling-time-back-to-physical-units" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Physical interpretation of dimensionless time
+        Compiling time back to physical units
       
     </span>
   </a>
@@ -1230,10 +1200,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#compiling-time-back-to-physical-units" class="md-nav__link">
+  <a href="#physical-interpretation-of-dimensionless-time" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Compiling time back to physical units
+        Physical interpretation of dimensionless time
       
     </span>
   </a>
@@ -1267,7 +1237,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../../fundamentals/custom_embedders/" class="md-nav__link">
+      <a href="../execution_config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_embedders/" class="md-nav__link">
         
   
   
@@ -1275,6 +1273,34 @@
     
   
     Custom embedders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_waveforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom waveforms
   
 
     
@@ -1392,157 +1418,6 @@
   
   
   
-    
-    
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tutorials
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Tutorials
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorials/user_journey/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    QooQit user journey tutorial
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorials/custom_quantum_program/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Execute Custom Quantum Program: Tutorial
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tutorials/rydberg_blockade/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Understanding unit conversions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     <li class="md-nav__item">
       <a href="../../reference/api/" class="md-nav__link">
         
@@ -1594,10 +1469,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1615,8 +1490,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1786,7 +1661,18 @@
   <a href="#introducing-the-reference-interaction-j_0" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Introducing the Reference Interaction \(J_0\)
+        Introducing the reference interaction \(J_0\)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-dimensionless-programs-to-physical-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From dimensionless programs to physical hardware
       
     </span>
   </a>
@@ -1806,10 +1692,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#case-1-drive-limited-compilation" class="md-nav__link">
+  <a href="#geometric-interpretation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 1: Drive-limited compilation
+        Geometric interpretation
       
     </span>
   </a>
@@ -1817,10 +1703,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#case-2-interaction-limited-compilation" class="md-nav__link">
+  <a href="#drive-limited-compilation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Case 2: Interaction-limited compilation
+        Drive-limited compilation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interaction-limited-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interaction-limited compilation
       
     </span>
   </a>
@@ -1844,10 +1741,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#physical-interpretation-of-dimensionless-time" class="md-nav__link">
+  <a href="#compiling-time-back-to-physical-units" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Physical interpretation of dimensionless time
+        Compiling time back to physical units
       
     </span>
   </a>
@@ -1855,10 +1752,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#compiling-time-back-to-physical-units" class="md-nav__link">
+  <a href="#physical-interpretation-of-dimensionless-time" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Compiling time back to physical units
+        Physical interpretation of dimensionless time
       
     </span>
   </a>
@@ -1910,16 +1807,20 @@
 
 
 <h1 id="adimensionalization">Adimensionalization</h1>
-<p>This section explains how QoolQit's dimensionless formulation relates to physical quantities, and how compilation maps abstract programs back to real hardware.</p>
+<p>This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, and how compilation maps an abstract programs onto actual hardware.</p>
+<p>The <a href="../../get_started/qoolqit_model/">QoolQit Model</a> page introduces the main idea of compilation at a high level: the compiler keeps the same dimensionless program while setting the reference physical scale used to realize it on hardware. Here, we make that idea precise by defining the reference interaction <span class="arithmatex">\(J_0\)</span>, the corresponding reference distance <span class="arithmatex">\(r_0\)</span>, and the mapping between dimensionless and physical quantities.</p>
 <hr />
 <h2 id="physical-hamiltonian">Physical Hamiltonian</h2>
-<p>In physical units, the Rydberg Hamiltonian is:</p>
+<p>In physical units, the Rydberg Hamiltonian is</p>
 <div class="arithmatex">\[
-H(t) = \underbrace{\sum_{i&lt;j} \frac{C_6}{r_{ij}^{6}} \hat{n}_i \hat{n}_j}_{\text{interactions}}
-+ \underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\,\hat{\sigma}_i^y\right)}_{\text{global drive}}
-- \underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i}_{\text{detuning}}
+H(t) =
+\underbrace{\sum_{i&lt;j} \frac{C_6}{r_{ij}^{6}} \hat{n}_i \hat{n}_j}_{\text{interactions}}
++
+\underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\,\hat{\sigma}_i^y\right)}_{\text{global drive}}
+-
+\underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i}_{\text{detuning}}.
 \]</div>
-<p>where <span class="arithmatex">\(\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)\)</span> is the Rydberg occupation operator.</p>
+<p>Here <span class="arithmatex">\(\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)\)</span> is the Rydberg occupation operator.</p>
 <table>
 <thead>
 <tr>
@@ -1931,80 +1832,157 @@ H(t) = \underbrace{\sum_{i&lt;j} \frac{C_6}{r_{ij}^{6}} \hat{n}_i \hat{n}_j}_{\t
 <tbody>
 <tr>
 <td><span class="arithmatex">\(C_6(n)\)</span></td>
-<td>Interaction coefficient (Rydberg level <span class="arithmatex">\(n\)</span>)</td>
-<td><span class="arithmatex">\(\text{rad/s} \times \mu\text{m}^6\)</span></td>
+<td>Interaction coefficient for Rydberg level <span class="arithmatex">\(n\)</span></td>
+<td><span class="arithmatex">\(\mathrm{rad/s}\times\mu\mathrm{m}^6\)</span></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\Omega(t)\)</span></td>
 <td>Global Rabi frequency (drive amplitude)</td>
-<td>rad/s</td>
+<td><span class="arithmatex">\(\mathrm{rad/s}\)</span></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\delta(t)\)</span></td>
 <td>Global detuning</td>
-<td>rad/s</td>
+<td><span class="arithmatex">\(\mathrm{rad/s}\)</span></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\Delta(t)\)</span></td>
 <td>Local detuning amplitude</td>
-<td>rad/s</td>
+<td><span class="arithmatex">\(\mathrm{rad/s}\)</span></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\phi(t)\)</span></td>
 <td>Drive phase</td>
-<td><span class="arithmatex">\([0, 2\pi)\)</span></td>
+<td><span class="arithmatex">\([0,2\pi)\)</span></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\epsilon_i\)</span></td>
 <td>Local detuning weight</td>
-<td><span class="arithmatex">\([0, 1]\)</span></td>
+<td><span class="arithmatex">\([0,1]\)</span></td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="introducing-the-reference-interaction-j_0">Introducing the Reference Interaction <span class="arithmatex">\(J_0\)</span></h2>
-<p>To make programs device-agnostic, QoolQit defines an arbitrary reference distance <span class="arithmatex">\(r_0\)</span> and a corresponding reference interaction:</p>
+<h2 id="introducing-the-reference-interaction-j_0">Introducing the reference interaction <span class="arithmatex">\(J_0\)</span></h2>
+<p>Because the interaction between Rydberg atoms depends on their separation, QoolQit introduces a reference distance <span class="arithmatex">\(r_0\)</span> and the corresponding reference interaction in order to make programs device-agnostic.</p>
 <div class="arithmatex">\[
-J_0 = \frac{C_6}{r_0^6}
+r_0 \;\text{(reference distance)},
+\qquad
+J_0 = \frac{C_6}{r_0^6} \;\text{(reference interaction)}.
 \]</div>
-<p>This <span class="arithmatex">\(J_0\)</span> sets the energy scale for the problem. All quantities are then expressed relative to it:</p>
+<p>Concretely, \(r_0\) is the physical separation that corresponds to a dimensionless distance of \(1\): any pair of atoms that sit at distance \(\tilde r_{ij}=1\) in the adimensional model will be placed at distance \(r_0\) on the actual device. This value is not fixed in advance — it is determined by compilation — and, through the relation above, every choice of \(r_0\) implies a definite value of \(J_0\).</p>
+<p>This quantity sets the energy scale for the program. All Hamiltonian parameters are then expressed relative to it:</p>
 <div class="arithmatex">\[
-\tilde{r}_{ij} = \frac{r_{ij}}{r_0}, \qquad \tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6}, \qquad \tilde{\Omega} = \frac{\Omega}{J_0}, \qquad \tilde{\delta} = \frac{\delta}{J_0}
+\tilde{r}_{ij} = \frac{r_{ij}}{r_0},
+\qquad
+\tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6} = \frac{C_6/r_{ij}^6}{J_0},
 \]</div>
-<p>Dividing the full Hamiltonian by <span class="arithmatex">\(J_0\)</span> yields the dimensionless QoolQit Hamiltonian:</p>
 <div class="arithmatex">\[
-\tilde{H}(t) = \sum_{i&lt;j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j
-+ \sum_i \frac{\tilde{\Omega}(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}^x_i - \sin\phi(t)\,\hat{\sigma}^y_i\right)
-- \sum_i \left(\tilde{\delta}(t) + \epsilon_i\tilde{\Delta}(t)\right)\hat{n}_i
+\tilde{\Omega} = \frac{\Omega}{J_0},
+\qquad
+\tilde{\delta} = \frac{\delta}{J_0},
+\qquad
+\tilde{\Delta} = \frac{\Delta}{J_0}.
+\]</div>
+<p>Dividing the physical Hamiltonian by <span class="arithmatex">\(J_0\)</span> yields the dimensionless QoolQit Hamiltonian:</p>
+<div class="arithmatex">\[
+\tilde{H}(t) =
+\sum_{i&lt;j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j
++
+\sum_i \frac{\tilde{\Omega}(t)}{2}
+\left(
+\cos\phi(t)\,\hat{\sigma}^x_i - \sin\phi(t)\,\hat{\sigma}^y_i
+\right)
+-
+\sum_i \left(\tilde{\delta}(t) + \epsilon_i\tilde{\Delta}(t)\right)\hat{n}_i.
 \]</div>
 <div class="admonition note">
 <p class="admonition-title">Key convention</p>
-<p>In QoolQit, the minimum dimensionless distance is fixed such that <span class="arithmatex">\(\min(\tilde{r}_{ij}) = 1\)</span>, which means the maximum interaction strength is also 1.</p>
+<p>In QoolQit, the minimum dimensionless distance is fixed so that <span class="arithmatex">\(\min(\tilde r_{ij})=1\)</span>. Equivalently, the maximum dimensionless interaction is normalized to <span class="arithmatex">\(1\)</span>:
+$$
+\max(\tilde J_{ij}) = 1.
+$$</p>
 </div>
+<p>This is the convention used throughout the documentation: the user specifies a dimensionless program, and compilation later chooses which physical scale <span class="arithmatex">\(J_0\)</span> will be used to realize it.</p>
+<hr />
+<h2 id="from-dimensionless-programs-to-physical-hardware">From dimensionless programs to physical hardware</h2>
+<p>A QoolQit program is specified in terms of dimensionless quantities such as <span class="arithmatex">\(\tilde{J}_{ij}\)</span>, <span class="arithmatex">\(\tilde{\Omega}(t)\)</span>, <span class="arithmatex">\(\tilde{\delta}(t)\)</span>, and <span class="arithmatex">\(\tilde t\)</span>. These quantities describe the structure of the program independently of any particular device.</p>
+<p>To run the program on actual hardware, one must choose a concrete value of <span class="arithmatex">\(J_0\)</span>. Once <span class="arithmatex">\(J_0\)</span> is fixed, all dimensionless quantities are converted back into physical ones:</p>
+<div class="arithmatex">\[
+\Omega(t) = J_0\,\tilde{\Omega}(t),
+\qquad
+\delta(t) = J_0\,\tilde{\delta}(t),
+\qquad
+\Delta(t) = J_0\,\tilde{\Delta}(t),
+\]</div>
+<p>and the physical distances are obtained from</p>
+<div class="arithmatex">\[
+r_0 = \left(\frac{C_6}{J_0}\right)^{1/6},
+\qquad
+r_{ij} = r_0\,\tilde r_{ij}.
+\]</div>
+<p>So choosing a compilation is equivalent to choosing the physical reference scale <span class="arithmatex">\(J_0\)</span>, and therefore also the physical distance scale <span class="arithmatex">\(r_0\)</span>.</p>
 <hr />
 <h2 id="compilation">Compilation</h2>
-<p>When you write a QoolQit program, you specify dimensionless ratios like <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span>. Compilation chooses a concrete value for <span class="arithmatex">\(J_0\)</span> that maps these ratios to physical values within a given device's capabilities.</p>
-<p>The key insight is:</p>
-<ul>
-<li>A <strong>program</strong> defines a ratio <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span>, which corresponds to a line through the origin in <span class="arithmatex">\((\Omega, J)\)</span> space.</li>
-<li>A <strong>device</strong> defines a box of allowed physical values: <span class="arithmatex">\([0,\,\Omega_{\max}] \times [0,\,J_{\max}]\)</span>.</li>
-</ul>
-<p>All points on the program line that fall within the device box are valid compilations. Choosing <span class="arithmatex">\(J_0\)</span> is equivalent to selecting which point on that line to use. In practice, programs running at higher amplitude perform better on hardware, so QoolQit automatically selects the point that maximises amplitude while staying within device constraints.</p>
+<p>As discussed in <a href="../../get_started/qoolqit_model/">The QoolQit Model</a>, compilation preserves the same dimensionless program while changing the physical scale used to realize it on hardware.</p>
+<p>The key point is that the user specifies <strong>dimensionless ratios</strong>, while the hardware imposes <strong>physical bounds</strong>. Compilation must therefore find a value of <span class="arithmatex">\(J_0\)</span> such that the resulting physical parameters remain inside the device limits.</p>
+<p>For example, if the target hardware imposes bounds such as</p>
+<div class="arithmatex">\[
+\Omega(t) \le \Omega_{\max},
+\qquad
+\delta(t) \in [\delta_{\min},\delta_{\max}],
+\qquad
+\Delta(t) \in [\Delta_{\min},\Delta_{\max}],
+\]</div>
+<p>and if there is also a geometric constraint on the minimum physical spacing <span class="arithmatex">\(r_{ij}\)</span>, then only certain choices of <span class="arithmatex">\(J_0\)</span> are valid.</p>
+<p>Using <span class="arithmatex">\(\Omega = J_0 \tilde{\Omega}\)</span>, the drive bound becomes</p>
+<div class="arithmatex">\[
+J_0\,\tilde{\Omega}(t) \le \Omega_{\max}.
+\]</div>
+<p>Similarly, since <span class="arithmatex">\(r_{ij}=r_0\tilde r_{ij}\)</span> and <span class="arithmatex">\(r_0=(C_6/J_0)^{1/6}\)</span>, any lower bound on physical distances translates into an upper bound on <span class="arithmatex">\(J_0\)</span>.</p>
+<p>Compilation therefore consists of finding a value of <span class="arithmatex">\(J_0\)</span> that satisfies all such constraints simultaneously.</p>
+<h3 id="geometric-interpretation">Geometric interpretation</h3>
+<p>When describing the <a href="../../get_started/qoolqit_model/">QoolQit model</a>, we introduced a geometric picture of compilation in dimensionless units: fixing the ratio <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span> defines a line in the <span class="arithmatex">\((\tilde{J},\tilde{\Omega})\)</span> plane, and compilation moves the program along that line until it reaches the allowed region.</p>
+<p>The same idea can be translated into physical units. For a fixed dimensionless program, changing the reference scale <span class="arithmatex">\(J_0\)</span> rescales both the physical interaction strength and the physical drive amplitude according to</p>
+<div class="arithmatex">\[
+J = J_0 \tilde{J},
+\qquad
+\Omega = J_0 \tilde{\Omega}.
+\]</div>
+<p>As a result, all physical realizations of the same dimensionless program lie on a ray in the <span class="arithmatex">\((J,\Omega)\)</span> plane. Each ray is therefore associated with a fixed value of the ratio <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span>, while different points along the same ray correspond to different choices of the physical reference scale <span class="arithmatex">\(J_0\)</span>.</p>
+<p>The figure below illustrates this picture. Each straight line corresponds to a different fixed ratio <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span>, and therefore to a different dimensionless program. The shaded green region represents the set of parameters allowed by the device, bounded here by the maximum interaction strength <span class="arithmatex">\(J_{\max}\)</span> and the maximum drive amplitude <span class="arithmatex">\(\Omega_{\max}\)</span>.</p>
 <p><img alt="Compilation diagram" src="../../extras/assets/compilation.svg" /></p>
-<h3 id="case-1-drive-limited-compilation">Case 1: Drive-limited compilation</h3>
-<p>When the program line hits the maximum amplitude <span class="arithmatex">\(\Omega_{\max}\)</span> before reaching <span class="arithmatex">\(J_{\max}\)</span>, the compiler sets:</p>
-<div class="arithmatex">\[J_0 = \Omega_{\max}\]</div>
-<p>and calculates the corresponding reference distance, which will fit within device specs.</p>
-<h3 id="case-2-interaction-limited-compilation">Case 2: Interaction-limited compilation</h3>
-<p>When the program line hits the maximum interaction <span class="arithmatex">\(J_{\max}\)</span> before reaching <span class="arithmatex">\(\Omega_{\max}\)</span>, the compiler sets:</p>
-<div class="arithmatex">\[J_0 = J_{\max}\]</div>
-<p>This is equivalent to placing the closest pair of atoms at the minimum allowed distance. The compiler then derives the corresponding <span class="arithmatex">\(\Omega\)</span> value.</p>
+<p>Compilation consists of selecting, along the ray defined by the program, a point that lies inside this allowed region. Among all such points, QoolQit chooses the largest valid one, corresponding to the largest reference scale <span class="arithmatex">\(J_0\)</span> compatible with the hardware constraints. This choice is preferable because it realizes the same dimensionless program with the largest possible physical energy scale, and therefore with the shortest corresponding physical runtime.</p>
+<h3 id="drive-limited-compilation">Drive-limited compilation</h3>
+<p>If the drive bound is reached before the interaction bound, then the largest valid implementation is obtained by saturating the drive limit:</p>
+<div class="arithmatex">\[
+\Omega = \Omega_{\max}.
+\]</div>
+<p>Since <span class="arithmatex">\(\Omega = J_0 \tilde{\Omega}\)</span>, this fixes</p>
+<div class="arithmatex">\[
+J_0 = \frac{\Omega_{\max}}{\tilde{\Omega}}.
+\]</div>
+<p>The corresponding reference distance is then</p>
+<div class="arithmatex">\[
+r_0 = \left(\frac{C_6}{J_0}\right)^{1/6}.
+\]</div>
+<h3 id="interaction-limited-compilation">Interaction-limited compilation</h3>
+<p>If the interaction bound is reached before the drive limit, then the largest valid implementation is obtained by saturating the interaction limit:</p>
+<div class="arithmatex">\[
+J = J_{\max}.
+\]</div>
+<p>Since <span class="arithmatex">\(J = J_0 \tilde{J}\)</span>, this fixes</p>
+<div class="arithmatex">\[
+J_0 = \frac{J_{\max}}{\tilde{J}}.
+\]</div>
+<p>Equivalently, this corresponds to choosing the smallest physical spacing allowed by the device for the relevant pair of atoms.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This strategy guarantees that compiled programs fit within device specs (if compilation succeeds) and use the maximum amplitude possible for the user-defined program.</p>
+<p>Compilation succeeds only if there exists at least one value of <span class="arithmatex">\(J_0\)</span> that satisfies all hardware constraints. If multiple valid values exist, QoolQit selects the largest one so as to maximize the physical scale of the implementation.</p>
 </div>
-<p>If compilation fails, the program simply cannot fit the device under any valid assignment of <span class="arithmatex">\(J_0\)</span>.</p>
+<hr />
 <h2 id="time-scaling">Time scaling</h2>
+<p>The <a href="../../get_started/qoolqit_model/">QoolQit Model</a> page explains geometrically that if compilation changes the overall energy scale while preserving the same dimensionless Hamiltonian, then the physical runtime must change as well. Here we derive that statement explicitly.</p>
 <p>Because QoolQit uses a dimensionless Hamiltonian defined relative to a reference energy scale <span class="arithmatex">\(J_0\)</span>, time must be rescaled by the same quantity. This follows directly from the Schrödinger equation.</p>
 <p>In physical units, the dynamics are governed by</p>
 <div class="arithmatex">\[
@@ -2016,7 +1994,7 @@ U(t)\equiv \mathcal{T}\exp\left(-\frac{i}{\hbar}\int_0^t H(t')\,dt'\right)
 =
 \tilde U(\tilde t)\equiv \mathcal{T}\exp\left(-i\int_0^{\tilde t}\tilde H(\tilde t')\,d\tilde t'\right).
 \]</div>
-<p>Using the definition of the dimensionless Hamiltonian,</p>
+<p>Using</p>
 <div class="arithmatex">\[
 H(t)=J_0\,\tilde H(\tilde t),
 \]</div>
@@ -2030,27 +2008,38 @@ H(t)=J_0\,\tilde H(\tilde t),
 <div class="arithmatex">\[
 i\frac{d}{d\tilde t}|\psi(\tilde t)\rangle = \tilde H(\tilde t)|\psi(\tilde t)\rangle.
 \]</div>
-<p>Assuming <span class="arithmatex">\(\hbar=1\)</span>, so this is written simply as</p>
+<p>Assuming <span class="arithmatex">\(\hbar=1\)</span>, this is written simply as</p>
 <div class="arithmatex">\[
 \tilde t = J_0 t.
 \]</div>
-<hr />
-<h2 id="physical-interpretation-of-dimensionless-time">Physical interpretation of dimensionless time</h2>
-<p>The meaning of <span class="arithmatex">\(\tilde t\)</span> is tied to the fact that <span class="arithmatex">\(J_0\)</span> is the interaction energy at the working point. Dimensionless time therefore measures how long the system evolves relative to its intrinsic interaction timescale.</p>
-<p>In an interacting many-body system, this gives <span class="arithmatex">\(\tilde t\)</span> a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb--Robinson picture, correlations spread at a finite speed set by the interaction scale. Roughly speaking:</p>
-<ul>
-<li><span class="arithmatex">\(\tilde t \ll 1\)</span> corresponds to evolution that is too short for interactions to significantly affect the dynamics,</li>
-<li><span class="arithmatex">\(\tilde t \sim 1\)</span> corresponds to the timescale on which nearest-neighbor correlations can begin to emerge,</li>
-<li><span class="arithmatex">\(\tilde t \sim n\)</span> can be interpreted as the timescale on which correlations may have propagated across a distance of order <span class="arithmatex">\(n\)</span> lattice spacings, assuming approximately ballistic spreading.</li>
-</ul>
-<p>This interpretation is particularly useful because it is independent of the specific hardware realization: the same dimensionless time corresponds to the same interaction-relative evolution, even though the physical runtime after compilation may differ from one device to another.</p>
+<p>This shows that the dimensionless evolution depends only on <span class="arithmatex">\(\tilde H\)</span> and <span class="arithmatex">\(\tilde t\)</span>. Therefore, if compilation changes the reference scale <span class="arithmatex">\(J_0\)</span>, the corresponding physical runtime must change accordingly in order to preserve the same dimensionless evolution.</p>
 <hr />
 <h2 id="compiling-time-back-to-physical-units">Compiling time back to physical units</h2>
 <p>Once compilation chooses a concrete value of <span class="arithmatex">\(J_0\)</span>, dimensionless times are mapped back to physical durations through</p>
 <div class="arithmatex">\[
 t = \frac{\tilde t}{J_0}.
 \]</div>
-<p>This means that choosing a larger <span class="arithmatex">\(J_0\)</span> produces a faster physical implementation of the same dimensionless program. This is consistent with the compilation strategy described above: whenever possible, QoolQit selects the largest feasible scale compatible with device constraints, so that programs run with the highest available amplitudes and shortest physical durations.</p>
+<p>This means that choosing a larger <span class="arithmatex">\(J_0\)</span> produces a faster physical implementation of the same dimensionless program.</p>
+<p>Equivalently, if compilation changes the reference scale from <span class="arithmatex">\(J_0\)</span> to</p>
+<div class="arithmatex">\[
+J_0' = \alpha J_0,
+\]</div>
+<p>then a fixed dimensionless duration <span class="arithmatex">\(\tilde T\)</span> is realized physically in a time</p>
+<div class="arithmatex">\[
+T' = \frac{\tilde T}{J_0'} = \frac{1}{\alpha}\frac{\tilde T}{J_0}.
+\]</div>
+<p>So reducing the energy scale by a factor <span class="arithmatex">\(\alpha\)</span> increases the physical runtime by a factor <span class="arithmatex">\(1/\alpha\)</span>.</p>
+<p>This is consistent with the compilation strategy described above: whenever possible, QoolQit selects the largest feasible <span class="arithmatex">\(J_0\)</span> compatible with device constraints, so that programs run with the highest available amplitudes and shortest physical durations.</p>
+<hr />
+<h2 id="physical-interpretation-of-dimensionless-time">Physical interpretation of dimensionless time</h2>
+<p>The meaning of <span class="arithmatex">\(\tilde t\)</span> is tied to the fact that <span class="arithmatex">\(J_0\)</span> is the interaction energy scale used to realize the program. Dimensionless time therefore measures how long the system evolves relative to its intrinsic interaction timescale.</p>
+<p>In an interacting many-body system, this gives <span class="arithmatex">\(\tilde t\)</span> a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb--Robinson picture, correlations spread at a finite speed set by the interaction scale. Roughly speaking:</p>
+<ul>
+<li><span class="arithmatex">\(\tilde t \ll 1\)</span> corresponds to evolution that is too short for interactions to significantly affect the dynamics;</li>
+<li><span class="arithmatex">\(\tilde t \sim 1\)</span> corresponds to the timescale on which nearest-neighbor correlations can begin to emerge;</li>
+<li><span class="arithmatex">\(\tilde t \sim n\)</span> can be interpreted as the timescale on which correlations may have propagated across a distance of order <span class="arithmatex">\(n\)</span> lattice spacings, assuming approximately ballistic spreading.</li>
+</ul>
+<p>This interpretation is useful because it is independent of the particular hardware realization: the same dimensionless time corresponds to the same interaction-relative evolution, even though the physical runtime after compilation may differ from one device to another.</p>
 <hr />
 <h2 id="special-case-a-single-atom">Special case: a single atom</h2>
 <p>The interpretation above relies on interactions being physically present. For a single atom, however, there are no pairwise interaction terms, so <span class="arithmatex">\(J_0\)</span> is no longer an intrinsic dynamical scale of the problem.</p>
