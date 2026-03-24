@@ -34,11 +34,15 @@ Here $\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)$ is the Rydberg occupatio
 
 ## Introducing the reference interaction \(J_0\)
 
-Because the interaction between Rydberg atoms depends on their separation, QoolQit introduces a reference distance \(r_0\) and the corresponding reference interaction in order to make programs device-agnostic.
+Because the interaction between Rydberg atoms depends on their separation, QoolQit introduces a **reference distance** \\(r_0\\) and the corresponding **reference interaction** \\(J_0\\) in order to make programs device-agnostic:
 
 $$
-J_0 = \frac{C_6}{r_0^6}.
+r_0 \;\text{(reference distance)},
+\qquad
+J_0 = \frac{C_6}{r_0^6} \;\text{(reference interaction)}.
 $$
+
+Concretely, \\(r_0\\) is the physical separation that corresponds to a dimensionless distance of \\(1\\): any pair of atoms that sit at distance \\(\tilde r_{ij}=1\\) in the adimensional model will be placed at distance \\(r_0\\) on the actual device. This value is not fixed in advance — it is determined by compilation — and, through the relation above, every choice of \\(r_0\\) implies a definite value of \\(J_0\\).
 
 This quantity sets the energy scale for the program. All Hamiltonian parameters are then expressed relative to it:
 
