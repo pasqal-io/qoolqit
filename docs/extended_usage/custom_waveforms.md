@@ -121,6 +121,7 @@ wf.draw()
 
 fig = wf.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
+```
 
 ## More examples
 
@@ -161,51 +162,6 @@ fig = pulse.draw(return_fig=True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-### Gaussian pulse
-
-A Gaussian envelope centred in the middle of the window:
-
-$$
-f(t) = \Omega_\text{max} \cdot \exp\!\left(-\frac{(t - T/2)^2}{2\sigma^2}\right)
-$$
-
-```python exec="on" source="material-block" result="json" session="custom_waveforms_extra"
-class GaussianPulse(Waveform):
-    """Gaussian pulse centred at t = duration/2.
-
-    Arguments:
-        duration: total duration of the waveform.
-        omega_max: peak amplitude (at the centre).
-        sigma: standard deviation controlling the pulse width.
-    """
-
-    def __init__(self, duration: float, omega_max: float, sigma: float) -> None:
-        super().__init__(duration, omega_max=omega_max, sigma=sigma)
-
-    def function(self, t: float) -> float:
-        centre = self.duration / 2.0
-        return self.omega_max * math.exp(-((t - centre) ** 2) / (2 * self.sigma ** 2))
-
-    def max(self) -> float:
-        return self.omega_max          # peak is at the centre
-
-    def min(self) -> float:
-        # tails evaluated at t = 0 and t = duration are equal by symmetry
-        centre = self.duration / 2.0
-        return self.omega_max * math.exp(-(centre ** 2) / (2 * self.sigma ** 2))
-
-gpulse = GaussianPulse(2 * math.pi, omega_max=1.0, sigma=1.0)
-print(gpulse)  # markdown-exec: hide
-```
-
-```python exec="on" source="material-block" html="1" session="custom_waveforms_extra"
-import matplotlib.pyplot as plt # markdown-exec: hide
-from docs.utils import fig_to_html # markdown-exec: hide
-gpulse.draw()
-fig = gpulse.draw(return_fig=True) # markdown-exec: hide
-print(fig_to_html(fig)) # markdown-exec: hide
-```
-
 ## Using a custom waveform in a Drive
 
 Custom waveforms compose with built-in ones via `>>` and slot into a [`Drive`](../fundamentals/drives.md) exactly like any
@@ -243,5 +199,4 @@ from docs.utils import fig_to_html # markdown-exec: hide
 drive.draw()
 fig = drive.draw(return_fig=True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
-```
 ```
