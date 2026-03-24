@@ -81,8 +81,6 @@ def test_default_device_specs() -> None:
         "max_radial_distance": None,
     }
     assert mock_device.specs == expected_mock_specs
-    # default value for reference only
-    assert mock_device._energy_ratio == 0.00949637427605188
 
     analog_device = AnalogDevice()
     expected_analog_specs = {
@@ -93,7 +91,6 @@ def test_default_device_specs() -> None:
         "max_radial_distance": 7.6,
     }
     assert analog_device.specs == expected_analog_specs
-    assert analog_device._energy_ratio == 0.22680411206965717
 
     digital_analog_device = DigitalAnalogDevice()
     expected_digital_analog_specs = {
@@ -104,7 +101,42 @@ def test_default_device_specs() -> None:
         "max_radial_distance": 12.5,
     }
     assert digital_analog_device.specs == expected_digital_analog_specs
+
+
+def test_device_properties() -> None:
+    mock_device = MockDevice()
+    assert mock_device.name == "MockDevice"
+    # default value for reference only
+    assert mock_device._energy_ratio == 0.03622579298420669
+    np.testing.assert_allclose(mock_device._upper_amp, 4 * np.pi)
+    np.testing.assert_allclose(mock_device._target_amp, 4 * np.pi)
+    np.testing.assert_allclose(mock_device._target_amp_adim, 0.03622579298420669)
+    np.testing.assert_allclose(mock_device._upper_amp, 4 * np.pi)
+    assert mock_device._lower_distance == 5.0
+    np.testing.assert_allclose(mock_device._target_dist, 5.0)
+    np.testing.assert_allclose(mock_device._target_dist_adim, 1.0)
+
+    analog_device = AnalogDevice()
+    assert analog_device.name == "AnalogDevice"
+    assert analog_device._energy_ratio == 0.22680411206965717
+    np.testing.assert_allclose(analog_device._upper_amp, 4 * np.pi)
+    np.testing.assert_allclose(analog_device._target_amp, 4 * np.pi)
+    np.testing.assert_allclose(analog_device._target_amp_adim, 0.22680411206965717)
+    np.testing.assert_allclose(analog_device._upper_amp, 4 * np.pi)
+    assert analog_device._lower_distance == 5.0
+    np.testing.assert_allclose(analog_device._target_dist, 5.0)
+    np.testing.assert_allclose(analog_device._target_dist_adim, 1.0)
+
+    digital_analog_device = DigitalAnalogDevice()
+    assert digital_analog_device.name == "DigitalAnalogDevice"
     assert digital_analog_device._energy_ratio == 0.011870467845064849
+    np.testing.assert_allclose(digital_analog_device._upper_amp, 5 * np.pi)
+    np.testing.assert_allclose(digital_analog_device._target_amp, 5 * np.pi)
+    np.testing.assert_allclose(digital_analog_device._target_amp_adim, 0.011870467845064849)
+    np.testing.assert_allclose(digital_analog_device._upper_amp, 5 * np.pi)
+    assert digital_analog_device._lower_distance == 4.0
+    np.testing.assert_allclose(digital_analog_device._target_dist, 4.0)
+    np.testing.assert_allclose(digital_analog_device._target_dist_adim, 1.0)
 
 
 def test_device_from_connection() -> None:

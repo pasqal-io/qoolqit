@@ -80,7 +80,7 @@ class Device:
         self._upper_amp = self._max_amp or 4 * math.pi
         self._max_abs_det = self._pulser_device.channels["rydberg_global"].max_abs_detuning
         self._min_distance = self._pulser_device.min_atom_distance
-        self._lower_distance = self._min_distance or 4.0
+        self._lower_distance = self._min_distance or 5.0
         self._max_radial_distance = self._pulser_device.max_radial_distance
 
         # ratio between maximum amplitude and maximum interaction energy J_max = C6/r_min^6
@@ -97,7 +97,7 @@ class Device:
             )
         else:
             self._default_factory = lambda: UnitConverter.from_distance(
-                self._C6, self._min_distance or 4.0
+                self._C6, self._lower_distance
             )
 
         self.reset_converter()
