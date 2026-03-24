@@ -98,11 +98,11 @@ This means that compilation does **not** change the dimensionless physics of the
 
 ### Example
 
-Suppose the initial dimensionless program is $(\tilde{J},\tilde{\Omega}) = (1,0.4),$ so that $\frac{\tilde{\Omega}}{\tilde{J}} = 0.4$
+Suppose the initial dimensionless program is define by $(\tilde{J},\subscript{\max}{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\subscript{\max}{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$. 
 
 Now assume that the valid compilation region is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2,$ as shown in the figure below.
 
-The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\tilde{\Omega}/\tilde{J} = 1$. The compiled point must therefore remain on the line $\tilde{\Omega} = \tilde{J}.$
+The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\subscript{\max}{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1$. The compiled point must therefore remain on the line $\tilde{\Omega} = \tilde{J}.$
 
 The largest valid point on this line is $(\tilde{J},\tilde{\Omega}) = (0.5,0.2).$
 
