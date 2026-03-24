@@ -6,6 +6,7 @@ import pytest
 from pulser.sequence import Sequence as PulserSequence
 
 from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
+from qoolqit.devices import Device
 from qoolqit.drive import Drive
 from qoolqit.exceptions import CompilationError
 from qoolqit.program import QuantumProgram
@@ -35,15 +36,14 @@ def test_program_init_and_compilation(
 
 
 @pytest.mark.parametrize(
-    "device_class",
-    [DigitalAnalogDevice, MockDevice],
+    "device",
+    [DigitalAnalogDevice(), MockDevice()],
 )
 def test_compiler_dmm(
-    device_class: Callable,
+    device: Device,
     dmm_program: Callable[[], QuantumProgram],
 ) -> None:
     program = dmm_program()
-    device = device_class()
     if device._device.dmm_channels:
         program.compile_to(device)
         assert program.is_compiled
