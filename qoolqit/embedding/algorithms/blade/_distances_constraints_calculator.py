@@ -15,9 +15,10 @@ def compute_best_scaling_for_qubo(
     filter_differences: bool = True,
     draw_differences: bool = False,
 ) -> Any:
-    """Computes the scaling factor on the positions to minimize the distance.
+    """Computes the best scaling factor on the positions.
 
-    between the target and the embedded interactions.
+    The best scaling factor minimizes the distance between the target and
+    the embedded interactions.
     """
 
     embedded_interactions_triu = embedded_interactions[
@@ -59,10 +60,10 @@ def compute_best_scaling_for_qubo(
 def compute_best_scaling_for_pos(
     target_interactions: np.ndarray, positions: np.ndarray, draw_differences: bool = False
 ) -> Any:
-    """Computes the scaling factor on the positions to minimize the distance.
+    """Computes the best scaling factor on the positions.
 
-    between the target interactions and the interactions defined by the
-    input positions.
+    The best scaling factor minimizes the distance between the target
+    interactions and the interactions defined by the input positions.
     """
 
     distance_matrix = distance_matrix_from_positions(positions)
@@ -98,8 +99,9 @@ class DistancesConstraintsCalculator:
     def compute_scaling_min_max(
         self, positions: np.ndarray, step_cursor: float, draw_differences: bool = False
     ) -> tuple[float, Optional[float], Optional[float]]:
-        """Computes the best scaling factor on the positions and the new.
+        """Computes the scaling and the new minimum and maximum distances.
 
+        Computes the best scaling factor on the positions and the new
         minimum and maximum distances to enforce corresponding to the progress
         defined by `step_cursor`. Step_cursor is between 0 (start)
         and 1 (end).
