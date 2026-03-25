@@ -268,57 +268,40 @@ def _validate_program_max_energy_profile(
         DISTANCE = device._target_dist_adim / register.min_distance()
         TIME, ENERGY = DISTANCE**6, 1 / DISTANCE**6
 
-    max_amplitude = drive.amplitude.max() * ENERGY
-    if specs["max_amplitude"]:
-        if max_amplitude > specs["max_amplitude"]:
-            msg = (
-                f"The MAX_ENERGY profile unexpectedly failed to meet the device specifications.\n"
-                f"The target {max_amplitude=} goes over the maximum value allowed for the device:\n"
-            )
-            raise CompilationError(msg + f"{device}")
-
-    min_distance = register.min_distance() * DISTANCE
-    if specs["min_distance"]:
-        if min_distance < specs["min_distance"]:
-            msg = (
-                f"The MAX_ENERGY profile unexpectedly failed to meet the device specifications.\n"
-                f"The target {min_distance=} goes below the minimum value allowed for the device:\n"
-            )
-            raise CompilationError(msg + f"{device}")
+    msg_init = (
+        "After rescaling the input program to the maximum energy scale available"
+        " for the selected device, the following exception was raised:\n\n"
+    )
 
     max_abs_detuning = max(abs(drive.detuning.min()), abs(drive.detuning.max()))
     if specs["max_abs_detuning"]:
         max_abs_detuning_to_compile = specs["max_abs_detuning"] / ENERGY
         if max_abs_detuning > max_abs_detuning_to_compile:
             msg = (
-                "After rescaling the input program to MAX_ENERGY, the drive's maximum absolute "
-                "detuning went over the maximum value allowed for the selected device.\n"
-                "To successfully compile your program, set the "
+                "The drive's maximum absolute detuning went over the maximum value allowed.\n"
+                "To compile your program, set the "
                 f"maximum absolute detuning below {max_abs_detuning_to_compile}"
             )
-            raise CompilationError(msg)
+            raise CompilationError(msg_init + msg)
 
     duration = drive.duration
     if specs["max_duration"]:
         max_duration_to_compile = specs["max_duration"] / TIME
         if duration > max_duration_to_compile:
             msg = (
-                f"After rescaling the input program to MAX_ENERGY, the drive's duration "
-                f"{duration:.4f} goes over the maximum value allowed for the selected device:\n"
-                "To successfully compile your program, set the "
-                f"maximum duration below {max_duration_to_compile}"
+                "The drive's duration went over the maximum value allowed.\n"
+                "To compile your program, set the "
+                f"drive's duration below {max_duration_to_compile}"
             )
-            raise CompilationError(msg)
+            raise CompilationError(msg_init + msg)
 
     max_radial_distance = register.max_radial_distance()
     if specs["max_radial_distance"]:
         max_radial_distance_to_compile = specs["max_radial_distance"] / DISTANCE
         if max_radial_distance > max_radial_distance_to_compile:
             msg = (
-                f"After rescaling the input program to MAX_ENERGY, the register's maximum radial "
-                f"distance {max_radial_distance:.4f} goes over the maximum value allowed for the "
-                "selected device:\n"
-                "To successfully compile your program, set the "
+                "The register's maximum radial distance went over the maximum value allowed.\n"
+                "To compile your program, set the "
                 f"maximum radial distance below {max_radial_distance_to_compile}"
             )
-            raise CompilationError(msg)
+            raise CompilationError(msg_init + msg)
