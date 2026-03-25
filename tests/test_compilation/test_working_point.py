@@ -28,7 +28,7 @@ class TestWorkingPointCompilerProfile:
     @pytest.fixture(autouse=True)
     def program_factory(
         self,
-        random_amplitude_factory: Callable,
+        random_waveform_factory: Callable,
         random_linear_register_factory: Callable,
     ) -> Callable[[Device, int | np.random.Generator], QuantumProgram]:
         def _generate_program(
@@ -43,8 +43,8 @@ class TestWorkingPointCompilerProfile:
             max_duration = specs["max_duration"] or 330
 
             register = random_linear_register_factory(min_distance, seed=rng)
-            amplitude = random_amplitude_factory(0.0, max_amp, max_duration, seed=rng)
-            detuning = random_amplitude_factory(-max_abs_det, max_abs_det, max_duration, seed=rng)
+            amplitude = random_waveform_factory(0.0, max_amp, max_duration, seed=rng)
+            detuning = random_waveform_factory(-max_abs_det, max_abs_det, max_duration, seed=rng)
             drive = Drive(amplitude=amplitude, detuning=detuning)
             program = QuantumProgram(register, drive)
             return program

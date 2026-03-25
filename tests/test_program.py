@@ -14,25 +14,16 @@ from qoolqit.register import Register
 from qoolqit.waveforms import Constant
 
 
-@pytest.mark.parametrize("device_class", [AnalogDevice, DigitalAnalogDevice, MockDevice])
-def test_program_init_and_compilation(
-    device_class: Callable,
-    random_linear_register: Callable[[], Register],
-    random_drive: Callable[[], Drive],
-) -> None:
-
-    register = random_linear_register()
-    drive = random_drive()
-    program = QuantumProgram(register, drive)
+def test_program_init() -> None:
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
+    drive = Drive(amplitude=Constant(1.0, 1.0), detuning=Constant(1.005, 1.0))
+    program = QuantumProgram(register=register, drive=drive)
+    assert program.register == register
+    assert program.drive == drive
     assert not program.is_compiled
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Program has not been compiled"):
         program.compiled_sequence
-
-    device = device_class()
-    program.compile_to(device)
-    assert program.is_compiled
-    assert isinstance(program.compiled_sequence, PulserSequence)
 
 
 @pytest.mark.parametrize(
