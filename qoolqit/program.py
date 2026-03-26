@@ -99,14 +99,14 @@ class QuantumProgram:
         the device's constraint. Programs compiled this way are not guaranteed to be portable
         across devices.
 
-        - max_duration: Extends the program duration to the device's maximum allowed.
+        - max_duration: Rescale the drive duration to the device's maximum allowed.
             This is typically useful in adiabatic protocols where one simply seek to
             minimize the time derivative of the drive's amplitude.
 
         Args:
             device: The target device for compilation.
             profile: The compilation strategy to optimize the program.
-            max_duration: Whether to extend the program duration to the device's
+            max_duration: Whether to set the program duration to the device's
                 maximum allowed duration.
         """
         compiler = SequenceCompiler(self.register, self.drive, device, profile)
