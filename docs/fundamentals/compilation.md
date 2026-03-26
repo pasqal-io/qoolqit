@@ -188,7 +188,7 @@ compiled program satisfies **all** device constraints:
 | Drive amplitude bounds |
 | Drive detuning bounds |
 | Sequence duration|
-| Minimum atom spacing | 
+| Minimum atom spacing |
 | Maximum radial distance |
 
 If any constraint is violated, a `CompilationError` is raised with a descriptive message
