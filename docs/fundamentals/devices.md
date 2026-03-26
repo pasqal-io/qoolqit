@@ -83,9 +83,6 @@ By default, each device creates a default converter where the **energy unit** is
 For advanced users, customizing the unit conversion factors is possible.
 
 ```python exec="on" source="material-block" result="json" session="devices"
-device_real.set_time_unit(50.0)
-print(device_real.converter)  # markdown-exec: hide
-
 device_real.set_energy_unit(10.0)
 print(device_real.converter)  # markdown-exec: hide
 
