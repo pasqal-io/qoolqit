@@ -42,7 +42,7 @@ r_0 \;\text{(reference distance)},
 J_0 = \frac{C_6}{r_0^6} \;\text{(reference interaction)}.
 $$
 
-Concretely, \$r_0\$ is the physical separation that corresponds to a dimensionless distance of \$1\$: any pair of atoms that sit at distance \$\tilde r_{ij}=1\$ in the adimensional model will be placed at distance \$r_0\$ on the actual device. This value is not fixed in advance — it is determined by compilation — and, through the relation above, every choice of \$r_0\$ implies a definite value of \$J_0\$.
+Concretely, $r_0$ is the physical separation that corresponds to a dimensionless distance of $1$: any pair of atoms that sit at distance $\tilde r_{ij}=1$ in the adimensional model will be placed at distance $r_0$ on the actual device. This value is not fixed in advance — it is determined by compilation — and, through the relation above, every choice of $r_0$ implies a definite value of $J_0$.
 
 This quantity sets the energy scale for the program. All Hamiltonian parameters are then expressed relative to it:
 
