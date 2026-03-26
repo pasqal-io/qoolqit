@@ -4,7 +4,7 @@ In this page, you will learn how to:
 
 - understand what compilation does in QoolQit,
 - understand the two compilation strategies: drive-limited and interaction-limited,
-- understand why QoolQit always uses the maximum available amplitude \(\Omega_{\max}\) whenever possible,
+- understand why QoolQit always uses the maximum available amplitude $\Omega_{\max}$ whenever possible,
 - inspect the compiled Pulser `Sequence` that results from compilation.
 
 ---
@@ -13,13 +13,13 @@ In this page, you will learn how to:
 
 A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as
 dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is
-measured in units of the reference interaction energy \(J_0\). This device-agnostic formulation
+measured in units of the reference interaction energy $J_0$. This device-agnostic formulation
 means that the same program can be compiled and run on any compatible hardware.
 
 Compilation is the step that converts these dimensionless quantities into concrete physical values
 that a real Pulser device can execute. Concretely, it:
 
-1. Selects a physical reference scale \(J_0\) that is consistent with the device's hardware constraints.
+1. Selects a physical reference scale $J_0$ that is consistent with the device's hardware constraints.
 2. Converts all dimensionless times, energies, and distances into their physical counterparts.
 3. Builds and returns a Pulser `Sequence` ready for emulation or execution on a QPU.
 
@@ -55,7 +55,7 @@ compilation are:
   relation $r_{ij} = (C_6/J_0)^{1/6}	\tilde{r}_{ij} \ge r_{\min}$, i.e.
   $J_0 \le C_6 / (r_{\min}/	\tilde{r}_{\min})^6$.
 
-QoolQit always picks the **largest \(J_0\) consistent with all hardware constraints**, because a
+QoolQit always picks the **largest $J_0$ consistent with all hardware constraints**, because a
 larger reference scale realizes the same dimensionless program with a higher physical amplitude and a
 shorter physical runtime — the most efficient use of the hardware.
 
@@ -79,7 +79,7 @@ $$
 	\tilde{\Omega}_{\max} \cdot \tilde{r}_{\min}^6 > \frac{\Omega_{\max} \cdot r_{\min}^6}{C_6},
 $$
 
-the drive amplitude bound is reached first. The largest valid \(J_0\) is then obtained by
+the drive amplitude bound is reached first. The largest valid $J_0$ is then obtained by
 **saturating the amplitude limit**:
 
 $$
@@ -115,9 +115,9 @@ resulting amplitude $\Omega = J_0\,	ilde{\Omega}_{\max}$ is below $\Omega_{\max}
 !!! note "QoolQit always maximizes the physical energy scale"
     In both cases, QoolQit selects the largest feasible reference scale $J_0$. When the drive
     bound is the binding constraint, this means the compilation always produces a pulse that
-    **saturates \(\Omega_{\max}\)** — the maximum amplitude available on the device. Doing so
-    gives the fastest possible physical runtime for the program, since \(t = 	\ilde{t}/J_0\)
-    decreases as \(J_0\) increases.
+    **saturates $\Omega_{\max}$** — the maximum amplitude available on the device. Doing so
+    gives the fastest possible physical runtime for the program, since $t = 	\ilde{t}/J_0$
+    decreases as $J_0$ increases.
 
 The figure below (from the [Adimensionalization](../extended_usage/adimensionalization.md) page)
 illustrates this selection geometrically. Each ray from the origin corresponds to a fixed
@@ -195,16 +195,16 @@ compiled program satisfies **all** device constraints:
 
 | Quantity | Constraint |
 |----------|------------|
-| Drive amplitude | \(\Omega \le \Omega_{\max}\) |
-| Drive detuning | \(\|\delta\| \le |\delta|_{\max}\) |
-| Sequence duration | \(T \le T_{\max}\) |
-| Minimum atom spacing | \(r_{\min,	ext{reg}} \ge r_{\min}\) |
-| Maximum radial distance | \(r_{\max,	ext{reg}} \le r_{\max}\) |
+| Drive amplitude | $\Omega \le \Omega_{\max}$ |
+| Drive detuning | $\|\delta\| \le |\delta|_{\max}$ |
+| Sequence duration | $T \le T_{\max}$ |
+| Minimum atom spacing | $r_{\min,	ext{reg}} \ge r_{\min}$ |
+| Maximum radial distance | $r_{\max,	ext{reg}} \le r_{\max}$ |
 
 If any constraint is violated, a `CompilationError` is raised with a descriptive message
 indicating which bound was exceeded and the device specifications that must be satisfied.
 
 !!! note "MockDevice"
     `MockDevice` has no hardware constraints, so compilation always succeeds and uses the
-    default unit converter (energy unit \(= 4\pi\)). It is designed for rapid prototyping
+    default unit converter (energy unit $= 4\pi$). It is designed for rapid prototyping
     without worrying about physical bounds.
