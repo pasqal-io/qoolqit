@@ -9,6 +9,8 @@ In this page, you will learn how to:
 - compose multiple waveforms into a single signal,
 - inspect durations and timing in composite waveforms.
 
+---
+
 An essential part of writing programs in the Rydberg analog model is to write the time-dependent functions representing the amplitude and detuning terms in the drive Hamiltonian. For that, QoolQit implements a set of waveforms that can be used directly and/or composed together.
 
 ## Base waveforms

@@ -8,6 +8,8 @@ In this page, you will learn how to:
 - retrieve the minimum qubit separation,
 - access the interaction coefficients associated with the register geometry.
 
+---
+
 A `Register` defines the qubit resources to be used by a quantum program.
 
 ```python exec="on" source="material-block" result="json" session="registers"
