@@ -8,6 +8,8 @@ In this page, you will learn how to:
 - inspect the resulting drive object,
 - visualize the drive Hamiltonian.
 
+---
+
 The `Drive` is a composition of waveforms defining the drive Hamiltonian.
 
 ```python exec="on" source="material-block" result="json" session="drives"

@@ -10,7 +10,7 @@ nav:
     - Programming with QoolQit: tutorials/programming_with_qoolqit.ipynb
   - Fundamentals:
     - Introduction: fundamentals/introduction.md
-    - Problem definition and graphs: fundamentals/graphs.md
+    - Graphs: fundamentals/graphs.md
     - Problem embedding: fundamentals/embedding.md
     - Registers: fundamentals/registers.md
     - Waveforms: fundamentals/waveforms.md
