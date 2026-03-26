@@ -91,7 +91,7 @@ def update_positions(
     unitary_vectors[range(n), range(n)] = np.zeros(space_dimension)
     logger.debug(f"{unitary_vectors=}")
 
-    interaction_force = compute_interaction_forces(
+    modulated_target_interactions, interaction_force = compute_interaction_forces(
         distance_matrix=distance_matrix,
         unitary_vectors=unitary_vectors,
         target_weights=target_interactions,
@@ -177,6 +177,9 @@ def update_positions(
             max_radius=max_radius,
             max_dist_to_walk=max_distance_to_walk,
             step=step,
+            modulated_target_interactions=(
+                modulated_target_interactions if max_distance_to_walk != np.inf else None
+            ),
         )
 
     for u, force in enumerate(resulting_forces_vectors):
@@ -242,6 +245,7 @@ def evolve_with_forces_through_dim_change(
 
         if draw_step:
             print(f"{step=}")
+
         scaling, min_dist, max_radius = dist_constr_calc.compute_scaling_min_max(
             positions=positions,
             step_cursor=(step - start_step) / (nb_steps - 1),
@@ -282,7 +286,7 @@ def evolve_with_forces_through_dim_change(
 
 
 def generate_random_positions(target_interactions: np.ndarray, dimension: int) -> np.ndarray:
-    return np.random.uniform(size=(len(target_interactions), dimension))
+    return np.random.uniform(-1, 1, size=(len(target_interactions), dimension))
 
 
 def augment_dimensions_with_random_values(
@@ -368,6 +372,16 @@ def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
     return np.min(distance_matrix[upper_diagonal_mask])  # type: ignore
 
 
+def default_compute_max_distance_to_walk(progress: float, max_radial_dist: float | None) -> float:
+    if max_radial_dist is None:
+        return float(np.inf)
+    return float(2 * max_radial_dist * (1 - np.sin(np.pi / 2 * progress)))
+
+
+def default_compute_ratio_step_factors(progress: float) -> float:
+    return float(np.interp(progress, xp=[0, 3 / 5, 1], fp=[2, 0.94, 0.98]))
+
+
 def blade(
     matrix: np.ndarray,
     *,
@@ -379,9 +393,10 @@ def blade(
     compute_weight_relative_threshold: Callable[[float], float] = (lambda _: 0.1),
     compute_max_distance_to_walk: Callable[
         [float, float | None], float | tuple[float, float, float]
-    ] = (lambda x, max_radial_dist: np.inf),
+    ] = default_compute_max_distance_to_walk,
     compute_regulation_cursor: Callable[[float], float] = (lambda _: 0.1),
-    starting_ratio_factor: int = 2,
+    compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors,
+    ratio_rerun: int = 2,
     draw_steps: bool | list[int] = False,
     draw_weighted_graph: bool = False,
     draw_differences: bool = False,
@@ -435,9 +450,12 @@ def blade(
         on the steps. It must return a float number between 0 (no regulation)
         and 1 (full regulation) that uniformizes the ability for the forces
         to achieve their objectives at each step by changing priorities.
-    starting_ratio_factor: When `max_min_dist_ratio` is enabled,
-        defines a multiplying factor on the target ratio to start the evolution
-        on a larger ratio, to let more flexibility in the beginning.
+    ratio_rerun: When the distance ratio constraint is not met, it defines
+        the maximum number of times the algorithm applies additional
+        computation steps putting the priority on the constraint.
+    compute_ratio_step_factors: Function that is called at the boundaries of
+        the rounds. It defines the target ratio the enforce during the
+        evolution. It acts as a multiplying factor on the target ratio.
     draw_steps: If it is a boolean, it defines whether to globally enable
         drawing and traces for nodes and forces (for all steps). If it is a
         list of integers, it defines a subset of steps to enable such drawing.
@@ -476,21 +494,24 @@ def blade(
             f"number of dimensions {dimensions[0]}."
         )
 
+    total_steps = steps_per_round * (len(dimensions) - 1)
+
+    def step_to_progress(step: int) -> float:
+        return step / (total_steps - 1)
+
+    steps_ratios: list[float | None] = []
+
     if max_min_dist_ratio is not None:
-        steps_ratios = np.linspace(
-            starting_ratio_factor * max_min_dist_ratio, max_min_dist_ratio, len(dimensions)
-        )
+        steps_ratios = [
+            max_min_dist_ratio * compute_ratio_step_factors(progress)
+            for progress in np.linspace(0, 1, len(dimensions))
+        ]
         starting_min = _compute_min_pairwise_distance(positions)
     else:
         steps_ratios = [None] * len(dimensions)
         starting_min = None
 
     assert len(dimensions) == len(steps_ratios)
-
-    total_steps = steps_per_round * (len(dimensions) - 1)
-
-    def step_to_progress(step: int) -> float:
-        return step / (total_steps - 1)
 
     def compute_weight_relative_threshold_by_step(step: int) -> float:
         return compute_weight_relative_threshold(step_to_progress(step))
@@ -530,6 +551,21 @@ def blade(
         min_atom_dist = _compute_min_pairwise_distance(positions)
         output_ratio = max_radial_dist / min_atom_dist
         if output_ratio > max_min_dist_ratio:
+
+            if ratio_rerun > 0:
+                return blade(
+                    matrix=matrix,
+                    max_min_dist_ratio=max_min_dist_ratio,
+                    dimensions=(2, 2, 2),
+                    starting_positions=positions,
+                    steps_per_round=steps_per_round,
+                    compute_max_distance_to_walk=lambda x, max_radial_dist: 0,
+                    compute_ratio_step_factors=lambda progress: np.interp(
+                        progress, xp=[0, 1 / 2, 1], fp=[0.8, 0.9, 0.98]
+                    ),
+                    ratio_rerun=ratio_rerun - 1,
+                )
+
             print(
                 f"[Warning] Output ratio {output_ratio}"
                 f" is higher than required {max_min_dist_ratio}"

@@ -118,33 +118,36 @@ def draw_set_graph_coords(
 def draw_graph_including_actual_weights(
     target_interactions_graph: nx.Graph,
     positions: np.ndarray,
+    print_interactions: bool = False,
     draw_weighted_graph: bool = False,
 ) -> None:
-    try:
-        import pandas as pd
-        from IPython.display import display
-    except ImportError:
-        raise ModuleNotFoundError(
-            "To use `draw_steps=True` in the BLaDE algorithm, "
-            "please install the `pandas` and `IPython` libraries."
+    if print_interactions:
+        try:
+            import pandas as pd
+            from IPython.display import display
+        except ImportError:
+            raise ModuleNotFoundError(
+                "To use `draw_steps=True` together with "
+                "`print_interactions=True` in the BLaDE algorithm, "
+                "please install the `pandas` and `IPython` libraries."
+            )
+
+        new_weights_matrix = np.full(
+            (len(target_interactions_graph), len(target_interactions_graph)),
+            fill_value="",
+            dtype=object,
         )
+        for u, v in target_interactions_graph.edges:
+            dist = np.linalg.norm(positions[u] - positions[v]).item()
+            interaction = normalized_interaction(dist)
+            new_weights_matrix[min(u, v), max(u, v)] = eformat(interaction)
 
-    new_weights_matrix = np.full(
-        (len(target_interactions_graph), len(target_interactions_graph)),
-        fill_value="",
-        dtype=object,
-    )
-    for u, v in target_interactions_graph.edges:
-        dist = np.linalg.norm(positions[u] - positions[v]).item()
-        interaction = normalized_interaction(dist)
-        new_weights_matrix[min(u, v), max(u, v)] = eformat(interaction)
+        df = pd.DataFrame(new_weights_matrix)
 
-    df = pd.DataFrame(new_weights_matrix)
-
-    with pd.option_context(
-        "display.max_rows", None, "display.max_columns", None, "max_colwidth", None
-    ):
-        display(df)
+        with pd.option_context(
+            "display.max_rows", None, "display.max_columns", None, "max_colwidth", None
+        ):
+            display(df)
 
     if draw_weighted_graph:
         draw_set_graph_coords(
@@ -431,8 +434,9 @@ def draw_discrepancy_lines_and_colorbar(
     sm = mcm.ScalarMappable(cmap=truncated_cmap, norm=norm)
     sm.set_array([])
 
-    cbar_ax = fig.add_axes(list(spec.cbar_axes_rect))
-    cbar = fig.colorbar(sm, cax=cbar_ax)
+    cbar = fig.colorbar(
+        sm, ax=ax, orientation="horizontal", location="bottom", pad=0.15, shrink=0.8
+    )
     cbar.set_label(spec.label, fontsize=spec.label_fontsize)
     cbar.ax.tick_params(labelsize=spec.tick_fontsize)
 
@@ -467,6 +471,7 @@ def draw_update_positions_step(
     step: int | None = None,
     target_interactions: np.ndarray | None = None,
     current_interactions: np.ndarray | None = None,
+    modulated_target_interactions: np.ndarray | None = None,
 ) -> None:
     validate_shapes(
         positions,
@@ -487,36 +492,63 @@ def draw_update_positions_step(
     max_f2d = as_2d(max_constr_resulting_forces)
     res_f2d = as_2d(resulting_forces_vectors)
 
-    fig, ax = plt.subplots()
-
-    if target_interactions is not None:
-        draw_discrepancy_lines_and_colorbar(
-            fig=fig,
-            ax=ax,
-            pos2d=pos2d,
-            target_interactions=target_interactions,
-            current_interactions=current_interactions,
+    use_two_panels = modulated_target_interactions is not None
+    if use_two_panels:
+        fig, axes = plt.subplots(
+            1, 2, figsize=plt.rcParams.get("figure.figsize", (6.4, 4.8))[:1] * np.array([2, 1])  # type: ignore
         )
+        ax_left, ax_right = axes[0], axes[1]
+        panels: list[tuple[plt.Axes, np.ndarray | None, str]] = [
+            (ax_left, target_interactions, "Target interactions"),
+            (ax_right, modulated_target_interactions, "Modulated target interactions"),
+        ]
+    else:
+        fig, ax_single = plt.subplots()
+        panels = [(ax_single, target_interactions, "Target interactions")]
 
-    ax.scatter(pos2d[:, 0], pos2d[:, 1], zorder=2)
+    def _draw_panel(ax: plt.Axes, panel_target_interactions: np.ndarray | None) -> None:
+        if panel_target_interactions is not None:
+            draw_discrepancy_lines_and_colorbar(
+                fig=fig,
+                ax=ax,
+                pos2d=pos2d,
+                target_interactions=panel_target_interactions,
+                current_interactions=current_interactions,
+            )
 
-    if min_dist is not None:
-        draw_min_dist_circles(ax=ax, pos2d=pos2d, min_dist=min_dist)
+        ax.scatter(pos2d[:, 0], pos2d[:, 1], zorder=2)
 
-    base_arrow_width = compute_base_arrow_width(pos2d)
+        if min_dist is not None:
+            draw_min_dist_circles(ax=ax, pos2d=pos2d, min_dist=min_dist)
 
-    draw_force_arrows(ax=ax, pos2d=pos2d, force2d=inter_f2d, color="blue", width=base_arrow_width)
-    draw_force_arrows(ax=ax, pos2d=pos2d, force2d=min_f2d, color="green", width=base_arrow_width)
-    draw_force_arrows(ax=ax, pos2d=pos2d, force2d=max_f2d, color="black", width=base_arrow_width)
-    draw_force_arrows(ax=ax, pos2d=pos2d, force2d=res_f2d, color="red", width=base_arrow_width)
+        base_arrow_width = compute_base_arrow_width(pos2d)
 
-    ax.set_aspect("equal", "box")
+        draw_force_arrows(
+            ax=ax, pos2d=pos2d, force2d=inter_f2d, color="blue", width=base_arrow_width
+        )
+        draw_force_arrows(
+            ax=ax, pos2d=pos2d, force2d=min_f2d, color="green", width=base_arrow_width
+        )
+        draw_force_arrows(
+            ax=ax, pos2d=pos2d, force2d=max_f2d, color="black", width=base_arrow_width
+        )
+        draw_force_arrows(ax=ax, pos2d=pos2d, force2d=res_f2d, color="red", width=base_arrow_width)
 
-    if max_radius is not None:
-        draw_max_radius_circle(ax=ax, max_radius=max_radius)
+        ax.set_aspect("equal", "box")
 
-    if max_dist_to_walk is not None and np.isfinite(max_dist_to_walk) and max_dist_to_walk > 0:
-        draw_scale_bar(ax=ax, fig=fig, max_dist_to_walk=float(max_dist_to_walk))
+        if max_radius is not None:
+            draw_max_radius_circle(ax=ax, max_radius=max_radius)
+
+        if max_dist_to_walk is not None and np.isfinite(max_dist_to_walk) and max_dist_to_walk > 0:
+            draw_scale_bar(ax=ax, fig=fig, max_dist_to_walk=float(max_dist_to_walk))
+
+    for ax, panel_target_interactions, panel_title in panels:
+        _draw_panel(ax, panel_target_interactions)
+        if use_two_panels:
+            ax.set_title(panel_title, fontsize=9)
+
+    # Build legend and attach to the rightmost axes
+    rightmost_ax: plt.Axes = panels[-1][0]
 
     legend_handles = [
         legend_line(color="blue", label="Interaction forces"),
@@ -531,7 +563,7 @@ def draw_update_positions_step(
                 color="orange",
                 linestyle="--",
                 marker="o",
-                label=f"Min dist boundary (r={min_dist/2:.2g})",
+                label=f"Current min dist constraint: {min_dist:.2g}",
             )
         )
 
@@ -541,8 +573,13 @@ def draw_update_positions_step(
                 color="red",
                 linestyle="-",
                 marker="o",
-                label=f"Max radius boundary (r={max_radius:.2g})",
+                label=f"Current max radius constraint: {max_radius:.2g}",
             )
+        )
+
+    if min_dist is not None and max_radius is not None:
+        legend_handles.append(
+            legend_text(f"Current max-min ratio constraint: {max_radius / min_dist:.2g}")
         )
 
     if current_interactions is not None:
@@ -555,7 +592,14 @@ def draw_update_positions_step(
         if s is not None:
             legend_handles.append(legend_text(s))
 
-    ax.legend(
+    if modulated_target_interactions is not None:
+        s = interaction_min_max_label(
+            "Modulated target interactions", modulated_target_interactions
+        )
+        if s is not None:
+            legend_handles.append(legend_text(s))
+
+    rightmost_ax.legend(
         handles=legend_handles,
         loc="upper left",
         bbox_to_anchor=(1.05, 1),
@@ -564,7 +608,7 @@ def draw_update_positions_step(
     )
 
     if step is not None:
-        add_step_annotation(ax=ax, step=step)
+        add_step_annotation(ax=rightmost_ax, step=step)
 
     plt.tight_layout()
     plt.show()
