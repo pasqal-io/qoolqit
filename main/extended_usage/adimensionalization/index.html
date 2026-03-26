@@ -716,7 +716,7 @@
   <span class="md-ellipsis">
     
   
-    Problem definition and graphs
+    Graphs
   
 
     
@@ -1185,23 +1185,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Compiling time back to physical units">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1744,23 +1727,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Compiling time back to physical units">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1819,6 +1785,15 @@
 
 
 <h1 id="adimensionalization">Adimensionalization</h1>
+<p>In this section, you will learn how to:</p>
+<ul>
+<li>relate the physical Rydberg Hamiltonian to QoolQit’s dimensionless Hamiltonian,</li>
+<li>define the reference interaction <span class="arithmatex">\(J_0\)</span> and reference distance <span class="arithmatex">\(r_0\)</span>,</li>
+<li>understand how compilation chooses the physical scale of an implementation,</li>
+<li>distinguish drive-limited and interaction-limited compilation,</li>
+<li>see why time must be rescaled together with the Hamiltonian</li>
+</ul>
+<hr />
 <p>This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, and how compilation maps an abstract programs onto actual hardware.</p>
 <p>The <a href="../../get_started/qoolqit_model/">QoolQit Model</a> page introduces the main idea of compilation at a high level: the compiler keeps the same dimensionless program while setting the reference physical scale used to realize it on hardware. Here, we make that idea precise by defining the reference interaction <span class="arithmatex">\(J_0\)</span>, the corresponding reference distance <span class="arithmatex">\(r_0\)</span>, and the mapping between dimensionless and physical quantities.</p>
 <hr />
@@ -1947,13 +1922,13 @@ J_{ij}\,[\mathrm{rad/s}] = J_0\,\tilde{J}_{ij},
 \qquad
 r_{ij}\,[\mu\mathrm{m}] = r_0\,\tilde{r}_{ij},
 \]</div>
-<p>where <span class="arithmatex">\(r_0 = (C_6/J_0)^{1/6}\,\mu\mathrm{m}\)</span>. All physical realizations of the same dimensionless program therefore lie on a ray in the <span class="arithmatex">\((J,\Omega)\,[\mathrm{rad/s}]\)</span> plane parameterized by <span class="arithmatex">\(J_0\)</span>.</p>
-<p>The figure below illustrates this picture. Each straight line corresponds to a different fixed ratio <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span>, and therefore to a different dimensionless program. The shaded green region represents the set of parameters allowed by the device, bounded by the maximum interaction strength <span class="arithmatex">\(J_{\max}\,[\mathrm{rad/s}]\)</span> and the maximum drive amplitude <span class="arithmatex">\(\Omega_{\max}\,[\mathrm{rad/s}]\)</span>.</p>
+<p>where <span class="arithmatex">\(r_0 = (C_6/J_0)^{1/6}\,\mu\mathrm{m}\)</span>. All physical realizations of the same dimensionless program therefore lie on a ray in the <span class="arithmatex">\((J,\Omega)\,[\mathrm{rad}/\mu s}]\)</span> plane parameterized by <span class="arithmatex">\(J_0\)</span>.</p>
+<p>The figure below illustrates this picture. Each straight line corresponds to a different fixed ratio <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span>, and therefore to a different dimensionless program. The shaded green region represents the set of parameters allowed by the device, bounded by the maximum interaction strength <span class="arithmatex">\(J_{\max}\,[2 \pi  \mathrm{rad}/\mu s= MHz]\)</span> and the maximum drive amplitude <span class="arithmatex">\(\Omega_{\max}\,[2 \pi  \mathrm{rad}/\mu s = MHz]\)</span>.</p>
 <p><img alt="Compilation diagram" src="../../extras/assets/compilation.svg" /></p>
-<p>Compilation consists of selecting, along the ray defined by the program, the largest <span class="arithmatex">\(J_0\)</span> whose corresponding physical parameters lie inside the allowed region. A larger <span class="arithmatex">\(J_0\)</span> realizes the same dimensionless program with a higher physical amplitude and a shorter physical runtime <span class="arithmatex">\(t = \tilde{t}/J_0\,[\mathrm{s}]\)</span>, making it the most efficient choice.</p>
+<p>Compilation consists of selecting, along the ray defined by the program, the largest <span class="arithmatex">\(J_0\)</span> whose corresponding physical parameters lie inside the allowed region. A larger <span class="arithmatex">\(J_0\)</span> realizes the same dimensionless program with a higher physical amplitude and a shorter physical runtime <span class="arithmatex">\(t = \tilde{t}/J_0\,[\mu \mathrm{s}]\)</span>, making it the most efficient choice.</p>
 <p>Which hardware constraint becomes binding first determines the compilation strategy.</p>
 <h3 id="drive-limited-compilation">Drive-limited compilation</h3>
-<p>When the drive amplitude bound <span class="arithmatex">\(\Omega_{\max}\,[\mathrm{rad/s}]\)</span> is reached before the minimum-spacing constraint, the largest valid <span class="arithmatex">\(J_0\)</span> is obtained by saturating the drive limit:</p>
+<p>When the drive amplitude bound <span class="arithmatex">\(\Omega_{\max}\,[\mathrm{rad}/\mu s]\)</span> is reached before the minimum-spacing constraint, the largest valid <span class="arithmatex">\(J_0\)</span> is obtained by saturating the drive limit:</p>
 <div class="arithmatex">\[
 \Omega_{\max}\,[\mathrm{rad/s}] = J_0\,\tilde{\Omega}_{\max}
 \qquad\Longrightarrow\qquad
@@ -1961,12 +1936,12 @@ J_0\,[\mathrm{rad/s}] = \frac{\Omega_{\max}}{\tilde{\Omega}_{\max}}.
 \]</div>
 <p>The corresponding reference distance is then</p>
 <div class="arithmatex">\[
-r_0\,[\mu\mathrm{m}] = \left(\frac{C_6\,[\mathrm{rad/s}\cdot\mu\mathrm{m}^6]}{J_0\,[\mathrm{rad/s}]}\right)^{1/6}.
+r_0\,[\mu\mathrm{m}] = \left(\frac{C_6\,[\mathrm{rad/s}\cdot\mu\mathrm{m}^6]}{J_0\,[\mathrm{rad}/\mu s]}\right)^{1/6}.
 \]</div>
 <h3 id="interaction-limited-compilation">Interaction-limited compilation</h3>
 <p>When the minimum atom spacing <span class="arithmatex">\(r_{\min}\,[\mu\mathrm{m}]\)</span> is reached before the drive limit, the largest valid <span class="arithmatex">\(J_0\)</span> is obtained by saturating the distance constraint. Since <span class="arithmatex">\(r_0 = (C_6/J_0)^{1/6}\)</span> and the closest pair has dimensionless distance <span class="arithmatex">\(\tilde{r}_{\min} = 1\)</span>, setting <span class="arithmatex">\(r_0 = r_{\min}\)</span> gives</p>
 <div class="arithmatex">\[
-J_0\,[\mathrm{rad/s}] = \frac{C_6\,[\mathrm{rad/s}\cdot\mu\mathrm{m}^6]}{r_{\min}^6\,[\mu\mathrm{m}^6]}.
+J_0\,[\mathrm{rad}/\mu s] = \frac{C_6\,[\mathrm{rad}/\mu s\cdot\mu\mathrm{m}^6]}{r_{\min}^6\,[\mu\mathrm{m}^6]}.
 \]</div>
 <p>This corresponds to placing the closest pair of atoms at the smallest physical spacing the device allows.</p>
 <div class="admonition note">
@@ -2023,9 +1998,6 @@ T' = \frac{\tilde T}{J_0'} = \frac{1}{\alpha}\frac{\tilde T}{J_0}.
 \]</div>
 <p>So reducing the energy scale by a factor <span class="arithmatex">\(\alpha\)</span> increases the physical runtime by a factor <span class="arithmatex">\(1/\alpha\)</span>.</p>
 <p>This is consistent with the compilation strategy described above: whenever possible, QoolQit selects the largest feasible <span class="arithmatex">\(J_0\)</span> compatible with device constraints, so that programs run with the highest available amplitudes and shortest physical durations.</p>
-<h3 id="example">Example</h3>
-<p>In the compilation example above, the program is rescaled from <span class="arithmatex">\((\tilde{J},\tilde{\Omega})=(1,0.4)\)</span> to <span class="arithmatex">\((0.5,0.2)\)</span>. This corresponds to reducing the reference interaction scale by a factor <span class="arithmatex">\(\alpha = 0.5\)</span>. As a consequence, the same dimensionless program must run for a physical time that is <span class="arithmatex">\(1/\alpha = 2\)</span> times longer.</p>
-<p>In this sense, compilation preserves the dimensionless Hamiltonian and the corresponding dimensionless evolution, while changing the physical energy and time scales used to realize it on hardware.</p>
 <hr />
 <h2 id="physical-interpretation-of-dimensionless-time">Physical interpretation of dimensionless time</h2>
 <p>The meaning of <span class="arithmatex">\(\tilde t\)</span> is tied to the fact that <span class="arithmatex">\(J_0\)</span> is the interaction energy scale used to realize the program. Dimensionless time therefore measures how long the system evolves relative to its intrinsic interaction timescale.</p>
