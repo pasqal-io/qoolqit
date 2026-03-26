@@ -76,11 +76,13 @@ class QuantumProgram:
             device = ""
         return header + register + drive + compiled + device
 
-    def compile_to(self, device: Device) -> None:
+    def compile_to(self, device: Device, max_duration: bool = False) -> None:
         """Compiles the given program to a device.
 
         Arguments:
             device: the Device to compile to.
+            max_duration: whether to set the program duration to device's maximum allowed.
+                The program drive's duration is set to the device's maximum allowed.
         """
         compiler = SequenceCompiler(self.register, self.drive, device)
         self._device = device
