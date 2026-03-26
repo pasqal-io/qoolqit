@@ -708,17 +708,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#whats-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What's Next
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1730,17 +1719,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#whats-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What's Next
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1807,6 +1785,8 @@
 \qquad
 \sigma^z=\begin{pmatrix} 1 &amp; 0\\ 0 &amp; -1\end{pmatrix}.
 \]</div>
+<p>Here, the interaction follow the <span class="arithmatex">\(1/r^6\)</span> Rydberg scaling, normalized so that the maximum equals <span class="arithmatex">\(1\)</span>: <span class="arithmatex">\(\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}\)</span> and <span class="arithmatex">\(\max(\tilde{J}_{ij}) = 1\)</span>.</p>
+<p>More details are provided in <a href="../../extended_usage/adimensionalization/">Adimensionalization</a>, to understand the connection to physical units and how compilation works.</p>
 <h3 id="parameters">Parameters</h3>
 <table>
 <thead>
@@ -1814,7 +1794,6 @@
 <th>Symbol</th>
 <th>Description</th>
 <th>Range</th>
-<th>Notes</th>
 </tr>
 </thead>
 <tbody>
@@ -1822,43 +1801,36 @@
 <td><span class="arithmatex">\(\tilde{J}_{ij}\)</span></td>
 <td>Dimensionless coupling between sites <span class="arithmatex">\(i\)</span> and <span class="arithmatex">\(j\)</span></td>
 <td><span class="arithmatex">\((0,\,1]\)</span></td>
-<td>Follows the <span class="arithmatex">\(1/r^6\)</span> Rydberg scaling, normalized so that the maximum equals <span class="arithmatex">\(1\)</span>: <span class="arithmatex">\(\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}\)</span> and <span class="arithmatex">\(\max(\tilde{J}_{ij}) = 1\)</span></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\tilde{\Omega}(t)\)</span></td>
 <td>Global drive amplitude, affecting all sites equally</td>
 <td><span class="arithmatex">\(\geq 0\)</span></td>
-<td>Expressed relative to the maximum interaction strength in the register (see <a href="../../extended_usage/adimensionalization/">Adimensionalization — Advanced</a>)</td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\tilde{\delta}(t)\)</span></td>
 <td>Global detuning, affecting all sites equally</td>
 <td>any real value</td>
-<td></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\tilde{\Delta}(t)\)</span></td>
 <td>Local detuning amplitude</td>
 <td><span class="arithmatex">\(\leq 0\)</span></td>
-<td></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\phi(t)\)</span></td>
 <td>Global phase</td>
 <td><span class="arithmatex">\([0,\,2\pi)\)</span></td>
-<td></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\epsilon_i\)</span></td>
 <td>Local detuning weight for site <span class="arithmatex">\(i\)</span></td>
 <td><span class="arithmatex">\([0,\,1]\)</span></td>
-<td></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\tilde{t}\)</span></td>
 <td>Dimensionless time</td>
 <td><span class="arithmatex">\(&gt; 0\)</span></td>
-<td>Measured relative to the interaction timescale</td>
 </tr>
 </tbody>
 </table>
@@ -1890,6 +1862,7 @@
 </tr>
 </tbody>
 </table>
+<hr />
 <h3 id="time-regimes">Time regimes</h3>
 <p>Time is expressed in QoolQit in units of the maximum interaction energy.</p>
 <p>In an interacting many-body system, this gives <span class="arithmatex">\(\tilde{t}\)</span> a natural physical interpretation: it measures evolution time relative to the timescale on which interactions generate correlations. Roughly speaking, a time <span class="arithmatex">\(\tilde{t} \sim 1\)</span> is enough for nearest-neighbor sites to begin developing correlations. More generally, <span class="arithmatex">\(\tilde{t} \sim n\)</span> can be interpreted as the timescale on which correlations may have propagated over a distance of order <span class="arithmatex">\(n\)</span> lattice spacings.</p>
@@ -1924,8 +1897,6 @@
 <h2 id="compilation">Compilation</h2>
 <p>As described above, a QoolQit program is written in <strong>dimensionless units</strong>. This means that the user specifies the problem in terms of dimensionless quantities, independently of any particular device.</p>
 <p>However, the values that can actually be implemented are constrained by the <strong>hardware</strong>. Real devices only allow certain ranges of interaction strengths, drive amplitudes, detunings, and evolution times. Therefore, an important task of QoolQit is to take the dimensionless program specified by the user and map it to a set of parameters that can be realized on the chosen hardware. We refer to this step as <strong>compilation</strong>.</p>
-<p>The purpose of compilation is precisely <strong>to find a physical realization of the same dimensionless program whose parameters satisfy the hardware constraints</strong>.</p>
-<p>In other words, compilation does not change the program the user wants to implement. Instead, it changes the overall scale used to realize that program on the device, so that all physical parameters remain within the allowed bounds.</p>
 <p>A convenient way to understand this is to first work entirely in dimensionless units.</p>
 <p>The key idea is that the program is defined by <strong>ratios</strong>, not by absolute scales. For example, fixing the ratio <span class="arithmatex">\(\max_{\tilde{t}}\frac{\tilde{\Omega}}{\tilde{J}}\)</span> defines a line in the <span class="arithmatex">\((\tilde{J},\tilde{\Omega})\)</span> plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure
 (here <span class="arithmatex">\(\max_{\tilde{t}}\)</span> stands for the maximum over time).</p>
@@ -1943,32 +1914,7 @@
 <p>If the initial point <span class="arithmatex">\((1,0.4)\)</span> corresponds to choosing the maximum interaction strength as the reference scale, then compiling to <span class="arithmatex">\((0.5,0.2)\)</span> means that the program is realized with a smaller reference interaction, equal to <span class="arithmatex">\(0.5\)</span> times the original one.</p>
 <p>In other words, compilation keeps the dimensionless problem unchanged, but changes the conversion between dimensionless quantities and physical ones.</p>
 <h3 id="what-about-timescales">What about timescales?</h3>
-<p>The discussion above explains how compilation rescales the Hamiltonian coefficients while preserving the same dimensionless program. The same reasoning also shows that the <strong>time scale must be rescaled</strong>.</p>
-<p>To see this, consider the Schrödinger equation written in physical units (with <span class="arithmatex">\(\hbar = 1\)</span>):</p>
-<div class="arithmatex">\[
-i\frac{d}{dt}\ket{\psi(t)} = H(t)\ket{\psi(t)}.
-\]</div>
-<p>Now write the physical Hamiltonian in terms of a reference interaction scale <span class="arithmatex">\(J_{\mathrm{ref}}\)</span> and a dimensionless Hamiltonian <span class="arithmatex">\(\tilde{H}\)</span>:</p>
-<div class="arithmatex">\[
-H(t) = J_{\mathrm{ref}}\,\tilde{H}(\tilde{t}),
-\]</div>
-<p>where the dimensionless time is defined as$ \tilde{t} = J_{\mathrm{ref}}\, t.$</p>
-<p>Using <span class="arithmatex">\(\frac{d}{dt} = J_{\mathrm{ref}} \frac{d}{d\tilde{t}},\)</span> the Schrödinger equation becomes</p>
-<div class="arithmatex">\[
-i\frac{d}{d\tilde{t}}\ket{\psi(\tilde{t})} = \tilde{H}(\tilde{t})\ket{\psi(\tilde{t})}.
-\]</div>
-<p>This equation depends only on the dimensionless Hamiltonian <span class="arithmatex">\(\tilde{H}\)</span> and on the dimensionless time <span class="arithmatex">\(\tilde{t}\)</span>. Therefore, the evolution is fully determined by the dimensionless program.</p>
-<p>This makes clear why compilation must also rescale time. If compilation changes the reference interaction scale from <span class="arithmatex">\(J_{\mathrm{ref}}\)</span> to <span class="arithmatex">\(J'_{\mathrm{ref}} = \alpha\, J_{\mathrm{ref}},\)</span> then the same dimensionless evolution must be described using the new dimensionless time <span class="arithmatex">\(\tilde{t}' = J'_{\mathrm{ref}}\, t.\)</span></p>
-<p>Equivalently, for a fixed dimensionless duration <span class="arithmatex">\(\tilde{T}\)</span>, the physical runtime changes from <span class="arithmatex">\(T = \frac{\tilde{T}}{J_{\mathrm{ref}}}\)</span> to <span class="arithmatex">\(T' = \frac{\tilde{T}}{J'_{\mathrm{ref}}} = \frac{1}{\alpha}T.\)</span></p>
-<p>So if compilation reduces the reference interaction scale by a factor <span class="arithmatex">\(\alpha\)</span>, the physical execution time must increase by a factor <span class="arithmatex">\(1/\alpha\)</span> in order to preserve the same dimensionless dynamics.</p>
-<p>In the example above, compilation maps <span class="arithmatex">\((\tilde{J},\tilde{\Omega})=(1,0.4)\)</span> to <span class="arithmatex">\((0.5,0.2)\)</span>. This corresponds to reducing the reference interaction scale by a factor <span class="arithmatex">\(0.2\)</span>. As a consequence, the same dimensionless program must run for a physical time that is <span class="arithmatex">\(2\)</span> times longer.
-In this sense, compilation preserves the dimensionless Hamiltonian and the corresponding dimensionless evolution, while changing the physical energy and time scales used to realize it on hardware.</p>
-<p>This is the basic logic behind compilation in QoolQit: the dimensionless program is preserved, while the physical energy and time scales are adjusted so that it can be realized on hardware. The connection to physical units is discussed in more detail in <a href="../../extended_usage/adimensionalization/">Adimensionalization — Advanced</a>.</p>
-<h2 id="whats-next">What's Next</h2>
-<ul>
-<li><a href="../../fundamentals/introduction/">Fundamentals</a> — Learn how to build programs with QoolQit: registers, waveforms, drives, and execution.</li>
-<li><a href="../../extended_usage/adimensionalization/">Adimensionalization — Advanced</a> — Understand the connection to physical units and how compilation works.</li>
-</ul>
+<p>Compilation also rescales time. A full derivation and a concrete numerical example are given in <a href="../../extended_usage/adimensionalization/#time-scaling">Adimensionalization</a>.</p>
 
 
 

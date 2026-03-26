@@ -1756,7 +1756,7 @@ Please, refer to <a href="https://docs.pasqal.com/pulser/tutorials/virtual_devic
 </code></pre></div>
 </div>
 <p>The converter handles the logic of converting the adimensional QoolQit model to Pulser units. For theoretical details on how this conversion works between the Rydberg analog model and the implementation that Pulser uses you can check the <a href="../../get_started/qoolqit_model/">Rydberg analog model page</a>.</p>
-<p>By default, each device creates a default converter where the <strong>energy unit</strong> is set as that device’s <strong>maximum amplitude</strong>. If you make no changes to the device’s converter, this means that amplitude values in the range <span class="arithmatex">\( [0, 1] \)</span> will be converted to values in the range <span class="arithmatex">\( [0, \Omega_{\max}] \)</span>.</p>
+<p>By default, each device creates a default converter where the <strong>energy unit</strong> is set as that device’s <strong>maximum amplitude</strong>. If you make no changes to the device’s converter, this means that amplitude values in the range $ [0, 1] $ will be converted to values in the range $ [0, \Omega_{\max}] $.</p>
 <h3 id="customizing-units">Customizing units</h3>
 <p>For advanced users, customizing the unit conversion factors is possible.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">device_real</span><span class="o">.</span><span class="n">set_time_unit</span><span class="p">(</span><span class="mf">50.0</span><span class="p">)</span>
