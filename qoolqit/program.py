@@ -108,8 +108,11 @@ class QuantumProgram:
             profile: The compilation strategy to optimize the program.
             max_duration: Whether to set the program duration to the device's
                 maximum allowed duration.
+
+        Raises:
+            CompilationError: If the compilation fails due to device constraints.
         """
-        compiler = SequenceCompiler(self.register, self.drive, device, profile)
+        compiler = SequenceCompiler(self.register, self.drive, device, profile, max_duration)
         self._device = device
         self._compiled_sequence = compiler.compile_sequence()
 
