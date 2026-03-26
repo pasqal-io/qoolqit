@@ -60,3 +60,17 @@ def test_compiled_sequence_with_small_delays() -> None:
     pulser_duration = program.compiled_sequence.get_duration()
     pulser_duration_small_delay = program_small_delay.compiled_sequence.get_duration()
     assert pulser_duration == pulser_duration_small_delay
+
+
+def test_compile_to_max_duration() -> None:
+    """Test that the compiled sequence's duration is set to the maximum allowed by the device."""
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
+    drive = Drive(amplitude=Constant(2.0, 1.0))
+    program = QuantumProgram(register=register, drive=drive)
+    device = AnalogDevice()
+
+    expected_max_duration = device._max_duration
+
+    program.compile_to(device=AnalogDevice(), max_duration=True)
+    assert program.is_compiled
+    assert program.compiled_sequence.get_duration() == expected_max_duration

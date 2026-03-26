@@ -78,14 +78,41 @@ class QuantumProgram:
         return header + register + drive + compiled + device
 
     def compile_to(
-        self, device: Device, profile: CompilerProfile = CompilerProfile.MAX_ENERGY
+        self,
+        device: Device,
+        profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
+        max_duration: bool = False,
     ) -> None:
-        """Compiles the given program to a device.
+        """Compiles the quantum program for execution on a specific device.
 
-        Arguments:
-            device: the Device to compile to.
+        The compilation process adapts the program to the device's constraints while
+        preserving the relative ratios of the original program parameters. Different
+        compilation profiles optimize for specific objectives:
+
+        - CompilerProfile.MAX_ENERGY (default): Scales the program to utilize the device's
+            maximum capabilities. The drive amplitude and the register positions are rescaled
+            to achieve respectively the maximum amplitude and the minimum pairwise distance
+            compatible with the input program and the device's constraints.
+        - CompilerProfile.WORKING_POINT: .
+
+        Further options DO NOT preserve the input program, but rather adapts the program to
+        the device's constraint. Programs compiled this way are not guaranteed to be portable
+        across devices.
+
+        - max_duration: Rescale the drive duration to the device's maximum allowed.
+            This is typically useful in adiabatic protocols where one simply seek to
+            minimize the time derivative of the drive's amplitude.
+
+        Args:
+            device: The target device for compilation.
+            profile: The compilation strategy to optimize the program.
+            max_duration: Whether to set the program duration to the device's
+                maximum allowed duration.
+
+        Raises:
+            CompilationError: If the compilation fails due to device constraints.
         """
-        compiler = SequenceCompiler(self.register, self.drive, device, profile)
+        compiler = SequenceCompiler(self.register, self.drive, device, profile, max_duration)
         self._device = device
         self._compiled_sequence = compiler.compile_sequence()
 
