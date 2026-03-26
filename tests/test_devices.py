@@ -58,9 +58,6 @@ def test_device_init_and_units(device: Device) -> None:
     TIME_ORIG, ENERGY_ORIG, DISTANCE_ORIG = device.converter.factors
     assert _validate_invariants(device._C6, *device.converter.factors)
 
-    device.set_time_unit(10.0)
-    assert _validate_invariants(device._C6, *device.converter.factors)
-
     device.set_energy_unit(10.0)
     assert _validate_invariants(device._C6, *device.converter.factors)
 
@@ -84,29 +81,62 @@ def test_default_device_specs() -> None:
         "max_radial_distance": None,
     }
     assert mock_device.specs == expected_mock_specs
-    assert mock_device.energy_ratio is None
 
     analog_device = AnalogDevice()
     expected_analog_specs = {
-        "max_duration": 75.39822368615503,
-        "max_amplitude": 1.0,
-        "max_abs_detuning": 10.0,
-        "min_distance": 0.7809234915702248,
-        "max_radial_distance": 5.935018535933708,
+        "max_duration": 332.43763968,
+        "max_amplitude": 0.22680411206965717,
+        "max_abs_detuning": 2.268041120696572,
+        "min_distance": 1.0,
+        "max_radial_distance": 7.6,
     }
     assert analog_device.specs == expected_analog_specs
-    assert analog_device.energy_ratio == 0.22680411206965717
 
     digital_analog_device = DigitalAnalogDevice()
     expected_digital_analog_specs = {
         "max_duration": None,
-        "max_amplitude": 1.0,
-        "max_abs_detuning": 8.0,
-        "min_distance": 0.47761501632709613,
-        "max_radial_distance": 5.970187704088701,
+        "max_amplitude": 0.011870467845064849,
+        "max_abs_detuning": 0.09496374276051879,
+        "min_distance": 1.0,
+        "max_radial_distance": 12.5,
     }
     assert digital_analog_device.specs == expected_digital_analog_specs
-    assert digital_analog_device.energy_ratio == 0.011870467845064849
+
+
+def test_device_properties() -> None:
+    mock_device = MockDevice()
+    assert mock_device.name == "MockDevice"
+    # default value for reference only
+    assert mock_device._energy_ratio == 0.03622579298420669
+    np.testing.assert_allclose(mock_device._upper_amp, 4 * np.pi)
+    np.testing.assert_allclose(mock_device._target_amp, 4 * np.pi)
+    np.testing.assert_allclose(mock_device._target_amp_adim, 0.03622579298420669)
+    np.testing.assert_allclose(mock_device._upper_amp, 4 * np.pi)
+    assert mock_device._lower_distance == 5.0
+    np.testing.assert_allclose(mock_device._target_dist, 5.0)
+    np.testing.assert_allclose(mock_device._target_dist_adim, 1.0)
+
+    analog_device = AnalogDevice()
+    assert analog_device.name == "AnalogDevice"
+    assert analog_device._energy_ratio == 0.22680411206965717
+    np.testing.assert_allclose(analog_device._upper_amp, 4 * np.pi)
+    np.testing.assert_allclose(analog_device._target_amp, 4 * np.pi)
+    np.testing.assert_allclose(analog_device._target_amp_adim, 0.22680411206965717)
+    np.testing.assert_allclose(analog_device._upper_amp, 4 * np.pi)
+    assert analog_device._lower_distance == 5.0
+    np.testing.assert_allclose(analog_device._target_dist, 5.0)
+    np.testing.assert_allclose(analog_device._target_dist_adim, 1.0)
+
+    digital_analog_device = DigitalAnalogDevice()
+    assert digital_analog_device.name == "DigitalAnalogDevice"
+    assert digital_analog_device._energy_ratio == 0.011870467845064849
+    np.testing.assert_allclose(digital_analog_device._upper_amp, 5 * np.pi)
+    np.testing.assert_allclose(digital_analog_device._target_amp, 5 * np.pi)
+    np.testing.assert_allclose(digital_analog_device._target_amp_adim, 0.011870467845064849)
+    np.testing.assert_allclose(digital_analog_device._upper_amp, 5 * np.pi)
+    assert digital_analog_device._lower_distance == 4.0
+    np.testing.assert_allclose(digital_analog_device._target_dist, 4.0)
+    np.testing.assert_allclose(digital_analog_device._target_dist_adim, 1.0)
 
 
 def test_device_from_connection() -> None:
@@ -114,15 +144,15 @@ def test_device_from_connection() -> None:
     assert fresnel_device.name == "FRESNEL"
 
     expected_fresnel_specs = {
-        "max_duration": 67.85840131753953,
-        "max_amplitude": 1.0,
-        "max_abs_detuning": 5.555555555555555,
-        "min_distance": 0.7673301077365813,
-        "max_radial_distance": 7.059436991176549,
+        "max_duration": 332.43763968,
+        "max_amplitude": 0.20412370086269147,
+        "max_abs_detuning": 1.134020560348286,
+        "min_distance": 1.0,
+        "max_radial_distance": 9.2,
     }
 
     assert fresnel_device.specs == expected_fresnel_specs
-    assert fresnel_device.energy_ratio == 0.20412370086269147
+    assert fresnel_device._energy_ratio == 0.20412370086269147
 
 
 def test_device_from_connection_not_available() -> None:

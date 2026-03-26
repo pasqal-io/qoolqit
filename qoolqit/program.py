@@ -6,6 +6,7 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
 from qoolqit.drive import Drive
+from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.register import Register
 
@@ -37,7 +38,7 @@ class QuantumProgram:
                     raise ValueError(
                         "In this QuantumProgram, the drive and the register "
                         f"do not match: qubit {key} appears in the drive but "
-                        f"is not defined in the register."
+                        "is not defined in the register."
                     )
 
     @property
@@ -76,7 +77,12 @@ class QuantumProgram:
             device = ""
         return header + register + drive + compiled + device
 
-    def compile_to(self, device: Device, max_duration: bool = False) -> None:
+    def compile_to(
+        self,
+        device: Device,
+        profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
+        max_duration: bool = False,
+    ) -> None:
         """Compiles the given program to a device.
 
         Arguments:
@@ -84,7 +90,7 @@ class QuantumProgram:
             max_duration: whether to set the program duration to device's maximum allowed.
                 The program drive's duration is set to the device's maximum allowed.
         """
-        compiler = SequenceCompiler(self.register, self.drive, device)
+        compiler = SequenceCompiler(self.register, self.drive, device, profile)
         self._device = device
         self._compiled_sequence = compiler.compile_sequence()
 

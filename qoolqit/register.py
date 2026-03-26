@@ -3,6 +3,7 @@ from __future__ import annotations
 from math import ceil
 
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 from matplotlib.ticker import MultipleLocator
 
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
@@ -99,11 +100,11 @@ class Register:
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
 
-    def draw(self, return_fig: bool = False) -> plt.Figure | None:
+    def draw(self, return_fig: bool = False) -> Figure | None:
         """Draw the register.
 
         Arguments:
-            return_fig: boolean argument to return the plt.Figure instance.
+            return_fig: boolean argument to return the matplotlib figure.
         """
         fig, ax = plt.subplots(1, 1, figsize=(4, 4), dpi=150)
         ax.set_aspect("equal")
