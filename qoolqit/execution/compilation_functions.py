@@ -108,7 +108,7 @@ def basic_compilation(
     else:
         raise ValueError(f"Invalid CompilerProfile: {profile}")
 
-    # if max_duration is True, use the device's maximum duration
+    # if max_duration is True, if available, use the device's maximum duration.
     if max_duration and device._max_duration:
         TIME = device._max_duration / drive.duration
 
