@@ -6,7 +6,7 @@ from qoolqit.graphs import DataGraph
 
 from .algorithms import (
     BladeConfig,
-    InteractionEmbeddingConfig,
+    InteractionEmbedderConfig,
     blade,
     interaction_embedding,
 )
@@ -38,11 +38,11 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
             )
 
 
-class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbeddingConfig]):
+class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbedderConfig]):
     """A matrix to graph embedder using the interaction embedding algorithm."""
 
     def __init__(self) -> None:
-        super().__init__(interaction_embedding, InteractionEmbeddingConfig())
+        super().__init__(interaction_embedding, InteractionEmbedderConfig())
 
 
 class Blade(MatrixToGraphEmbedder[BladeConfig]):

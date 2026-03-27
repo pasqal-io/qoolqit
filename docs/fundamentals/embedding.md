@@ -53,7 +53,7 @@ The spring-layout embedding utilizes the Fruchterman-Reingold force-directed alg
 In QoolQit, the `SpringLayoutEmbedder` directly wraps the `nx.spring_layout` function, and it maps a `DataGraph` without coordinates to another `DataGraph` with coordinates.
 
 ```python exec="on" source="material-block" result="json" session="embedding"
-from qoolqit import SpringLayoutEmbedder
+from qoolqit.embedding import SpringLayoutEmbedder
 
 embedder = SpringLayoutEmbedder()
 print(embedder) # markdown-exec: hide
@@ -153,7 +153,7 @@ where $r_{ij} = \sqrt{(x_i-x_j)^2 + (y_i-y_j)^2}$ is the distance between qubits
 In QoolQit, the `InteractionEmbedder` performs this minimization using `scipy.minimize`, and it maps a `np.ndarray` to a `DataGraph` with coordinates.
 
 ```python exec="on" source="material-block" result="json" session="embedding"
-from qoolqit import InteractionEmbedder
+from qoolqit.embedding import InteractionEmbedder
 
 embedder = InteractionEmbedder()
 print(embedder) # markdown-exec: hide
