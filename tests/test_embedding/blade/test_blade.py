@@ -8,8 +8,9 @@ import numpy as np
 import pytest
 import scipy
 
-from qoolqit import AnalogDevice, BladeConfig, DigitalAnalogDevice, MockDevice
+from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
+from qoolqit.embedding import BladeConfig
 from qoolqit.embedding.algorithms.blade._helpers import (
     distance_matrix_from_positions,
     interaction_matrix_from_distances,

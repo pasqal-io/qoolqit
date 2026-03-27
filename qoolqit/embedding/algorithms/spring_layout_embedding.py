@@ -7,11 +7,11 @@ import numpy as np
 
 from qoolqit.graphs import DataGraph
 
-from ..base_embedder import EmbeddingConfig
+from ..base_embedder import EmbedderConfig
 
 
 @dataclass
-class SpringLayoutConfig(EmbeddingConfig):
+class SpringLayoutConfig(EmbedderConfig):
     """Configuration parameters for the spring-layout embedding."""
 
     iterations: int = 100
