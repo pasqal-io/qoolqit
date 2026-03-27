@@ -1,8 +1,3 @@
-from setuptools import find_packages, setup
+from setuptools import setup
 
-setup(
-    name="qoolqit",
-    version="0.4.0",
-    install_requires=["pulser[torch]~=1.6.2", "networkx~=3.4"],
-    packages=find_packages(),
-)
+setup()

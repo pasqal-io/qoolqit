@@ -79,14 +79,6 @@ def test_results(backend_type: Backend, device: Device) -> None:
     # Test evaluation times
     qutip_eval_times = qutip_res.get_result_times("occupation")
     np.testing.assert_allclose(qutip_eval_times, evaluation_times, atol=1e-12)
-    # Emulators below:
-    # - skip the t=0 evaluation time
-    # - alter user input evaluation times
-    # - will fail for even steps
-    # TODO: review this test when https://github.com/pasqal-io/emulators/issues/169 is solved
     other_eval_times = other_res.get_result_times("occupation")
-    np.testing.assert_allclose(other_eval_times, evaluation_times[1:], atol=0.01)
-
-    # value comparison of result is not fair because of different evaluation times
-    # TODO: review this test when https://github.com/pasqal-io/emulators/issues/169 is solved
-    np.testing.assert_allclose(qutip_occupation[1:], other_occupation, atol=0.1)
+    np.testing.assert_allclose(other_eval_times, evaluation_times, atol=0.01)
+    np.testing.assert_allclose(qutip_occupation, other_occupation, atol=0.01)
