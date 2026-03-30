@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from collections.abc import Sequence
 from unittest.mock import MagicMock
 
@@ -74,32 +75,36 @@ class TestBackends:
     def test_emulator_backend_with_nruns(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend, runs=123)
 
-        expected_config = EmulationConfig(observables=(BitStrings(num_shots=123),))
-        # convert configs to str
-        expected_config_repr = expected_config.to_abstract_repr()
-        config_repr = backend._emulation_config.to_abstract_repr()
-        assert config_repr == expected_config_repr
+        config_repr = json.loads(backend._emulation_config.to_abstract_repr())
+        bitstrings_repr = config_repr["observables"][0]
+        assert bitstrings_repr["num_shots"] == 123
 
     def test_emulator_backend_default_config(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
 
         expected_config = backend.default_emulation_config()
         # convert the expected config to a str
-        expected_config_repr = expected_config.to_abstract_repr()
+        expected_config_repr = json.loads(expected_config.to_abstract_repr())
+        expected_obs_repr = expected_config_repr.pop("observables")
 
         config = backend._emulation_config
         assert isinstance(config, EmulationConfig)
         # convert the saved config to a str
-        config_repr = config.to_abstract_repr()
+        config_repr = json.loads(config.to_abstract_repr())
+        obs_repr = config_repr.pop("observables")
 
-        assert config_repr == expected_config_repr
+        assert expected_config_repr == config_repr
+        for obs, expected_obs in zip(obs_repr, expected_obs_repr):
+            expected_obs.pop("uuid")
+            obs.pop("uuid")
+            assert obs == expected_obs
 
     def test_check_backend_type(self) -> None:
         with pytest.raises(match="`backend_type` must be a EmulatorBackend type."):
-            LocalEmulator(backend_type=int)
+            LocalEmulator(backend_type=int)  # type: ignore
 
         with pytest.raises(match="`backend_type` must be a RemoteEmulatorBackend type."):
-            RemoteEmulator(backend_type=str, connection=self.mock_connection)
+            RemoteEmulator(backend_type=str, connection=self.mock_connection)  # type: ignore
 
     def test_validate_connection(self) -> None:
         backend = RemoteEmulator(
@@ -110,7 +115,7 @@ class TestBackends:
 
         with pytest.raises(match=f"""Error in `PulserRemoteBackend`:
                 `connection` must be of type {RemoteConnection}."""):
-            backend.validate_connection(4.0)
+            backend.validate_connection(4.0)  # type: ignore
 
     def test_local_emulator_run(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend)

@@ -47,7 +47,7 @@ class PulserEmulatorBackend:
                 isinstance(obs, BitStrings) for obs in emulation_config.observables
             )
             if has_bitstrings:
-                # if the provided config has already a biststring obs, ignore nruns
+                # if the provided config has already a bitstring obs, ignore nruns
                 logging.warning(
                     f"""The number of runs is specified both in {self.__class__.__name__}
                         and in `EmulationConfig`, ignoring the former"""
