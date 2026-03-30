@@ -94,6 +94,7 @@ class TestBackends:
         obs_repr = config_repr.pop("observables")
 
         assert expected_config_repr == config_repr
+        # uuid is expected to be different for each instance
         for obs, expected_obs in zip(obs_repr, expected_obs_repr):
             expected_obs.pop("uuid")
             obs.pop("uuid")

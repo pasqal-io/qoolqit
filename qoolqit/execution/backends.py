@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import copy
 import logging
-from typing import Optional, Sequence
+from typing import Sequence
 
 from pulser.backend import BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
@@ -19,16 +19,16 @@ class PulserEmulatorBackend:
     """Base Emulator class.
 
     Args:
-        runs (int): run the program `runs` times to collect bitstrings statistics.
+        runs: run the program `runs` times to collect bitstrings statistics.
             On QPU backends this represents the actual number of runs of the program.
             On emulators, instead the bitstring are sampled from the quantum state `runs` times.
     """
 
-    def __init__(self, runs: int = 1000):
+    def __init__(self, runs: int | None = None) -> None:
         self._runs = runs
 
     def validate_emulation_config(
-        self, emulation_config: Optional[EmulationConfig]
+        self, emulation_config: EmulationConfig | None
     ) -> EmulationConfig:
         """Returns a valid config for emulator backends, if needed.
 
@@ -47,11 +47,12 @@ class PulserEmulatorBackend:
                 isinstance(obs, BitStrings) for obs in emulation_config.observables
             )
             if has_bitstrings:
-                # if the provided config has already a bitstring obs, ignore nruns
-                logging.warning(
-                    f"""The number of runs is specified both in {self.__class__.__name__}
-                        and in `EmulationConfig`, ignoring the former"""
-                )
+                if self._runs is not None:
+                    # if the provided config has already a bitstring obs, ignore nruns
+                    logging.warning(
+                        f"""The number of runs is specified both in {self.__class__.__name__}
+                            and in `EmulationConfig`, ignoring the former"""
+                    )
             else:
                 # else append a bitstring observable with nruns specified by the user
                 updated_obs = (*emulation_config.observables, BitStrings(num_shots=self._runs))
@@ -109,8 +110,8 @@ class LocalEmulator(PulserEmulatorBackend):
         self,
         *,
         backend_type: type[EmulatorBackend] = QutipBackendV2,
-        emulation_config: Optional[EmulationConfig] = None,
-        runs: int = 100,
+        emulation_config: EmulationConfig | None = None,
+        runs: int | None = None,
     ) -> None:
         super().__init__(runs=runs)
         if not issubclass(backend_type, EmulatorBackend):
@@ -175,8 +176,8 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         *,
         backend_type: type[RemoteEmulatorBackend] = EmuFreeBackendV2,
         connection: RemoteConnection,
-        emulation_config: Optional[EmulationConfig] = None,
-        runs: int = 100,
+        emulation_config: EmulationConfig | None = None,
+        runs: int | None = None,
     ) -> None:
         super().__init__(runs=runs)
         if not issubclass(backend_type, RemoteEmulatorBackend):
@@ -186,10 +187,10 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         self._backend_type = backend_type
         self._emulation_config = self.validate_emulation_config(emulation_config)
         self._connection = self.validate_connection(connection)
-        # JobParams is ignored in remote emulators and `runs`
-        # is set instead in `default_emulation_config()`.
-        # TODO: after pulser 1.6 & pasqal-cloud 0.20.6 assess if job_params is still needed
-        self._job_params = [JobParams(runs=self._runs)]
+        # JobParams is ignored in remote emulators
+        # and `runs` is set in `default_emulation_config()`.
+        # TODO: after pinning pulser>1.6 remove _job_params
+        self._job_params = [JobParams(runs=1000)]
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled QuantumProgram and return a remote handler of the results.
@@ -254,6 +255,8 @@ class QPU(PulserRemoteBackend):
         self._runs = runs
         self._connection = self.validate_connection(connection)
         # in QPU backends `runs` is specified in a JobParams object
+        # TODO: after pinning pulser>1.6 remove _job_params
+        # and replace it with BackendConfig
         self._job_params = [JobParams(runs=self._runs)]
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
