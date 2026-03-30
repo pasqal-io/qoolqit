@@ -67,7 +67,6 @@ Because $\tilde{\Omega}$ is expressed relative to the maximum interaction streng
 | Balanced | $\tilde{\Omega} \sim 1$ | Controls and interactions compete |
 | Weak drive | $\tilde{\Omega} \ll 1$ | Interactions dominate; blockade and correlation effects are strong |
 
----
 
 ### Time regimes
 
@@ -90,6 +89,9 @@ As described above, a QoolQit program is written in **dimensionless units**. Thi
 
 However, the values that can actually be implemented are constrained by the **hardware**. Real devices only allow certain ranges of interaction strengths, drive amplitudes, detunings, and evolution times. Therefore, an important task of QoolQit is to take the dimensionless program specified by the user and map it to a set of parameters that can be realized on the chosen hardware. We refer to this step as **compilation**.
 
+!!! Compilation
+    Compilation is the step where QoolQit takes the user’s dimensionless program and translates it into hardware-realizable parameters.
+
 A convenient way to understand this is to first work entirely in dimensionless units.
 
 The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\max_{\tilde{t}}\frac{\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure
@@ -99,28 +101,21 @@ This means that compilation does **not** change the dimensionless physics of the
 
 ### Example
 
-The initial dimensionless program is defined by $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$.
+
+Let us define a program by selecting by $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$.
 
 Now assume that the valid compilation region is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2,$ as shown in the figure below.
 
-The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1$.
-
-The largest valid point on this line is $(\tilde{J},\tilde{\Omega}) = (0.5,0.2).$
-
-So the program is rescaled by a factor $0.5$, but its dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying dimensionless problem is the same.
-
 ![Compilation in dimensionless units](../extras/assets/compilation_adimensional_rescaled.svg)
 
-In this figure, the green rectangle represents the valid compilation region. The diagonal line corresponds to all programs with fixed ratio $\tilde{\Omega}/\tilde{J}=1$. The initial point $(1,0.4)$ lies outside the allowed region, while the compiled point $(0.5,0.2)$ is the largest point on the same line that fits inside it.
+In this figure, the green rectangle represents the valid compilation region. The diagonal line corresponds to all programs with fixed ratio $\tilde{\Omega}/\tilde{J}=0.4$. The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 0.4$.
+
+The largest valid point on this line is $(\tilde{J},\tilde{\Omega}) = (0.5,0.2).$ So the program is rescaled by a factor $0.5$, but its dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying dimensionless problem is the same.
 
 ### What changes under compilation?
 
-What remains fixed is the **dimensionless program**. What changes is the **reference scale** used to realize it.
+What remains fixed is the **dimensionless program**. What changes is the **reference scale** used to map it to a physical device. A full derivation of the mapping and a concrete numerical examples are given in [Adimensionalization](../extended_usage/adimensionalization.md#time-scaling).
 
-If the initial point $(1,0.4)$ corresponds to choosing the maximum interaction strength as the reference scale, then compiling to $(0.5,0.2)$ means that the program is realized with a smaller reference interaction, equal to $0.5$ times the original one.
+If the initial point $(1,0.4)$ corresponds to choosing the maximum interaction strength as the reference scale, then compiling to $(0.5,0.2)$ means that the program is realized with a smaller reference interaction, equal to $0.5$ times the original one. It is to be kept in mind that compilation also rescales time.
 
 In other words, compilation keeps the dimensionless problem unchanged, but changes the conversion between dimensionless quantities and physical ones.
-
-### What about timescales?
-
-Compilation also rescales time. A full derivation and a concrete numerical example are given in [Adimensionalization](../extended_usage/adimensionalization.md#time-scaling).
