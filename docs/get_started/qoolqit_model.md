@@ -32,8 +32,7 @@ $$
 \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i\,\tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}.
 $$
 
-Here $\hat{n} = \frac{1}{2}(1 + \hat{\sigma}^z)$ is the Rydberg occupation operator, and the Pauli operators are
-
+Here $\hat{n}_i = \frac{1}{2}(1 + \hat{\sigma}^z_i)$ is the Rydberg occupation operator of atom, and $\sigma$'s stand for the Pauli operators:
 $$
 \sigma^x=\begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix},
 \qquad
@@ -42,9 +41,9 @@ $$
 \sigma^z=\begin{pmatrix} 1 & 0\\ 0 & -1\end{pmatrix}.
 $$
 
-Here, the interaction follow the $1/r^6$ Rydberg scaling, normalized so that the maximum equals $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
+The interaction follow the $1/r^6$ Rydberg scaling, normalized so that the maximum equals $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
 
-More details are provided in [Adimensionalization](../extended_usage/adimensionalization.md), to understand the connection to physical units and how compilation works.
+More details about the connection to physical units are provided in the section [Adimensionalization](../extended_usage/adimensionalization.md).
 
 ### Parameters
 
