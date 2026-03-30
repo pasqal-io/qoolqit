@@ -6,7 +6,7 @@ This solves a key challenge in programming neutral-atom quantum computers: in st
 
 QoolQit introduces a **dimensionless reference frame** with the following conventions:
 
-- Distances are rescaled so that the smallest pairwise distance equals $1$.
+- Distances are rescaled so that the smallest pairwise distance equals $1$. This also implies that the largest interaction strength is normalized to $1$.
 - $\tilde{\Omega}(t)$ and $\tilde{\delta}(t)$ are measured relative to the maximum interaction strength, which is equal to $1$ in the dimensionless program.
 - Times $\tilde{t}$ are measured relative to the interaction timescale.
 
@@ -32,7 +32,7 @@ $$
 \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i\,\tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}.
 $$
 
-Here $\hat{n}_i = \frac{1}{2}(1 + \hat{\sigma}^z_i)$ is the Rydberg occupation operator of atom, and $\sigma$'s stand for the Pauli operators:
+Here, $\hat{n}_i = \frac{1}{2}(1 + \hat{\sigma}^z_i)$ is the Rydberg occupation operator of atom $i$, and the $\hat{\sigma}^{x,y,z}_i$ are the Pauli operators:
 $$
 \sigma^x=\begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix},
 \qquad
@@ -45,7 +45,7 @@ The interaction follow the $1/r^6$ Rydberg scaling, normalized so that the maxim
 
 More details about the connection to physical units are provided in the section [Adimensionalization](../extended_usage/adimensionalization.md).
 
-Here we present a table with the different parameters present in the Hamiltonian and their respective value ranges.
+The following table summarizes the parameters appearing in the Hamiltonian and their allowed ranges.
 
 | Symbol | Description | Range |
 |--------|-------------|-------|
@@ -90,7 +90,7 @@ As described above, a QoolQit program is written in **dimensionless units**. Thi
 However, the values that can actually be implemented are constrained by the **hardware**. Real devices only allow certain ranges of interaction strengths, drive amplitudes, detunings, and evolution times. Therefore, an important task of QoolQit is to take the dimensionless program specified by the user and map it to a set of parameters that can be realized on the chosen hardware. We refer to this step as **compilation**.
 
 !!! Compilation
-    Compilation is the step where QoolQit takes the user’s dimensionless program and translates it into hardware-realizable parameters.
+    Compilation is the step where QoolQit takes a dimensionless program and rescales it into hardware-realizable parameters, while preserving its dimensionless structure.
 
 A convenient way to understand this is to first work entirely in dimensionless units.
 
@@ -102,7 +102,7 @@ This means that compilation does **not** change the dimensionless physics of the
 ### Example
 
 
-Let us define a program by selecting by $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$.
+Consider a program defined by $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$.
 
 Now assume that the valid compilation region is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2,$ as shown in the figure below.
 
@@ -114,8 +114,8 @@ The largest valid point on this line is $(\tilde{J},\tilde{\Omega}) = (0.5,0.2).
 
 ### What changes under compilation?
 
-What remains fixed is the **dimensionless program**. What changes is the **reference scale** used to map it to a physical device. A full derivation of the mapping and a concrete numerical examples are given in [Adimensionalization](../extended_usage/adimensionalization.md#time-scaling).
+What remains fixed is the **dimensionless program**. What changes is the **reference scale** used to map it to a physical device. A full derivation of the mapping and concrete numerical examples are given in [Adimensionalization](../extended_usage/adimensionalization.md#time-scaling).
 
-If the initial point $(1,0.4)$ corresponds to choosing the maximum interaction strength as the reference scale, then compiling to $(0.5,0.2)$ means that the program is realized with a smaller reference interaction, equal to $0.5$ times the original one. It is to be kept in mind that compilation also rescales time.
+If the initial point $(1,0.4)$ corresponds to choosing the maximum interaction strength as the reference scale, then compiling to $(0.5,0.2)$ means that the program is realized with a smaller reference interaction, equal to $0.5$ times the original one. It is important to keep in mind that compilation also rescales time.
 
 In other words, compilation keeps the dimensionless problem unchanged, but changes the conversion between dimensionless quantities and physical ones.
