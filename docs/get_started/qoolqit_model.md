@@ -12,13 +12,13 @@ QoolQit introduces a **dimensionless reference frame** with the following conven
 
 This means that programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
 
-Once a quantum program is written, a **compilation routine** automatically maps its dimensionless parameters to physical values compatible with the target hardware. For more details, see the Overview page.
+Once a quantum program is written, a **compilation routine** automatically maps its dimensionless parameters to physical values compatible with the target hardware.
 
 ---
 
 ## The QoolQit Dimensionless Hamiltonian
 
-The system evolves under the following Hamiltonian:
+In QoolQit the system is described by the following Hamiltonian:
 
 $$
 \tilde{H}(t) =
