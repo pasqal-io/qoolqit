@@ -53,7 +53,7 @@ class TestBackends:
     def test_default_backend(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
         assert backend._backend_type is self.MockEmulatorBackend
-        assert backend._runs == 100
+        assert backend._runs is None
 
     def test_default_remote_backend(self) -> None:
         backend = RemoteEmulator(
@@ -61,7 +61,7 @@ class TestBackends:
         )
         assert backend._backend_type is self.MockRemoteEmulatorBackend
         assert backend._connection is self.mock_connection
-        assert backend._runs == 100
+        assert backend._runs is None
 
     def test_emulator_backend_with_config(self) -> None:
         config = EmulationConfig(observables=(BitStrings(num_shots=1117),))
