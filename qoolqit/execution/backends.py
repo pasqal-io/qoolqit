@@ -33,11 +33,8 @@ class PulserEmulatorBackend:
         """Returns a valid config for emulator backends, if needed.
 
         Args:
-            emulation_config (EmulationConfig): base configuration class for all emulators backends.
-                If no config is provided to an emulator backend, a default will be provided instead.
-        Note:
-            Emulators backend (local/remote) can be configured through the generic
-            `EmulationConfig` object. Early validation makes the error easier to understand.
+            emulation_config: optional base configuration class for all emulators backends.
+                If no config is provided to an emulator backend, a default will used.
         """
         if emulation_config is None:
             emulation_config = self.default_emulation_config()
