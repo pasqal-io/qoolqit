@@ -45,7 +45,7 @@ The interaction follow the $1/r^6$ Rydberg scaling, normalized so that the maxim
 
 More details about the connection to physical units are provided in the section [Adimensionalization](../extended_usage/adimensionalization.md).
 
-### Parameters
+Here we present a table with the different parameters present in the Hamiltonian and their respective value ranges.
 
 | Symbol | Description | Range |
 |--------|-------------|-------|
