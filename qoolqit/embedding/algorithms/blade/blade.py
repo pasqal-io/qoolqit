@@ -373,12 +373,14 @@ def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
 
 
 def default_compute_max_distance_to_walk(progress: float, max_radial_dist: float | None) -> float:
+    """Default function with rapid then slow decrease to zero of the walking distance."""
     if max_radial_dist is None:
         return float(np.inf)
     return float(2 * max_radial_dist * (1 - np.sin(np.pi / 2 * progress)))
 
 
 def default_compute_ratio_step_factors(progress: float) -> float:
+    """Default function to decrease the ratio slightly too low and then increase."""
     return float(np.interp(progress, xp=[0, 3 / 5, 1], fp=[2, 0.94, 0.98]))
 
 
