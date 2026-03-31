@@ -1,6 +1,4 @@
-
-<a name="constructors"></a>
-## Graph constructors
+# Graph constructors
 
 Class constructors can help you create a variety of graphs. A useful constructor is starting from a set of coordinates. By default, it will create an empty set of edges, but we can use the `set_ud_edges` method to specify the edges as the unit-disk intersections.
 
@@ -26,7 +24,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 Some geometric graph constructors will already have coordinates by default.
 
-### Line
+## Line
 A line graph on n nodes.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
@@ -36,7 +34,7 @@ graph.draw()
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-### Circle
+## Circle
 A circle graph on n nodes.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
@@ -46,7 +44,7 @@ graph.draw()
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-### Triangular
+## Triangular
 A triangular lattice graph with m rows and n columns of triangles.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
@@ -66,7 +64,7 @@ graph.draw()
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-### Hexagonal
+## Hexagonal
 A Hexagonal lattice graph with m rows and n columns of hexagons.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
@@ -76,7 +74,7 @@ graph.draw()
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-### Heavy-hexagonal
+## Heavy-hexagonal
 An Heavy-Hexagonal lattice graph with m rows and n columns of hexagons where each edge is decorated with an additional lattice site.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
@@ -86,7 +84,7 @@ graph.draw()
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-### Random unit-disk
+## Random unit-disk
 A random unit-disk graph by uniformly sampling points in area of side L.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
@@ -108,7 +106,7 @@ graph.draw()
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-### Loading from a matrix
+## Loading from a matrix
 
 Loading an adjacency matrix into a graph is also possible.
 
