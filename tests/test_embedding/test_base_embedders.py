@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import numpy as np
 import pytest
 
-from qoolqit.embedding.base_embedder import EmbeddingConfig
+from qoolqit.embedding import EmbedderConfig
 from qoolqit.embedding.graph_embedder import GraphToGraphEmbedder
 from qoolqit.embedding.matrix_embedder import MatrixToGraphEmbedder
 from qoolqit.graphs import DataGraph
@@ -16,7 +16,7 @@ def test_custom_embedders() -> None:
     def some_embedding_algo(data: DataGraph, param1: float) -> DataGraph:
         return data
 
-    # Config does not inherit from EmbeddingConfig
+    # Config does not inherit from EmbedderConfig
     @dataclass
     class WrongTypeConfig:
         param1: float = 1.0
@@ -26,7 +26,7 @@ def test_custom_embedders() -> None:
 
     # Config params don't match algo params
     @dataclass
-    class WrongParamConfig(EmbeddingConfig):  # type: ignore
+    class WrongParamConfig(EmbedderConfig):  # type: ignore
         param2: float = 1.0
 
     with pytest.raises(KeyError):
@@ -34,7 +34,7 @@ def test_custom_embedders() -> None:
 
     # Embedding function returns unexpected data
     @dataclass
-    class SomeConfig(EmbeddingConfig):
+    class SomeConfig(EmbedderConfig):
         param1: float = 1.0
 
     def some_wrong_embedding_algo(data: DataGraph, param1: float) -> float:

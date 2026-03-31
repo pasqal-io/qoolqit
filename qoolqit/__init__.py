@@ -13,14 +13,6 @@ from qoolqit.devices import (
     available_default_devices,
 )
 from qoolqit.drive import Drive
-from qoolqit.embedding import (
-    Blade,
-    BladeConfig,
-    InteractionEmbedder,
-    InteractionEmbeddingConfig,
-    SpringLayoutConfig,
-    SpringLayoutEmbedder,
-)
 from qoolqit.execution import SequenceCompiler
 from qoolqit.graphs import DataGraph
 from qoolqit.program import QuantumProgram
@@ -29,12 +21,6 @@ from qoolqit.waveforms import Blackman, Constant, Delay, Interpolated, Piecewise
 
 __all__ = [
     "DataGraph",
-    "InteractionEmbedder",
-    "InteractionEmbeddingConfig",
-    "SpringLayoutConfig",
-    "SpringLayoutEmbedder",
-    "BladeConfig",
-    "Blade",
     "Blackman",
     "Constant",
     "Delay",

@@ -9,11 +9,11 @@ from scipy.spatial.distance import pdist, squareform
 
 from qoolqit.graphs import DataGraph
 
-from ..base_embedder import EmbeddingConfig
+from ..base_embedder import EmbedderConfig
 
 
 @dataclass
-class InteractionEmbeddingConfig(EmbeddingConfig):
+class InteractionEmbedderConfig(EmbedderConfig):
     """Configuration parameters for the interaction embedding."""
 
     method: str = "Nelder-Mead"
