@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import warnings
 from types import SimpleNamespace
 from typing import Callable
 
