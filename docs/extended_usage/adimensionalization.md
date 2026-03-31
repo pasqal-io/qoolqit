@@ -1,5 +1,15 @@
 # Adimensionalization
 
+In this section, you will learn how to:
+
+- relate the physical Rydberg Hamiltonian to QoolQit’s dimensionless Hamiltonian,
+- define the reference interaction $J_0$ and reference distance $r_0$,
+- understand how compilation chooses the physical scale of an implementation,
+- distinguish drive-limited and interaction-limited compilation,
+- see why time must be rescaled together with the Hamiltonian
+
+---
+
 This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, and how compilation maps an abstract programs onto actual hardware.
 
 The [QoolQit Model](../get_started/qoolqit_model.md) page introduces the main idea of compilation at a high level: the compiler keeps the same dimensionless program while setting the reference physical scale used to realize it on hardware. Here, we make that idea precise by defining the reference interaction $J_0$, the corresponding reference distance $r_0$, and the mapping between dimensionless and physical quantities.
@@ -42,7 +52,7 @@ r_0 \;\text{(reference distance)},
 J_0 = \frac{C_6}{r_0^6} \;\text{(reference interaction)}.
 $$
 
-Concretely, \$r_0\$ is the physical separation that corresponds to a dimensionless distance of \$1\$: any pair of atoms that sit at distance \$\tilde r_{ij}=1\$ in the adimensional model will be placed at distance \$r_0\$ on the actual device. This value is not fixed in advance — it is determined by compilation — and, through the relation above, every choice of \$r_0\$ implies a definite value of \$J_0\$.
+Concretely, $r_0$ is the physical separation that corresponds to a dimensionless distance of $1$: any pair of atoms that sit at distance $\tilde r_{ij}=1$ in the adimensional model will be placed at distance $r_0$ on the actual device. This value is not fixed in advance — it is determined by compilation — and, through the relation above, every choice of $r_0$ implies a definite value of $J_0$.
 
 This quantity sets the energy scale for the program. All Hamiltonian parameters are then expressed relative to it:
 
@@ -126,19 +136,19 @@ J_{ij}\,[\mathrm{rad/s}] = J_0\,\tilde{J}_{ij},
 r_{ij}\,[\mu\mathrm{m}] = r_0\,\tilde{r}_{ij},
 $$
 
-where $r_0 = (C_6/J_0)^{1/6}\,\mu\mathrm{m}$. All physical realizations of the same dimensionless program therefore lie on a ray in the $(J,\Omega)\,[\mathrm{rad/s}]$ plane parameterized by $J_0$.
+where $r_0 = (C_6/J_0)^{1/6}\,\mu\mathrm{m}$. All physical realizations of the same dimensionless program therefore lie on a ray in the $(J,\Omega)\,[\mathrm{rad}/\mu s}]$ plane parameterized by $J_0$.
 
-The figure below illustrates this picture. Each straight line corresponds to a different fixed ratio $\tilde{\Omega}/\tilde{J}$, and therefore to a different dimensionless program. The shaded green region represents the set of parameters allowed by the device, bounded by the maximum interaction strength $J_{\max}\,[\mathrm{rad/s}]$ and the maximum drive amplitude $\Omega_{\max}\,[\mathrm{rad/s}]$.
+The figure below illustrates this picture. Each straight line corresponds to a different fixed ratio $\tilde{\Omega}/\tilde{J}$, and therefore to a different dimensionless program. The shaded green region represents the set of parameters allowed by the device, bounded by the maximum interaction strength $J_{\max}\,[2 \pi  \mathrm{rad}/\mu s= MHz]$ and the maximum drive amplitude $\Omega_{\max}\,[2 \pi  \mathrm{rad}/\mu s = MHz]$.
 
 ![Compilation diagram](../extras/assets/compilation.svg)
 
-Compilation consists of selecting, along the ray defined by the program, the largest $J_0$ whose corresponding physical parameters lie inside the allowed region. A larger $J_0$ realizes the same dimensionless program with a higher physical amplitude and a shorter physical runtime $t = \tilde{t}/J_0\,[\mathrm{s}]$, making it the most efficient choice.
+Compilation consists of selecting, along the ray defined by the program, the largest $J_0$ whose corresponding physical parameters lie inside the allowed region. A larger $J_0$ realizes the same dimensionless program with a higher physical amplitude and a shorter physical runtime $t = \tilde{t}/J_0\,[\mu \mathrm{s}]$, making it the most efficient choice.
 
 Which hardware constraint becomes binding first determines the compilation strategy.
 
 ### Drive-limited compilation
 
-When the drive amplitude bound $\Omega_{\max}\,[\mathrm{rad/s}]$ is reached before the minimum-spacing constraint, the largest valid $J_0$ is obtained by saturating the drive limit:
+When the drive amplitude bound $\Omega_{\max}\,[\mathrm{rad}/\mu s]$ is reached before the minimum-spacing constraint, the largest valid $J_0$ is obtained by saturating the drive limit:
 
 $$
 \Omega_{\max}\,[\mathrm{rad/s}] = J_0\,\tilde{\Omega}_{\max}
@@ -149,7 +159,7 @@ $$
 The corresponding reference distance is then
 
 $$
-r_0\,[\mu\mathrm{m}] = \left(\frac{C_6\,[\mathrm{rad/s}\cdot\mu\mathrm{m}^6]}{J_0\,[\mathrm{rad/s}]}\right)^{1/6}.
+r_0\,[\mu\mathrm{m}] = \left(\frac{C_6\,[\mathrm{rad/s}\cdot\mu\mathrm{m}^6]}{J_0\,[\mathrm{rad}/\mu s]}\right)^{1/6}.
 $$
 
 ### Interaction-limited compilation
@@ -157,7 +167,7 @@ $$
 When the minimum atom spacing $r_{\min}\,[\mu\mathrm{m}]$ is reached before the drive limit, the largest valid $J_0$ is obtained by saturating the distance constraint. Since $r_0 = (C_6/J_0)^{1/6}$ and the closest pair has dimensionless distance $\tilde{r}_{\min} = 1$, setting $r_0 = r_{\min}$ gives
 
 $$
-J_0\,[\mathrm{rad/s}] = \frac{C_6\,[\mathrm{rad/s}\cdot\mu\mathrm{m}^6]}{r_{\min}^6\,[\mu\mathrm{m}^6]}.
+J_0\,[\mathrm{rad}/\mu s] = \frac{C_6\,[\mathrm{rad}/\mu s\cdot\mu\mathrm{m}^6]}{r_{\min}^6\,[\mu\mathrm{m}^6]}.
 $$
 
 This corresponds to placing the closest pair of atoms at the smallest physical spacing the device allows.
@@ -242,12 +252,6 @@ $$
 So reducing the energy scale by a factor $\alpha$ increases the physical runtime by a factor $1/\alpha$.
 
 This is consistent with the compilation strategy described above: whenever possible, QoolQit selects the largest feasible $J_0$ compatible with device constraints, so that programs run with the highest available amplitudes and shortest physical durations.
-
-### Example
-
-In the compilation example above, the program is rescaled from $(\tilde{J},\tilde{\Omega})=(1,0.4)$ to $(0.5,0.2)$. This corresponds to reducing the reference interaction scale by a factor $\alpha = 0.5$. As a consequence, the same dimensionless program must run for a physical time that is $1/\alpha = 2$ times longer.
-
-In this sense, compilation preserves the dimensionless Hamiltonian and the corresponding dimensionless evolution, while changing the physical energy and time scales used to realize it on hardware.
 
 ---
 

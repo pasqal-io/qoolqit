@@ -9,6 +9,8 @@ In this page, you will learn how to:
 - submit remote jobs and retrieve their results,
 - execute compiled programs on a QPU.
 
+---
+
 A `QuantumProgram` can be easily run on multiple backends provided by Pasqal:
 - locally installed emulators
 - remote cloud emulators

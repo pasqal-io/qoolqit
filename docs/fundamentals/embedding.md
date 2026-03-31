@@ -10,6 +10,7 @@ In this page, you will learn how to:
 - embed symmetric matrices into interaction graphs,
 - inspect how well the resulting embedding matches the original data.
 
+---
 
 Embedding data and problems into the Rydberg analog model is a broad research topic. Typically, an embedding is a structure preserving map $f_\text{embedding}: X \rightarrow Y$, such that an object $X$ is embedded into an object $Y$. Our goal is to define optimal embedding functions such that problem-specific data and definitions are embedded into model-compatible objects with the Rydberg analog model.
 

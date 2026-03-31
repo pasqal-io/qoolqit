@@ -63,24 +63,23 @@ def compute_target_weights_distances_by_weight_diff_limit(
 
     weight_difference_threshold = np.max(np.abs(weight_differences)) * weight_relative_threshold
     logger.debug(f"{weight_difference_threshold=}")
-    weight_differences[np.abs(weight_differences) < weight_difference_threshold] = (
-        0.0  # or use exponentially decreasing value
-    )
-    logger.debug(f"new {weight_differences=}")
 
-    step_target_weights = current_weights + weight_differences * (1 - weight_relative_threshold)
-    logger.debug(f"{step_target_weights=}")
+    reduced_weight_differences = weight_differences * (1 - weight_relative_threshold)
+    step_target_weights = current_weights + reduced_weight_differences
+    np.fill_diagonal(step_target_weights, 0)
+
     step_target_distances = np.vectorize(normalized_best_dist, signature="(m,n)->(m,n)")(
         step_target_weights
     )
-    logger.debug(f"{step_target_distances=}")
 
     distances_to_walk = (
         distance_matrix - step_target_distances
     ) / 2  # division by 2 because both forces will be applied on both atoms of each pair
     logger.debug(f"{distances_to_walk=}")
 
-    weighted_vectors = weight_differences[:, :, np.newaxis] * unitary_vectors
+    weighted_vectors = reduced_weight_differences[:, :, np.newaxis] * unitary_vectors
+    weighted_vectors[distances_to_walk == 0] = 0.0
+
     assert not np.any(np.isnan(weighted_vectors))
     logger.debug(f"{weighted_vectors=}")
 
@@ -94,7 +93,7 @@ def compute_interaction_forces(
     target_weights: np.ndarray,
     weight_relative_threshold: float,
     max_distance_to_walk: float,
-) -> Force:
+) -> tuple[Any, Force]:
     current_weights = np.vectorize(normalized_interaction, signature="(m,n)->(m,n)")(
         distance_matrix
     )
@@ -115,4 +114,6 @@ def compute_interaction_forces(
         weight_relative_threshold=weight_relative_threshold,
     )
 
-    return Force(weighted_vectors=weighted_vectors, distances_to_walk=np.abs(distances_to_walk))
+    return modulated_target_weights, Force(
+        weighted_vectors=weighted_vectors, distances_to_walk=np.abs(distances_to_walk)
+    )

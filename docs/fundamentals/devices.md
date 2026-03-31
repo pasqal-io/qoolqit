@@ -9,6 +9,8 @@ In this page, you will learn how to:
 - customize time, energy, and distance units,
 - restore the default unit conversion settings.
 
+---
+
 Each `Device` in QoolQit wraps a Pulser device and defines the hardware characteristics that the program will be compiled to and later executed on.
 
 ```python exec="on" source="material-block" session="devices"
@@ -83,9 +85,6 @@ By default, each device creates a default converter where the **energy unit** is
 For advanced users, customizing the unit conversion factors is possible.
 
 ```python exec="on" source="material-block" result="json" session="devices"
-device_real.set_time_unit(50.0)
-print(device_real.converter)  # markdown-exec: hide
-
 device_real.set_energy_unit(10.0)
 print(device_real.converter)  # markdown-exec: hide
 
