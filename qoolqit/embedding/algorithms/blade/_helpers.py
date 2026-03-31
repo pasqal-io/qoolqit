@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from typing import Any, TypeVar
 
 import numpy as np
@@ -8,11 +9,29 @@ Value = TypeVar("Value", float, np.ndarray)
 
 
 def normalized_interaction(dist: Value) -> Value:
-    return 1 / dist**6
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore", message="divide by zero encountered in divide", category=RuntimeWarning
+        )
+        result = 1 / dist**6
+
+    if isinstance(result, np.ndarray) and result.ndim == 2:
+        np.fill_diagonal(result, 0)
+
+    return result
 
 
 def normalized_best_dist(weight: Value) -> Value:
-    return (1 / weight) ** (1 / 6)  # type: ignore[no-any-return]
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore", message="divide by zero encountered in divide", category=RuntimeWarning
+        )
+        result = (1 / weight) ** (1 / 6)
+
+    if isinstance(result, np.ndarray) and result.ndim == 2:
+        np.fill_diagonal(result, 0)
+
+    return result  # type: ignore[no-any-return]
 
 
 def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
@@ -21,10 +40,9 @@ def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
 
 
 def interaction_matrix_from_distances(distance_matrix: np.ndarray) -> np.ndarray:
-    current_weights = np.vectorize(normalized_interaction, signature="(m,n)->(m,n)")(
-        distance_matrix
-    )
-    return np.triu(current_weights, k=1)
+    current_weights = normalized_interaction(distance_matrix)
+    current_weights = np.triu(current_weights, k=1)
+    return current_weights
 
 
 def interaction_matrix_from_positions(positions: np.ndarray) -> np.ndarray:

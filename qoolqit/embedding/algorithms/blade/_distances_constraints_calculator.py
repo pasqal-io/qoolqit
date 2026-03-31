@@ -67,11 +67,7 @@ def compute_best_scaling_for_pos(
     """
 
     distance_matrix = distance_matrix_from_positions(positions)
-
-    current_weights = np.vectorize(normalized_interaction, signature="(m,n)->(m,n)")(
-        dist=distance_matrix
-    )
-    current_weights = np.triu(current_weights, k=1)
+    current_weights = np.triu(normalized_interaction(distance_matrix), k=1)
 
     return compute_best_scaling_for_qubo(
         target_interactions=target_interactions,
