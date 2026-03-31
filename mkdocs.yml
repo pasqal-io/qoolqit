@@ -14,11 +14,8 @@ nav:
     - Problem definition and embedding:
         - fundamentals/problems/index.md
         - Graphs: fundamentals/problems/graphs.md
+        - Available Graphs: fundamentals/problems/available_graphs.md
         - Embedding: fundamentals/problems/embedding.md
-        - Available Graphs:
-            - fundamentals/problems/available_graphs/index.md
-            - Ring: fundamentals/problems/available_graphs/ring.md
-            - Square Lattice: fundamentals/problems/available_graphs/square.md
         - Available Embedders:
             - fundamentals/problems/available_embedders/index.md
             - Spring Layout Embedder: fundamentals/problems/available_embedders/spring_layout.md
