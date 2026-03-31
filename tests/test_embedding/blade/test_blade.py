@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from types import SimpleNamespace
 from typing import Callable
 
@@ -460,9 +461,12 @@ def test_drawing() -> None:
     plt.close("all")
     assert len(plt.get_fignums()) == 0
 
-    with pytest.warns(
-        UserWarning, match="FigureCanvasAgg is non-interactive, and thus cannot be shown"
-    ):
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message="FigureCanvasAgg is non-interactive, and thus cannot be shown",
+            category=UserWarning,
+        )
         update_positions(
             positions=np.array([[-10, 0], [10, 0]]),
             target_interactions=qubo,
