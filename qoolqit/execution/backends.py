@@ -4,11 +4,11 @@ import copy
 import logging
 from typing import Sequence
 
-from pulser.backend import BitStrings, Results
+from pulser.backend import BackendConfig, BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
 from pulser.backend.config import EmulationConfig
 from pulser.backend.qpu import QPUBackend
-from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
+from pulser.backend.remote import RemoteConnection, RemoteResults
 from pulser_pasqal.backends import EmuFreeBackendV2, RemoteEmulatorBackend
 from pulser_simulation import QutipBackendV2
 
@@ -182,12 +182,8 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
                 "Error in `RemoteEmulator`: `backend_type` must be a RemoteEmulatorBackend type."
             )
         self._backend_type = backend_type
-        self._emulation_config = self.validate_emulation_config(emulation_config)
         self._connection = self.validate_connection(connection)
-        # JobParams is ignored in remote emulators
-        # and `runs` is set in `default_emulation_config()`.
-        # TODO: after pinning pulser>1.6 remove _job_params
-        self._job_params = [JobParams(runs=1000)]
+        self._emulation_config = self.validate_emulation_config(emulation_config)
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled QuantumProgram and return a remote handler of the results.
@@ -206,7 +202,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
             connection=self._connection,
             config=self._emulation_config,
         )
-        remote_results = self._backend.run(job_params=self._job_params, wait=wait)
+        remote_results = self._backend.run(wait=wait)
         return remote_results
 
     def run(self, program: QuantumProgram) -> Sequence[Results]:
@@ -217,62 +213,90 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
 
 
 class QPU(PulserRemoteBackend):
-    """
-    Run QoolQit `QuantumProgram`s on a Pasqal QPU.
+    """Execute QoolQit QuantumPrograms on Pasqal quantum processing units.
 
-    This class serves as a primary interface between tools written using QoolQit (including solvers)
-    and QPU backend. It requires credentials through a `connection` to submit/run a program.
-    Please, contact your provider to get your credentials and get help on how create a
-    connection object:
-    - [Pasqal Cloud interface documentation](https://docs.pasqal.com/cloud)
-    - [Atos MyQML framework](https://github.com/pasqal-io/Pulser-myQLM/blob/main/tutorials/Submitting%20AFM%20state%20prep%20to%20QPU.ipynb)
+    This class provides the primary interface for running quantum programs on actual
+    QPU hardware. It requires authenticated credentials through a connection object
+    to submit and execute programs on remote quantum processors.
 
     Args:
-        connection (RemoteConnection): connection to execute the program on remote backends.
-        runs (int): run the program `runs` times to collect bitstrings statistics.
+        connection: Authenticated connection to the remote QPU backend.
+        config: Optional backend configuration for QPU execution parameters.
 
     Examples:
+        Using Pasqal Cloud:
         ```python
         from pulser_pasqal import PasqalCloud
         from qoolqit.execution import QPU
-        connection = PasqalCloud(username=..., password=..., project_id=...)
+
+        connection = PasqalCloud(
+            username="your_username",
+            password="your_password",
+            project_id="your_project_id"
+        )
         backend = QPU(connection=connection)
         remote_results = backend.submit(program)
         ```
-    """  # noqa
+
+        Using Atos MyQML:
+        ```python
+        from pulser_myqlm import PulserQLMConnection
+        from qoolqit.execution import QPU
+
+        connection = PulserQLMConnection()
+        backend = QPU(connection=connection)
+        results = backend.run(program)
+        ```
+
+    Note:
+        Contact your quantum computing provider for credentials and connection setup:
+        - [Pasqal Cloud Documentation](https://docs.pasqal.com/cloud)
+        - [Atos MyQML Framework](https://github.com/pasqal-io/Pulser-myQLM)
+    """
 
     def __init__(
         self,
-        *,
         connection: RemoteConnection,
-        runs: int = 100,
+        *,
+        config: BackendConfig | None = None,
     ) -> None:
-
         self._backend_type = QPUBackend
-        self._runs = runs
         self._connection = self.validate_connection(connection)
-        # in QPU backends `runs` is specified in a JobParams object
-        # TODO: after pinning pulser>1.6 remove _job_params
-        # and replace it with BackendConfig
-        self._job_params = [JobParams(runs=self._runs)]
+        self._config = config
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
-        """Submit a compiled QuantumProgram and return a remote handler of the results.
-
-        The returned handler `RemoteResults` can be used to:
-        - query the job status with `remote_results.get_batch_status()`
-        - when DONE, retrieve results with `remote_results.results`
+        """Submit a compiled quantum program to the QPU and return a result handler.
 
         Args:
-            program (QuantumProgram): the compiled quantum program to run.
-            wait (bool): Wait for remote backend to complete the job.
+            program: The compiled quantum program to execute on the QPU.
+            wait: Whether to wait for the QPU to complete execution before returning.
+
+        Returns:
+            A remote result handler for monitoring job status and retrieving results.
+
+        Note:
+            The returned RemoteResults object provides:
+            - Job status monitoring via `get_batch_status()`
+            - Result retrieval via the `results` property (when job is complete)
         """
-        self._backend = self._backend_type(program.compiled_sequence, connection=self._connection)
-        remote_results = self._backend.run(job_params=self._job_params, wait=wait)
+        self._backend = self._backend_type(
+            program.compiled_sequence, connection=self._connection, config=self._config
+        )
+        remote_results = self._backend.run(wait=wait)
         return remote_results
 
     def run(self, program: QuantumProgram) -> Sequence[Results]:
-        """Run a compiled QuantumProgram remotely and return the results."""
+        """Execute a compiled quantum program on the QPU and return the results.
+
+        This method submits the program and waits for completion before returning
+        the final results.
+
+        Args:
+            program: The compiled quantum program to execute on the QPU.
+
+        Returns:
+            The execution results from the QPU.
+        """
         remote_results = self.submit(program, wait=True)
         res_seq: Sequence[Results] = remote_results.results
         return res_seq
