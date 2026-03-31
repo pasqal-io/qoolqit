@@ -6,56 +6,56 @@ nav:
   - Overview: index.md
 
   - Get started:
-      - get_started/index.md
-      - Install: get_started/install.md
-      - Programming a neutral atom QPU: get_started/qoolqit_model.md
-      - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
+    - get_started/index.md
+    - Install: get_started/install.md
+    - Programming a neutral atom QPU: get_started/qoolqit_model.md
+    - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
 
   - Fundamentals:
-      - fundamentals/index.md
-      - Introduction: fundamentals/introduction.md
+    - fundamentals/index.md
+    - Introduction: fundamentals/introduction.md
 
-      - Problem definition and embedding:
-          - fundamentals/problems/index.md
-          - Graphs: fundamentals/problems/graphs.md
-          - Embedding: fundamentals/problems/embedding.md
-          - Available Graphs:
-              - fundamentals/problems/available_graphs/index.md
-              - Ring: fundamentals/problems/available_graphs/ring.md
-              - Square Lattice: fundamentals/problems/available_graphs/square.md
-          - Available Embedders:
-              - fundamentals/problems/available_embedders/index.md
-              - Spring Layout Embedder: fundamentals/problems/available_embedders/spring_layout.md
-              - Matrix Embedder: fundamentals/problems/available_embedders/matrix.md
-              - BlaDe: fundamentals/problems/available_embedders/blade.md
+    - Problem definition and embedding:
+        - fundamentals/problems/index.md
+        - Graphs: fundamentals/problems/graphs.md
+        - Embedding: fundamentals/problems/embedding.md
+        - Available Graphs:
+            - fundamentals/problems/available_graphs/index.md
+            - Ring: fundamentals/problems/available_graphs/ring.md
+            - Square Lattice: fundamentals/problems/available_graphs/square.md
+        - Available Embedders:
+            - fundamentals/problems/available_embedders/index.md
+            - Spring Layout Embedder: fundamentals/problems/available_embedders/spring_layout.md
+            - Matrix Embedder: fundamentals/problems/available_embedders/matrix.md
+            - BlaDe: fundamentals/problems/available_embedders/blade.md
 
-      - Quantum Program:
-          - fundamentals/quantum_program/index.md
-          - Registers:
-              - fundamentals/quantum_program/registers/index.md
-              - From Graphs: fundamentals/quantum_program/registers/from_graph.md
-              - From Positions: fundamentals/quantum_program/registers/from_positions.md
-              - From Embeddings: fundamentals/quantum_program/registers/from_embeddings.md
-          - Drives:
-              - fundamentals/quantum_program/drives/index.md
-              - Waveforms: fundamentals/quantum_program/drives/waveforms.md
-              - DMM: fundamentals/quantum_program/drives/dmm.md
-          - Defining Programs: fundamentals/defining_programs.md
+    - Quantum Program:
+        - fundamentals/quantum_program/index.md
+        - Registers:
+            - fundamentals/quantum_program/registers/index.md
+            - From Graphs: fundamentals/quantum_program/registers/from_graph.md
+            - From Positions: fundamentals/quantum_program/registers/from_positions.md
+            - From Embeddings: fundamentals/quantum_program/registers/from_embeddings.md
+        - Drives:
+            - fundamentals/quantum_program/drives/index.md
+            - Waveforms: fundamentals/quantum_program/drives/waveforms.md
+            - DMM: fundamentals/quantum_program/drives/dmm.md
+        - Defining Programs: fundamentals/defining_programs.md
 
-      - Compilation:
-          - fundamentals/compilation/index.md
-          - Rationale: fundamentals/compilation/rationale.md
-          - Devices: fundamentals/compilation/devices.md
-          - How to Compile: fundamentals/compilation/how_to_compile.md
-          - Error handling: fundamentals/compilation/error_handling.md
-          - Breaking invariance: fundamentals/compilation/breaking_invariance.md
+    - Compilation:
+        - fundamentals/compilation/index.md
+        - Rationale: fundamentals/compilation/rationale.md
+        - Devices: fundamentals/compilation/devices.md
+        - How to Compile: fundamentals/compilation/how_to_compile.md
+        - Error handling: fundamentals/compilation/error_handling.md
+        - Breaking invariance: fundamentals/compilation/breaking_invariance.md
 
-      - Execution:
-          - fundamentals/execution/index.md
-          - Introduction: fundamentals/execution.md
-          - Local Emulators: fundamentals/execution/local_emulators.md
-          - Remote Emulators: fundamentals/execution/remote_emulators.md
-          - QPU: fundamentals/execution/qpu.md
+    - Execution:
+        - fundamentals/execution/index.md
+        - Introduction: fundamentals/execution.md
+        - Local Emulators: fundamentals/execution/local_emulators.md
+        - Remote Emulators: fundamentals/execution/remote_emulators.md
+        - QPU: fundamentals/execution/qpu.md
 
   - Extended usage:
       - extended_usage/index.md
