@@ -8,7 +8,7 @@ In this page, you will learn how to:
 - wrap a custom embedder in a reusable class,
 - use automatic validation for configuration, input, and output types.
 
-In the [available embedders](../fundamentals/embedding.md) page you saw the usage of some pre-defined embedders. The embedding module in QoolQit is designed to be flexible and extendable to various forms of embedding algorithms developed for the Rydberg analog model, with potentially different inputs and outputs, and different configuration parameters. It is structured in three levels:
+In the [available embedders](../fundamentals/problems/embedding.md) page you saw the usage of some pre-defined embedders. The embedding module in QoolQit is designed to be flexible and extendable to various forms of embedding algorithms developed for the Rydberg analog model, with potentially different inputs and outputs, and different configuration parameters. It is structured in three levels:
 
 **Level 0: Concretizing the interface**
 
