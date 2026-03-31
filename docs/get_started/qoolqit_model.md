@@ -6,19 +6,19 @@ This solves a key challenge in programming neutral-atom quantum computers: in st
 
 QoolQit introduces a **dimensionless reference frame** with the following conventions:
 
-- Distances are rescaled so that the smallest pairwise distance equals $1$.
+- Distances are rescaled so that the smallest pairwise distance equals $1$. This also implies that the largest interaction strength is normalized to $1$.
 - $\tilde{\Omega}(t)$ and $\tilde{\delta}(t)$ are measured relative to the maximum interaction strength, which is equal to $1$ in the dimensionless program.
 - Times $\tilde{t}$ are measured relative to the interaction timescale.
 
 This means that programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
 
-Once a quantum program is written, a **compilation routine** automatically maps its dimensionless parameters to physical values compatible with the target hardware. For more details, see the Overview page.
+Once a quantum program is written, a **compilation routine** automatically maps its dimensionless parameters to physical values compatible with the target hardware.
 
 ---
 
 ## The QoolQit Dimensionless Hamiltonian
 
-The system evolves under the following Hamiltonian:
+In QoolQit the system is described by the following Hamiltonian:
 
 $$
 \tilde{H}(t) =
@@ -32,8 +32,7 @@ $$
 \underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i\,\tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}.
 $$
 
-Here $\hat{n} = \frac{1}{2}(1 + \hat{\sigma}^z)$ is the Rydberg occupation operator, and the Pauli operators are
-
+Here, $\hat{n}_i = \frac{1}{2}(1 + \hat{\sigma}^z_i)$ is the Rydberg occupation operator of atom $i$, and the $\hat{\sigma}^{x,y,z}_i$ are the Pauli operators:
 $$
 \sigma^x=\begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix},
 \qquad
@@ -42,11 +41,11 @@ $$
 \sigma^z=\begin{pmatrix} 1 & 0\\ 0 & -1\end{pmatrix}.
 $$
 
-Here, the interaction follow the $1/r^6$ Rydberg scaling, normalized so that the maximum equals $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
+The interaction follow the $1/r^6$ Rydberg scaling, normalized so that the maximum equals $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
 
-More details are provided in [Adimensionalization](../extended_usage/adimensionalization.md), to understand the connection to physical units and how compilation works.
+More details about the connection to physical units are provided in the section [Adimensionalization](../extended_usage/adimensionalization.md).
 
-### Parameters
+The following table summarizes the parameters appearing in the Hamiltonian and their allowed ranges.
 
 | Symbol | Description | Range |
 |--------|-------------|-------|
@@ -68,7 +67,6 @@ Because $\tilde{\Omega}$ is expressed relative to the maximum interaction streng
 | Balanced | $\tilde{\Omega} \sim 1$ | Controls and interactions compete |
 | Weak drive | $\tilde{\Omega} \ll 1$ | Interactions dominate; blockade and correlation effects are strong |
 
----
 
 ### Time regimes
 
@@ -91,6 +89,9 @@ As described above, a QoolQit program is written in **dimensionless units**. Thi
 
 However, the values that can actually be implemented are constrained by the **hardware**. Real devices only allow certain ranges of interaction strengths, drive amplitudes, detunings, and evolution times. Therefore, an important task of QoolQit is to take the dimensionless program specified by the user and map it to a set of parameters that can be realized on the chosen hardware. We refer to this step as **compilation**.
 
+!!! Compilation
+    Compilation is the step where QoolQit takes a dimensionless program and rescales it into hardware-realizable parameters, while preserving its dimensionless structure.
+
 A convenient way to understand this is to first work entirely in dimensionless units.
 
 The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\max_{\tilde{t}}\frac{\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure
@@ -100,28 +101,21 @@ This means that compilation does **not** change the dimensionless physics of the
 
 ### Example
 
-The initial dimensionless program is defined by $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$.
+
+Consider a program defined by $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$.
 
 Now assume that the valid compilation region is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2,$ as shown in the figure below.
 
-The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1$.
-
-The largest valid point on this line is $(\tilde{J},\tilde{\Omega}) = (0.5,0.2).$
-
-So the program is rescaled by a factor $0.5$, but its dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying dimensionless problem is the same.
-
 ![Compilation in dimensionless units](../extras/assets/compilation_adimensional_rescaled.svg)
 
-In this figure, the green rectangle represents the valid compilation region. The diagonal line corresponds to all programs with fixed ratio $\tilde{\Omega}/\tilde{J}=1$. The initial point $(1,0.4)$ lies outside the allowed region, while the compiled point $(0.5,0.2)$ is the largest point on the same line that fits inside it.
+In this figure, the green rectangle represents the valid compilation region. The diagonal line corresponds to all programs with fixed ratio $\tilde{\Omega}/\tilde{J}=0.4$. The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 0.4$.
+
+The largest valid point on this line is $(\tilde{J},\tilde{\Omega}) = (0.5,0.2).$ So the program is rescaled by a factor $0.5$, but its dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying dimensionless problem is the same.
 
 ### What changes under compilation?
 
-What remains fixed is the **dimensionless program**. What changes is the **reference scale** used to realize it.
+What remains fixed is the **dimensionless program**. What changes is the **reference scale** used to map it to a physical device. A full derivation of the mapping and concrete numerical examples are given in [Adimensionalization](../extended_usage/adimensionalization.md).
 
-If the initial point $(1,0.4)$ corresponds to choosing the maximum interaction strength as the reference scale, then compiling to $(0.5,0.2)$ means that the program is realized with a smaller reference interaction, equal to $0.5$ times the original one.
+If the initial point $(1,0.4)$ corresponds to choosing the maximum interaction strength as the reference scale, then compiling to $(0.5,0.2)$ means that the program is realized with a smaller reference interaction, equal to $0.5$ times the original one. It is important to keep in mind that compilation also rescales time.
 
 In other words, compilation keeps the dimensionless problem unchanged, but changes the conversion between dimensionless quantities and physical ones.
-
-### What about timescales?
-
-Compilation also rescales time. A full derivation and a concrete numerical example are given in [Adimensionalization](../extended_usage/adimensionalization.md#time-scaling).
