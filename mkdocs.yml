@@ -37,6 +37,7 @@ nav:
       - Devices: fundamentals/devices.md
       - How to Compile:
       - Error handling:
+      - Breaking invariance:
     - Execution:
       - Introduction: fundamentals/execution.md
       - Local Emulators:
