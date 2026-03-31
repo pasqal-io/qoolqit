@@ -480,6 +480,12 @@ def blade(
         to draw a weighted graph representing interactions.
     draw_differences: For each step with drawing enabled, defines whether
         to draw the differences between current and target interactions.
+
+    Raises:
+        DistanceRatioException: If `max_min_dist_ratio` is set and the algorithm
+            cannot satisfy the distance ratio constraint after exhausting all
+            reruns (as defined by `ratio_rerun`). The partial result is still
+            accessible via the `positions` attribute of the exception.
     """
 
     if len(dimensions) == 1:
