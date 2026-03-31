@@ -2320,12 +2320,12 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpringLayoutEmbedder</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.embedding</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpringLayoutEmbedder</span>
 
 <span class="n">sl_embedder</span> <span class="o">=</span> <span class="n">SpringLayoutEmbedder</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sl_embedder</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">from qoolqit import SpringLayoutEmbedder
+<div class="clipboard-copy-txt" id="cell-1">from qoolqit.embedding import SpringLayoutEmbedder
 
 sl_embedder = SpringLayoutEmbedder()
 print(sl_embedder)</div>
@@ -2481,7 +2481,7 @@ Q = Q/Q.max()</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractionEmbedder</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.embedding</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractionEmbedder</span>
 
 <span class="n">embedder</span> <span class="o">=</span> <span class="n">InteractionEmbedder</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">embedder</span><span class="p">)</span>
@@ -2489,7 +2489,7 @@ Q = Q/Q.max()</div>
 <span class="n">embedded_graph</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
 <span class="n">embedded_graph</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">from qoolqit import InteractionEmbedder
+<div class="clipboard-copy-txt" id="cell-4">from qoolqit.embedding import InteractionEmbedder
 
 embedder = InteractionEmbedder()
 print(embedder)
@@ -2509,7 +2509,7 @@ embedded_graph.draw()</div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>InteractionEmbedder:
 | Algorithm: interaction_embedding
-| Config: InteractionEmbeddingConfig(method='Nelder-Mead', maxiter=200000, tol=1e-08)
+| Config: InteractionEmbedderConfig(method='Nelder-Mead', maxiter=200000, tol=1e-08)
 </pre>
 </div>
 </div>
