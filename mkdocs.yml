@@ -69,8 +69,9 @@ theme:
       name: Switch to light mode
 
 markdown_extensions:
-- admonition
-- pymdownx.arithmatex:
+- admonition  # for notes
+- pymdownx.arithmatex: # for mathjax
+    generic: true
 - pymdownx.highlight:
     default_lang: python
     anchor_linenums: true
@@ -86,14 +87,13 @@ plugins:
 - section-index
 - markdown-exec
 - mkdocs-jupyter:
-    include: ["./docs/tutorials/*.ipynb"]
-    custom_mathjax_url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe"
+    include: ["./docs/tutorials/*.ipynb"] # only notebooks in tutorials
 - mkdocstrings:
     handlers:
       python:
         paths: [qoolqit]
         options:
-          backings: tree
+          backlinks: tree
           docstring_options:
             ignore_init_summary: true
           docstring_section_style: list
