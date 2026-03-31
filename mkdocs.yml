@@ -10,15 +10,38 @@ nav:
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
     - Introduction: fundamentals/introduction.md
-    - Problem definition and graphs: fundamentals/graphs.md
-    - Problem embedding: fundamentals/embedding.md
-    - Registers: fundamentals/registers.md
-    - Waveforms: fundamentals/waveforms.md
-    - Drive Hamiltonian: fundamentals/drives.md
-    - Devices: fundamentals/devices.md
-    - Quantum programs: fundamentals/programs.md
-    - Compilation: fundamentals/compilation.md
-    - Execution: fundamentals/execution.md
+    - Problem definition and embedding:
+      - Intro:
+      - Graphs:  fundamentals/graphs.md
+      - Embedding: fundamentals/embedding.md
+      - Available Graphs:
+        - Ring:
+        - Square Lattice:
+      - Available Embedders:
+        - Spring Layout Embedder:
+        - Matrix Embedder:
+        - BlaDe:
+    - Quantum Program:
+      - Introduction:
+      - Registers:
+        - From Graphs: fundamentals/registers.md
+        - From Positions:
+        - From Embeddings:
+      - Drives:
+        - Waveforms: fundamentals/waveforms.md
+        - DMM: fundamentals/programs.md
+      - Defining Programs: fundamentals/programs.md
+    - Compilation:
+    - Rationale of compilation:
+      - Introduction: fundamentals/compilation.md
+      - Devices: fundamentals/devices.md
+      - How to Compile:
+      - Error handling:
+    - Execution:
+      - Introduction: fundamentals/execution.md
+      - Local Emulators:
+      - Remote Emulators:
+      - QPU:
   - Extended usage:
     - Adimensionalization: extended_usage/adimensionalization.md
     - Emulation configuration: extended_usage/execution_config.md
