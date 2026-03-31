@@ -125,7 +125,7 @@ emulator = RemoteEmulator(connection=connection)
 
 As before, also `RemoteEmulator` can be instantiated with:
 - `backend_type`: remote counterpart of local backends, namely `EmuFreeBackendV2` (default), `EmuSVBackend` (not available yet), `EmuMPSBackend`.
-- `emulation_config`: same as before — see [Emulation configuration](../extended_usage/execution_config.md) for details.
+- `emulation_config`: same as before — see [Emulation configuration](../../extended_usage/execution_config.md) for details.
 - `runs`: same as before.
 
 As an example, below, we specify to emulate the program with the `EmuMPSBackend` and a custom `EmulationConfig`:

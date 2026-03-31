@@ -46,7 +46,7 @@ nav:
         - Breaking invariance: fundamentals/compilation/breaking_invariance.md
     - Execution:
         - fundamentals/execution/index.md
-        - Introduction: fundamentals/execution.md
+        - Introduction: fundamentals/execution/execution.md
         - Local Emulators: fundamentals/execution/local_emulators.md
         - Remote Emulators: fundamentals/execution/remote_emulators.md
         - QPU: fundamentals/execution/qpu.md
