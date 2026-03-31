@@ -10,8 +10,7 @@ nav:
     - Programming a neutral atom QPU: get_started/qoolqit_model.md
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
-    - fundamentals/index.md
-    - Introduction: fundamentals/introduction.md
+    - fundamentals/introduction.md
     - Problem definition and embedding:
         - fundamentals/problems/index.md
         - Graphs: fundamentals/problems/graphs.md
