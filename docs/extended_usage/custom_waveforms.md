@@ -96,7 +96,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 ## Using a custom waveform in a Drive
 
-Custom waveforms compose with built-in ones via `>>` and slot into a [`Drive`](../fundamentals/drives.md) exactly like any
+Custom waveforms compose with built-in ones via `>>` and slot into a [`Drive`](../fundamentals/quantum_program/drives/index.md) exactly like any
 other waveform:
 
 ```python exec="on" source="material-block" result="json" session="custom_waveforms_drive"
