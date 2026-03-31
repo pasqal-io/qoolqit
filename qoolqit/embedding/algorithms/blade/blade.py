@@ -10,7 +10,7 @@ import scipy
 import torch
 
 from qoolqit.devices.device import Device
-from qoolqit.embedding.base_embedder import EmbeddingConfig
+from qoolqit.embedding.base_embedder import EmbedderConfig
 
 from ._dimension_shrinker import DimensionShrinker
 from ._dist_constraints_forces import (
@@ -577,7 +577,7 @@ def blade(
 
 
 @dataclass
-class BladeConfig(EmbeddingConfig):
+class BladeConfig(EmbedderConfig):
     """Configuration parameters to embed with BLaDE."""
 
     max_min_dist_ratio: float | None = None

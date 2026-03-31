@@ -33,7 +33,7 @@ Let's exemplify the case of defining a custom embedder in the family of graph to
 
 ```python exec="on" source="material-block" result="json" session="embedding"
 from qoolqit.embedding import GraphToGraphEmbedder
-from qoolqit.embedding import EmbeddingConfig
+from qoolqit.embedding import EmbedderConfig
 from qoolqit import DataGraph
 from dataclasses import dataclass
 
@@ -49,10 +49,10 @@ def my_embedding_function(graph: DataGraph, param1: float) -> DataGraph:
     return graph
 
 @dataclass
-class MyEmbeddingConfig(EmbeddingConfig):
+class MyEmbedderConfig(EmbedderConfig):
     param1: float = 1.0
 
-embedder = GraphToGraphEmbedder(my_embedding_function, MyEmbeddingConfig())
+embedder = GraphToGraphEmbedder(my_embedding_function, MyEmbedderConfig())
 print(embedder) # markdown-exec: hide
 ```
 
@@ -73,7 +73,7 @@ To share this embedder or potentially add it to the QoolQit codebase, we might w
 ```python exec="on" source="material-block" session="embedding"
 class MyNewEmbedder(GraphToGraphEmbedder):
     def __init__(self):
-        super().__init__(my_embedding_function, MyEmbeddingConfig())
+        super().__init__(my_embedding_function, MyEmbedderConfig())
 ```
 
 ## Automatic validation
@@ -85,7 +85,7 @@ def my_embedding_function(graph: DataGraph, param1: float) -> DataGraph:
     return graph
 
 @dataclass
-class MyWrongConfig(EmbeddingConfig):
+class MyWrongConfig(EmbedderConfig):
     some_other_param: float = 1.0
 
 try:
@@ -97,7 +97,7 @@ except KeyError as error:
 Furthermore, because we are defining an embedder in the `GraphToGraphEmbedder`, the input must be an instance of a `DataGraph`:
 
 ```python exec="on" source="material-block" result="json" session="embedding"
-embedder = GraphToGraphEmbedder(my_embedding_function, MyEmbeddingConfig())
+embedder = GraphToGraphEmbedder(my_embedding_function, MyEmbedderConfig())
 
 try:
     data = 1.0 # Not a DataGraph
@@ -112,7 +112,7 @@ The output of the embedding function must also be a `DataGraph`:
 def my_wrong_embedding_function(graph: DataGraph, param1: float) -> DataGraph:
     return param1 # Not a DataGraph
 
-embedder = GraphToGraphEmbedder(my_wrong_embedding_function, MyEmbeddingConfig())
+embedder = GraphToGraphEmbedder(my_wrong_embedding_function, MyEmbedderConfig())
 
 try:
     graph = DataGraph.random_er(5, 0.5)
