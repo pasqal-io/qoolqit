@@ -25,7 +25,7 @@ that a real Pulser device can execute. Concretely, it:
 
 The conversion rules are derived from the requirement that the dimensionless Hamiltonian
 $\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ generate the same unitary evolution.
-A full derivation is given in the [Adimensionalization](../extended_usage/adimensionalization.md)
+A full derivation is given in the [Adimensionalization](../../extended_usage/adimensionalization.md)
 page. The key identities are:
 
 $$
