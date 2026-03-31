@@ -22,7 +22,7 @@ Later, we will briefly show how to authenticate and send a remote job.
 
 ## A simple quantum program
 
-Let us revisit the quantum program definition described before in the [Quantum programs](./programs.md) page.
+Let us revisit the quantum program definition described before in the [Quantum programs](../quantum_program/index.md) page.
 
 ```python exec="on" source="material-block" session="execution"
 
