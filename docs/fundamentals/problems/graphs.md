@@ -118,56 +118,9 @@ graph.min_distance(connected = True)
 graph.min_distance(connected = False)
 ```
 
-## Unit-disk graphs
-
-Working with node coordinates and distances is an essential part of dealing with unit-disk graphs.
-
-!!! info "Definition: Unit-Disk Graphs"
-    For a set of nodes $V$, each node $i\in V$ marked by a set of coordinates $(x, y)_i$ in Euclidean space, a set of edges $E$ and a radius $R$, a Unit-Disk Graph $UDG(V, E, R)$ is such that there exists an edge $(i, j)\in E$ for two nodes $i$ and $j$ if and only if $\text{dist}(i, j) \leq R$, where $\text{dist}(i, j)$ is the Euclidean distance between the coordinates of nodes $i$ and $j$.
-
-In other words, a unit-disk graph for a radius $R$ is the graph where the set of edges corresponds to the intersections of disks of radius $R/2$ centered at each node position in Euclidean space.
-
-For a `DataGraph` with a set of node coordinates, we can check if it is a valid unit-disk graph
-
-```python exec="on" source="material-block" result="json" session="graphs"
-graph.is_ud_graph()
-print(graph.is_ud_graph()) # markdown-exec: hide
-```
-
-This method checks that `graph.max_distance(connected = True)` is smaller than `graph.min_distance(connected = False)`. If this is `True`, then for every value of $R$ inside that interval the unit-disk condition is met. We can easily check this.
-
-First, we can check the set of edges given by the intersection of unit disks:
-
-```python exec="on" source="material-block" result="json" session="graphs"
-# For a small value no disks intersect, the set is empty
-ud_edges = graph.ud_edges(radius = 0.1)
-print("Radius = 0.1: ", ud_edges) # markdown-exec: hide
-
-# For a large enough value all disks intersect
-ud_edges = graph.ud_edges(radius = 50.0)
-print("Radius = 50.0: ", ud_edges) # markdown-exec: hide
-
-assert ud_edges == graph.all_node_pairs
-```
-
-Now, we can randomly pick a value or $R$ matching the unit-disk condition and verify that the set of unit-disk edges exactly match the set of edges in the graph. The possible range of values is directly available with the `ud_radius_range()` method.
-
-```python exec="on" source="material-block" result="json" session="graphs"
-import numpy as np
-
-low, high = graph.ud_radius_range()
-
-R = np.random.uniform(low, high)
-
-print(graph.ud_edges(radius = R) == graph.sorted_edges)
-```
-
-We can also reset the set of edges on a graph to be equal to the set of unit-disk edges for a given radius with `graph.set_ud_edges(radius = R)`. For this example we will not run this line, but we show it later when constructing a graph from a set of coordinates.
-
-
 ## Node and edge weights
 
-Another two important attributes are **node weights** and **edge weights**:
+Two important attributes are **node weights** and **edge weights**:
 
 ```python exec="on" source="material-block" session="graphs"
 import random
