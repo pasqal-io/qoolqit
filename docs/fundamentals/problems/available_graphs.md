@@ -28,6 +28,8 @@ Some geometric graph constructors will already have coordinates by default.
 A line graph on n nodes.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
+from qoolqit import DataGraph # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
 graph = DataGraph.line(n = 10, spacing = 1.0)
 fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
@@ -38,6 +40,8 @@ print(fig_to_html(fig)) # markdown-exec: hide
 A circle graph on n nodes.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
+from qoolqit import DataGraph # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
 graph = DataGraph.circle(n = 10, spacing = 1.0, center = (0.0, 0.0))
 fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
@@ -48,6 +52,8 @@ print(fig_to_html(fig)) # markdown-exec: hide
 A triangular lattice graph with m rows and n columns of triangles.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
+from qoolqit import DataGraph # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
 graph = DataGraph.triangular(m = 2, n = 2, spacing = 1.0)
 fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
@@ -58,6 +64,8 @@ print(fig_to_html(fig)) # markdown-exec: hide
 A square lattice graph with m rows and n columns of square.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
+from qoolqit import DataGraph # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
 graph = DataGraph.square(m = 2, n = 2, spacing = 1.0)
 fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
@@ -68,6 +76,8 @@ print(fig_to_html(fig)) # markdown-exec: hide
 A Hexagonal lattice graph with m rows and n columns of hexagons.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
+from qoolqit import DataGraph # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
 graph = DataGraph.hexagonal(m = 2, n = 2, spacing = 1.0)
 fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
@@ -78,6 +88,8 @@ print(fig_to_html(fig)) # markdown-exec: hide
 An Heavy-Hexagonal lattice graph with m rows and n columns of hexagons where each edge is decorated with an additional lattice site.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
+from qoolqit import DataGraph # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
 graph = DataGraph.heavy_hexagonal(m = 2, n = 2, spacing = 1.0)
 fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
@@ -88,6 +100,8 @@ print(fig_to_html(fig)) # markdown-exec: hide
 A random unit-disk graph by uniformly sampling points in area of side L.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
+from qoolqit import DataGraph # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
 graph = DataGraph.random_ud(n = 10, radius = 1.0, L = 2.0)
 fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
@@ -100,6 +114,8 @@ Other generic constructors are also available which have no information on node 
 A random Erdős–Rényi graph of n nodes.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
+from qoolqit import DataGraph # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
 graph = DataGraph.random_er(n = 10, p = 0.5, seed = 1)
 fig, ax = plt.subplots(figsize=(4,4), dpi=200) # markdown-exec: hide
 graph.draw()
