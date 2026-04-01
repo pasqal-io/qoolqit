@@ -3,9 +3,24 @@
 Once a `QuantumProgram` is defined and a `Device` is selected one can proceed with the compilation by means of the method `compile_to`. This method will execute what has been discussed in the [introduction](./rationale.md) mapping adimensional parameters to physical quantities according to specific default rules.
 
 ```python exec="on" source="material-block" result="json" session="drives"
+from qoolqit import PiecewiseLinear
+from qoolqit import Register, Drive, QuantumProgram
 from qoolqit import AnalogDevice
 
+# Defining the Drive
+wf0 = PiecewiseLinear([1.0, 2.0, 1.0], [0.0, 0.5, 0.5, 0.0])
+wf1 = PiecewiseLinear([1.0, 2.0, 1.0], [-1.0, -1.0, 1.0, 1.0])
+drive = Drive(amplitude = wf0, detuning = wf1)
+
+# Defining the Register
+coords = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]
+register = Register.from_coordinates(coords)
+
+# Creating the Program
+program = QuantumProgram(register, drive)
 device = AnalogDevice()
+
+# Compilation to AnalogDevice
 program.compile_to(device)
 print(program) # markdown-exec: hide
 ```
