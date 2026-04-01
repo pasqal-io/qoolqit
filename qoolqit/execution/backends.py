@@ -252,7 +252,7 @@ class QPU(PulserRemoteBackend):
             raise ValueError(
                 """Number of runs must be provided to use the QPU backend.
                 Please specify the number of runs when creating the QPU instance.
-                For example: QPU(connection=..., runs=100""",
+                For example: QPU(connection=..., runs=100)""",
             )
         self._config = BackendConfig(default_num_shots=runs)
 
