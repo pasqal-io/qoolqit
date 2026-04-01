@@ -1,14 +1,5 @@
 # Compiling a quantum program
 
-In this page, you will learn how to:
-
-- understand what compilation does in QoolQit,
-- understand the two compilation strategies: drive-limited and interaction-limited,
-- understand why QoolQit always uses the maximum available amplitude $\Omega_{\max}$ whenever possible,
-- inspect the compiled Pulser `Sequence` that results from compilation.
-
----
-
 ## What compilation does
 
 A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as

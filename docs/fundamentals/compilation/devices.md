@@ -1,13 +1,5 @@
 # Initializing quantum devices
 
-In this page, you will learn how to:
-
-- create built-in QoolQit devices,
-- fetch available hardware devices from a connection,
-- build a QoolQit device from a Pulser device,
-- inspect the unit converter associated with a device,
-- customize time, energy, and distance units,
-- restore the default unit conversion settings.
 
 ---
 
