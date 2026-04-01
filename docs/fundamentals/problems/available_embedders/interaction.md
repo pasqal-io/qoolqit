@@ -38,7 +38,7 @@ print(matrix) # markdown-exec: hide
 Finally, running the embedding we obtain a `DataGraph` with coordinates that can be easily converted to a `Register` of qubits.
 
 ```python exec="on" source="material-block" html="1" session="embedding"
-import numpy as np
+import matplotlib.pyplot as plt
 from qoolqit import Register
 
 embedded_graph = embedder.embed(matrix)
