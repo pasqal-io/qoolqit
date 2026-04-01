@@ -84,7 +84,6 @@ class LocalEmulator(PulserEmulatorBackend):
         backend_type (type): backend type. Must be a subtype of `pulser.backend.EmulatorBackend`.
         emulation_config (EmulationConfig): optional configuration object emulators.
         runs (int): number of bitstring samples to collect from the final quantum state.
-            It emulates running the program `runs` times to collect bitstrings statistics.
 
     Examples:
         ```python
@@ -101,6 +100,7 @@ class LocalEmulator(PulserEmulatorBackend):
         emulation_config: EmulationConfig | None = None,
         runs: int | None = None,
     ) -> None:
+        """Instantiates a LocalEmulator."""
         super().__init__(runs=runs)
         if not issubclass(backend_type, EmulatorBackend):
             raise TypeError(
@@ -134,7 +134,6 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         connection (RemoteConnection): connection to execute the program on remote backends.
         emulation_config (EmulationConfig): optional configuration object emulators.
         runs (int): number of bitstring samples to collect from the final quantum state.
-            It emulates running the program `runs` times to collect bitstrings statistics.
 
     Examples:
         ```python
@@ -161,6 +160,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         emulation_config: EmulationConfig | None = None,
         runs: int | None = None,
     ) -> None:
+        """Instantiates a RemoteEmulator."""
         super().__init__(runs=runs)
         if not issubclass(backend_type, RemoteEmulatorBackend):
             raise TypeError(
@@ -245,7 +245,7 @@ class QPU(PulserRemoteBackend):
         connection: RemoteConnection,
         runs: int | None = None,
     ) -> None:
-        """Initialize the QPU backend."""
+        """Instantiates a QPU backend."""
         self._backend_type = QPUBackend
         self._connection = self.validate_connection(connection)
         if runs is None:
