@@ -30,7 +30,7 @@ nav:
       - Rationale: fundamentals/compilation/rationale.md
       - Devices: fundamentals/compilation/devices.md
       - How to Compile: fundamentals/compilation/how_to_compile.md
-      - Error handling: fundamentals/compilation/error_handling.md
+      - Error handling: fundamentals/compilation/error_handling.ipynb
       - Breaking invariance: fundamentals/compilation/breaking_invariance.md
     - Execution:
       - fundamentals/execution/index.md

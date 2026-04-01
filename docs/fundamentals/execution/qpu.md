@@ -1,7 +1,22 @@
 ## Executing remotely on a QPU
 
 A connection object can also be used to run the program directly on a QPU.
-To see the list of available devices, run:
+
+Let's initialize a connection again:
+
+```python exec="on" source="material-block" session="execution"
+from pulser_pasqal import PasqalCloud
+```
+
+```python
+connection = PasqalCloud(
+    username=USERNAME,  # Your username or email address for the Pasqal Cloud Platform
+    password=PASSWORD,  # The password for your Pasqal Cloud Platform account
+    project_id=PROJECT_ID,  # The ID of the project associated to your account
+)
+```
+
+Then, to see the list of available devices, run:
 
 ```python exec="on" source="material-block" session="execution"
 connection = PasqalCloud()
