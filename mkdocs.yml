@@ -19,6 +19,7 @@ nav:
         - fundamentals/problems/available_embedders/index.md
         - Spring Layout Embedder: fundamentals/problems/available_embedders/spring_layout.md
         - Interaction Embedder: fundamentals/problems/available_embedders/matrix.md
+        - BlaDe Embedder: fundamentals/problems/available_embedders/blade.md
     - Quantum Program:
         - fundamentals/quantum_program/index.md
         - Registers:

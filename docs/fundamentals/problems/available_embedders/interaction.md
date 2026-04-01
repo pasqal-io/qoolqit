@@ -1,4 +1,4 @@
-## Interaction embedder
+# Interaction embedder
 
 Interaction embedding means to encode a matrix in the interaction term of the Rydberg analog model. For a matrix $U$, the goal is to find the set of coordinates that minimize
 
