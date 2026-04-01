@@ -4,7 +4,7 @@ In neutral-atom systems, atoms interact through a combination of **distance-depe
 
 As a result, the behavior of the system is not set by absolute values alone, but by the **interplay between geometry (distances) and control strength (laser power)**. Different combinations of these quantities can lead to equivalent physical behavior, as long as their relative scales are preserved.
 
-!!! QoolQit introduces a **dimensionless reference frame** where all quantities are expressed in function of an **interaction reference**. 
+!!! QoolQit introduces a **dimensionless reference frame** where all quantities are expressed in function of an **interaction reference**.
 
 The quantum system is described by the following Hamiltonian:
 
