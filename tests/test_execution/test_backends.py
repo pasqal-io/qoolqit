@@ -6,11 +6,13 @@ from unittest.mock import MagicMock
 
 import pytest
 from pulser.backend import BitStrings, EmulationConfig, EmulatorBackend, Results
+from pulser.backend.config import BackendConfig
+from pulser.backend.qpu import QPUBackend
 from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
 from pulser.sequence import Sequence as PulserSequence
 from pulser_pasqal.backends import RemoteEmulatorBackend
 
-from qoolqit.execution import LocalEmulator, RemoteEmulator
+from qoolqit.execution import QPU, LocalEmulator, RemoteEmulator
 from qoolqit.program import QuantumProgram
 
 
@@ -133,3 +135,17 @@ class TestBackends:
         assert isinstance(backend._backend, self.MockRemoteEmulatorBackend)
         # assert called once
         assert backend._backend.run_calls == 1
+
+    def test_qpu_init(self) -> None:
+        qpu = QPU(connection=self.mock_connection, runs=123)
+        assert qpu._backend_type == QPUBackend
+        assert qpu._connection is self.mock_connection
+        config = qpu._config
+        assert isinstance(config, BackendConfig)
+        assert config.default_num_shots == 123
+
+    def test_qpu_init_no_runs(self) -> None:
+        with pytest.raises(
+            ValueError, match="Number of runs must be provided to use the QPU backend."
+        ):
+            QPU(connection=self.mock_connection)
