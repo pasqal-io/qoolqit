@@ -30,6 +30,7 @@ Finally, we can run the embedder with the `embed` method.
 
 ```python exec="on" source="material-block" html="1" session="embedding"
 import matplotlib.pyplot as plt
+from docs.utils import fig_to_html # markdown-exec: hide
 from qoolqit import DataGraph
 
 graph_1 = DataGraph.random_er(n = 7, p = 0.3, seed = 3)
@@ -38,7 +39,7 @@ embedded_graph_1 = embedder.embed(graph_1)
 fig, axs = plt.subplots(1, 2, figsize=(8,4), dpi=200)
 graph_1.draw(ax=axs[0])
 embedded_graph_1.draw(ax=axs[1])
-from docs.utils import fig_to_html # markdown-exec: hide
+
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
@@ -52,6 +53,7 @@ print(embedded_graph_1.is_ud_graph()) # markdown-exec: hide
 In this case, the embedding was successful and we obtained a unit-disk graph. For more densely connected graphs, the spring layout algorithm tends to struggle with finding a unit-disk graph embedding, if it even exists.
 
 ```python exec="on" source="material-block" html="1" session="embedding"
+
 graph_2 = DataGraph.random_er(n = 7, p = 0.8, seed = 3)
 embedded_graph_2 = embedder.embed(graph_2)
 

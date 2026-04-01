@@ -28,6 +28,7 @@ We can try it out with the default configuration by generating a random symmetri
 ```python exec="on" source="material-block" result="json" session="embedding"
 import numpy as np
 
+
 matrix = np.random.rand(6, 6)
 
 matrix = matrix + matrix.T
@@ -38,7 +39,8 @@ print(matrix) # markdown-exec: hide
 Finally, running the embedding we obtain a `DataGraph` with coordinates that can be easily converted to a `Register` of qubits.
 
 ```python exec="on" source="material-block" html="1" session="embedding"
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
 from qoolqit import Register
 
 embedded_graph = embedder.embed(matrix)
