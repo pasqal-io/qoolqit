@@ -28,6 +28,6 @@ embedded_data = embedder.embed(data)
 
 In this case, `ConcreteEmbedder` exemplifies an embedder that already has a mapping function and the respective configuration dataclass for that mapping function. Below, we will exemplify how to use some of the pre-defined concrete embedders directly available in QoolQit, and then show some considerations when defining custom embedders.
 
-All the available embedders are listed in [Available embedders](./available_embedders/index.md). 
+All the available embedders are listed in [Available embedders](./available_embedders/index.md).
 
-For more details on the definition of custom embedders the reader can refer to [Custom embedders](../../extended_usage/custom_embedders.md). 
+For more details on the definition of custom embedders the reader can refer to [Custom embedders](../../extended_usage/custom_embedders.md).

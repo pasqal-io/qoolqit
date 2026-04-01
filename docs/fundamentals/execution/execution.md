@@ -42,4 +42,3 @@ program.compile_to(device)
 ```
 
 In the following sections we will provide more details on local/remote emulations and on running on available QPUs.
-
