@@ -96,8 +96,6 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 ## Using a custom waveform in a Drive
 
-Custom waveforms compose with built-in ones via `>>` and slot into a [`Drive`](../fundamentals/quantum_program/waveforms_and_drives.md#drives) exactly like any other waveform:
-
 ```python exec="on" source="material-block" result="json" session="custom_waveforms_drive"
 import math
 from qoolqit.waveforms import Waveform
