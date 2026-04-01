@@ -1,9 +1,6 @@
 # Initializing quantum devices
 
-
----
-
-Each `Device` in QoolQit wraps a Pulser device and defines the hardware characteristics that the program will be compiled to and later executed on.
+Each `Device` in QoolQit wraps a [Pulser](https://pulser.readthedocs.io/en/stable/tutorials/virtual_devices.html#) device and defines the hardware characteristics that the program will be compiled to and later executed on.
 
 ```python exec="on" source="material-block" session="devices"
 from qoolqit import MockDevice, AnalogDevice, DigitalAnalogDevice
@@ -57,49 +54,3 @@ ModdedAnalogDevice = replace(VirtualAnalog, max_radial_distance=100, max_sequenc
 mod_analog_device = Device(pulser_device=ModdedAnalogDevice)
 print(mod_analog_device)  # markdown-exec: hide
 ```
-
-## Unit conversion
-
-Each device has a default unit converter. These are the unit values used when converting an adimensional program in the Rydberg analog model to the physical units of Pulser devices for hardware execution.
-
-```python exec="on" source="material-block" result="json" session="devices"
-device_real.converter
-
-print(device_real.converter)  # markdown-exec: hide
-```
-
-The converter handles the logic of converting the adimensional QoolQit model to Pulser units. For theoretical details on how this conversion works between the Rydberg analog model and the implementation that Pulser uses you can check the [Rydberg analog model page](../../get_started/qoolqit_model.md).
-
-By default, each device creates a default converter where the **energy unit** is set as that device’s **maximum amplitude**. If you make no changes to the device’s converter, this means that amplitude values in the range $ [0, 1] $ will be converted to values in the range $ [0, \Omega_{\max}] $.
-
-### Customizing units
-
-For advanced users, customizing the unit conversion factors is possible.
-
-```python exec="on" source="material-block" result="json" session="devices"
-device_real.set_energy_unit(10.0)
-print(device_real.converter)  # markdown-exec: hide
-
-device_real.set_distance_unit(6.0)
-print(device_real.converter)  # markdown-exec: hide
-```
-
-### Restoring defaults
-
-You can always restore the default converter:
-
-```python exec="on" source="material-block" result="json" session="devices"
-device_real.reset_converter()
-print(device_real.converter)  # markdown-exec: hide
-```
-
-**Notes**
-
-- Advanced users may also pass a prebuilt `default_converter` to the constructor to start in a custom unit system:
-  ```python exec="on" source="material-block" result="json" session="devices"
-  from pulser import AnalogDevice
-  from qoolqit import Device
-  from qoolqit.devices.unit_converter import UnitConverter
-  custom_converter = UnitConverter.from_energy(C6=AnalogDevice.interaction_coeff, energy=2.0)
-  device_custom = Device(pulser_device=AnalogDevice, default_converter=custom_converter)
-  ```
