@@ -305,4 +305,3 @@ def _validate_program_max_energy_profile(
                 f"drive's duration below {max_duration_to_compile}"
             )
             raise CompilationError(msg_init + msg)
-
