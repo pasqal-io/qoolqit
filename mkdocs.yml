@@ -5,7 +5,6 @@ repo_name: "QoolQit"
 nav:
   - Overview: index.md
   - Get started:
-    - get_started/index.md
     - Install: get_started/install.md
     - Programming a neutral atom QPU: get_started/qoolqit_model.md
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
