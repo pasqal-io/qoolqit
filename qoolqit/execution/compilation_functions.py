@@ -273,6 +273,17 @@ def _validate_program_max_energy_profile(
         " for the selected device, the following exception was raised:\n\n"
     )
 
+    max_radial_distance = register.max_radial_distance()
+    if specs["max_radial_distance"]:
+        max_radial_distance_to_compile = specs["max_radial_distance"] / DISTANCE
+        if max_radial_distance > max_radial_distance_to_compile:
+            msg = (
+                "The register's maximum radial distance went over the maximum value allowed.\n"
+                "To compile your program, set the "
+                f"maximum radial distance below {max_radial_distance_to_compile}"
+            )
+            raise CompilationError(msg_init + msg)
+
     max_abs_detuning = max(abs(drive.detuning.min()), abs(drive.detuning.max()))
     if specs["max_abs_detuning"]:
         max_abs_detuning_to_compile = specs["max_abs_detuning"] / ENERGY
@@ -295,13 +306,3 @@ def _validate_program_max_energy_profile(
             )
             raise CompilationError(msg_init + msg)
 
-    max_radial_distance = register.max_radial_distance()
-    if specs["max_radial_distance"]:
-        max_radial_distance_to_compile = specs["max_radial_distance"] / DISTANCE
-        if max_radial_distance > max_radial_distance_to_compile:
-            msg = (
-                "The register's maximum radial distance went over the maximum value allowed.\n"
-                "To compile your program, set the "
-                f"maximum radial distance below {max_radial_distance_to_compile}"
-            )
-            raise CompilationError(msg_init + msg)
