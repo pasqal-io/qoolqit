@@ -132,7 +132,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 Built-in waveforms cover the most common shapes, but any differentiable (or piecewise-smooth)
 profile can be realised by subclassing `Waveform`. For a full walkthrough — including concrete
 examples and how to use custom waveforms inside a `Drive` — see
-[Defining custom waveforms](../../../extended_usage/custom_waveforms.md).
+[Defining custom waveforms](../../extended_usage/custom_waveforms.md).
 
 
 # Drives

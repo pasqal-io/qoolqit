@@ -39,6 +39,7 @@ Finally, running the embedding we obtain a `DataGraph` with coordinates that can
 
 ```python exec="on" source="material-block" html="1" session="embedding"
 import numpy as np
+from qoolqit import Register
 
 embedded_graph = embedder.embed(matrix)
 register = Register.from_graph(embedded_graph)
