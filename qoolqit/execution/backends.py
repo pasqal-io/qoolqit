@@ -256,13 +256,20 @@ class QPU(PulserRemoteBackend):
 
     def __init__(
         self,
-        connection: RemoteConnection,
         *,
-        config: BackendConfig | None = None,
+        connection: RemoteConnection,
+        runs: int | None = None,
     ) -> None:
+        """Initialize the QPU backend."""
         self._backend_type = QPUBackend
         self._connection = self.validate_connection(connection)
-        self._config = config
+        if runs is None:
+            raise ValueError(
+                """Number of runs must be provided to use the QPU backend.
+                Please specify the number of runs when creating the QPU instance.
+                For example: QPU(connection=..., runs=100""",
+            )
+        self._config = BackendConfig(default_num_shots=runs)
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled quantum program to the QPU and return a result handler.
