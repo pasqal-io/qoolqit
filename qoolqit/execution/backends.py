@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import copy
-import logging
 from typing import Sequence
 
 from pulser.backend import BackendConfig, BitStrings, Results
@@ -34,28 +32,20 @@ class PulserEmulatorBackend:
 
         Args:
             emulation_config: optional base configuration class for all emulators backends.
-                If no config is provided to an emulator backend, a default will used.
+                If no config is provided to an emulator backend, the backend default will used.
         """
         if emulation_config is None:
             emulation_config = self.default_emulation_config()
         else:
-            emulation_config = copy.deepcopy(emulation_config)
             has_bitstrings = any(
                 isinstance(obs, BitStrings) for obs in emulation_config.observables
             )
             if has_bitstrings:
-                if self._runs is not None:
-                    # if the provided config has already a bitstring obs, ignore nruns
-                    logging.warning(
-                        f"""The number of runs is specified both in {self.__class__.__name__}
-                            and in `EmulationConfig`, ignoring the former"""
-                    )
+                emulation_config = emulation_config.with_changes(default_num_shots=self._runs)
             else:
-                # else append a bitstring observable with nruns specified by the user
                 updated_obs = (*emulation_config.observables, BitStrings(num_shots=self._runs))
-                emulation_config._backend_options["observables"] = updated_obs
-        # TODO: validate config when bump to pulser==1.6 (uncomment below)
-        # config = backend_type.validate_config(config)
+                emulation_config = emulation_config.with_changes(observables=updated_obs)
+
         return emulation_config
 
     def default_emulation_config(self) -> EmulationConfig:
@@ -114,12 +104,6 @@ class LocalEmulator(PulserEmulatorBackend):
         if not issubclass(backend_type, EmulatorBackend):
             raise TypeError(
                 "Error in `LocalEmulator`: `backend_type` must be a EmulatorBackend type."
-            )
-        if issubclass(backend_type, RemoteEmulator):
-            raise TypeError(
-                """Error in `LocalEmulator`: `backend_type` cannot be a RemoteBackend type.
-                If you wish to run your program on a remote emulator backend, please, use the
-                RemoteEmulator class."""
             )
         self._backend_type = backend_type
         self._emulation_config = self.validate_emulation_config(emulation_config)
@@ -221,7 +205,7 @@ class QPU(PulserRemoteBackend):
 
     Args:
         connection: Authenticated connection to the remote QPU backend.
-        config: Optional backend configuration for QPU execution parameters.
+        runs: Number of bitstring samples to collect from the final quantum state.
 
     Examples:
         Using Pasqal Cloud:
