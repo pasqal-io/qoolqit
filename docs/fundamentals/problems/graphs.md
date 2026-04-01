@@ -13,7 +13,7 @@ edges = [(0, 1), (1, 2), (2, 3), (3, 0)]
 graph = DataGraph(edges)
 ```
 
-Later in the [graph constructors](#graph-constructors) section we also describe how to construct graphs from sets of coordinates, or with built-in constructors.
+Later in the [graph constructors](./available_graphs.md) section we also describe how to construct graphs from sets of coordinates, or with built-in constructors.
 
 As with any NetworkX graph, the set of nodes and edges can be accessed:
 
@@ -121,8 +121,6 @@ graph.min_distance(connected = False)
 ## Unit-disk graphs
 
 Working with node coordinates and distances is an essential part of dealing with unit-disk graphs.
-
-<a name="unit-disk"></a>
 
 !!! info "Definition: Unit-Disk Graphs"
     For a set of nodes $V$, each node $i\in V$ marked by a set of coordinates $(x, y)_i$ in Euclidean space, a set of edges $E$ and a radius $R$, a Unit-Disk Graph $UDG(V, E, R)$ is such that there exists an edge $(i, j)\in E$ for two nodes $i$ and $j$ if and only if $\text{dist}(i, j) \leq R$, where $\text{dist}(i, j)$ is the Euclidean distance between the coordinates of nodes $i$ and $j$.
