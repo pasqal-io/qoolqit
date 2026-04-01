@@ -137,4 +137,10 @@ fig = wf_pwl.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-For advanced use cases, QoolQit also supports the definition of [custom waveforms](../extended_usage/custom_waveforms.md), allowing users to implement new pulse shapes by subclassing the base `Waveform` class.
+
+## Custom waveforms
+
+Built-in waveforms cover the most common shapes, but any differentiable (or piecewise-smooth)
+profile can be realised by subclassing `Waveform`. For a full walkthrough — including concrete
+examples and how to use custom waveforms inside a `Drive` — see
+[Defining custom waveforms](../../../extended_usage/custom_waveforms.md).

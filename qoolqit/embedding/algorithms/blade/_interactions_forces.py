@@ -93,7 +93,7 @@ def compute_interaction_forces(
     target_weights: np.ndarray,
     weight_relative_threshold: float,
     max_distance_to_walk: float,
-) -> Force:
+) -> tuple[Any, Force]:
     current_weights = np.vectorize(normalized_interaction, signature="(m,n)->(m,n)")(
         distance_matrix
     )
@@ -114,4 +114,6 @@ def compute_interaction_forces(
         weight_relative_threshold=weight_relative_threshold,
     )
 
-    return Force(weighted_vectors=weighted_vectors, distances_to_walk=np.abs(distances_to_walk))
+    return modulated_target_weights, Force(
+        weighted_vectors=weighted_vectors, distances_to_walk=np.abs(distances_to_walk)
+    )

@@ -22,7 +22,7 @@ Later, we will briefly show how to authenticate and send a remote job.
 
 ## A simple quantum program
 
-Let us revisit the quantum program definition described before in the [Quantum programs](./programs.md) page.
+Let us revisit the quantum program definition described before in the [Quantum programs](../quantum_program/index.md) page.
 
 ```python exec="on" source="material-block" session="execution"
 
@@ -125,7 +125,7 @@ emulator = RemoteEmulator(connection=connection)
 
 As before, also `RemoteEmulator` can be instantiated with:
 - `backend_type`: remote counterpart of local backends, namely `EmuFreeBackendV2` (default), `EmuSVBackend` (not available yet), `EmuMPSBackend`.
-- `emulation_config`: same as before — see [Emulation configuration](../extended_usage/execution_config.md) for details.
+- `emulation_config`: same as before — see [Emulation configuration](../../extended_usage/execution_config.md) for details.
 - `runs`: same as before.
 
 As an example, below, we specify to emulate the program with the `EmuMPSBackend` and a custom `EmulationConfig`:

@@ -1,3 +1,43 @@
+# Writing the drive Hamiltonian
+
+In this page, you will learn how to:
+
+- build a `Drive` from waveform components,
+- define amplitude and detuning waveforms,
+- compose drives into longer pulse sequences,
+- inspect the resulting drive object,
+- visualize the drive Hamiltonian.
+
+The `Drive` is a composition of waveforms defining the drive Hamiltonian.
+
+```python exec="on" source="material-block" result="json" session="drives"
+from qoolqit import Constant, Ramp
+from qoolqit import Drive
+
+# Defining two waveforms
+wf0 = Constant(0.5, 1.0) >> Ramp(1.0, 0.0, 0.5)
+wf1 = Ramp(2.0, -1.0, 1.0) >> Constant(1.0, 1.0)
+
+# Defining the drive
+drive = Drive(
+    amplitude = wf0,
+    detuning = wf1
+)
+
+# Expanding the drive through composition
+drive = drive >> drive
+
+print(drive)  # markdown-exec: hide
+```
+
+```python exec="on" source="material-block" html="1" session="drives"
+import matplotlib.pyplot as plt # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
+drive.draw()
+fig = drive.draw(return_fig = True) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+```
+
 # Creating a quantum program
 
 In this page, you will learn how to:
@@ -38,7 +78,7 @@ program.is_compiled
 print(program.is_compiled) # markdown-exec: hide
 ```
 
-Next, we create a device and compile the program for it. In QoolQit, compilation refers to converting the dimensionless time, energy, and distance values used in the Rydberg analog model into concrete values that execute the same instructions on a Pulser device, while accounting for the device’s units and specific parameters. More detailed information on this conversion is provided in the [Rydberg analog model page](../get_started/qoolqit_model.md).
+Next, we create a device and compile the program for it. In QoolQit, compilation refers to converting the dimensionless time, energy, and distance values used in the Rydberg analog model into concrete values that execute the same instructions on a Pulser device, while accounting for the device’s units and specific parameters. More detailed information on this conversion is provided in the [Rydberg analog model page](../../get_started/qoolqit_model.md).
 
 ```python exec="on" source="material-block" result="json" session="drives"
 from qoolqit import AnalogDevice
