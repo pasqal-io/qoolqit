@@ -40,11 +40,12 @@ class PulserEmulatorBackend:
             has_bitstrings = any(
                 isinstance(obs, BitStrings) for obs in emulation_config.observables
             )
-            if has_bitstrings:
-                emulation_config = emulation_config.with_changes(default_num_shots=self._runs)
-            else:
+            if not has_bitstrings:
                 updated_obs = (*emulation_config.observables, BitStrings(num_shots=self._runs))
                 emulation_config = emulation_config.with_changes(observables=updated_obs)
+
+        if self._runs is not None:
+            emulation_config = emulation_config.with_changes(default_num_shots=self._runs)
 
         return emulation_config
 
