@@ -199,7 +199,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 Built-in waveforms cover the most common shapes, but any differentiable (or piecewise-smooth)
 profile can be realised by subclassing `Waveform`. For a full walkthrough — including concrete
 examples and how to use custom waveforms inside a `Drive` — see
-[Defining custom waveforms](../../extended_usage/custom_waveforms.md).
+[Defining custom waveforms](../extended_usage/custom_waveforms.md).
 
 
 # Drives
@@ -265,4 +265,4 @@ program.is_compiled
 print(program.is_compiled) # markdown-exec: hide
 ```
 
-Next, we have to choose a device and compile the program for it. In QoolQit, compilation refers to converting the dimensionless time, energy, and distance values used in the Rydberg analog model into concrete values. More detailed information on this conversion is provided in the [Rydberg analog model page](../../get_started/qoolqit_model.md) and in [Compilation](../compilation/index.md)
+Next, we have to choose a device and compile the program for it. In QoolQit, compilation refers to converting the dimensionless time, energy, and distance values used in the Rydberg analog model into concrete values. More detailed information on this conversion is provided in the [Rydberg analog model page](../get_started/qoolqit_model.md) and in [Compilation](../compilation/rationale.md)
