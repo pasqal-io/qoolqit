@@ -22,11 +22,11 @@ $$
 
 Here, $\hat{n}_i = \frac{1}{2}(1 + \hat{\sigma}^z_i)$ is the Rydberg occupation operator of atom $i$, and the $\hat{\sigma}^{x,y,z}_i$ are the Pauli operators:
 $$
-\sigma^x=\begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix},
+\sigma^x=\begin{pmatrix} 0 & 1 \\ 1 & 0\end{pmatrix},
 \qquad
-\sigma^y=\begin{pmatrix} 0 & -i\\ i & 0\end{pmatrix},
+\sigma^y=\begin{pmatrix} 0 & -i \\ i & 0\end{pmatrix},
 \qquad
-\sigma^z=\begin{pmatrix} 1 & 0\\ 0 & -1\end{pmatrix}.
+\sigma^z=\begin{pmatrix} 1 & 0 \\ 0 & -1\end{pmatrix}.
 $$
 
 - The interaction $\tilde{J}_{ij}$ follows the $1/r^6$ Rydberg scaling, normalized so that the maximum equals $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
