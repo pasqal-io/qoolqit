@@ -21,6 +21,7 @@ $$
 $$
 
 Here, $\hat{n}_i = \frac{1}{2}(1 + \hat{\sigma}^z_i)$ is the Rydberg occupation operator of atom $i$, and the $\hat{\sigma}^{x,y,z}_i$ are the Pauli operators:
+
 $$
 \sigma^x=\begin{pmatrix} 0 & 1\\ 1 & 0\end{pmatrix},
 \qquad
