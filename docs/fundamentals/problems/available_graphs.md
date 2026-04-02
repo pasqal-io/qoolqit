@@ -60,7 +60,7 @@ graph.draw()
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-### Square
+## Square
 A square lattice graph with m rows and n columns of square.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
@@ -110,7 +110,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 
 Other generic constructors are also available which have no information on node coordinates.
 
-### Erdős–Rényi
+## Erdős–Rényi
 A random Erdős–Rényi graph of n nodes.
 
 ```python exec="on" source="material-block" html="1" session="graph-constructors"
