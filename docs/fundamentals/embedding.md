@@ -1,3 +1,10 @@
+In this section, you will learn how to:
+
+- understand how problem graphs are mapped onto the analog Rydberg device through embedding,
+- use QoolQit embedders to transform graphs into physically realizable configurations,
+- test whether an embedding satisfies hardware constraints (e.g. unit-disk condition),
+- convert embedded graphs into qubit registers.
+
 # The embedding problem
 
 Embedding data and problems into the Rydberg analog model is a broad research topic. Typically, an embedding is a structure preserving map $f_\text{embedding}: X \rightarrow Y$, such that an object $X$ is embedded into an object $Y$. Our goal is to define optimal embedding functions such that problem-specific data and definitions are embedded into model-compatible objects with the Rydberg analog model.
