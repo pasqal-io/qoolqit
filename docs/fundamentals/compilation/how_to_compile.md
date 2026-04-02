@@ -1,18 +1,11 @@
-# Creating a quantum program
+#How to compile
 
-In this page, you will learn how to:
-
-- create a `QuantumProgram` from a `Register` and a `Drive`,
-- check whether a program has already been compiled,
-- compile a dimensionless program to a target device,
-- inspect the compiled Pulser `Sequence`,
-- visualize both the original program and its compiled version.
-
-A `QuantumProgram` combines a `Register` and a `Drive` and serves as the main interface for compilation and execution.
+Once a `QuantumProgram` is defined and a `Device` is selected one can proceed with the compilation by means of the method `compile_to`. This method will execute what has been discussed in the [introduction](./rationale.md) mapping adimensional parameters to physical quantities according to specific default rules.
 
 ```python exec="on" source="material-block" result="json" session="drives"
 from qoolqit import PiecewiseLinear
 from qoolqit import Register, Drive, QuantumProgram
+from qoolqit import AnalogDevice
 
 # Defining the Drive
 wf0 = PiecewiseLinear([1.0, 2.0, 1.0], [0.0, 0.5, 0.5, 0.0])
@@ -25,23 +18,9 @@ register = Register.from_coordinates(coords)
 
 # Creating the Program
 program = QuantumProgram(register, drive)
-print(program) # markdown-exec: hide
-```
-
-At this point, the program has not been compiled to any device. As shown above, this is conveniently displayed
-when printing the program. It can also be checked through the `is_compiled` property.
-
-```python exec="on" source="material-block" result="json" session="drives"
-program.is_compiled
-print(program.is_compiled) # markdown-exec: hide
-```
-
-Next, we create a device and compile the program for it. In QoolQit, compilation refers to converting the dimensionless time, energy, and distance values used in the Rydberg analog model into concrete values that execute the same instructions on a Pulser device, while accounting for the device’s units and specific parameters. More detailed information on this conversion is provided in the [Rydberg analog model page](../get_started/qoolqit_model.md).
-
-```python exec="on" source="material-block" result="json" session="drives"
-from qoolqit import AnalogDevice
-
 device = AnalogDevice()
+
+# Compilation to AnalogDevice
 program.compile_to(device)
 print(program) # markdown-exec: hide
 ```

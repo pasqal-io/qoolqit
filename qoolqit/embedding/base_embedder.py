@@ -7,7 +7,7 @@ from typing import Callable, Generic, TypeVar
 
 
 @dataclass
-class EmbeddingConfig(ABC):
+class EmbedderConfig(ABC):
     """Base abstract dataclass for all embedding algorithm configurations.
 
     Subclasses define parameters specific to their algorithms. Each config
@@ -22,7 +22,7 @@ class EmbeddingConfig(ABC):
 
 InDataType = TypeVar("InDataType")
 OutDataType = TypeVar("OutDataType")
-ConfigType = TypeVar("ConfigType", bound=EmbeddingConfig)
+ConfigType = TypeVar("ConfigType", bound=EmbedderConfig)
 
 
 class BaseEmbedder(ABC, Generic[InDataType, OutDataType, ConfigType]):
@@ -30,7 +30,7 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType, ConfigType]):
 
     An embedder is a function that maps a InDataType to an OutDataType
     through an embedding algorithm. Parameters of the embedding algorithm
-    can be customized through the EmbeddingConfig.
+    can be customized through the EmbedderConfig.
     """
 
     def __init__(self, algorithm: Callable, config: ConfigType) -> None:
@@ -39,7 +39,7 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType, ConfigType]):
         An algorithm should be a standalone function that takes a piece of data of an
         InDataType and maps it to an OutDataType. Any extra configuration parameters
         taken as input by the algorithm function should be defined in the config dataclass,
-        inheriting from EmbeddingConfig.
+        inheriting from EmbedderConfig.
 
         Arguments:
             algorithm: a callable to the algorithm function.
@@ -48,9 +48,9 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType, ConfigType]):
 
         algo_signature = inspect.signature(algorithm)
 
-        if not isinstance(config, EmbeddingConfig):
+        if not isinstance(config, EmbedderConfig):
             raise TypeError(
-                "The config must be an instance of a dataclass inheriting from EmbeddingConfig."
+                "The config must be an instance of a dataclass inheriting from EmbedderConfig."
             )
 
         if not set(config.dict().keys()) <= set(algo_signature.parameters):

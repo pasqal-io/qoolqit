@@ -35,8 +35,8 @@ classifiers = [
 ]
 
 dependencies = [
-  "pulser[torch]~=1.6.2",
-  "networkx~=3.4",
+  "pulser[torch]>=1.7.0",
+  "networkx>=3.4",
 ]
 
 [project.optional-dependencies]
@@ -61,11 +61,10 @@ dev = [
   "mkdocs-material",
   "mkdocstrings-python",
   "mkdocs-section-index",
-  "mkdocs-jupyter==0.24.7", # Don't let it update to 0.25 as it doesn't render LaTeX in notebooks!
+  "mkdocs-jupyter",
   "mkdocs-exclude",
   "markdown-exec",
   "mike",
-  "nbconvert",
 ]
 
 [project.urls]

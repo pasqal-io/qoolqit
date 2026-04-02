@@ -1,0 +1,142 @@
+# Standard structure for Graphs
+
+Working with graphs is an essential part of computations with the Rydberg analog model. For that reason, QoolQit implements a specific `DataGraph` class to serve as the basis of all graph creation and manipulation, and setting the logic related to unit-disk graphs. QoolQit integrates with [NetworkX](https://networkx.org/) for many operations, and the `DataGraph` inherits from `nx.Graph`.
+
+## Basic construction
+
+The `DataGraph` is an undirected graph with no self loops. The default way to instantiate a `DataGraph` is with a set of edges.
+
+```python exec="on" source="material-block" session="graphs"
+from qoolqit import DataGraph
+
+edges = [(0, 1), (1, 2), (2, 3), (3, 0)]
+graph = DataGraph(edges)
+```
+
+Later in the [graph constructors](./available_graphs.md) section we also describe how to construct graphs from sets of coordinates, or with built-in constructors.
+
+As with any NetworkX graph, the set of nodes and edges can be accessed:
+
+```python exec="on" source="material-block" result="json" session="graphs"
+print(graph.nodes)
+```
+```python exec="on" source="material-block" result="json" session="graphs"
+print(graph.edges)
+```
+
+These are the standard `NodeView` and `EdgeView` objects from NetworkX, and thus can be used add and access node and edge attributes.
+
+## Drawing
+
+We can draw the graph with `graph.draw()`, which calls [`draw_networkx`](https://networkx.org/documentation/stable/reference/generated/networkx.drawing.nx_pylab.draw_networkx.html). As such, optional arguments can be passed that will be fed to NetworkX.
+```python exec="on" source="material-block" html="1" session="graphs"
+import networkx as nx
+import matplotlib.pyplot as plt # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
+
+pos = nx.circular_layout(graph)
+
+fig, ax = plt.subplots(figsize=(4,4), dpi=200)  # markdown-exec: hide
+graph.draw(pos=pos)
+print(fig_to_html(fig)) # markdown-exec: hide
+```
+
+## Coordinates and distances
+
+One convenient property added by QoolQit is the `sorted_edges`, which guarantees that the indices in each edge tuple are always provided as $(u, v):u<v$. This condition is not guaranteed by calling the NetworkX property `graph.edges`, but is sometimes useful.
+
+```python exec="on" source="material-block" result="json" session="graphs"
+print(graph.sorted_edges)
+```
+
+Another convenient property is accessing the pairs of all nodes in the graph, which again follow the convention of $(u, v):u<v$.
+```python exec="on" source="material-block" result="json" session="graphs"
+print(graph.all_node_pairs)
+```
+
+In QoolQit a set of attributes that takes center stage when dealing with graphs are the **node coordinates**. These are essential for the Rydberg analog model as they directly translate to qubit positions that define the interaction term in the Hamiltonian. This behaviour has a close connection with the study of unit-disk graphs, where node coordinates are also essential. The coordinates can be set directly in the respective property:
+
+```python exec="on" source="material-block" result="json" session="graphs"
+# The list must have the same length as the number of nodes:
+graph.coords = [(-0.5, -0.5), (-0.5, 0.5), (0.5, 0.5), (0.5, -0.5)]
+
+graph.coords
+print(graph.coords) # markdown-exec: hide
+```
+Both a dictionary or a list can be passed, which will be converted to a dictionary. Because the graph now has a set of node coordinates, we can directly access the distance between the nodes. Optionally, a set of node pairs can be given and only those distances will be computed.
+
+```python exec="on" source="material-block" result="json" session="graphs"
+# Compute for all node pairs
+graph.distances()
+print(graph.distances()) # markdown-exec: hide
+
+# Compute only for connected nodes
+graph.distances(graph.sorted_edges)
+print(graph.distances(graph.sorted_edges)) # markdown-exec: hide
+
+# Compute for a specific set of node pairs
+graph.distances([(0, 1), (0, 2)])
+print(graph.distances([(0, 1), (0, 2)])) # markdown-exec: hide
+```
+
+!!! note
+    Accessing distances as NumPy arrays or Torch tensors will be designed later.
+
+Furthermore, when calling `graph.draw()` the coordinate information will be automatically used.
+
+```python exec="on" source="material-block" html="1" session="graphs"
+import matplotlib.pyplot as plt # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
+
+fig, ax = plt.subplots(figsize=(4,4), dpi=200)  # markdown-exec: hide
+graph.draw()
+print(fig_to_html(fig)) # markdown-exec: hide
+```
+
+Graph coordinates can be rescaled. The `rescale_coords` method only accepts a keyword argument,
+which must be either `scaling` or `spacing`.
+
+```python exec="on" source="material-block" session="graphs"
+# Rescale coordinates by a constant factor
+graph.rescale_coords(scaling = 2.0)
+
+# Rescale coordinates by setting the minimum spacing
+graph.rescale_coords(spacing = 1.0)
+```
+
+The minimum and maximum distance can be directly checked.
+
+```python exec="on" source="material-block" session="graphs"
+# Compute for all node pairs
+graph.min_distance()
+graph.max_distance()
+
+# Compute only for connected nodes
+graph.min_distance(connected = True)
+
+# Compute only for disconnected nodes
+graph.min_distance(connected = False)
+```
+
+## Node and edge weights
+
+Two important attributes are **node weights** and **edge weights**:
+
+```python exec="on" source="material-block" session="graphs"
+import random
+
+graph.node_weights = {i: random.random() for i in graph.nodes}
+graph.edge_weights = {edge: random.random() for edge in graph.sorted_edges}
+```
+
+If the graph does not have these attributes, the dictionaries will still be returned with `None` in place of the value.
+A set of boolean properties allows quickly checking if the graph has coordinates or weights. It only returns `True` if there is a value set for every node / edge in the graph.
+
+!!! note
+    Accessing weights as NumPy arrays or Torch tensors will be designed later.
+
+```python exec="on" source="material-block" session="graphs"
+assert graph.has_coords
+assert graph.has_node_weights
+assert graph.has_edge_weights
+```

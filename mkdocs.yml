@@ -7,32 +7,54 @@ nav:
   - Get started:
     - Install: get_started/install.md
     - Programming a neutral atom QPU: get_started/qoolqit_model.md
-    - Programming with QoolQit: tutorials/programming_with_qoolqit.ipynb
+    - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
-    - Introduction: fundamentals/introduction.md
-    - Problem definition and graphs: fundamentals/graphs.md
-    - Problem embedding: fundamentals/embedding.md
-    - Registers: fundamentals/registers.md
-    - Waveforms: fundamentals/waveforms.md
-    - Drive Hamiltonian: fundamentals/drives.md
-    - Devices: fundamentals/devices.md
-    - Quantum programs: fundamentals/programs.md
-    - Compilation: fundamentals/compilation.md
-    - Execution: fundamentals/execution.md
+    - fundamentals/introduction.md
+    - Graphs and embedding:
+      - fundamentals/problems/index.md
+      - Graphs: fundamentals/problems/graphs.md
+      - Available Graphs: fundamentals/problems/available_graphs.md
+      - Embedding: fundamentals/problems/embedding.md
+      - Available Embedders:
+        - fundamentals/problems/available_embedders/index.md
+        - Spring Layout Embedder: fundamentals/problems/available_embedders/spring_layout.md
+        - Interaction Embedder: fundamentals/problems/available_embedders/interaction.md
+        - BlaDe Embedder: fundamentals/problems/available_embedders/blade.md
+    - Quantum Program:
+        - fundamentals/quantum_program/index.md
+        - fundamentals/quantum_program/registers.md
+        - Waveforms and Drives: fundamentals/quantum_program/waveforms_and_drives.md
+        - Defining Programs: fundamentals/quantum_program/defining_programs.md
+    - Compilation:
+      - fundamentals/compilation/index.md
+      - Rationale: fundamentals/compilation/rationale.md
+      - Devices: fundamentals/compilation/devices.md
+      - How to Compile: fundamentals/compilation/how_to_compile.md
+      - Error handling: fundamentals/compilation/error_handling.ipynb
+    - Execution:
+      - fundamentals/execution/index.md
+      - Introduction: fundamentals/execution/execution.md
+      - Local Emulators: fundamentals/execution/local_emulators.md
+      - Remote Emulators: fundamentals/execution/remote_emulators.md
+      - QPU: fundamentals/execution/qpu.md
   - Extended usage:
+    - extended_usage/index.md
     - Adimensionalization: extended_usage/adimensionalization.md
     - Emulation configuration: extended_usage/execution_config.md
     - Custom embedders: extended_usage/custom_embedders.md
     - Custom waveforms: extended_usage/custom_waveforms.md
   - Applications:
+    - tutorials/index.md
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
-  - API reference: reference/api.md
+  - API reference:
+    - reference/index.md
+    - API reference: reference/api.md
   - Contribute:
-    - How to contribute: CONTRIBUTING.md
-    - Code of conduct: CODE_OF_CONDUCT.md
-    - License: LICENSE.md
-    - Contributor Agreement: CONTRIBUTOR_AGREEMENT.md
-
+    - contribute/index.md
+    - How to contribute: contribute/CONTRIBUTING.md
+    - Code of conduct: contribute/CODE_OF_CONDUCT.md
+    - License: contribute/LICENSE.md
+    - Contributor Agreement: contribute/CONTRIBUTOR_AGREEMENT.md
 
 theme:
   name: material
@@ -69,8 +91,8 @@ theme:
       name: Switch to light mode
 
 markdown_extensions:
-- admonition  # for notes
-- pymdownx.arithmatex: # for mathjax
+- admonition
+- pymdownx.arithmatex:
     generic: true
 - pymdownx.highlight:
     default_lang: python
@@ -87,7 +109,9 @@ plugins:
 - section-index
 - markdown-exec
 - mkdocs-jupyter:
-    include: ["./docs/tutorials/*.ipynb"] # only notebooks in tutorials
+    include: ["*.ipynb"]
+    include_requirejs: true
+    custom_mathjax_url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe"
 - mkdocstrings:
     handlers:
       python:
@@ -106,7 +130,6 @@ plugins:
           preload_modules: [qoolqit]
           relative_crossrefs: true
           scoped_crossrefs: true
-          separate_signature: true
           show_bases: false
           show_inheritance_diagram: false
           show_root_heading: true

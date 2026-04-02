@@ -1,13 +1,4 @@
-# Writing time-dependent functions
-
-
-In this page, you will learn how to:
-
-- create and evaluate basic waveforms,
-- draw waveform shapes over time,
-- use interpolated and piecewise-linear waveforms,
-- compose multiple waveforms into a single signal,
-- inspect durations and timing in composite waveforms.
+# Waveforms
 
 An essential part of writing programs in the Rydberg analog model is to write the time-dependent functions representing the amplitude and detuning terms in the drive Hamiltonian. For that, QoolQit implements a set of waveforms that can be used directly and/or composed together.
 
@@ -135,4 +126,44 @@ fig = wf_pwl.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-For advanced use cases, QoolQit also supports the definition of [custom waveforms](../extended_usage/custom_waveforms.md), allowing users to implement new pulse shapes by subclassing the base `Waveform` class.
+
+## Custom waveforms
+
+Built-in waveforms cover the most common shapes, but any differentiable (or piecewise-smooth)
+profile can be realised by subclassing `Waveform`. For a full walkthrough — including concrete
+examples and how to use custom waveforms inside a `Drive` — see
+[Defining custom waveforms](../../extended_usage/custom_waveforms.md).
+
+
+# Drives
+
+
+The `Drive` is a composition of waveforms defining the drive Hamiltonian.
+
+```python exec="on" source="material-block" result="json" session="drives"
+from qoolqit import Constant, Ramp
+from qoolqit import Drive
+
+# Defining two waveforms
+wf0 = Constant(0.5, 1.0) >> Ramp(1.0, 0.0, 0.5)
+wf1 = Ramp(2.0, -1.0, 1.0) >> Constant(1.0, 1.0)
+
+# Defining the drive
+drive = Drive(
+    amplitude = wf0,
+    detuning = wf1
+)
+
+# Expanding the drive through composition
+drive = drive >> drive
+
+print(drive)  # markdown-exec: hide
+```
+
+```python exec="on" source="material-block" html="1" session="drives"
+import matplotlib.pyplot as plt # markdown-exec: hide
+from docs.utils import fig_to_html # markdown-exec: hide
+drive.draw()
+fig = drive.draw(return_fig = True) # markdown-exec: hide
+print(fig_to_html(fig)) # markdown-exec: hide
+```

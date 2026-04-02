@@ -8,7 +8,7 @@ In this page, you will learn how to:
 - wrap a custom embedder in a reusable class,
 - use automatic validation for configuration, input, and output types.
 
-In the [available embedders](../fundamentals/embedding.md) page you saw the usage of some pre-defined embedders. The embedding module in QoolQit is designed to be flexible and extendable to various forms of embedding algorithms developed for the Rydberg analog model, with potentially different inputs and outputs, and different configuration parameters. It is structured in three levels:
+In the [available embedders](../fundamentals/problems/embedding.md) page you saw the usage of some pre-defined embedders. The embedding module in QoolQit is designed to be flexible and extendable to various forms of embedding algorithms developed for the Rydberg analog model, with potentially different inputs and outputs, and different configuration parameters. It is structured in three levels:
 
 **Level 0: Concretizing the interface**
 
@@ -27,13 +27,13 @@ In the future, more families of embedders can be defined that may require differ
 
 **Level 2: Concretizing the algorithms and configurations**
 
-The final level is defining concrete embedders, such as the ones we have used in the [available embedders page](../fundamentals/embedding.md). Here the requirement is to define a concrete function that maps the input to the output, along with any parameters required, and a config dataclass inheriting from `EmbeddingConfig` holding all the configuration parameters. In the previous examples, we used the `SpringLayoutEmbedder` which is a subclass of a `GraphToGraphEmbedder` and the `InteractionEmbedder` which is a subclass of the `MatrixToGraphEmbedder`.
+The final level is defining concrete embedders, such as the ones we have used in the [available embedders page](../fundamentals/problems/embedding.md). Here the requirement is to define a concrete function that maps the input to the output, along with any parameters required, and a config dataclass inheriting from `EmbedderConfig` holding all the configuration parameters. In the previous examples, we used the `SpringLayoutEmbedder` which is a subclass of a `GraphToGraphEmbedder` and the `InteractionEmbedder` which is a subclass of the `MatrixToGraphEmbedder`.
 
 Let's exemplify the case of defining a custom embedder in the family of graph to graph embedders.
 
 ```python exec="on" source="material-block" result="json" session="embedding"
 from qoolqit.embedding import GraphToGraphEmbedder
-from qoolqit.embedding import EmbeddingConfig
+from qoolqit.embedding import EmbedderConfig
 from qoolqit import DataGraph
 from dataclasses import dataclass
 
@@ -49,10 +49,10 @@ def my_embedding_function(graph: DataGraph, param1: float) -> DataGraph:
     return graph
 
 @dataclass
-class MyEmbeddingConfig(EmbeddingConfig):
+class MyEmbedderConfig(EmbedderConfig):
     param1: float = 1.0
 
-embedder = GraphToGraphEmbedder(my_embedding_function, MyEmbeddingConfig())
+embedder = GraphToGraphEmbedder(my_embedding_function, MyEmbedderConfig())
 print(embedder) # markdown-exec: hide
 ```
 
@@ -73,7 +73,7 @@ To share this embedder or potentially add it to the QoolQit codebase, we might w
 ```python exec="on" source="material-block" session="embedding"
 class MyNewEmbedder(GraphToGraphEmbedder):
     def __init__(self):
-        super().__init__(my_embedding_function, MyEmbeddingConfig())
+        super().__init__(my_embedding_function, MyEmbedderConfig())
 ```
 
 ## Automatic validation
@@ -85,7 +85,7 @@ def my_embedding_function(graph: DataGraph, param1: float) -> DataGraph:
     return graph
 
 @dataclass
-class MyWrongConfig(EmbeddingConfig):
+class MyWrongConfig(EmbedderConfig):
     some_other_param: float = 1.0
 
 try:
@@ -97,7 +97,7 @@ except KeyError as error:
 Furthermore, because we are defining an embedder in the `GraphToGraphEmbedder`, the input must be an instance of a `DataGraph`:
 
 ```python exec="on" source="material-block" result="json" session="embedding"
-embedder = GraphToGraphEmbedder(my_embedding_function, MyEmbeddingConfig())
+embedder = GraphToGraphEmbedder(my_embedding_function, MyEmbedderConfig())
 
 try:
     data = 1.0 # Not a DataGraph
@@ -112,7 +112,7 @@ The output of the embedding function must also be a `DataGraph`:
 def my_wrong_embedding_function(graph: DataGraph, param1: float) -> DataGraph:
     return param1 # Not a DataGraph
 
-embedder = GraphToGraphEmbedder(my_wrong_embedding_function, MyEmbeddingConfig())
+embedder = GraphToGraphEmbedder(my_wrong_embedding_function, MyEmbedderConfig())
 
 try:
     graph = DataGraph.random_er(5, 0.5)

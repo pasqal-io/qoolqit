@@ -1,21 +1,47 @@
-This section introduces the core concepts and abstractions used throughout QoolQit. It follows the typical workflow of working with the Rydberg analog model: first defining a problem in a structured form, then embedding it into a geometry compatible with neutral-atom hardware, and finally building, compiling, and executing a quantum program.
+This section introduces the core concepts used throughout QoolQit, following the typical workflow: define a problem, embed it into hardware, then build, compile, and execute a quantum program.
 
-The first part of this section focuses on **problem representation and embedding**. In QoolQit, graphs provide the standard representation for many problems of interest, particularly in optimization and machine learning. The [`DataGraph`](graphs.md) class extends the standard NetworkX graph interface with functionality tailored to the Rydberg analog model, including node coordinates, distance-based methods, unit-disk graph logic, and support for node and edge weights.
+---
 
-Once a problem has been defined, it can be mapped into a hardware-compatible object through the **embedding** interface. The [embedding pages](embedding.md) introduce the basic embedding workflow in QoolQit and the pre-defined embedders currently available in the library. For more advanced use cases, QoolQit also supports the definition of [custom embedders](../extended_usage/custom_embedders.md), allowing users to implement new embedding strategies with their own input types, output types, and configuration parameters.
+## Problem definition and embedding
 
-The second part of this section presents the **building blocks of quantum programs** in QoolQit. A program is constructed by combining:
+The first part focuses on **problem definition and embedding**.
 
-- a [`Register`](registers.md), which defines the qubit positions;
+- **Problem definition**
+  Problems are represented using graphs.
+  The [`DataGraph`](./problems/graphs.md) class extends NetworkX with features for the Rydberg analog model, including:
+  - node coordinates
+  - distance-based methods
+  - unit-disk graph logic
+  - node and edge weights
 
-- a set of [`Waveforms`](waveforms.md), which describe time-dependent controls;
+- **Embedding**
+  Once defined, a problem is mapped to hardware via the embedding interface.
 
-- a [`Drive`](drives.md), which combines those controls into a drive Hamiltonian;
+  See the [embedding pages](./problems/embedding.md) for:
+  - the standard embedding workflow
+  - available built-in embedders
 
-- a [`Device`](devices.md), which specifies the hardware constraints and unit conversion rules; and
+  Advanced users can define [custom embedders](../extended_usage/custom_embedders.md) with custom inputs, outputs, and parameters.
 
-- a [`QuantumProgram`](programs.md), which combines the register and drive into an executable program.
+---
 
-Finally, the [execution](execution.md) page shows how compiled programs can be run on local emulators, remote emulators, or QPUs, and how to retrieve and interpret the resulting data.
+## Quantum programs, compilation, and execution
 
-Together, these pages define the standard workflow in QoolQit, from hardware agnostic problem specification to compilation and quantum program execution.
+The second part covers program construction, compilation, and execution.
+
+A quantum program is built from:
+
+- a [`Register`](./quantum_program/registers.md) — qubit positions
+- [`Waveforms`](./quantum_program/waveforms_and_drives.md#waveforms) — time-dependent controls
+- a [`Drive`](./quantum_program/waveforms_and_drives.md#drives) — drive Hamiltonian
+- a [`Device`](./compilation/devices.md) — hardware constraints and units
+- a [`QuantumProgram`](./quantum_program/index.md) — executable program
+
+Finally, see the [execution](./execution/index.md) page to:
+
+- run programs on emulators or QPUs
+- retrieve and interpret results
+
+---
+
+Together, these pages define the full QoolQit workflow, from hardware-agnostic problem definition to compiled execution.

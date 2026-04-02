@@ -1,3 +1,5 @@
+"""QoolQit module to execute quantum programs on QPUs or local/remote emulators."""
+
 from __future__ import annotations
 
 import pulser.backends as BackendType

@@ -10,7 +10,9 @@ hide:
 
 **QoolQit** is a Python library for designing and compiling analog quantum programs for neutral-atom devices in the Rydberg Analog Model.
 
-Instead of writing directly in hardware-dependent physical units, QoolQit lets you describe programs in a **dimensionless framework**. This makes programs easier to reason about, easier to compare across devices, and easier to compile to real hardware.
+Instead of writing directly in hardware-dependent physical units, QoolQit works in a **dimensionless framework**. This solves a key challenge in programming neutral-atom quantum computers: in standard hardware-level descriptions, one must specify physical parameters such as atom positions in micrometers, laser amplitudes in MHz, and pulse durations in nanoseconds. These values depend strongly on the particular hardware platform, since different devices have different Rydberg levels, laser power limits, and trapping geometries.
+
+QoolQit separates the **program you want to implement** from the **hardware scale used to realize it**. This makes it possible to develop analog quantum algorithms in a device-agnostic way, while still compiling them consistently to realistic hardware constraints.
 
 ![QoolQit demo](./extras/assets/qoolqit_demo.gif)
 
@@ -29,9 +31,3 @@ QoolQit is designed for both **algorithm exploration** and **hardware-aware prog
 - [The QoolQit Model](get_started/qoolqit_model.md) — the dimensionless Hamiltonian and compilation logic,
 - [Fundamentals](fundamentals/introduction.md) — registers, waveforms, programs, and execution,
 - [Adimensionalization — Advanced](extended_usage/adimensionalization.md) — how dimensionless programs are mapped to physical units.
-
-## Why QoolQit?
-
-Programming neutral-atom hardware usually requires choosing physical parameters such as distances, amplitudes, detunings, and runtimes. These depend strongly on the target device.
-
-QoolQit separates the **program you want to implement** from the **hardware scale used to realize it**. This makes it possible to develop analog quantum algorithms in a device-agnostic way, while still compiling them consistently to realistic hardware constraints.

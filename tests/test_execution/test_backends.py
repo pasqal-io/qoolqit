@@ -1,15 +1,18 @@
 from __future__ import annotations
 
+import json
 from collections.abc import Sequence
 from unittest.mock import MagicMock
 
 import pytest
 from pulser.backend import BitStrings, EmulationConfig, EmulatorBackend, Results
+from pulser.backend.config import BackendConfig
+from pulser.backend.qpu import QPUBackend
 from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
 from pulser.sequence import Sequence as PulserSequence
 from pulser_pasqal.backends import RemoteEmulatorBackend
 
-from qoolqit.execution import LocalEmulator, RemoteEmulator
+from qoolqit.execution import QPU, LocalEmulator, RemoteEmulator
 from qoolqit.program import QuantumProgram
 
 
@@ -52,7 +55,7 @@ class TestBackends:
     def test_default_backend(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
         assert backend._backend_type is self.MockEmulatorBackend
-        assert backend._runs == 100
+        assert backend._runs is None
 
     def test_default_remote_backend(self) -> None:
         backend = RemoteEmulator(
@@ -60,7 +63,7 @@ class TestBackends:
         )
         assert backend._backend_type is self.MockRemoteEmulatorBackend
         assert backend._connection is self.mock_connection
-        assert backend._runs == 100
+        assert backend._runs is None
 
     def test_emulator_backend_with_config(self) -> None:
         config = EmulationConfig(observables=(BitStrings(num_shots=1117),))
@@ -74,32 +77,37 @@ class TestBackends:
     def test_emulator_backend_with_nruns(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend, runs=123)
 
-        expected_config = EmulationConfig(observables=(BitStrings(num_shots=123),))
-        # convert configs to str
-        expected_config_repr = expected_config.to_abstract_repr()
-        config_repr = backend._emulation_config.to_abstract_repr()
-        assert config_repr == expected_config_repr
+        config_repr = json.loads(backend._emulation_config.to_abstract_repr())
+        bitstrings_repr = config_repr["observables"][0]
+        assert bitstrings_repr["num_shots"] == 123
 
     def test_emulator_backend_default_config(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
 
         expected_config = backend.default_emulation_config()
         # convert the expected config to a str
-        expected_config_repr = expected_config.to_abstract_repr()
+        expected_config_repr = json.loads(expected_config.to_abstract_repr())
+        expected_obs_repr = expected_config_repr.pop("observables")
 
         config = backend._emulation_config
         assert isinstance(config, EmulationConfig)
         # convert the saved config to a str
-        config_repr = config.to_abstract_repr()
+        config_repr = json.loads(config.to_abstract_repr())
+        obs_repr = config_repr.pop("observables")
 
-        assert config_repr == expected_config_repr
+        assert expected_config_repr == config_repr
+        # uuid is expected to be different for each instance
+        for obs, expected_obs in zip(obs_repr, expected_obs_repr):
+            expected_obs.pop("uuid")
+            obs.pop("uuid")
+            assert obs == expected_obs
 
     def test_check_backend_type(self) -> None:
         with pytest.raises(match="`backend_type` must be a EmulatorBackend type."):
-            LocalEmulator(backend_type=int)
+            LocalEmulator(backend_type=int)  # type: ignore
 
         with pytest.raises(match="`backend_type` must be a RemoteEmulatorBackend type."):
-            RemoteEmulator(backend_type=str, connection=self.mock_connection)
+            RemoteEmulator(backend_type=str, connection=self.mock_connection)  # type: ignore
 
     def test_validate_connection(self) -> None:
         backend = RemoteEmulator(
@@ -110,7 +118,7 @@ class TestBackends:
 
         with pytest.raises(match=f"""Error in `PulserRemoteBackend`:
                 `connection` must be of type {RemoteConnection}."""):
-            backend.validate_connection(4.0)
+            backend.validate_connection(4.0)  # type: ignore
 
     def test_local_emulator_run(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
@@ -127,3 +135,17 @@ class TestBackends:
         assert isinstance(backend._backend, self.MockRemoteEmulatorBackend)
         # assert called once
         assert backend._backend.run_calls == 1
+
+    def test_qpu_init(self) -> None:
+        qpu = QPU(connection=self.mock_connection, runs=123)
+        assert qpu._backend_type == QPUBackend
+        assert qpu._connection is self.mock_connection
+        config = qpu._config
+        assert isinstance(config, BackendConfig)
+        assert config.default_num_shots == 123
+
+    def test_qpu_init_no_runs(self) -> None:
+        with pytest.raises(
+            ValueError, match="Number of runs must be provided to use the QPU backend."
+        ):
+            QPU(connection=self.mock_connection)

@@ -7,9 +7,11 @@ import networkx as nx
 import numpy as np
 import pytest
 import scipy
+from pulser.register.special_layouts import TriangularLatticeLayout
 
-from qoolqit import AnalogDevice, BladeConfig, DigitalAnalogDevice, MockDevice
+from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
+from qoolqit.embedding import BladeConfig
 from qoolqit.embedding.algorithms.blade._helpers import (
     distance_matrix_from_positions,
     interaction_matrix_from_distances,
@@ -524,3 +526,65 @@ def test_embed_3_nodes(dimensions: tuple[int, ...], steps_per_round: int) -> Non
     blade_interactions = interaction_matrix_from_positions(blade_pos)
     quality = np.linalg.norm(target_interactions - blade_interactions)
     np.testing.assert_allclose(quality, 0.0, atol=1e-2)
+
+
+def test_embed_medium_dense_register() -> None:
+    size = 17
+    expected_ratio = 2.2
+
+    seed = 0
+
+    np.random.seed(seed)
+
+    random_matrix = np.random.rand(size, size)
+    random_symmetric = (random_matrix + random_matrix.T) / 2
+    np.fill_diagonal(random_symmetric, 0)
+
+    np.random.seed(seed)
+
+    positions = blade(
+        random_symmetric,
+        max_min_dist_ratio=expected_ratio,
+        ratio_rerun=0,
+    )
+
+    distances = distance_matrix_from_positions(positions)
+
+    ratio = np.max(np.linalg.norm(positions, axis=-1)) / np.min(
+        distances[np.triu_indices_from(distances, k=1)]
+    )
+
+    assert ratio <= expected_ratio
+
+
+def test_embed_large_dense_register_from_hexagonal_lattice() -> None:
+    spacing = 1
+    size = 127  # size to make it as dense as possible
+    reg = TriangularLatticeLayout(size, spacing).hexagonal_register(size)
+    positions = np.array(list(reg.qubits.values()))
+    max_dist = np.max(np.linalg.norm(positions, axis=-1))
+
+    expected_ratio = max_dist / spacing * (1 + 8e-2)
+
+    seed = 0
+
+    np.random.seed(seed)
+
+    random_matrix = np.random.rand(size, size)
+    random_symmetric = (random_matrix + random_matrix.T) / 2
+    np.fill_diagonal(random_symmetric, 0)
+
+    np.random.seed(seed)
+
+    positions = blade(
+        random_symmetric,
+        max_min_dist_ratio=expected_ratio,
+    )
+
+    distances = distance_matrix_from_positions(positions)
+
+    ratio = np.max(np.linalg.norm(positions, axis=-1)) / np.min(
+        distances[np.triu_indices_from(distances, k=1)]
+    )
+
+    assert ratio <= expected_ratio
