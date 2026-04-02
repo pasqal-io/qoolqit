@@ -37,4 +37,4 @@ In this case, `ConcreteEmbedder` exemplifies an embedder that already has a mapp
 
 All the available embedders are listed in [Available embedders](./available_embedders/index.md).
 
-For more details on the definition of custom embedders the reader can refer to [Custom embedders](../../extended_usage/custom_embedders.md).
+For more details on the definition of custom embedders the reader can refer to [Custom embedders](../extended_usage/custom_embedders.md).
