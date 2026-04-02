@@ -92,8 +92,8 @@ theme:
       name: Switch to light mode
 
 markdown_extensions:
-- admonition  # for notes
-- pymdownx.arithmatex: # for mathjax
+- admonition
+- pymdownx.arithmatex:
     generic: true
 - pymdownx.highlight:
     default_lang: python
@@ -110,7 +110,7 @@ plugins:
 - section-index
 - markdown-exec
 - mkdocs-jupyter:
-    include: ["./docs/tutorials/*.ipynb"] # only notebooks in tutorials
+    include: ["*.ipynb"]
 - mkdocstrings:
     handlers:
       python:
@@ -129,7 +129,6 @@ plugins:
           preload_modules: [qoolqit]
           relative_crossrefs: true
           scoped_crossrefs: true
-          separate_signature: true
           show_bases: false
           show_inheritance_diagram: false
           show_root_heading: true

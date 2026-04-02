@@ -65,7 +65,6 @@ dev = [
   "mkdocs-exclude",
   "markdown-exec",
   "mike",
-  "nbconvert",
 ]
 
 [project.urls]
