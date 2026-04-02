@@ -10,11 +10,11 @@ nav:
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
     - fundamentals/introduction.md
-    - Graphs: fundamentals/problems/graphs.md
-    - Embedding: fundamentals/problems/embedding.md
+    - Graphs: fundamentals/graphs.md
+    - Embedding: fundamentals/embedding.md
     - Available Embedders:
-      - Spring Layout Embedder: fundamentals/problems/available_embedders/spring_layout.md
-      - Interaction Embedder: fundamentals/problems/available_embedders/interaction.md
+      - Spring Layout Embedder: fundamentals/available_embedders/spring_layout.md
+      - Interaction Embedder: fundamentals/available_embedders/interaction.md
     - Quantum Program: fundamentals/quantum_program.md
     - Compilation:
       - Introduction: fundamentals/compilation/rationale.md
