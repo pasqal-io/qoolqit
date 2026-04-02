@@ -44,11 +44,11 @@ The following table summarizes the parameters appearing in the Hamiltonian and t
 
 | Symbol | Description | Range |
 |--------|-------------|-------|
-| $\tilde{J}_{ij}$ | Dimensionless coupling between sites $i$ and $j$ | $(0,\,1\]$ |
+| $\tilde{J}_{ij}$ | Dimensionless coupling between sites $i$ and $j$ | $[0,\,1]$ |
 | $\tilde{\Omega}(t)$ | Global drive amplitude, affecting all sites equally | $\geq 0$ |
 | $\tilde{\delta}(t)$ | Global detuning, affecting all sites equally | any real value |
 | $\tilde{\Delta}(t)$ | Local detuning amplitude | $\leq 0$ |
-| $\phi(t)$ | Global phase | $\[0,\,2\pi)$ |
+| $\phi(t)$ | Global phase | $[0,\,2\pi]$ |
 | $\epsilon_i$ | Local detuning weight for site $i$ | $[0,\,1]$ |
 | $\tilde{t}$ | Dimensionless time | $> 0$ |
 
