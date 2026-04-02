@@ -1,16 +1,14 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./docs/extras/assets/logo/qoolqit_logo_white.svg" width="65%">
-    <source media="(prefers-color-scheme: light)" srcset="./docs/extras/assets/logo/qoolqit_logo_darkgreen.svg" width="65%">
-    <img alt="Qoolqit logo" src="./docs/assets/logo/qoolqit_logo_darkgreen.svg" width="65%">
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/extras/assets/logo/qoolqit_logo_white.svg" width="60%">
+    <source media="(prefers-color-scheme: light)" srcset="./docs/extras/assets/logo/qoolqit_logo_darkgreen.svg" width="60%">
+    <img alt="Qoolqit logo" src="./docs/assets/logo/qoolqit_logo_darkgreen.svg" width="60%">
   </picture>
 </p>
 
 <p align="center">
-  <strong>
-    **QoolQit** is a Python library for algorithm development in the Rydberg Analog Model.
-  </strong>
+  <strong>QoolQit</strong> is a Python library for algorithm development in the Rydberg Analog Model.
 </p>
 
 **For more detailed information, [check out the documentation](https://pasqal-io.github.io/qoolqit/latest/)**.
