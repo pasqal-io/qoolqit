@@ -1,5 +1,8 @@
 # Introduction
 
+
+## Qoolqit model
+
 In neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**. The interaction strength between two atoms decreases rapidly with their separation $r$ (as $1/r^6$), while the laser beams determine how strongly each atom is driven.
 
 As a result, the behavior of the system is not set by absolute values alone, but by the **interplay between geometry (distances) and control strength (laser power)**. Different combinations of these quantities can lead to equivalent physical behavior, as long as their relative scales are preserved.
