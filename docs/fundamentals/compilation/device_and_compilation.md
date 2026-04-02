@@ -56,7 +56,7 @@ mod_analog_device = Device(pulser_device=ModdedAnalogDevice)
 print(mod_analog_device)  # markdown-exec: hide
 ```
 
-# Compilation 
+# Compilation
 
 Once a `QuantumProgram` is defined and a `Device` is selected one can proceed with the compilation by means of the method `compile_to`. This method will execute what has been discussed in the [introduction](./rationale.md) mapping adimensional parameters to physical quantities according to specific default rules.
 
