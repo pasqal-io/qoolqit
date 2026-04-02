@@ -31,11 +31,11 @@ The second part covers program construction, compilation, and execution.
 
 A quantum program is built from:
 
-- a [`Register`](./quantum_program/registers.md) — qubit positions
-- [`Waveforms`](./quantum_program/waveforms_and_drives.md#waveforms) — time-dependent controls
-- a [`Drive`](./quantum_program/waveforms_and_drives.md#drives) — drive Hamiltonian
-- a [`Device`](./compilation/devices.md) — hardware constraints and units
-- a [`QuantumProgram`](./quantum_program/index.md) — executable program
+- a [`Register`](./quantum_program.md#registers) — qubit positions
+- [`Waveforms`](./quantum_program.md#waveforms) — time-dependent controls
+- a [`Drive`](./quantum_program.md#drives) — drive Hamiltonian
+- a [`Device`](./compilation/device_and_compilation.md#initializing-a-quantum-device) — hardware constraints and units
+- a [`QuantumProgram`](./quantum_program.md#defining-a-quantum-program) — executable program
 
 Finally, see the [execution](./execution/index.md) page to:
 
