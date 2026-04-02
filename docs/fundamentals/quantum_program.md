@@ -265,4 +265,4 @@ program.is_compiled
 print(program.is_compiled) # markdown-exec: hide
 ```
 
-Next, we have to choose a device and compile the program for it. In QoolQit, compilation refers to converting the dimensionless time, energy, and distance values used in the Rydberg analog model into concrete values. More detailed information on this conversion is provided in the [Rydberg analog model page](../get_started/qoolqit_model.md) and in [Compilation](../compilation/rationale.md)
+Next, we have to choose a device and compile the program for it. In QoolQit, compilation refers to converting the dimensionless time, energy, and distance values used in the Rydberg analog model into concrete values. More detailed information on this conversion is provided in the [Rydberg analog model page](../get_started/qoolqit_model.md) and in [Compilation](./compilation/rationale.md)
