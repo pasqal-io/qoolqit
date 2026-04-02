@@ -22,6 +22,7 @@ Besides available default devices, relevant for QPU emulation, new QPU devices c
 ### Fetching a QoolQit device from a connection
 Depending on your provider you might have different QPUs available to launch your quantum program to.
 The list of available ones can be fetched through the specific connection handler object, with the generic `connection.fetch_available_devices()` method.
+
 For the Pasqal Cloud service, for example, creating a QoolQit device from a connection object, simply reads as:
 
 ```python exec="on" source="material-block" result="json" session="devices"
