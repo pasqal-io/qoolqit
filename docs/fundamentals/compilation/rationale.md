@@ -10,8 +10,6 @@ In this page, you will learn how to:
 
 # Compiling a quantum program
 
-## What compilation does
-
 A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as
 dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is
 measured in units of a reference interaction energy, that we call $J_0$. This device-agnostic formulation
