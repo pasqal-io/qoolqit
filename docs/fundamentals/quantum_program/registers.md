@@ -1,15 +1,5 @@
 # Creating qubit registers
 
-In this page, you will learn how to:
-
-- create a `Register` from a dictionary of labeled qubit coordinates,
-- build a `Register` directly from a list of coordinates,
-- inspect the pairwise distances between qubits,
-- retrieve the minimum qubit separation,
-- access the interaction coefficients associated with the register geometry.
-
----
-
 A `Register` defines the qubit resources to be used by a quantum program.
 
 ```python exec="on" source="material-block" result="json" session="registers"

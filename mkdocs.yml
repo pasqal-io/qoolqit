@@ -18,26 +18,19 @@ nav:
       - Available Embedders:
         - fundamentals/problems/available_embedders/index.md
         - Spring Layout Embedder: fundamentals/problems/available_embedders/spring_layout.md
-        - Matrix Embedder: fundamentals/problems/available_embedders/matrix.md
-        - BlaDe: fundamentals/problems/available_embedders/blade.md
+        - Interaction Embedder: fundamentals/problems/available_embedders/interaction.md
+        - BlaDe Embedder: fundamentals/problems/available_embedders/blade.md
     - Quantum Program:
         - fundamentals/quantum_program/index.md
-        - Registers:
-          - fundamentals/quantum_program/registers/index.md
-          - From Graphs: fundamentals/quantum_program/registers/from_graphs.md
-          - From Positions: fundamentals/quantum_program/registers/from_positions.md
-          - From Embeddings: fundamentals/quantum_program/registers/from_embeddings.md
-        - Drives:
-          - fundamentals/quantum_program/drives/index.md
-          - Waveforms: fundamentals/quantum_program/drives/waveforms.md
-          - DMM: fundamentals/quantum_program/drives/dmm.md
+        - fundamentals/quantum_program/registers.md
+        - Waveforms and Drives: fundamentals/quantum_program/waveforms_and_drives.md
         - Defining Programs: fundamentals/quantum_program/defining_programs.md
     - Compilation:
       - fundamentals/compilation/index.md
       - Rationale: fundamentals/compilation/rationale.md
       - Devices: fundamentals/compilation/devices.md
       - How to Compile: fundamentals/compilation/how_to_compile.md
-      - Error handling: fundamentals/compilation/error_handling.md
+      - Error handling: fundamentals/compilation/error_handling.ipynb
       - Breaking invariance: fundamentals/compilation/breaking_invariance.md
     - Execution:
       - fundamentals/execution/index.md

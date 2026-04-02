@@ -1,19 +1,10 @@
 # Compiling a quantum program
 
-In this page, you will learn how to:
-
-- understand what compilation does in QoolQit,
-- understand the two compilation strategies: drive-limited and interaction-limited,
-- understand why QoolQit always uses the maximum available amplitude $\Omega_{\max}$ whenever possible,
-- inspect the compiled Pulser `Sequence` that results from compilation.
-
----
-
 ## What compilation does
 
 A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as
 dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is
-measured in units of a reference interaction energy $J_0$. This device-agnostic formulation
+measured in units of a reference interaction energy, that we call $J_0$. This device-agnostic formulation
 means that the same program can be compiled and run on any compatible hardware.
 
 Compilation is the step that converts these dimensionless quantities into concrete physical values
@@ -29,13 +20,13 @@ A full derivation is given in the [Adimensionalization](../../extended_usage/adi
 page. The key identities are:
 
 $$
+r_{ij} = \left(\frac{C_6}{J_0}\right)^{1/6}	\tilde{r}_{ij},
+\qqad
 \Omega(t) = J_0\,	\tilde{\Omega}(	\tilde{t}),
 \qquad
 \delta(t) = J_0\,	\tilde{\delta}(	\tilde{t}),
 \qquad
-t = \frac{	\tilde{t}}{J_0},
-\qquad
-r_{ij} = \left(\frac{C_6}{J_0}\right)^{1/6}	\tilde{r}_{ij}.
+t = \frac{	\tilde{t}}{J_0}.
 $$
 
 Choosing $J_0$ therefore simultaneously sets the physical amplitude scale, the detuning scale,
@@ -87,7 +78,7 @@ $$
 J_0 = \frac{\Omega_{\max}}{	ilde{\Omega}_{\max}}.
 $$
 
-In this regime the compiled program runs at **full device amplitude** $\Omega = \Omega_{\max}$,
+In this regime the compiled program runs at **maximum device amplitude** $\Omega = \Omega_{\max}$,
 and the physical atom spacings are larger than the device minimum.
 
 ### Compilation at minimum spacing
