@@ -915,14 +915,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../problems/available_embedders/matrix/" class="md-nav__link">
+      <a href="../problems/available_embedders/interaction/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Matrix Embedder
+    Interaction Embedder
   
 
     
@@ -950,7 +950,7 @@
   <span class="md-ellipsis">
     
   
-    BlaDe
+    BlaDe Embedder
   
 
     
@@ -1056,82 +1056,15 @@
   
   
   
-    
-    
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_1" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../quantum_program/registers/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Registers
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_3_2_1" id="__nav_3_2_1_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_2_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Registers
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
-      <a href="../quantum_program/registers/from_graphs/" class="md-nav__link">
+      <a href="../quantum_program/registers/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    From Graphs
+    Creating qubit registers
   
 
     
@@ -1152,14 +1085,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../quantum_program/registers/from_positions/" class="md-nav__link">
+      <a href="../quantum_program/waveforms_and_drives/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    From Positions
+    Waveforms and Drives
   
 
     
@@ -1168,171 +1101,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../quantum_program/registers/from_embeddings/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    From Embeddings
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_2" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../quantum_program/drives/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Drives
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_3_2_2" id="__nav_3_2_2_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_2_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Drives
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../quantum_program/drives/waveforms/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Waveforms
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../quantum_program/drives/dmm/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    DMM
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -1541,7 +1309,7 @@
   
   
     <li class="md-nav__item">
-      <a href="error_handling/" class="md-nav__link">
+      <a href="error_handling.ipynb" class="md-nav__link">
         
   
   
@@ -2420,7 +2188,16 @@
 
   <h1>Compilation</h1>
 
-
+<p>In this page, you will learn how to:</p>
+<ul>
+<li>create built-in QoolQit devices,</li>
+<li>fetch available hardware devices from a connection,</li>
+<li>build a QoolQit device from a Pulser device,</li>
+<li>understand what compilation does in QoolQit,</li>
+<li>compile a dimensionless program to a target device,</li>
+<li>inspect the compiled Pulser <code>Sequence</code>,</li>
+<li>visualize both the original program and its compiled version.</li>
+</ul>
 
 
 

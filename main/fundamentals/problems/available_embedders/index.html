@@ -919,14 +919,14 @@
   
   
     <li class="md-nav__item">
-      <a href="matrix/" class="md-nav__link">
+      <a href="interaction/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Matrix Embedder
+    Interaction Embedder
   
 
     
@@ -954,7 +954,7 @@
   <span class="md-ellipsis">
     
   
-    BlaDe
+    BlaDe Embedder
   
 
     
@@ -1060,82 +1060,15 @@
   
   
   
-    
-    
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_1" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../quantum_program/registers/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Registers
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_3_2_1" id="__nav_3_2_1_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_2_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Registers
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
-      <a href="../../quantum_program/registers/from_graphs/" class="md-nav__link">
+      <a href="../../quantum_program/registers/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    From Graphs
+    Creating qubit registers
   
 
     
@@ -1156,14 +1089,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../quantum_program/registers/from_positions/" class="md-nav__link">
+      <a href="../../quantum_program/waveforms_and_drives/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    From Positions
+    Waveforms and Drives
   
 
     
@@ -1172,171 +1105,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../quantum_program/registers/from_embeddings/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    From Embeddings
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_2" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../quantum_program/drives/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Drives
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_3_2_2" id="__nav_3_2_2_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_2_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Drives
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../quantum_program/drives/waveforms/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Waveforms
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../quantum_program/drives/dmm/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    DMM
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -1543,7 +1311,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../compilation/error_handling/" class="md-nav__link">
+      <a href="../../compilation/error_handling.ipynb" class="md-nav__link">
         
   
   
@@ -2422,7 +2190,14 @@
 
   <h1>Available Embedders</h1>
 
-
+<p>This section provides an overview of the different embedders available in the system.</p>
+<p>We currently support</p>
+<ul>
+<li>Interaction Embedder: Designed to position atoms based on their pair-wise interaction.</li>
+<li>Spring Layout Embedders: A family of force-directed algorithms that simulate physical forces (to output suitable positions.</li>
+<li>BlaDe: .</li>
+</ul>
+<p>Each embedder has its own strengths and is suited to different types of data and use cases. The following sections describe their behavior, configuration options, and recommended scenarios in more detail.</p>
 
 
 
