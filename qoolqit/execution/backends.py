@@ -18,7 +18,7 @@ class PulserEmulatorBackend:
 
     Args:
         num_shots: run the program `num_shots` times to collect bitstrings statistics.
-            On QPU backends this represents the actual number of num_shots of the program.
+            On QPU this represents the actual number of runs of the program.
             On emulators, the bitstring are sampled from the quantum state `num_shots` times.
     """
 
