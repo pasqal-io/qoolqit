@@ -50,24 +50,26 @@ def test_results(backend_type: Backend, device: Device) -> None:
     program.compile_to(device)
 
     # Run with QUTIP backend as reference
-    runs = 1001  # how many bitstrings to sample
+    num_shots = 1001  # how many bitstrings to sample
     steps = 20
     evaluation_times = np.linspace(0, 1, steps).tolist()
     config = EmulationConfig(observables=(Occupation(evaluation_times=evaluation_times),))
-    qutip_emulator = LocalEmulator(emulation_config=config, runs=runs)
+    qutip_emulator = LocalEmulator(emulation_config=config, num_shots=num_shots)
     qutip_res = qutip_emulator.run(program)[0]
     qutip_occupation = qutip_res.occupation
-    # assert final time bitstrings dict is present, with `runs` entries
+    # assert final time bitstrings dict is present, with `num_shots` entries
     qutip_bitstrings = qutip_res.final_bitstrings
-    assert sum(qutip_bitstrings.values()) == runs
+    assert sum(qutip_bitstrings.values()) == num_shots
 
     # Run with other backend
-    other_emulator = LocalEmulator(backend_type=backend_type, emulation_config=config, runs=runs)
+    other_emulator = LocalEmulator(
+        backend_type=backend_type, emulation_config=config, num_shots=num_shots
+    )
     other_res = other_emulator.run(program)[0]
     other_occupation = other_res.occupation
-    # assert final time bitstrings dict is present, with `runs` entries
+    # assert final time bitstrings dict is present, with `num_shots` entries
     other_bitstrings = other_res.final_bitstrings
-    assert sum(other_bitstrings.values()) == runs
+    assert sum(other_bitstrings.values()) == num_shots
 
     # Test result observables tags
     expected_tags = {"occupation", "bitstrings"}
