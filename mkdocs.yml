@@ -10,26 +10,12 @@ nav:
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
     - fundamentals/introduction.md
-    - Graphs and embedding:
-      - fundamentals/problems/index.md
-      - Graphs: fundamentals/problems/graphs.md
-      - Available Graphs: fundamentals/problems/available_graphs.md
-      - Embedding: fundamentals/problems/embedding.md
-      - Available Embedders:
-        - fundamentals/problems/available_embedders/index.md
-        - Spring Layout Embedder: fundamentals/problems/available_embedders/spring_layout.md
-        - Interaction Embedder: fundamentals/problems/available_embedders/interaction.md
-        - BlaDe Embedder: fundamentals/problems/available_embedders/blade.md
-    - Quantum Program:
-        - fundamentals/quantum_program/index.md
-        - fundamentals/quantum_program/registers.md
-        - Waveforms and Drives: fundamentals/quantum_program/waveforms_and_drives.md
-        - Defining Programs: fundamentals/quantum_program/defining_programs.md
+    - Graphs: fundamentals/graphs.md
+    - Embedding: fundamentals/embedding.md
+    - Quantum Program: fundamentals/quantum_program.md
     - Compilation:
-      - fundamentals/compilation/index.md
-      - Rationale: fundamentals/compilation/rationale.md
-      - Devices: fundamentals/compilation/devices.md
-      - How to Compile: fundamentals/compilation/how_to_compile.md
+      - Introduction: fundamentals/compilation/rationale.md
+      - Devices and Compilation: fundamentals/compilation/device_and_compilation.md
       - Error handling: fundamentals/compilation/error_handling.ipynb
     - Execution:
       - fundamentals/execution/index.md
