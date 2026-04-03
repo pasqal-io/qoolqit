@@ -10,7 +10,7 @@ hide:
 
 **QoolQit** is a Python library for designing and compiling analog quantum programs for neutral-atom devices in the Rydberg Analog Model.
 
-QoolQit works in a **dimensionless framework**. This solves a key challenge in programming neutral-atom quantum computers, that is specifying physical parameters such as atom positions in micrometers, laser amplitudes in MHz, and pulse durations in nanoseconds. Sicne these values depend strongly on the particular hardware platform and differ of different devices.
+QoolQit works in a **dimensionless framework**. This solves a key challenge in programming neutral-atom quantum computers, that is specifying physical parameters such as atom positions in micrometers, laser amplitudes in MHz, and pulse durations in nanoseconds. Since these values depend strongly on the particular hardware platform and differ of different devices.
 
 QoolQit separates the **program you want to implement** from the **hardware scale used to realize it**. This makes it possible to develop analog quantum algorithms in a device-agnostic way, while still compiling them consistently to realistic hardware constraints.
 
