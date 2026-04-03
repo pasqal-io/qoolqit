@@ -8,6 +8,8 @@ In this page, you will learn how to:
 - inspect the compiled Pulser `Sequence`,
 - visualize both the original program and its compiled version.
 
+---
+
 # Compiling a quantum program
 
 A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as

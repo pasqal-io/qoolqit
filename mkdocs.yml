@@ -14,7 +14,7 @@ nav:
     - Embedding: fundamentals/embedding.md
     - Quantum Program: fundamentals/quantum_program.md
     - Compilation:
-      - Introduction: fundamentals/compilation/rationale.md
+      - Compiling a Quantum Program: fundamentals/compilation/rationale.md
       - Devices and Compilation: fundamentals/compilation/device_and_compilation.md
       - Error handling: fundamentals/compilation/error_handling.ipynb
     - Execution:
