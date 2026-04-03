@@ -32,11 +32,7 @@ nav:
       - How to Compile: fundamentals/compilation/how_to_compile.md
       - Error handling: fundamentals/compilation/error_handling.ipynb
     - Execution:
-      - fundamentals/execution/index.md
-      - Introduction: fundamentals/execution/execution.md
-      - Local Emulators: fundamentals/execution/local_emulators.md
-      - Remote Emulators: fundamentals/execution/remote_emulators.md
-      - QPU: fundamentals/execution/qpu.md
+      - fundamentals/execution.ipynb
   - Extended usage:
     - extended_usage/index.md
     - Adimensionalization: extended_usage/adimensionalization.md
@@ -61,10 +57,8 @@ theme:
   custom_dir: docs/extras/overrides/
   logo: extras/assets/logo/qoolqit_symbol_white.svg
   features:
-    - content.code.annotate
     - content.code.copy
     - content.action.view
-    - content.action.edit
     - content.tooltips
     - navigation.indexes
     - navigation.sections
