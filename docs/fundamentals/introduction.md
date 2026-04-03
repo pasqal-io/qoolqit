@@ -37,7 +37,7 @@ A quantum program is built from:
 - a [`Device`](./compilation/device_and_compilation.md#initializing-a-quantum-device) — hardware constraints and units
 - a [`QuantumProgram`](./quantum_program.md#defining-a-quantum-program) — executable program
 
-Finally, see the [execution](./execution/index.md) page to:
+Finally, see the [execution](./execution/execution.ipynb) page to:
 
 - run programs on emulators or QPUs
 - retrieve and interpret results
