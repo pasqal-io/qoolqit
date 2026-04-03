@@ -20,7 +20,6 @@ nav:
     - Execution:
       - fundamentals/execution/execution.ipynb
   - Extended usage:
-    - extended_usage/index.md
     - Adimensionalization: extended_usage/adimensionalization.md
     - Emulation configuration: extended_usage/execution_config.md
     - Custom embedders: extended_usage/custom_embedders.md
