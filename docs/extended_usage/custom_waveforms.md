@@ -9,7 +9,7 @@ In this page, you will learn how to:
 - compose custom waveforms with built-in ones,
 - use a custom waveform as part of a `Drive`.
 
-In the [waveforms page](../fundamentals/quantum_program/waveforms_and_drives.md#waveforms) you saw the usage of the pre-defined waveforms available in QoolQit. The waveform system is designed to be easily extended by subclassing the `Waveform` class and defining a small number of key properties and methods.
+In the [waveforms page](../fundamentals/quantum_program.md#waveforms) you saw the usage of the pre-defined waveforms available in QoolQit. The waveform system is designed to be easily extended by subclassing the `Waveform` class and defining a small number of key properties and methods.
 
 ## Subclassing `Waveform`
 
