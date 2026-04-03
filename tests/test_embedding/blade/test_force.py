@@ -15,7 +15,7 @@ def low_discrepancy_distrib(n: int, *, d: int = 1) -> np.ndarray:
     return qmc.Sobol(d=d, scramble=True).random(n).reshape(n, d)
 
 
-@pytest.fixture(params=list(map(tuple, low_discrepancy_distrib(20, d=2))))
+@pytest.fixture(params=list(map(tuple, low_discrepancy_distrib(2**5, d=2))))
 def stiffness_middle_value(request: pytest.FixtureRequest) -> tuple[float, float]:
     stiffness, middle_value = request.param
     return stiffness, middle_value
@@ -43,7 +43,7 @@ def test_configured_increasing_func_constraints(
 def test_configured_increasing_func_increasing(stiffness_middle_value: tuple[float, float]) -> None:
     stiffness, middle_value = stiffness_middle_value
 
-    points = low_discrepancy_distrib(10)
+    points = low_discrepancy_distrib(2**4)
 
     y = configured_increasing_func(points, middle_value=middle_value, stiffness=stiffness)
     assert np.all(np.diff(y) > 0)
@@ -70,7 +70,7 @@ def test_modulate_cursor_constraints(stiffness_middle_value: tuple[float, float]
         np.array([0, 0, 0, 1]),
     )
 
-    coordinate = low_discrepancy_distrib(10)
+    coordinate = low_discrepancy_distrib(2**4)
 
     min_strong_cursor_eval = modulate_cursor(
         strong_cursor=0, weak_cursor=coordinate, center_value=center_value, stiffness=stiffness
@@ -99,7 +99,7 @@ def test_modulate_cursor_increasing(
     stiffness, middle_value = stiffness_middle_value
     center_value = middle_value / 2
 
-    points = low_discrepancy_distrib(30, d=2)
+    points = low_discrepancy_distrib(2**5, d=2)
     cursors = modulate_cursor(
         strong_cursor=points[:, 0],
         weak_cursor=points[:, 1],
