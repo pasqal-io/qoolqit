@@ -32,7 +32,7 @@ nav:
       - How to Compile: fundamentals/compilation/how_to_compile.md
       - Error handling: fundamentals/compilation/error_handling.ipynb
     - Execution:
-      - fundamentals/execution.ipynb
+      - fundamentals/execution/execution.ipynb
   - Extended usage:
     - extended_usage/index.md
     - Adimensionalization: extended_usage/adimensionalization.md
