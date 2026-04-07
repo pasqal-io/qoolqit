@@ -1,4 +1,4 @@
-# Initializing a quantum device
+## Initializing a quantum device
 
 Each `Device` in QoolQit wraps a [Pulser](https://pulser.readthedocs.io/en/stable/tutorials/virtual_devices.html#) device and defines the hardware characteristics that the program will be compiled to and later executed on.
 
@@ -19,7 +19,7 @@ Besides available default devices, relevant for QPU emulation, new QPU devices c
 - imported remotely
 - created from custom Pulser devices
 
-### Fetching a QoolQit device from a connection
+#### Fetching a QoolQit device from a connection
 Depending on your provider you might have different QPUs available to launch your quantum program to.
 The list of available ones can be fetched through the specific connection handler object, with the generic `connection.fetch_available_devices()` method.
 
@@ -37,7 +37,7 @@ fresnel_device = Device.from_connection(connection=connection, name="FRESNEL")
 print(fresnel_device)   # markdown-exec: hide
 ```
 
-## Create a QoolQit device from a Pulser device
+### Create a QoolQit device from a Pulser device
 A custom QoolQit device can also be built straight from any Pulser device, with any desired specification.
 Please, refer to [Pulser documentation](https://docs.pasqal.com/pulser/tutorials/virtual_devices/) to learn how to make a custom device.
 
@@ -56,7 +56,7 @@ mod_analog_device = Device(pulser_device=ModdedAnalogDevice)
 print(mod_analog_device)  # markdown-exec: hide
 ```
 
-# Compilation
+## Compilation
 
 Once a `QuantumProgram` is defined and a `Device` is selected one can proceed with the compilation by means of the method `compile_to`. This method will execute what has been discussed in the [introduction](./rationale.md) mapping adimensional parameters to physical quantities according to specific default rules.
 

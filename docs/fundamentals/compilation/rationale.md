@@ -10,7 +10,7 @@ In this page, you will learn how to:
 
 ---
 
-# Compiling a quantum program
+## Compiling a quantum program
 
 A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as
 dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is
@@ -31,7 +31,7 @@ page. The key identities are:
 
 $$
 r_{ij} = \left(\frac{C_6}{J_0}\right)^{1/6}	\tilde{r}_{ij},
-\qqad
+\qquad
 \Omega(t) = J_0\,	\tilde{\Omega}(	\tilde{t}),
 \qquad
 \delta(t) = J_0\,	\tilde{\delta}(	\tilde{t}),
@@ -44,7 +44,7 @@ the physical runtime, and the physical atom spacings.
 
 ---
 
-## Default compilation
+### Default compilation
 
 A device imposes hardware constraints on the compiled program. The two most important ones for
 compilation are:
