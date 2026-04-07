@@ -1,9 +1,7 @@
 ---
 title: API reference
-hide:
-- navigation
 ---
 
-# ::: qoolqit
+## ::: qoolqit
     options:
         show_submodules: true
