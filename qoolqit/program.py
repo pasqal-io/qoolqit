@@ -81,7 +81,7 @@ class QuantumProgram:
         self,
         device: Device,
         profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
-        max_duration: bool = False,
+        device_max_duration_ratio: float | None = None,
     ) -> None:
         """Compiles the quantum program for execution on a specific device.
 
@@ -99,20 +99,24 @@ class QuantumProgram:
         the device's constraint. Programs compiled this way are not guaranteed to be portable
         across devices.
 
-        - max_duration: Rescale the drive duration to the device's maximum allowed.
-            This is typically useful in adiabatic protocols where one simply seek to
+        - device_max_duration_ratio: Rescale the drive duration to a fraction of the
+            device's maximum allowed duration.
+            This option is useful in adiabatic protocols where one simply seek to
             minimize the time derivative of the drive's amplitude.
 
         Args:
             device: The target device for compilation.
             profile: The compilation strategy to optimize the program.
-            max_duration: Whether to set the program duration to the device's
-                maximum allowed duration.
+                Defaults to CompilerProfile.MAX_ENERGY.
+            device_max_duration_ratio: Whether to set the program duration to a fraction of
+                the device's maximum allowed duration.
 
         Raises:
             CompilationError: If the compilation fails due to device constraints.
         """
-        compiler = SequenceCompiler(self.register, self.drive, device, profile, max_duration)
+        compiler = SequenceCompiler(
+            self.register, self.drive, device, profile, device_max_duration_ratio
+        )
         self._device = device
         self._compiled_sequence = compiler.compile_sequence()
 

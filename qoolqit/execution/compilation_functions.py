@@ -65,7 +65,7 @@ def basic_compilation(
     drive: Drive,
     device: Device,
     profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
-    max_duration: bool = False,
+    device_max_duration_ratio: float | None = None,
 ) -> PulserSequence:
     """Compiles a QoolQit program to a PulserSequence.
 
@@ -85,6 +85,8 @@ def basic_compilation(
         register: QoolQit Register.
         drive: QoolQit Drive.
         device: QoolQit Device.
+        device_max_duration_ratio: optionally set the program duration to a fraction
+            of the device's maximum allowed duration.
 
     Returns:
         PulserSequence: The compiled program as a pulser.Sequence object.
@@ -108,9 +110,9 @@ def basic_compilation(
     else:
         raise ValueError(f"Invalid CompilerProfile: {profile}")
 
-    # if max_duration is True, if available, use the device's maximum duration.
-    if max_duration and device._max_duration:
-        TIME = device._max_duration / drive.duration
+    # if device_max_duration_ratio is set, use the device's maximum duration if available.
+    if device_max_duration_ratio and device._max_duration:
+        TIME = device_max_duration_ratio * device._max_duration / drive.duration
 
     # Build pulser pulse and register
     wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)

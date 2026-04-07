@@ -62,15 +62,17 @@ def test_compiled_sequence_with_small_delays() -> None:
     assert pulser_duration == pulser_duration_small_delay
 
 
-def test_compile_to_max_duration() -> None:
+@pytest.mark.parametrize("ratio", [0.33, 0.5, 1.0])
+def test_compile_to_max_duration_ratio(ratio: float) -> None:
     """Test that the compiled sequence's duration is set to the maximum allowed by the device."""
     register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
     drive = Drive(amplitude=Constant(2.0, 1.0))
     program = QuantumProgram(register=register, drive=drive)
     device = AnalogDevice()
+    assert device._max_duration == 6000
 
-    expected_max_duration = device._max_duration
+    expected_max_duration = round(ratio * device._max_duration)
 
-    program.compile_to(device=AnalogDevice(), max_duration=True)
+    program.compile_to(device=AnalogDevice(), device_max_duration_ratio=ratio)
     assert program.is_compiled
     assert program.compiled_sequence.get_duration() == expected_max_duration

@@ -21,7 +21,7 @@ class SequenceCompiler:
         drive: Drive,
         device: Device,
         profile: CompilerProfile,
-        max_duration: bool = False,
+        device_max_duration_ratio: float | None = None,
     ) -> None:
         """Initializes the compiler.
 
@@ -30,8 +30,8 @@ class SequenceCompiler:
             drive: the QoolQit Drive.
             device: the QoolQit Device.
             profile: the CompilerProfile to use.
-            max_duration: Whether to set the program duration to the device's
-                maximum allowed duration.
+            device_max_duration_ratio: optionally set the program duration to a fraction
+                of the device's maximum allowed duration.
         """
 
         self._register = register
@@ -39,7 +39,7 @@ class SequenceCompiler:
         self._device = device
         self._target_device = device._device
         self._profile = profile
-        self._max_duration = max_duration
+        self._device_max_duration_ratio = device_max_duration_ratio
         self._compilation_function: Callable = basic_compilation
 
     @property
@@ -59,8 +59,8 @@ class SequenceCompiler:
         return self._profile
 
     @property
-    def max_duration(self) -> bool:
-        return self._max_duration
+    def device_max_duration_ratio(self) -> float | None:
+        return self._device_max_duration_ratio
 
     def compile_sequence(self) -> PulserSequence:
         try:
@@ -69,7 +69,7 @@ class SequenceCompiler:
                 self.drive,
                 self.device,
                 self.profile,
-                self.max_duration,
+                self.device_max_duration_ratio,
             )
         except CompilationError as error:
             raise error
