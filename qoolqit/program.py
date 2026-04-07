@@ -109,11 +109,25 @@ class QuantumProgram:
             profile: The compilation strategy to optimize the program.
                 Defaults to CompilerProfile.MAX_ENERGY.
             device_max_duration_ratio: Whether to set the program duration to a fraction of
-                the device's maximum allowed duration.
+                the device's maximum allowed duration. Must be a number in the range (0, 1].
+                Can only be set if the device has a maximum allowed duration.
 
         Raises:
             CompilationError: If the compilation fails due to device constraints.
         """
+
+        if device_max_duration_ratio is not None:
+            if device._max_duration is None:
+                raise ValueError(
+                    "Cannot set `device_max_duration_ratio` because the target device "
+                    "does not have a maximum allowed duration."
+                )
+            if not (0 < device_max_duration_ratio <= 1):
+                raise ValueError(
+                    "`device_max_duration_ratio` must be between 0 and 1, "
+                    f"got {device_max_duration_ratio} instead."
+                )
+
         compiler = SequenceCompiler(
             self.register, self.drive, device, profile, device_max_duration_ratio
         )

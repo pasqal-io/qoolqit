@@ -25,7 +25,7 @@ class SequenceCompiler:
     ) -> None:
         """Initializes the compiler.
 
-        Arguments:
+        Args:
             register: the QoolQit Register.
             drive: the QoolQit Drive.
             device: the QoolQit Device.

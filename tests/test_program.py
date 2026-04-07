@@ -73,6 +73,19 @@ def test_compile_to_max_duration_ratio(ratio: float) -> None:
 
     expected_max_duration = round(ratio * device._max_duration)
 
-    program.compile_to(device=AnalogDevice(), device_max_duration_ratio=ratio)
+    program.compile_to(device=device, device_max_duration_ratio=ratio)
     assert program.is_compiled
     assert program.compiled_sequence.get_duration() == expected_max_duration
+
+
+def test_max_duration_ratio_error() -> None:
+    """Test that a ValueError is raised when the device_max_duration_ratio is not in (0,1]."""
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
+    drive = Drive(amplitude=Constant(2.0, 1.0))
+    program = QuantumProgram(register=register, drive=drive)
+
+    with pytest.raises(ValueError, match="`device_max_duration_ratio` must be between 0 and 1,"):
+        program.compile_to(device=AnalogDevice(), device_max_duration_ratio=-0.1)
+
+    with pytest.raises(ValueError, match="Cannot set `device_max_duration_ratio`"):
+        program.compile_to(device=MockDevice(), device_max_duration_ratio=0.5)
