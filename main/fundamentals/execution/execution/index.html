@@ -2846,13 +2846,13 @@ final_bitstrings</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>Counter({'111': 819,
-         '011': 62,
-         '110': 59,
-         '101': 52,
-         '010': 4,
-         '100': 3,
-         '001': 1})</pre>
+<pre>Counter({'111': 813,
+         '101': 64,
+         '110': 58,
+         '011': 48,
+         '100': 9,
+         '001': 4,
+         '010': 4})</pre>
 </div>
 </div>
 </div>
@@ -2967,7 +2967,7 @@ emulator = RemoteEmulator(connection=connection)</div>
 <ul>
 <li><code>backend_type</code>: remote counterpart of local backends, namely <code>EmuFreeBackendV2</code> (default), <code>EmuSVBackend</code>, <code>EmuMPSBackend</code>.</li>
 <li><code>emulation_config</code>: same as before — see <a href="../../extended_usage/execution_config.md">Emulation configuration</a> for details.</li>
-<li><code>runs</code>: same as before.</li>
+<li><code>num_shots</code>: same as before.</li>
 </ul>
 <p>As an example, below, we specify to emulate the program with the <code>EmuMPSBackend</code> and a custom <code>EmulationConfig</code>:</p>
 </div>
@@ -3002,12 +3002,12 @@ emulator = RemoteEmulator(connection=connection)</div>
 <span class="n">observables</span> <span class="o">=</span> <span class="p">(</span><span class="n">Occupation</span><span class="p">(</span><span class="n">evaluation_times</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),)</span>
 <span class="n">emulation_config</span> <span class="o">=</span> <span class="n">EmulationConfig</span><span class="p">(</span><span class="n">observables</span><span class="o">=</span><span class="n">observables</span><span class="p">,</span> <span class="n">with_modulation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># initialize the remote emulator with the custom configuration and runs</span>
+<span class="c1"># initialize the remote emulator with the custom configuration and num_shots</span>
 <span class="n">remote_emulator</span> <span class="o">=</span> <span class="n">RemoteEmulator</span><span class="p">(</span>
     <span class="n">backend_type</span><span class="o">=</span><span class="n">BackendType</span><span class="o">.</span><span class="n">EmuMPSBackend</span><span class="p">,</span>
     <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
     <span class="n">emulation_config</span><span class="o">=</span><span class="n">emulation_config</span><span class="p">,</span>
-    <span class="n">runs</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">num_shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-8">from qoolqit.execution import (
@@ -3020,12 +3020,12 @@ emulator = RemoteEmulator(connection=connection)</div>
 observables = (Occupation(evaluation_times=[0.5, 1.0]),)
 emulation_config = EmulationConfig(observables=observables, with_modulation=True)
 
-# initialize the remote emulator with the custom configuration and runs
+# initialize the remote emulator with the custom configuration and num_shots
 remote_emulator = RemoteEmulator(
     backend_type=BackendType.EmuMPSBackend,
     connection=connection,
     emulation_config=emulation_config,
-    runs=1000,
+    num_shots=1000,
 )</div>
 </div>
 </div>
@@ -3167,7 +3167,7 @@ program.compile_to(device=device)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Finally, to set up a QPU backend, there is no configuration and, as per the properties of the quantum hardware, results will come as a bitstrings counter of length specified by the <code>runs</code> parameter.</p>
+<p>Finally, to set up a QPU backend, there is no configuration and, as per the properties of the quantum hardware, results will come as a bitstrings counter of length specified by the <code>num_shots</code> parameter.</p>
 </div>
 </div>
 </div>
@@ -3192,11 +3192,11 @@ program.compile_to(device=device)</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPU</span>
 
-<span class="n">qpu</span> <span class="o">=</span> <span class="n">QPU</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span> <span class="n">runs</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">qpu</span> <span class="o">=</span> <span class="n">QPU</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span> <span class="n">num_shots</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-11">from qoolqit.execution import QPU
 
-qpu = QPU(connection=connection, runs=500)</div>
+qpu = QPU(connection=connection, num_shots=500)</div>
 </div>
 </div>
 </div>
@@ -3222,7 +3222,7 @@ qpu = QPU(connection=connection, runs=500)</div>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="hardware-considerations">Hardware Considerations<a class="anchor-link" href="#hardware-considerations">¶</a></h2><p>When running on QPUs, consider:</p>
 <ul>
-<li><strong>Limited shots</strong>: QPU time is precious, so choose your number of runs carefully</li>
+<li><strong>Limited shots</strong>: QPU time is precious, so choose your number shots carefully</li>
 <li><strong>Hardware constraints</strong>: Your program must be compiled for the specific QPU device</li>
 <li><strong>Queue times</strong>: QPU jobs may wait in queue before execution</li>
 </ul>

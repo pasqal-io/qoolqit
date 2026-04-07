@@ -2756,7 +2756,7 @@ program.compile_to(device = AnalogDevice())</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
@@ -2771,7 +2771,7 @@ program.compile_to(device = AnalogDevice())</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEmulator</span>
 
-<span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">(</span><span class="n">runs</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">(</span><span class="n">num_shots</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 
 <span class="n">results</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
 
@@ -2780,7 +2780,7 @@ program.compile_to(device = AnalogDevice())</div>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-6">from qoolqit.execution import LocalEmulator
 
-emulator = LocalEmulator(runs=500)
+emulator = LocalEmulator(num_shots=500)
 
 results = emulator.run(program)
 
