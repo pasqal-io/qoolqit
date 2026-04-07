@@ -17,13 +17,13 @@ class PulserEmulatorBackend:
     """Base Emulator class.
 
     Args:
-        runs: run the program `runs` times to collect bitstrings statistics.
-            On QPU backends this represents the actual number of runs of the program.
-            On emulators, instead the bitstring are sampled from the quantum state `runs` times.
+        num_shots: run the program `num_shots` times to collect bitstrings statistics.
+            On QPU this represents the actual number of runs of the program.
+            On emulators, the bitstring are sampled from the quantum state `num_shots` times.
     """
 
-    def __init__(self, runs: int | None = None) -> None:
-        self._runs = runs
+    def __init__(self, num_shots: int | None = None) -> None:
+        self._num_shots = num_shots
 
     def validate_emulation_config(
         self, emulation_config: EmulationConfig | None
@@ -41,20 +41,20 @@ class PulserEmulatorBackend:
                 isinstance(obs, BitStrings) for obs in emulation_config.observables
             )
             if not has_bitstrings:
-                updated_obs = (*emulation_config.observables, BitStrings(num_shots=self._runs))
+                updated_obs = (*emulation_config.observables, BitStrings(num_shots=self._num_shots))
                 emulation_config = emulation_config.with_changes(observables=updated_obs)
 
-        if self._runs is not None:
-            emulation_config = emulation_config.with_changes(default_num_shots=self._runs)
+        if self._num_shots is not None:
+            emulation_config = emulation_config.with_changes(default_num_shots=self._num_shots)
 
         return emulation_config
 
     def default_emulation_config(self) -> EmulationConfig:
         """Return a unique emulation config for all emulators.
 
-        Defaults to a configuration that asks for the final bitstring, sampled `runs` times.
+        Defaults to a configuration that asks for the final bitstring, sampled `num_shots` times.
         """
-        return EmulationConfig(observables=(BitStrings(num_shots=self._runs),))
+        return EmulationConfig(observables=(BitStrings(num_shots=self._num_shots),))
 
 
 class PulserRemoteBackend:
@@ -83,7 +83,7 @@ class LocalEmulator(PulserEmulatorBackend):
     Args:
         backend_type (type): backend type. Must be a subtype of `pulser.backend.EmulatorBackend`.
         emulation_config (EmulationConfig): optional configuration object emulators.
-        runs (int): number of bitstring samples to collect from the final quantum state.
+        num_shots (int): number of bitstring samples to collect from the final quantum state.
 
     Examples:
         ```python
@@ -98,10 +98,10 @@ class LocalEmulator(PulserEmulatorBackend):
         *,
         backend_type: type[EmulatorBackend] = QutipBackendV2,
         emulation_config: EmulationConfig | None = None,
-        runs: int | None = None,
+        num_shots: int | None = None,
     ) -> None:
         """Instantiates a LocalEmulator."""
-        super().__init__(runs=runs)
+        super().__init__(num_shots=num_shots)
         if not issubclass(backend_type, EmulatorBackend):
             raise TypeError(
                 "Error in `LocalEmulator`: `backend_type` must be a EmulatorBackend type."
@@ -133,7 +133,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
             `pulser_pasqal.backends.RemoteEmulatorBackend`.
         connection (RemoteConnection): connection to execute the program on remote backends.
         emulation_config (EmulationConfig): optional configuration object emulators.
-        runs (int): number of bitstring samples to collect from the final quantum state.
+        num_shots (int): number of bitstring samples to collect from the final quantum state.
 
     Examples:
         ```python
@@ -158,10 +158,10 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         backend_type: type[RemoteEmulatorBackend] = EmuFreeBackendV2,
         connection: RemoteConnection,
         emulation_config: EmulationConfig | None = None,
-        runs: int | None = None,
+        num_shots: int | None = None,
     ) -> None:
         """Instantiates a RemoteEmulator."""
-        super().__init__(runs=runs)
+        super().__init__(num_shots=num_shots)
         if not issubclass(backend_type, RemoteEmulatorBackend):
             raise TypeError(
                 "Error in `RemoteEmulator`: `backend_type` must be a RemoteEmulatorBackend type."
@@ -206,7 +206,7 @@ class QPU(PulserRemoteBackend):
 
     Args:
         connection: Authenticated connection to the remote QPU backend.
-        runs: Number of bitstring samples to collect from the final quantum state.
+        num_shots: Number of bitstring samples to collect from the final quantum state.
 
     Examples:
         Using Pasqal Cloud:
@@ -243,18 +243,18 @@ class QPU(PulserRemoteBackend):
         self,
         *,
         connection: RemoteConnection,
-        runs: int | None = None,
+        num_shots: int | None = None,
     ) -> None:
         """Instantiates a QPU backend."""
         self._backend_type = QPUBackend
         self._connection = self.validate_connection(connection)
-        if runs is None:
+        if num_shots is None:
             raise ValueError(
-                """Number of runs must be provided to use the QPU backend.
-                Please specify the number of runs when creating the QPU instance.
-                For example: QPU(connection=..., runs=100)""",
+                """Number of shots must be provided to use the QPU backend.
+                Please specify `num_shots` when creating the QPU instance.
+                For example: QPU(connection=..., num_shots=100)""",
             )
-        self._config = BackendConfig(default_num_shots=runs)
+        self._config = BackendConfig(default_num_shots=num_shots)
 
     def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
         """Submit a compiled quantum program to the QPU and return a result handler.

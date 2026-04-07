@@ -10,35 +10,16 @@ nav:
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
     - fundamentals/introduction.md
-    - Graphs and embedding:
-      - fundamentals/problems/index.md
-      - Graphs: fundamentals/problems/graphs.md
-      - Available Graphs: fundamentals/problems/available_graphs.md
-      - Embedding: fundamentals/problems/embedding.md
-      - Available Embedders:
-        - fundamentals/problems/available_embedders/index.md
-        - Spring Layout Embedder: fundamentals/problems/available_embedders/spring_layout.md
-        - Interaction Embedder: fundamentals/problems/available_embedders/interaction.md
-        - BlaDe Embedder: fundamentals/problems/available_embedders/blade.md
-    - Quantum Program:
-        - fundamentals/quantum_program/index.md
-        - fundamentals/quantum_program/registers.md
-        - Waveforms and Drives: fundamentals/quantum_program/waveforms_and_drives.md
-        - Defining Programs: fundamentals/quantum_program/defining_programs.md
+    - Graphs: fundamentals/graphs.md
+    - Embedding: fundamentals/embedding.md
+    - Quantum Program: fundamentals/quantum_program.md
     - Compilation:
-      - fundamentals/compilation/index.md
-      - Rationale: fundamentals/compilation/rationale.md
-      - Devices: fundamentals/compilation/devices.md
-      - How to Compile: fundamentals/compilation/how_to_compile.md
+      - Compiling a Quantum Program: fundamentals/compilation/rationale.md
+      - Devices and Compilation: fundamentals/compilation/device_and_compilation.md
       - Error handling: fundamentals/compilation/error_handling.ipynb
     - Execution:
-      - fundamentals/execution/index.md
-      - Introduction: fundamentals/execution/execution.md
-      - Local Emulators: fundamentals/execution/local_emulators.md
-      - Remote Emulators: fundamentals/execution/remote_emulators.md
-      - QPU: fundamentals/execution/qpu.md
+      - fundamentals/execution/execution.ipynb
   - Extended usage:
-    - extended_usage/index.md
     - Adimensionalization: extended_usage/adimensionalization.md
     - Emulation configuration: extended_usage/execution_config.md
     - Custom embedders: extended_usage/custom_embedders.md
@@ -61,16 +42,14 @@ theme:
   custom_dir: docs/extras/overrides/
   logo: extras/assets/logo/qoolqit_symbol_white.svg
   features:
-    - content.code.annotate
     - content.code.copy
-    - content.action.view
-    - content.action.edit
     - content.tooltips
     - navigation.indexes
     - navigation.sections
     - navigation.tabs
     - navigation.top
     - navigation.tracking
+    - navigation.footer
     - search.highlight
     - search.suggest
 
