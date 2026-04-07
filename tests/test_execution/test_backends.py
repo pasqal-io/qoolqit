@@ -55,7 +55,7 @@ class TestBackends:
     def test_default_backend(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
         assert backend._backend_type is self.MockEmulatorBackend
-        assert backend._runs is None
+        assert backend._num_shots is None
 
     def test_default_remote_backend(self) -> None:
         backend = RemoteEmulator(
@@ -63,7 +63,7 @@ class TestBackends:
         )
         assert backend._backend_type is self.MockRemoteEmulatorBackend
         assert backend._connection is self.mock_connection
-        assert backend._runs is None
+        assert backend._num_shots is None
 
     def test_emulator_backend_with_config(self) -> None:
         config = EmulationConfig(observables=(BitStrings(num_shots=1117),))
@@ -74,8 +74,8 @@ class TestBackends:
         config_repr = backend._emulation_config.to_abstract_repr()
         assert config_repr == expected_config_repr
 
-    def test_emulator_backend_with_nruns(self) -> None:
-        backend = LocalEmulator(backend_type=self.MockEmulatorBackend, runs=123)
+    def test_emulator_backend_with_no_num_shots(self) -> None:
+        backend = LocalEmulator(backend_type=self.MockEmulatorBackend, num_shots=123)
 
         config_repr = json.loads(backend._emulation_config.to_abstract_repr())
         bitstrings_repr = config_repr["observables"][0]
@@ -137,15 +137,15 @@ class TestBackends:
         assert backend._backend.run_calls == 1
 
     def test_qpu_init(self) -> None:
-        qpu = QPU(connection=self.mock_connection, runs=123)
+        qpu = QPU(connection=self.mock_connection, num_shots=123)
         assert qpu._backend_type == QPUBackend
         assert qpu._connection is self.mock_connection
         config = qpu._config
         assert isinstance(config, BackendConfig)
         assert config.default_num_shots == 123
 
-    def test_qpu_init_no_runs(self) -> None:
+    def test_qpu_init_no_num_shots(self) -> None:
         with pytest.raises(
-            ValueError, match="Number of runs must be provided to use the QPU backend."
+            ValueError, match="Number of shots must be provided to use the QPU backend."
         ):
             QPU(connection=self.mock_connection)
