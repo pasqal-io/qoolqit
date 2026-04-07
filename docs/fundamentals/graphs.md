@@ -4,6 +4,8 @@ In this section, you will learn how to:
 - create, inspect, draw, and construct graphs in different ways,
 - use coordinates, distances, weights, and unit-disk graph properties,
 
+---
+
 # Standard structure for Graphs
 
 Working with graphs is an essential part of computations with the Rydberg analog model. For that reason, QoolQit implements a specific `DataGraph` class to serve as the basis of all graph creation and manipulation, and setting the logic related to unit-disk graphs. QoolQit integrates with [NetworkX](https://networkx.org/) for many operations, and the `DataGraph` inherits from `nx.Graph`.

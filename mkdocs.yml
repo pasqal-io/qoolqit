@@ -14,13 +14,12 @@ nav:
     - Embedding: fundamentals/embedding.md
     - Quantum Program: fundamentals/quantum_program.md
     - Compilation:
-      - Introduction: fundamentals/compilation/rationale.md
+      - Compiling a Quantum Program: fundamentals/compilation/rationale.md
       - Devices and Compilation: fundamentals/compilation/device_and_compilation.md
       - Error handling: fundamentals/compilation/error_handling.ipynb
     - Execution:
       - fundamentals/execution/execution.ipynb
   - Extended usage:
-    - extended_usage/index.md
     - Adimensionalization: extended_usage/adimensionalization.md
     - Emulation configuration: extended_usage/execution_config.md
     - Custom embedders: extended_usage/custom_embedders.md
