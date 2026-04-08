@@ -238,7 +238,9 @@ print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
 To understand the role of time and the duration of a drive in the Rydberg Analog model, please have a look at the [Time regimes](../get_started/qoolqit_model.md#time-regimes) page.
-To simply use the maximum available time of a specific hardware device, for example when working on adiabatic protocols, please have a look at the [Device and compilation](../fundamentals/compilation/device_and_compilation.md) page of the documentation, specifically at the [Special compilation flags](../fundamentals/compilation/device_and_compilation.md#special-compilation-maximum-allowed-duration) section.
+Alternatively, duration can also be set at compilation time, as relative to the maximum duration allowed by a specific hardware device.
+Such feature, is useful, for example, when working on adiabatic protocols.
+For more details, please have a look at the [Device and compilation](../fundamentals/compilation/device_and_compilation.md) page of the documentation, specifically at the [Special compilation flags](../fundamentals/compilation/device_and_compilation.md#special-compilation-maximum-allowed-duration) section.
 
 ## Defining a quantum program
 
