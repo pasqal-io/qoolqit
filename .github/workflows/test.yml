@@ -58,4 +58,4 @@ jobs:
         pip install -e .[dev]
     - name: Run notebooks
       run: |
-        pytest --no-cov --nbmake **/*ipynb
+        pytest --no-cov --nbmake $(find docs -name "*.ipynb")
