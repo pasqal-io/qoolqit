@@ -6,20 +6,18 @@ This section introduces the core concepts used throughout QoolQit, following the
 
 The first part focuses on **problem definition and embedding**.
 
-- **Problem definition**
+- **Problem definition**:
   Problems are represented using graphs.
   The [`DataGraph`](./graphs.md) class extends NetworkX with features for the Rydberg analog model, including:
-  - node coordinates
-  - distance-based methods
-  - unit-disk graph logic
-  - node and edge weights
+      - node coordinates
+      - distance-based methods
+      - unit-disk graph logic
+      - node and edge weights
 
-- **Embedding**
-  Once defined, a problem is mapped to hardware via the embedding interface.
-
-  See the [embedding pages](./embedding.md) for:
-  - the standard embedding workflow
-  - available built-in embedders
+- **Embedding**:
+  Once defined, a problem is mapped to hardware via the embedding interface. See the [embedding pages](./embedding.md) for:
+      - the standard embedding workflow
+      - available built-in embedders
 
   Advanced users can define [custom embedders](../extended_usage/custom_embedders.md) with custom inputs, outputs, and parameters.
 
