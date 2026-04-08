@@ -204,28 +204,30 @@ examples and how to use custom waveforms inside a `Drive` — see
 
 ## Drives
 
-
-The `Drive` is a composition of waveforms defining the drive Hamiltonian.
+The `Drive` is a collection of amplitude and detuning waveforms, plus and optional phase, fully specifying the drive Hamiltonian, as described in the [QoolQit model](../get_started/qoolqit_model.md#qoolqit-model) page.
+Here is an example on how to create a drive:
 
 ```python exec="on" source="material-block" result="json" session="drives"
 from qoolqit import Constant, Ramp
 from qoolqit import Drive
 
 # Defining two waveforms
-wf0 = Constant(0.5, 1.0) >> Ramp(1.0, 0.0, 0.5)
-wf1 = Ramp(2.0, -1.0, 1.0) >> Constant(1.0, 1.0)
+amplitude = Constant(5.0, 1.0) >> Ramp(1.0, 0.0, 0.5)
+detuning = Ramp(2.0, -1.0, 1.0) >> Constant(1.0, 1.0)
 
 # Defining the drive
 drive = Drive(
-    amplitude = wf0,
-    detuning = wf1
+    amplitude = amplitude,
+    detuning = detuning
 )
 
 # Expanding the drive through composition
 drive = drive >> drive
-
 print(drive)  # markdown-exec: hide
 ```
+
+While defining an amplitude is required, if not provided, the detuning and the phase value will be assumed to be zero.
+Finally, after creation, drives can be conveniently plotted and inspected as:
 
 ```python exec="on" source="material-block" html="1" session="drives"
 import matplotlib.pyplot as plt # markdown-exec: hide
@@ -234,6 +236,8 @@ drive.draw()
 fig = drive.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
+
+To understand the role of time and the duration of a drive in the Rydberg Analog model, please have a look at the [Time regimes](../get_started/qoolqit_model.md#time-regimes) page.
 
 ## Defining a quantum program
 

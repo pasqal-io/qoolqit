@@ -88,3 +88,7 @@ resulting amplitude is below $\Omega_{\max}$.
     In both cases, QoolQit selects the largest feasible reference scale $J_0$. Doing so
     gives the fastest possible physical runtime for the program, since $t = \tilde{t}/J_0$
     decreases as $J_0$ increases.
+
+
+### Working point compilation
+In progress...
