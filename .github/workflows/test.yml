@@ -52,10 +52,10 @@ jobs:
     - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
-        python-version: 3.12
+        python-version: '3.12'
     - name: Install QoolQit with development dependencies
       run: |
         pip install -e .[dev]
     - name: Run notebooks
       run: |
-        pytest --no-cov --nbmake **/*.ipynb
+        pytest --no-cov --nbmake **/*ipynb
