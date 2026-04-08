@@ -15,13 +15,23 @@ from .compilation_functions import CompilerProfile, basic_compilation
 class SequenceCompiler:
     """Compiles a QoolQit Register and Drive to a Device."""
 
-    def __init__(self, register: Register, drive: Drive, device: Device, profile: CompilerProfile):
+    def __init__(
+        self,
+        register: Register,
+        drive: Drive,
+        device: Device,
+        profile: CompilerProfile,
+        device_max_duration_ratio: float | None = None,
+    ) -> None:
         """Initializes the compiler.
 
-        Arguments:
+        Args:
             register: the QoolQit Register.
             drive: the QoolQit Drive.
             device: the QoolQit Device.
+            profile: the CompilerProfile to use.
+            device_max_duration_ratio: optionally set the program duration to a fraction
+                of the device's maximum allowed duration.
         """
 
         self._register = register
@@ -29,6 +39,7 @@ class SequenceCompiler:
         self._device = device
         self._target_device = device._device
         self._profile = profile
+        self._device_max_duration_ratio = device_max_duration_ratio
         self._compilation_function: Callable = basic_compilation
 
     @property
@@ -47,6 +58,10 @@ class SequenceCompiler:
     def profile(self) -> CompilerProfile:
         return self._profile
 
+    @property
+    def device_max_duration_ratio(self) -> float | None:
+        return self._device_max_duration_ratio
+
     def compile_sequence(self) -> PulserSequence:
         try:
             return self._compilation_function(
@@ -54,6 +69,7 @@ class SequenceCompiler:
                 self.drive,
                 self.device,
                 self.profile,
+                self.device_max_duration_ratio,
             )
         except CompilationError as error:
             raise error
