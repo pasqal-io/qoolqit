@@ -41,7 +41,7 @@ class WaveformConverter:
     Additionally, requires the clock period of the device to round the duration.
     """
 
-    def __init__(self, device: Device, time: float, energy: float):
+    def __init__(self, device: Device, time: float, energy: float) -> None:
         self._time = time
         self._energy = energy
         self._clock_period = device._clock_period
@@ -65,6 +65,7 @@ def basic_compilation(
     drive: Drive,
     device: Device,
     profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
+    device_max_duration_ratio: float | None = None,
 ) -> PulserSequence:
     """Compiles a QoolQit program to a PulserSequence.
 
@@ -84,6 +85,8 @@ def basic_compilation(
         register: QoolQit Register.
         drive: QoolQit Drive.
         device: QoolQit Device.
+        device_max_duration_ratio: optionally set the program duration to a fraction
+            of the device's maximum allowed duration.
 
     Returns:
         PulserSequence: The compiled program as a pulser.Sequence object.
@@ -106,6 +109,11 @@ def basic_compilation(
         _validate_program_max_energy_profile(register, drive, device)
     else:
         raise ValueError(f"Invalid CompilerProfile: {profile}")
+
+    # if device_max_duration_ratio is set and the device has max_duration
+    # set the duration to the fraction of device's maximum duration.
+    if device_max_duration_ratio and device._max_duration:
+        TIME = device_max_duration_ratio * device._max_duration / drive.duration
 
     # Build pulser pulse and register
     wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
