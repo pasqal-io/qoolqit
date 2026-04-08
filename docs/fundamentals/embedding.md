@@ -7,7 +7,7 @@ In this section, you will learn how to:
 
 ---
 
-# The embedding problem
+## The embedding problem
 
 Embedding data and problems into the Rydberg analog model is a broad research topic. Typically, an embedding is a structure preserving map $f_\text{embedding}: X \rightarrow Y$, such that an object $X$ is embedded into an object $Y$. Our goal is to define optimal embedding functions such that problem-specific data and definitions are embedded into model-compatible objects with the Rydberg analog model.
 
@@ -41,9 +41,9 @@ All the available embedders are listed in the section [Available embedders](#ava
 
 For more details on the definition of custom embedders the reader can refer to [Custom embedders](../extended_usage/custom_embedders.md).
 
-# Available embedders
+## Available embedders
 
-## Interaction embedder
+### Interaction embedder
 
 Interaction embedding means to encode a matrix in the interaction term of the Rydberg analog model. For a matrix $U$, the goal is to find the set of coordinates that minimize
 
@@ -112,7 +112,7 @@ print([f"{f:.4f}" for f in sorted(interactions)])
 print([f"{f:.4f}" for f in sorted(off_diagonal)])
 ```
 
-## Spring-layout embedder
+### Spring-layout embedder
 
 The spring-layout embedding utilizes the Fruchterman-Reingold force-directed algorithm. It assigns spring-like forces to the edges that keep nodes closer, while treating nodes themselves as repelling objects. The system is then simulated until the nodes find an equilibrium position, which represent the final coordinates assigned to the nodes.
 

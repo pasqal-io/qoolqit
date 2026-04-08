@@ -28,8 +28,7 @@ nav:
     - tutorials/index.md
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
   - API reference:
-    - reference/index.md
-    - API reference: reference/api.md
+    - reference/api.md
   - Contribute:
     - contribute/index.md
     - How to contribute: contribute/CONTRIBUTING.md

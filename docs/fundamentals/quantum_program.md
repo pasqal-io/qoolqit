@@ -9,7 +9,7 @@ In this page, you will learn how to:
 
 ---
 
-# Registers
+## Registers
 
 A `Register` defines the qubit resources to be used by a quantum program.
 
@@ -65,11 +65,11 @@ print(register.interactions())  # markdown-exec: hide
 ```
 
 
-# Waveforms
+## Waveforms
 
 An essential part of writing programs in the Rydberg analog model is to write the time-dependent functions representing the amplitude and detuning terms in the drive Hamiltonian. For that, QoolQit implements a set of waveforms that can be used directly and/or composed together.
 
-## Base waveforms
+### Base waveforms
 
 A full list of the available waveforms can be found in the [API reference][qoolqit.waveforms].
 
@@ -129,7 +129,7 @@ fig = wf3.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-## Interpolated waveform
+### Interpolated waveform
 
 Special waveform to easily fit a set given values with a smooth function.
 For the full set of available options please refer to the [API reference][qoolqit.waveforms].
@@ -144,7 +144,7 @@ fig = wf_interpolated.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-## Composite waveforms
+### Composite waveforms
 
 The most straightforward way to arbitrarily compose waveforms is to use the `>>` operator. This will create a `CompositeWaveform` representing the waveforms in the order provided.
 
@@ -194,7 +194,7 @@ print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
 
-## Custom waveforms
+### Custom waveforms
 
 Built-in waveforms cover the most common shapes, but any differentiable (or piecewise-smooth)
 profile can be realised by subclassing `Waveform`. For a full walkthrough — including concrete
@@ -202,7 +202,7 @@ examples and how to use custom waveforms inside a `Drive` — see
 [Defining custom waveforms](../extended_usage/custom_waveforms.md).
 
 
-# Drives
+## Drives
 
 
 The `Drive` is a composition of waveforms defining the drive Hamiltonian.
@@ -235,7 +235,7 @@ fig = drive.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-# Defining a quantum program
+## Defining a quantum program
 
 A `QuantumProgram` combines a `Register` and a `Drive` and serves as the main interface for compilation and execution.
 
