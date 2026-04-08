@@ -337,7 +337,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../reference/" class="md-tabs__link">
+      <a href="../../../reference/api/" class="md-tabs__link">
         
   
   
@@ -829,8 +829,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -873,8 +871,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -883,6 +879,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#compiling-a-quantum-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiling a quantum program
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compiling a quantum program">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#default-compilation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -890,6 +898,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -944,7 +957,7 @@
   <span class="md-ellipsis">
     
   
-    Compilation errors
+    Error handling
   
 
     
@@ -1286,69 +1299,6 @@
   
   
   
-    
-    
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../../reference/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API reference
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    API reference
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
       <a href="../../../reference/api/" class="md-nav__link">
         
@@ -1366,14 +1316,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -1583,8 +1525,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1593,6 +1533,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#compiling-a-quantum-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiling a quantum program
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compiling a quantum program">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#default-compilation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1600,6 +1552,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1623,6 +1580,8 @@
   
 
 
+  <h1>Compiling a Quantum Program</h1>
+
 <p>In this page, you will learn how to:</p>
 <ul>
 <li>create built-in QoolQit devices,</li>
@@ -1634,7 +1593,7 @@
 <li>visualize both the original program and its compiled version.</li>
 </ul>
 <hr />
-<h1 id="compiling-a-quantum-program">Compiling a quantum program</h1>
+<h2 id="compiling-a-quantum-program">Compiling a quantum program</h2>
 <p>A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as
 dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is
 measured in units of a reference interaction energy, that we call <span class="arithmatex">\(J_0\)</span>. This device-agnostic formulation
@@ -1652,7 +1611,7 @@ A full derivation is given in the <a href="../../../extended_usage/adimensionali
 page. The key identities are:</p>
 <div class="arithmatex">\[
 r_{ij} = \left(\frac{C_6}{J_0}\right)^{1/6} \tilde{r}_{ij},
-\qqad
+\qquad
 \Omega(t) = J_0\,   \tilde{\Omega}( \tilde{t}),
 \qquad
 \delta(t) = J_0\,   \tilde{\delta}( \tilde{t}),
@@ -1662,7 +1621,7 @@ t = \frac{  \tilde{t}}{J_0}.
 <p>Choosing <span class="arithmatex">\(J_0\)</span> therefore simultaneously sets the physical amplitude scale, the detuning scale,
 the physical runtime, and the physical atom spacings.</p>
 <hr />
-<h2 id="default-compilation">Default compilation</h2>
+<h3 id="default-compilation">Default compilation</h3>
 <p>A device imposes hardware constraints on the compiled program. The two most important ones for
 compilation are:</p>
 <ul>
