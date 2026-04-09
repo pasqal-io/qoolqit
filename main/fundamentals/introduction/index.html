@@ -1508,38 +1508,39 @@
 <h2 id="problem-definition-and-embedding">Problem definition and embedding</h2>
 <p>The first part focuses on <strong>problem definition and embedding</strong>.</p>
 <ul>
-<li><strong>Problem definition</strong>
+<li>
+<p><strong>Problem definition</strong>:
   Problems are represented using graphs.
-  The <a href="../graphs/"><code>DataGraph</code></a> class extends NetworkX with features for the Rydberg analog model, including:</li>
+  The <a href="../graphs/"><code>DataGraph</code></a> class extends NetworkX with features for the Rydberg analog model, including:</p>
+<ul>
 <li>node coordinates</li>
 <li>distance-based methods</li>
 <li>unit-disk graph logic</li>
-<li>
-<p>node and edge weights</p>
+<li>node and edge weights</li>
+</ul>
 </li>
 <li>
-<p><strong>Embedding</strong>
-  Once defined, a problem is mapped to hardware via the embedding interface.</p>
+<p><strong>Embedding</strong>:
+  Once defined, a problem is mapped to hardware via the embedding interface. See the <a href="../embedding/">embedding pages</a> for:</p>
+<ul>
+<li>the standard embedding workflow</li>
+<li>available built-in embedders</li>
+</ul>
 </li>
 </ul>
-<p>See the <a href="../embedding/">embedding pages</a> for:
-  - the standard embedding workflow
-  - available built-in embedders</p>
 <p>Advanced users can define <a href="../../extended_usage/custom_embedders/">custom embedders</a> with custom inputs, outputs, and parameters.</p>
 <hr />
 <h2 id="quantum-programs-compilation-and-execution">Quantum programs, compilation, and execution</h2>
 <p>The second part covers program construction, compilation, and execution.</p>
-<p>A quantum program is built from:</p>
+<p>The <a href="../quantum_program/#defining-a-quantum-program">quantum program</a> page details how create a quantum program from its basic components:</p>
 <ul>
 <li>a <a href="../quantum_program/#registers"><code>Register</code></a> — qubit positions</li>
-<li><a href="../quantum_program/#waveforms"><code>Waveforms</code></a> — time-dependent controls</li>
-<li>a <a href="../quantum_program/#drives"><code>Drive</code></a> — drive Hamiltonian</li>
-<li>a <a href="../compilation/device_and_compilation/#initializing-a-quantum-device"><code>Device</code></a> — hardware constraints and units</li>
-<li>a <a href="../quantum_program/#defining-a-quantum-program"><code>QuantumProgram</code></a> — executable program</li>
+<li>a <a href="../quantum_program/#drives"><code>Drive</code></a> — drive Hamiltonian, as composed of <a href="../quantum_program/#waveforms"><code>Waveforms</code></a> to specify the time-dependent qubit controls</li>
 </ul>
+<p>Once defined, a quantum program <strong>must</strong> be compiled to a QoolQit <code>Device</code>, as described in the <a href="../compilation/device_and_compilation/"><code>device amd compilation</code></a> page. This step will encoding hardware constraints and units and generate an executable program.</p>
 <p>Finally, see the <a href="../execution/execution/">execution</a> page to:</p>
 <ul>
-<li>run programs on emulators or QPUs</li>
+<li>run compiled programs on local/remote emulators or QPUs</li>
 <li>retrieve and interpret results</li>
 </ul>
 <hr />
