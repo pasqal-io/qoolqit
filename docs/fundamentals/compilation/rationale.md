@@ -84,6 +84,4 @@ When the program's energy ratio is within the device budget, the minimum-spacing
 In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below $\Omega_{\max}$.
 
 !!! note "QoolQit always maximizes the physical energy scale"
-    In both cases, QoolQit selects the largest feasible reference scale $J_0$. Doing so
-    gives the fastest possible physical runtime for the program, since $t = \tilde{t}/J_0$
-    decreases as $J_0$ increases.
+    In both cases, QoolQit selects the largest feasible reference scale $J_0$. Doing so gives the fastest possible physical runtime for the program, since $t = \tilde{t}/J_0$ decreases as $J_0$ increases.
