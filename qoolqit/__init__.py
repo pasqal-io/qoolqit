@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-import pulser
-from packaging.version import Version
+from pulser.sequence import store_package_version_metadata
 
 from qoolqit.devices import (
     AnalogDevice,
@@ -40,11 +39,6 @@ __all__ = [
 ]
 
 
-__version__ = "0.4.0"
+__version__ = "1.0.0"
 
-# metadata are stored only from pulser 1.6.3
-pulser_version = Version(pulser.__version__)
-if pulser_version >= Version("1.6.3"):
-    from pulser.sequence import store_package_version_metadata
-
-    store_package_version_metadata("qoolqit", __version__)
+store_package_version_metadata("qoolqit", __version__)
