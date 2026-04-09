@@ -123,7 +123,7 @@ print(fig_to_html(fig_compiled)) # markdown-exec: hide
 ```
 
 As anticipated, this flag will decouple time from the compilation, letting the user set a time relative to the maximum allowed by the selected device.
-Moreover, as a drive's amplitude/detuning can be composed by many waveforms, this feature will simply rescale them preserving their relative durations.
+Moreover, as a drive's amplitude/detuning can be composed by many waveforms, this feature will rescale them preserving their relative durations.
 
 Finally, it is important to highlight that:
 
