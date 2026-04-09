@@ -247,7 +247,7 @@ Alternatively, duration can also be overwritten at compilation time, as relative
 Such feature, is useful, for example, when working on adiabatic protocols.
 For more details, please have a look at the [Device and compilation](../fundamentals/compilation/device_and_compilation.md) page of the documentation, specifically at the [Special compilation flags](../fundamentals/compilation/device_and_compilation.md#special-compilation-maximum-allowed-duration) section.
 
-Finally, at the [compilation stage](../fundamentals/compilation/device_and_compilation.md), the duration set by the user might be higher than what the specific QPU device of choice allows. Compilation will thus trigger an informative error about the hardware limitations and how to comply with those.
+Finally, at the [compilation stage](../fundamentals/compilation/device_and_compilation.md), the duration set by the user might be higher than what the selected QPU device allows. Compilation will thus trigger an informative error about the hardware limitations and how to comply with those.
 
 ## Defining a quantum program
 
