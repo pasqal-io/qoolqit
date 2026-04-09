@@ -203,7 +203,8 @@ examples and how to use custom waveforms inside a `Drive` — see
 
 ## Drives
 
-The `Drive` is a composition of waveforms defining the drive Hamiltonian .
+The `Drive` is a collection of amplitude and detuning waveforms, plus an optional phase, fully specifying the drive Hamiltonian described in the [QoolQit model](../get_started/qoolqit_model.md#qoolqit-model) page.
+Here is an example on how to create a drive:
 
 ```python exec="on" source="material-block" result="json" session="drives"
 from qoolqit import Constant, Ramp
@@ -221,9 +222,11 @@ drive = Drive(
 
 # Expanding the drive through composition
 drive = drive >> drive
-
 print(drive)  # markdown-exec: hide
 ```
+
+While defining an amplitude is required, if not provided, the detuning and the phase value will be assumed to be zero.
+Finally, after creation, drives can be conveniently plotted and inspected as:
 
 ```python exec="on" source="material-block" html="1" session="drives"
 import matplotlib.pyplot as plt # markdown-exec: hide
@@ -232,6 +235,11 @@ drive.draw()
 fig = drive.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
+
+To understand the role of time and the duration of a drive in the Rydberg Analog model, please have a look at the [Time regimes](../get_started/qoolqit_model.md#time-regimes) page.
+Alternatively, duration can also be overwritten at compilation time, as relative to the maximum duration allowed by a specific hardware device.
+Such feature, is useful, for example, when working on adiabatic protocols.
+For more details, please have a look at the [Device and compilation](../fundamentals/compilation/device_and_compilation.md) page of the documentation, specifically at the [Special compilation flags](../fundamentals/compilation/device_and_compilation.md#special-compilation-maximum-allowed-duration) section.
 
 ## Defining a quantum program
 
