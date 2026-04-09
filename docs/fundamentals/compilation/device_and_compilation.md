@@ -104,3 +104,29 @@ program.draw(compiled = True)
 fig_compiled = program.draw(compiled = True, return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig_compiled)) # markdown-exec: hide
 ```
+
+
+## Special compilation: maximum allowed duration
+Whenever possible, the compilation step in QoolQit will simply take care of mapping the input quantum program into real hardware instructions.
+In other words, ratios between energies (interactions and drive) and time will be preserved (see [compilation rationale](./rationale.md)).
+However, in some applications, one may be interested in separating time from the compilation step.
+For example, in adiabatic protocols, one simply seeks to rescale the duration of a quantum program to the maximum value allowed by the specific hardware.
+
+To do so, set the corresponding flag at compilation:
+
+```python exec="on" source="material-block" html="1" session="drives"
+# Compilation to AnalogDevice max duration
+program.compile_to(device, device_max_duration_ratio=1.0)
+program.draw(compiled = True)
+fig_compiled = program.draw(compiled = True, return_fig = True) # markdown-exec: hide
+print(fig_to_html(fig_compiled)) # markdown-exec: hide
+```
+
+As anticipated, this flag will decouple time from the compilation, letting the user set a time relative to the maximum allowed by the selected device.
+Moreover, as a drive's amplitude/detuning can be composed by many waveforms, this feature will rescale them preserving their relative durations.
+
+Finally, it is important to highlight that:
+
+!!! warning
+    Programs compiled with the flag `device_max_duration_ratio` are not portable across different devices.
+    The same program compiled on two different devices will be different.
