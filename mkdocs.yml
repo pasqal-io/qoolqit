@@ -30,7 +30,6 @@ nav:
   - API reference:
     - reference/api.md
   - Contribute:
-    - contribute/index.md
     - How to contribute: contribute/CONTRIBUTING.md
     - Code of conduct: contribute/CODE_OF_CONDUCT.md
     - License: contribute/LICENSE.md
