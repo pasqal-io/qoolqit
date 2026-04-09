@@ -1,12 +1,18 @@
-In this page, you will learn how to:
+ In this page, you will learn how to build a quantum program, from its building blocks:
 
-- create a `Register` from a set of coordinates,
-- define `Waveforms` selecting amplitude and detuning,
-- build a `Drive` from waveform components,
-- create a `QuantumProgram` from a `Register` and a `Drive`,
-- check whether a program has already been compiled.
+- Create a `Register` from a set of coordinates,
+- Define `Waveforms` selecting amplitude and detuning,
+- Build a `Drive` from waveform components,
+- Instantiate a `QuantumProgram` from a `Register` and a `Drive`,
+- Check whether a program has already been compiled.
 
 ---
+
+The QuantumProgram defines the protocol used to solve your problem within the adimensional framework of the [Rydberg Analog model](../get_started/qoolqit_model.md).
+
+In practice, this involves specifying both the interaction and the driving Hamiltonian. In QoolQit, these are set up by creating a `Register`, which determines the positions of the qubits, and a `Drive` object, which describes how laser fields drive the qubits over time.
+
+To run the program on real quantum hardware, the abstract `QuantumProgram` must first be compiled into a form compatible with a specific QPU. This compilation process will be covered later in the [Compilation](./compilation/rationale.md) page.
 
 ## Registers
 
@@ -23,7 +29,6 @@ qubits = {
 }
 
 register = Register(qubits)
-
 print(register)  # markdown-exec: hide
 ```
 
@@ -37,6 +42,7 @@ register = Register.from_coordinates(coords)
 
 import matplotlib.pyplot as plt # markdown-exec: hide
 from docs.utils import fig_to_html # markdown-exec: hide
+
 register.draw()
 fig = register.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
