@@ -10,7 +10,7 @@
 
 The QuantumProgram defines the protocol used to solve your problem within the adimensional framework of the [Rydberg Analog model](../get_started/qoolqit_model.md).
 
-In practice, this involves specifying both the interaction and the driving Hamiltonian. In QoolQit, these are set up by creating a `Register`, which determines the positions of the qubits, and a `Drive` object, which describes how laser fields drive the qubits over time.
+In practice, this involves specifying both the interaction and the driving Hamiltonian. In QoolQit, these are set up by creating a `Register`, which determines the positions of the qubits, and a `Drive` object, which describes how laser fields control the qubits over time.
 
 To run the program on real quantum hardware, the abstract `QuantumProgram` must first be compiled into a form compatible with a specific QPU. This compilation process will be covered later in the [Compilation](./compilation/rationale.md) page.
 
