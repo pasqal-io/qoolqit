@@ -110,7 +110,7 @@ print(fig_to_html(fig_compiled)) # markdown-exec: hide
 Whenever possible, the compilation step in QoolQit will simply take care of mapping the input quantum program into real hardware instructions.
 In other words, ratios between energies (interactions and drive) and time will be preserved (see [compilation rationale](./rationale.md)).
 However, in some applications, one may be interested in separating time from the compilation step.
-For example, in adiabatic protocols, one simply seek to rescale the duration of a quantum program to the maximum value allowed by the specific hardware.
+For example, in adiabatic protocols, one simply seeks to rescale the duration of a quantum program to the maximum value allowed by the specific hardware.
 
 To do so, set the corresponding flag at compilation:
 
