@@ -217,7 +217,7 @@ from qoolqit import Constant, Ramp
 from qoolqit import Drive
 
 # Defining two waveforms
-amplitude = Constant(duration=5.0, 1.0) >> Ramp(1.0, 0.0, 0.5)
+amplitude = Constant(duration=5.0, value=1.0) >> Ramp(1.0, 0.0, 0.5)
 detuning = Ramp(2.0, -1.0, 1.0) >> Constant(1.0, 1.0)
 
 # Defining the drive
