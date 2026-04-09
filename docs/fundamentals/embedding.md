@@ -200,3 +200,6 @@ fig2 = register_2.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig1)) # markdown-exec: hide
 print(fig_to_html(fig2)) # markdown-exec: hide
 ```
+
+### Blade
+Coming soon...
