@@ -81,8 +81,7 @@ In this regime the compiled program runs at **maximum device amplitude**, and th
 
 When the program's energy ratio is within the device budget, the minimum-spacing constraint is reached first (red line). The largest valid $J_0$ is obtained by **saturating the distance limit**.
 
-In this regime the compiled register uses the smallest physical spacing the device allows, and the
-resulting amplitude is below $\Omega_{\max}$.
+In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below $\Omega_{\max}$.
 
 !!! note "QoolQit always maximizes the physical energy scale"
     In both cases, QoolQit selects the largest feasible reference scale $J_0$. Doing so
