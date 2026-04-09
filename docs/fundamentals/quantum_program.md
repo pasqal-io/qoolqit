@@ -204,7 +204,7 @@ examples and how to use custom waveforms inside a `Drive` — see
 
 ## Drives
 
-The `Drive` is a collection of amplitude and detuning waveforms, plus and optional phase, fully specifying the drive Hamiltonian, as described in the [QoolQit model](../get_started/qoolqit_model.md#qoolqit-model) page.
+The `Drive` is a collection of amplitude and detuning waveforms, plus an optional phase, fully specifying the drive Hamiltonian, as described in the [QoolQit model](../get_started/qoolqit_model.md#qoolqit-model) page.
 Here is an example on how to create a drive:
 
 ```python exec="on" source="material-block" result="json" session="drives"
