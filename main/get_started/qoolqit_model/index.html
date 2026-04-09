@@ -84,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#introduction" class="md-skip">
+        <a href="#qoolqit-model" class="md-skip">
           Skip to content
         </a>
       
@@ -546,8 +546,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -589,8 +587,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
     <label class="md-nav__title" for="__toc">
@@ -1574,8 +1570,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1681,12 +1675,15 @@
   
 
 
-<h1 id="introduction">Introduction</h1>
+  <h1>Programming a neutral atom QPU</h1>
+
 <h2 id="qoolqit-model">Qoolqit model</h2>
 <p>In neutral-atom systems, atoms interact through a combination of <strong>distance-dependent interactions</strong> and <strong>laser-driven controls</strong>. The interaction strength between two atoms decreases rapidly with their separation <span class="arithmatex">\(r\)</span> (as <span class="arithmatex">\(1/r^6\)</span>), while the laser beams determine how strongly each atom is driven.</p>
 <p>As a result, the behavior of the system is not set by absolute values alone, but by the <strong>interplay between geometry (distances) and control strength (laser power)</strong>. Different combinations of these quantities can lead to equivalent physical behavior, as long as their relative scales are preserved.</p>
-<p>!!! QoolQit introduces a <strong>dimensionless reference frame</strong> where all quantities are expressed in function of an <strong>interaction reference</strong>.</p>
-<p>The quantum system is described by the following Hamiltonian:</p>
+<div class="admonition note">
+<p class="admonition-title">QoolQit introduces a <strong>dimensionless reference frame</strong> where all quantities are expressed in function of an <strong>interaction reference</strong>.</p>
+</div>
+<p>The quantum system is thus described by the sum of two energetic contribution, the interaction and the driving one, as described by the following Hamiltonian:</p>
 <div class="arithmatex">\[
 \tilde{H}(t) =
 \underbrace{\sum_{i&lt;j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j}_{\text{interactions}}
@@ -1712,7 +1709,9 @@
 <li>Times <span class="arithmatex">\(\tilde{t}\)</span> are measured relative to the interaction timescale.</li>
 </ul>
 <p>This means that programs are <strong>hardware-independent until compilation</strong>: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.</p>
-<p>!!! The actual physical scale — such as the precise distances or laser amplitudes — is determined only later, during the <strong>compilation step</strong>, when targeting a specific device.</p>
+<div class="admonition note">
+<p class="admonition-title">The actual physical scale — such as the precise distances or laser amplitudes — is determined only later, during the <strong>compilation step</strong>, when targeting a specific device.</p>
+</div>
 <p>More details about the connection to physical units are provided in the section <a href="../../extended_usage/adimensionalization/">Adimensionalization</a>.</p>
 <p>The following table summarizes the parameters appearing in the Hamiltonian and their allowed ranges.</p>
 <table>
