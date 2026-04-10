@@ -10,7 +10,7 @@ nav:
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
     - fundamentals/introduction.md
-    - Graphs: fundamentals/graphs.md
+    - Graphs: fundamentals/graphs.ipynb
     - Embedding: fundamentals/embedding.md
     - Quantum Program: fundamentals/quantum_program.md
     - Compilation:
