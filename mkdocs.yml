@@ -11,7 +11,7 @@ nav:
   - Fundamentals:
     - fundamentals/introduction.md
     - Graphs: fundamentals/graphs.md
-    - Embedding: fundamentals/embedding.md
+    - Embedding: fundamentals/embedding.ipynb
     - Quantum Program: fundamentals/quantum_program.md
     - Compilation:
       - Compiling a Quantum Program: fundamentals/compilation/rationale.md

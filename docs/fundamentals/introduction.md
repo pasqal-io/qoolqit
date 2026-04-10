@@ -15,7 +15,7 @@ The first part focuses on **problem definition and embedding**.
       - node and edge weights
 
 - **Embedding**:
-  Once defined, a problem is mapped to hardware via the embedding interface. See the [embedding pages](./embedding.md) for:
+  Once defined, a problem is mapped to hardware via the embedding interface. See the [embedding pages](./embedding.ipynb) for:
       - the standard embedding workflow
       - available built-in embedders
 
