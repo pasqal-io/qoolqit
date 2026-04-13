@@ -37,6 +37,10 @@ fresnel_device = Device.from_connection(connection=connection, name="FRESNEL")
 print(fresnel_device)   # markdown-exec: hide
 ```
 
+On a QRMI-enabled cluster, you can pass `PulserQRMIConnection()` as the connection and submit the same script with `sbatch --qpu=<backend> ...` (for example `FRESNEL` or `EMU_FREE`).
+
+For a Qaptiva managed cluster, you can similarly pass `PulserQLMConnection()`.
+
 ### Create a QoolQit device from a Pulser device
 A custom QoolQit device can also be built straight from any Pulser device, with any desired specification.
 Please, refer to [Pulser documentation](https://docs.pasqal.com/pulser/tutorials/virtual_devices/) to learn how to make a custom device.
