@@ -17,11 +17,12 @@ class InteractionEmbedderConfig(EmbedderConfig):
     """Configuration parameters for the interaction embedding."""
 
     method: str = "Nelder-Mead"
+    x0 = None
     maxiter: int = 200000
     tol: float = 1e-8
 
 
-def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: float) -> DataGraph:
+def interaction_embedding(matrix: np.ndarray, x0: np.ndarray, method: str, maxiter: int, tol: float) -> DataGraph:
     """Matrix embedding into the interaction term of the Rydberg Analog Model.
 
     Uses scipy.minimize to find the optimal set of node coordinates such that the
@@ -47,7 +48,9 @@ def interaction_embedding(matrix: np.ndarray, method: str, maxiter: int, tol: fl
     np.random.seed(0)
 
     # Initial guess for the coordinates
-    x0 = np.random.random(len(matrix) * 2)
+    if not x0:
+        np.random.random(len(matrix) * 2)
+        
 
     res = minimize(
         cost_function,
