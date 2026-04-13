@@ -10,17 +10,16 @@ nav:
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
     - fundamentals/introduction.md
-    - Graphs: fundamentals/graphs.md
-    - Embedding: fundamentals/embedding.md
+    - Graphs: fundamentals/graphs.ipynb
+    - Embedding: fundamentals/embedding.ipynb
     - Quantum Program: fundamentals/quantum_program.md
     - Compilation:
-      - Introduction: fundamentals/compilation/rationale.md
+      - Compiling a Quantum Program: fundamentals/compilation/rationale.md
       - Devices and Compilation: fundamentals/compilation/device_and_compilation.md
       - Error handling: fundamentals/compilation/error_handling.ipynb
     - Execution:
       - fundamentals/execution/execution.ipynb
   - Extended usage:
-    - extended_usage/index.md
     - Adimensionalization: extended_usage/adimensionalization.md
     - Emulation configuration: extended_usage/execution_config.md
     - Custom embedders: extended_usage/custom_embedders.md
@@ -29,14 +28,12 @@ nav:
     - tutorials/index.md
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
   - API reference:
-    - reference/index.md
-    - API reference: reference/api.md
+    - reference/api.md
   - Contribute:
-    - contribute/index.md
-    - How to contribute: contribute/CONTRIBUTING.md
-    - Code of conduct: contribute/CODE_OF_CONDUCT.md
-    - License: contribute/LICENSE.md
-    - Contributor Agreement: contribute/CONTRIBUTOR_AGREEMENT.md
+    - How to contribute: CONTRIBUTING.md
+    - Code of conduct: CODE_OF_CONDUCT.md
+    - License: LICENSE.md
+    - Contributor Agreement: CONTRIBUTOR_AGREEMENT.md
 
 theme:
   name: material

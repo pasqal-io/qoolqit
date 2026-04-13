@@ -1,15 +1,20 @@
-In this page, you will learn how to:
+ In this page, you will learn how to build a quantum program, from its building blocks:
 
-- create a `Register` from a dictionary of labeled qubit coordinates,
-- build a `Register` directly from a list of coordinates,
-- define `Waveforms` selecting amplitude and detuning,
-- build a `Drive` from waveform components,
-- create a `QuantumProgram` from a `Register` and a `Drive`,
-- check whether a program has already been compiled.
+- Create a `Register` from a set of coordinates,
+- Define `Waveforms` selecting amplitude and detuning,
+- Build a `Drive` from waveform components,
+- Instantiate a `QuantumProgram` from a `Register` and a `Drive`,
+- Check whether a program has already been compiled.
 
 ---
 
-# Registers
+The QuantumProgram defines the protocol used to solve your problem within the adimensional framework of the [Rydberg Analog model](../get_started/qoolqit_model.md).
+
+In practice, this involves specifying both the interaction and the driving Hamiltonian. In QoolQit, these are set up by creating a `Register`, which determines the positions of the qubits, and a `Drive` object, which describes how laser fields control the qubits over time.
+
+To run the program on real quantum hardware, the abstract `QuantumProgram` must first be compiled into a form compatible with a specific QPU. This compilation process will be covered later in the [Compilation](./compilation/rationale.md) page.
+
+## Registers
 
 A `Register` defines the qubit resources to be used by a quantum program.
 
@@ -24,7 +29,6 @@ qubits = {
 }
 
 register = Register(qubits)
-
 print(register)  # markdown-exec: hide
 ```
 
@@ -38,6 +42,7 @@ register = Register.from_coordinates(coords)
 
 import matplotlib.pyplot as plt # markdown-exec: hide
 from docs.utils import fig_to_html # markdown-exec: hide
+
 register.draw()
 fig = register.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
@@ -65,11 +70,11 @@ print(register.interactions())  # markdown-exec: hide
 ```
 
 
-# Waveforms
+## Waveforms
 
 An essential part of writing programs in the Rydberg analog model is to write the time-dependent functions representing the amplitude and detuning terms in the drive Hamiltonian. For that, QoolQit implements a set of waveforms that can be used directly and/or composed together.
 
-## Base waveforms
+### Base waveforms
 
 A full list of the available waveforms can be found in the [API reference][qoolqit.waveforms].
 
@@ -129,7 +134,7 @@ fig = wf3.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-## Interpolated waveform
+### Interpolated waveform
 
 Special waveform to easily fit a set given values with a smooth function.
 For the full set of available options please refer to the [API reference][qoolqit.waveforms].
@@ -144,7 +149,7 @@ fig = wf_interpolated.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-## Composite waveforms
+### Composite waveforms
 
 The most straightforward way to arbitrarily compose waveforms is to use the `>>` operator. This will create a `CompositeWaveform` representing the waveforms in the order provided.
 
@@ -194,38 +199,40 @@ print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
 
-## Custom waveforms
+### Custom waveforms
 
 Built-in waveforms cover the most common shapes, but any differentiable (or piecewise-smooth)
-profile can be realised by subclassing `Waveform`. For a full walkthrough — including concrete
+profile can be realized by subclassing `Waveform`. For a full walkthrough — including concrete
 examples and how to use custom waveforms inside a `Drive` — see
 [Defining custom waveforms](../extended_usage/custom_waveforms.md).
 
 
-# Drives
+## Drives
 
-
-The `Drive` is a composition of waveforms defining the drive Hamiltonian.
+The `Drive` is a collection of amplitude and detuning waveforms, plus an optional phase, fully specifying the drive Hamiltonian described in the [QoolQit model](../get_started/qoolqit_model.md#qoolqit-model) page.
+Here is an example on how to create a drive:
 
 ```python exec="on" source="material-block" result="json" session="drives"
 from qoolqit import Constant, Ramp
 from qoolqit import Drive
 
 # Defining two waveforms
-wf0 = Constant(0.5, 1.0) >> Ramp(1.0, 0.0, 0.5)
-wf1 = Ramp(2.0, -1.0, 1.0) >> Constant(1.0, 1.0)
+amplitude = Constant(duration=5.0, value=1.0) >> Ramp(1.0, 0.0, 0.5)
+detuning = Ramp(2.0, -1.0, 1.0) >> Constant(1.0, 1.0)
 
 # Defining the drive
 drive = Drive(
-    amplitude = wf0,
-    detuning = wf1
+    amplitude = amplitude,
+    detuning = detuning
 )
 
 # Expanding the drive through composition
 drive = drive >> drive
-
 print(drive)  # markdown-exec: hide
 ```
+
+While defining an amplitude is required, if not provided, the detuning and the phase value will be assumed to be zero.
+Finally, after creation, drives can be conveniently plotted and inspected as:
 
 ```python exec="on" source="material-block" html="1" session="drives"
 import matplotlib.pyplot as plt # markdown-exec: hide
@@ -235,7 +242,14 @@ fig = drive.draw(return_fig = True) # markdown-exec: hide
 print(fig_to_html(fig)) # markdown-exec: hide
 ```
 
-# Defining a quantum program
+To understand the role of time and the duration of a drive in the Rydberg Analog model, please have a look at the [Time regimes](../get_started/qoolqit_model.md#time-regimes) page.
+Alternatively, duration can also be overwritten at compilation time, as relative to the maximum duration allowed by a specific hardware device.
+Such feature, is useful, for example, when working on adiabatic protocols.
+For more details, please have a look at the [Device and compilation](../fundamentals/compilation/device_and_compilation.md) page of the documentation, specifically at the [Special compilation flags](../fundamentals/compilation/device_and_compilation.md#special-compilation-maximum-allowed-duration) section.
+
+Finally, at the [compilation stage](../fundamentals/compilation/device_and_compilation.md), the duration set by the user might be higher than what the selected QPU device allows. Compilation will thus trigger an informative error about the hardware limitations and how to comply with those.
+
+## Defining a quantum program
 
 A `QuantumProgram` combines a `Register` and a `Drive` and serves as the main interface for compilation and execution.
 

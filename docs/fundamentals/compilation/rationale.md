@@ -8,7 +8,9 @@ In this page, you will learn how to:
 - inspect the compiled Pulser `Sequence`,
 - visualize both the original program and its compiled version.
 
-# Compiling a quantum program
+---
+
+## Compiling a quantum program
 
 A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as
 dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is
@@ -29,7 +31,7 @@ page. The key identities are:
 
 $$
 r_{ij} = \left(\frac{C_6}{J_0}\right)^{1/6}	\tilde{r}_{ij},
-\qqad
+\qquad
 \Omega(t) = J_0\,	\tilde{\Omega}(	\tilde{t}),
 \qquad
 \delta(t) = J_0\,	\tilde{\delta}(	\tilde{t}),
@@ -42,7 +44,7 @@ the physical runtime, and the physical atom spacings.
 
 ---
 
-## Default compilation
+### Default compilation
 
 A device imposes hardware constraints on the compiled program. The two most important ones for
 compilation are:
@@ -79,10 +81,13 @@ In this regime the compiled program runs at **maximum device amplitude**, and th
 
 When the program's energy ratio is within the device budget, the minimum-spacing constraint is reached first (red line). The largest valid $J_0$ is obtained by **saturating the distance limit**.
 
-In this regime the compiled register uses the smallest physical spacing the device allows, and the
-resulting amplitude is below $\Omega_{\max}$.
+In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below $\Omega_{\max}$.
 
 !!! note "QoolQit always maximizes the physical energy scale"
     In both cases, QoolQit selects the largest feasible reference scale $J_0$. Doing so
     gives the fastest possible physical runtime for the program, since $t = \tilde{t}/J_0$
     decreases as $J_0$ increases.
+
+
+### Working point compilation
+In progress...

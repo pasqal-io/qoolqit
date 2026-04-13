@@ -1,15 +1,12 @@
-# Introduction
-
-
 ## Qoolqit model
 
 In neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**. The interaction strength between two atoms decreases rapidly with their separation $r$ (as $1/r^6$), while the laser beams determine how strongly each atom is driven.
 
 As a result, the behavior of the system is not set by absolute values alone, but by the **interplay between geometry (distances) and control strength (laser power)**. Different combinations of these quantities can lead to equivalent physical behavior, as long as their relative scales are preserved.
 
-!!! QoolQit introduces a **dimensionless reference frame** where all quantities are expressed in function of an **interaction reference**.
+!!! note "QoolQit introduces a **dimensionless reference frame** where all quantities are expressed in function of an **interaction reference**."
 
-The quantum system is described by the following Hamiltonian:
+The quantum system is thus described by the sum of two energetic contribution, the interaction and the driving one, as described by the following Hamiltonian:
 
 $$
 \tilde{H}(t) =
@@ -39,7 +36,7 @@ $$
 
 This means that programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
 
-!!! The actual physical scale — such as the precise distances or laser amplitudes — is determined only later, during the **compilation step**, when targeting a specific device.
+!!! note "The actual physical scale — such as the precise distances or laser amplitudes — is determined only later, during the **compilation step**, when targeting a specific device."
 
 More details about the connection to physical units are provided in the section [Adimensionalization](../extended_usage/adimensionalization.md).
 
@@ -97,7 +94,6 @@ A convenient way to understand this is to first work entirely in dimensionless u
 This means that compilation does **not** change the dimensionless physics of the program. Instead, it rescales the program so that it lies inside the region that can be implemented on a given device.
 
 ### Example
-
 
 Consider a program defined by $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4),$ so that $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}} = 0.4$.
 
