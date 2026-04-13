@@ -50,7 +50,7 @@ def interaction_embedding(
 
     # Initial guess for the coordinates
     if not x0:
-        np.random.random(len(matrix) * 2)
+        x0=np.random.random(len(matrix) * 2)
 
     res = minimize(
         cost_function,
