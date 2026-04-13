@@ -19,6 +19,7 @@ class InteractionEmbedderConfig(EmbedderConfig):
     method: str = "Nelder-Mead"
     maxiter: int = 200000
     tol: float = 1e-8
+    x0: np.ndarray | None = None
 
 
 def interaction_embedding(
@@ -49,8 +50,8 @@ def interaction_embedding(
     np.random.seed(0)
 
     # Initial guess for the coordinates
-    if not x0:
-        x0=np.random.random(len(matrix) * 2)
+    if x0 is None:
+        x0 = np.random.random(len(matrix) * 2)
 
     res = minimize(
         cost_function,
