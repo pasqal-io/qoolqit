@@ -8,7 +8,7 @@ The first part focuses on **problem definition and embedding**.
 
 - **Problem definition**:
   Problems are represented using graphs.
-  The [`DataGraph`](./graphs.md) class extends NetworkX with features for the Rydberg analog model, including:
+  The [`DataGraph`](./graphs.ipynb) class extends NetworkX with features for the Rydberg analog model, including:
       - node coordinates
       - distance-based methods
       - unit-disk graph logic
