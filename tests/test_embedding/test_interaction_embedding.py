@@ -40,3 +40,14 @@ def test_interaction_embedding(n_qubits: int) -> None:
     with pytest.raises(TypeError):
         graph = DataGraph.random_er(n=n_qubits, p=0.2)
         embedder.embed(graph)  # type: ignore
+
+    x0 = np.random.rand(n_qubits * 2)
+    embedder.config.x0 = x0
+    embedded_graph_x0_1 = embedder.embed(matrix)
+    coords_x0_1 = np.array(list(embedded_graph_x0_1.coords.values()))
+
+    embedded_graph_x0_2 = embedder.embed(matrix)
+    coords_x0_2 = np.array(list(embedded_graph_x0_2.coords.values()))
+
+    # Results should be identical (up to numerical precision)
+    assert np.allclose(coords_x0_1, coords_x0_2, atol=1e-6)
