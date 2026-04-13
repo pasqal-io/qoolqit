@@ -15,7 +15,7 @@ nav:
     - Quantum Program: fundamentals/quantum_program.md
     - Compilation:
       - Compiling a Quantum Program: fundamentals/compilation/rationale.md
-      - Devices and Compilation: fundamentals/compilation/device_and_compilation.md
+      - Devices and Compilation: fundamentals/compilation/device_and_compilation.ipynb
       - Error handling: fundamentals/compilation/error_handling.ipynb
     - Execution:
       - fundamentals/execution/execution.ipynb

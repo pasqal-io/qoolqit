@@ -245,9 +245,9 @@ print(fig_to_html(fig)) # markdown-exec: hide
 To understand the role of time and the duration of a drive in the Rydberg Analog model, please have a look at the [Time regimes](../get_started/qoolqit_model.md#time-regimes) page.
 Alternatively, duration can also be overwritten at compilation time, as relative to the maximum duration allowed by a specific hardware device.
 Such feature, is useful, for example, when working on adiabatic protocols.
-For more details, please have a look at the [Device and compilation](../fundamentals/compilation/device_and_compilation.md) page of the documentation, specifically at the [Special compilation flags](../fundamentals/compilation/device_and_compilation.md#special-compilation-maximum-allowed-duration) section.
+For more details, please have a look at the [Device and compilation](../fundamentals/compilation/device_and_compilation.ipynb) page of the documentation, specifically at the [Special compilation flags](../fundamentals/compilation/device_and_compilation.ipynb#special-compilation-maximum-allowed-duration) section.
 
-Finally, at the [compilation stage](../fundamentals/compilation/device_and_compilation.md), the duration set by the user might be higher than what the selected QPU device allows. Compilation will thus trigger an informative error about the hardware limitations and how to comply with those.
+Finally, at the [compilation stage](../fundamentals/compilation/device_and_compilation.ipynb), the duration set by the user might be higher than what the selected QPU device allows. Compilation will thus trigger an informative error about the hardware limitations and how to comply with those.
 
 ## Defining a quantum program
 

@@ -32,7 +32,7 @@ The [quantum program](./quantum_program.md#defining-a-quantum-program) page deta
 - a [`Register`](./quantum_program.md#registers) — qubit positions
 - a [`Drive`](./quantum_program.md#drives) — drive Hamiltonian, as composed of [`Waveforms`](./quantum_program.md#waveforms) to specify the time-dependent qubit controls
 
-Once defined, a quantum program **must** be compiled to a QoolQit `Device`, as described in the [`device amd compilation`](./compilation/device_and_compilation.md) page. This step will encoding hardware constraints and units and generate an executable program.
+Once defined, a quantum program **must** be compiled to a QoolQit `Device`, as described in the [`device amd compilation`](./compilation/device_and_compilation.ipynb) page. This step will encoding hardware constraints and units and generate an executable program.
 
 Finally, see the [execution](./execution/execution.ipynb) page to:
 
