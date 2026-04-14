@@ -36,6 +36,7 @@ def interaction_embedding(
     Arguments:
         matrix: the matrix to embed.
         method: the method used by scipy.minimize.
+        x0: starting positions.
         maxiter: maximum number of iterations.
         tol: tolerance for termination.
     """
