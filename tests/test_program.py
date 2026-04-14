@@ -63,11 +63,10 @@ def test_compiled_sequence_with_small_delays() -> None:
 
 
 @pytest.mark.parametrize("ratio", [0.33, 0.5, 1.0])
-def test_compile_to_max_duration_ratio(
-    ratio: float,
-) -> None:
-    """Test that the compiled sequence's duration is set to the ratio.
+def test_compile_to_max_duration_ratio(ratio: float) -> None:
+    """Test `device_max_duration_ratio` compilation flag.
 
+    Check that that the compiled sequence's duration is set to the ratio
     of the maximum allowed by the device.
     """
     register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
