@@ -93,7 +93,7 @@ def basic_compilation(
     """
     if profile == CompilerProfile.WORKING_POINT:
         TIME, ENERGY, DISTANCE = device.converter.factors
-        _validate_program_default_profile(register, drive, device)
+        _validate_program_default_profile(register, drive, device, device_max_duration_ratio)
     elif profile == CompilerProfile.MAX_ENERGY:
         # fix compilation strategy according to the program energy ratio Ω_max/J_max
         program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
@@ -106,7 +106,7 @@ def basic_compilation(
             # map to the minimum pairwise distance allowed on the device
             DISTANCE = device._target_dist / register.min_distance()
             TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
-        _validate_program_max_energy_profile(register, drive, device)
+        _validate_program_max_energy_profile(register, drive, device, device_max_duration_ratio)
     else:
         raise ValueError(f"Invalid CompilerProfile: {profile}")
 
@@ -186,6 +186,7 @@ def _validate_program_default_profile(
     register: Register,
     drive: Drive,
     device: Device,
+    device_max_duration_ratio: float | None,
 ) -> None:
     """Validate that the program respect the device specs.
 
@@ -216,13 +217,16 @@ def _validate_program_default_profile(
         )
         raise CompilationError(msg + f"{device}")
 
-    duration = drive.duration
-    if specs["max_duration"] and (duration > specs["max_duration"]):
-        msg = (
-            f"The drive's duration {duration:.4f} "
-            "goes over the maximum value allowed for the chosen device:\n"
-        )
-        raise CompilationError(msg + f"{device}")
+    # only check drive if device has a maximum duration
+    # and it is not manually set with device_max_duration_ratio
+    if specs["max_duration"] and (device_max_duration_ratio is None):
+        duration = drive.duration
+        if duration > specs["max_duration"]:
+            msg = (
+                f"The drive's duration {duration:.4f} "
+                "goes over the maximum value allowed for the chosen device:\n"
+            )
+            raise CompilationError(msg + f"{device}")
 
     if register.n_qubits > 1:
         min_distance = register.min_distance()
@@ -246,6 +250,7 @@ def _validate_program_max_energy_profile(
     register: Register,
     drive: Drive,
     device: Device,
+    device_max_duration_ratio: float | None,
 ) -> None:
     """Validate that the program respect the given device specifications.
 
@@ -303,8 +308,10 @@ def _validate_program_max_energy_profile(
             )
             raise CompilationError(msg_init + msg)
 
-    duration = drive.duration
-    if specs["max_duration"]:
+    # only check drive if device has a maximum duration
+    # and it is not manually set with device_max_duration_ratio
+    if specs["max_duration"] and (device_max_duration_ratio is None):
+        duration = drive.duration
         max_duration_to_compile = specs["max_duration"] / TIME
         if duration > max_duration_to_compile:
             msg = (
