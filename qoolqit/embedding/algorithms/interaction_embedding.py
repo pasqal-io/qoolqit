@@ -23,7 +23,7 @@ class InteractionEmbedderConfig(EmbedderConfig):
 
 
 def interaction_embedding(
-    matrix: np.ndarray, method: str, maxiter: int, tol: float, x0: np.ndarray | None
+    matrix: np.ndarray, method: str, x0: np.ndarray | None, maxiter: int, tol: float
 ) -> DataGraph:
     """Matrix embedding into the interaction term of the Rydberg Analog Model.
 
