@@ -92,6 +92,9 @@ def test_compile_to_max_duration(duration: float) -> None:
     program = QuantumProgram(reg, drive)
     program.compile_to(AnalogDevice(), device_max_duration_ratio=1.0)
 
+    assert program.is_compiled
+    assert program.compiled_sequence.get_duration() == 6000
+
 
 def test_max_duration_ratio_error() -> None:
     """Test that a ValueError is raised when the device_max_duration_ratio is not in (0,1]."""
