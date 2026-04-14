@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
     
     
       
@@ -49317,7 +49317,7 @@ of the device's maximum allowed duration.</p>
 <a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="k">if</span> <span class="n">profile</span> <span class="o">==</span> <span class="n">CompilerProfile</span><span class="o">.</span><span class="n">WORKING_POINT</span><span class="p">:</span>
 <a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="n">TIME</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">DISTANCE</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">factors</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="n">_validate_program_default_profile</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">drive</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="n">_validate_program_default_profile</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">drive</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">device_max_duration_ratio</span><span class="p">)</span>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a>    <span class="k">elif</span> <span class="n">profile</span> <span class="o">==</span> <span class="n">CompilerProfile</span><span class="o">.</span><span class="n">MAX_ENERGY</span><span class="p">:</span>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="c1"># fix compilation strategy according to the program energy ratio Ω_max/J_max</span>
 <a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="n">program_energy_ratio</span> <span class="o">=</span> <span class="n">drive</span><span class="o">.</span><span class="n">amplitude</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="n">register</span><span class="o">.</span><span class="n">min_distance</span><span class="p">()</span> <span class="o">**</span> <span class="mi">6</span>
@@ -49330,7 +49330,7 @@ of the device's maximum allowed duration.</p>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a>            <span class="c1"># map to the minimum pairwise distance allowed on the device</span>
 <a id="__codelineno-0-107" name="__codelineno-0-107"></a>            <span class="n">DISTANCE</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_target_dist</span> <span class="o">/</span> <span class="n">register</span><span class="o">.</span><span class="n">min_distance</span><span class="p">()</span>
 <a id="__codelineno-0-108" name="__codelineno-0-108"></a>            <span class="n">TIME</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">DISTANCE</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">factors_from_distance</span><span class="p">(</span><span class="n">DISTANCE</span><span class="p">)</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a>        <span class="n">_validate_program_max_energy_profile</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">drive</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a>        <span class="n">_validate_program_max_energy_profile</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">drive</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">device_max_duration_ratio</span><span class="p">)</span>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a>    <span class="k">else</span><span class="p">:</span>
 <a id="__codelineno-0-111" name="__codelineno-0-111"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid CompilerProfile: </span><span class="si">{</span><span class="n">profile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a>
