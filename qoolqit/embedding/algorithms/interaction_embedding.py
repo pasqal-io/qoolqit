@@ -51,12 +51,11 @@ def interaction_embedding(
     rng = np.random.default_rng(0)
 
     if x0 is None:
-            # random initial positions
-            x0 = rng.random((len(matrix), 2), dtype=matrix.dtype)
+        # random initial positions
+        x0 = rng.random((len(matrix), 2), dtype=matrix.dtype)
 
     # make sure positions are of same type as matrix and flatten
     x0 = np.asarray(x0.flatten(), dtype=matrix.dtype)
-
 
     res = minimize(
         cost_function,
