@@ -48,11 +48,15 @@ def interaction_embedding(
         new_matrix = squareform(1.0 / (pdist(new_coords) ** 6))
         return np.linalg.norm(new_matrix - matrix)
 
-    np.random.seed(0)
+    rng = np.random.default_rng(0)
 
-    # Initial guess for the coordinates
     if x0 is None:
-        x0 = np.random.random(len(matrix) * 2)
+            # random initial positions
+            x0 = rng.random((len(matrix), 2), dtype=matrix.dtype)
+
+    # make sure positions are of same type as matrix and flatten
+    x0 = np.asarray(x0.flatten(), dtype=matrix.dtype)
+
 
     res = minimize(
         cost_function,
