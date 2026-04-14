@@ -67,7 +67,7 @@ def test_compile_to_max_duration_ratio(ratio: float) -> None:
     """Test `device_max_duration_ratio` compilation flag.
 
     Check that that the compiled sequence's duration is set to the ratio
-    of the maximum allowed by the device.
+    of the maximum duration allowed by the device.
     """
     register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
     drive = Drive(amplitude=Constant(2.0, 1.0))
