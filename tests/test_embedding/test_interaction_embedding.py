@@ -50,4 +50,4 @@ def test_interaction_embedding(n_qubits: int) -> None:
     coords_x0_2 = np.array(list(embedded_graph_x0_2.coords.values()))
 
     # Results should be identical (up to numerical precision)
-    assert np.allclose(coords_x0_1, coords_x0_2, atol=1e-6)
+    np.testing.assert_allclose(coords_x0_1, coords_x0_2, atol=1e-6)
