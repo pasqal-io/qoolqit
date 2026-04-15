@@ -28,7 +28,16 @@ nav:
     - tutorials/index.md
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
   - API reference:
-    - reference/api.md
+    - qoolqit: reference/qoolqit.md
+    - qoolqit.embedding: reference/embedding.md
+    - qoolqit.graphs: reference/graphs.md
+    - qoolqit.register: reference/register.md
+    - qoolqit.waveforms: reference/waveforms.md
+    - qoolqit.drive: reference/drive.md
+    - qoolqit.program: reference/program.md
+    - qoolqit.devices: reference/devices.md
+    - qoolqit.execution: reference/execution.md
+    - qoolqit.exceptions: reference/exceptions.md
   - Contribute:
     - How to contribute: CONTRIBUTING.md
     - Code of conduct: CODE_OF_CONDUCT.md
