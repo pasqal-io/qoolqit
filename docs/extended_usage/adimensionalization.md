@@ -42,7 +42,7 @@ Here $\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)$ is the Rydberg occupatio
 
 ---
 
-## Introducing the reference energy $J_0$
+## Introducing the reference energy
 
 Because the interaction between Rydberg atoms depends on their separation, QoolQit introduces a reference distance $r_0$ and the corresponding reference interaction in order to make programs device-agnostic.
 
