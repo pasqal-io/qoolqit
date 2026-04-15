@@ -2,22 +2,24 @@ from __future__ import annotations
 
 import math
 import time
-from abc import ABC
+from abc import ABC, abstractmethod
 from enum import Enum, auto
 from typing import Generic, TypeVar
 
-from pulser.backend import remote, Results
+from pulser.backend import Results, remote
 
 ResultType = TypeVar("ResultType")
 
 
 class JobFailedError(Exception):
     """Raised when a job reaches a failed or error state."""
+
     pass
 
 
 class JobCancelledError(Exception):
     """Raised when a job was cancelled before or during execution."""
+
     pass
 
 
@@ -58,14 +60,17 @@ class Job(ABC, Generic[ResultType]):
                            -> CANCELLED
     """
 
+    @abstractmethod
     def get_status(self) -> JobStatus:
         """Return the current status of the job."""
         ...
 
+    @abstractmethod
     def id(self) -> str:
         """Return the unique identifier of the job."""
         ...
 
+    @abstractmethod
     def result(self, timeout: float = math.inf, wait: float = 5) -> ResultType:
         """Block until the job completes and return its result.
 
@@ -80,16 +85,17 @@ class Job(ABC, Generic[ResultType]):
         """
         ...
 
+    @abstractmethod
     def message(self) -> str:
         """Return the latest status message, or an empty string if none."""
         ...
 
+    @abstractmethod
     def cancel(self) -> None:
         """Request cancellation of the job.
 
         Has no effect if the job has already reached a terminal state.
         After cancellation, status() will return JobStatus.CANCELLED and done() will return True.
-
         """
         ...
 
@@ -131,12 +137,12 @@ class _RemoteJob(Job[Results]):
     """Job implementation for remote/asynchronous execution."""
 
     _STATUS_MAP = {
-        remote.JobStatus.PENDING:  JobStatus.PENDING,
-        remote.JobStatus.RUNNING:  JobStatus.RUNNING,
-        remote.JobStatus.DONE:     JobStatus.SUCCEEDED,
+        remote.JobStatus.PENDING: JobStatus.PENDING,
+        remote.JobStatus.RUNNING: JobStatus.RUNNING,
+        remote.JobStatus.DONE: JobStatus.SUCCEEDED,
         remote.JobStatus.CANCELED: JobStatus.CANCELLED,
-        remote.JobStatus.ERROR:    JobStatus.FAILED,
-        remote.JobStatus.PAUSED:   JobStatus.RUNNING,
+        remote.JobStatus.ERROR: JobStatus.FAILED,
+        remote.JobStatus.PAUSED: JobStatus.RUNNING,
     }
 
     def __init__(self, remote_results: remote.RemoteResults) -> None:
@@ -145,7 +151,7 @@ class _RemoteJob(Job[Results]):
         job_ids = self._remote_results.job_ids
         assert len(job_ids) > 0
         # If in open-batch mode, the job should be the last one in the batch ?
-        self._id = job_ids[-1]
+        self._id: str = job_ids[-1]
 
     def get_status(self) -> JobStatus:
         status = self._remote_results.get_status()

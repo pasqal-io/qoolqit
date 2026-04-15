@@ -1,17 +1,15 @@
 from __future__ import annotations
 
-from typing import Sequence
-
 from pulser.backend import BackendConfig, BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
 from pulser.backend.config import EmulationConfig
 from pulser.backend.qpu import QPUBackend
-from pulser.backend.remote import RemoteConnection, RemoteResults
+from pulser.backend.remote import RemoteConnection
 from pulser_pasqal.backends import EmuFreeBackendV2, RemoteEmulatorBackend
 from pulser_simulation import QutipBackendV2
 
-from qoolqit.program import QuantumProgram
 from qoolqit.execution import job
+from qoolqit.program import QuantumProgram
 
 
 class PulserEmulatorBackend:
@@ -113,12 +111,13 @@ class LocalEmulator(PulserEmulatorBackend):
     def run(self, program: QuantumProgram) -> job.Job[Results]:
         """Run a compiled QuantumProgram and return the results."""
         self._backend = self._backend_type(program.compiled_sequence, config=self._emulation_config)
+        # Maybe don't catch the exception ?
         try:
             results = self._backend.run()
             assert isinstance(results, Results)
             return job._LocalJob(results, "")
         except Exception as e:
-            return job._LocalJob(None, e.message())
+            return job._LocalJob(None, str(e))
 
 
 class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
@@ -279,7 +278,7 @@ class QPU(PulserRemoteBackend):
         remote_results = self._backend.run(wait=wait)
         return job._RemoteJob(remote_results)
 
-    def run(self, program: QuantumProgram) -> Sequence[Results]:
+    def run(self, program: QuantumProgram) -> job.Job[Results]:
         """Execute a compiled quantum program on the QPU and return the results.
 
         This method submits the program and waits for completion before returning
