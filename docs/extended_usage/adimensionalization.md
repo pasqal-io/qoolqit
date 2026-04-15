@@ -85,10 +85,7 @@ $$
 $$
 
 !!! note "Key convention"
-    In QoolQit, the minimum dimensionless distance is fixed so that $\min(\tilde r_{ij})=1$. Equivalently, the maximum dimensionless interaction is normalized to $1$:
-    $$
-    \max(\tilde J_{ij}) = 1.
-    $$
+    In QoolQit, the minimum dimensionless distance is fixed so that $\min(\tilde r_{ij})=1$. Equivalently, the maximum dimensionless interaction is normalized to $\max(\tilde J_{ij}) = 1$
 
 This is the convention used throughout the documentation: the user specifies a dimensionless program, and compilation later chooses which physical scale $J_0$ will be used to realize it.
 
