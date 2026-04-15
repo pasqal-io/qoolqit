@@ -11,6 +11,7 @@ from pulser_pasqal.backends import EmuFreeBackendV2, RemoteEmulatorBackend
 from pulser_simulation import QutipBackendV2
 
 from qoolqit.program import QuantumProgram
+from qoolqit.execution import job
 
 
 class PulserEmulatorBackend:
@@ -109,12 +110,15 @@ class LocalEmulator(PulserEmulatorBackend):
         self._backend_type = backend_type
         self._emulation_config = self.validate_emulation_config(emulation_config)
 
-    def run(self, program: QuantumProgram) -> Sequence[Results]:
+    def run(self, program: QuantumProgram) -> job.Job[Results]:
         """Run a compiled QuantumProgram and return the results."""
         self._backend = self._backend_type(program.compiled_sequence, config=self._emulation_config)
-        results = self._backend.run()
-        res_seq = (results,) if isinstance(results, Results) else tuple(results)
-        return res_seq
+        try:
+            results = self._backend.run()
+            assert isinstance(results, Results)
+            return job._LocalJob(results, "")
+        except Exception as e:
+            return job._LocalJob(None, e.message())
 
 
 class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
@@ -170,7 +174,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         self._connection = self.validate_connection(connection)
         self._emulation_config = self.validate_emulation_config(emulation_config)
 
-    def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
+    def submit(self, program: QuantumProgram, wait: bool = False) -> job.Job[Results]:
         """Submit a compiled QuantumProgram and return a remote handler of the results.
 
         The returned handler `RemoteResults` can be used to:
@@ -188,13 +192,11 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
             config=self._emulation_config,
         )
         remote_results = self._backend.run(wait=wait)
-        return remote_results
+        return job._RemoteJob(remote_results)
 
-    def run(self, program: QuantumProgram) -> Sequence[Results]:
+    def run(self, program: QuantumProgram) -> job.Job[Results]:
         """Run a compiled QuantumProgram remotely and return the results."""
-        remote_results = self.submit(program, wait=True)
-        res_seq: Sequence[Results] = remote_results.results
-        return res_seq
+        return self.submit(program, wait=True)
 
 
 class QPU(PulserRemoteBackend):
@@ -256,7 +258,7 @@ class QPU(PulserRemoteBackend):
             )
         self._config = BackendConfig(default_num_shots=num_shots)
 
-    def submit(self, program: QuantumProgram, wait: bool = False) -> RemoteResults:
+    def submit(self, program: QuantumProgram, wait: bool = False) -> job.Job[Results]:
         """Submit a compiled quantum program to the QPU and return a result handler.
 
         Args:
@@ -275,7 +277,7 @@ class QPU(PulserRemoteBackend):
             program.compiled_sequence, connection=self._connection, config=self._config
         )
         remote_results = self._backend.run(wait=wait)
-        return remote_results
+        return job._RemoteJob(remote_results)
 
     def run(self, program: QuantumProgram) -> Sequence[Results]:
         """Execute a compiled quantum program on the QPU and return the results.
@@ -289,6 +291,4 @@ class QPU(PulserRemoteBackend):
         Returns:
             The execution results from the QPU.
         """
-        remote_results = self.submit(program, wait=True)
-        res_seq: Sequence[Results] = remote_results.results
-        return res_seq
+        return self.submit(program, wait=True)
