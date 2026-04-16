@@ -7,6 +7,7 @@ from enum import Enum, auto
 from typing import Generic, TypeVar
 
 from pulser.backend import Results, remote
+from pulser_pasqal import PasqalCloud
 
 ResultType = TypeVar("ResultType")
 
@@ -181,3 +182,11 @@ class _RemoteJob(Job[Results]):
                 raise JobCancelledError(f"Job {self.id()} was cancelled.")
             time.sleep(wait)
         raise TimeoutError(f"Job {self.id()} did not complete within {timeout} seconds.")
+
+
+def retrieve_remote_job(id: str, connection: PasqalCloud) -> Job[Results]:
+    # Is there a way to retrieve a job with _sdk_connection ?
+    # Maybe input a sdk instead ?
+    batch_id = connection._sdk_connection.get_job(id).batch_id
+    remote_results = connection.get_results(batch_id, [id])
+    return _RemoteJob(remote_results)
