@@ -70,6 +70,6 @@ Finally, before contributing, please take a moment to review the following:
 
 - [Code of Conduct](./CODE_OF_CONDUCT.md)
 - [Contributor Agreement](./CONTRIBUTOR_AGREEMENT.md)
-- [License](./LICENSE.md)
+- [License](https://github.com/pasqal-io/qoolqit/blob/main/LICENSE.md)
 
 By contributing, you agree to follow and accept these documents.
