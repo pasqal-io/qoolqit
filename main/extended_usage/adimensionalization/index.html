@@ -1081,10 +1081,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#introducing-the-reference-energy-j_0" class="md-nav__link">
+  <a href="#introducing-the-reference-energy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Introducing the reference energy \(J_0\)
+        Introducing the reference energy
       
     </span>
   </a>
@@ -1629,10 +1629,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#introducing-the-reference-energy-j_0" class="md-nav__link">
+  <a href="#introducing-the-reference-energy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Introducing the reference energy \(J_0\)
+        Introducing the reference energy
       
     </span>
   </a>
@@ -1819,7 +1819,7 @@ H(t) =
 </tbody>
 </table>
 <hr />
-<h2 id="introducing-the-reference-energy-j_0">Introducing the reference energy <span class="arithmatex">\(J_0\)</span></h2>
+<h2 id="introducing-the-reference-energy">Introducing the reference energy</h2>
 <p>Because the interaction between Rydberg atoms depends on their separation, QoolQit introduces a reference distance <span class="arithmatex">\(r_0\)</span> and the corresponding reference interaction in order to make programs device-agnostic.</p>
 <div class="arithmatex">\[
 r_0 \;\text{(reference distance)},
@@ -1854,10 +1854,7 @@ J_0 = \frac{C_6}{r_0^6} \;\text{(reference interaction)}.
 \]</div>
 <div class="admonition note">
 <p class="admonition-title">Key convention</p>
-<p>In QoolQit, the minimum dimensionless distance is fixed so that <span class="arithmatex">\(\min(\tilde r_{ij})=1\)</span>. Equivalently, the maximum dimensionless interaction is normalized to <span class="arithmatex">\(1\)</span>:
-$$
-\max(\tilde J_{ij}) = 1.
-$$</p>
+<p>In QoolQit, the minimum dimensionless distance is fixed so that <span class="arithmatex">\(\min(\tilde r_{ij})=1\)</span>. Equivalently, the maximum dimensionless interaction is normalized to <span class="arithmatex">\(\max(\tilde J_{ij}) = 1\)</span></p>
 </div>
 <p>This is the convention used throughout the documentation: the user specifies a dimensionless program, and compilation later chooses which physical scale <span class="arithmatex">\(J_0\)</span> will be used to realize it.</p>
 <hr />
