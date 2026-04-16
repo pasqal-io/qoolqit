@@ -12,7 +12,7 @@ nav:
     - fundamentals/introduction.md
     - Graphs: fundamentals/graphs.ipynb
     - Embedding: fundamentals/embedding.ipynb
-    - Quantum Program: fundamentals/quantum_program.md
+    - Quantum Program: fundamentals/quantum_program.ipynb
     - Compilation:
       - Compiling a Quantum Program: fundamentals/compilation/rationale.md
       - Devices and Compilation: fundamentals/compilation/device_and_compilation.ipynb
@@ -85,6 +85,7 @@ plugins:
 - search
 - section-index
 - markdown-exec
+- autorefs
 - mkdocs-jupyter:
     include: ["*.ipynb"]
     include_requirejs: true

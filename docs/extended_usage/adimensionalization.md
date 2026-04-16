@@ -42,7 +42,7 @@ Here $\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)$ is the Rydberg occupatio
 
 ---
 
-## Introducing the reference energy $J_0$
+## Introducing the reference energy
 
 Because the interaction between Rydberg atoms depends on their separation, QoolQit introduces a reference distance $r_0$ and the corresponding reference interaction in order to make programs device-agnostic.
 
@@ -85,10 +85,7 @@ $$
 $$
 
 !!! note "Key convention"
-    In QoolQit, the minimum dimensionless distance is fixed so that $\min(\tilde r_{ij})=1$. Equivalently, the maximum dimensionless interaction is normalized to $1$:
-    $$
-    \max(\tilde J_{ij}) = 1.
-    $$
+    In QoolQit, the minimum dimensionless distance is fixed so that $\min(\tilde r_{ij})=1$. Equivalently, the maximum dimensionless interaction is normalized to $\max(\tilde J_{ij}) = 1$
 
 This is the convention used throughout the documentation: the user specifies a dimensionless program, and compilation later chooses which physical scale $J_0$ will be used to realize it.
 
