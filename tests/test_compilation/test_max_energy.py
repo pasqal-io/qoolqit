@@ -22,7 +22,7 @@ from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
 
 
-class TestWorkingPointCompilerProfile:
+class TestMaxEnergyCompilerProfile:
     profile = CompilerProfile.MAX_ENERGY
 
     @pytest.fixture(autouse=True)
@@ -82,8 +82,10 @@ class TestWorkingPointCompilerProfile:
             max_abs_det_allowed = device.specs["max_abs_detuning"] / ENERGY
             with pytest.raises(
                 CompilationError,
-                match="To compile your program, set the maximum absolute"
-                f" detuning below {max_abs_det_allowed}",
+                match=(
+                    f"To compile this program on the selected device `{device.name}`, "
+                    f"set the maximum absolute detuning below {max_abs_det_allowed}"
+                ),
             ):
                 program.compile_to(AnalogDevice(), profile=self.profile)
 
@@ -99,7 +101,10 @@ class TestWorkingPointCompilerProfile:
         ENERGY = device._target_amp_adim / amplitude.max()
         if device.specs["max_duration"]:
             max_duration_allowed = device.specs["max_duration"] * ENERGY
-            msg = f"To compile your program, set the drive's duration below {max_duration_allowed}"
+            msg = (
+                f"To compile this program on the selected device `{device.name}`, "
+                f"set the drive's duration below {max_duration_allowed}"
+            )
             with pytest.raises(CompilationError, match=msg):
                 program.compile_to(AnalogDevice(), profile=self.profile)
 
@@ -114,8 +119,8 @@ class TestWorkingPointCompilerProfile:
         if device.specs["max_radial_distance"]:
             max_radial_distance_allowed = device.specs["max_radial_distance"] * ENERGY ** (1 / 6)
             msg = (
-                "To compile your program, set the maximum radial"
-                f" distance below {max_radial_distance_allowed}"
+                f"To compile this program on the selected device `{device.name}`, "
+                f"the maximum radial distance must be below {max_radial_distance_allowed}"
             )
             with pytest.raises(CompilationError, match=msg):
                 program.compile_to(AnalogDevice(), profile=self.profile)

@@ -292,8 +292,8 @@ def _validate_program_max_energy_profile(
         if max_radial_distance > max_radial_distance_to_compile:
             msg = (
                 "The register's maximum radial distance went over the maximum value allowed.\n"
-                "To compile your program, set the "
-                f"maximum radial distance below {max_radial_distance_to_compile}"
+                f"To compile this program on the selected device `{device.name}`, "
+                f"the maximum radial distance must be below {max_radial_distance_to_compile}"
             )
             raise CompilationError(msg_init + msg)
 
@@ -303,7 +303,7 @@ def _validate_program_max_energy_profile(
         if max_abs_detuning > max_abs_detuning_to_compile:
             msg = (
                 "The drive's maximum absolute detuning went over the maximum value allowed.\n"
-                "To compile your program, set the "
+                f"To compile this program on the selected device `{device.name}`, set the "
                 f"maximum absolute detuning below {max_abs_detuning_to_compile}"
             )
             raise CompilationError(msg_init + msg)
@@ -316,7 +316,7 @@ def _validate_program_max_energy_profile(
         if duration > max_duration_to_compile:
             msg = (
                 "The drive's duration went over the maximum value allowed.\n"
-                "To compile your program, set the "
+                f"To compile this program on the selected device `{device.name}`, set the "
                 f"drive's duration below {max_duration_to_compile}"
             )
             raise CompilationError(msg_init + msg)
