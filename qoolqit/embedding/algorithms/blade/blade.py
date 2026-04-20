@@ -588,9 +588,10 @@ class BladeConfig(EmbedderConfig):
     compute_weight_relative_threshold: Callable[[float], float] = lambda _: 0.1
     compute_max_distance_to_walk: Callable[
         [float, float | None], float | tuple[float, float, float]
-    ] = lambda x, max_radial_dist: np.inf
-    starting_ratio_factor: int = 2
-    draw_steps: bool | list[int] = False
+    ] = default_compute_max_distance_to_walk
+    compute_regulation_cursor: Callable[[float], float] = lambda _: 0.1
+    compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors
+    ratio_rerun: int = 2
     device: InitVar[Device | None] = None
 
     def __post_init__(self, device: Device | None) -> None:
