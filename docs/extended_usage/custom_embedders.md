@@ -90,7 +90,7 @@ class MyWrongConfig(EmbedderConfig):
 
 try:
     wrong_embedder = GraphToGraphEmbedder(my_embedding_function, MyWrongConfig())
-except KeyError as error:
+except TypeError as error:
     print(error)
 ```
 

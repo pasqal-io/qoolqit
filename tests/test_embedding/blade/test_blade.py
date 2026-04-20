@@ -11,7 +11,7 @@ from pulser.register.special_layouts import TriangularLatticeLayout
 
 from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
-from qoolqit.embedding import BladeConfig
+from qoolqit.embedding import Blade, BladeConfig
 from qoolqit.embedding.algorithms.blade._helpers import (
     distance_matrix_from_positions,
     interaction_matrix_from_distances,
@@ -588,3 +588,13 @@ def test_embed_large_dense_register_from_hexagonal_lattice() -> None:
     )
 
     assert ratio <= expected_ratio
+
+
+def test_blade_init() -> None:
+    embedder = Blade()
+    assert embedder.config == BladeConfig()
+
+
+def test_invalid_blade_config() -> None:
+    with pytest.raises(TypeError, match="got an unexpected keyword argument 'wrong_config_key'"):
+        BladeConfig(wrong_config_key="value")  # type: ignore
