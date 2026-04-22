@@ -14,35 +14,26 @@ __all__ = ["WeightedDetuning", "Drive"]
 
 @dataclass
 class WeightedDetuning:
-    """A weighted detuning.
+    """A weighted detuning for the Detuning Map Modulation (DMM).
 
-    See https://pasqal-io.github.io/qoolqit/latest/theory/rydberg_model/#weighted-detuning for
-    details on weighted detunings.
+    Args:
+        weights: A dictionary associating detuning weights to qubits.
+        waveform: The waveform for this detuning.
 
-    Note: detuning with positive waveforms cannot be instantiated.
+    See https://docs.pasqal.com/pulser/tutorials/dmm/ for details on DMM.
+
+    Note:
+        - Detuning with positive waveforms cannot be instantiated.
+        - Each weight must be in [0, 1], where `0` means that the waveform is ignored for
+            this qubit and `1` means that the waveform is fully applied to this qubit.
     """
 
     weights: dict[Any, float]
-    """
-    Association of weights to qubits.
-
-    Each weight must be in [0, 1], where `0` means that the
-    waveform is ignored for this qubit and `1` means that the waveform is fully applied to this
-    qubit.
-
-    In the companion documentation, these are the value epsilon_i.
-    """
-
     waveform: Waveform
-    """
-    The waveform for this detuning.
-
-    In the companion documentation, this is the function Delta(t).
-    """
 
     def __post_init__(self) -> None:
         if self.waveform.max() > 0:
-            raise ValueError("WeightedDetuning waveform must not be positive.")
+            raise ValueError("WeightedDetuning waveform must be negative.")
 
 
 class Drive:
@@ -50,8 +41,8 @@ class Drive:
 
     def __init__(
         self,
-        *args: Any,
-        amplitude: Waveform | None = None,
+        *,
+        amplitude: Waveform,
         detuning: Waveform | None = None,
         weighted_detunings: list[WeightedDetuning] | None = None,
         phase: float = 0.0,
@@ -64,42 +55,25 @@ class Drive:
         Arguments:
             amplitude: waveform representing Ω(t) in the drive Hamiltonian.
             detuning: waveform representing δ(t) in the drive Hamiltonian.
-            phase: phase value ɸ for the amplitude term.
+            phase: global phase value ɸ for the amplitude term.
             weighted_detunings: additional waveforms and weights applied to individual
                 qubits. Note that these detunings are not supported on all devices.
         """
 
-        if len(args) > 0:
-            raise TypeError("Please pass the `amplitude` and / or `detuning` as keyword arguments.")
-
-        if amplitude is None and detuning is None:
-            raise ValueError("Amplitude and detuning cannot both be empty.")
-
         for arg in [amplitude, detuning]:
             if arg is not None and not isinstance(arg, Waveform):
-                raise TypeError("Amplitude and detuning must be of type Waveform.")
+                raise TypeError("amplitude and detuning must be of type Waveform.")
 
-        self._amplitude: Waveform
-        self._detuning: Waveform
-        self._amplitude_orig: Waveform
-        self._detuning_orig: Waveform
+        if amplitude.min() < 0.0:
+            raise ValueError("amplitude must be positive.")
 
-        if amplitude is None and isinstance(detuning, Waveform):
-            self._amplitude = Delay(detuning.duration)
-            self._detuning = detuning
-        elif detuning is None and isinstance(amplitude, Waveform):
-            self._amplitude = amplitude
-            self._detuning = Delay(amplitude.duration)
-        elif isinstance(detuning, Waveform) and isinstance(amplitude, Waveform):
-            self._amplitude = amplitude
-            self._detuning = detuning
-
-        if self._amplitude.min() < 0.0:
-            raise ValueError("Amplitude cannot be negative.")
+        self._amplitude = amplitude
+        self._detuning = detuning if detuning is not None else Delay(amplitude.duration)
 
         self._amplitude_orig = self._amplitude
         self._detuning_orig = self._detuning
 
+        # adjust amplitude and detuning waveforms to match the duration
         if self._amplitude.duration > self._detuning.duration:
             extra_duration = self._amplitude.duration - self._detuning.duration
             self._detuning = CompositeWaveform(self._detuning, Delay(extra_duration))

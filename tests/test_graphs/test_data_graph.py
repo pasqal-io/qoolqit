@@ -7,7 +7,6 @@ import torch
 from torch_geometric.data import Data
 
 from qoolqit.graphs import DataGraph, random_edge_list
-from qoolqit.utils import ATOL_64
 
 
 @pytest.mark.parametrize("graph_type", ["circle", "line", "random_ud"])
@@ -89,7 +88,7 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
     assert np.allclose(node_weights, data_diag)
 
     # Remove diagonal and some random values from the data
-    almost_zero = ATOL_64
+    almost_zero = 1e-14
 
     np.fill_diagonal(data, almost_zero)
 

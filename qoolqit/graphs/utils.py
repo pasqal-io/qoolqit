@@ -7,8 +7,6 @@ from typing import Iterable
 
 import numpy as np
 
-from qoolqit.utils import ATOL_32
-
 
 def all_node_pairs(nodes: Iterable) -> set:
     """Return all pairs of nodes (u, v) where u < v.
@@ -80,6 +78,6 @@ def random_edge_list(nodes: Iterable, k: int) -> list:
     return random.sample(tuple(all_edges), k=k)
 
 
-def less_or_equal(a: float, b: float, rel_tol: float = 0.0, abs_tol: float = ATOL_32) -> bool:
+def less_or_equal(a: float, b: float, rel_tol: float = 0.0, abs_tol: float = 1e-7) -> bool:
     """Less or approximately equal."""
     return a < b or isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol)
