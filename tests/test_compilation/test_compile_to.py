@@ -1,7 +1,9 @@
 """Test compilation independently on the compilation profiles."""
+from __future__ import annotations
 
 import pytest
-from qoolqit import AnalogDevice, Constant, Drive, Register, QuantumProgram
+
+from qoolqit import AnalogDevice, Constant, Drive, QuantumProgram, Register
 from qoolqit.execution.compilation_functions import CompilerProfile
 
 
