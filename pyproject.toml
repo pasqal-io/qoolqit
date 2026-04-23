@@ -6,22 +6,21 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "1.0.0"
+version = "1.0.1"
 requires-python = ">=3.10"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
 authors = [
-  { name = "João Moutinho", email = "joao.moutinho@pasqal.com" },
-  { name = "Stefano Grava", email = "s.grava-ext@pasqal.com" },
-  { name = "Vytautas Abramavicius", email = "vytautas.abramavicius@pasqal.com" },
-  { name = "Roland Guichard", email = "roland.guichard@pasqal.com" },
-  { name = "David Teller", email = "david.teller@pasqal.com" },
-  { name = "Manu Lahariya", email = "manu.lahariya@pasqal.com" },
-  { name = "Charles MOUSSA", email = "charles.moussa@pasqal.com" },
-  { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
+  { name = "Charles Moussa", email = "charles.moussa@pasqal.com" },
   { name = "Clément de Terrasson de Montleau", email = "clement.de-terrasson@pasqal.com" },
-  { name = "Mathieu Garrigues", email = "mathieu.garrigues@pasqal.com" }
-
+  { name = "David Teller", email = "david.teller@pasqal.com" },
+  { name = "João Moutinho", email = "joao.moutinho@pasqal.com" },
+  { name = "Manu Lahariya", email = "manu.lahariya@pasqal.com" },
+  { name = "Mathieu Garrigues", email = "mathieu.garrigues@pasqal.com" },
+  { name = "Roland Guichard", email = "roland.guichard@pasqal.com" },
+  { name = "Stefano Grava", email = "s.grava-ext@pasqal.com" },
+  { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
+  { name = "Vytautas Abramavicius", email = "vytautas.abramavicius@pasqal.com" },
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
