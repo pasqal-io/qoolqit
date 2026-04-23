@@ -23,7 +23,7 @@ from qoolqit.waveforms.base_waveforms import Waveform
         ),
     ],
 )
-def test_drive_init(amp_wf: Waveform, det_wf: Waveform) -> None:
+def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
 
     with pytest.raises(TypeError, match="missing 1 required keyword-only argument: 'amplitude'"):
         Drive()  # type: ignore [call-arg]
@@ -49,10 +49,8 @@ def test_drive_init(amp_wf: Waveform, det_wf: Waveform) -> None:
 
     drive = drive >> drive
     assert math.isclose(drive.duration, 2.0 * max([duration_amp, duration_det]))
-    assert math.isclose(drive.duration, 2.0 * max([duration_amp, duration_det]))
 
     drive = drive >> drive
-    assert math.isclose(drive.duration, 4.0 * max([duration_amp, duration_det]))
     assert math.isclose(drive.duration, 4.0 * max([duration_amp, duration_det]))
 
     drive = Drive(amplitude=amp_wf)
@@ -60,16 +58,13 @@ def test_drive_init(amp_wf: Waveform, det_wf: Waveform) -> None:
     assert math.isclose(drive.duration, duration_amp)
 
     phase = random.random()
-    drive1 = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
-    drive2 = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
-    drive = drive1 >> drive2
-    assert math.isclose(drive.phase, phase)
+    drive_rand_phase = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
+    drive = drive_rand_phase >> drive_rand_phase
     assert math.isclose(drive.phase, phase)
 
     with pytest.raises(NotImplementedError):
         drive1 = Drive(amplitude=amp_wf, detuning=det_wf, phase=1.0)
         drive2 = Drive(amplitude=amp_wf, detuning=det_wf, phase=0.0)
-        drive = drive1 >> drive2
         drive = drive1 >> drive2
 
 
