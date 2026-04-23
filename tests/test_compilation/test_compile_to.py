@@ -1,4 +1,5 @@
 """Test compilation independently on the compilation profiles."""
+
 from __future__ import annotations
 
 import pytest
