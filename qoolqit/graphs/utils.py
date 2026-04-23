@@ -7,7 +7,7 @@ from typing import Iterable
 
 import numpy as np
 
-from qoolqit.utils import ATOL_32
+ATOL_32 = 1e-7
 
 
 def all_node_pairs(nodes: Iterable) -> set:
