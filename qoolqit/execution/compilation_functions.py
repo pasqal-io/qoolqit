@@ -79,8 +79,6 @@ def basic_compilation(
     maximum allowed amplitude.
     Otherwise, the program is scaled to match the device's minimum allowed pairwise distance.
 
-    If the device requires a layout, it is automatically generated.
-
     Args:
         register: QoolQit Register.
         drive: QoolQit Drive.
@@ -90,6 +88,11 @@ def basic_compilation(
 
     Returns:
         PulserSequence: The compiled program as a pulser.Sequence object.
+
+    Note:
+        - If the register contains only one qubit, the program is scaled to match the device's
+            maximum allowed amplitude.
+        - If the device requires a layout, it is automatically generated.
     """
     if profile == CompilerProfile.WORKING_POINT:
         TIME, ENERGY, DISTANCE = device.converter.factors
