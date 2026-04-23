@@ -31,13 +31,13 @@ def test_drive_init(amp_wf: Waveform, det_wf: Waveform) -> None:
     with pytest.raises(TypeError, match="missing 1 required keyword-only argument: 'amplitude'"):
         Drive(detuning=Constant(duration=10, value=1.0))  # type: ignore [call-arg]
 
-    with pytest.raises(TypeError, match="amplitude and detuning must be of type Waveform."):
+    with pytest.raises(TypeError, match="'amplitude' and 'detuning' must be of type Waveform."):
         drive = Drive(amplitude=1.0, detuning=det_wf)  # type: ignore [arg-type]
 
-    with pytest.raises(TypeError, match="amplitude and detuning must be of type Waveform."):
+    with pytest.raises(TypeError, match="'amplitude' and 'detuning' must be of type Waveform."):
         drive = Drive(amplitude=amp_wf, detuning=1.0)  # type: ignore [arg-type]
 
-    with pytest.raises(ValueError, match="amplitude must be positive."):
+    with pytest.raises(ValueError, match="'amplitude' must be positive."):
         drive = Drive(amplitude=det_wf)
 
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
@@ -70,14 +70,9 @@ def test_drive_init(amp_wf: Waveform, det_wf: Waveform) -> None:
 
 
 def test_error_amplitude_negative() -> None:
-    with pytest.raises(ValueError, match="amplitude must be positive."):
+    with pytest.raises(ValueError, match="'amplitude' must be positive."):
         neg_ramp = Ramp(10.0, -1.0, 2.0)
         Drive(amplitude=neg_ramp, detuning=neg_ramp)
-
-
-def test_error_weighted_detuning_positive() -> None:
-    with pytest.raises(ValueError):
-        WeightedDetuning(weights={0: 1}, waveform=Ramp(1.0, 0.2, 0.5))
 
 
 @pytest.mark.parametrize("amp_duration, det_duration", [(1.0, 1.005), (20.0, 10.0)])
@@ -86,6 +81,11 @@ def test_drive_duration_with_delays(amp_duration: float, det_duration: float) ->
     det_wf = Ramp(det_duration, -1.0, 0.0)
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
     assert drive.duration == max(amp_duration, det_duration)
+
+
+def test_error_weighted_detuning_positive() -> None:
+    with pytest.raises(ValueError, match="WeightedDetuning waveform must be negative."):
+        WeightedDetuning(weights={0: 1}, waveform=Ramp(1.0, 0.2, 0.5))
 
 
 @pytest.mark.parametrize(

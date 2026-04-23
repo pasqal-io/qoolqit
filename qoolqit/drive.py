@@ -62,10 +62,10 @@ class Drive:
 
         for arg in [amplitude, detuning]:
             if arg is not None and not isinstance(arg, Waveform):
-                raise TypeError("amplitude and detuning must be of type Waveform.")
+                raise TypeError("'amplitude' and 'detuning' must be of type Waveform.")
 
         if amplitude.min() < 0.0:
-            raise ValueError("amplitude must be positive.")
+            raise ValueError("'amplitude' must be positive.")
 
         self._amplitude = amplitude
         self._detuning = detuning if detuning is not None else Delay(amplitude.duration)
