@@ -269,18 +269,18 @@ class DataGraph(BaseGraph):
         """
         if data.ndim != 2:
             raise ValueError("2D Matrix required.")
-        if not np.allclose(data, data.T, rtol=0.0, atol=1e-7):
+        if not np.allclose(data, data.T, rtol=0.0, atol=ATOL_32):
             raise ValueError("Matrix must be symmetric.")
 
         diag = np.diag(data)
         n_nodes = len(diag)
         node_weights = {i: diag[i] for i in range(n_nodes)}
-        if np.allclose(diag, np.zeros(n_nodes), rtol=0.0, atol=1e-7):
+        if np.allclose(diag, np.zeros(n_nodes), rtol=0.0, atol=ATOL_32):
             node_weights = {i: None for i in range(n_nodes)}
         else:
             node_weights = {i: diag[i].item() for i in range(n_nodes)}
 
-        data[data <= 1e-7] = 0.0
+        data[data <= ATOL_32] = 0.0
         non_zero = data.nonzero()
         i_list = non_zero[0].tolist()
         j_list = non_zero[1].tolist()
