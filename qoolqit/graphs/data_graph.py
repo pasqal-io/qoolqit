@@ -12,14 +12,14 @@ import networkx as nx
 import numpy as np
 from numpy.typing import ArrayLike
 
-from qoolqit.utils import ATOL_32
-
 from .base_graph import BaseGraph
 from .utils import random_coords
 
 if TYPE_CHECKING:
     import torch
     import torch_geometric
+
+ATOL_32 = 1e-7
 
 
 class DataGraph(BaseGraph):
@@ -33,8 +33,6 @@ class DataGraph(BaseGraph):
             edges: set of edge tuples (i, j)
         """
         super().__init__(edges)
-
-    # classmethods
 
     @classmethod
     def line(cls, n: int, spacing: float = 1.0) -> DataGraph:
