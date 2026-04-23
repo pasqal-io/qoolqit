@@ -49,8 +49,10 @@ def test_drive_init(amp_wf: Waveform, det_wf: Waveform) -> None:
 
     drive = drive >> drive
     assert math.isclose(drive.duration, 2.0 * max([duration_amp, duration_det]))
+    assert math.isclose(drive.duration, 2.0 * max([duration_amp, duration_det]))
 
     drive = drive >> drive
+    assert math.isclose(drive.duration, 4.0 * max([duration_amp, duration_det]))
     assert math.isclose(drive.duration, 4.0 * max([duration_amp, duration_det]))
 
     drive = Drive(amplitude=amp_wf)
@@ -62,10 +64,12 @@ def test_drive_init(amp_wf: Waveform, det_wf: Waveform) -> None:
     drive2 = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
     drive = drive1 >> drive2
     assert math.isclose(drive.phase, phase)
+    assert math.isclose(drive.phase, phase)
 
     with pytest.raises(NotImplementedError):
         drive1 = Drive(amplitude=amp_wf, detuning=det_wf, phase=1.0)
         drive2 = Drive(amplitude=amp_wf, detuning=det_wf, phase=0.0)
+        drive = drive1 >> drive2
         drive = drive1 >> drive2
 
 

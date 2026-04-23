@@ -19,6 +19,8 @@ if TYPE_CHECKING:
     import torch
     import torch_geometric
 
+ATOL_32 = 1e-7
+
 
 class DataGraph(BaseGraph):
     """The main graph structure to represent problem data."""
@@ -31,8 +33,6 @@ class DataGraph(BaseGraph):
             edges: set of edge tuples (i, j)
         """
         super().__init__(edges)
-
-    # classmethods
 
     @classmethod
     def line(cls, n: int, spacing: float = 1.0) -> DataGraph:

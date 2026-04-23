@@ -8,6 +8,8 @@ from torch_geometric.data import Data
 
 from qoolqit.graphs import DataGraph, random_edge_list
 
+ATOL_64 = 1e-14
+
 
 @pytest.mark.parametrize("graph_type", ["circle", "line", "random_ud"])
 @pytest.mark.parametrize("n_nodes", [10, 20, 30, 40, 50])
