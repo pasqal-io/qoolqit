@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from enum import Enum
 
 from pulser.devices import Device as PulserDevice
@@ -13,6 +14,7 @@ from qoolqit.devices import Device
 from qoolqit.drive import Drive, Waveform, WeightedDetuning
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
+from qoolqit.waveforms import Interpolated
 
 
 class CompilerProfile(Enum):
@@ -57,6 +59,13 @@ class WaveformConverter:
     def convert(self, waveform: Waveform) -> ParamObj | PulserWaveform:
         """Convert a QoolQit waveform into a equivalent Pulser waveform."""
         pulser_duration = self._pulser_duration(waveform)
+
+        if isinstance(waveform, Interpolated):
+            # fix https://github.com/pasqal-io/qoolqit/issues/288
+            # pulser.InterpolatedWaveform round values to 1e8 which
+            # can lead to higher amplitudes that what the device allows.
+            self._energy = math.floor(self._energy * 1e8) / 1e8
+
         return waveform._to_pulser(duration=pulser_duration) * self._energy
 
 
