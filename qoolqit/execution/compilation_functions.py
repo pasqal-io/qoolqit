@@ -64,6 +64,7 @@ class WaveformConverter:
         # pulser.InterpolatedWaveform round values to 1e8 which can lead to amplitudes
         # higher than what the device allows.
         # Once solved in pulser the additional rounding below can be removed.
+        # see https://github.com/pasqal-io/Pulser/issues/1051
         if isinstance(waveform, Interpolated):
             self._energy = math.floor(self._energy * 1e8) / 1e8
 
