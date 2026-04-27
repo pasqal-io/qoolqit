@@ -60,10 +60,11 @@ class WaveformConverter:
         """Convert a QoolQit waveform into a equivalent Pulser waveform."""
         pulser_duration = self._pulser_duration(waveform)
 
+        # see https://github.com/pasqal-io/qoolqit/issues/288
+        # pulser.InterpolatedWaveform round values to 1e8 which can lead to amplitudes
+        # higher than what the device allows.
+        # Once solved in pulser the additional rounding below can be removed.
         if isinstance(waveform, Interpolated):
-            # fix https://github.com/pasqal-io/qoolqit/issues/288
-            # pulser.InterpolatedWaveform round values to 1e8 which
-            # can lead to higher amplitudes that what the device allows.
             self._energy = math.floor(self._energy * 1e8) / 1e8
 
         return waveform._to_pulser(duration=pulser_duration) * self._energy
