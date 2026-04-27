@@ -52,10 +52,10 @@ class Drive:
         Must be instantiated with keyword arguments. Accepts either an amplitude waveform,
         a detuning waveform, or both. A phase value can also be passed.
 
-        Arguments:
+        Args:
             amplitude: waveform representing Ω(t) in the drive Hamiltonian.
             detuning: waveform representing δ(t) in the drive Hamiltonian.
-            phase: global phase value ɸ for the amplitude term.
+            phase: global phase value ɸ for the amplitude term (default to 0.0).
             weighted_detunings: additional waveforms and weights applied to individual
                 qubits. Note that these detunings are not supported on all devices.
         """
