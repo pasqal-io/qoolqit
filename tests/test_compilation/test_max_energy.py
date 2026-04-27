@@ -6,6 +6,7 @@ from typing import Callable
 
 import numpy as np
 import pytest
+from pulser.sampler import sample
 from pulser.sequence import Sequence as PulserSequence
 
 from qoolqit import (
@@ -14,6 +15,7 @@ from qoolqit import (
     Device,
     DigitalAnalogDevice,
     Drive,
+    Interpolated,
     MockDevice,
     QuantumProgram,
     Register,
@@ -124,3 +126,20 @@ class TestMaxEnergyCompilerProfile:
             )
             with pytest.raises(CompilationError, match=msg):
                 program.compile_to(AnalogDevice(), profile=self.profile)
+
+    @pytest.mark.parametrize("device", [AnalogDevice(), DigitalAnalogDevice(), MockDevice()])
+    def test_compilation_interpolated(self, device: Device) -> None:
+        register = Register.from_coordinates([[0, 0], [0, 1]])
+        amp_wave = Interpolated(60.0, [0.0, 0.5, 1.0, 0.5, 0.0])
+        drive = Drive(amplitude=amp_wave)
+        program = QuantumProgram(register=register, drive=drive)
+        program.compile_to(device=device, profile=self.profile)
+
+        # check this program is compiled to ~ device max amplitude
+        if device._max_amp is not None:
+            # extract sequence max amplitude
+            seq_sample = sample(program.compiled_sequence)
+            seq_max_amp = max(seq_sample.channel_samples["rydberg"].amp)
+
+            np.testing.assert_allclose(seq_max_amp, device._max_amp, atol=1e-8)
+            assert seq_max_amp < device._max_amp
