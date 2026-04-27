@@ -79,8 +79,6 @@ def basic_compilation(
     maximum allowed amplitude.
     Otherwise, the program is scaled to match the device's minimum allowed pairwise distance.
 
-    If the device requires a layout, it is automatically generated.
-
     Args:
         register: QoolQit Register.
         drive: QoolQit Drive.
@@ -90,15 +88,25 @@ def basic_compilation(
 
     Returns:
         PulserSequence: The compiled program as a pulser.Sequence object.
+
+    Note:
+        - If the register contains only one qubit, the program is scaled to match the device's
+            maximum allowed amplitude.
+        - If the device requires a layout, it is automatically generated.
     """
     if profile == CompilerProfile.WORKING_POINT:
         TIME, ENERGY, DISTANCE = device.converter.factors
         _validate_program_default_profile(register, drive, device, device_max_duration_ratio)
     elif profile == CompilerProfile.MAX_ENERGY:
-        # fix compilation strategy according to the program energy ratio Ω_max/J_max
-        program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
-        device_energy_ratio = device._energy_ratio
-        if program_energy_ratio > device_energy_ratio:
+        if register.n_qubits > 1:
+            # fix compilation strategy according to the program energy ratio Ω_max/J_max
+            program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
+            device_energy_ratio = device._energy_ratio
+            use_max_amp = program_energy_ratio > device_energy_ratio
+        else:
+            use_max_amp = True
+
+        if use_max_amp:
             # map to the maximum amplitude allowed on the device
             ENERGY = device._target_amp / drive.amplitude.max()
             TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
@@ -270,11 +278,15 @@ def _validate_program_max_energy_profile(
     # Get profile factors in the adimensional basis, not conversion factors to pulser
     # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
     # this part can be removed when compilation return a QuantumProgram that can be directly checked
-    program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
-    device_energy_ratio = device._energy_ratio
-    specs = device.specs
+    if register.n_qubits > 1:
+        program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
+        device_energy_ratio = device._energy_ratio
+        use_max_amp = program_energy_ratio > device_energy_ratio
+    else:
+        use_max_amp = True
+
     # fix compilation strategy according to the program energy ratio Ω_max/J_max
-    if program_energy_ratio > device_energy_ratio:
+    if use_max_amp:
         ENERGY = device._target_amp_adim / drive.amplitude.max()
         TIME, DISTANCE = 1 / ENERGY, ENERGY ** (-1 / 6)
     else:
@@ -285,6 +297,8 @@ def _validate_program_max_energy_profile(
         "After rescaling the input program to the maximum energy scale available"
         " for the selected device, the following exception was raised:\n\n"
     )
+
+    specs = device.specs
 
     max_radial_distance = register.max_radial_distance()
     if specs["max_radial_distance"]:
