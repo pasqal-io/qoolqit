@@ -243,7 +243,7 @@ class Interpolated(Waveform):
         # to avoid overflow when converting to pulser waveforms.
         # see: https://github.com/pasqal-io/qoolqit/issues/288
         # see: https://github.com/pasqal-io/Pulser/issues/1051
-        truncated_values = np.floor(self._values * energy_factor * 1e8) / 1e8
+        truncated_values = np.trunc(self._values * energy_factor * 1e8) / 1e8
         return pulser.InterpolatedWaveform(
             duration,
             values=truncated_values,

@@ -5,6 +5,7 @@ import random
 import numpy as np
 import pulser
 import pytest
+from numpy.typing import ArrayLike
 from scipy.integrate import quad
 
 from qoolqit import Blackman
@@ -194,7 +195,29 @@ def test_interpolated_to_pulser() -> None:
     interpolated = Interpolated(20.46, values=values)
 
     pulser_interpolated = interpolated._to_pulser(duration=222)
+    assert isinstance(pulser_interpolated, pulser.InterpolatedWaveform)
     assert pulser_interpolated.duration == 222
+
+
+@pytest.mark.parametrize(
+    "values", [[0.1, 0.3, -0.5, 1.0, 5.7], np.sin(np.linspace(0, 2 * np.pi, 10))]
+)
+@pytest.mark.parametrize("energy_factor", [0.5, 1.0, np.pi])
+def test_interpolated_to_pulser_energy_factor(values: ArrayLike, energy_factor: float) -> None:
+    interpolated = Interpolated(20.46, values=values)
+
+    pulser_interpolated = interpolated._to_pulser(duration=20, energy_factor=energy_factor)
+    assert isinstance(pulser_interpolated, pulser.InterpolatedWaveform)
+
+    # check that pulser values are scaled correctly, within the expected tolerance
+    expected_pulser_values = np.array(values) * energy_factor
+    np.testing.assert_allclose(pulser_interpolated._values, expected_pulser_values, atol=1e-8)
+
+    # check that pulser samples are within the expected range
+    min_value, max_value = expected_pulser_values.min(), expected_pulser_values.max()
+    pulser_interpolated_samples = pulser_interpolated.samples
+    assert np.all(pulser_interpolated_samples >= min_value)
+    assert np.all(pulser_interpolated_samples <= max_value)
 
 
 @pytest.mark.parametrize("n_waveforms", [3, 4, 5])
