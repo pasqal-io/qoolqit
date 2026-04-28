@@ -7,7 +7,6 @@ from enum import Enum, auto
 from typing import Generic, TypeVar
 
 from pulser.backend import Results, remote
-from pulser_pasqal import PasqalCloud
 
 ResultType = TypeVar("ResultType")
 
@@ -67,12 +66,12 @@ class Job(ABC, Generic[ResultType]):
         ...
 
     @abstractmethod
-    def id(self) -> str:
+    def job_id(self) -> str:
         """Return the unique identifier of the job."""
         ...
 
     @abstractmethod
-    def result(self, timeout: float = math.inf, wait: float = 5) -> ResultType:
+    def results(self, timeout: float = math.inf, wait: float = 5) -> ResultType:
         """Block until the job completes and return its result.
 
         Args:
@@ -116,7 +115,7 @@ class _LocalJob(Job[Results]):
     def get_status(self) -> JobStatus:
         return JobStatus.FAILED if self._result is None else JobStatus.SUCCEEDED
 
-    def id(self) -> str:
+    def job_id(self) -> str:
         # What should it be ?
         return ""
 
@@ -126,7 +125,7 @@ class _LocalJob(Job[Results]):
     def message(self) -> str:
         return self._message
 
-    def result(self, timeout: float = math.inf, wait: float = 5) -> Results:
+    def results(self, timeout: float = math.inf, wait: float = 5) -> Results:
         status = self.get_status()
         if status == JobStatus.FAILED:
             raise JobFailedError(f"Job failed. Message: {self.message()}")
@@ -146,21 +145,25 @@ class _RemoteJob(Job[Results]):
         remote.JobStatus.PAUSED: JobStatus.RUNNING,
     }
 
-    def __init__(self, remote_results: remote.RemoteResults) -> None:
+    def __init__(self, connection: remote.RemoteConnection, job_id: str, *, batch_id: str = "") -> None:
         super().__init__()
-        self._remote_results = remote_results
-        job_ids = self._remote_results.job_ids
-        assert len(job_ids) > 0
-        # If in open-batch mode, the job should be the last one in the batch ?
-        self._id: str = job_ids[-1]
+        self._connection = connection
+        self._job_id = job_id
+        self._batch_id = batch_id
+
+    def _query_job_progress(self) -> tuple[JobStatus, Results | None]:
+        jobs = self._connection._query_job_progress(self._batch_id)
+        job_id = self.job_id()
+        if job_id not in jobs.keys():
+            raise ValueError(f"Job {job_id} not found")
+        status, results = jobs[job_id]
+        return self._STATUS_MAP[status], results
+
 
     def get_status(self) -> JobStatus:
-        status = self._remote_results.get_status()
-        if status not in self._STATUS_MAP:
-            raise ValueError(f"Unhandled remote job status: {status!r}")
-        return self._STATUS_MAP[status]
+        return self._query_job_progress()[0]
 
-    def id(self) -> str:
+    def job_id(self) -> str:
         return self._id
 
     def cancel(self) -> None:
@@ -169,24 +172,35 @@ class _RemoteJob(Job[Results]):
     def message(self) -> str:
         return str(self._remote_results.batch_id)
 
-    def result(self, timeout: float = math.inf, wait: float = 5) -> Results:
+    def results(self, timeout: float = math.inf, wait: float = 5) -> Results:
         # Back-off ? Inside connection, See pasqal-cloud
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
-            status = self.get_status()
+            status, results = self._query_job_progress()
             if status == JobStatus.SUCCEEDED:
-                return self._remote_results.results
+                assert results is not None
+                return results
             if status == JobStatus.FAILED:
-                raise JobFailedError(f"Job {self.id()} failed.")
+                raise JobFailedError(f"Job {self.job_id()} failed.")
             if status == JobStatus.CANCELLED:
-                raise JobCancelledError(f"Job {self.id()} was cancelled.")
+                raise JobCancelledError(f"Job {self.job_id()} was cancelled.")
             time.sleep(wait)
-        raise TimeoutError(f"Job {self.id()} did not complete within {timeout} seconds.")
+        raise TimeoutError(f"Job {self.job_id()} did not complete within {timeout} seconds.")
 
+    @classmethod
+    def _from_remote_results(cls, remote_results: remote.RemoteResults, position: int = -1) -> Job[Results]:
+        connection = remote_results._connection
+        try:
+            job_id = remote_results.job_ids[position]
+        except IndexError:
+            raise IndexError(f"No job found at index {position} in the provided remote results.")
+        batch_id = remote_results.batch_id
+        return cls(connection, job_id, batch_id=batch_id)
 
-def retrieve_remote_job(id: str, connection: PasqalCloud) -> Job[Results]:
-    # Is there a way to retrieve a job with _sdk_connection ?
-    # Maybe input a sdk instead ?
-    batch_id = connection._sdk_connection.get_job(id).batch_id
-    remote_results = connection.get_results(batch_id, [id])
-    return _RemoteJob(remote_results)
+def retrieve_remote_job(connection: remote.RemoteConnection, job_id: str, *, batch_id: str = "") -> Job[Results]:
+    return _RemoteJob(connection, job_id, batch_id)
+
+def get_batch_id(job: Job[Results]) -> str:
+    if isinstance(job, _RemoteJob):
+        return job._batch_id
+    return ""

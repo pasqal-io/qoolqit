@@ -111,13 +111,9 @@ class LocalEmulator(PulserEmulatorBackend):
     def run(self, program: QuantumProgram) -> job.Job[Results]:
         """Run a compiled QuantumProgram and return the results."""
         self._backend = self._backend_type(program.compiled_sequence, config=self._emulation_config)
-        # Maybe don't catch the exception ?
-        try:
-            results = self._backend.run()
-            assert isinstance(results, Results)
-            return job._LocalJob(results, "")
-        except Exception as e:
-            return job._LocalJob(None, str(e))
+        results = self._backend.run()
+        assert isinstance(results, Results)
+        return job._LocalJob(results)
 
 
 class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
@@ -191,7 +187,8 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
             config=self._emulation_config,
         )
         remote_results = self._backend.run(wait=wait)
-        return job._RemoteJob(remote_results)
+        # If in open-batch mode, the job should be the last one in the batch ?
+        return job._RemoteJob._from_remote_results(remote_results, -1)
 
     def run(self, program: QuantumProgram) -> job.Job[Results]:
         """Run a compiled QuantumProgram remotely and return the results."""
@@ -276,7 +273,8 @@ class QPU(PulserRemoteBackend):
             program.compiled_sequence, connection=self._connection, config=self._config
         )
         remote_results = self._backend.run(wait=wait)
-        return job._RemoteJob(remote_results)
+        # If in open-batch mode, the job should be the last one in the batch ?
+        return job._RemoteJob._from_remote_results(remote_results, -1)
 
     def run(self, program: QuantumProgram) -> job.Job[Results]:
         """Execute a compiled quantum program on the QPU and return the results.

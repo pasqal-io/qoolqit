@@ -50,7 +50,7 @@ class TestBackends:
             self, job_params: list[JobParams] | None = None, wait: bool = False
         ) -> RemoteResults:
             self.run_calls += 1
-            mock = MagicMock(spec=RemoteResults)
+            mock = MagicMock(spec=RemoteResults, _connection=MagicMock(spec=RemoteConnection))
             type(mock).job_ids = PropertyMock(return_value=["job_id1"])
             return mock
 
