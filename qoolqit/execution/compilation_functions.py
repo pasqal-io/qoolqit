@@ -13,6 +13,7 @@ from qoolqit.devices import Device
 from qoolqit.drive import Drive, Waveform, WeightedDetuning
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
+from qoolqit.waveforms import Interpolated
 
 
 class CompilerProfile(Enum):
@@ -57,6 +58,14 @@ class WaveformConverter:
     def convert(self, waveform: Waveform) -> ParamObj | PulserWaveform:
         """Convert a QoolQit waveform into a equivalent Pulser waveform."""
         pulser_duration = self._pulser_duration(waveform)
+
+        # Interpolated to be converted differently because of round off issue:
+        # see https://github.com/pasqal-io/qoolqit/issues/288
+        # see https://github.com/pasqal-io/Pulser/issues/1051
+        if isinstance(waveform, Interpolated):
+            wf = waveform._to_pulser(duration=pulser_duration, energy_factor=self._energy)
+            return wf
+
         return waveform._to_pulser(duration=pulser_duration) * self._energy
 
 
