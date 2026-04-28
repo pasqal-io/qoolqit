@@ -6,6 +6,7 @@ from typing import Callable
 
 import numpy as np
 import pytest
+from numpy.typing import ArrayLike
 from pulser.sampler import sample
 from pulser.sequence import Sequence as PulserSequence
 
@@ -128,9 +129,17 @@ class TestMaxEnergyCompilerProfile:
                 program.compile_to(AnalogDevice(), profile=self.profile)
 
     @pytest.mark.parametrize("device", [AnalogDevice(), DigitalAnalogDevice(), MockDevice()])
-    def test_compilation_interpolated(self, device: Device) -> None:
+    @pytest.mark.parametrize(
+        "values",
+        [
+            [0.0, 0.5, 1.0, 0.5, 0.0],
+            np.sin(np.linspace(0, 2 * np.pi, 10)) ** 2,
+            [0.7504049424354939, 0.1, 0.1, 0.0],
+        ],
+    )
+    def test_compilation_interpolated(self, device: Device, values: ArrayLike) -> None:
         register = Register.from_coordinates([[0, 0], [0, 1]])
-        amp_wave = Interpolated(60.0, [0.0, 0.5, 1.0, 0.5, 0.0])
+        amp_wave = Interpolated(duration=60.0, values=values)
         drive = Drive(amplitude=amp_wave)
         program = QuantumProgram(register=register, drive=drive)
         program.compile_to(device=device, profile=self.profile)
