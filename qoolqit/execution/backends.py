@@ -169,12 +169,12 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         self._connection = self.validate_connection(connection)
         self._emulation_config = self.validate_emulation_config(emulation_config)
 
-    def submit(self, program: QuantumProgram, wait: bool = False) -> job.Job[Results]:
-        """Submit a compiled QuantumProgram and return a remote handler of the results.
+    def run(self, program: QuantumProgram, wait: bool = False) -> job.Job[Results]:
+        """Submit a compiled QuantumProgram and return a job handler.
 
-        The returned handler `RemoteResults` can be used to:
-        - query the job status with `remote_results.get_batch_status()`
-        - when DONE, retrieve results with `remote_results.results`
+        The returned handler `Job` can be used to:
+        - query the job status with `job.get_status()`
+        - when DONE, retrieve results with `job.results()`
 
         Args:
             program (QuantumProgram): the compiled quantum program to run.
@@ -189,10 +189,6 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         remote_results = self._backend.run(wait=wait)
         # If in open-batch mode, the job should be the last one in the batch ?
         return job._RemoteJob._from_remote_results(remote_results, -1)
-
-    def run(self, program: QuantumProgram) -> job.Job[Results]:
-        """Run a compiled QuantumProgram remotely and return the results."""
-        return self.submit(program, wait=True)
 
 
 class QPU(PulserRemoteBackend):
