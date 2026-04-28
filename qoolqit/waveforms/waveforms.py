@@ -234,10 +234,19 @@ class Interpolated(Waveform):
     def max(self) -> float:
         return float(self._values.max())
 
-    def _to_pulser(self, duration: int) -> ParamObj | pulser.InterpolatedWaveform:
+    def _to_pulser(
+        self,
+        duration: int,
+        energy_factor: float = 1.0,
+    ) -> ParamObj | pulser.InterpolatedWaveform:
+        # Truncate the values to the specified energy factor,
+        # to avoid overflow when converting to pulser waveforms.
+        # see: https://github.com/pasqal-io/qoolqit/issues/288
+        # see: https://github.com/pasqal-io/Pulser/issues/1051
+        truncated_values = np.trunc(self._values * energy_factor * 1e8) / 1e8
         return pulser.InterpolatedWaveform(
             duration,
-            values=self._values,
+            values=truncated_values,
             times=self._times,
             interpolator=self._interpolator,
             **self._interpolator_kwargs,
