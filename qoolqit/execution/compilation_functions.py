@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import math
 from enum import Enum
 
 from pulser.devices import Device as PulserDevice
@@ -60,13 +59,12 @@ class WaveformConverter:
         """Convert a QoolQit waveform into a equivalent Pulser waveform."""
         pulser_duration = self._pulser_duration(waveform)
 
+        # Interpolated to be converted differently because of round off issue:
         # see https://github.com/pasqal-io/qoolqit/issues/288
-        # pulser.InterpolatedWaveform round values to 1e8 which can lead to amplitudes
-        # higher than what the device allows.
-        # Once solved in pulser the additional rounding below can be removed.
         # see https://github.com/pasqal-io/Pulser/issues/1051
         if isinstance(waveform, Interpolated):
-            self._energy = math.floor(self._energy * 1e8) / 1e8
+            wf = waveform._to_pulser(duration=pulser_duration, energy_factor=self._energy)
+            return wf
 
         return waveform._to_pulser(duration=pulser_duration) * self._energy
 
