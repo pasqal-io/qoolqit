@@ -20,7 +20,7 @@ class WeightedDetuning:
         weights: A dictionary associating detuning weights to qubits.
             Each weight must be in [0, 1], where 0 means that the waveform is ignored for
             this qubit and 1 means that the waveform is fully applied to this qubit.
-        waveform: The waveform for this detuning. Must be negative valued.
+        waveform: The waveform for this detuning. Must be negative for all times.
 
     See https://docs.pasqal.com/pulser/tutorials/dmm/ for details on DMM.
     """
@@ -60,8 +60,8 @@ class Drive:
 
         Args:
             amplitude: Time-dependent amplitude waveform Ω(t) representing the Rabi frequency.
-                Must be non-negative for all times. This controls the strength of the
-                coupling between ground and Rydberg states.
+                Controls the strength of the coupling between ground and Rydberg states.
+                Must be positive for all times.
             detuning: Time-dependent detuning waveform δ(t) representing the energy offset
                 of the Rydberg state relative to resonance. If None, defaults to zero
                 detuning (Delay waveform) for the duration of the amplitude.
