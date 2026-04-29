@@ -56,7 +56,7 @@ class Drive:
         H_drive(t) = Σᵢ [Ω(t)/2 (cos φ(t) σˣᵢ - sin φ(t) σʸᵢ)] - Σᵢ [δ(t) + εᵢ Δ(t)] nᵢ
 
         representing:
-        - Amplitude Ω(t): Controls the Rabi frequency that drive qubits.
+        - Amplitude Ω(t): Controls the Rabi frequency that drives qubits.
         - Detuning δ(t): Controls the energy offset of the Rydberg state.
         - Phase φ: Global phase applied to the amplitude term.
         - Weighted detunings: Individual qubit detunings via Detuning Map Modulation (DMM).
