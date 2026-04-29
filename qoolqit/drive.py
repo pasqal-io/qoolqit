@@ -47,28 +47,32 @@ class Drive:
         weighted_detunings: list[WeightedDetuning] | None = None,
         phase: float = 0.0,
     ) -> None:
-        """Initialize a Drive representing the time-dependent drive and detuning terms.
+        """Initialize a Drive.
 
-        H_drive(t) = Σᵢ [Ω(t)/2 (cos φ(t) σˣᵢ - ˆ sin φ(t) σʸᵢ)] - Σᵢ [δ(t) + εᵢ Δ(t)] nᵢ
+        The Drive specifies the control parameters for the time-dependent drive Hamiltonian
+        in the Rydberg model
+        (see https://docs.pasqal.com/qoolqit/get_started/qoolqit_model/ for details),
 
-        The Drive encapsulates the control parameters for a Rydberg quantum program:
-        - Amplitude Ω(t): Controls the Rabi frequency (must be non-negative)
-        - Detuning δ(t): Controls the energy offset of the Rydberg state
-        - Phase φ: Global phase applied to the amplitude term
-        - Weighted detunings: Individual qubit detunings via Detuning Map Modulation (DMM)
+        H_drive(t) = Σᵢ [Ω(t)/2 (cos φ(t) σˣᵢ - sin φ(t) σʸᵢ)] - Σᵢ [δ(t) + εᵢ Δ(t)] nᵢ
+
+        representing:
+        - Amplitude Ω(t): Controls the Rabi frequency that drive qubits.
+        - Detuning δ(t): Controls the energy offset of the Rydberg state.
+        - Phase φ: Global phase applied to the amplitude term.
+        - Weighted detunings: Individual qubit detunings via Detuning Map Modulation (DMM).
 
         Args:
-            amplitude: Time-dependent amplitude waveform Ω̃(t) representing the Rabi frequency.
+            amplitude: Time-dependent amplitude waveform Ω(t) representing the Rabi frequency.
                 Must be non-negative for all times. This controls the strength of the
                 coupling between ground and Rydberg states.
-            detuning: Time-dependent detuning waveform δ̃(t) representing the energy offset
+            detuning: Time-dependent detuning waveform δ(t) representing the energy offset
                 of the Rydberg state relative to resonance. If None, defaults to zero
                 detuning (Delay waveform) for the duration of the amplitude.
             phase: Global phase φ applied to the amplitude term in the Hamiltonian.
                 Defaults to 0.0 (no phase).
             weighted_detunings: List of additional detuning waveforms applied to individual
                 qubits using Detuning Map Modulation (DMM). Each WeightedDetuning specifies
-                weights εᵢ for different qubits and a corresponding waveform Δ̃(t). Note that DMM
+                weights εᵢ for different qubits and a corresponding waveform Δ(t). Note that DMM
                 is not supported on all devices. Defaults to an empty list.
 
         Raises:
@@ -83,8 +87,6 @@ class Drive:
               detuning durations.
             - WeightedDetuning waveforms must be non-positive (≤ 0) as they represent
               energy shifts below the resonance.
-            - The interaction terms J̃ᵢⱼ are determined by the qubit register geometry,
-              not by the Drive.
 
         Example:
             >>> from qoolqit import Drive
