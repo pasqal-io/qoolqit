@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -80,8 +80,8 @@ class TestLocalJob:
         assert job.results() is result
 
     def test_results_raises_on_failure(self):
-        job = _LocalJob(None, message="some error")
-        with pytest.raises(JobFailedError, match="some error"):
+        job = _LocalJob(None)
+        with pytest.raises(JobFailedError):
             job.results()
 
     def test_results_ignores_timeout(self):
@@ -95,10 +95,7 @@ class TestLocalJob:
     def test_cancel_is_noop(self):
         _LocalJob(MagicMock()).cancel()  # must not raise
 
-    def test_message_returns_given_string(self):
-        assert _LocalJob(MagicMock(), message="hello").message() == "hello"
-
-    def test_message_defaults_to_empty(self):
+    def test_message_returns_empty_string(self):
         assert _LocalJob(MagicMock()).message() == ""
 
 
@@ -191,7 +188,7 @@ class TestRemoteJob:
         job = _RemoteJob(connection, "my-id", batch_id="b")
         assert job.job_id() == "my-id"
 
-    def test_message_returns_empty(self):
+    def test_message_returns_empty_string(self):
         connection = MagicMock(spec=remote.RemoteConnection)
         job = _RemoteJob(connection, "j", batch_id="my-batch")
         assert job.message() == ""

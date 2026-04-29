@@ -60,8 +60,10 @@ class Job(ABC, Generic[ResultType]):
 
     Concrete backend implementations (:class:`_LocalJob`,
     :class:`_RemoteJob`) must override all abstract methods.
-    End users should never instantiate subclasses directly;
-    instead, obtain a :class:`Job` from a backend submission
+    The leading underscore in their names indicates that they are
+    internal to the library and must not be instantiated or
+    referenced directly by library consumers.
+    Instead, obtain a :class:`Job` from a backend submission
     function such as ``backend.run(program)``.
 
     Note:
@@ -122,14 +124,16 @@ class Job(ABC, Generic[ResultType]):
 
     @abstractmethod
     def message(self) -> str:
-        """Return the latest human-readable status message.
+        """Return a human-readable message for this job.
 
-        Provides details about the job's current state or completion
-        reason (e.g. an error description).
+        .. note::
+            This method is a placeholder. The API is defined here for
+            future use; current implementations return an empty string
+            or a minimal stub value. The contract (content, format,
+            and availability) will be stabilised in a future release.
 
         Returns:
-            str: The latest status message, or an empty string if
-            none is available.
+            str: A message, or an empty string if none is available.
         """
         ...
 
@@ -182,14 +186,11 @@ class _LocalJob(Job[Results]):
     Args:
         result (Results | None): The result of local execution,
             or ``None`` if execution failed.
-        message (str): Optional human-readable status message.
-            Defaults to an empty string.
     """
 
-    def __init__(self, result: Results | None, message: str = "") -> None:
+    def __init__(self, result: Results | None) -> None:
         super().__init__()
         self._result = result
-        self._message = message
 
     def get_status(self) -> JobStatus:
         """Return FAILED if *result* is ``None``, otherwise SUCCEEDED."""
@@ -212,12 +213,16 @@ class _LocalJob(Job[Results]):
         return
 
     def message(self) -> str:
-        """Return the status message provided at construction time.
+        """Return an empty string.
+
+        .. note::
+            Placeholder implementation. No message is currently
+            available for local jobs.
 
         Returns:
-            str: The message string, or an empty string if none.
+            str: An empty string.
         """
-        return self._message
+        return ""
 
     def results(self, timeout: float = math.inf) -> Results:
         """Return the local execution result immediately.
@@ -329,10 +334,14 @@ class _RemoteJob(Job[Results]):
         return
 
     def message(self) -> str:
-        """Return the batch ID as a status message.
+        """Return an empty string.
+
+        .. note::
+            Placeholder implementation. No message is currently
+            retrieved from the remote backend.
 
         Returns:
-            str: String representation of the batch ID.
+            str: An empty string.
         """
         return ""
 
@@ -369,7 +378,7 @@ class _RemoteJob(Job[Results]):
             if time.monotonic() >= deadline:
                 raise TimeoutError(
                     f"Job {self.job_id()} did not complete within {timeout} seconds."
-        )
+                )
 
     @classmethod
     def _from_remote_results(
