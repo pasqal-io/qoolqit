@@ -18,14 +18,11 @@ class WeightedDetuning:
 
     Args:
         weights: A dictionary associating detuning weights to qubits.
-        waveform: The waveform for this detuning.
+            Each weight must be in [0, 1], where 0 means that the waveform is ignored for
+            this qubit and 1 means that the waveform is fully applied to this qubit.
+        waveform: The waveform for this detuning. Must be negative valued.
 
     See https://docs.pasqal.com/pulser/tutorials/dmm/ for details on DMM.
-
-    Note:
-        - Detuning with positive waveforms cannot be instantiated.
-        - Each weight must be in [0, 1], where `0` means that the waveform is ignored for
-            this qubit and `1` means that the waveform is fully applied to this qubit.
     """
 
     weights: dict[Any, float]
