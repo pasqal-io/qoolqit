@@ -39,7 +39,7 @@ def random_waveform_factory() -> (
         rng = np.random.default_rng(seed)
         n = rng.integers(2, 5)
         durations = rng.uniform(1.0, 2.0, size=n)
-        durations *= rng.uniform(max_duration / 100, max_duration) / np.sum(durations)
+        durations *= rng.uniform(0.05 * max_duration, max_duration) / np.sum(durations)
         wf: Waveform = Ramp(
             durations[0],
             initial_value=rng.uniform(min_value, max_value),
@@ -65,11 +65,11 @@ def dmm_program(
         register = random_linear_register_factory(1.0, rng)
         wf_amp = Ramp(1.0, 0.5, 0.5)
         wf_det = Ramp(1.0, -0.2, -0.5)
-        wdetuning = WeightedDetuning(
+        weighted_detuning = WeightedDetuning(
             weights={q: uniform(0.1, 0.99) for q in register.qubits_ids},
             waveform=wf_det,
         )
-        drive = Drive(amplitude=wf_amp, detuning=wf_det, weighted_detunings=[wdetuning])
+        drive = Drive(amplitude=wf_amp, detuning=wf_det, weighted_detunings=[weighted_detuning])
         return QuantumProgram(register, drive)
 
     yield _generate_program

@@ -91,13 +91,9 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
 
     # Remove diagonal and some random values from the data
     almost_zero = ATOL_64
-
     np.fill_diagonal(data, almost_zero)
-
     random_edges_removal = random_edge_list(range(n_nodes), k=4)
-
     i_list, j_list = zip(*random_edges_removal)
-
     data[i_list, j_list] = almost_zero
     data[j_list, i_list] = almost_zero
 

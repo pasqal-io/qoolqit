@@ -14,35 +14,23 @@ __all__ = ["WeightedDetuning", "Drive"]
 
 @dataclass
 class WeightedDetuning:
-    """A weighted detuning.
+    """A weighted detuning for the Detuning Map Modulation (DMM).
 
-    See https://pasqal-io.github.io/qoolqit/latest/theory/rydberg_model/#weighted-detuning for
-    details on weighted detunings.
+    Args:
+        weights: A dictionary associating detuning weights to qubits.
+            Each weight must be in [0, 1], where 0 means that the waveform is ignored for
+            this qubit and 1 means that the waveform is fully applied to this qubit.
+        waveform: The waveform for this detuning. Must be negative for all times.
 
-    Note: detuning with positive waveforms cannot be instantiated.
+    See https://docs.pasqal.com/pulser/tutorials/dmm/ for details on DMM.
     """
 
     weights: dict[Any, float]
-    """
-    Association of weights to qubits.
-
-    Each weight must be in [0, 1], where `0` means that the
-    waveform is ignored for this qubit and `1` means that the waveform is fully applied to this
-    qubit.
-
-    In the companion documentation, these are the value epsilon_i.
-    """
-
     waveform: Waveform
-    """
-    The waveform for this detuning.
-
-    In the companion documentation, this is the function Delta(t).
-    """
 
     def __post_init__(self) -> None:
         if self.waveform.max() > 0:
-            raise ValueError("WeightedDetuning waveform must not be positive.")
+            raise ValueError("WeightedDetuning waveform must be negative.")
 
 
 class Drive:
@@ -50,56 +38,80 @@ class Drive:
 
     def __init__(
         self,
-        *args: Any,
-        amplitude: Waveform | None = None,
+        *,
+        amplitude: Waveform,
         detuning: Waveform | None = None,
         weighted_detunings: list[WeightedDetuning] | None = None,
         phase: float = 0.0,
     ) -> None:
-        """Default constructor for the Drive.
+        """Initialize a Drive.
 
-        Must be instantiated with keyword arguments. Accepts either an amplitude waveform,
-        a detuning waveform, or both. A phase value can also be passed.
+        The Drive specifies the control parameters for the time-dependent drive Hamiltonian
+        in the Rydberg model
+        (see https://docs.pasqal.com/qoolqit/get_started/qoolqit_model/ for details),
 
-        Arguments:
-            amplitude: waveform representing Ω(t) in the drive Hamiltonian.
-            detuning: waveform representing δ(t) in the drive Hamiltonian.
-            phase: phase value ɸ for the amplitude term.
-            weighted_detunings: additional waveforms and weights applied to individual
-                qubits. Note that these detunings are not supported on all devices.
+        H_drive(t) = Σᵢ [Ω(t)/2 (cos φ(t) σˣᵢ - sin φ(t) σʸᵢ)] - Σᵢ [δ(t) + εᵢ Δ(t)] nᵢ
+
+        representing:
+        - Amplitude Ω(t): Controls the Rabi frequency that drives qubits.
+        - Detuning δ(t): Controls the energy offset of the Rydberg state.
+        - Phase φ: Global phase applied to the amplitude term.
+        - Weighted detunings: Individual qubit detunings via Detuning Map Modulation (DMM).
+
+        Args:
+            amplitude: Time-dependent amplitude waveform Ω(t) representing the Rabi frequency.
+                Controls the strength of the coupling between ground and Rydberg states.
+                Must be positive for all times.
+            detuning: Time-dependent detuning waveform δ(t) representing the energy offset
+                of the Rydberg state relative to resonance. If None, defaults to zero
+                detuning (Delay waveform) for the duration of the amplitude.
+            phase: Global phase φ applied to the amplitude term in the Hamiltonian.
+                Defaults to 0.0 (no phase).
+            weighted_detunings: List of additional detuning waveforms applied to individual
+                qubits using Detuning Map Modulation (DMM). Each WeightedDetuning specifies
+                weights εᵢ for different qubits and a corresponding waveform Δ(t). Note that DMM
+                is not supported on all devices. Defaults to an empty list.
+
+        Raises:
+            TypeError: If amplitude or detuning are not Waveform instances.
+            ValueError: If the amplitude waveform has negative values.
+
+        Note:
+            - All arguments must be passed as keyword arguments.
+            - If amplitude and detuning have different durations, the shorter one is
+              automatically extended with a Delay to match the longer duration.
+            - The resulting Drive duration equals the maximum of the amplitude and
+              detuning durations.
+            - WeightedDetuning waveforms must be non-positive (≤ 0) as they represent
+              energy shifts below the resonance.
+
+        Example:
+            >>> from qoolqit import Drive
+            >>> from qoolqit.waveforms import Constant, Ramp
+            >>>
+            >>> # Simple constant drive
+            >>> drive = Drive(amplitude=Constant(10.0, 1.5))
+            >>>
+            >>> # Drive with time-varying amplitude and detuning
+            >>> amp = Ramp(5.0, 0.0, 2.0)
+            >>> det = Constant(5.0, -1.0)
+            >>> drive = Drive(amplitude=amp, detuning=det, phase=0.5)
         """
-
-        if len(args) > 0:
-            raise TypeError("Please pass the `amplitude` and / or `detuning` as keyword arguments.")
-
-        if amplitude is None and detuning is None:
-            raise ValueError("Amplitude and detuning cannot both be empty.")
 
         for arg in [amplitude, detuning]:
             if arg is not None and not isinstance(arg, Waveform):
-                raise TypeError("Amplitude and detuning must be of type Waveform.")
+                raise TypeError("'amplitude' and 'detuning' must be of type Waveform.")
 
-        self._amplitude: Waveform
-        self._detuning: Waveform
-        self._amplitude_orig: Waveform
-        self._detuning_orig: Waveform
+        if amplitude.min() < 0.0:
+            raise ValueError("'amplitude' must be positive.")
 
-        if amplitude is None and isinstance(detuning, Waveform):
-            self._amplitude = Delay(detuning.duration)
-            self._detuning = detuning
-        elif detuning is None and isinstance(amplitude, Waveform):
-            self._amplitude = amplitude
-            self._detuning = Delay(amplitude.duration)
-        elif isinstance(detuning, Waveform) and isinstance(amplitude, Waveform):
-            self._amplitude = amplitude
-            self._detuning = detuning
-
-        if self._amplitude.min() < 0.0:
-            raise ValueError("Amplitude cannot be negative.")
+        self._amplitude = amplitude
+        self._detuning = detuning if detuning is not None else Delay(amplitude.duration)
 
         self._amplitude_orig = self._amplitude
         self._detuning_orig = self._detuning
 
+        # adjust amplitude and detuning waveforms to match the duration
         if self._amplitude.duration > self._detuning.duration:
             extra_duration = self._amplitude.duration - self._detuning.duration
             self._detuning = CompositeWaveform(self._detuning, Delay(extra_duration))
