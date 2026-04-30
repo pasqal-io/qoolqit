@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
-from logging import warning
 from typing import Any, Sequence
 
 import matplotlib.pyplot as plt
@@ -131,7 +131,7 @@ class Drive:
 
         self._weighted_detunings = weighted_detunings
         if self._weighted_detunings is not None:
-            warning(
+            warnings.warn(
                 "Warning: `weighted_detunings` in Drive is deprecated. "
                 "Use `dmm` instead. This will be removed in a future version."
             )
@@ -182,10 +182,10 @@ class Drive:
         else:
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
-    def __amp_header__(self) -> str:  # pragma: no cover
+    def __amp_header__(self) -> str:
         return "Amplitude: \n"
 
-    def __det_header__(self) -> str:  # pragma: no cover
+    def __det_header__(self) -> str:
         return "Detuning: \n"
 
     def __repr__(self) -> str:

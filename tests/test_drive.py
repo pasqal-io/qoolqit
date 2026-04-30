@@ -42,6 +42,11 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
 
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
 
+    with pytest.raises(
+        NotImplementedError, match="Composing with object of type <class 'float'> not supported."
+    ):
+        drive >> 1.0  # type: ignore [operator]
+
     duration_amp = amp_wf.duration
     duration_det = det_wf.duration
 
