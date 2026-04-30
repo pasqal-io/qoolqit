@@ -146,7 +146,7 @@ def basic_compilation(
     pulser_sequence.declare_channel("rydberg", "rydberg_global")
     pulser_sequence.add(pulser_pulse, "rydberg")
 
-    if len(drive.weighted_detunings) > 0:
+    if drive.weighted_detunings is not None:
         # Add detuning map
         channels = list(device._device.dmm_channels.keys())
         if len(channels) == 0:

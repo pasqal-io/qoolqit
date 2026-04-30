@@ -32,14 +32,16 @@ class QuantumProgram:
             raise TypeError("`drive` must be of type Drive.")
         self._drive = drive
         self._compiled_sequence: PulserSequence | None = None
-        for detuning in drive.weighted_detunings:
-            for key in detuning.weights.keys():
-                if key not in register.qubits:
-                    raise ValueError(
-                        "In this QuantumProgram, the drive and the register "
-                        f"do not match: qubit {key} appears in the drive but "
-                        "is not defined in the register."
-                    )
+
+        if drive.weighted_detunings is not None:
+            for detuning in drive.weighted_detunings:
+                for key in detuning.weights.keys():
+                    if key not in register.qubits:
+                        raise ValueError(
+                            "In this QuantumProgram, the drive and the register "
+                            f"do not match: qubit {key} appears in the drive but "
+                            "is not defined in the register."
+                        )
 
     @property
     def register(self) -> Register:

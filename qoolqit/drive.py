@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from logging import warning
 from typing import Any, Sequence
 
 import matplotlib.pyplot as plt
@@ -9,28 +10,33 @@ from matplotlib.figure import Figure
 
 from qoolqit.waveforms import CompositeWaveform, Delay, Waveform
 
-__all__ = ["WeightedDetuning", "Drive"]
+__all__ = ["WeightedDetuning", "DetuningMapModulator", "Drive"]
 
 
-@dataclass
-class WeightedDetuning:
+@dataclass(frozen=True)
+class DetuningMapModulator:
     """A weighted detuning for the Detuning Map Modulation (DMM).
 
     Args:
+        waveform: The waveform for this detuning. Must be negative for all times.
         weights: A dictionary associating detuning weights to qubits.
             Each weight must be in [0, 1], where 0 means that the waveform is ignored for
             this qubit and 1 means that the waveform is fully applied to this qubit.
-        waveform: The waveform for this detuning. Must be negative for all times.
 
     See https://docs.pasqal.com/pulser/tutorials/dmm/ for details on DMM.
     """
 
-    weights: dict[Any, float]
     waveform: Waveform
+    weights: dict[Any, float]
 
     def __post_init__(self) -> None:
         if self.waveform.max() > 0:
-            raise ValueError("WeightedDetuning waveform must be negative.")
+            raise ValueError("`waveform` must be negative for all times.")
+        if any(weight < 0 or weight > 1 for weight in self.weights.values()):
+            raise ValueError("`weights` must be a dictionary of values in [0, 1].")
+
+
+WeightedDetuning = DetuningMapModulator
 
 
 class Drive:
@@ -42,6 +48,7 @@ class Drive:
         amplitude: Waveform,
         detuning: Waveform | None = None,
         weighted_detunings: list[WeightedDetuning] | None = None,
+        dmm: DetuningMapModulator | None = None,
         phase: float = 0.0,
     ) -> None:
         """Initialize a Drive.
@@ -121,7 +128,15 @@ class Drive:
 
         self._duration = self._amplitude.duration
         self._phase = phase
-        self._weighted_detunings = weighted_detunings if weighted_detunings is not None else []
+
+        self._weighted_detunings = weighted_detunings
+        if self._weighted_detunings is not None:
+            warning(
+                "Warning: `weighted_detunings` in Drive is deprecated. "
+                "Use `dmm` instead. This will be removed in a future version."
+            )
+
+        self._dmm = dmm
 
     @property
     def amplitude(self) -> Waveform:
@@ -134,9 +149,14 @@ class Drive:
         return self._detuning_orig
 
     @property
-    def weighted_detunings(self) -> Sequence[WeightedDetuning]:
+    def weighted_detunings(self) -> Sequence[WeightedDetuning] | None:
         """Detunings applied to individual qubits."""
         return self._weighted_detunings
+
+    @property
+    def dmm(self) -> DetuningMapModulator | None:
+        """Detuning Map Modulator (DMM) applied to individual qubits."""
+        return self._dmm
 
     @property
     def phase(self) -> float:
