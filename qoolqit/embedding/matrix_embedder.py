@@ -41,8 +41,8 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
 class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbedderConfig]):
     """A matrix to graph embedder using the interaction embedding algorithm."""
 
-    def __init__(self, config: InteractionEmbedderConfig = InteractionEmbedderConfig()) -> None:
-        super().__init__(interaction_embedding, config=config)
+    def __init__(self) -> None:
+        super().__init__(interaction_embedding, InteractionEmbedderConfig())
 
 
 class Blade(MatrixToGraphEmbedder[BladeConfig]):
