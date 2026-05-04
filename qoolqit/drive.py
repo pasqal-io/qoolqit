@@ -62,8 +62,10 @@ class Drive:
         representing:
         - Amplitude Ω(t): Controls the Rabi frequency that drives qubits.
         - Detuning δ(t): Controls the energy offset of the Rydberg state.
+        - dmm εᵢ, Δ(t): Detuning Map Modulator (DMM) for additional qubit-specific detunings.
         - Phase φ: Global phase applied to the amplitude term.
-        - Weighted detunings: Individual qubit detunings via Detuning Map Modulation (DMM).
+        - Weighted detunings: [DEPRECATED] Individual qubit detunings via
+            Detuning Map Modulation (DMM).
 
         Args:
             amplitude: Time-dependent amplitude waveform Ω(t) representing the Rabi frequency.
@@ -72,12 +74,14 @@ class Drive:
             detuning: Time-dependent detuning waveform δ(t) representing the energy offset
                 of the Rydberg state relative to resonance. If None, defaults to zero
                 detuning (Delay waveform) for the duration of the amplitude.
+            dmm: DetuningMapModulator instance for additional negative detuning waveform Δ(t) ≤ 0
+                applied to individual qubits as specified by its `weights` attribute εᵢ.
             phase: Global phase φ applied to the amplitude term in the Hamiltonian.
                 Defaults to 0.0 (no phase).
-            weighted_detunings: List of additional detuning waveforms applied to individual
-                qubits using Detuning Map Modulation (DMM). Each WeightedDetuning specifies
-                weights εᵢ for different qubits and a corresponding waveform Δ(t). Note that DMM
-                is not supported on all devices. Defaults to an empty list.
+            weighted_detunings: [DEPRECATED] List of additional detuning waveforms applied to
+                individual qubits using Detuning Map Modulation (DMM). Each WeightedDetuning
+                specifies weights εᵢ for different qubits and a corresponding waveform Δ(t).
+                Note that DMM is not supported on all devices.
 
         Raises:
             TypeError: If amplitude or detuning are not Waveform instances.
@@ -89,8 +93,8 @@ class Drive:
               automatically extended with a Delay to match the longer duration.
             - The resulting Drive duration equals the maximum of the amplitude and
               detuning durations.
-            - WeightedDetuning waveforms must be non-positive (≤ 0) as they represent
-              energy shifts below the resonance.
+            - DetuningMapModulator waveform must be negative for all times
+                (≤ 0) as it represents energy shifts below the resonance.
 
         Example:
             >>> from qoolqit import Drive
@@ -129,12 +133,12 @@ class Drive:
         self._duration = self._amplitude.duration
         self._phase = phase
 
-        self._weighted_detunings = weighted_detunings
-        if self._weighted_detunings is not None:
+        if weighted_detunings is not None:
             warnings.warn(
                 "Warning: `weighted_detunings` in Drive is deprecated. "
                 "Use `dmm` instead. This will be removed in a future version."
             )
+        self._weighted_detunings = weighted_detunings
 
         self._dmm = dmm
 
