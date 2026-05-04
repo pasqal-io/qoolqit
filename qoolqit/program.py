@@ -28,11 +28,23 @@ class QuantumProgram:
         if not isinstance(register, Register):
             raise TypeError("`register` must be of type Register.")
         self._register = register
+
         if not isinstance(drive, Drive):
             raise TypeError("`drive` must be of type Drive.")
+        if drive.dmm is not None:
+            dmm_weights = drive.dmm.weights
+            for qid in dmm_weights.keys():
+                if qid not in register.qubits:
+                    raise ValueError(
+                        "In this QuantumProgram, the drive's detuning modulator map (DMM) "
+                        f"and the register do not match: qubit {qid} appears in the DMM "
+                        "but is not defined in the register."
+                    )
+
         self._drive = drive
         self._compiled_sequence: PulserSequence | None = None
 
+        # to be deprecated
         if drive.weighted_detunings is not None:
             for detuning in drive.weighted_detunings:
                 for key in detuning.weights.keys():
