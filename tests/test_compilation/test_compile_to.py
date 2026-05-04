@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+from unittest.mock import MagicMock
+
 import pytest
 
 from qoolqit import AnalogDevice, Constant, Drive, QuantumProgram, Register
+from qoolqit.drive import DetuningMapModulator
+from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
 
 
@@ -18,3 +22,29 @@ def test_compilation_single_qubit(profile: CompilerProfile) -> None:
     # Test compilation on the default profile
     program.compile_to(device=AnalogDevice(), profile=profile)
     assert program.is_compiled
+
+
+def test_dmm_not_supported() -> None:
+    """Test compilation of a program with a DMM but the device does not support it."""
+    mock_register = MagicMock(spec=Register)
+    mock_dmm = MagicMock(spec=DetuningMapModulator, weights={})
+    mock_drive = MagicMock(spec=Drive, dmm=mock_dmm)
+    program = QuantumProgram(register=mock_register, drive=mock_drive)
+    with pytest.raises(CompilationError, match="The device does not support DMM"):
+        # AnalogDevice does not support DMM
+        program.compile_to(device=AnalogDevice())
+
+
+""" @pytest.mark.parametrize("profile", [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT])
+def test_compilation_with_dmm(profile: CompilerProfile) -> None:
+    register = Register(qubits={"q0": (0.0, 0.7), "q1": (-0.5, -0.5), "q2": (0.5, -0.5)})
+
+    dmm = DetuningMapModulator(
+        waveform=Constant(4.0, -1.0), weights={"q0": 0.1, "q1": 0.2, "q2": 0.9}
+    )
+    drive = Drive(amplitude=Constant(150.0, 0.01), dmm=dmm)
+    program = QuantumProgram(register=register, drive=drive)
+
+    # Test compilation on the default profile
+    program.compile_to(device=DigitalAnalogDevice(), profile=profile)
+    assert program.is_compiled """

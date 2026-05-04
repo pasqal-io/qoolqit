@@ -6,6 +6,7 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
 from qoolqit.drive import Drive
+from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.register import Register
@@ -140,6 +141,13 @@ class QuantumProgram:
                 raise ValueError(
                     "`device_max_duration_ratio` must be between 0 and 1, "
                     f"got {device_max_duration_ratio} instead."
+                )
+
+        # Check if device supports DMM and has a DMM channel
+        if self.drive.dmm is not None:
+            if not device._device.dmm_channels:
+                raise CompilationError(
+                    "The device does not support DMM. Please use a device that supports DMM."
                 )
 
         compiler = SequenceCompiler(
