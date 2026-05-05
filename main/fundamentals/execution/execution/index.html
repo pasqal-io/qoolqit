@@ -2897,7 +2897,7 @@ QoolQit provides easy access to local emulation through the <code>LocalEmulator<
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
@@ -2910,15 +2910,19 @@ QoolQit provides easy access to local emulation through the <code>LocalEmulator<
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEmulator</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">JobStatus</span><span class="p">,</span> <span class="n">LocalEmulator</span>
 
 <span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">()</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span> <span class="o">==</span> <span class="n">JobStatus</span><span class="o">.</span><span class="n">DONE</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">results</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">from qoolqit.execution import LocalEmulator
+<div class="clipboard-copy-txt" id="cell-2">from qoolqit.execution import JobStatus, LocalEmulator
 
 emulator = LocalEmulator()
-results = emulator.run(program)</div>
+job = emulator.run(program)
+assert job.get_status() == JobStatus.DONE
+results = job.results()</div>
 </div>
 </div>
 </div>
@@ -2979,8 +2983,8 @@ emulator = LocalEmulator(backend_type=BackendType.QutipBackendV2)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="handling-local-results">Handling local results<a class="anchor-link" href="#handling-local-results">¶</a></h3><p>The call <code>emulator.run(program)</code> will return a <code>Sequence[Results]</code> object type. This is where the results of the computation are stored.
-For more info about this specific object, please, have a look at <a href="https://pulser.readthedocs.io/en/stable/apidoc/_autosummary/pulser.backend.Results.html#results">Pulser documentation</a>.
+<h3 id="handling-local-results">Handling local results<a class="anchor-link" href="#handling-local-results">¶</a></h3><p>The call <code>emulator.run(program)</code> will return a <code>Job[Results]</code> object type. This is where the results of the computation are stored.
+For more info about this specific object, please, have a look at <a href="????">Qoolqit documentation</a>.
 As an example, lets inspect the results we got in the previous run:</p>
 </div>
 </div>
@@ -2991,7 +2995,7 @@ As an example, lets inspect the results we got in the previous run:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
@@ -3005,10 +3009,10 @@ As an example, lets inspect the results we got in the previous run:</p>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># single result in the sequence</span>
-<span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_result_tags</span><span class="p">()</span>
+<span class="n">results</span><span class="o">.</span><span class="n">get_result_tags</span><span class="p">()</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-4"># single result in the sequence
-results[0].get_result_tags()</div>
+results.get_result_tags()</div>
 </div>
 </div>
 </div>
@@ -3018,7 +3022,7 @@ results[0].get_result_tags()</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[ ]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>['bitstrings']</pre>
 </div>
@@ -3043,7 +3047,7 @@ results[0].get_result_tags()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
@@ -3057,11 +3061,11 @@ results[0].get_result_tags()</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># single result in the sequence</span>
-<span class="n">final_bitstrings</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">final_bitstrings</span>
+<span class="n">final_bitstrings</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">final_bitstrings</span>
 <span class="n">final_bitstrings</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-5"># single result in the sequence
-final_bitstrings = results[0].final_bitstrings
+final_bitstrings = results.final_bitstrings
 final_bitstrings</div>
 </div>
 </div>
@@ -3072,7 +3076,7 @@ final_bitstrings</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[ ]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>Counter({'111': 813,
          '101': 64,

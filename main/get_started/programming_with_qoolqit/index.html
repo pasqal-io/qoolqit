@@ -3155,7 +3155,7 @@ program.compile_to(device)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
@@ -3168,15 +3168,19 @@ program.compile_to(device)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEmulator</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">JobStatus</span><span class="p">,</span> <span class="n">LocalEmulator</span>
 
 <span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">()</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span> <span class="o">==</span> <span class="n">JobStatus</span><span class="o">.</span><span class="n">DONE</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">results</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">from qoolqit.execution import LocalEmulator
+<div class="clipboard-copy-txt" id="cell-6">from qoolqit.execution import JobStatus, LocalEmulator
 
 emulator = LocalEmulator()
-results = emulator.run(program)</div>
+job = emulator.run(program)
+assert job.get_status() == JobStatus.DONE
+results = job.results()</div>
 </div>
 </div>
 </div>
@@ -3191,7 +3195,7 @@ results = emulator.run(program)</div>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <blockquote>
 <p>📖 See <a href="../fundamentals/compilation/devices.md">Devices</a> for available devices and their specifications.</p>
-<p>📖 See <a href="./fundamentals/execution/index.md">Execution</a> for running programs and handling different result types.</p>
+<p>📖 See <a href="./fundamentals/execution/execution.ipynb">Execution</a> for running programs and handling job results.</p>
 </blockquote>
 </div>
 </div>
@@ -3353,7 +3357,7 @@ program_no_blockade.compile_to(device)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
@@ -3373,8 +3377,12 @@ program_no_blockade.compile_to(device)</div>
 
 <span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">(</span><span class="n">emulation_config</span><span class="o">=</span><span class="n">configuration</span><span class="p">)</span>
 
-<span class="n">results_blockade</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program_blockade</span><span class="p">)</span>
-<span class="n">results_no_blockade</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program_no_blockade</span><span class="p">)</span>
+<span class="n">job_blockade</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program_blockade</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">job_blockade</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span> <span class="o">==</span> <span class="n">JobStatus</span><span class="o">.</span><span class="n">DONE</span>
+<span class="n">result_blockade</span> <span class="o">=</span> <span class="n">job_blockade</span><span class="o">.</span><span class="n">results</span><span class="p">()</span>
+<span class="n">job_no_blockade</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program_no_blockade</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">job_no_blockade</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span> <span class="o">==</span> <span class="n">JobStatus</span><span class="o">.</span><span class="n">DONE</span>
+<span class="n">result_no_blockade</span> <span class="o">=</span> <span class="n">job_no_blockade</span><span class="o">.</span><span class="n">results</span><span class="p">()</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-9"># Configure emulation: sample bitstrings at 81 evaluation times
 eval_times = np.linspace(0.0, 1.0, 81)
@@ -3383,8 +3391,12 @@ configuration = EmulationConfig(observables=[bitstrings])
 
 emulator = LocalEmulator(emulation_config=configuration)
 
-results_blockade = emulator.run(program_blockade)
-results_no_blockade = emulator.run(program_no_blockade)</div>
+job_blockade = emulator.run(program_blockade)
+assert job_blockade.get_status() == JobStatus.DONE
+result_blockade = job_blockade.results()
+job_no_blockade = emulator.run(program_no_blockade)
+assert job_no_blockade.get_status() == JobStatus.DONE
+result_no_blockade = job_no_blockade.results()</div>
 </div>
 </div>
 </div>
@@ -3396,7 +3408,7 @@ results_no_blockade = emulator.run(program_no_blockade)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
@@ -3411,14 +3423,14 @@ results_no_blockade = emulator.run(program_no_blockade)</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="n">times</span><span class="o">=</span><span class="n">results_blockade</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_result_times</span><span class="p">(</span><span class="n">bitstrings</span><span class="p">)</span>
-<span class="n">occupation</span><span class="o">=</span><span class="p">[</span><span class="n">results_blockade</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="n">bitstrings</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="n">t</span><span class="p">)[</span><span class="s2">"11"</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span>
+<span class="n">times</span><span class="o">=</span><span class="n">result_blockade</span><span class="o">.</span><span class="n">get_result_times</span><span class="p">(</span><span class="n">bitstrings</span><span class="p">)</span>
+<span class="n">occupation</span><span class="o">=</span><span class="p">[</span><span class="n">result_blockade</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="n">bitstrings</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="n">t</span><span class="p">)[</span><span class="s2">"11"</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span>
              <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">times</span><span class="p">)]</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span><span class="n">occupation</span><span class="p">,</span>
          <span class="n">label</span><span class="o">=</span><span class="s2">"Blockade"</span><span class="p">,</span>
          <span class="n">color</span><span class="o">=</span><span class="s2">"navy"</span><span class="p">)</span>
-<span class="n">times</span><span class="o">=</span><span class="n">results_no_blockade</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_result_times</span><span class="p">(</span><span class="n">bitstrings</span><span class="p">)</span>
-<span class="n">occupation</span><span class="o">=</span><span class="p">[</span><span class="n">results_no_blockade</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="n">bitstrings</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="n">t</span><span class="p">)[</span><span class="s2">"11"</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span>
+<span class="n">times</span><span class="o">=</span><span class="n">result_no_blockade</span><span class="o">.</span><span class="n">get_result_times</span><span class="p">(</span><span class="n">bitstrings</span><span class="p">)</span>
+<span class="n">occupation</span><span class="o">=</span><span class="p">[</span><span class="n">result_no_blockade</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="n">bitstrings</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="n">t</span><span class="p">)[</span><span class="s2">"11"</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span>
              <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">times</span><span class="p">)]</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span><span class="n">occupation</span><span class="p">,</span>
          <span class="n">label</span><span class="o">=</span><span class="s2">"No Blockade"</span><span class="p">,</span>
@@ -3432,14 +3444,14 @@ results_no_blockade = emulator.run(program_no_blockade)</div>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-10">import matplotlib.pyplot as plt
 
-times=results_blockade[0].get_result_times(bitstrings)
-occupation=[results_blockade[0].get_result(bitstrings.tag,time=t)["11"]/1000
+times=result_blockade.get_result_times(bitstrings)
+occupation=[result_blockade.get_result(bitstrings.tag,time=t)["11"]/1000
              for k,t in enumerate(times)]
 plt.plot(times,occupation,
          label="Blockade",
          color="navy")
-times=results_no_blockade[0].get_result_times(bitstrings)
-occupation=[results_no_blockade[0].get_result(bitstrings.tag,time=t)["11"]/1000
+times=result_no_blockade.get_result_times(bitstrings)
+occupation=[result_no_blockade.get_result(bitstrings.tag,time=t)["11"]/1000
              for k,t in enumerate(times)]
 plt.plot(times,occupation,
          label="No Blockade",

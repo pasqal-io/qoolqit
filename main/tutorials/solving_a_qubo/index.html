@@ -2997,22 +2997,26 @@ program.compile_to(device = AnalogDevice())</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEmulator</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">JobStatus</span><span class="p">,</span> <span class="n">LocalEmulator</span>
 
 <span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">(</span><span class="n">num_shots</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 
-<span class="n">results</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span> <span class="o">==</span> <span class="n">JobStatus</span><span class="o">.</span><span class="n">DONE</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">results</span><span class="p">()</span>
 
-<span class="n">counter</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">final_bitstrings</span>
+<span class="n">counter</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">final_bitstrings</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">from qoolqit.execution import LocalEmulator
+<div class="clipboard-copy-txt" id="cell-6">from qoolqit.execution import JobStatus, LocalEmulator
 
 emulator = LocalEmulator(num_shots=500)
 
-results = emulator.run(program)
+job = emulator.run(program)
+assert job.get_status() == JobStatus.DONE
+result = job.results()
 
-counter = results[0].final_bitstrings
+counter = result.final_bitstrings
 print(counter)</div>
 </div>
 </div>
