@@ -3,12 +3,21 @@ from __future__ import annotations
 import math
 import time
 from abc import ABC, abstractmethod
-from enum import Enum, auto
 from typing import Generic, TypeVar
 
 from pulser.backend import Results, remote
 
 ResultType = TypeVar("ResultType")
+
+JobStatus = remote.JobStatus
+"""Alias for :class:`~pulser.backend.remote.JobStatus`.
+
+Terminal states (where :meth:`Job.has_ended` returns ``True``):
+
+- :attr:`~remote.JobStatus.DONE`
+- :attr:`~remote.JobStatus.ERROR`
+- :attr:`~remote.JobStatus.CANCELED`
+"""
 
 
 class JobFailedError(Exception):
@@ -17,32 +26,6 @@ class JobFailedError(Exception):
 
 class JobCancelledError(Exception):
     """Raised when a job was cancelled before or during execution."""
-
-
-class JobStatus(Enum):
-    """Lifecycle state of a :class:`Job`.
-
-    Terminal states (where :meth:`Job.is_done` returns ``True``):
-
-    - :attr:`SUCCEEDED`
-    - :attr:`FAILED`
-    - :attr:`CANCELLED`
-    """
-
-    PENDING = auto()
-    """Job submitted but execution has not started yet."""
-
-    RUNNING = auto()
-    """Job is currently being executed."""
-
-    SUCCEEDED = auto()
-    """Job completed successfully."""
-
-    FAILED = auto()
-    """Job terminated due to a failure."""
-
-    CANCELLED = auto()
-    """Job was cancelled before or during execution."""
 
 
 class Job(ABC, Generic[ResultType]):
@@ -54,9 +37,9 @@ class Job(ABC, Generic[ResultType]):
 
     Lifecycle::
 
-        PENDING -> RUNNING -> SUCCEEDED
-                           -> FAILED
-                           -> CANCELLED
+        PENDING -> RUNNING -> DONE
+                           -> ERROR
+                           -> CANCELED
 
     Concrete backend implementations (:class:`_LocalJob`,
     :class:`_RemoteJob`) must override all abstract methods.
@@ -123,51 +106,36 @@ class Job(ABC, Generic[ResultType]):
         ...
 
     @abstractmethod
-    def message(self) -> str:
-        """Return a human-readable message for this job.
-
-        .. note::
-            This method is a placeholder. The API is defined here for
-            future use; current implementations return an empty string
-            or a minimal stub value. The contract (content, format,
-            and availability) will be stabilised in a future release.
-
-        Returns:
-            str: A message, or an empty string if none is available.
-        """
-        ...
-
-    @abstractmethod
     def cancel(self) -> None:
         """Request cancellation of the job.
 
         Has no effect if the job has already reached a terminal state.
         After a successful cancellation, :meth:`get_status` returns
-        :attr:`JobStatus.CANCELLED` and :meth:`is_done` returns
+        :attr:`~remote.JobStatus.CANCELED` and :meth:`has_ended` returns
         ``True``.
 
         Note:
             Some implementations do not support cancellation. In that
             case this method is a no-op and the job status will never
-            be :attr:`JobStatus.CANCELLED`.
+            be :attr:`~remote.JobStatus.CANCELED`.
         """
         ...
 
-    def is_done(self) -> bool:
+    def has_ended(self) -> bool:
         """Return whether the job has reached a terminal state.
 
-        A job is done when its status is one of
-        :attr:`~JobStatus.SUCCEEDED`, :attr:`~JobStatus.FAILED`, or
-        :attr:`~JobStatus.CANCELLED`.
+        A job has ended when its status is one of
+        :attr:`~remote.JobStatus.DONE`, :attr:`~remote.JobStatus.ERROR`, or
+        :attr:`~remote.JobStatus.CANCELED`.
 
         Returns:
             bool: ``True`` if the job is in a terminal state,
             ``False`` otherwise.
         """
         return self.get_status() in {
-            JobStatus.SUCCEEDED,
-            JobStatus.FAILED,
-            JobStatus.CANCELLED,
+            JobStatus.DONE,
+            JobStatus.ERROR,
+            JobStatus.CANCELED,
         }
 
 
@@ -193,8 +161,8 @@ class _LocalJob(Job[Results]):
         self._result = result
 
     def get_status(self) -> JobStatus:
-        """Return FAILED if *result* is ``None``, otherwise SUCCEEDED."""
-        return JobStatus.FAILED if self._result is None else JobStatus.SUCCEEDED
+        """Return ERROR if *result* is ``None``, otherwise DONE."""
+        return JobStatus.ERROR if self._result is None else JobStatus.DONE
 
     def job_id(self) -> str:
         """Return the job identifier.
@@ -211,18 +179,6 @@ class _LocalJob(Job[Results]):
     def cancel(self) -> None:
         """No-op: local jobs complete synchronously and cannot be cancelled."""
         return
-
-    def message(self) -> str:
-        """Return an empty string.
-
-        .. note::
-            Placeholder implementation. No message is currently
-            available for local jobs.
-
-        Returns:
-            str: An empty string.
-        """
-        return ""
 
     def results(self, timeout: float = math.inf) -> Results:
         """Return the local execution result immediately.
@@ -241,9 +197,9 @@ class _LocalJob(Job[Results]):
                 ``None`` at construction time).
         """
         status = self.get_status()
-        if status == JobStatus.FAILED:
-            raise JobFailedError(f"Job failed. Message: {self.message()}")
-        assert status == JobStatus.SUCCEEDED
+        if status == JobStatus.ERROR:
+            raise JobFailedError("Job failed.")
+        assert status == JobStatus.DONE
         return self._result
 
 
@@ -252,8 +208,8 @@ class _RemoteJob(Job[Results]):
 
     Polls the remote connection for status updates until the job
     reaches a terminal state. Status values from Pulser's
-    :class:`~pulser.backend.remote.RemoteConnection` are translated
-    to :class:`JobStatus` via :attr:`_STATUS_MAP`.
+    :class:`~pulser.backend.remote.RemoteConnection` are used
+    directly via the :data:`JobStatus` alias.
 
     Note:
         This class is private. Do not instantiate it directly.
@@ -268,16 +224,6 @@ class _RemoteJob(Job[Results]):
             Required by some RemoteConnection implementations to query
             job progress. Defaults to an empty string.
     """
-
-    _STATUS_MAP = {
-        remote.JobStatus.PENDING: JobStatus.PENDING,
-        remote.JobStatus.RUNNING: JobStatus.RUNNING,
-        remote.JobStatus.DONE: JobStatus.SUCCEEDED,
-        remote.JobStatus.CANCELED: JobStatus.CANCELLED,
-        remote.JobStatus.ERROR: JobStatus.FAILED,
-        remote.JobStatus.PAUSED: JobStatus.RUNNING,
-    }
-    """Mapping from Pulser's JobStatus values to :class:`JobStatus`."""
 
     def __init__(
         self,
@@ -307,7 +253,7 @@ class _RemoteJob(Job[Results]):
         if job_id not in jobs:
             raise ValueError(f"Job {job_id} not found")
         status, results = jobs[job_id]
-        return self._STATUS_MAP[status], results
+        return status, results
 
     def get_status(self) -> JobStatus:
         """Query the remote connection and return the current job status.
@@ -333,18 +279,6 @@ class _RemoteJob(Job[Results]):
         """
         return
 
-    def message(self) -> str:
-        """Return an empty string.
-
-        .. note::
-            Placeholder implementation. No message is currently
-            retrieved from the remote backend.
-
-        Returns:
-            str: An empty string.
-        """
-        return ""
-
     def results(self, timeout: float = math.inf) -> Results:
         """Block until the remote job completes and return its result.
 
@@ -362,18 +296,18 @@ class _RemoteJob(Job[Results]):
         Raises:
             TimeoutError: If the job does not complete within *timeout*
                 seconds.
-            JobFailedError: If the job reached FAILED status.
-            JobCancelledError: If the job was CANCELLED.
+            JobFailedError: If the job reached ERROR status.
+            JobCancelledError: If the job was CANCELED.
         """
         deadline = time.monotonic() + timeout
         while True:
             status, results = self._query_job_progress()
-            if status == JobStatus.SUCCEEDED:
+            if status == JobStatus.DONE:
                 assert results is not None
                 return results
-            if status == JobStatus.FAILED:
+            if status == JobStatus.ERROR:
                 raise JobFailedError(f"Job {self.job_id()} failed.")
-            if status == JobStatus.CANCELLED:
+            if status == JobStatus.CANCELED:
                 raise JobCancelledError(f"Job {self.job_id()} was cancelled.")
             if time.monotonic() >= deadline:
                 raise TimeoutError(

@@ -27,7 +27,7 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
     emulation_config = EmulationConfig(observables=(Occupation(),))
     emulator = LocalEmulator(backend_type=backend_type, emulation_config=emulation_config)
     job = emulator.run(program)
-    assert job.get_status() == JobStatus.SUCCEEDED
+    assert job.get_status() == JobStatus.DONE
     res = job.results()
 
     final_r_pop = res.occupation
@@ -58,7 +58,7 @@ def test_results(backend_type: Backend, device: Device) -> None:
     config = EmulationConfig(observables=(Occupation(evaluation_times=evaluation_times),))
     qutip_emulator = LocalEmulator(emulation_config=config, num_shots=num_shots)
     qutip_job = qutip_emulator.run(program)
-    assert qutip_job.get_status() == JobStatus.SUCCEEDED
+    assert qutip_job.get_status() == JobStatus.DONE
     qutip_res = qutip_job.results()
     qutip_occupation = qutip_res.occupation
     # assert final time bitstrings dict is present, with `num_shots` entries
@@ -70,7 +70,7 @@ def test_results(backend_type: Backend, device: Device) -> None:
         backend_type=backend_type, emulation_config=config, num_shots=num_shots
     )
     other_job = other_emulator.run(program)
-    assert other_job.get_status() == JobStatus.SUCCEEDED
+    assert other_job.get_status() == JobStatus.DONE
     other_res = other_job.results()
     other_occupation = other_res.occupation
     # assert final time bitstrings dict is present, with `num_shots` entries

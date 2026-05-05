@@ -40,17 +40,12 @@ def make_remote_job(
 # ---------------------------------------------------------------------------
 
 class TestJobStatus:
-    def test_terminal_states(self):
-        terminal = {JobStatus.SUCCEEDED, JobStatus.FAILED, JobStatus.CANCELLED}
-        non_terminal = {JobStatus.PENDING, JobStatus.RUNNING}
-        for s in terminal:
-            assert s not in non_terminal
-        for s in non_terminal:
-            assert s not in terminal
+    def test_is_alias_for_remote_job_status(self):
+        assert JobStatus is remote.JobStatus
 
-    def test_all_values_defined(self):
+    def test_all_values_accessible(self):
         names = {s.name for s in JobStatus}
-        assert names == {"PENDING", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED"}
+        assert {"PENDING", "RUNNING", "DONE", "ERROR", "CANCELED", "PAUSED"}.issubset(names)
 
 
 # ---------------------------------------------------------------------------
@@ -58,21 +53,21 @@ class TestJobStatus:
 # ---------------------------------------------------------------------------
 
 class TestLocalJob:
-    def test_succeeded_when_result_provided(self):
+    def test_done_when_result_provided(self):
         job = _LocalJob(MagicMock())
-        assert job.get_status() == JobStatus.SUCCEEDED
+        assert job.get_status() == JobStatus.DONE
 
-    def test_failed_when_result_is_none(self):
+    def test_error_when_result_is_none(self):
         job = _LocalJob(None)
-        assert job.get_status() == JobStatus.FAILED
+        assert job.get_status() == JobStatus.ERROR
 
-    def test_is_done_when_succeeded(self):
+    def test_has_ended_when_done(self):
         job = _LocalJob(MagicMock())
-        assert job.is_done()
+        assert job.has_ended()
 
-    def test_is_done_when_failed(self):
+    def test_has_ended_when_error(self):
         job = _LocalJob(None)
-        assert job.is_done()
+        assert job.has_ended()
 
     def test_results_returns_value(self):
         result = MagicMock()
@@ -95,9 +90,6 @@ class TestLocalJob:
     def test_cancel_is_noop(self):
         _LocalJob(MagicMock()).cancel()  # must not raise
 
-    def test_message_returns_empty_string(self):
-        assert _LocalJob(MagicMock()).message() == ""
-
 
 # ---------------------------------------------------------------------------
 # _RemoteJob
@@ -112,41 +104,45 @@ class TestRemoteJob:
         job = make_remote_job([(remote.JobStatus.RUNNING, None)])
         assert job.get_status() == JobStatus.RUNNING
 
-    def test_get_status_done_maps_to_succeeded(self):
+    def test_get_status_done(self):
         job = make_remote_job([(remote.JobStatus.DONE, MagicMock())])
-        assert job.get_status() == JobStatus.SUCCEEDED
+        assert job.get_status() == JobStatus.DONE
 
-    def test_get_status_canceled_maps_to_cancelled(self):
+    def test_get_status_canceled(self):
         job = make_remote_job([(remote.JobStatus.CANCELED, None)])
-        assert job.get_status() == JobStatus.CANCELLED
+        assert job.get_status() == JobStatus.CANCELED
 
-    def test_get_status_error_maps_to_failed(self):
+    def test_get_status_error(self):
         job = make_remote_job([(remote.JobStatus.ERROR, None)])
-        assert job.get_status() == JobStatus.FAILED
+        assert job.get_status() == JobStatus.ERROR
 
-    def test_get_status_paused_maps_to_running(self):
+    def test_get_status_paused(self):
         job = make_remote_job([(remote.JobStatus.PAUSED, None)])
-        assert job.get_status() == JobStatus.RUNNING
+        assert job.get_status() == JobStatus.PAUSED
 
-    def test_is_done_false_while_pending(self):
+    def test_has_ended_false_while_pending(self):
         job = make_remote_job([(remote.JobStatus.PENDING, None)])
-        assert not job.is_done()
+        assert not job.has_ended()
 
-    def test_is_done_false_while_running(self):
+    def test_has_ended_false_while_running(self):
         job = make_remote_job([(remote.JobStatus.RUNNING, None)])
-        assert not job.is_done()
+        assert not job.has_ended()
 
-    def test_is_done_true_when_succeeded(self):
+    def test_has_ended_false_while_paused(self):
+        job = make_remote_job([(remote.JobStatus.PAUSED, None)])
+        assert not job.has_ended()
+
+    def test_has_ended_true_when_done(self):
         job = make_remote_job([(remote.JobStatus.DONE, MagicMock())])
-        assert job.is_done()
+        assert job.has_ended()
 
-    def test_is_done_true_when_failed(self):
+    def test_has_ended_true_when_error(self):
         job = make_remote_job([(remote.JobStatus.ERROR, None)])
-        assert job.is_done()
+        assert job.has_ended()
 
-    def test_is_done_true_when_cancelled(self):
+    def test_has_ended_true_when_canceled(self):
         job = make_remote_job([(remote.JobStatus.CANCELED, None)])
-        assert job.is_done()
+        assert job.has_ended()
 
     def test_results_returns_on_success(self):
         result = MagicMock()
@@ -187,11 +183,6 @@ class TestRemoteJob:
         connection = MagicMock(spec=remote.RemoteConnection)
         job = _RemoteJob(connection, "my-id", batch_id="b")
         assert job.job_id() == "my-id"
-
-    def test_message_returns_empty_string(self):
-        connection = MagicMock(spec=remote.RemoteConnection)
-        job = _RemoteJob(connection, "j", batch_id="my-batch")
-        assert job.message() == ""
 
     def test_cancel_is_noop(self):
         connection = MagicMock(spec=remote.RemoteConnection)
