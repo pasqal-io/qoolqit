@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, PropertyMock
 
 import pytest
 from pulser.backend import BitStrings, EmulationConfig, EmulatorBackend, Results
@@ -50,7 +50,9 @@ class TestBackends:
             self, job_params: list[JobParams] | None = None, wait: bool = False
         ) -> RemoteResults:
             self.run_calls += 1
-            return MagicMock(spec=RemoteResults)
+            mock = MagicMock(spec=RemoteResults, _connection=MagicMock(spec=RemoteConnection))
+            type(mock).job_ids = PropertyMock(return_value=["job_id1"])
+            return mock
 
     def test_default_backend(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend)
