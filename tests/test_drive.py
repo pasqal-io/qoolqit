@@ -5,7 +5,7 @@ import random
 
 import pytest
 
-from qoolqit.drive import Drive, WeightedDetuning
+from qoolqit.drive import DetuningMapModulator, Drive
 from qoolqit.waveforms import Constant, Delay, PiecewiseLinear, Ramp
 from qoolqit.waveforms.base_waveforms import Waveform
 
@@ -41,6 +41,11 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
         drive = Drive(amplitude=det_wf)
 
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
+
+    with pytest.raises(
+        NotImplementedError, match="Composing with object of type <class 'float'> not supported."
+    ):
+        drive >> 1.0  # type: ignore [operator]
 
     duration_amp = amp_wf.duration
     duration_det = det_wf.duration
@@ -82,28 +87,19 @@ def test_drive_duration_with_delays(amp_duration: float, det_duration: float) ->
     assert drive.duration == max(amp_duration, det_duration)
 
 
-def test_error_weighted_detuning_positive() -> None:
-    with pytest.raises(ValueError, match="WeightedDetuning waveform must be negative."):
-        WeightedDetuning(weights={0: 1}, waveform=Ramp(1.0, 0.2, 0.5))
+def test_dmm_init() -> None:
+    positive_wf = Ramp(10.0, -10.0, 1.0)
+    negative_wf = Ramp(10.0, -1.0, -2.0)
 
+    valid_weights = {0: 0.1, 1: 0.2, 2: 0.3}
+    invalid_weights = {0: 1.1, 1: 0.3}
 
-@pytest.mark.parametrize(
-    "amp_wf, det_wf",
-    [
-        (Ramp(10.0, 1.0, 0.0), Ramp(12.1, -2.1, 2.1)),
-        (
-            Constant(10.0, math.pi),
-            PiecewiseLinear(
-                [4.60132814, 4.18237748, 5.21984795, 3.5963718],
-                [0.1443786, -0.2027756, 0.46146151, 0.07375925, 0.52915184],
-            ),
-        ),
-    ],
-)
-def test_weighted_detuning(amp_wf: Waveform, det_wf: Waveform) -> None:
-    drive = Drive(
-        amplitude=amp_wf,
-        detuning=det_wf,
-        weighted_detunings=[WeightedDetuning(weights={0: 1}, waveform=Ramp(1.0, -0.2, -0.5))],
-    )
-    assert len(drive.weighted_detunings) == 1
+    with pytest.raises(ValueError, match="`weights` must be a dictionary of values in \\[0, 1\\]."):
+        DetuningMapModulator(negative_wf, weights=invalid_weights)
+
+    with pytest.raises(ValueError, match="`waveform` must be negative for all times."):
+        DetuningMapModulator(positive_wf, weights=valid_weights)
+
+    dmm = DetuningMapModulator(negative_wf, weights=valid_weights)
+    assert isinstance(dmm.waveform, Ramp)
+    assert dmm.weights == valid_weights

@@ -6,7 +6,7 @@ from typing import Callable, Generator
 import numpy as np
 import pytest
 
-from qoolqit.drive import Drive, WeightedDetuning
+from qoolqit.drive import DetuningMapModulator, Drive
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import Ramp, Waveform
@@ -65,11 +65,11 @@ def dmm_program(
         register = random_linear_register_factory(1.0, rng)
         wf_amp = Ramp(1.0, 0.5, 0.5)
         wf_det = Ramp(1.0, -0.2, -0.5)
-        weighted_detuning = WeightedDetuning(
+        dmm = DetuningMapModulator(
             weights={q: uniform(0.1, 0.99) for q in register.qubits_ids},
             waveform=wf_det,
         )
-        drive = Drive(amplitude=wf_amp, detuning=wf_det, weighted_detunings=[weighted_detuning])
+        drive = Drive(amplitude=wf_amp, detuning=wf_det, dmm=dmm)
         return QuantumProgram(register, drive)
 
     yield _generate_program

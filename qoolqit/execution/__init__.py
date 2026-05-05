@@ -19,6 +19,7 @@ from pulser.backend import (
 from pulser.backend.remote import RemoteResults
 
 from qoolqit.execution.backends import QPU, LocalEmulator, RemoteEmulator
+from qoolqit.execution.job import JobStatus, get_batch_id, retrieve_remote_job
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 
 __all__ = [
@@ -39,4 +40,7 @@ __all__ = [
     "Results",
     "RemoteResults",
     "BackendType",
+    "JobStatus",
+    "get_batch_id",
+    "retrieve_remote_job",
 ]

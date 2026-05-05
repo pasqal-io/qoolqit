@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Sequence
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,28 +9,30 @@ from matplotlib.figure import Figure
 
 from qoolqit.waveforms import CompositeWaveform, Delay, Waveform
 
-__all__ = ["WeightedDetuning", "Drive"]
+__all__ = ["DetuningMapModulator", "Drive"]
 
 
-@dataclass
-class WeightedDetuning:
-    """A weighted detuning for the Detuning Map Modulation (DMM).
+@dataclass(frozen=True)
+class DetuningMapModulator:
+    """A weighted detuning for the Detuning Map Modulator (DMM).
 
     Args:
+        waveform: The waveform for this detuning. Must be negative for all times.
         weights: A dictionary associating detuning weights to qubits.
             Each weight must be in [0, 1], where 0 means that the waveform is ignored for
             this qubit and 1 means that the waveform is fully applied to this qubit.
-        waveform: The waveform for this detuning. Must be negative for all times.
 
     See https://docs.pasqal.com/pulser/tutorials/dmm/ for details on DMM.
     """
 
-    weights: dict[Any, float]
     waveform: Waveform
+    weights: dict[Any, float]
 
     def __post_init__(self) -> None:
         if self.waveform.max() > 0:
-            raise ValueError("WeightedDetuning waveform must be negative.")
+            raise ValueError("`waveform` must be negative for all times.")
+        if any(weight < 0 or weight > 1 for weight in self.weights.values()):
+            raise ValueError("`weights` must be a dictionary of values in [0, 1].")
 
 
 class Drive:
@@ -41,7 +43,7 @@ class Drive:
         *,
         amplitude: Waveform,
         detuning: Waveform | None = None,
-        weighted_detunings: list[WeightedDetuning] | None = None,
+        dmm: DetuningMapModulator | None = None,
         phase: float = 0.0,
     ) -> None:
         """Initialize a Drive.
@@ -55,8 +57,8 @@ class Drive:
         representing:
         - Amplitude Ω(t): Controls the Rabi frequency that drives qubits.
         - Detuning δ(t): Controls the energy offset of the Rydberg state.
+        - dmm εᵢ, Δ(t): Detuning Map Modulator (DMM) for additional qubit-specific detunings.
         - Phase φ: Global phase applied to the amplitude term.
-        - Weighted detunings: Individual qubit detunings via Detuning Map Modulation (DMM).
 
         Args:
             amplitude: Time-dependent amplitude waveform Ω(t) representing the Rabi frequency.
@@ -65,12 +67,10 @@ class Drive:
             detuning: Time-dependent detuning waveform δ(t) representing the energy offset
                 of the Rydberg state relative to resonance. If None, defaults to zero
                 detuning (Delay waveform) for the duration of the amplitude.
+            dmm: DetuningMapModulator instance for additional negative detuning waveform Δ(t) ≤ 0
+                applied to individual qubits as specified by its `weights` attribute εᵢ.
             phase: Global phase φ applied to the amplitude term in the Hamiltonian.
                 Defaults to 0.0 (no phase).
-            weighted_detunings: List of additional detuning waveforms applied to individual
-                qubits using Detuning Map Modulation (DMM). Each WeightedDetuning specifies
-                weights εᵢ for different qubits and a corresponding waveform Δ(t). Note that DMM
-                is not supported on all devices. Defaults to an empty list.
 
         Raises:
             TypeError: If amplitude or detuning are not Waveform instances.
@@ -80,10 +80,8 @@ class Drive:
             - All arguments must be passed as keyword arguments.
             - If amplitude and detuning have different durations, the shorter one is
               automatically extended with a Delay to match the longer duration.
-            - The resulting Drive duration equals the maximum of the amplitude and
-              detuning durations.
-            - WeightedDetuning waveforms must be non-positive (≤ 0) as they represent
-              energy shifts below the resonance.
+            - DetuningMapModulator waveform must be negative for all times
+                (≤ 0) as it represents energy shifts below the resonance.
 
         Example:
             >>> from qoolqit import Drive
@@ -120,8 +118,10 @@ class Drive:
             self._amplitude = CompositeWaveform(self._amplitude, Delay(extra_duration))
 
         self._duration = self._amplitude.duration
+        if dmm is not None and not isinstance(dmm, DetuningMapModulator):
+            raise TypeError("'dmm' must be of type DetuningMapModulator.")
+        self._dmm = dmm
         self._phase = phase
-        self._weighted_detunings = weighted_detunings if weighted_detunings is not None else []
 
     @property
     def amplitude(self) -> Waveform:
@@ -134,9 +134,9 @@ class Drive:
         return self._detuning_orig
 
     @property
-    def weighted_detunings(self) -> Sequence[WeightedDetuning]:
-        """Detunings applied to individual qubits."""
-        return self._weighted_detunings
+    def dmm(self) -> DetuningMapModulator | None:
+        """Detuning Map Modulator (DMM) applied to individual qubits."""
+        return self._dmm
 
     @property
     def phase(self) -> float:
@@ -162,10 +162,10 @@ class Drive:
         else:
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
-    def __amp_header__(self) -> str:  # pragma: no cover
+    def __amp_header__(self) -> str:
         return "Amplitude: \n"
 
-    def __det_header__(self) -> str:  # pragma: no cover
+    def __det_header__(self) -> str:
         return "Detuning: \n"
 
     def __repr__(self) -> str:
