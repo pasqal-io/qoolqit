@@ -17,7 +17,8 @@ def compute_target_weights_by_dist_limit(
     target_weights: np.ndarray,
     max_distance_to_walk: float,
 ) -> Any:
-    target_distances = np.vectorize(normalized_best_dist, signature="(m,n)->(m,n)")(target_weights)
+    target_distances = normalized_best_dist(target_weights)
+
     np.fill_diagonal(target_distances, 0)
     distances_to_walk = (distance_matrix - target_distances) / 2
     np.fill_diagonal(distances_to_walk, 0)
@@ -37,11 +38,9 @@ def compute_target_weights_by_dist_limit(
             np.minimum(modulated_target_distances, target_distances),
         ),
     )
-    modulated_target_weights = np.vectorize(normalized_interaction, signature="(m,n)->(m,n)")(
-        rectified_modulated_target_distances
-    )
 
-    assert not np.any(np.triu(np.isinf(modulated_target_weights), k=1))
+    modulated_target_weights = normalized_interaction(rectified_modulated_target_distances)
+    assert not np.any(np.isinf(modulated_target_weights))
 
     return modulated_target_weights
 
@@ -54,23 +53,18 @@ def compute_target_weights_distances_by_weight_diff_limit(
     target_weights: np.ndarray,
     weight_relative_threshold: float,
 ) -> Any:
-    with np.errstate(divide="ignore", invalid="ignore"):
-        weight_differences = target_weights - current_weights
+    weight_differences = target_weights - current_weights
     n = len(weight_differences)
-    weight_differences[range(n), range(n)] = 0
     logger.debug(f"{weight_differences=}")
-    # significant_weight_difference = np.max(np.abs(weight_differences)) / 100
 
     weight_difference_threshold = np.max(np.abs(weight_differences)) * weight_relative_threshold
     logger.debug(f"{weight_difference_threshold=}")
 
     reduced_weight_differences = weight_differences * (1 - weight_relative_threshold)
     step_target_weights = current_weights + reduced_weight_differences
-    np.fill_diagonal(step_target_weights, 0)
 
-    step_target_distances = np.vectorize(normalized_best_dist, signature="(m,n)->(m,n)")(
-        step_target_weights
-    )
+    step_target_distances = normalized_best_dist(step_target_weights)
+    assert not np.any(np.isinf(step_target_distances))
 
     distances_to_walk = (
         distance_matrix - step_target_distances
@@ -94,9 +88,8 @@ def compute_interaction_forces(
     weight_relative_threshold: float,
     max_distance_to_walk: float,
 ) -> tuple[Any, Force]:
-    current_weights = np.vectorize(normalized_interaction, signature="(m,n)->(m,n)")(
-        distance_matrix
-    )
+    current_weights = normalized_interaction(distance_matrix)
+
     logger.debug(f"{current_weights=}")
     logger.debug(f"{target_weights=}")
 
