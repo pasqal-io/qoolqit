@@ -7,7 +7,7 @@ from pulser.sequence import Sequence as PulserSequence
 
 from qoolqit import AnalogDevice, DataGraph, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
-from qoolqit.drive import Drive
+from qoolqit.drive import DetuningMapModulator, Drive
 from qoolqit.exceptions import CompilationError
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
@@ -24,6 +24,17 @@ def test_program_init() -> None:
 
     with pytest.raises(ValueError, match="Program has not been compiled"):
         program.compiled_sequence
+
+
+def test_program_init_wrong_type() -> None:
+    register = Register(qubits={"q0": (-0.5, 0.0), "q1": (0.5, 0.0)})
+    drive = Drive(amplitude=Constant(10.0, 1.0), detuning=Constant(10.0, -1.0))
+
+    with pytest.raises(TypeError, match="`register` must be of type Register."):
+        QuantumProgram(register=123, drive=drive)  # type: ignore [arg-type]
+
+    with pytest.raises(TypeError, match="`drive` must be of type Drive."):
+        QuantumProgram(register=register, drive=123)  # type: ignore [arg-type]
 
 
 @pytest.mark.parametrize(
@@ -106,3 +117,23 @@ def test_max_duration_ratio_error() -> None:
 
     with pytest.raises(ValueError, match="Cannot set `device_max_duration_ratio`"):
         program.compile_to(device=MockDevice(), device_max_duration_ratio=0.5)
+
+
+def test_program_with_dmm() -> None:
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.3, 0.0)})
+
+    valid_weights = {"q0": 0.1, "q1": 0.2}
+
+    dmm = DetuningMapModulator(waveform=Constant(4.0, -1.0), weights=valid_weights)
+    drive = Drive(amplitude=Constant(5.0, 1.0), detuning=Constant(5.0, 1.0), dmm=dmm)
+    program = QuantumProgram(register=register, drive=drive)
+
+    invalid_weights = {"q0": 0.1, "q1": 0.2, "wrong_qubit_id": 0.3}
+
+    dmm = DetuningMapModulator(waveform=Constant(4.0, -1.0), weights=invalid_weights)
+    drive = Drive(amplitude=Constant(5.0, 1.0), detuning=Constant(5.0, 1.0), dmm=dmm)
+    with pytest.raises(
+        ValueError,
+        match="qubit wrong_qubit_id appears in the DMM but is not defined in the register.",
+    ):
+        QuantumProgram(register=register, drive=drive)
