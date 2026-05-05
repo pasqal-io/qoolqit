@@ -187,29 +187,28 @@ class Drive:
             )
         return amp_repr + "\n\n" + det_repr
 
-    def draw(self, n_points: int = 500, return_fig: bool = False) -> Figure | None:
-        fig, ax = plt.subplots(2, 1, sharex=True, figsize=(16, 4), dpi=200)
+    def draw(self, fig: Figure | None = None, return_fig: bool = False) -> Figure | None:
+        if fig is None:
+            fig = plt.gcf()
 
-        ax[0].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
-        ax[0].set_axisbelow(True)
-        ax[0].set_ylabel("Amplitude")
-        ax[1].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
-        ax[1].set_axisbelow(True)
-        ax[1].set_ylabel("Detuning")
-        ax[1].set_xlabel("Time t")
+        ax0 = fig.add_subplot(2, 1, 1)
+        ax1 = fig.add_subplot(2, 1, 2, sharex=ax0)
 
-        t_array = np.linspace(0.0, self.duration, n_points)
+        ax0.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+        ax0.set_ylabel("Amplitude")
+        ax1.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+        ax1.set_axisbelow(True)
+        ax1.set_ylabel("Detuning")
+        ax1.set_xlabel("Time t")
+
+        t_array = np.linspace(0.0, self.duration, 250)
         y_amp = self.amplitude(t_array)
         y_det = self.detuning(t_array)
 
-        ax[0].plot(t_array, y_amp, color="darkgreen")
-        ax[1].plot(t_array, y_det, color="darkmagenta")
+        ax0.plot(t_array, y_amp, color="darkgreen")
+        ax1.plot(t_array, y_det, color="darkmagenta")
 
-        ax[0].fill_between(t_array, y_amp, color="darkgreen", alpha=0.4)
-        ax[1].fill_between(t_array, y_det, color="darkmagenta", alpha=0.4)
+        ax0.fill_between(t_array, y_amp, color="darkgreen", alpha=0.4)
+        ax1.fill_between(t_array, y_det, color="darkmagenta", alpha=0.4)
 
-        if return_fig:
-            plt.close()
-            return fig
-        else:
-            return None
+        return fig if return_fig else None
