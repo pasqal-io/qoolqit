@@ -39,6 +39,7 @@ def test_dmm_not_supported() -> None:
 
 @pytest.mark.parametrize("profile", [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT])
 def test_compilation_with_dmm(profile: CompilerProfile) -> None:
+    """Test compilation of a program with a DMM."""
     register = Register(qubits={"q0": (0.0, 0.7), "q1": (-0.5, -0.5), "q2": (0.5, -0.5)})
 
     amplitude = Constant(5.0, 0.5)

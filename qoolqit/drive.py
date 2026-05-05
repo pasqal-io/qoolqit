@@ -91,8 +91,6 @@ class Drive:
             - All arguments must be passed as keyword arguments.
             - If amplitude and detuning have different durations, the shorter one is
               automatically extended with a Delay to match the longer duration.
-            - The resulting Drive duration equals the maximum of the amplitude and
-              detuning durations.
             - DetuningMapModulator waveform must be negative for all times
                 (≤ 0) as it represents energy shifts below the resonance.
 
