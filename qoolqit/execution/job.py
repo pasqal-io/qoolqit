@@ -3,13 +3,13 @@ from __future__ import annotations
 import math
 import time
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar
+from typing import Generic, TypeAlias, TypeVar
 
 from pulser.backend import Results, remote
 
 ResultType = TypeVar("ResultType")
 
-JobStatus = remote.JobStatus
+JobStatus: TypeAlias = remote.JobStatus
 """Alias for :class:`~pulser.backend.remote.JobStatus`.
 
 Terminal states (where :meth:`Job.has_ended` returns ``True``):
@@ -81,9 +81,7 @@ class Job(ABC, Generic[ResultType]):
         ...
 
     @abstractmethod
-    def results(
-        self, timeout: float = math.inf
-    ) -> ResultType:
+    def results(self, timeout: float = math.inf) -> ResultType:
         """Block until the job completes and return its result.
 
         Waits until the job reaches a terminal state, then returns
@@ -343,9 +341,7 @@ class _RemoteJob(Job[Results]):
         try:
             job_id = remote_results.job_ids[position]
         except IndexError:
-            raise IndexError(
-                f"No job found at index {position} in the provided remote results."
-            )
+            raise IndexError(f"No job found at index {position} in the provided remote results.")
         batch_id = remote_results.batch_id
         return cls(connection, job_id, batch_id=batch_id)
 

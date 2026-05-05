@@ -6,7 +6,7 @@ from pulser.backend import Backend, Occupation
 
 from qoolqit import AnalogDevice, Constant, Drive, MockDevice, QuantumProgram, Register
 from qoolqit.devices import Device
-from qoolqit.execution import BackendType, EmulationConfig, LocalEmulator, JobStatus
+from qoolqit.execution import BackendType, EmulationConfig, JobStatus, LocalEmulator
 
 
 @pytest.mark.parametrize("rotation_angle", [0.3 * np.pi])
