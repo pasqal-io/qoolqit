@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import warnings
 from dataclasses import dataclass
-from typing import Any, Sequence
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,12 +9,12 @@ from matplotlib.figure import Figure
 
 from qoolqit.waveforms import CompositeWaveform, Delay, Waveform
 
-__all__ = ["WeightedDetuning", "DetuningMapModulator", "Drive"]
+__all__ = ["DetuningMapModulator", "Drive"]
 
 
 @dataclass(frozen=True)
 class DetuningMapModulator:
-    """A weighted detuning for the Detuning Map Modulation (DMM).
+    """A weighted detuning for the Detuning Map Modulator (DMM).
 
     Args:
         waveform: The waveform for this detuning. Must be negative for all times.
@@ -36,9 +35,6 @@ class DetuningMapModulator:
             raise ValueError("`weights` must be a dictionary of values in [0, 1].")
 
 
-WeightedDetuning = DetuningMapModulator
-
-
 class Drive:
     """The drive Hamiltonian acting over a duration."""
 
@@ -47,7 +43,6 @@ class Drive:
         *,
         amplitude: Waveform,
         detuning: Waveform | None = None,
-        weighted_detunings: list[WeightedDetuning] | None = None,
         dmm: DetuningMapModulator | None = None,
         phase: float = 0.0,
     ) -> None:
@@ -64,8 +59,6 @@ class Drive:
         - Detuning δ(t): Controls the energy offset of the Rydberg state.
         - dmm εᵢ, Δ(t): Detuning Map Modulator (DMM) for additional qubit-specific detunings.
         - Phase φ: Global phase applied to the amplitude term.
-        - Weighted detunings: [DEPRECATED] Individual qubit detunings via
-            Detuning Map Modulation (DMM).
 
         Args:
             amplitude: Time-dependent amplitude waveform Ω(t) representing the Rabi frequency.
@@ -78,10 +71,6 @@ class Drive:
                 applied to individual qubits as specified by its `weights` attribute εᵢ.
             phase: Global phase φ applied to the amplitude term in the Hamiltonian.
                 Defaults to 0.0 (no phase).
-            weighted_detunings: [DEPRECATED] List of additional detuning waveforms applied to
-                individual qubits using Detuning Map Modulation (DMM). Each WeightedDetuning
-                specifies weights εᵢ for different qubits and a corresponding waveform Δ(t).
-                Note that DMM is not supported on all devices.
 
         Raises:
             TypeError: If amplitude or detuning are not Waveform instances.
@@ -129,21 +118,10 @@ class Drive:
             self._amplitude = CompositeWaveform(self._amplitude, Delay(extra_duration))
 
         self._duration = self._amplitude.duration
-        self._phase = phase
-
-        if weighted_detunings is not None:
-            warnings.warn(
-                "Warning: `weighted_detunings` in Drive is deprecated. "
-                "Use `dmm` instead. This will be removed in a future version."
-            )
-            if dmm is not None:
-                raise ValueError(
-                    "Cannot specify both `weighted_detunings` and `dmm`. "
-                    "`weighted_detunings` is deprecated, use `dmm` instead."
-                )
-        self._weighted_detunings = weighted_detunings
-
+        if dmm is not None and not isinstance(dmm, DetuningMapModulator):
+            raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
+        self._phase = phase
 
     @property
     def amplitude(self) -> Waveform:
@@ -154,11 +132,6 @@ class Drive:
     def detuning(self) -> Waveform:
         """The detuning waveform in the drive."""
         return self._detuning_orig
-
-    @property
-    def weighted_detunings(self) -> Sequence[WeightedDetuning] | None:
-        """Detunings applied to individual qubits."""
-        return self._weighted_detunings
 
     @property
     def dmm(self) -> DetuningMapModulator | None:

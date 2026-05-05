@@ -5,7 +5,7 @@ import random
 
 import pytest
 
-from qoolqit.drive import DetuningMapModulator, Drive, WeightedDetuning
+from qoolqit.drive import DetuningMapModulator, Drive
 from qoolqit.waveforms import Constant, Delay, PiecewiseLinear, Ramp
 from qoolqit.waveforms.base_waveforms import Waveform
 
@@ -85,21 +85,6 @@ def test_drive_duration_with_delays(amp_duration: float, det_duration: float) ->
     det_wf = Ramp(det_duration, -1.0, 0.0)
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
     assert drive.duration == max(amp_duration, det_duration)
-
-
-def test_weighted_detuning() -> None:
-    drive = Drive(
-        amplitude=Ramp(10, 0.0, 1.0),
-        weighted_detunings=[WeightedDetuning(weights={0: 1}, waveform=Ramp(1.0, -0.2, -0.5))],
-    )
-    weighted_detunings = drive.weighted_detunings
-    assert isinstance(weighted_detunings, list)
-    assert len(weighted_detunings) == 1
-
-    weighted_detuning = weighted_detunings[0]
-    assert isinstance(weighted_detuning, WeightedDetuning)
-    assert weighted_detuning.weights == {0: 1}
-    assert isinstance(weighted_detuning.waveform, Ramp)
 
 
 def test_dmm_init() -> None:
