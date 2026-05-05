@@ -136,6 +136,11 @@ class Drive:
                 "Warning: `weighted_detunings` in Drive is deprecated. "
                 "Use `dmm` instead. This will be removed in a future version."
             )
+            if dmm is not None:
+                raise ValueError(
+                    "Cannot specify both `weighted_detunings` and `dmm`. "
+                    "`weighted_detunings` is deprecated, use `dmm` instead."
+                )
         self._weighted_detunings = weighted_detunings
 
         self._dmm = dmm
