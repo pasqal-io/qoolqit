@@ -48,14 +48,14 @@ def interaction_embedding(
         new_matrix = squareform(1.0 / (pdist(new_coords) ** 6))
         return np.linalg.norm(new_matrix - matrix)
 
-    rng = np.random.default_rng(0)
+    rng = np.random.default_rng(1)
 
     if x0 is None:
         # random initial positions
-        x0 = rng.random((len(matrix), 2), dtype=matrix.dtype)
+        x0 = rng.random(len(matrix) * 2, dtype=matrix.dtype)
 
     # make sure positions are of same type as matrix and flatten
-    x0 = np.asarray(x0.flatten(), dtype=matrix.dtype)
+    x0 = np.asarray(x0, dtype=matrix.dtype).flatten()
 
     res = minimize(
         cost_function,
@@ -68,7 +68,7 @@ def interaction_embedding(
 
     coords = np.reshape(res.x, (len(matrix), 2))
 
-    centered_coords = coords - np.mean(coords, axis=0)
+    centered_coords = coords - np.median(coords, axis=0)
 
     graph = DataGraph.from_coordinates(centered_coords.tolist())
 
