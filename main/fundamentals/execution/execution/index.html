@@ -1037,10 +1037,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#handling-remote-results" class="md-nav__link">
+  <a href="#handling-remote-results-job-and-status-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Handling remote results
+        Handling remote results: job and status management
       
     </span>
   </a>
@@ -1979,10 +1979,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#handling-remote-results" class="md-nav__link">
+  <a href="#handling-remote-results-job-and-status-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Handling remote results
+        Handling remote results: job and status management
       
     </span>
   </a>
@@ -2779,14 +2779,13 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>In this page, you will learn how to:</p>
 <ul>
-<li>run a <code>QuantumProgram</code> on local emulators</li>
+<li>run a <code>QuantumProgram</code> on local/remote emulators and QPUs.</li>
+<li>inspect and extract the execution results</li>
 <li>choose between different emulator backends</li>
-<li>inspect and extract local execution results</li>
-<li>connect to Pasqal Cloud and run programs remotely</li>
-<li>submit remote jobs and retrieve their results</li>
-<li>execute compiled programs on a QPU</li>
+<li>use a <code>connection</code> to run programs remotely through your cloud provider.</li>
+<li>submit remote jobs, query their status and retrieve results</li>
 </ul>
-<p>A <code>QuantumProgram</code> can be easily run on multiple backends provided by Pasqal:</p>
+<p>As anticipated, a <code>QuantumProgram</code> can be run on multiple backends provided by Pasqal and external providers:</p>
 <ul>
 <li>locally installed emulators</li>
 <li>remote cloud emulators</li>
@@ -2805,7 +2804,7 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [34]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-1">
@@ -2887,7 +2886,9 @@ program.compile_to(device)</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="local-emulator">Local Emulator<a class="anchor-link" href="#local-emulator">¶</a></h2><p>Local emulators run quantum simulations directly on your machine. They are ideal for development, testing, and small-scale quantum programs.
-QoolQit provides easy access to local emulation through the <code>LocalEmulator</code> class, which allows you to run quantum programs locally.</p>
+QoolQit provides easy access to local emulation through the <code>LocalEmulator</code> class, which allows you to <code>run</code> quantum programs locally.</p>
+<p>For all emulators, a job handler is returned, to which you can query the results.
+Emulating locally will only return completed jobs, as opposed to remote emulators, which we will discuss later.</p>
 </div>
 </div>
 </div>
@@ -2897,7 +2898,7 @@ QoolQit provides easy access to local emulation through the <code>LocalEmulator<
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [35]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
@@ -2910,21 +2911,34 @@ QoolQit provides easy access to local emulation through the <code>LocalEmulator<
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">JobStatus</span><span class="p">,</span> <span class="n">LocalEmulator</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEmulator</span>
 
 <span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">()</span>
 <span class="n">job</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span> <span class="o">==</span> <span class="n">JobStatus</span><span class="o">.</span><span class="n">DONE</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">results</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">from qoolqit.execution import JobStatus, LocalEmulator
+<div class="clipboard-copy-txt" id="cell-2">from qoolqit.execution import LocalEmulator
 
 emulator = LocalEmulator()
 job = emulator.run(program)
-assert job.get_status() == JobStatus.DONE
 results = job.results()</div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>While the snippet above provides the basic way to run a quantum program, we will now discuss:</p>
+<ul>
+<li>how to select different emulators backends.</li>
+<li>how to handle local results.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -2951,7 +2965,7 @@ results = job.results()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [36]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
@@ -2983,8 +2997,9 @@ emulator = LocalEmulator(backend_type=BackendType.QutipBackendV2)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="handling-local-results">Handling local results<a class="anchor-link" href="#handling-local-results">¶</a></h3><p>The call <code>emulator.run(program)</code> will return a <code>Job[Results]</code> object type. This is where the results of the computation are stored.
-For more info about this specific object, please, have a look at <a href="????">Qoolqit documentation</a>.
+<h3 id="handling-local-results">Handling local results<a class="anchor-link" href="#handling-local-results">¶</a></h3><p>The call <code>emulator.run(program)</code> will return a <code>Job</code> object type.
+All execution methods (<code>LocalEmulator.run()</code>, <code>RemoteEmulator.run()</code>, and <code>QPU.run()</code>) return a <code>Job</code> object that serves as a handler for managing the execution lifecycle and to fetch the results once the computation is completed.
+For more info about this specific object, please, have a look at <a href="../../reference/execution.md">Qoolqit documentation</a>.
 As an example, lets inspect the results we got in the previous run:</p>
 </div>
 </div>
@@ -2995,7 +3010,7 @@ As an example, lets inspect the results we got in the previous run:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [37]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
@@ -3022,7 +3037,7 @@ results.get_result_tags()</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[ ]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[37]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>['bitstrings']</pre>
 </div>
@@ -3047,7 +3062,7 @@ results.get_result_tags()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [38]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
@@ -3076,15 +3091,16 @@ final_bitstrings</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[ ]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[38]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>Counter({'111': 813,
-         '101': 64,
-         '110': 58,
-         '011': 48,
-         '100': 9,
-         '001': 4,
-         '010': 4})</pre>
+<pre>Counter({'111': 807,
+         '110': 68,
+         '101': 61,
+         '011': 50,
+         '010': 6,
+         '100': 4,
+         '001': 3,
+         '000': 1})</pre>
 </div>
 </div>
 </div>
@@ -3111,7 +3127,7 @@ Again, for more information about Pasqal Cloud and other providers, please refer
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [39]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
@@ -3163,7 +3179,7 @@ connection = PasqalCloud()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [40]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
@@ -3178,11 +3194,11 @@ connection = PasqalCloud()</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemoteEmulator</span>
 
-<span class="n">emulator</span> <span class="o">=</span> <span class="n">RemoteEmulator</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">)</span>
+<span class="n">remote_emulator</span> <span class="o">=</span> <span class="n">RemoteEmulator</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-7">from qoolqit.execution import RemoteEmulator
 
-emulator = RemoteEmulator(connection=connection)</div>
+remote_emulator = RemoteEmulator(connection=connection)</div>
 </div>
 </div>
 </div>
@@ -3211,7 +3227,7 @@ emulator = RemoteEmulator(connection=connection)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [41]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
@@ -3231,7 +3247,9 @@ emulator = RemoteEmulator(connection=connection)</div>
     <span class="n">RemoteEmulator</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="c1"># define the observables to be evaluated at the specified times</span>
 <span class="n">observables</span> <span class="o">=</span> <span class="p">(</span><span class="n">Occupation</span><span class="p">(</span><span class="n">evaluation_times</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),)</span>
+<span class="c1"># emulation configuration to add observables and include hardware modulation</span>
 <span class="n">emulation_config</span> <span class="o">=</span> <span class="n">EmulationConfig</span><span class="p">(</span><span class="n">observables</span><span class="o">=</span><span class="n">observables</span><span class="p">,</span> <span class="n">with_modulation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># initialize the remote emulator with the custom configuration and num_shots</span>
@@ -3249,7 +3267,9 @@ emulator = RemoteEmulator(connection=connection)</div>
     RemoteEmulator,
 )
 
+# define the observables to be evaluated at the specified times
 observables = (Occupation(evaluation_times=[0.5, 1.0]),)
+# emulation configuration to add observables and include hardware modulation
 emulation_config = EmulationConfig(observables=observables, with_modulation=True)
 
 # initialize the remote emulator with the custom configuration and num_shots
@@ -3271,28 +3291,39 @@ remote_emulator = RemoteEmulator(
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="handling-remote-results">Handling remote results<a class="anchor-link" href="#handling-remote-results">¶</a></h3><p>Remote emulators and QPU both have a <code>run()</code> method that will return a <code>Sequence[Results]</code> object type.
-However, if your program requires intensive resources to be run, or if QPU happens to be on maintenance, the use of this method is discouraged since it might leave your script hanging.
-In these situations prefer the use of the <code>submit(program) -&gt; RemoteResults</code> instead:</p>
-<div class="highlight"><pre><span></span><span class="n">remote_results</span> <span class="o">=</span> <span class="n">remote_emulator</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+<h3 id="handling-remote-results-job-and-status-management">Handling remote results: job and status management<a class="anchor-link" href="#handling-remote-results-job-and-status-management">¶</a></h3><p>Remote emulators and QPU both have a <code>run()</code> method that will return a job handler.</p>
+<div class="highlight"><pre><span></span><span class="n">job</span> <span class="o">=</span> <span class="n">remote_emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
 </pre></div>
-<p>Here, the remote results can act as a job handler:</p>
-<ul>
-<li>Query the batch status: PENDING, RUNNING, DONE, etc.:<div class="highlight"><pre><span></span><span class="n">batch_status</span> <span class="o">=</span> <span class="n">remote_results</span><span class="o">.</span><span class="n">get_batch_status</span><span class="p">()</span>
+<p>If your program requires intensive resources to be run, or if QPU happens to be on maintenance, results might not be immediately available.
+For this reason, the job handler provides several key methods for monitoring and retrieving results:</p>
+<p><strong>Querying Job Status:</strong></p>
+<div class="highlight"><pre><span></span><span class="c1"># Check the current status of the job</span>
+<span class="n">status</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Job status: </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Returns: PENDING, RUNNING, DONE, ERROR, etc.</span>
 </pre></div>
-</li>
-<li>Query the batch id, to be saved for later retrieval of results:<div class="highlight"><pre><span></span><span class="n">batch_id</span> <span class="o">=</span> <span class="n">remote_results</span><span class="o">.</span><span class="n">get_batch_id</span><span class="p">()</span>
-</pre></div>
-</li>
-<li>Retrieve the remote results from <code>batch_id</code> and a <code>connection</code>:<div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemoteResults</span>
+<p><strong>Retrieving Job Results:</strong></p>
+<div class="highlight"><pre><span></span><span class="c1"># Get results (blocks until completion for remote jobs)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">results</span><span class="p">()</span>
 
-<span class="n">remote_results</span> <span class="o">=</span> <span class="n">RemoteResults</span><span class="p">(</span><span class="n">batch_id</span><span class="p">,</span> <span class="n">connection</span><span class="p">)</span>
+<span class="c1"># Get results with timeout (raises TimeoutError if exceeded)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">results</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>  <span class="c1"># 5 minutes timeout</span>
 </pre></div>
-</li>
-</ul>
-<p>Once the batch has been completed (<code>batch_status</code> returns DONE), the complete results can be finally fetched as:</p>
-<div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">remote_results</span><span class="o">.</span><span class="n">results</span>
+<p>Please note that depending on the provider connection lifecycle, <code>job.results()</code> may not allow to wait indefinitely.
+It is good practice to always check the status of the job before retrieving results.</p>
+<p><strong>Job Identification and Retrieval:</strong></p>
+<div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_batch_id</span>
+
+<span class="c1"># Get the unique batch identifier for the job</span>
+<span class="n">batch_id</span> <span class="o">=</span> <span class="n">get_batch_id</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+
+<span class="c1"># Get the unique job identifier</span>
+<span class="n">job_id</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">job_id</span><span class="p">()</span>
+
+<span class="c1"># For remote jobs, retrieve a job using its ID</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">retrieve_remote_job</span>
+<span class="n">retrieved_job</span> <span class="o">=</span> <span class="n">retrieve_remote_job</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">job_id</span><span class="p">,</span> <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">)</span>
 </pre></div>
+<p>Note that local emulator jobs complete immediately and always return <code>DONE</code> status, while remote jobs (remote emulators and QPUs) may remain in <code>PENDING</code> or <code>RUNNING</code> states before completion.</p>
 </div>
 </div>
 </div>
@@ -3314,7 +3345,7 @@ In these situations prefer the use of the <code>submit(program) -&gt; RemoteResu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [20]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [42]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
@@ -3339,9 +3370,9 @@ In these situations prefer the use of the <code>submit(program) -&gt; RemoteResu
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[42]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>{'FRESNEL': FRESNEL}</pre>
+<pre>{'FRESNEL_CAN1': FRESNEL_CAN1, 'FRESNEL': FRESNEL}</pre>
 </div>
 </div>
 </div>
@@ -3365,7 +3396,7 @@ In these situations prefer the use of the <code>submit(program) -&gt; RemoteResu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [43]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
@@ -3409,7 +3440,7 @@ program.compile_to(device=device)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [44]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
@@ -3480,7 +3511,7 @@ qpu = QPU(connection=connection, num_shots=500)</div>
 <li>Use remote emulators for larger simulations beyond local capabilities</li>
 <li>Use QPUs for real quantum experiments and final validation</li>
 </ul>
-<p>For more detailed configuration options, see the <a href="../../extended_usage/execution_config.md">Extended Usage</a> documentation.</p>
+<p>For more detailed configuration options for emulators, see the <a href="../../extended_usage/execution_config.md">Extended Usage</a> documentation.</p>
 </div>
 </div>
 </div>
