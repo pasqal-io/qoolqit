@@ -1,0 +1,2408 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../fundamentals/execution/execution/">
+      
+      
+        <link rel="next" href="../execution_config/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Adimensionalization - QoolQit</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_markdown_exec_pyodide.css">
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../extras/css/mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../extras/css/home.css">
+    
+      <link rel="stylesheet" href="../../extras/css/colors.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adimensionalization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="QoolQit" class="md-header__button md-logo" aria-label="QoolQit" data-md-component="logo">
+      
+  <img src="../../extras/assets/logo/qoolqit_symbol_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            QoolQit
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Adimensionalization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="light-green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pasqal-io/qoolqit" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    QoolQit
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../get_started/install/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Get started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../fundamentals/introduction/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Fundamentals
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Extended usage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../tutorials/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Applications
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/qoolqit/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../CONTRIBUTING/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Contribute
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="QoolQit" class="md-nav__button md-logo" aria-label="QoolQit" data-md-component="logo">
+      
+  <img src="../../extras/assets/logo/qoolqit_symbol_white.svg" alt="logo">
+
+    </a>
+    QoolQit
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pasqal-io/qoolqit" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    QoolQit
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Get started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Get started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get_started/install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Install
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get_started/qoolqit_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Programming a neutral atom QPU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get_started/programming_with_qoolqit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial: Programming with QoolQit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../fundamentals/introduction/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/graphs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graphs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/embedding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embedding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/quantum_program/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compilation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Compilation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/compilation/rationale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiling a Quantum Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/compilation/device_and_compilation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Devices and Compilation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/compilation/error_handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/execution/execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extended usage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Extended usage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adimensionalization
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adimensionalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#physical-hamiltonian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Hamiltonian
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introducing-the-reference-energy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducing the reference energy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-dimensionless-programs-to-physical-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From dimensionless programs to physical hardware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compilation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compilation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#drive-limited-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drive-limited compilation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interaction-limited-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interaction-limited compilation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time scaling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiling-time-back-to-physical-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiling time back to physical units
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#physical-interpretation-of-dimensionless-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical interpretation of dimensionless time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#special-case-a-single-atom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Special case: a single atom
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../execution_config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_embedders/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom embedders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_waveforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom waveforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Applications
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Applications
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/solving_a_qubo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solving a basic QUBO problem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/qoolqit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/embedding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.embedding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/graphs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.graphs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/register/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.register
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/waveforms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.waveforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/drive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.drive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/program/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/devices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.devices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/execution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.execution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    qoolqit.exceptions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contribute
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contribute
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CONTRIBUTOR_AGREEMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributor Agreement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#physical-hamiltonian" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Hamiltonian
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introducing-the-reference-energy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducing the reference energy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-dimensionless-programs-to-physical-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From dimensionless programs to physical hardware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compilation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compilation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#drive-limited-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drive-limited compilation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interaction-limited-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interaction-limited compilation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time scaling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiling-time-back-to-physical-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compiling time back to physical units
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#physical-interpretation-of-dimensionless-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical interpretation of dimensionless time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#special-case-a-single-atom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Special case: a single atom
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="adimensionalization">Adimensionalization</h1>
+<p>In this section, you will learn how to:</p>
+<ul>
+<li>relate the physical Rydberg Hamiltonian to QoolQit’s dimensionless Hamiltonian,</li>
+<li>define the reference interaction <span class="arithmatex">\(J_0\)</span> and reference distance <span class="arithmatex">\(r_0\)</span>,</li>
+<li>understand how compilation chooses the physical scale of an implementation,</li>
+<li>distinguish drive-limited and interaction-limited compilation,</li>
+<li>see why time must be rescaled together with the Hamiltonian</li>
+</ul>
+<hr />
+<p>This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, and how compilation maps an abstract programs onto actual hardware.</p>
+<p>The <a href="../../get_started/qoolqit_model/">QoolQit Model</a> page introduces the main idea of compilation at a high level: the compiler keeps the same dimensionless program while setting the reference physical scale used to realize it on hardware. Here, we make that idea precise by defining the reference interaction <span class="arithmatex">\(J_0\)</span>, the corresponding reference distance <span class="arithmatex">\(r_0\)</span>, and the mapping between dimensionless and physical quantities.</p>
+<hr />
+<h2 id="physical-hamiltonian">Physical Hamiltonian</h2>
+<p>In physical units, the Rydberg Hamiltonian is</p>
+<div class="arithmatex">\[
+H(t) =
+\underbrace{\sum_{i&lt;j} \frac{C_6}{r_{ij}^{6}} \hat{n}_i \hat{n}_j}_{\text{interactions}}
++
+\underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\,\hat{\sigma}_i^y\right)}_{\text{global drive}}
+-
+\underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i}_{\text{detuning}}.
+\]</div>
+<p>Here <span class="arithmatex">\(\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)\)</span> is the Rydberg occupation operator.</p>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Description</th>
+<th>Typical units</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(C_6(n)\)</span></td>
+<td>Interaction coefficient for Rydberg level <span class="arithmatex">\(n\)</span></td>
+<td><span class="arithmatex">\(\mathrm{rad/s}\times\mu\mathrm{m}^6\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\Omega(t)\)</span></td>
+<td>Global Rabi frequency (drive amplitude)</td>
+<td><span class="arithmatex">\(\mathrm{rad/s}\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\delta(t)\)</span></td>
+<td>Global detuning</td>
+<td><span class="arithmatex">\(\mathrm{rad/s}\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\Delta(t)\)</span></td>
+<td>Local detuning amplitude</td>
+<td><span class="arithmatex">\(\mathrm{rad/s}\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\phi(t)\)</span></td>
+<td>Drive phase</td>
+<td><span class="arithmatex">\([0,2\pi)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\epsilon_i\)</span></td>
+<td>Local detuning weight</td>
+<td><span class="arithmatex">\([0,1]\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="introducing-the-reference-energy">Introducing the reference energy</h2>
+<p>Because the interaction between Rydberg atoms depends on their separation, QoolQit introduces a reference distance <span class="arithmatex">\(r_0\)</span> and the corresponding reference interaction in order to make programs device-agnostic.</p>
+<div class="arithmatex">\[
+r_0 \;\text{(reference distance)},
+\qquad
+J_0 = \frac{C_6}{r_0^6} \;\text{(reference interaction)}.
+\]</div>
+<p>Concretely, <span class="arithmatex">\(r_0\)</span> is the physical separation that corresponds to a dimensionless distance of <span class="arithmatex">\(1\)</span>: any pair of atoms that sit at distance <span class="arithmatex">\(\tilde r_{ij}=1\)</span> in the adimensional model will be placed at distance <span class="arithmatex">\(r_0\)</span> on the actual device. This value is not fixed in advance — it is determined by compilation — and, through the relation above, every choice of <span class="arithmatex">\(r_0\)</span> implies a definite value of <span class="arithmatex">\(J_0\)</span>.</p>
+<p>This quantity sets the energy scale for the program. All Hamiltonian parameters are then expressed relative to it:</p>
+<div class="arithmatex">\[
+\tilde{r}_{ij} = \frac{r_{ij}}{r_0},
+\qquad
+\tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6} = \frac{C_6/r_{ij}^6}{J_0},
+\]</div>
+<div class="arithmatex">\[
+\tilde{\Omega} = \frac{\Omega}{J_0},
+\qquad
+\tilde{\delta} = \frac{\delta}{J_0},
+\qquad
+\tilde{\Delta} = \frac{\Delta}{J_0}.
+\]</div>
+<p>Dividing the physical Hamiltonian by <span class="arithmatex">\(J_0\)</span> yields the dimensionless QoolQit Hamiltonian:</p>
+<div class="arithmatex">\[
+\tilde{H}(t) =
+\sum_{i&lt;j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j
++
+\sum_i \frac{\tilde{\Omega}(t)}{2}
+\left(
+\cos\phi(t)\,\hat{\sigma}^x_i - \sin\phi(t)\,\hat{\sigma}^y_i
+\right)
+-
+\sum_i \left(\tilde{\delta}(t) + \epsilon_i\tilde{\Delta}(t)\right)\hat{n}_i.
+\]</div>
+<div class="admonition note">
+<p class="admonition-title">Key convention</p>
+<p>In QoolQit, the minimum dimensionless distance is fixed so that <span class="arithmatex">\(\min(\tilde r_{ij})=1\)</span>. Equivalently, the maximum dimensionless interaction is normalized to <span class="arithmatex">\(\max(\tilde J_{ij}) = 1\)</span></p>
+</div>
+<p>This is the convention used throughout the documentation: the user specifies a dimensionless program, and compilation later chooses which physical scale <span class="arithmatex">\(J_0\)</span> will be used to realize it.</p>
+<hr />
+<h2 id="from-dimensionless-programs-to-physical-hardware">From dimensionless programs to physical hardware</h2>
+<p>A QoolQit program is specified in terms of dimensionless quantities such as <span class="arithmatex">\(\tilde{J}_{ij}\)</span>, <span class="arithmatex">\(\tilde{\Omega}(t)\)</span>, <span class="arithmatex">\(\tilde{\delta}(t)\)</span>, and <span class="arithmatex">\(\tilde t\)</span>. These quantities describe the structure of the program independently of any particular device.</p>
+<p>To run the program on actual hardware, one must choose a concrete value of <span class="arithmatex">\(J_0\)</span>. Once <span class="arithmatex">\(J_0\)</span> is fixed, all dimensionless quantities are converted back into physical ones:</p>
+<div class="arithmatex">\[
+\Omega(t) = J_0\,\tilde{\Omega}(t),
+\qquad
+\delta(t) = J_0\,\tilde{\delta}(t),
+\qquad
+\Delta(t) = J_0\,\tilde{\Delta}(t),
+\]</div>
+<p>and the physical distances are obtained from</p>
+<div class="arithmatex">\[
+r_0 = \left(\frac{C_6}{J_0}\right)^{1/6},
+\qquad
+r_{ij} = r_0\,\tilde r_{ij}.
+\]</div>
+<p>So choosing a compilation is equivalent to choosing the physical reference scale <span class="arithmatex">\(J_0\)</span>, and therefore also the physical distance scale <span class="arithmatex">\(r_0\)</span>.</p>
+<hr />
+<h2 id="compilation">Compilation</h2>
+<p>The geometric picture of compilation in dimensionless units — where fixing the ratio <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span> defines a ray in the <span class="arithmatex">\((\tilde{J},\tilde{\Omega})\)</span> plane and compilation moves the program along that ray until it fits inside the allowed region — is introduced in <a href="../../get_started/qoolqit_model/">The QoolQit Model</a>. Here we translate that picture into physical units.</p>
+<p>For a fixed dimensionless program, changing the reference scale <span class="arithmatex">\(J_0\)</span> rescales all physical Hamiltonian parameters simultaneously:</p>
+<div class="arithmatex">\[
+\Omega\,[\mathrm{rad/s}] = J_0\,\tilde{\Omega},
+\qquad
+\delta\,[\mathrm{rad/s}] = J_0\,\tilde{\delta},
+\qquad
+J_{ij}\,[\mathrm{rad/s}] = J_0\,\tilde{J}_{ij},
+\qquad
+r_{ij}\,[\mu\mathrm{m}] = r_0\,\tilde{r}_{ij},
+\]</div>
+<p>where <span class="arithmatex">\(r_0 = (C_6/J_0)^{1/6}\,\mu\mathrm{m}\)</span>. All physical realizations of the same dimensionless program therefore lie on a ray in the <span class="arithmatex">\((J,\Omega)\,[\mathrm{rad}/\mu s}]\)</span> plane parameterized by <span class="arithmatex">\(J_0\)</span>.</p>
+<p>The figure below illustrates this picture. Each straight line corresponds to a different fixed ratio <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}\)</span>, and therefore to a different dimensionless program. The shaded green region represents the set of parameters allowed by the device, bounded by the maximum interaction strength <span class="arithmatex">\(J_{\max}\,[2 \pi  \mathrm{rad}/\mu s= MHz]\)</span> and the maximum drive amplitude <span class="arithmatex">\(\Omega_{\max}\,[2 \pi  \mathrm{rad}/\mu s = MHz]\)</span>.</p>
+<p><img alt="Compilation diagram" src="../../extras/assets/compilation.svg" /></p>
+<p>Compilation consists of selecting, along the ray defined by the program, the largest <span class="arithmatex">\(J_0\)</span> whose corresponding physical parameters lie inside the allowed region. A larger <span class="arithmatex">\(J_0\)</span> realizes the same dimensionless program with a higher physical amplitude and a shorter physical runtime <span class="arithmatex">\(t = \tilde{t}/J_0\,[\mu \mathrm{s}]\)</span>, making it the most efficient choice.</p>
+<p>Which hardware constraint becomes binding first determines the compilation strategy.</p>
+<h3 id="drive-limited-compilation">Drive-limited compilation</h3>
+<p>When the drive amplitude bound <span class="arithmatex">\(\Omega_{\max}\,[\mathrm{rad}/\mu s]\)</span> is reached before the minimum-spacing constraint, the largest valid <span class="arithmatex">\(J_0\)</span> is obtained by saturating the drive limit:</p>
+<div class="arithmatex">\[
+\Omega_{\max}\,[\mathrm{rad/s}] = J_0\,\tilde{\Omega}_{\max}
+\qquad\Longrightarrow\qquad
+J_0\,[\mathrm{rad/s}] = \frac{\Omega_{\max}}{\tilde{\Omega}_{\max}}.
+\]</div>
+<p>The corresponding reference distance is then</p>
+<div class="arithmatex">\[
+r_0\,[\mu\mathrm{m}] = \left(\frac{C_6\,[\mathrm{rad/s}\cdot\mu\mathrm{m}^6]}{J_0\,[\mathrm{rad}/\mu s]}\right)^{1/6}.
+\]</div>
+<h3 id="interaction-limited-compilation">Interaction-limited compilation</h3>
+<p>When the minimum atom spacing <span class="arithmatex">\(r_{\min}\,[\mu\mathrm{m}]\)</span> is reached before the drive limit, the largest valid <span class="arithmatex">\(J_0\)</span> is obtained by saturating the distance constraint. Since <span class="arithmatex">\(r_0 = (C_6/J_0)^{1/6}\)</span> and the closest pair has dimensionless distance <span class="arithmatex">\(\tilde{r}_{\min} = 1\)</span>, setting <span class="arithmatex">\(r_0 = r_{\min}\)</span> gives</p>
+<div class="arithmatex">\[
+J_0\,[\mathrm{rad}/\mu s] = \frac{C_6\,[\mathrm{rad}/\mu s\cdot\mu\mathrm{m}^6]}{r_{\min}^6\,[\mu\mathrm{m}^6]}.
+\]</div>
+<p>This corresponds to placing the closest pair of atoms at the smallest physical spacing the device allows.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Compilation succeeds only if there exists at least one value of <span class="arithmatex">\(J_0\)</span> that satisfies all hardware constraints. If multiple valid values exist, QoolQit selects the largest one so as to maximize the physical scale of the implementation.</p>
+</div>
+<hr />
+<h2 id="time-scaling">Time scaling</h2>
+<p>The discussion above explains how compilation rescales the Hamiltonian coefficients while preserving the same dimensionless program. The same reasoning also shows that the <strong>time scale must be rescaled</strong>.</p>
+<p>Because QoolQit uses a dimensionless Hamiltonian defined relative to a reference energy scale <span class="arithmatex">\(J_0\)</span>, time must be rescaled by the same quantity. This follows directly from the Schrödinger equation.</p>
+<p>In physical units, the dynamics are governed by</p>
+<div class="arithmatex">\[
+i\hbar \frac{d}{dt}|\psi(t)\rangle = H(t)|\psi(t)\rangle.
+\]</div>
+<p>We want the physical and dimensionless descriptions to generate the same unitary evolution:</p>
+<div class="arithmatex">\[
+U(t)\equiv \mathcal{T}\exp\left(-\frac{i}{\hbar}\int_0^t H(t')\,dt'\right)
+=
+\tilde U(\tilde t)\equiv \mathcal{T}\exp\left(-i\int_0^{\tilde t}\tilde H(\tilde t')\,d\tilde t'\right).
+\]</div>
+<p>Using</p>
+<div class="arithmatex">\[
+H(t)=J_0\,\tilde H(\tilde t),
+\]</div>
+<p>this equivalence is possible only if the integration variables satisfy</p>
+<div class="arithmatex">\[
+\frac{J_0}{\hbar}\,dt = d\tilde t,
+\qquad\Longrightarrow\qquad
+\tilde t = \frac{J_0}{\hbar}t.
+\]</div>
+<p>With this choice, the Schrödinger equation becomes</p>
+<div class="arithmatex">\[
+i\frac{d}{d\tilde t}|\psi(\tilde t)\rangle = \tilde H(\tilde t)|\psi(\tilde t)\rangle.
+\]</div>
+<p>Assuming <span class="arithmatex">\(\hbar=1\)</span>, this is written simply as</p>
+<div class="arithmatex">\[
+\tilde t = J_0 t.
+\]</div>
+<p>This shows that the dimensionless evolution depends only on <span class="arithmatex">\(\tilde H\)</span> and <span class="arithmatex">\(\tilde t\)</span>. Therefore, if compilation changes the reference scale <span class="arithmatex">\(J_0\)</span>, the corresponding physical runtime must change accordingly in order to preserve the same dimensionless evolution.</p>
+<hr />
+<h2 id="compiling-time-back-to-physical-units">Compiling time back to physical units</h2>
+<p>Once compilation chooses a concrete value of <span class="arithmatex">\(J_0\)</span>, dimensionless times are mapped back to physical durations through</p>
+<div class="arithmatex">\[
+t = \frac{\tilde t}{J_0}.
+\]</div>
+<p>This means that choosing a larger <span class="arithmatex">\(J_0\)</span> produces a faster physical implementation of the same dimensionless program.</p>
+<p>Equivalently, if compilation changes the reference scale from <span class="arithmatex">\(J_0\)</span> to</p>
+<div class="arithmatex">\[
+J_0' = \alpha J_0,
+\]</div>
+<p>then a fixed dimensionless duration <span class="arithmatex">\(\tilde T\)</span> is realized physically in a time</p>
+<div class="arithmatex">\[
+T' = \frac{\tilde T}{J_0'} = \frac{1}{\alpha}\frac{\tilde T}{J_0}.
+\]</div>
+<p>So reducing the energy scale by a factor <span class="arithmatex">\(\alpha\)</span> increases the physical runtime by a factor <span class="arithmatex">\(1/\alpha\)</span>.</p>
+<p>This is consistent with the compilation strategy described above: whenever possible, QoolQit selects the largest feasible <span class="arithmatex">\(J_0\)</span> compatible with device constraints, so that programs run with the highest available amplitudes and shortest physical durations.</p>
+<hr />
+<h2 id="physical-interpretation-of-dimensionless-time">Physical interpretation of dimensionless time</h2>
+<p>The meaning of <span class="arithmatex">\(\tilde t\)</span> is tied to the fact that <span class="arithmatex">\(J_0\)</span> is the interaction energy scale used to realize the program. Dimensionless time therefore measures how long the system evolves relative to its intrinsic interaction timescale.</p>
+<p>In an interacting many-body system, this gives <span class="arithmatex">\(\tilde t\)</span> a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb--Robinson picture, correlations spread at a finite speed set by the interaction scale. Roughly speaking:</p>
+<ul>
+<li><span class="arithmatex">\(\tilde t \ll 1\)</span> corresponds to evolution that is too short for interactions to significantly affect the dynamics;</li>
+<li><span class="arithmatex">\(\tilde t \sim 1\)</span> corresponds to the timescale on which nearest-neighbor correlations can begin to emerge;</li>
+<li><span class="arithmatex">\(\tilde t \sim n\)</span> can be interpreted as the timescale on which correlations may have propagated across a distance of order <span class="arithmatex">\(n\)</span> lattice spacings, assuming approximately ballistic spreading.</li>
+</ul>
+<p>This interpretation is useful because it is independent of the particular hardware realization: the same dimensionless time corresponds to the same interaction-relative evolution, even though the physical runtime after compilation may differ from one device to another.</p>
+<hr />
+<h2 id="special-case-a-single-atom">Special case: a single atom</h2>
+<p>The interpretation above relies on interactions being physically present. For a single atom, however, there are no pairwise interaction terms, so <span class="arithmatex">\(J_0\)</span> is no longer an intrinsic dynamical scale of the problem.</p>
+<p>Mathematically, the dimensionless convention still works exactly as before: one may still define</p>
+<div class="arithmatex">\[
+\tilde t = \frac{J_0}{\hbar}t
+\]</div>
+<p>and rewrite the Hamiltonian in dimensionless form. But in this case, <span class="arithmatex">\(J_0\)</span> is only a reference scale introduced by convention. It is not a scale that the dynamics can directly probe, because there is no interaction-driven process in the system.</p>
+<p>As a result, saying that time is measured "in units of the interaction" remains mathematically valid, but it is not especially informative physically in the one-atom limit.</p>
+<p>For a single atom, time should instead be interpreted through the local dynamics generated by the drive and detuning, namely through quantities such as <span class="arithmatex">\(\tilde\Omega\)</span> and <span class="arithmatex">\(\tilde\delta\)</span>. For example, when detuning is absent, the natural timescale is the Rabi period set by the drive amplitude. In that regime, the relevant physical question is not how long it takes correlations to spread, but how long it takes the atom to undergo coherent single-particle evolution.</p>
+<div class="admonition note">
+<p class="admonition-title">Single-atom programs</p>
+<p>For one-atom programs, the dimensionless formulation remains fully consistent and compilable, but the physical interpretation of time is different from the many-body case. Dimensionless time should be understood as a convenient normalized parameterization of the pulse sequence, rather than as an interaction-driven clock.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../fundamentals/execution/execution/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Execution">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Execution
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../execution_config/" class="md-footer__link md-footer__link--next" aria-label="Next: Emulation configuration">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Emulation configuration
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/_markdown_exec_pyodide.js"></script>
+      
+        <script src="../../extras/javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
