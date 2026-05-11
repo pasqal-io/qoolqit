@@ -129,7 +129,7 @@ In addition to the upper bound $\tilde J_{ij} \leq 1$ inherent to the adimension
 
 ![Compilation diagram](../extras/assets/compilation.svg)
 
-If the user's point lies outside this region, the program cannot be implemented as specified. If it lies strictly inside, the program is feasible but does not exploit the full capability of the device. Compilation resolves both situations by sliding the program point along the line until it sits exactly on the boundary of the feasible region, maximizing $\tilde\Omega$.
+If the user's point lies outside this region, the program cannot be implemented as specified. If it lies strictly inside, the program is feasible but does not exploit the full capability of the device. Compilation resolves both situations by rescaling the program (sliding the point along the line) until it sits exactly on the boundary of the feasible region, maximizing $\tilde\Omega$. 
 
 Concretely, compilation multiplies all dimensionless parameters along the ray by a common factor $\alpha$:
 
