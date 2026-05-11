@@ -228,7 +228,7 @@ A larger $\alpha$, that is a program with larger amplitude and interaction, yiel
 
 ## Physical interpretation of dimensionless time
 
-Let us definethe strongest interaction **present in the register** as
+Let us define the strongest interaction **present in the register** as
 $$
 \tilde J_{\text{max}} \;=\; \max_{i<j}\tilde J_{ij} \;\leq\; 1.
 $$
