@@ -58,7 +58,7 @@ QoolQit takes this $J_{\text{max}}$ as the **reference energy scale** for adimen
 All Hamiltonian parameters are expressed relative to this fixed scale:
 
 $$
-\tilde{r}_{ij} = \frac{r_{ij}}{r_{\text{min}},
+\tilde{r}_{ij} = \frac{r_{ij}}{r_{\text{min}}},
 \qquad
 \tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6} = \frac{C_6/r_{ij}^6}{J_{\text{max}}},
 $$
