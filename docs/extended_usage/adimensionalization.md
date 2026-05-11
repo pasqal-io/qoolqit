@@ -117,7 +117,7 @@ In the following step, QoolQit adjusts the **dimensionless program** so that the
 
 ## Compilation
 
-TThe user specifies a dimensionless program by providing a register (which determines the values $\tilde J_{ij}$) and a drive (which determines $\max_{\tilde t} \tilde \Omega(t)$, $\tilde\delta(t)$, etc.). Together these correspond to a point in the $(\tilde J, \tilde\Omega)$ plane — more precisely, to a value of the ratio
+The user specifies a dimensionless program by providing a register (which determines the values $\tilde J_{ij}$) and a drive (which determines $\max_{\tilde t} \tilde \Omega(t)$, $\tilde\delta(t)$, etc.). Together these correspond to a point in the $(\tilde J, \tilde\Omega)$ plane — more precisely, to a value of the ratio
 
 $$
 \frac{\max_{\tilde t}\tilde\Omega}{\max_{i<j}\tilde J_{ij}},
