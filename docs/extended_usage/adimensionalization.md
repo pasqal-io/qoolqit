@@ -12,7 +12,7 @@ In this section, you will learn how to:
 
 This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, and how compilation maps an abstract programs onto actual hardware.
 
-This page assumes the knowledge of The [QoolQit Model](../get_started/qoolqit_model.ipynb) page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware. 
+This page assumes the knowledge of The [QoolQit Model](../get_started/qoolqit_model.ipynb) page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.
 
 Here, we make that idea precise by defining a reference interaction, the corresponding reference distance, and the mapping between dimensionless and physical quantities.
 
