@@ -1,4 +1,4 @@
-# Adimensionalization
+# Adimensionalization and Compilation
 
 In this section, you will learn how to:
 
@@ -12,7 +12,9 @@ In this section, you will learn how to:
 
 This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, and how compilation maps an abstract programs onto actual hardware.
 
-The [QoolQit Model](../get_started/qoolqit_model.ipynb) page introduces the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware. Here, we make that idea precise by defining a reference interaction, the corresponding reference distance, and the mapping between dimensionless and physical quantities.
+This page assumes the knowledge of The [QoolQit Model](../get_started/qoolqit_model.ipynb) page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware. 
+
+Here, we make that idea precise by defining a reference interaction, the corresponding reference distance, and the mapping between dimensionless and physical quantities.
 
 ---
 
@@ -129,7 +131,7 @@ In addition to the upper bound $\tilde J_{ij} \leq 1$ inherent to the adimension
 
 ![Compilation diagram](../extras/assets/compilation.svg)
 
-If the user's point lies outside this region, the program cannot be implemented as specified. If it lies strictly inside, the program is feasible but does not exploit the full capability of the device. Compilation resolves both situations by rescaling the program (sliding the point along the line) until it sits exactly on the boundary of the feasible region, maximizing $\tilde\Omega$. 
+If the user's point lies outside this region, the program cannot be implemented as specified. If it lies strictly inside, the program is feasible but does not exploit the full capability of the device. Compilation resolves both situations by rescaling the program (sliding the point along the line) until it sits exactly on the boundary of the feasible region, maximizing $\tilde\Omega$.
 
 Concretely, compilation rescale all dimensionless parameters by a common factor $\alpha$:
 
