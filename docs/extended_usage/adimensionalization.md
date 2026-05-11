@@ -3,7 +3,7 @@
 In this section, you will learn how to:
 
 - relate the physical Rydberg Hamiltonian to QoolQit’s dimensionless Hamiltonian,
-- define the reference interaction $J_0$ and reference distance $r_0$,
+- define the reference interaction $J_{\text{max}}$ and reference distance $r_{\text{min}}$,
 - understand how compilation chooses the physical scale of an implementation,
 - distinguish drive-limited and interaction-limited compilation,
 - see why time must be rescaled together with the Hamiltonian
@@ -44,10 +44,10 @@ Here $\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)$ is the Rydberg occupatio
 
 ## Reference energy and dimensionless Hamiltonian
 
-Every neutral-atom device is characterized by a minimum allowed atom separation $r_{\min}$, set by hardware. This minimum spacing corresponds to the largest pairwise interaction the device can ever produce:
+Every neutral-atom device is characterized by a minimum allowed atom separation $r_{\text{min}}$, set by hardware. This minimum spacing corresponds to the largest pairwise interaction the device can ever produce:
 
 $$
-J_{\text{max}} \;=\; \frac{C_6}{r_{\min}^{6}}.
+J_{\text{max}} \;=\; \frac{C_6}{r_{\text{min}}^{6}}.
 $$
 
 QoolQit takes this $J_{\text{max}}$ as the **reference energy scale** for adimensionalization, and the corresponding minimum spacing as the reference distance.
@@ -227,11 +227,6 @@ A larger $\alpha$, that is a program with larger amplitude and interaction, yiel
 ---
 
 ## Physical interpretation of dimensionless time
-
-Let us definethe strongest interaction **present in the register** as
-$$
-\tilde J_{\text{max}} \;=\; \max_{i<j}\tilde J_{ij} \;\leq\; 1.
-$$
 
 In an interacting many-body system, the product $\tilde J_{\text{max}}\tilde t$ (and so the time $\tilde $) has a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb-Robinson picture, correlations spread at a finite speed set by the interaction scale. Roughly speaking:
 
