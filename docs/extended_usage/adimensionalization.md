@@ -58,7 +58,7 @@ QoolQit takes this $J_{\text{max}}$ as the **reference energy scale** for adimen
 All Hamiltonian parameters are expressed relative to this fixed scale:
 
 $$
-\tilde{r}_{ij} = \frac{r_{ij}}{r_{\text{min}},
+\tilde{r}_{ij} = \frac{r_{ij}}{r_{\text{min}}},
 \qquad
 \tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6} = \frac{C_6/r_{ij}^6}{J_{\text{max}}},
 $$
@@ -85,7 +85,7 @@ $$
 \sum_i \left(\tilde{\delta}(t) + \epsilon_i\tilde{\Delta}(t)\right)\hat{n}_i.
 $$
 
-Since $J_0$ is the largest interaction the device can produce, every physically realizable register satisfies
+Since $J_{\text{max}}$ is the largest interaction the device can produce, under this renormalization, every physically realizable register satisfies:
 
 $$
 \min_{i<j}\tilde r_{ij} \geq 1,
@@ -131,7 +131,7 @@ In addition to the upper bound $\tilde J_{ij} \leq 1$ inherent to the adimension
 
 If the user's point lies outside this region, the program cannot be implemented as specified. If it lies strictly inside, the program is feasible but does not exploit the full capability of the device. Compilation resolves both situations by rescaling the program (sliding the point along the line) until it sits exactly on the boundary of the feasible region, maximizing $\tilde\Omega$. 
 
-Concretely, compilation multiplies all dimensionless parameters along the ray by a common factor $\alpha$:
+Concretely, compilation rescale all dimensionless parameters by a common factor $\alpha$:
 
 $$
 \tilde J_{ij}\;\to\;\alpha\,\tilde J_{ij},
@@ -230,9 +230,9 @@ A larger $\alpha$, that is a program with larger amplitude and interaction, yiel
 
 In an interacting many-body system, the product $\tilde J_{\text{max}}\tilde t$ (and so the time $\tilde $) has a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb-Robinson picture, correlations spread at a finite speed set by the interaction scale. Roughly speaking:
 
-- $\tilde \tilde t \ll 1/J_{\text{max}}$ corresponds to evolution that is too short for interactions to significantly affect the dynamics;
-- $\tilde \tilde t \sim 1/J_{\text{max}}$ corresponds to the timescale on which nearest-neighbor correlations can begin to emerge;
-- $\tilde \tilde t \sim n/J_{\text{max}}$ can be interpreted as the timescale on which correlations may have propagated across a distance of order $n$ lattice spacings, assuming approximately ballistic spreading.
+- $\tilde t \ll 1/J_{\text{max}}$ corresponds to evolution that is too short for interactions to significantly affect the dynamics;
+- $\tilde t \sim 1/J_{\text{max}}$ corresponds to the timescale on which nearest-neighbor correlations can begin to emerge;
+- $\tilde t \sim n/J_{\text{max}}$ can be interpreted as the timescale on which correlations may have propagated across a distance of order $n$ lattice spacings, assuming approximately ballistic spreading.
 
 
 ---
