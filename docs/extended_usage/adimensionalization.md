@@ -228,11 +228,16 @@ A larger $\alpha$, that is a program with larger amplitude and interaction, yiel
 
 ## Physical interpretation of dimensionless time
 
-In an interacting many-body system, the product $\tilde J_{\text{max}}\tilde t$ (and so the time $\tilde $) has a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb-Robinson picture, correlations spread at a finite speed set by the interaction scale. Roughly speaking:
+Let us definethe strongest dimensional interaction **present in the register** as
+$$
+\tilde J_{\text{max}} \;=\; \max_{i<j}\tilde J_{ij} \;\leq\; 1.
+$$
 
-- $\tilde t \ll 1/J_{\text{max}}$ corresponds to evolution that is too short for interactions to significantly affect the dynamics;
-- $\tilde t \sim 1/J_{\text{max}}$ corresponds to the timescale on which nearest-neighbor correlations can begin to emerge;
-- $\tilde t \sim n/J_{\text{max}}$ can be interpreted as the timescale on which correlations may have propagated across a distance of order $n$ lattice spacings, assuming approximately ballistic spreading.
+In an interacting many-body system, the product $\tilde J_{\text{max}}\tilde t$ (and so the time $\tilde t$) has a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb-Robinson picture, correlations spread at a finite speed set by the interaction scale. Roughly speaking:
+
+- $\tilde t \ll 1/\tilde{J}_{\text{max}}$ corresponds to evolution that is too short for interactions to significantly affect the dynamics;
+- $\tilde t \sim 1/\tilde{J}_{\text{max}}$ corresponds to the timescale on which nearest-neighbor correlations can begin to emerge;
+- $\tilde t \sim n/\tilde{J}_{\text{max}}$ can be interpreted as the timescale on which correlations may have propagated across a distance of order $n$ lattice spacings, assuming approximately ballistic spreading.
 
 
 ---
