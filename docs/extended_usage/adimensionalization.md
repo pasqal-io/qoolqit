@@ -85,7 +85,7 @@ $$
 \sum_i \left(\tilde{\delta}(t) + \epsilon_i\tilde{\Delta}(t)\right)\hat{n}_i.
 $$
 
-Since $J_0$ is the largest interaction the device can produce, every physically realizable register satisfies
+Since $J_{\text{max}}$ is the largest interaction the device can produce, under this renormalization, every physically realizable register satisfies:
 
 $$
 \min_{i<j}\tilde r_{ij} \geq 1,
