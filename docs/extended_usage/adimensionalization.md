@@ -151,7 +151,7 @@ with $\alpha$ chosen as large as possible while keeping the program inside the f
 
 ### Drive-limited compilation
 
-When the ratio $\tilde\Omega/\tilde J$ is large, the ray hits the line $\tilde\Omega = \tilde\Omega_{\max}$ before reaching $\tilde J = 1$. The compiled program saturates the drive maximum:
+When the ratio $\tilde\Omega/\tilde J$ is large, the ray hits the line $\tilde\Omega = \tilde\Omega_{\max}$ before reaching $\tilde J = 1$. The compiled program saturates the drive maximum amplitude:
 
 $$
 \alpha \,\max_{\tilde t}\tilde\Omega \;=\; \tilde\Omega_{\max}
