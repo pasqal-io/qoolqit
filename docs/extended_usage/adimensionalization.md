@@ -101,7 +101,7 @@ $$
 
 ## From dimensionless programs to physical hardware
 
-A QoolQit program is specified in terms of dimensionless quantities ($\tilde{J}_{ij}$, $\tilde{\Omega}(t)$, $\tilde{\delta}(t)$, $\tilde t$). Once the device, and therefore $J_{\text{max}}$ and $r_{\text{min}}$ — is fixed, the conversion to physical units is **completely determined**:
+A QoolQit program is specified in terms of dimensionless quantities ($\tilde{J}_{ij}$, $\tilde{\Omega}(t)$, $\tilde{\delta}(t)$, $\tilde t$). Once the device, and therefore $J_{\text{max}}$ and $r_{\text{min}}$ are fixed, the conversion to physical units is **completely determined**:
 
 $$
 \Omega(t) = J_{\text{max}}\,\tilde{\Omega}(t),
@@ -110,10 +110,12 @@ $$
 \qquad
 \Delta(t) = J_{\text{max}}\,\tilde{\Delta}(t),
 \qquad
-r_{ij} = r_{\text{min}}\,\tilde r_{ij}.
+r_{ij} = r_{\text{min}}\,\tilde r_{ij},
+\qquad
+t = \tilde t/J_{\text{max}}.
 $$
 
-A given dimensionless program corresponds to one and only one set of physical parameters on a given device.
+Thus, a given dimensionless program corresponds to one and only one set of physical parameters on a given device.
 
 In the following step, QoolQit adjusts the **dimensionless program** so that the resulting physical parameters satisfy the device's operational constraints.
 
