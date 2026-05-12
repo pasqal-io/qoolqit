@@ -1,12 +1,11 @@
 # QoolQit model
 
-In neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**. The interaction strength between two atoms decreases rapidly with their separation $r$ (as $1/r^6$), while the laser beams determine how strongly each atom is driven.
+In Rydberg neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**. The interaction strength between two atoms decreases rapidly with their separation $r$ (as $1/r^6$), while the laser beams determine how strongly each atom is driven.
 
 As a result, the behavior of the system is not set by absolute values alone, but by the **interplay between geometry (distances) and control strength (laser power)**. Different combinations of these quantities can lead to equivalent physical behavior, as long as their relative scales are preserved.
 
 !!! info "Take-home message 1"
     QoolQit introduces a **dimensionless reference frame** where all quantities are expressed in function of an **interaction reference**.
-
 
 The quantum system is thus described by the sum of two energetic contributions, the interaction and the driving one, as described by the following Hamiltonian:
 
@@ -38,13 +37,10 @@ $$
 
 This means that programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
 
-
 !!! info "Take-home message 2"
-    The actual physical scale — such as the precise distances or laser amplitudes — is determined only later, during the **compilation step**, when targeting a specific device.
-
+    The actual physical scale, such as the precise distances or laser amplitudes, is determined later during the **compilation step**, when targeting a specific device.
 
 More details about the connection to physical units are provided in the section [Adimensionalization](../extended_usage/adimensionalization.md).
-
 The following table summarizes the parameters appearing in the Hamiltonian and their allowed ranges.
 
 | Symbol | Description | Range |
@@ -57,6 +53,14 @@ The following table summarizes the parameters appearing in the Hamiltonian and t
 | $\epsilon_i$ | Local detuning weight for site $i$ | $[0,\,1]$ |
 | $\tilde{t}$ | Dimensionless time | $> 0$ |
 
+The introduced many-body Hamiltonian has rich dynamics, resulting from the interplay between the driving and interaction terms over time.
+To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength,
+
+$$
+\tilde J_{\text{max}} \;=\; \max_{i<j}\tilde J_{ij} \;\leq\; 1,
+$$
+
+is what matters.
 
 ## Drive regimes
 
@@ -64,27 +68,23 @@ Because $\tilde{\Omega}$ is expressed relative to the maximum interaction streng
 
 | Regime | Condition | Intuition |
 |--------|-----------|-----------|
-| Strong drive | $\tilde{\Omega} \gg 1$ | Controls dominate; interactions are a perturbation |
-| Balanced | $\tilde{\Omega} \sim 1$ | Controls and interactions compete |
-| Weak drive | $\tilde{\Omega} \ll 1$ | Interactions dominate; blockade and correlation effects are strong |
-
+| Strong drive | $\tilde{\Omega} \gg \tilde J_{\text{max}}$ | Controls dominate; interactions are a perturbation |
+| Balanced | $\tilde{\Omega} \sim \tilde J_{\text{max}}$ | Controls and interactions compete |
+| Weak drive | $\tilde{\Omega} \ll \tilde J_{\text{max}}$ | Interactions dominate; blockade and correlation effects are strong |
 
 ## Time regimes
 
-Time is expressed in QoolQit in units of the maximum interaction energy.
-
-In an interacting many-body system, this gives $\tilde{t}$ a natural physical interpretation: it measures evolution time relative to the timescale on which interactions generate correlations. Roughly speaking, a time $\tilde{t} \sim 1$ is enough for nearest-neighbor sites to begin developing correlations. More generally, $\tilde{t} \sim n$ can be interpreted as the timescale on which correlations may have propagated over a distance of order $n$ lattice spacings.
-
-This makes dimensionless time a convenient, geometry-independent way to describe how long the system evolves relative to its intrinsic interaction dynamics.
+In an interacting many-body system, time can be naturally measured relative to the timescale on which interactions generate correlations. Roughly speaking, a time $\tilde{t} \sim 1/\tilde J_{\text{max}}$ is enough for nearest-neighbor sites to begin developing correlations. More generally, $\tilde{t} \sim n/\tilde J_{\text{max}}$ can be interpreted as the timescale on which correlations may have propagated over a distance of order $n$ lattice spacings.
 
 | Regime | Condition | Intuition |
 |--------|-----------|-----------|
-| Short time | $\tilde{t} \ll 1$ | Evolution is too brief for interactions to significantly build up correlations |
-| Intermediate time | $\tilde{t} \sim 1$ | Interactions begin to visibly affect the dynamics; nearest-neighbor correlations can emerge |
-| Long time | $\tilde{t} \gg 1$ | Correlations and many-body interaction effects have had time to spread across the system |
+| Short time | $\tilde{t} \ll 1/\tilde J_{\text{max}}$ | Evolution is too brief for interactions to significantly build up correlations |
+| Intermediate time | $\tilde{t} \sim 1/\tilde J_{\text{max}}$ | Interactions begin to visibly affect the dynamics; nearest-neighbor correlations can emerge |
+| Long time | $\tilde{t} \gg 1/\tilde J_{\text{max}}$ | Correlations and many-body interaction effects have had time to spread across the system |
 
----
+Since all physical regimes are characterized by parameters relative to the maximum interaction strength, QoolQit's choice of dimensionless units is natural: interactions are always of order unity, providing an intuitive reference scale for all other quantities.
 
+Next we will discuss the compilation, the crucial step to translate a QoolQit dimensionless program to a sequence of operations that can be realized on a real neutral-atom-based QPU.
 
 ## Compilation
 

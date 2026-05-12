@@ -240,7 +240,7 @@ $$
 \tilde J_{\text{max}} \;=\; \max_{i<j}\tilde J_{ij} \;\leq\; 1.
 $$
 
-In an interacting many-body system, the product $\tilde J_{\text{max}}\tilde t$ (and so the time $\tilde t$) has a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb-Robinson picture, correlations spread at a finite speed set by the interaction scale. Roughly speaking:
+In an interacting many-body system, the product $\tilde J_{\text{max}}\tilde t$ (and so the time $\tilde t$) has a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb-Robinson picture, correlations spread at a finite speed set by the interaction scale. In concrete:
 
 - $\tilde t \ll 1/\tilde{J}_{\text{max}}$ corresponds to evolution that is too short for interactions to significantly affect the dynamics;
 - $\tilde t \sim 1/\tilde{J}_{\text{max}}$ corresponds to the timescale on which nearest-neighbor correlations can begin to emerge;
