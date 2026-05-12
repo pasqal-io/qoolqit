@@ -232,7 +232,8 @@ A larger $\alpha$, that is a program with larger amplitude and interaction, yiel
 
 ## Physical interpretation of dimensionless time
 
-Let us definethe strongest dimensional interaction **present in the register** as
+Let us define the strongest dimensional interaction **present in the register** as
+
 $$
 \tilde J_{\text{max}} \;=\; \max_{i<j}\tilde J_{ij} \;\leq\; 1.
 $$
@@ -256,7 +257,7 @@ $$
 \tilde t = \frac{J_0}{\hbar}t
 $$
 
-and rewrite the Hamiltonian in dimensionless form. But in this case, $J_0$ is only a reference scale introduced by convention. It is not a scale that the dynamics can directly probe, because there is no interaction-driven process in the system.
+and rewrite the Hamiltonian in dimensionless form. But in this case, $J_{\text{max}}$ is only a reference scale introduced by convention. It is not a scale that the dynamics can directly probe, because there is no interaction-driven process in the system.
 
 As a result, saying that time is measured "in units of the interaction" remains mathematically valid, but it is not especially informative physically in the one-atom limit.
 
