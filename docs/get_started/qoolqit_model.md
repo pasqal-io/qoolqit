@@ -31,7 +31,7 @@ $$
 \sigma^z=\begin{pmatrix} 1 & 0 \\ 0 & -1\end{pmatrix}.
 $$
 
-- The interaction $\tilde{J}_{ij}$ follows the $1/r^6$ Rydberg scaling, normalized so that the maximum can at most be equal to $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
+- The interaction $\tilde{J}_{ij}$ follows the $1/r^6$ Rydberg scaling, normalized so that the maximum can be at most equal to $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
 - $\tilde{\Omega}(t)$ and $\tilde{\delta}(t)$ are laser parameters (amplitude and detuning) and are measured relative to the maximum interaction strength, which is equal to $1$.
 - Times $\tilde{t}$ are measured relative to the interaction timescale.
 
