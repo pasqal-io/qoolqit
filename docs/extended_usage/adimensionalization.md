@@ -12,7 +12,7 @@ In this section, you will learn how to:
 
 This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, and how compilation maps an abstract programs onto actual hardware.
 
-This page assumes the knowledge of The [QoolQit Model](../get_started/qoolqit_model.md) page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.
+This page assumes the knowledge of the [QoolQit Model](../get_started/qoolqit_model.md) page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.
 
 Here, we make that idea precise by defining a reference interaction, the corresponding reference distance, and the mapping between dimensionless and physical quantities.
 
@@ -46,7 +46,7 @@ Here $\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)$ is the Rydberg occupatio
 
 ## Reference energy and dimensionless Hamiltonian
 
-Every neutral-atom device is characterized by a minimum allowed atom separation $r_{\text{min}}$, set by hardware. This minimum spacing corresponds to the largest pairwise interaction the device can ever produce:
+Every neutral-atom device is characterized by a minimum allowed atom separation $r_{\text{min}}$, determined by hardware constraints. This minimum spacing corresponds to the largest pairwise interaction the device can produce:
 
 $$
 J_{\text{max}} \;=\; \frac{C_6}{r_{\text{min}}^{6}}.
@@ -54,7 +54,7 @@ $$
 
 QoolQit takes this $J_{\text{max}}$ as the **reference energy scale** for adimensionalization, and the corresponding minimum spacing as the reference distance.
 
-!!! note "Key point"
+!!! info "Key point"
     Both $r_{\text{min}}$ and $J_{\text{max}}$ are **device constants**. They are fixed by the hardware specification and do not depend on the user's program. They are not chosen by compilation.
 
 All Hamiltonian parameters are expressed relative to this fixed scale:
@@ -73,7 +73,7 @@ $$
 \tilde{\Delta} = \frac{\Delta}{J_{\text{max}}}.
 $$
 
-Dividing the physical Hamiltonian by $J_{\text{max}}$ yields the dimensionless QoolQit Hamiltonian:
+Dividing the physical Hamiltonian by $J_{\text{max}}$ yields the dimensionless [QoolQit Model](../get_started/qoolqit_model.md):
 
 $$
 \tilde{H}(t) =
@@ -87,7 +87,9 @@ $$
 \sum_i \left(\tilde{\delta}(t) + \epsilon_i\tilde{\Delta}(t)\right)\hat{n}_i.
 $$
 
-Since $J_{\text{max}}$ is the largest interaction the device can produce, under this renormalization, every physically realizable register satisfies:
+Most programs are built starting from the definition of a set of coordinates for the atoms (register), or equivalently an interaction matrix. For this reason, renormalization brings an important advantage: it provides a natural constraint for program feasibility.
+
+Since, $J_{\text{max}}$ is the largest interaction the device can produce, under this renormalization, every physically realizable register satisfies:
 
 $$
 \min_{i<j}\tilde r_{ij} \geq 1,
