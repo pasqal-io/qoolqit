@@ -106,11 +106,12 @@ This means that compilation does **not** change the dimensionless physics of the
 
 Consider the figure below:
 
-![Compilation in dimensionless units](../extras/assets/compilation_2.svg)
+![Compilation diagram](../extras/assets/compilation.svg)
 
 The valid compilation region of a device is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2,$. The bound $\tilde{J} \leq 1$ is compatible with a minimum spacing $a$ allowed in the register distance equal to $a_{\text{min}}=1$.
 
 We define two programs by specifying the maximum adimensional amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the adimensional interaction between nearest neighbor atoms in the register $\tilde{J}=\frac{1}{\tilde{a^6}}$.  We define the following tuples:
+
 1. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4)$,
 2. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)$
 
