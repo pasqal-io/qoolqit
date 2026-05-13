@@ -38,6 +38,7 @@ nav:
     - qoolqit.devices: reference/devices.md
     - qoolqit.execution: reference/execution.md
     - qoolqit.exceptions: reference/exceptions.md
+    - qoolqit.internals: reference/internals.md
   - Contribute:
     - How to contribute: CONTRIBUTING.md
     - Code of conduct: CODE_OF_CONDUCT.md

@@ -384,7 +384,7 @@ def default_compute_ratio_step_factors(progress: float) -> float:
     return float(np.interp(progress, xp=[0, 3 / 5, 1], fp=[2, 0.94, 0.98]))
 
 
-def blade(
+def _blade(
     matrix: np.ndarray,
     *,
     max_min_dist_ratio: float | None = None,
@@ -403,8 +403,11 @@ def blade(
     draw_weighted_graph: bool = False,
     draw_differences: bool = False,
 ) -> np.ndarray:
-    """
-    Embed an interaction matrix or QUBO with the BLaDE algorithm.
+    """Embed an interaction matrix or QUBO with the BLaDE algorithm.
+
+    Note:
+        This function is private and not part of the public API.
+        It is documented here for internal reference only.
 
     BLaDE stands for Balanced Latently Dimensional Embedder.
     It compute positions for nodes so that their interactions
@@ -414,58 +417,59 @@ def blade(
     for MIS with limitations if the adjacency matrix is converted into a QUBO.
     The general principle is based on the Fruchterman-Reingold algorithm.
 
-    matrix: An objective interaction matrix or QUBO between the nodes. It must
-        be either symmetrical or triangular.
-    max_min_dist_ratio: If present, set the maximum ratio between
-        the maximum radial distance and the minimum pairwise distances.
-    dimensions: List of numbers of dimensions to explore one
-        after the other. A list with one value is equivalent to a list containing
-        twice the same value. For a 2D embedding, the last value should be 2.
-        Increasing the number of intermediate dimensions can help to escape
-        from local minima.
-    starting_positions: If provided, initial positions to start from. Otherwise,
-        random positions will be generated. The number of dimensions of the
-        starting positions must be lower than or equal to the first dimension
-        to explore. If it is lower, it is added dimensions filled with
-        random values.
-    pca: Whether to apply Principal Component Analysis to prioritize dimensions
-        to keep when transitioning from a space to a space with fewer dimensions.
-        It is disabled by default because it can raise an error when there are
-        too many dimensions compared to the number of nodes.
-    steps_per_round: Number of elementary steps to perform for each dimension
-        transition, where at each step move vectors are computed and applied
-        on the nodes.
-    compute_weight_relative_threshold: Function that is called at each step.
-        It takes a float number between 0 and 1 that represents the progress
-        on the steps. It must return a float number between 0 and 1 that gives
-        a threshold determining which weights are significant (see
-        `update_positions` to learn more).
-    compute_max_distance_to_walk: Function that is called at each step.
-        It takes a float number between 0 and 1 that represents the progress
-        on the steps, and takes another argument that is set to `None` when
-        `max_min_dist_ratio` is not enabled, otherwise, it is set to
-        the maximum radial distance for the current step.
-        It must return a float number that limits the distances
-        nodes can move at one step  (see `update_positions` to learn more).
-    compute_regulation_cursor: Function that is called at each step.
-        It takes a float number between 0 and 1 that represents the progress
-        on the steps. It must return a float number between 0 (no regulation)
-        and 1 (full regulation) that uniformizes the ability for the forces
-        to achieve their objectives at each step by changing priorities.
-    ratio_rerun: When the distance ratio constraint is not met, it defines
-        the maximum number of times the algorithm applies additional
-        computation steps putting the priority on the constraint.
-    compute_ratio_step_factors: Function that is called at the boundaries of
-        the rounds. It defines the target ratio the enforce during the
-        evolution. It acts as a multiplying factor on the target ratio.
-    draw_steps: If it is a boolean, it defines whether to globally enable
-        drawing and traces for nodes and forces (for all steps). If it is a
-        list of integers, it defines a subset of steps to enable such drawing.
-        Requires installing the seaborn library.
-    draw_weighted_graph: For each step with drawing enabled, defines whether
-        to draw a weighted graph representing interactions.
-    draw_differences: For each step with drawing enabled, defines whether
-        to draw the differences between current and target interactions.
+    Args:
+        matrix: An objective interaction matrix or QUBO between the nodes. It must
+            be either symmetrical or triangular.
+        max_min_dist_ratio: If present, set the maximum ratio between
+            the maximum radial distance and the minimum pairwise distances.
+        dimensions: List of numbers of dimensions to explore one
+            after the other. A list with one value is equivalent to a list containing
+            twice the same value. For a 2D embedding, the last value should be 2.
+            Increasing the number of intermediate dimensions can help to escape
+            from local minima.
+        starting_positions: If provided, initial positions to start from. Otherwise,
+            random positions will be generated. The number of dimensions of the
+            starting positions must be lower than or equal to the first dimension
+            to explore. If it is lower, it is added dimensions filled with
+            random values.
+        pca: Whether to apply Principal Component Analysis to prioritize dimensions
+            to keep when transitioning from a space to a space with fewer dimensions.
+            It is disabled by default because it can raise an error when there are
+            too many dimensions compared to the number of nodes.
+        steps_per_round: Number of elementary steps to perform for each dimension
+            transition, where at each step move vectors are computed and applied
+            on the nodes.
+        compute_weight_relative_threshold: Function that is called at each step.
+            It takes a float number between 0 and 1 that represents the progress
+            on the steps. It must return a float number between 0 and 1 that gives
+            a threshold determining which weights are significant (see
+            `update_positions` to learn more).
+        compute_max_distance_to_walk: Function that is called at each step.
+            It takes a float number between 0 and 1 that represents the progress
+            on the steps, and takes another argument that is set to `None` when
+            `max_min_dist_ratio` is not enabled, otherwise, it is set to
+            the maximum radial distance for the current step.
+            It must return a float number that limits the distances
+            nodes can move at one step (see `update_positions` to learn more).
+        compute_regulation_cursor: Function that is called at each step.
+            It takes a float number between 0 and 1 that represents the progress
+            on the steps. It must return a float number between 0 (no regulation)
+            and 1 (full regulation) that uniformizes the ability for the forces
+            to achieve their objectives at each step by changing priorities.
+        ratio_rerun: When the distance ratio constraint is not met, it defines
+            the maximum number of times the algorithm applies additional
+            computation steps putting the priority on the constraint.
+        compute_ratio_step_factors: Function that is called at the boundaries of
+            the rounds. It defines the target ratio the enforce during the
+            evolution. It acts as a multiplying factor on the target ratio.
+        draw_steps: If it is a boolean, it defines whether to globally enable
+            drawing and traces for nodes and forces (for all steps). If it is a
+            list of integers, it defines a subset of steps to enable such drawing.
+            Requires installing the seaborn library.
+        draw_weighted_graph: For each step with drawing enabled, defines whether
+            to draw a weighted graph representing interactions.
+        draw_differences: For each step with drawing enabled, defines whether
+            to draw the differences between current and target interactions.
     """
 
     if len(dimensions) == 1:
@@ -555,7 +559,7 @@ def blade(
         if output_ratio > max_min_dist_ratio:
 
             if ratio_rerun > 0:
-                return blade(
+                return _blade(
                     matrix=matrix,
                     max_min_dist_ratio=max_min_dist_ratio,
                     dimensions=(2, 2, 2),
