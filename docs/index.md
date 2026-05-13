@@ -28,6 +28,6 @@ QoolQit is designed for both **algorithm exploration** and **hardware-aware prog
 
 ## Where to start
 
-- [The QoolQit Model](get_started/qoolqit_model.md) — the dimensionless Hamiltonian and compilation logic,
-- [Fundamentals](fundamentals/introduction.md) — registers, waveforms, programs, and execution,
-- [Adimensionalization — Advanced](extended_usage/adimensionalization.md) — how dimensionless programs are mapped to physical units.
+- [The QoolQit Model](get_started/qoolqit_model.md) — the dimensionless Hamiltonian and compilation logic.
+- [Fundamentals](fundamentals/introduction.md) — registers, waveforms, programs, and execution.
+- [Programming with QoolQit](./get_started/programming_with_qoolqit.ipynb) — writing a quantum program.

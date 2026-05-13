@@ -1,4 +1,4 @@
-This section introduces the core concepts used throughout QoolQit, following the typical workflow: define a problem, embed it into hardware, then build, compile, and execute a quantum program.
+This section introduces the core concepts used throughout QoolQit, following the typical workflow: define a problem, embed it into a quantum program, compile, and execute.
 
 ---
 
