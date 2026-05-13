@@ -164,7 +164,7 @@ Atoms are placed further apart than the device minimum: the closest pair sits at
 
 ### Interaction-limited compilation
 
-When the ratio $\tilde\Omega/\tilde J$ is small, the ray hits $\tilde J = 1$ before reaching $\tilde\Omega_{\max}$. The compiled program saturates the interaction bound:
+When the ratio $\tilde\Omega/\tilde J$ is small, the ray hits $\tilde J = 1$ before reaching $\tilde\Omega_{\max}$ (red line above). The compiled program saturates the interaction bound:
 
 $$
 \alpha \,\max_{i<j}\tilde J_{ij} \;=\; 1
