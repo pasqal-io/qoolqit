@@ -40,7 +40,7 @@ This means that programs are **hardware-independent until compilation**: drive s
 !!! info "Take-home message 2"
     The actual physical scale, such as the precise distances or laser amplitudes, is determined later during the **compilation step**, when targeting a specific device.
 
-More details about the connection to physical units are provided in the section [Adimensionalization](../extended_usage/adimensionalization.md).
+More details about the connection to physical units are provided in the section [Adimensionalization and Compilation](../extended_usage/adimensionalization.md).
 The following table summarizes the parameters appearing in the Hamiltonian and their allowed ranges.
 
 | Symbol | Description | Range |
@@ -132,4 +132,4 @@ What changes are the **dimensionless values themselves**: compilation slides the
 
 For instance, compiling the program $(\tilde J, \max_{\tilde t}\tilde\Omega) = (1, 0.4)$ to $(0.5, 0.2)$ corresponds to a rescaling factor $\alpha = 0.5$. The ratio $2/5$ is preserved, but the dimensionless interaction is halved, meaning the closest pair of atoms is placed further apart and the dimensionless drive is halved so that it saturates the device maximum.
 
-Finally, compilation also rescales time: if the dimensionless Hamiltonian is multiplied by $\alpha$, dimensionless time must be divided by $\alpha$ in order to preserve the unitary evolution. A full derivation and concrete numerical examples are given in [Adimensionalization](../extended_usage/adimensionalization.md).
+Finally, compilation also rescales time: if the dimensionless Hamiltonian is multiplied by $\alpha$, dimensionless time must be divided by $\alpha$ in order to preserve the unitary evolution. A full derivation and concrete numerical examples are given in [Adimensionalization and Compilation](../extended_usage/adimensionalization.md).

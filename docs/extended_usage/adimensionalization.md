@@ -127,7 +127,7 @@ As discussed, the user specifies a dimensionless program by providing a register
 Over all these parameters, two in particular are arguably more important since they set the energy scales of the interactions and of the drive, and thus their ratio.
 Respectively, they are the maximum interaction $\max_{i>j}\tilde J_{ij}$ and the maximum driving amplitude $\max_{\tilde t}\tilde\Omega$ in the defined program.
 
-Simplifying, below, we will represent a program as a point in the $(\tilde J, \tilde\Omega)$ plane. Interestingly, every program also defines a line through the origin in that plane. Every line defines a "family" of equivalent programs, where the ratio between interaction and driving strength is fixed.
+Thus, simplifying, we will represent a program as a point in the $(\tilde J, \tilde\Omega)$ plane. Interestingly, every program also defines a line through the origin in that plane, with slope $\tilde{\Omega}_{\text{max}}/\tilde{J}_{\text{max}}$. All points lying on the same line are ideally physically identical programs, differing only by a global energy scale factor while preserving the fundamental ratio between driving and interaction strengths.
 
 In addition to the upper bound $\tilde J_{ij} \leq 1$ inherent to the adimensionalization, the device imposes a maximum drive amplitude $\tilde\Omega_{\text{max}} = \Omega_{\max}/J_{\text{max}}$. Together these define a **device allowed region** represented as a shaded green rectangle in the figure below:
 
