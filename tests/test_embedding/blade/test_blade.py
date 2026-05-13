@@ -21,7 +21,7 @@ from qoolqit.embedding.algorithms.blade._helpers import (
 )
 from qoolqit.embedding.algorithms.blade._qubo_mapper import Qubo
 from qoolqit.embedding.algorithms.blade.blade import (
-    blade,
+    _blade,
     update_positions,
 )
 
@@ -331,7 +331,7 @@ def test_force_based_embedding(
         ]
     )
 
-    positions = blade(
+    positions = _blade(
         matrix=qubo,
         max_min_dist_ratio=max_dist / min_dist,
         starting_positions=np.array([[-1, 1], [1, 1], [1, -1], [-1, -1]]) * max_dist / 3,
@@ -373,7 +373,7 @@ def test_high_dimension_increase_after_equilibrium() -> None:
             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         ]
     )
-    blade(qubo, dimensions=(2, 2, 10), steps_per_round=100)
+    _blade(qubo, dimensions=(2, 2, 10), steps_per_round=100)
 
 
 def test_initial_positions_with_fewer_dimensions_than_starting_dimensions() -> None:
@@ -388,7 +388,7 @@ def test_initial_positions_with_fewer_dimensions_than_starting_dimensions() -> N
     expected_interactions = np.triu(normalized_interaction(expected_distances), k=1)
 
     starting_positions = np.array([[-1, 1], [1, 1], [1, -1], [-1, -1]])
-    positions = blade(
+    positions = _blade(
         expected_interactions,
         starting_positions=starting_positions,
         dimensions=(starting_positions.shape[1] + 2, 2),
@@ -480,7 +480,7 @@ def test_simple_positions() -> None:
             [0, 0],
         ]
     )
-    positions = blade(qubo, dimensions=(2, 2), steps_per_round=100)
+    positions = _blade(qubo, dimensions=(2, 2), steps_per_round=100)
     distances = np.triu(
         np.linalg.norm(positions[np.newaxis, :, :] - positions[:, np.newaxis, :], axis=-1), k=1
     )
@@ -522,7 +522,7 @@ def test_embed_3_nodes(dimensions: tuple[int, ...], steps_per_round: int) -> Non
     target_interactions = interaction_matrix_from_positions(target_positions)
     np.fill_diagonal(target_interactions, 0)
 
-    blade_pos = blade(target_interactions, dimensions=dimensions, steps_per_round=steps_per_round)
+    blade_pos = _blade(target_interactions, dimensions=dimensions, steps_per_round=steps_per_round)
     blade_interactions = interaction_matrix_from_positions(blade_pos)
     quality = np.linalg.norm(target_interactions - blade_interactions)
     np.testing.assert_allclose(quality, 0.0, atol=1e-2)
@@ -542,7 +542,7 @@ def test_embed_medium_dense_register() -> None:
 
     np.random.seed(seed)
 
-    positions = blade(
+    positions = _blade(
         random_symmetric,
         max_min_dist_ratio=expected_ratio,
         ratio_rerun=0,
@@ -576,7 +576,7 @@ def test_embed_large_dense_register_from_hexagonal_lattice() -> None:
 
     np.random.seed(seed)
 
-    positions = blade(
+    positions = _blade(
         random_symmetric,
         max_min_dist_ratio=expected_ratio,
     )

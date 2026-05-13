@@ -38,6 +38,7 @@ nav:
     - qoolqit.devices: reference/devices.md
     - qoolqit.execution: reference/execution.md
     - qoolqit.exceptions: reference/exceptions.md
+    - qoolqit.internals: reference/internals.md
   - Contribute:
     - How to contribute: CONTRIBUTING.md
     - Code of conduct: CODE_OF_CONDUCT.md
@@ -63,14 +64,12 @@ theme:
   - media: "(prefers-color-scheme: light)"
     scheme: default
     primary: custom
-    accent: custom
     toggle:
       icon: material/weather-sunny
       name: Switch to dark mode
   - media: "(prefers-color-scheme: dark)"
     scheme: slate
-    primary: black
-    accent: light green
+    primary: custom
     toggle:
       icon: material/weather-night
       name: Switch to light mode
