@@ -109,7 +109,7 @@ class QuantumProgram:
             minimize the time derivative of the drive's amplitude.
 
         Args:
-            device: The target device for compilation.
+            device: The target device for compilation. Must be a QoolQit Device.
             profile: The compilation strategy to optimize the program.
                 Defaults to CompilerProfile.MAX_ENERGY.
             device_max_duration_ratio: Whether to set the program duration to a fraction of
@@ -119,6 +119,8 @@ class QuantumProgram:
         Raises:
             CompilationError: If the compilation fails due to device constraints.
         """
+        if not isinstance(device, Device):
+            raise TypeError("`device` must be of type `qoolqit.devices.Device`.")
 
         if device_max_duration_ratio is not None:
             if device._max_duration is None:

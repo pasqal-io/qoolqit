@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
+from pulser import AnalogDevice as PulserAnalogDevice
 from pulser.sampler import sample
 
 from qoolqit import AnalogDevice, Constant, Drive, MockDevice, QuantumProgram, Register
@@ -67,3 +68,14 @@ def test_compilation_with_dmm(profile: CompilerProfile) -> None:
 
     dmm_weights = dmm_sample.detuning_map.weights
     assert dmm_weights == (0.1, 0.2, 0.9)
+
+
+def test_compile_to_wrong_device_type() -> None:
+    """Test compilation to a device with a different type."""
+    register = Register(qubits={"q0": (0.0, 0.0)})
+    drive = Drive(amplitude=Constant(2.0, 0.2))
+    program = QuantumProgram(register=register, drive=drive)
+    with pytest.raises(TypeError, match="`device` must be of type `qoolqit.devices.Device`."):
+        program.compile_to(device="I'm not a device")  # type: ignore [arg-type]
+    with pytest.raises(TypeError, match="`device` must be of type `qoolqit.devices.Device`."):
+        program.compile_to(device=PulserAnalogDevice)  # type: ignore [arg-type]
