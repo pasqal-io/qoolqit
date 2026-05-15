@@ -1,6 +1,8 @@
-site_name: QoolQit
-repo_url: "https://github.com/pasqal-io/qoolqit"
-repo_name: "QoolQit"
+site_name: QoolQit Documentation
+site_author: Pasqal
+repo_url: https://github.com/pasqal-io/qoolqit
+copyright: © 2026, Pasqal
+
 
 nav:
   - Overview: index.md
