@@ -32,7 +32,8 @@ $$
 $$
 
 - The interaction $\tilde{J}_{ij}$ follows the $1/r^6$ Rydberg scaling, normalized so that the maximum can be at most equal to $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
-- $\tilde{\Omega}(t)$ and $\tilde{\delta}(t)$ are laser parameters (amplitude and detuning) and are measured relative to the maximum interaction strength, which is equal to $1$.
+- $\tilde{\Omega}(t)$, $\tilde{\delta}(t)$ and $\phi$ are laser parameters (amplitude, detuning and phase) and are measured relative to the maximum interaction strength, which is equal to $1$.
+- $\tilde{\Delta}(t)$ defines an additional detuning that can be applied locally to each qubit as modulated by the set of weights $\epsilon_i$.
 - Times $\tilde{t}$ are measured relative to the interaction timescale.
 
 This means that programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
@@ -48,8 +49,8 @@ The following table summarizes the parameters appearing in the Hamiltonian and t
 | $\tilde{J}_{ij}$ | Dimensionless coupling between sites $i$ and $j$ | $[0,\,1]$ |
 | $\tilde{\Omega}(t)$ | Global drive amplitude, affecting all sites equally | $\geq 0$ |
 | $\tilde{\delta}(t)$ | Global detuning, affecting all sites equally | any real value |
-| $\tilde{\Delta}(t)$ | Local detuning amplitude | $\leq 0$ |
 | $\phi(t)$ | Global phase | $[0,\,2\pi]$ |
+| $\tilde{\Delta}(t)$ | Local detuning amplitude | $\leq 0$ |
 | $\epsilon_i$ | Local detuning weight for site $i$ | $[0,\,1]$ |
 | $\tilde{t}$ | Dimensionless time | $> 0$ |
 
