@@ -149,12 +149,11 @@ class QuantumProgram:
 
     def draw(
         self,
-        n_points: int = 500,
         compiled: bool = False,
         return_fig: bool = False,
     ) -> Figure | None:
         if not compiled:
-            return self.drive.draw(n_points=n_points, return_fig=return_fig)
+            return self.drive.draw(return_fig=return_fig)
         else:
             if not self.is_compiled:
                 raise ValueError(

@@ -163,10 +163,13 @@ class Drive:
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
     def __amp_header__(self) -> str:
-        return "Amplitude: \n"
+        return "amplitude: \n"
 
     def __det_header__(self) -> str:
-        return "Detuning: \n"
+        return "detuning: \n"
+
+    def __dmm_header__(self) -> str:
+        return "dmm: \n"
 
     def __repr__(self) -> str:
         if isinstance(self.amplitude, CompositeWaveform):
@@ -185,31 +188,48 @@ class Drive:
                 + self.detuning.__repr_header__()
                 + self.detuning.__repr_content__()
             )
-        return amp_repr + "\n\n" + det_repr
 
-    def draw(self, n_points: int = 500, return_fig: bool = False) -> Figure | None:
-        fig, ax = plt.subplots(2, 1, sharex=True, figsize=(16, 4), dpi=200)
+        repr = amp_repr + "\n" + det_repr
 
-        ax[0].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
-        ax[0].set_axisbelow(True)
-        ax[0].set_ylabel("Amplitude")
-        ax[1].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
-        ax[1].set_axisbelow(True)
-        ax[1].set_ylabel("Detuning")
-        ax[1].set_xlabel("Time t")
+        if self.dmm is not None:
+            dmm_repr = self.__dmm_header__() + self.dmm.__repr__()
+            repr += "\n" + dmm_repr
 
-        t_array = np.linspace(0.0, self.duration, n_points)
+        return repr
+
+    def draw(self, return_fig: bool = False) -> Figure | None:
+
+        nrows = 3 if self.dmm is not None else 2
+
+        fig = plt.gcf()
+        axs = fig.subplots(nrows, 1, sharex=True)
+
+        # samples
+        t_array = np.linspace(0.0, self.duration, 250)
         y_amp = self.amplitude(t_array)
         y_det = self.detuning(t_array)
 
-        ax[0].plot(t_array, y_amp, color="darkgreen")
-        ax[1].plot(t_array, y_det, color="darkmagenta")
+        # draw amplitude
+        axs[0].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+        axs[0].set_ylabel("Amplitude")
+        axs[0].plot(t_array, y_amp, color="darkgreen")
+        axs[0].fill_between(t_array, y_amp, color="darkgreen", alpha=0.4)
 
-        ax[0].fill_between(t_array, y_amp, color="darkgreen", alpha=0.4)
-        ax[1].fill_between(t_array, y_det, color="darkmagenta", alpha=0.4)
+        # draw detuning
+        axs[1].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+        axs[1].set_axisbelow(True)
+        axs[1].set_ylabel("Detuning")
+        axs[1].plot(t_array, y_det, color="darkmagenta")
+        axs[1].fill_between(t_array, y_det, color="darkmagenta", alpha=0.4)
 
-        if return_fig:
-            plt.close()
-            return fig
-        else:
-            return None
+        axs[-1].set_xlabel("Time t")
+
+        # draw DMM if present
+        if self.dmm is not None:
+            y_dmm = self.dmm.waveform(t_array)
+            axs[-1].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+            axs[-1].set_ylabel("DMM")
+            axs[-1].plot(t_array, y_dmm, color="darkblue")
+            axs[-1].fill_between(t_array, y_dmm, color="darkblue", alpha=0.4)
+
+        return fig if return_fig else None
