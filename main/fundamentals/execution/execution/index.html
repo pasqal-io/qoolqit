@@ -3008,9 +3008,8 @@ emulator = LocalEmulator(backend_type=BackendType.QutipBackendV2)</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="handling-local-results">Handling local results<a class="anchor-link" href="#handling-local-results">¶</a></h3><p>The call <code>emulator.run(program)</code> will return a <code>Job</code> object type.
-All execution methods (<code>LocalEmulator.run()</code>, <code>RemoteEmulator.run()</code>, and <code>QPU.run()</code>) return a <code>Job</code> object that serves as a handler for managing the execution lifecycle and to fetch the results once the computation is completed.
-For more info about this specific object, please, have a look at <a href="../../reference/execution.md">Qoolqit documentation</a>.
-As an example, lets inspect the results we got in the previous run:</p>
+All execution methods (<code>LocalEmulator.run()</code>, <code>RemoteEmulator.run()</code>, and <code>QPU.run()</code>) return a <code>Job</code> object that serves as a handler for managing the execution lifecycle and to fetch the results once the computation is completed. More about this in the remote emulator <a href="#handling-remote-results-job-and-status-management">section</a> of this page.</p>
+<p>As an example, lets inspect the results we got in the previous run:</p>
 </div>
 </div>
 </div>

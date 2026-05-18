@@ -1979,7 +1979,8 @@
 \]</div>
 <ul>
 <li>The interaction <span class="arithmatex">\(\tilde{J}_{ij}\)</span> follows the <span class="arithmatex">\(1/r^6\)</span> Rydberg scaling, normalized so that the maximum can be at most equal to <span class="arithmatex">\(1\)</span>: <span class="arithmatex">\(\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}\)</span> and <span class="arithmatex">\(\max(\tilde{J}_{ij}) = 1\)</span>.</li>
-<li><span class="arithmatex">\(\tilde{\Omega}(t)\)</span> and <span class="arithmatex">\(\tilde{\delta}(t)\)</span> are laser parameters (amplitude and detuning) and are measured relative to the maximum interaction strength, which is equal to <span class="arithmatex">\(1\)</span>.</li>
+<li><span class="arithmatex">\(\tilde{\Omega}(t)\)</span>, <span class="arithmatex">\(\tilde{\delta}(t)\)</span> and <span class="arithmatex">\(\phi\)</span> are laser parameters (amplitude, detuning and phase) and are measured relative to the maximum interaction strength, which is equal to <span class="arithmatex">\(1\)</span>.</li>
+<li><span class="arithmatex">\(\tilde{\Delta}(t)\)</span> defines an additional detuning that can be applied locally to each qubit as modulated by the set of weights <span class="arithmatex">\(\epsilon_i\)</span>.</li>
 <li>Times <span class="arithmatex">\(\tilde{t}\)</span> are measured relative to the interaction timescale.</li>
 </ul>
 <p>This means that programs are <strong>hardware-independent until compilation</strong>: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.</p>
@@ -2014,14 +2015,14 @@ The following table summarizes the parameters appearing in the Hamiltonian and t
 <td>any real value</td>
 </tr>
 <tr>
-<td><span class="arithmatex">\(\tilde{\Delta}(t)\)</span></td>
-<td>Local detuning amplitude</td>
-<td><span class="arithmatex">\(\leq 0\)</span></td>
-</tr>
-<tr>
 <td><span class="arithmatex">\(\phi(t)\)</span></td>
 <td>Global phase</td>
 <td><span class="arithmatex">\([0,\,2\pi]\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\tilde{\Delta}(t)\)</span></td>
+<td>Local detuning amplitude</td>
+<td><span class="arithmatex">\(\leq 0\)</span></td>
 </tr>
 <tr>
 <td><span class="arithmatex">\(\epsilon_i\)</span></td>
