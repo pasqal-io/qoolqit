@@ -177,7 +177,7 @@ class Interpolated(Waveform):
     """A waveform created from interpolation of a set of data points.
 
     Attributes:
-        duration: The waveform duration (in ns).
+        duration: The waveform duration.
         values: Values of the interpolation points. Must be a list of castable
             to float or a parametrized object.
         times: Fractions of the total duration (between 0 and 1),
