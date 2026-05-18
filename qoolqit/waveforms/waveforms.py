@@ -174,21 +174,36 @@ class PiecewiseLinear(CompositeWaveform):
 
 
 class Interpolated(Waveform):
-    """A waveform created from interpolation of a set of data points.
+    """A waveform created from shape-preserving interpolation of data points.
+
+    This class creates a smooth waveform by interpolating between specified data points
+    using PCHIP (Piecewise Cubic Hermite Interpolating Polynomial) interpolation. The
+    interpolation is guaranteed to preserve the shape of the data and stay within the
+    bounds defined by the input values, avoiding under/overshooting.
+    Uses scipy's PchipInterpolator for the interpolation.
 
     Attributes:
         duration: The waveform duration.
-        values: Values of the interpolation points. Must be a list of castable
-            to float or a parametrized object.
-        times: Fractions of the total duration (between 0 and 1),
-            indicating where to place each value on the time axis. Must be a list
-            of castable to float or a parametrized object. If not given, the
-            values are spread evenly throughout the full duration of the waveform.
+        values: Array-like sequence of waveform values at the interpolation points.
+            Must be convertible to float. These values define the amplitude of the
+            waveform at the corresponding time points.
+        times: Optional array-like sequence of fractional times in the range [0, 1]
+            indicating where to place each value on the time axis. Must have the same
+            length as `values`. If not provided, values are distributed evenly across
+            the waveform duration. Default is None.
 
-    Notes:
-        Uses scipy's PchipInterpolator for the interpolation.
-        PCHIP (Piecewise Cubic Hermite Interpolating Polynomial) is a shape-preserving interpolator
-        (C1 smooth), preserves monotonicity in the interpolation data and does not overshoot them.
+    Raises:
+    ValueError: If `times` contains values outside [0, 1] or if `times` and
+        `values` have different lengths.
+
+    Example:
+        >>> # Create a waveform with 4 points over 100ns
+        >>> values = [0.0, 1.0, 0.5, 0.0]
+        >>> wf = Interpolated(100, values)
+        >>>
+        >>> # Create with custom timing
+        >>> times = [0.0, 0.2, 0.8, 1.0]  # Non-uniform spacing
+        >>> wf = Interpolated(100, values, times)
     """
 
     def __init__(
@@ -197,13 +212,19 @@ class Interpolated(Waveform):
         values: ArrayLike,
         times: ArrayLike | None = None,
     ):
-        """Initializes an Interpolated waveform.
+        """Initialize an Interpolated waveform.
 
         Args:
-            duration: The waveform duration.
-            values: Values of the interpolation points.
-            times: Fractions of the total duration (between 0 and 1),
-                indicating where to place each value on the time axis.
+            duration: The total duration of the waveform. Must be positive.
+            values: Array-like sequence of waveform values at interpolation points.
+                Can be a list, tuple, numpy array, or any sequence convertible to float.
+            times: Optional array-like sequence of fractional times in [0, 1]. If provided,
+                must have the same length as `values`. If None, values are evenly spaced
+                across the duration. Default is None.
+
+        Raises:
+            ValueError: If any value in `times` is outside [0, 1], or if `times` and
+                `values` have different lengths.
         """
         super().__init__(duration)
         self._values = np.array(values, dtype=float)
