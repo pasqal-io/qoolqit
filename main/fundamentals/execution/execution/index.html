@@ -84,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#a-simple-quantum-program" class="md-skip">
+        <a href="#local-emulator" class="md-skip">
           Skip to content
         </a>
       
@@ -975,17 +975,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#a-simple-quantum-program" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A simple quantum program
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#local-emulator" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1013,6 +1002,17 @@
     <span class="md-ellipsis">
       
         Handling local results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emulation-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emulation configuration
       
     </span>
   </a>
@@ -1116,8 +1116,6 @@
       
         
       
-        
-      
     
     
     
@@ -1178,34 +1176,6 @@
     
   
     Adimensionalization
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../extended_usage/execution_config/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Emulation configuration
   
 
     
@@ -1947,17 +1917,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#a-simple-quantum-program" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A simple quantum program
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#local-emulator" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1985,6 +1944,17 @@
     <span class="md-ellipsis">
       
         Handling local results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emulation-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emulation configuration
       
     </span>
   </a>
@@ -2811,11 +2781,11 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <ul>
 <li>run a <code>QuantumProgram</code> on local/remote emulators and QPUs.</li>
 <li>inspect and extract the execution results</li>
-<li>choose between different emulator backends</li>
-<li>use a <code>connection</code> to run programs remotely through your cloud provider.</li>
+<li>choose between different emulator backends and configuration options.</li>
+<li>use a <code>connection</code> to run programs remotely through your provider.</li>
 <li>submit remote jobs, query their status and retrieve results</li>
 </ul>
-<p>As anticipated, a <code>QuantumProgram</code> can be run on multiple backends provided by Pasqal and external providers:</p>
+<p>As anticipated, a <code>QuantumProgram</code> can be run on multiple backends provided by <a href="https://docs.pasqal.com/">Pasqal</a>:</p>
 <ul>
 <li>locally installed emulators</li>
 <li>remote cloud emulators</li>
@@ -2824,7 +2794,18 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <p>Remote emulators and QPU <strong>require</strong> credentials to submit a job.
 More information on how to access a QPU through your favorite cloud provider, is available at <a href="https://www.pasqal.com/solutions/cloud/">Pasqal's website</a>.
 Later, we will briefly show how to authenticate and send a remote job.</p>
-<h2 id="a-simple-quantum-program">A simple quantum program<a class="anchor-link" href="#a-simple-quantum-program">¶</a></h2><p>Let us revisit the quantum program definition described before in the <a href="../quantum_program.ipynb#defining-a-quantum-program">Quantum programs</a> page.</p>
+<hr/>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Let us revisit the quantum program definition described before in the <a href="../quantum_program.ipynb#defining-a-quantum-program">Defining a quantum program</a> page.</p>
 </div>
 </div>
 </div>
@@ -2834,7 +2815,7 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [34]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-1">
@@ -2847,7 +2828,7 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">MockDevice</span><span class="p">,</span> <span class="n">QuantumProgram</span><span class="p">,</span> <span class="n">Ramp</span><span class="p">,</span> <span class="n">Register</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalogDevice</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">QuantumProgram</span><span class="p">,</span> <span class="n">Ramp</span><span class="p">,</span> <span class="n">Register</span>
 
 <span class="c1"># Create the register</span>
 <span class="n">register</span> <span class="o">=</span> <span class="n">Register</span><span class="o">.</span><span class="n">from_coordinates</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)])</span>
@@ -2866,11 +2847,10 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 <span class="c1"># Creating the program</span>
 <span class="n">program</span> <span class="o">=</span> <span class="n">QuantumProgram</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">drive</span><span class="p">)</span>
 
-<span class="c1"># Compiling the Program</span>
-<span class="n">device</span> <span class="o">=</span> <span class="n">MockDevice</span><span class="p">()</span>
-<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="c1"># Compiling the program to a device</span>
+<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">AnalogDevice</span><span class="p">())</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">from qoolqit import Constant, Drive, MockDevice, QuantumProgram, Ramp, Register
+<div class="clipboard-copy-txt" id="cell-1">from qoolqit import AnalogDevice, Constant, Drive, QuantumProgram, Ramp, Register
 
 # Create the register
 register = Register.from_coordinates([(0,1), (0,-1), (2,0)])
@@ -2889,9 +2869,8 @@ drive = Drive(amplitude = wf_amp, detuning = wf_det)
 # Creating the program
 program = QuantumProgram(register, drive)
 
-# Compiling the Program
-device = MockDevice()
-program.compile_to(device)</div>
+# Compiling the program to a device
+program.compile_to(device=AnalogDevice())</div>
 </div>
 </div>
 </div>
@@ -2904,7 +2883,7 @@ program.compile_to(device)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>In the following sections we will provide more details on local/remote emulations and on running on available QPUs.</p>
+<p>In the following sections we will provide more details about local/remote emulation and QPU execution of your program.</p>
 </div>
 </div>
 </div>
@@ -2928,7 +2907,7 @@ Emulating locally will only return completed jobs, as opposed to remote emulator
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [35]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
@@ -2964,10 +2943,11 @@ results = job.results()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>While the snippet above provides the basic way to run a quantum program, we will now discuss:</p>
+<p>While the snippet above provides the basic way to run a quantum program, we will now discuss how to:</p>
 <ul>
-<li>how to select different emulators backends.</li>
-<li>how to handle local results.</li>
+<li>select different emulator backends.</li>
+<li>get the results.</li>
+<li>configure emulation backends.</li>
 </ul>
 </div>
 </div>
@@ -2982,8 +2962,8 @@ results = job.results()</div>
 <h3 id="backend-types">Backend Types<a class="anchor-link" href="#backend-types">¶</a></h3><p>The <code>LocalEmulator</code> allows to emulate the program run on different backends provided by Pasqal:</p>
 <ul>
 <li><code>QutipBackendV2</code>: Based on Qutip, runs programs with up to ~12 qubits and return qutip objects in the results (default).</li>
-<li><code>SVBackend</code>: PyTorch based state vectors and sparse matrices emulator. Runs programs with up to ~25 qubits and return torch objects in the results. Requires installing the <code>emu-sv</code> package.</li>
-<li><code>MPSBackend</code>: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~80 qubits and return torch objects in the results. Requires installing the <code>emu-mps</code> package.</li>
+<li><code>SVBackend</code>: PyTorch based state vectors and sparse matrices emulator. Runs programs with up to ~25 qubits and return torch objects in the results. Requires installing the <code>emu-sv</code> package (see the <a href="https://docs.pasqal.com/emulationtools/emusv/">emu-sv documentation</a>)</li>
+<li><code>MPSBackend</code>: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~80 qubits and return torch objects in the results. Requires installing the <code>emu-mps</code> package (see the <a href="https://docs.pasqal.com/emulationtools/emumps/">emu-mps documentation</a>).</li>
 </ul>
 <p>To use a particular backend it is sufficient to specify it through the <code>backend_type</code> argument:</p>
 </div>
@@ -2995,7 +2975,7 @@ results = job.results()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [36]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
@@ -3040,7 +3020,7 @@ As an example, lets inspect the results we got in the previous run:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [37]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
@@ -3067,7 +3047,7 @@ results.get_result_tags()</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[37]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>['bitstrings']</pre>
 </div>
@@ -3092,7 +3072,7 @@ results.get_result_tags()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [38]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
@@ -3121,16 +3101,16 @@ final_bitstrings</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[38]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[18]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>Counter({'111': 807,
-         '110': 68,
-         '101': 61,
-         '011': 50,
-         '010': 6,
-         '100': 4,
-         '001': 3,
-         '000': 1})</pre>
+<pre>Counter({'111': 827,
+         '101': 60,
+         '011': 54,
+         '110': 42,
+         '010': 5,
+         '001': 5,
+         '000': 4,
+         '100': 3})</pre>
 </div>
 </div>
 </div>
@@ -3143,11 +3123,10 @@ final_bitstrings</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="remote-emulator">Remote Emulator<a class="anchor-link" href="#remote-emulator">¶</a></h2><p>Remote emulators run on cloud infrastructure, allowing you to simulate larger quantum systems without local computational constraints.
-As anticipated, for remote workflows <strong>credentials to create a connection are required</strong>.
-Here we will show how to create the specific handler of Pasqal Cloud services.
-Again, for more information about Pasqal Cloud and other providers, please refer to the <a href="https://www.pasqal.com/solutions/cloud/">Pasqal Cloud website</a>.</p>
-<p>Let's first initialize a connection. Without providing the actual credentials, we can only create an empty connection object, for displaying purposes only:</p>
+<h3 id="emulation-configuration">Emulation configuration<a class="anchor-link" href="#emulation-configuration">¶</a></h3><p>Here we discuss how to fully configure emulator backends to exploit all their possibilities.
+Notable examples include asking for specific observables, modifying the default evaluation times, emulating real hardware modulation effects, defining the initial state, setting noise models, etc.
+This is done through the <code>EmulationConfig</code> object, which can be used to configure all emulators.
+Once instantiated, the configuration can be then passed to the emulator at instantiation:</p>
 </div>
 </div>
 </div>
@@ -3157,10 +3136,193 @@ Again, for more information about Pasqal Cloud and other providers, please refer
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [39]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">BitStrings</span><span class="p">,</span> <span class="n">EmulationConfig</span><span class="p">,</span> <span class="n">LocalEmulator</span><span class="p">,</span> <span class="n">Occupation</span>
+
+<span class="c1"># observables to compute, occupation of the Rydberg state and bitstrings sample</span>
+<span class="n">observables</span> <span class="o">=</span> <span class="p">(</span><span class="n">Occupation</span><span class="p">(</span><span class="n">evaluation_times</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),</span> <span class="n">BitStrings</span><span class="p">(</span><span class="n">num_shots</span><span class="o">=</span><span class="mi">100</span><span class="p">))</span>
+<span class="n">emulation_config</span> <span class="o">=</span> <span class="n">EmulationConfig</span><span class="p">(</span>
+    <span class="n">observables</span><span class="o">=</span><span class="n">observables</span><span class="p">,</span>
+    <span class="n">with_modulation</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+<span class="c1"># emulator with a custom configuration</span>
+<span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">(</span><span class="n">emulation_config</span><span class="o">=</span><span class="n">emulation_config</span><span class="p">)</span>
+<span class="c1"># run the program with the new config</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-6">from qoolqit.execution import BitStrings, EmulationConfig, LocalEmulator, Occupation
+
+# observables to compute, occupation of the Rydberg state and bitstrings sample
+observables = (Occupation(evaluation_times=[0.1, 0.5, 1.0]), BitStrings(num_shots=100))
+emulation_config = EmulationConfig(
+    observables=observables,
+    with_modulation=True
+    )
+
+# emulator with a custom configuration
+emulator = LocalEmulator(emulation_config=emulation_config)
+# run the program with the new config
+job = emulator.run(program)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>As before, results can be inspected and queried specific observable result:</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [20]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># get the results</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">results</span><span class="p">()</span>
+
+<span class="c1"># get the result tags (this will include the observable names)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">get_result_tags</span><span class="p">())</span>
+
+<span class="c1"># get the result for the occupation observable at time 1.0 (final time)</span>
+<span class="n">results</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s2">"occupation"</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-7"># get the results
+results = job.results()
+
+# get the result tags (this will include the observable names)
+print(results.get_result_tags())
+
+# get the result for the occupation observable at time 1.0 (final time)
+results.get_result("occupation", time=1.0)</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>['occupation', 'bitstrings']
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>[0.9475510886440889, 0.9475510886440889, 0.9473207271168341]</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>The key parameters of <code>EmulationConfig</code> are:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>observables</code></td>
+<td>Sequence of observables to compute during emulation. The list of available observables is available <a href="https://docs.pasqal.com/pulser/apidoc/_autosummary/pulser.backend/">here</a>.</td>
+</tr>
+<tr>
+<td><code>default_evaluation_times</code></td>
+<td>Default relative times (between 0 and 1) at which observables are evaluated, or <code>"Full"</code> for every emulation step. Defaults to <code>(1.0,)</code> (end of simulation only).</td>
+</tr>
+<tr>
+<td><code>with_modulation</code></td>
+<td>Whether to emulate finite-bandwidth hardware modulation of the drive.</td>
+</tr>
+<tr>
+<td><code>initial_state</code></td>
+<td>Custom initial state (defaults to all qubits in the ground state).</td>
+</tr>
+<tr>
+<td><code>noise_model</code></td>
+<td>Optional noise model to apply during emulation.</td>
+</tr>
+</tbody>
+</table>
+<p>For a more detailed description of all configuration options, please refer to the
+<a href="https://docs.pasqal.com/pulser/apidoc/_autosummary/pulser.backend.EmulatorConfig/">Pulser documentation</a>.</p>
+<p>The <code>EmulationConfig</code> object is designed to be easily extensible, allowing for the addition of new configuration parameters or specific backend-specific configurations, respectively <code>QutipConfig</code>, <code>SVConfig</code> and <code>MPSConfig</code>. They should be used by pairing them with the corresponding backend type
+and imported from their respective packages, namely <code>pulser-simulation</code>, <code>emu-sv</code> and <code>emu-mps</code>.</p>
+<p>As we will see in the next section, <code>EmulationConfig</code> can also be used to configure the remote emulators.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="remote-emulator">Remote Emulator<a class="anchor-link" href="#remote-emulator">¶</a></h2><p>Remote emulators run on cloud infrastructure, potentially allowing to simulate larger quantum systems.
+As anticipated, for remote workflows <strong>credentials to create a connection are required</strong>.
+Here we will show how to create the specific handler of Pasqal Cloud services.
+Again, for more information about Pasqal Cloud and other providers, please refer to the <a href="https://www.pasqal.com/solutions/cloud/">Pasqal Cloud website</a>.</p>
+<p>Let's first initialize a connection. Without providing actual credentials, we can only create an empty object, for displaying purposes only:</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3179,7 +3341,7 @@ Again, for more information about Pasqal Cloud and other providers, please refer
 <span class="c1"># )</span>
 <span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloud</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">from pulser_pasqal import PasqalCloud
+<div class="clipboard-copy-txt" id="cell-8">from pulser_pasqal import PasqalCloud
 
 # connection = PasqalCloud(
 #     username=USERNAME,  # Your username or email address for the Pasqal Cloud Platform
@@ -3199,7 +3361,7 @@ connection = PasqalCloud()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>To use such connection, and to send jobs to the cloud, we first need to initialize a remote emulator:</p>
+<p>To use such connection to submit jobs, we first need to initialize a remote emulator:</p>
 </div>
 </div>
 </div>
@@ -3209,10 +3371,10 @@ connection = PasqalCloud()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [40]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3226,7 +3388,7 @@ connection = PasqalCloud()</div>
 
 <span class="n">remote_emulator</span> <span class="o">=</span> <span class="n">RemoteEmulator</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7">from qoolqit.execution import RemoteEmulator
+<div class="clipboard-copy-txt" id="cell-9">from qoolqit.execution import RemoteEmulator
 
 remote_emulator = RemoteEmulator(connection=connection)</div>
 </div>
@@ -3241,13 +3403,15 @@ remote_emulator = RemoteEmulator(connection=connection)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>The <code>RemoteEmulator</code> supports the equivalent remote version of the above-mentioned backends, respectively <code>EmuFreeBackendV2</code> (default), <code>EmuSVBackend</code> and <code>EmuMPSBackend</code>.
+Depending on your provider, however, some emulator backend might not be available to use.</p>
 <p>As before, also <code>RemoteEmulator</code> can be instantiated with:</p>
 <ul>
 <li><code>backend_type</code>: remote counterpart of local backends, namely <code>EmuFreeBackendV2</code> (default), <code>EmuSVBackend</code>, <code>EmuMPSBackend</code>.</li>
-<li><code>emulation_config</code>: same as before — see <a href="../../extended_usage/execution_config.md">Emulation configuration</a> for details.</li>
-<li><code>num_shots</code>: same as before.</li>
+<li><code>emulation_config</code>: same as local emulators. See <a href="#emulation-configuration">Emulation configuration</a>.</li>
+<li><code>num_shots</code>: same as local emulators.</li>
 </ul>
-<p>As an example, below, we specify to emulate the program with the <code>EmuMPSBackend</code> and a custom <code>EmulationConfig</code>:</p>
+<p>As an example, below, we specify to emulate the program with the <code>EmuFreeBackendV2</code> and a custom <code>EmulationConfig</code>:</p>
 </div>
 </div>
 </div>
@@ -3257,10 +3421,10 @@ remote_emulator = RemoteEmulator(connection=connection)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [41]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3284,13 +3448,13 @@ remote_emulator = RemoteEmulator(connection=connection)</div>
 
 <span class="c1"># initialize the remote emulator with the custom configuration and num_shots</span>
 <span class="n">remote_emulator</span> <span class="o">=</span> <span class="n">RemoteEmulator</span><span class="p">(</span>
-    <span class="n">backend_type</span><span class="o">=</span><span class="n">BackendType</span><span class="o">.</span><span class="n">EmuMPSBackend</span><span class="p">,</span>
+    <span class="n">backend_type</span><span class="o">=</span><span class="n">BackendType</span><span class="o">.</span><span class="n">EmuFreeBackendV2</span><span class="p">,</span>
     <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
     <span class="n">emulation_config</span><span class="o">=</span><span class="n">emulation_config</span><span class="p">,</span>
     <span class="n">num_shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8">from qoolqit.execution import (
+<div class="clipboard-copy-txt" id="cell-10">from qoolqit.execution import (
     BackendType,
     EmulationConfig,
     Occupation,
@@ -3304,7 +3468,7 @@ emulation_config = EmulationConfig(observables=observables, with_modulation=True
 
 # initialize the remote emulator with the custom configuration and num_shots
 remote_emulator = RemoteEmulator(
-    backend_type=BackendType.EmuMPSBackend,
+    backend_type=BackendType.EmuFreeBackendV2,
     connection=connection,
     emulation_config=emulation_config,
     num_shots=1000,
@@ -3375,10 +3539,10 @@ It is good practice to always check the status of the job before retrieving resu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [42]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [24]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3390,7 +3554,7 @@ It is good practice to always check the status of the job before retrieving resu
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9">connection.fetch_available_devices()</div>
+<div class="clipboard-copy-txt" id="cell-11">connection.fetch_available_devices()</div>
 </div>
 </div>
 </div>
@@ -3400,7 +3564,7 @@ It is good practice to always check the status of the job before retrieving resu
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[42]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[24]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>{'FRESNEL_CAN1': FRESNEL_CAN1, 'FRESNEL': FRESNEL}</pre>
 </div>
@@ -3426,10 +3590,10 @@ It is good practice to always check the status of the job before retrieving resu
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [43]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [25]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3444,7 +3608,7 @@ It is good practice to always check the status of the job before retrieving resu
 <span class="n">device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s2">"FRESNEL"</span><span class="p">)</span>
 <span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10">from qoolqit.devices import Device
+<div class="clipboard-copy-txt" id="cell-12">from qoolqit.devices import Device
 
 device = Device.from_connection(connection, "FRESNEL")
 program.compile_to(device=device)</div>
@@ -3470,10 +3634,10 @@ program.compile_to(device=device)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [44]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [26]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3487,7 +3651,7 @@ program.compile_to(device=device)</div>
 
 <span class="n">qpu</span> <span class="o">=</span> <span class="n">QPU</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span> <span class="n">num_shots</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11">from qoolqit.execution import QPU
+<div class="clipboard-copy-txt" id="cell-13">from qoolqit.execution import QPU
 
 qpu = QPU(connection=connection, num_shots=500)</div>
 </div>
@@ -3541,7 +3705,7 @@ qpu = QPU(connection=connection, num_shots=500)</div>
 <li>Use remote emulators for larger simulations beyond local capabilities</li>
 <li>Use QPUs for real quantum experiments and final validation</li>
 </ul>
-<p>For more detailed configuration options for emulators, see the <a href="../../extended_usage/execution_config.md">Extended Usage</a> documentation.</p>
+<p>For more detailed configuration options for emulators, see the <a href="../../extended_usage/execution_config.ipynb">Extended Usage - Emulation Configuration</a> section of this documentation.</p>
 </div>
 </div>
 </div>
