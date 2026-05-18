@@ -154,11 +154,10 @@ def test_piecewise(n_pieces: int) -> None:
     assert wf.n_waveforms == n_pieces
 
 
-@pytest.mark.parametrize("interpolator", ["PchipInterpolator", "interp1d"])
-def test_interpolated(interpolator: str) -> None:
+def test_interpolated() -> None:
     values = [-2.1, 5.3, 3.12, 1.04]
     duration = 100
-    interpolated = Interpolated(duration, values=values, interpolator=interpolator)
+    interpolated = Interpolated(duration, values=values)
 
     expected_fractional_times = np.linspace(0, 1, len(values))
     assert np.allclose(interpolated._times, expected_fractional_times)
@@ -168,12 +167,11 @@ def test_interpolated(interpolator: str) -> None:
     assert np.allclose(interpolated_values, values)
 
 
-@pytest.mark.parametrize("interpolator", ["PchipInterpolator", "interp1d"])
-def test_interpolated_with_times(interpolator: str) -> None:
+def test_interpolated_with_times() -> None:
     values = [0.1, 0.3, -0.5, 1.0]
     times = [0.0, 0.2, 0.8, 1.0]
     duration = 100
-    interpolated = Interpolated(duration, values=values, times=times, interpolator=interpolator)
+    interpolated = Interpolated(duration, values=values, times=times)
 
     waveform_times = duration * np.array(times, dtype=float)
     interpolated_values = interpolated(waveform_times)
