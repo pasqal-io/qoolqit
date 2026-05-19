@@ -178,8 +178,9 @@ class Interpolated(Waveform):
 
     This class creates a smooth waveform by interpolating between specified data points
     using PCHIP (Piecewise Cubic Hermite Interpolating Polynomial) interpolation. The
-    interpolation is guaranteed to preserve the shape of the data and stay within the
-    bounds defined by the input values, avoiding under/overshooting.
+    interpolating curve preserves the shape of the input data:
+    bounds (avoiding under/overshooting), monotonicity, and convexity.
+
     Uses scipy's PchipInterpolator for the interpolation.
 
     Attributes:
