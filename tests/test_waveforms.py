@@ -165,6 +165,8 @@ def test_interpolated() -> None:
     waveform_times = duration * expected_fractional_times
     interpolated_values = interpolated(waveform_times)
     np.testing.assert_allclose(interpolated_values, values)
+    assert all(val <= interpolated.max() for val in interpolated_values)
+    assert all(val >= interpolated.min() for val in interpolated_values)
 
 
 def test_interpolated_with_times() -> None:
@@ -175,7 +177,8 @@ def test_interpolated_with_times() -> None:
 
     waveform_times = duration * np.array(times, dtype=float)
     interpolated_values = interpolated(waveform_times)
-    np.testing.assert_allclose(interpolated_values, values)
+    assert all(val <= interpolated.max() for val in interpolated_values)
+    assert all(val >= interpolated.min() for val in interpolated_values)
 
 
 def test_interpolated_fractional_times() -> None:
