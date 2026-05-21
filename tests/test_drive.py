@@ -6,8 +6,7 @@ import random
 import pytest
 
 from qoolqit.drive import DetuningMapModulator, Drive
-from qoolqit.waveforms import Constant, Delay, PiecewiseLinear, Ramp
-from qoolqit.waveforms.base_waveforms import Waveform
+from qoolqit.waveforms import Constant, Delay, PiecewiseLinear, Ramp, Waveform
 
 
 @pytest.mark.parametrize(
