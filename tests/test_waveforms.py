@@ -6,6 +6,7 @@ import numpy as np
 import pulser
 import pytest
 from numpy.typing import ArrayLike
+from qoolqit.waveforms.utils import round_to_sum
 from scipy.integrate import quad
 
 from qoolqit import Blackman
@@ -19,7 +20,6 @@ from qoolqit.waveforms import (
     Sin,
     Waveform,
 )
-from qoolqit.waveforms.utils import round_to_sum
 
 
 def test_delay() -> None:

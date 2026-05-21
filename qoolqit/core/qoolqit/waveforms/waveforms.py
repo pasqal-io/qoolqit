@@ -9,7 +9,7 @@ from numpy.typing import ArrayLike
 from pulser.parametrized import ParamObj
 from scipy import interpolate
 
-from qoolqit.waveforms.base_waveforms import CompositeWaveform, Waveform
+from .base_waveforms import CompositeWaveform, Waveform
 
 
 class Delay(Waveform):

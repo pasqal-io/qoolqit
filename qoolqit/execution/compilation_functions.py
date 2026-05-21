@@ -10,10 +10,10 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.devices import Device
-from qoolqit.drive import DetuningMapModulator, Drive, Waveform
+from qoolqit.drive import DetuningMapModulator, Drive
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
-from qoolqit.waveforms import Interpolated
+from qoolqit.waveforms import Interpolated, Waveform
 
 
 class CompilerProfile(Enum):

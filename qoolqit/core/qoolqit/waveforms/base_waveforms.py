@@ -10,7 +10,7 @@ from matplotlib.figure import Figure
 from pulser.parametrized import ParamObj
 from pulser.waveforms import Waveform as PulserWaveform
 
-from qoolqit.waveforms.utils import round_to_sum
+from .utils import round_to_sum
 
 # Default number of points used to resolve the full waveform duration
 N_POINTS = 500
