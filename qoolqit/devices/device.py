@@ -233,6 +233,27 @@ class AnalogDevice(Device):
         super().__init__(pulser_device=pulser.AnalogDevice)
 
 
+class AnalogDeviceWithDMM(Device):
+    """A realistic device for analog sequence execution."""
+
+    def __init__(self) -> None:
+        from dataclasses import replace
+
+        from numpy import pi
+        from pulser.channels.dmm import DMM
+
+        dmm_channel = DMM(
+            clock_period=4,
+            min_duration=16,
+            max_duration=6000,
+            mod_bandwidth=8,
+            bottom_detuning=-2 * pi * 20,
+            total_bottom_detuning=-2 * pi * 20,
+        )
+        device = replace(pulser.AnalogDevice.to_virtual(), dmm_objects=(dmm_channel,))
+        super().__init__(pulser_device=device)
+
+
 class DigitalAnalogDevice(Device):
     """A device with digital and analog capabilities."""
 
