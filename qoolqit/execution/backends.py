@@ -1,3 +1,5 @@
+"""Backends to run quantum programs on local/remote emulators and QPUs."""
+
 from __future__ import annotations
 
 from pulser.backend import BackendConfig, BitStrings, Results

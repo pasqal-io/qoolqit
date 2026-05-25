@@ -1,4 +1,4 @@
-"""QoolQit module to execute quantum programs on QPUs or local/remote emulators."""
+"""Execute quantum programs on QPUs or local/remote emulators."""
 
 from __future__ import annotations
 
@@ -19,11 +19,9 @@ from pulser.backend import (
 from pulser.backend.remote import RemoteResults
 
 from qoolqit.execution.backends import QPU, LocalEmulator, RemoteEmulator
-from qoolqit.execution.job import JobStatus, get_batch_id, retrieve_remote_job
-from qoolqit.execution.sequence_compiler import SequenceCompiler
+from qoolqit.execution.job import Job, JobStatus, get_batch_id, retrieve_remote_job
 
 __all__ = [
-    "SequenceCompiler",
     "LocalEmulator",
     "RemoteEmulator",
     "QPU",
@@ -40,6 +38,7 @@ __all__ = [
     "Results",
     "RemoteResults",
     "BackendType",
+    "Job",
     "JobStatus",
     "get_batch_id",
     "retrieve_remote_job",
