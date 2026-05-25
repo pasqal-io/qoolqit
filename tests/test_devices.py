@@ -110,11 +110,14 @@ def test_default_device_specs() -> None:
     }
     assert digital_analog_device.specs == expected_digital_analog_specs
 
+
 @pytest.mark.parametrize("device", [AnalogDeviceWithDMM(), DigitalAnalogDevice()])
 def test_devices_with_dmm(device: Device) -> None:
     pulser_device = device._device
-    dmm_channel_ids = tuple(pulser_device.dmm_channels.keys())    
+    dmm_channel_ids = tuple(pulser_device.dmm_channels.keys())
     assert dmm_channel_ids == ("dmm_0",)
+
+
 def test_device_properties() -> None:
     mock_device = MockDevice()
     assert mock_device.name == "MockDevice"
