@@ -6,13 +6,14 @@ from pulser.sequence import store_package_version_metadata
 
 from qoolqit.devices import (
     AnalogDevice,
+    AnalogDeviceWithDMM,
     Device,
     DigitalAnalogDevice,
     MockDevice,
     available_default_devices,
 )
 from qoolqit.drive import Drive
-from qoolqit.execution import SequenceCompiler
+from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.graphs import DataGraph
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
@@ -33,6 +34,7 @@ __all__ = [
     "SequenceCompiler",
     "available_default_devices",
     "AnalogDevice",
+    "AnalogDeviceWithDMM",
     "DigitalAnalogDevice",
     "MockDevice",
     "Device",
