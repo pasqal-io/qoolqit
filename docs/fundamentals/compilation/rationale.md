@@ -1,28 +1,22 @@
-In this page, you will learn how to:
+In this page, you will learn:
 
-- create built-in QoolQit devices,
-- fetch available hardware devices from a connection,
-- build a QoolQit device from a Pulser device,
-- understand what compilation does in QoolQit,
-- compile a dimensionless program to a target device,
-- inspect the compiled Pulser `Sequence`,
-- visualize both the original program and its compiled version.
+- Meaning of the compilation step,
+- Role of adimensional units in QoolQit,
+- Compilation strategies: default and working point (in progress),
+- Hardware effects,
 
----
 
 ## Compiling a quantum program
 
-A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as
-dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is
-measured in units of a reference interaction energy, that we call $J_0$. This device-agnostic formulation
-means that the same program can be compiled and run on any compatible hardware.
+A QoolQit program is written in dimensionless units.
+Qubit positions are expressed as dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is measured in units of a reference interaction energy, that we call $J_{max}$.
+This device-agnostic formulation means that the same program can be compiled and run on any compatible hardware.
 
-Compilation is the step that converts these dimensionless quantities into concrete physical values
-that a real Pulser device can execute. Concretely, it:
+Compilation is then the step that converts these dimensionless quantities into concrete physical values, and where a QoolQit program is translated into a lower-level code that can be executed on real QPU. Concretely, it:
 
-1. Selects a physical reference scale $J_0$ that is consistent with the device's hardware constraints.
-2. Converts all dimensionless times, energies, and distances into their physical counterparts.
-3. Builds and returns a Pulser `Sequence` ready for emulation or execution on a QPU.
+1. Converts all dimensionless times, energies, and distances into their physical counterparts.
+2. Rescale the program to met device's hardware constraints.
+3. Builds a Pulser `Sequence`, i.e. a lower level of instructions to execute on the QPU.
 
 The conversion rules are derived from the requirement that the dimensionless Hamiltonian
 $\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ generate the same unitary evolution.
@@ -30,19 +24,21 @@ A full derivation is given in the [Adimensionalization and Compilation](../../ex
 page. The key identities are:
 
 $$
-r_{ij} = \left(\frac{C_6}{J_0}\right)^{1/6}	\tilde{r}_{ij},
+r_{ij} = \left(\frac{C_6}{J_{max}}\right)^{1/6}	\tilde{r}_{ij},
 \qquad
-\Omega(t) = J_0\,	\tilde{\Omega}(	\tilde{t}),
+\Omega(t) = J_{max}\,	\tilde{\Omega}(	\tilde{t}),
 \qquad
 \delta(t) = J_0\,	\tilde{\delta}(	\tilde{t}),
 \qquad
-t = \frac{	\tilde{t}}{J_0}.
+t = \frac{	\tilde{t}}{J_{max}}.
 $$
 
-Choosing $J_0$ therefore simultaneously sets the physical amplitude scale, the detuning scale,
+Choosing $J_{max}$ therefore simultaneously sets the physical amplitude scale, the detuning scale,
 the physical runtime, and the physical atom spacings.
 
----
+Finally, the compilation will internally store the set of instructions needed for QPU execution as a Pulser `Sequence`.
+Pulser is an open-source library that provides tools to design and run pulse sequences that act on programmable arrays of neutral atoms.
+More information about the scope of the library are available at the [Pasqal's documentation portal](https://docs.pasqal.com/pulser/).
 
 ### Default compilation
 
