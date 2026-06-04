@@ -1,27 +1,25 @@
 In this page, you will learn:
 
-- Meaning of the compilation step,
-- Role of adimensional units in QoolQit,
+- What the compilation step does and why it's important,
+- How dimensionless units work in QoolQit,
 - Compilation strategies: default and working point (in progress),
 - Hardware effects,
 
 
 ## Compiling a quantum program
 
-A QoolQit program is written in dimensionless units.
-Qubit positions are expressed as dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is measured in units of a reference interaction energy, that we call $J_{max}$.
-This device-agnostic formulation means that the same program can be compiled and run on any compatible hardware.
+QoolQit programs are written using dimensionless units, making them hardware-independent.
+Qubit positions use dimensionless coordinates, waveforms have dimensionless amplitudes and detunings, and time is measured in units of a reference interaction energy called $J_{max}$.
+This device-agnostic approach allows the same program to be compiled and executed on any compatible quantum hardware.
 
-Compilation is then the step that converts these dimensionless quantities into concrete physical values, and where a QoolQit program is translated into a lower-level code that can be executed on real QPU. Concretely, it:
+Compilation transforms these dimensionless quantities into concrete physical values and translates the QoolQit program into low-level instructions for real quantum processing units (QPUs). The compilation process:
 
-1. Converts all dimensionless times, energies, and distances into their physical counterparts.
-2. Rescale the program to met device's hardware constraints.
-3. Builds a Pulser `Sequence`, i.e. a lower level of instructions to execute on the QPU.
+1. Converts all dimensionless times, energies, and distances into their physical equivalents.
+2. Rescales the program to satisfy device-specific hardware constraints.
+3. Generates a Pulser `Sequence` containing the low-level instructions for QPU execution.
 
-The conversion rules are derived from the requirement that the dimensionless Hamiltonian
-$\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ generate the same unitary evolution.
-A full derivation is given in the [Adimensionalization and Compilation](../../extended_usage/adimensionalization.md)
-page. The key identities are:
+The conversion rules ensure that the dimensionless Hamiltonian $\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ produce identical unitary evolution.
+For a complete mathematical derivation, see the [Adimensionalization and Compilation](../../extended_usage/adimensionalization.md) page. The essential conversion relationships are:
 
 $$
 r_{ij} = \left(\frac{C_6}{J_{max}}\right)^{1/6}	\tilde{r}_{ij},
@@ -33,12 +31,11 @@ r_{ij} = \left(\frac{C_6}{J_{max}}\right)^{1/6}	\tilde{r}_{ij},
 t = \frac{	\tilde{t}}{J_{max}}.
 $$
 
-Choosing $J_{max}$ therefore simultaneously sets the physical amplitude scale, the detuning scale,
-the physical runtime, and the physical atom spacings.
+Setting $J_{max}$ determines the physical amplitude scale, detuning scale, runtime, and atom spacings all at once.
 
-Finally, the compilation will internally store the set of instructions needed for QPU execution as a Pulser `Sequence`.
-Pulser is an open-source library that provides tools to design and run pulse sequences that act on programmable arrays of neutral atoms.
-More information about the scope of the library are available at the [Pasqal's documentation portal](https://docs.pasqal.com/pulser/).
+The compilation output is stored internally as a Pulser `Sequence`, which contains the instructions for QPU execution.
+Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
+For more details about Pulser's scope and capabilities, visit [Pasqal's documentation portal](https://docs.pasqal.com/pulser/).
 
 ### Default compilation
 
@@ -55,10 +52,10 @@ QoolQit always picks the **largest $J_0$ consistent with these hardware constrai
 larger reference scale realizes the same dimensionless program with a higher physical amplitude and a
 shorter physical runtime — the most efficient use of the hardware.
 
-Which constraint becomes binding first depends on the dimensionless ratio
+The determining factor is which constraint becomes active first, based on comparing the dimensionless program ratio,
 
 $$
-\frac{\tilde{\Omega}_{\max}}{\tilde{J}_{\max}} = \tilde{\Omega}_{\max} \cdot \tilde{r}_{\min}^6
+\frac{\tilde{\Omega}_{\max}}{\tilde{J}_{\max}} = \tilde{\Omega}_{\max} \cdot \tilde{r}_{\min}^6,
 $$
 
 which characterizes the program, compared with the corresponding device ratio
@@ -67,7 +64,7 @@ $$
 \frac{\Omega_{\max}}{J_{\max}} = \frac{\Omega_{\max} \cdot r_{\min}^6}{C_6}.
 $$
 
-These two example are shown in the following figure
+The following figure illustrates both scenarios:
 
 ![Compilation diagram](../../extras/assets/compilation_rationale.svg)
 
@@ -87,3 +84,6 @@ In this regime the compiled register uses the smallest physical spacing the devi
 
 ### Working point compilation
 In progress...
+
+
+## Hardware effects
