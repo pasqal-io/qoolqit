@@ -19,7 +19,7 @@ Compilation transforms these dimensionless quantities into concrete physical val
 3. Generates a Pulser `Sequence` containing the low-level instructions for QPU execution.
 
 The conversion rules ensure that the dimensionless Hamiltonian $\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ produce identical unitary evolution.
-For a complete mathematical derivation, see the [Adimensionalization and Compilation](../../extended_usage/adimensionalization.md) page. 
+For a complete mathematical derivation, see the [Adimensionalization and Compilation](../../extended_usage/adimensionalization.md) page.
 
 The essential conversion relationships are:
 
