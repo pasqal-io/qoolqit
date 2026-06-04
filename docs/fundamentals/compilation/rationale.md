@@ -87,3 +87,7 @@ In progress...
 
 
 ## Hardware effects
+
+After compilation, the physical device may not execute the exact input waveform drawn in the program. Hardware channels have finite modulation bandwidth, so amplitudes, detunings, and phases can be smoothed, stretched, or merged when pulses are too short or too close together.
+
+When this matters, inspect the compiled Pulser sequence output and run emulator checks with output modulation enabled. See Pulser's Output Modulation & EOM Mode guide for the detailed behavior and examples.
