@@ -1,9 +1,9 @@
 In this page, you will learn:
 
-- What the compilation step does and why it's important,
-- How dimensionless units work in QoolQit,
-- Compilation strategies: default and working point (in progress),
-- Hardware effects,
+- What the compilation step does and why it's important
+- How dimensionless units work in QoolQit
+- Compilation strategies: default and working point (in progress)
+- Hardware modulation and noise
 
 
 ## Compiling a quantum program
@@ -86,8 +86,19 @@ In this regime the compiled register uses the smallest physical spacing the devi
 In progress...
 
 
+
 ## Hardware effects
 
-After compilation, the physical device may not execute the exact input waveform drawn in the program. Hardware channels have finite modulation bandwidth, so amplitudes, detunings, and phases can be smoothed, stretched, or merged when pulses are too short or too close together.
+Real quantum hardware introduces deviations between the ideal compiled program and its actual execution. These effects can be categorized into two main classes: hardware modulation and noise sources.
 
-When this matters, inspect the compiled Pulser sequence output and run emulator checks with output modulation enabled. See Pulser's Output Modulation & EOM Mode guide for the detailed behavior and examples.
+Importantly, in both cases, these effects can be included by configuring emulators, as detailed in the [Execution](../execution/execution.ipynb) page of this documentation.
+
+### Hardware modulation
+**Hardware modulation** arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions) the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
+The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in [Devices and Compilation](./device_and_compilation.ipynb). Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag `with_hardware_modulation=true`, as described in [Execution](../execution/execution.ipynb).
+
+
+### Noise
+**Noise sources** encompass various forms of environmental and systematic errors that introduce unwanted fluctuations or systematic shifts in the quantum system parameters during execution. As before, to include noise sources in the emulation of a program, emulators must be configured with the flag `noise_model`, as described in [Execution](../execution/execution.ipynb).
+
+Finally, for more detailed information on [hardware modulation](https://docs.pasqal.com/pulser/tutorials/output_mod_eom/) and [noise sources](https://docs.pasqal.com/pulser/noise_model/), consult the comprehensive discussions available in the Pulser documentation.
