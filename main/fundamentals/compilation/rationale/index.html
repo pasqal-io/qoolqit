@@ -923,6 +923,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#hardware-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware effects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hardware effects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardware-modulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware modulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#noise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Noise
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1885,6 +1924,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#hardware-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware effects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hardware effects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardware-modulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware modulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#noise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Noise
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1907,45 +1985,39 @@
 
   <h1>Compiling a Quantum Program</h1>
 
-<p>In this page, you will learn how to:</p>
+<p>In this page, you will learn:</p>
 <ul>
-<li>create built-in QoolQit devices,</li>
-<li>fetch available hardware devices from a connection,</li>
-<li>build a QoolQit device from a Pulser device,</li>
-<li>understand what compilation does in QoolQit,</li>
-<li>compile a dimensionless program to a target device,</li>
-<li>inspect the compiled Pulser <code>Sequence</code>,</li>
-<li>visualize both the original program and its compiled version.</li>
+<li>What the compilation step does and why it's important</li>
+<li>How dimensionless units work in QoolQit</li>
+<li>Compilation strategies: default and working point (in progress)</li>
+<li>Hardware modulation and noise</li>
 </ul>
-<hr />
 <h2 id="compiling-a-quantum-program">Compiling a quantum program</h2>
-<p>A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as
-dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is
-measured in units of a reference interaction energy, that we call <span class="arithmatex">\(J_0\)</span>. This device-agnostic formulation
-means that the same program can be compiled and run on any compatible hardware.</p>
-<p>Compilation is the step that converts these dimensionless quantities into concrete physical values
-that a real Pulser device can execute. Concretely, it:</p>
+<p>QoolQit programs are written using dimensionless units, making them hardware-independent.
+Qubit positions use dimensionless coordinates, waveforms have dimensionless amplitudes and detunings, and time is measured in units of a reference interaction energy called <span class="arithmatex">\(J_{max}\)</span>.
+This device-agnostic approach allows the same program to be compiled and executed on any compatible quantum hardware.</p>
+<p>Compilation transforms these dimensionless quantities into concrete physical values and translates the QoolQit program into low-level instructions for real quantum processing units (QPUs). The compilation process:</p>
 <ol>
-<li>Selects a physical reference scale <span class="arithmatex">\(J_0\)</span> that is consistent with the device's hardware constraints.</li>
-<li>Converts all dimensionless times, energies, and distances into their physical counterparts.</li>
-<li>Builds and returns a Pulser <code>Sequence</code> ready for emulation or execution on a QPU.</li>
+<li>Converts all dimensionless times, energies, and distances into their physical equivalents.</li>
+<li>Rescales the program to satisfy device-specific hardware constraints.</li>
+<li>Generates a Pulser <code>Sequence</code> containing the low-level instructions for QPU execution.</li>
 </ol>
-<p>The conversion rules are derived from the requirement that the dimensionless Hamiltonian
-<span class="arithmatex">\(\tilde{H}(\tilde{t})\)</span> and the physical Hamiltonian <span class="arithmatex">\(H(t)\)</span> generate the same unitary evolution.
-A full derivation is given in the <a href="../../../extended_usage/adimensionalization/">Adimensionalization and Compilation</a>
-page. The key identities are:</p>
+<p>The conversion rules ensure that the dimensionless Hamiltonian <span class="arithmatex">\(\tilde{H}(\tilde{t})\)</span> and the physical Hamiltonian <span class="arithmatex">\(H(t)\)</span> produce identical unitary evolution.
+For a complete mathematical derivation, see the <a href="../../../extended_usage/adimensionalization/">Adimensionalization and Compilation</a> page.</p>
+<p>The essential conversion relationships are:</p>
 <div class="arithmatex">\[
-r_{ij} = \left(\frac{C_6}{J_0}\right)^{1/6} \tilde{r}_{ij},
+r_{ij} = \left(\frac{C_6}{J_{max}}\right)^{1/6} \tilde{r}_{ij},
 \qquad
-\Omega(t) = J_0\,   \tilde{\Omega}( \tilde{t}),
+\Omega(t) = J_{max}\,   \tilde{\Omega}( \tilde{t}),
 \qquad
 \delta(t) = J_0\,   \tilde{\delta}( \tilde{t}),
 \qquad
-t = \frac{  \tilde{t}}{J_0}.
+t = \frac{  \tilde{t}}{J_{max}}.
 \]</div>
-<p>Choosing <span class="arithmatex">\(J_0\)</span> therefore simultaneously sets the physical amplitude scale, the detuning scale,
-the physical runtime, and the physical atom spacings.</p>
-<hr />
+<p>Setting <span class="arithmatex">\(J_{max}\)</span> determines the physical amplitude scale, detuning scale, runtime, and atom spacings all at once.</p>
+<p>The compilation output is stored internally as a Pulser <code>Sequence</code>, which contains the instructions for QPU execution.
+Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
+For more details about Pulser's scope and capabilities, visit <a href="https://docs.pasqal.com/pulser/">Pasqal's documentation portal</a>.</p>
 <h3 id="default-compilation">Default compilation</h3>
 <p>A device imposes hardware constraints on the compiled program. The two most important ones for
 compilation are:</p>
@@ -1959,15 +2031,15 @@ compilation are:</p>
 <p>QoolQit always picks the <strong>largest <span class="arithmatex">\(J_0\)</span> consistent with these hardware constraints</strong>, because a
 larger reference scale realizes the same dimensionless program with a higher physical amplitude and a
 shorter physical runtime — the most efficient use of the hardware.</p>
-<p>Which constraint becomes binding first depends on the dimensionless ratio</p>
+<p>The determining factor is which constraint becomes active first, based on comparing the dimensionless program ratio,</p>
 <div class="arithmatex">\[
-\frac{\tilde{\Omega}_{\max}}{\tilde{J}_{\max}} = \tilde{\Omega}_{\max} \cdot \tilde{r}_{\min}^6
+\frac{\tilde{\Omega}_{\max}}{\tilde{J}_{\max}} = \tilde{\Omega}_{\max} \cdot \tilde{r}_{\min}^6,
 \]</div>
 <p>which characterizes the program, compared with the corresponding device ratio</p>
 <div class="arithmatex">\[
 \frac{\Omega_{\max}}{J_{\max}} = \frac{\Omega_{\max} \cdot r_{\min}^6}{C_6}.
 \]</div>
-<p>These two example are shown in the following figure</p>
+<p>The following figure illustrates both scenarios:</p>
 <p><img alt="Compilation diagram" src="../../../extras/assets/compilation_rationale.svg" /></p>
 <p>The users works by default at <span class="arithmatex">\(\tilde{J}=1.0\)</span>. When the program's energy ratio exceeds the device's energy ratio, the drive amplitude bound is reached first (blue line). The largest valid <span class="arithmatex">\(J_0\)</span> is then obtained by <strong>rescaling the amplitude limit</strong> to the maximum allowed value (as denoted by the arrow).</p>
 <p>In this regime the compiled program runs at <strong>maximum device amplitude</strong>, and the physical atom spacings are larger than the device minimum.</p>
@@ -1981,6 +2053,15 @@ decreases as <span class="arithmatex">\(J_0\)</span> increases.</p>
 </div>
 <h3 id="working-point-compilation">Working point compilation</h3>
 <p>In progress...</p>
+<h2 id="hardware-effects">Hardware effects</h2>
+<p>Real quantum hardware introduces deviations between the ideal compiled program and its actual execution. These effects can be categorized into two main classes: hardware modulation and noise sources.</p>
+<p>Importantly, in both cases, these effects can be included by configuring emulators, as detailed in the <a href="../../execution/execution/">Execution</a> page of this documentation.</p>
+<h3 id="hardware-modulation">Hardware modulation</h3>
+<p><strong>Hardware modulation</strong> arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions) the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
+The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in <a href="../device_and_compilation/">Devices and Compilation</a>. Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag <code>with_hardware_modulation=true</code>, as described in <a href="../../execution/execution/">Execution</a>.</p>
+<h3 id="noise">Noise</h3>
+<p><strong>Noise sources</strong> encompass various forms of environmental and systematic errors that introduce unwanted fluctuations or systematic shifts in the quantum system parameters during execution. As before, to include noise sources in the emulation of a program, emulators must be configured with the flag <code>noise_model</code>, as described in <a href="../../execution/execution/">Execution</a>.</p>
+<p>Finally, for more detailed information on <a href="https://docs.pasqal.com/pulser/tutorials/output_mod_eom/">hardware modulation</a> and <a href="https://docs.pasqal.com/pulser/noise_model/">noise sources</a>, consult the comprehensive discussions available in the Pulser documentation.</p>
 
 
 
