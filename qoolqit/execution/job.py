@@ -1,3 +1,5 @@
+"""Job submission and results retrieval on local/remote emulators and QPUs."""
+
 from __future__ import annotations
 
 import math

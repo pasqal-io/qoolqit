@@ -13,7 +13,7 @@ from qoolqit.devices import (
     available_default_devices,
 )
 from qoolqit.drive import Drive
-from qoolqit.execution import SequenceCompiler
+from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.graphs import DataGraph
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
@@ -41,6 +41,6 @@ __all__ = [
 ]
 
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 store_package_version_metadata("qoolqit", __version__)
