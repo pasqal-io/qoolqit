@@ -11,7 +11,8 @@ requires-python = ">=3.10"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
 maintainers = [
-  {name = "Stefano Grava", email = "s.grava-ext@pasqal.com"}
+  { name = "Stefano Grava", email = "s.grava-ext@pasqal.com" },
+  { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
