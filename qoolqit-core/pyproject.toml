@@ -25,6 +25,3 @@ classifiers = [
 dependencies = [
   "pulser-core >= 1.8",
 ]
-
-
-
