@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "qoolqit-core"
-description = "QoolQit core library."
+description = "Work in progress to define QoolQit core library with minimal dependencies."
 readme = "README.md"
-version = "0.1.0"
+version = "0.0.1"
 requires-python = ">=3.10"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
