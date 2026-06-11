@@ -220,7 +220,7 @@ def evolve_with_forces_through_dim_change(
     final_ratio: float | None = None,
     compute_weight_relative_threshold_by_step: Callable[[int], float],
     compute_max_distance_to_walk_by_step: Callable[
-        [int, float | None], float | tuple[float, float, float]
+        [int, float], float | tuple[float, float, float]
     ],
     compute_regulation_cursor_by_step: Callable[[int], float],
     draw_weighted_graph: bool = False,
@@ -270,7 +270,7 @@ def evolve_with_forces_through_dim_change(
             weight_relative_threshold=compute_weight_relative_threshold_by_step(step),
             min_dist=min_dist,
             max_radius=max_radius,
-            max_distance_to_walk=compute_max_distance_to_walk_by_step(step, max_radius),
+            max_distance_to_walk=compute_max_distance_to_walk_by_step(step, max_radius if max_radius is not None else np.max(scipy.spatial.distance.pdist(positions))),
             regulation_cursor=compute_regulation_cursor_by_step(step),
             draw_step=draw_step,
             step=step,
@@ -318,7 +318,7 @@ def evolve_with_dimension_transition(
     stop_step: int,
     compute_weight_relative_threshold_by_step: Callable[[int], float],
     compute_max_distance_to_walk_by_step: Callable[
-        [int, float | None], float | tuple[float, float, float]
+        [int, float], float | tuple[float, float, float]
     ],
     compute_regulation_cursor_by_step: Callable[[int], float],
     target_interactions: np.ndarray,
@@ -378,10 +378,8 @@ def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
     return np.min(distance_matrix[upper_diagonal_mask])  # type: ignore
 
 
-def default_compute_max_distance_to_walk(progress: float, max_radial_dist: float | None) -> float:
+def default_compute_max_distance_to_walk(progress: float, max_radial_dist: float) -> float:
     """Default function with rapid then slow decrease to zero of the walking distance."""
-    if max_radial_dist is None:
-        return float(np.inf)
     return float(2 * max_radial_dist * (1 - np.sin(np.pi / 2 * progress)))
 
 
@@ -400,7 +398,7 @@ def _blade(
     steps_per_round: int = 200,
     compute_weight_relative_threshold: Callable[[float], float] = (lambda _: 0.1),
     compute_max_distance_to_walk: Callable[
-        [float, float | None], float | tuple[float, float, float]
+        [float, float], float | tuple[float, float, float]
     ] = default_compute_max_distance_to_walk,
     compute_regulation_cursor: Callable[[float], float] = (lambda _: 0.1),
     compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors,
@@ -452,11 +450,11 @@ def _blade(
             `update_positions` to learn more).
         compute_max_distance_to_walk: Function that is called at each step.
             It takes a float number between 0 and 1 that represents the progress
-            on the steps, and takes another argument that is set to `None` when
-            `max_min_dist_ratio` is not enabled, otherwise, it is set to
-            the maximum radial distance for the current step.
-            It must return a float number that limits the distances
-            nodes can move at one step (see `update_positions` to learn more).
+            on the steps, and takes another argument that is set to the current
+            largest pairwise distance when `max_min_dist_ratio` is not enabled,
+            otherwise, it is set to the maximum radial distance for the current
+            step. It must return a float number that limits the distances
+            nodes can move at one step  (see `update_positions` to learn more).
         compute_regulation_cursor: Function that is called at each step.
             It takes a float number between 0 and 1 that represents the progress
             on the steps. It must return a float number between 0 (no regulation)
@@ -529,7 +527,7 @@ def _blade(
         return compute_weight_relative_threshold(step_to_progress(step))
 
     def compute_max_distance_to_walk_by_step(
-        step: int, max_radial_dist: float | None
+        step: int, max_radial_dist: float
     ) -> float | tuple[float, float, float]:
         return compute_max_distance_to_walk(step_to_progress(step), max_radial_dist)
 
