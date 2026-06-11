@@ -83,6 +83,8 @@ def compute_target_weights_distances_by_weight_diff_limit(
     assert not np.any(np.isnan(weighted_vectors))
     logger.debug(f"{weighted_vectors=}")
 
+    assert not np.any(np.isnan(distances_to_walk))
+
     return weighted_vectors, distances_to_walk
 
 

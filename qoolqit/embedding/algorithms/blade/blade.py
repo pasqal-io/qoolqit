@@ -253,6 +253,9 @@ def evolve_with_forces_through_dim_change(
         )
         assert np.unique(positions, axis=0).shape == positions.shape
         positions = scaling * positions
+        assert np.unique(positions, axis=0).shape == positions.shape
+        assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
+
         if draw_step:
             distances = scipy.spatial.distance.pdist(positions)
             print(
@@ -275,7 +278,10 @@ def evolve_with_forces_through_dim_change(
         )
         assert np.unique(positions, axis=0).shape == positions.shape
         assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
+
         positions = dim_shrinker.applied_step(positions)
+        assert np.unique(positions, axis=0).shape == positions.shape
+        assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
 
     removed_position_dims = positions[:, final_dimensions:]
     assert np.all(
