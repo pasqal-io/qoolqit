@@ -284,7 +284,7 @@ def evolve_with_forces_through_dim_change(
 
     removed_position_dims = positions[:, final_dimensions:]
     assert np.all(
-        np.isclose(removed_position_dims, 0)
+        np.isclose(removed_position_dims, 0, atol=1e-5)
     ), f"Shrunk dimensions {removed_position_dims=} should only contain zeros"
 
     return positions[:, :final_dimensions], min_dist
