@@ -93,15 +93,16 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
     node_weights = list(graph.node_weights.values())
     np.testing.assert_allclose(node_weights, data_diag)
 
-    # Remove diagonal and some random values from the data
+    # Build a fresh matrix for the second sub-test: zero out the diagonal and some random edges
     almost_zero = ATOL_64
-    np.fill_diagonal(data, almost_zero)
+    data2 = data_copy.copy()
+    np.fill_diagonal(data2, almost_zero)
     random_edges_removal = random_edge_list(range(n_nodes), k=4)
     i_list, j_list = zip(*random_edges_removal)
-    data[i_list, j_list] = almost_zero
-    data[j_list, i_list] = almost_zero
+    data2[i_list, j_list] = almost_zero
+    data2[j_list, i_list] = almost_zero
 
-    graph = DataGraph.from_matrix(data)
+    graph = DataGraph.from_matrix(data2)
 
     assert not graph.has_node_weights
     assert graph.has_edge_weights
@@ -112,7 +113,7 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
     n_edges = graph.number_of_edges()
     idx = [2 * i for i in range(n_edges)]
 
-    data_edge_weights = np.sort(data[data >= 1e-7])[idx]
+    data_edge_weights = np.sort(data2[data2 >= 1e-7])[idx]
     edge_weights = sorted(list(graph.edge_weights.values()))
 
     np.testing.assert_allclose(edge_weights, data_edge_weights)
