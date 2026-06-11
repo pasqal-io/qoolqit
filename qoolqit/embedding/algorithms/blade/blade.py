@@ -336,13 +336,22 @@ def evolve_with_dimension_transition(
     if final_dimensions < starting_dimensions and pca:
         try:
             from sklearn.decomposition import PCA
-        except ImportError:
+        except ImportError as e:
             raise ModuleNotFoundError(
-                "To use `pca=True` in the BLaDE algorithm, "
-                "please install the `scikit-learn` library."
-            )
-        pca_inst = PCA(n_components=starting_dimensions)
+                "To use `pca=True` in the BLaDE algorithm, please install `scikit-learn`."
+            ) from e
+
+        n_components = min(*positions.shape)
+
+        if n_components < 1:
+            raise ValueError(f"PCA impossible: positions.shape={positions.shape}")
+
+        pca_inst = PCA(n_components=n_components)
         positions = pca_inst.fit_transform(positions)
+
+        if positions.shape[1] < starting_dimensions:
+            pad = starting_dimensions - positions.shape[1]
+            positions = np.pad(positions, ((0, 0), (0, pad)), mode="constant")
 
     elif final_dimensions > starting_dimensions:
         positions = augment_dimensions_with_random_values(
@@ -393,7 +402,7 @@ def _blade(
     max_min_dist_ratio: float | None = None,
     dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2),
     starting_positions: np.ndarray | None = None,
-    pca: bool = False,
+    pca: bool = True,
     steps_per_round: int = 200,
     compute_weight_relative_threshold: Callable[[float], float] = (lambda _: 0.1),
     compute_max_distance_to_walk: Callable[
