@@ -269,20 +269,22 @@ class DataGraph(BaseGraph):
         if not np.allclose(data, data.T, rtol=0.0, atol=1e-7):
             raise ValueError("Matrix must be symmetric.")
 
+        # absolute values below this tolerance are treated as zeros.
+        nonzero_tol = 1e-7
+
         diag = np.diag(data)
         n_nodes = len(diag)
         node_weights = {i: diag[i] for i in range(n_nodes)}
-        if np.allclose(diag, np.zeros(n_nodes), rtol=0.0, atol=1e-7):
+        if np.allclose(diag, np.zeros(n_nodes), rtol=0.0, atol=nonzero_tol):
             node_weights = {i: None for i in range(n_nodes)}
         else:
             node_weights = {i: diag[i].item() for i in range(n_nodes)}
 
-        non_zero = data.nonzero()
-        i_list = non_zero[0].tolist()
-        j_list = non_zero[1].tolist()
-
         edge_list = [
-            (i, j) for i, j in zip(i_list, j_list) if i < j and (np.abs(data[i, j]) >= 1e-7)
+            (i, j)
+            for i in range(n_nodes)
+            for j in range(i + 1, n_nodes)
+            if (np.abs(data[i, j]) >= nonzero_tol)
         ]
         edge_weights = {(i, j): data[i, j].item() for i, j in edge_list}
 
