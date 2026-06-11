@@ -81,7 +81,10 @@ def compute_target_weights_distances_by_weight_diff_limit(
     ) / 2  # division by 2 because both forces will be applied on both atoms of each pair
     logger.debug(f"{distances_to_walk=}")
 
-    weighted_vectors = reduced_weight_differences[:, :, np.newaxis] * unitary_vectors
+    chosen_weights_l1 = reduced_weight_differences[:, :, np.newaxis]
+    chosen_weights_l2 = chosen_weights_l1 ** 2 * np.sign(chosen_weights_l1)
+
+    weighted_vectors = chosen_weights_l2 * unitary_vectors
     weighted_vectors[distances_to_walk == 0] = 0.0
 
     assert not np.any(np.isnan(weighted_vectors))
