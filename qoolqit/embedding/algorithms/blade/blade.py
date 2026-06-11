@@ -182,8 +182,7 @@ def update_positions(
             ),
         )
 
-    for u, force in enumerate(resulting_forces_vectors):
-        positions[u] += force
+    positions += resulting_forces_vectors
 
     assert not np.any(np.isnan(positions))
 
