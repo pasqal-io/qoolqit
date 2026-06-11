@@ -56,6 +56,10 @@ def compute_target_weights_distances_by_weight_diff_limit(
 ) -> Any:
     with np.errstate(divide="ignore", invalid="ignore"):
         weight_differences = target_weights - current_weights
+
+    max_non_overflowing_value = 0.9 * np.sqrt(np.finfo(weight_differences.dtype).max)
+    weight_differences = np.clip(weight_differences, -max_non_overflowing_value, max_non_overflowing_value)
+
     n = len(weight_differences)
     weight_differences[range(n), range(n)] = 0
     logger.debug(f"{weight_differences=}")
