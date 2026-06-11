@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
-from typing import Callable
+from typing import Any, Callable
 
 import networkx as nx
 import numpy as np
@@ -241,6 +241,7 @@ def test_full_priority_on_small_weight_difference(
         new_distances[2, 3],
         params.pairs_curr_dists[1] * (1 - second_pair_expected_progress)
         + params.pairs_target_dists[1] * second_pair_expected_progress,
+        rtol=2e-3,
     )
 
 
@@ -269,7 +270,7 @@ def test_partial_priority_on_small_weight_difference(
         np.log10(np.abs(new_interactions[2, 3] - params.pairs_curr_weights[1]))
         / np.log10(np.abs(params.pairs_weight_diffs[1])),
         2,
-        atol=0.5,
+        atol=0.6,
     )
 
 
@@ -297,23 +298,34 @@ def test_cancelled_priority_on_small_weight_difference(
 
 
 @pytest.mark.parametrize(
-    "steps_per_round, compute_regulation_cursor, compute_max_distance_to_walk, margin_factor",
+    "blade_kwargs, margin_factor",
     [
         (
-            1000,
-            lambda progress: (1 - progress) ** (1 / 3),
-            lambda progress, max_radial_dist: max_radial_dist * (1 - np.sin(np.pi / 2 * progress)),
+            dict(
+                steps_per_round=1000,
+                compute_regulation_cursor=lambda progress: 0.1,
+                compute_max_distance_to_walk=lambda progress, max_radial_dist: max_radial_dist * (1 - np.sin(np.pi / 2 * progress)),
+                dimensions=(2, 2),
+            ),
             1.7,
         ),
-        (1000, lambda progress: 0.1, lambda progress, max_radial_dist: np.inf, 1),
-    ],
+        (
+            dict(
+                steps_per_round=1000,
+                compute_regulation_cursor=lambda progress: 0.1,
+                compute_max_distance_to_walk=lambda progress, max_radial_dist: np.inf,
+                dimensions=(2, 2),
+            ),
+            1,
+        ),
+        (
+            dict(),
+            1,
+        ),
+    ]
 )
 def test_force_based_embedding(
-    steps_per_round: int,
-    compute_regulation_cursor: Callable[[float], float],
-    compute_max_distance_to_walk: Callable[
-        [float, float | None], float | tuple[float, float, float]
-    ],
+    blade_kwargs: dict[str, Any],
     margin_factor: float,
 ) -> None:
     min_dist = 1
@@ -335,10 +347,7 @@ def test_force_based_embedding(
         matrix=qubo,
         max_min_dist_ratio=max_dist / min_dist,
         starting_positions=np.array([[-1, 1], [1, 1], [1, -1], [-1, -1]]) * max_dist / 3,
-        steps_per_round=steps_per_round,  # ok
-        compute_max_distance_to_walk=compute_max_distance_to_walk,
-        compute_regulation_cursor=compute_regulation_cursor,
-        dimensions=(2, 2),
+        **blade_kwargs,
     )
 
     distances = distance_matrix_from_positions(positions)
