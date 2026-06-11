@@ -608,3 +608,11 @@ def test_blade_init() -> None:
 def test_invalid_blade_config() -> None:
     with pytest.raises(TypeError, match="got an unexpected keyword argument 'wrong_config_key'"):
         BladeConfig(wrong_config_key="value")  # type: ignore
+
+
+@pytest.mark.parametrize("max_min_dist_ratio, atol", [(None, 1e-3), (10, 1e-1)])
+def test_disconnected_nodes(max_min_dist_ratio: int | None, atol: float) -> None:
+    matrix = np.array([[0, 1, 0], [0, 0, 0], [0, 0, 0]])
+    positions = _blade(matrix, max_min_dist_ratio=max_min_dist_ratio)
+    interactions = interaction_matrix_from_positions(positions)
+    assert np.allclose(interactions, matrix, atol=atol)
