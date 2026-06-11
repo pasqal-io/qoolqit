@@ -65,8 +65,6 @@ def compute_target_weights_distances_by_weight_diff_limit(
     logger.debug(f"{weight_differences=}")
     # significant_weight_difference = np.max(np.abs(weight_differences)) / 100
 
-    weight_difference_threshold = np.max(np.abs(weight_differences)) * weight_relative_threshold
-    logger.debug(f"{weight_difference_threshold=}")
 
     reduced_weight_differences = weight_differences * (1 - weight_relative_threshold)
     step_target_weights = current_weights + reduced_weight_differences
