@@ -8,15 +8,15 @@ import pytest
 from numpy.typing import ArrayLike
 from scipy.integrate import quad
 
-from qoolqit import Blackman
 from qoolqit.waveforms import (
+    BlackmanWaveform,
     CompositeWaveform,
-    Constant,
-    Delay,
-    Interpolated,
-    PiecewiseLinear,
-    Ramp,
-    Sin,
+    ConstantWaveform,
+    DelayWaveform,
+    InterpolatedWaveform,
+    PiecewiseLinearWaveform,
+    RampWaveform,
+    SinWaveform,
     Waveform,
 )
 from qoolqit.waveforms.utils import round_to_sum
@@ -24,13 +24,13 @@ from qoolqit.waveforms.utils import round_to_sum
 
 def test_delay() -> None:
     with pytest.raises(ValueError):
-        wf = Delay(duration=0.0)
+        wf = DelayWaveform(duration=0.0)
 
     with pytest.raises(ValueError):
-        wf = Delay(duration=-1.0)
+        wf = DelayWaveform(duration=-1.0)
 
     duration = 1.0
-    wf = Delay(duration)
+    wf = DelayWaveform(duration)
 
     t_val = random.random()
 
@@ -44,7 +44,7 @@ def test_constant() -> None:
     duration = 1.0
     value = random.random()
 
-    wf = Constant(duration, value)
+    wf = ConstantWaveform(duration, value)
 
     assert wf.value == value
 
@@ -70,7 +70,7 @@ def test_ramp() -> None:
     duration = 1.0
     initial_value = random.random()
     final_value = random.random()
-    wf = Ramp(duration, initial_value, final_value)
+    wf = RampWaveform(duration, initial_value, final_value)
 
     t_val = random.random()
 
@@ -90,7 +90,7 @@ def test_sin() -> None:
     phi = random.random()
     shift = random.random()
 
-    wf = Sin(duration, amplitude, omega, phi, shift)
+    wf = SinWaveform(duration, amplitude, omega, phi, shift)
 
     assert wf.amplitude == amplitude
     assert wf.omega == omega
@@ -114,7 +114,7 @@ def test_sin() -> None:
 def test_blackman() -> None:
     duration = 11.0
     area = 1.5 * np.pi
-    blackman = Blackman(duration, area=area)
+    blackman = BlackmanWaveform(duration, area=area)
 
     assert blackman.duration == duration
     assert blackman.area == area
@@ -139,17 +139,17 @@ def test_piecewise(n_pieces: int) -> None:
     values = np.random.rand(n_pieces + 1).tolist()
 
     with pytest.raises(ValueError):
-        wf = PiecewiseLinear([1.0], values)
+        wf = PiecewiseLinearWaveform([1.0], values)
 
     with pytest.raises(TypeError):
-        wf = PiecewiseLinear(1.0, values)  # type: ignore [arg-type]
+        wf = PiecewiseLinearWaveform(1.0, values)  # type: ignore [arg-type]
 
     with pytest.raises(ValueError):
         durations[0] = 0.0
-        wf = PiecewiseLinear(durations, values)
+        wf = PiecewiseLinearWaveform(durations, values)
 
     durations[0] = 1.0
-    wf = PiecewiseLinear(durations, values)
+    wf = PiecewiseLinearWaveform(durations, values)
 
     assert wf.n_waveforms == n_pieces
 
@@ -157,7 +157,7 @@ def test_piecewise(n_pieces: int) -> None:
 def test_interpolated() -> None:
     values = [-2.1, 5.3, 3.12, 1.04]
     duration = 100
-    interpolated = Interpolated(duration, values=values)
+    interpolated = InterpolatedWaveform(duration, values=values)
 
     expected_fractional_times = np.linspace(0, 1, len(values))
     assert np.allclose(interpolated._times, expected_fractional_times)
@@ -173,7 +173,7 @@ def test_interpolated_with_times() -> None:
     values = [0.1, 0.3, -0.5, 1.0]
     times = [0.0, 0.2, 0.8, 1.0]
     duration = 100
-    interpolated = Interpolated(duration, values=values, times=times)
+    interpolated = InterpolatedWaveform(duration, values=values, times=times)
 
     waveform_times = duration * np.array(times, dtype=float)
     interpolated_values = interpolated(waveform_times)
@@ -183,17 +183,17 @@ def test_interpolated_with_times() -> None:
 
 def test_interpolated_fractional_times() -> None:
     with pytest.raises(ValueError, match=r"must be in \[0,1\]."):
-        Interpolated(10, values=[0, 1], times=[0, 10])
+        InterpolatedWaveform(10, values=[0, 1], times=[0, 10])
 
 
 def test_interpolated_wrong_times_len() -> None:
     with pytest.raises(ValueError, match="must be arrays of the same length."):
-        Interpolated(10, values=[0, 1], times=[0, 0.5, 0.8])
+        InterpolatedWaveform(10, values=[0, 1], times=[0, 0.5, 0.8])
 
 
 def test_interpolated_to_pulser() -> None:
     values = [0.1, 0.3, -0.5, 1.0, 5.7]
-    interpolated = Interpolated(20.46, values=values)
+    interpolated = InterpolatedWaveform(20.46, values=values)
 
     pulser_interpolated = interpolated._to_pulser(duration=222)
     assert isinstance(pulser_interpolated, pulser.InterpolatedWaveform)
@@ -205,7 +205,7 @@ def test_interpolated_to_pulser() -> None:
 )
 @pytest.mark.parametrize("energy_factor", [0.5, 1.0, np.pi])
 def test_interpolated_to_pulser_energy_factor(values: ArrayLike, energy_factor: float) -> None:
-    interpolated = Interpolated(20.46, values=values)
+    interpolated = InterpolatedWaveform(20.46, values=values)
 
     pulser_interpolated = interpolated._to_pulser(duration=20, energy_factor=energy_factor)
     assert isinstance(pulser_interpolated, pulser.InterpolatedWaveform)
@@ -226,10 +226,10 @@ def test_waveform_composition(n_waveforms: int) -> None:
 
     duration = 1.0
 
-    wf: Waveform = Ramp(1.0, random.random(), random.random())
+    wf: Waveform = RampWaveform(1.0, random.random(), random.random())
 
     for _ in range(n_waveforms - 1):
-        wf = wf >> Ramp(1.0, random.random(), random.random())
+        wf = wf >> RampWaveform(1.0, random.random(), random.random())
 
     wf = wf >> wf
 
@@ -294,7 +294,7 @@ def test_round_to_sum_random() -> None:
 
 def test_negative_duration() -> None:
     with pytest.raises(ValueError, match="Duration needs to be a positive non-zero value."):
-        Constant(-10.0, value=2.0)
+        ConstantWaveform(-10.0, value=2.0)
 
 
 def test_waveform_only_kwarg() -> None:
@@ -343,7 +343,9 @@ def test_to_pulser_sub_ns_delay_single_wf() -> None:
     pulser_delay_duration = (qoolqit_delay_duration / qoolqit_duration) * pulser_duration
     assert pulser_delay_duration < 1
 
-    composite_waveform = CompositeWaveform(Constant(2.83, 0.5), Delay(qoolqit_delay_duration))
+    composite_waveform = CompositeWaveform(
+        ConstantWaveform(2.83, 0.5), DelayWaveform(qoolqit_delay_duration)
+    )
     pulser_waveform = composite_waveform._to_pulser(duration=pulser_duration)
 
     # assert that it is ignored when compiled to a pulser.Waveform without the delay
@@ -366,9 +368,9 @@ def test_to_pulser_sub_ns_delay_composite_wf() -> None:
     assert pulser_delay_duration < 1
 
     composite_waveform = CompositeWaveform(
-        Constant(qoolqit_duration / 5, 0.5),
-        Ramp(4 * qoolqit_duration / 5, -1.0, 1.3),
-        Delay(qoolqit_delay_duration),
+        ConstantWaveform(qoolqit_duration / 5, 0.5),
+        RampWaveform(4 * qoolqit_duration / 5, -1.0, 1.3),
+        DelayWaveform(qoolqit_delay_duration),
     )
     pulser_waveform = composite_waveform._to_pulser(duration=pulser_duration)
 

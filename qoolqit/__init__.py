@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import warnings
+
 from pulser.sequence import store_package_version_metadata
 
 from qoolqit.devices import (
@@ -17,17 +19,25 @@ from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.graphs import DataGraph
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
-from qoolqit.waveforms import Blackman, Constant, Delay, Interpolated, PiecewiseLinear, Ramp, Sin
+from qoolqit.waveforms import (
+    BlackmanWaveform,
+    ConstantWaveform,
+    DelayWaveform,
+    InterpolatedWaveform,
+    PiecewiseLinearWaveform,
+    RampWaveform,
+    SinWaveform,
+)
 
 __all__ = [
     "DataGraph",
-    "Blackman",
-    "Constant",
-    "Delay",
-    "Interpolated",
-    "PiecewiseLinear",
-    "Ramp",
-    "Sin",
+    "BlackmanWaveform",
+    "ConstantWaveform",
+    "DelayWaveform",
+    "InterpolatedWaveform",
+    "PiecewiseLinearWaveform",
+    "RampWaveform",
+    "SinWaveform",
     "Drive",
     "Register",
     "QuantumProgram",
@@ -44,3 +54,32 @@ __all__ = [
 __version__ = "1.1.1"
 
 store_package_version_metadata("qoolqit", __version__)
+
+
+# ---------------------------------------------------------------------------
+# Deprecated aliases — will be removed in a future release.
+# ---------------------------------------------------------------------------
+
+
+def __getattr__(name: str) -> type:
+    _deprecated = {
+        "Blackman": BlackmanWaveform,
+        "Constant": ConstantWaveform,
+        "Delay": DelayWaveform,
+        "Interpolated": InterpolatedWaveform,
+        "PiecewiseLinear": PiecewiseLinearWaveform,
+        "Ramp": RampWaveform,
+        "Sin": SinWaveform,
+    }
+
+    # No else condition since Python only calls __getattr__ on a module
+    # when the normal lookup has already failed.
+    if name in _deprecated:
+        new_name = _deprecated[name]
+        warnings.warn(
+            f"{name} is deprecated and will be removed in a future release. "
+            f"Use {new_name.__name__} instead.",
+            DeprecationWarning,
+        )
+        return new_name
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

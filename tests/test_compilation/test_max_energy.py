@@ -12,17 +12,16 @@ from pulser.sequence import Sequence as PulserSequence
 
 from qoolqit import (
     AnalogDevice,
-    Constant,
     Device,
     DigitalAnalogDevice,
     Drive,
-    Interpolated,
     MockDevice,
     QuantumProgram,
     Register,
 )
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
+from qoolqit.waveforms import ConstantWaveform, InterpolatedWaveform
 
 
 class TestMaxEnergyCompilerProfile:
@@ -73,8 +72,8 @@ class TestMaxEnergyCompilerProfile:
     def test_catch_compilation_error_max_abs_detuning(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
         amp_max_value = 0.5
-        amplitude = Constant(50, value=amp_max_value)
-        detuning = Constant(50, value=20.26)
+        amplitude = ConstantWaveform(50, value=amp_max_value)
+        detuning = ConstantWaveform(50, value=20.26)
         drive = Drive(amplitude=amplitude, detuning=detuning)
         program = QuantumProgram(register, drive)
         device = AnalogDevice()
@@ -95,7 +94,7 @@ class TestMaxEnergyCompilerProfile:
     def test_catch_compilation_error_max_duration(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
         duration = 300
-        amplitude = Constant(duration, value=0.5)
+        amplitude = ConstantWaveform(duration, value=0.5)
         drive = Drive(amplitude=amplitude)
         program = QuantumProgram(register, drive)
         device = AnalogDevice()
@@ -113,7 +112,7 @@ class TestMaxEnergyCompilerProfile:
 
     def test_catch_compilation_error_max_radial_distance(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (9.0, 0.0)})
-        drive = Drive(amplitude=Constant(13.0, 0.5))
+        drive = Drive(amplitude=ConstantWaveform(13.0, 0.5))
         program = QuantumProgram(register, drive)
         device = AnalogDevice()
 
@@ -137,9 +136,9 @@ class TestMaxEnergyCompilerProfile:
             [0.7504049424354939, 0.1, 0.1, 0.0],
         ],
     )
-    def test_compilation_interpolated(self, device: Device, values: ArrayLike) -> None:
+    def test_compilation_InterpolatedWaveform(self, device: Device, values: ArrayLike) -> None:
         register = Register.from_coordinates([[0, 0], [0, 1]])
-        amp_wave = Interpolated(duration=60.0, values=values)
+        amp_wave = InterpolatedWaveform(duration=60.0, values=values)
         drive = Drive(amplitude=amp_wave)
         program = QuantumProgram(register=register, drive=drive)
         program.compile_to(device=device, profile=self.profile)
