@@ -58,13 +58,13 @@ def compute_target_weights_distances_by_weight_diff_limit(
         weight_differences = target_weights - current_weights
 
     max_non_overflowing_value = 0.9 * np.sqrt(np.finfo(weight_differences.dtype).max)
-    weight_differences = np.clip(weight_differences, -max_non_overflowing_value, max_non_overflowing_value)
+    weight_differences = np.clip(
+        weight_differences, -max_non_overflowing_value, max_non_overflowing_value
+    )
 
     n = len(weight_differences)
     weight_differences[range(n), range(n)] = 0
     logger.debug(f"{weight_differences=}")
-    # significant_weight_difference = np.max(np.abs(weight_differences)) / 100
-
 
     reduced_weight_differences = weight_differences * (1 - weight_relative_threshold)
     step_target_weights = current_weights + reduced_weight_differences
@@ -80,7 +80,7 @@ def compute_target_weights_distances_by_weight_diff_limit(
     logger.debug(f"{distances_to_walk=}")
 
     chosen_weights_l1 = reduced_weight_differences[:, :, np.newaxis]
-    chosen_weights_l2 = chosen_weights_l1 ** 2 * np.sign(chosen_weights_l1)
+    chosen_weights_l2 = chosen_weights_l1**2 * np.sign(chosen_weights_l1)
 
     weighted_vectors = chosen_weights_l2 * unitary_vectors
     weighted_vectors[distances_to_walk == 0] = 0.0

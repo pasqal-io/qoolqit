@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import InitVar, dataclass
-from typing import Callable
+from typing import Callable, Final
 
 import networkx as nx
 import numpy as np
@@ -269,7 +269,14 @@ def evolve_with_forces_through_dim_change(
             weight_relative_threshold=compute_weight_relative_threshold_by_step(step),
             min_dist=min_dist,
             max_radius=max_radius,
-            max_distance_to_walk=compute_max_distance_to_walk_by_step(step, max_radius if max_radius is not None else np.max(scipy.spatial.distance.pdist(positions))),
+            max_distance_to_walk=compute_max_distance_to_walk_by_step(
+                step,
+                (
+                    max_radius
+                    if max_radius is not None
+                    else np.max(scipy.spatial.distance.pdist(positions))
+                ),
+            ),
             regulation_cursor=compute_regulation_cursor_by_step(step),
             draw_step=draw_step,
             step=step,
@@ -396,21 +403,41 @@ def default_compute_ratio_step_factors(progress: float) -> float:
     return float(np.interp(progress, xp=[0, 3 / 5, 1], fp=[2, 0.94, 0.98]))
 
 
+default_dimensions: Final[tuple[int, ...]] = (5, 4, 3, 2, 2, 2)
+default_pca: Final[bool] = True
+default_steps_per_round: Final[int] = 200
+
+
+def default_compute_weight_relative_threshold(cursor: float) -> float:
+    """Default function for a low constant weight relative threshold."""
+    return 0.1
+
+
+def default_compute_regulation_cursor(progress: float) -> float:
+    """Default function for a low constant regulation cursor."""
+    return 0.1
+
+
+default_ratio_rerun: Final[int] = 2
+
+
 def _blade(
     matrix: np.ndarray,
     *,
     max_min_dist_ratio: float | None = None,
-    dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2),
+    dimensions: tuple[int, ...] = default_dimensions,
     starting_positions: np.ndarray | None = None,
-    pca: bool = True,
-    steps_per_round: int = 200,
-    compute_weight_relative_threshold: Callable[[float], float] = (lambda _: 0.1),
+    pca: bool = default_pca,
+    steps_per_round: int = default_steps_per_round,
+    compute_weight_relative_threshold: Callable[
+        [float], float
+    ] = default_compute_weight_relative_threshold,
     compute_max_distance_to_walk: Callable[
         [float, float], float | tuple[float, float, float]
     ] = default_compute_max_distance_to_walk,
-    compute_regulation_cursor: Callable[[float], float] = (lambda _: 0.1),
+    compute_regulation_cursor: Callable[[float], float] = default_compute_regulation_cursor,
     compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors,
-    ratio_rerun: int = 2,
+    ratio_rerun: int = default_ratio_rerun,
     draw_steps: bool | list[int] = False,
     draw_weighted_graph: bool = False,
     draw_differences: bool = False,
@@ -598,17 +625,19 @@ class BladeConfig(EmbedderConfig):
     """Configuration parameters to embed with BLaDE."""
 
     max_min_dist_ratio: float | None = None
-    dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2)
+    dimensions: tuple[int, ...] = default_dimensions
     starting_positions: np.ndarray | None = None
-    pca: bool = False
-    steps_per_round: int = 200
-    compute_weight_relative_threshold: Callable[[float], float] = lambda _: 0.1
-    compute_max_distance_to_walk: Callable[
-        [float, float | None], float | tuple[float, float, float]
-    ] = default_compute_max_distance_to_walk
-    compute_regulation_cursor: Callable[[float], float] = lambda _: 0.1
+    pca: bool = default_pca
+    steps_per_round: int = default_steps_per_round
+    compute_weight_relative_threshold: Callable[[float], float] = (
+        default_compute_weight_relative_threshold
+    )
+    compute_max_distance_to_walk: Callable[[float, float], float | tuple[float, float, float]] = (
+        default_compute_max_distance_to_walk
+    )
+    compute_regulation_cursor: Callable[[float], float] = default_compute_regulation_cursor
     compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors
-    ratio_rerun: int = 2
+    ratio_rerun: int = default_ratio_rerun
     device: InitVar[Device | None] = None
 
     def __post_init__(self, device: Device | None) -> None:

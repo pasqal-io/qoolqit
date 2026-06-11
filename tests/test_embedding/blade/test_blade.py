@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
-from typing import Any, Callable
+from typing import Any
 
 import networkx as nx
 import numpy as np
@@ -304,7 +304,8 @@ def test_cancelled_priority_on_small_weight_difference(
             dict(
                 steps_per_round=1000,
                 compute_regulation_cursor=lambda progress: 0.1,
-                compute_max_distance_to_walk=lambda progress, max_radial_dist: max_radial_dist * (1 - np.sin(np.pi / 2 * progress)),
+                compute_max_distance_to_walk=lambda progress, max_radial_dist: max_radial_dist
+                * (1 - np.sin(np.pi / 2 * progress)),
                 dimensions=(2, 2),
             ),
             1.7,
@@ -322,7 +323,7 @@ def test_cancelled_priority_on_small_weight_difference(
             dict(),
             1,
         ),
-    ]
+    ],
 )
 def test_force_based_embedding(
     blade_kwargs: dict[str, Any],
