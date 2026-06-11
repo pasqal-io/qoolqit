@@ -73,6 +73,9 @@ class Force:
         assert self.weighted_vectors.shape[:-1] == self.distances_to_walk.shape
         assert not np.any(np.isnan(self.distances_to_walk))
         assert not np.any(np.isnan(self.weighted_vectors))
+        cleaned = self.weighted_vectors.copy()
+        cleaned[self.vector_weights == 0] = 0.0
+        object.__setattr__(self, "weighted_vectors", cleaned)
         self.maximum_temperatures
 
     def get_nb_dims(self) -> int:
