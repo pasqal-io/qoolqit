@@ -486,6 +486,7 @@ def _blade(
         assert not torch.all(matrix == 0)
 
     graph = Qubo.from_matrix(matrix).as_graph()
+    graph.add_nodes_from(range(matrix.shape[0]))
     matrix = np.array(
         nx.adjacency_matrix(graph, nodelist=list(range(len(matrix))), weight="weight").toarray()
     )
