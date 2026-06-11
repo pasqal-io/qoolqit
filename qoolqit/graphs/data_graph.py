@@ -277,14 +277,14 @@ class DataGraph(BaseGraph):
         else:
             node_weights = {i: diag[i].item() for i in range(n_nodes)}
 
-        data_copy = data.copy()
-        data_copy[data <= 1e-7] = 0.0
-        non_zero = data_copy.nonzero()
+        non_zero = data.nonzero()
         i_list = non_zero[0].tolist()
         j_list = non_zero[1].tolist()
 
-        edge_list = [(i, j) for i, j in zip(i_list, j_list) if i < j]
-        edge_weights = {(i, j): data_copy[i, j].item() for i, j in edge_list}
+        edge_list = [
+            (i, j) for i, j in zip(i_list, j_list) if i < j and (np.abs(data[i, j]) >= 1e-7)
+        ]
+        edge_weights = {(i, j): data[i, j].item() for i, j in edge_list}
 
         graph = cls.from_nodes(range(n_nodes))
         graph.add_edges_from(edge_list)
