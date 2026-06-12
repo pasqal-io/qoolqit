@@ -78,7 +78,7 @@ def __getattr__(name: str) -> type:
         new_name = _deprecated[name]
         warnings.warn(
             f"{name} is deprecated and will be removed in a future release. "
-            f"Use {new_name.__name__} instead.",
+            f"Use the equivalent {new_name.__name__} instead.",
             DeprecationWarning,
         )
         return new_name
