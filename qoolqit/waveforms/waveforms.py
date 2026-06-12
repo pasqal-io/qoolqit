@@ -11,7 +11,7 @@ from scipy.interpolate import PchipInterpolator
 from qoolqit.waveforms.base_waveforms import CompositeWaveform, Waveform
 
 
-class Delay(Waveform):
+class DelayWaveform(Waveform):
     """An empty waveform."""
 
     def function(self, t: float) -> float:
@@ -27,7 +27,7 @@ class Delay(Waveform):
         return pulser.ConstantWaveform(duration, 0.0)
 
 
-class Ramp(Waveform):
+class RampWaveform(Waveform):
     """A ramp that linearly interpolates between an initial and final value.
 
     Arguments:
@@ -61,7 +61,7 @@ class Ramp(Waveform):
         return pulser.RampWaveform(duration, self.initial_value, self.final_value)
 
 
-class Constant(Waveform):
+class ConstantWaveform(Waveform):
     """A constant waveform over a given duration.
 
     Arguments:
@@ -91,7 +91,7 @@ class Constant(Waveform):
         return pulser.ConstantWaveform(duration, self.value)
 
 
-class Blackman(Waveform):
+class BlackmanWaveform(Waveform):
     """A Blackman window of a specified duration and area under the curve.
 
     Implements the Blackman window shaped waveform
@@ -108,14 +108,14 @@ class Blackman(Waveform):
 
     Example:
         ```python
-        blackman_wf = Blackman(100.0, area=3.14)
+        blackman_wf = BlackmanWaveform(100.0, area=3.14)
         ```
     """
 
     area: float
 
     def __init__(self, duration: float, area: float) -> None:
-        """Initializes a new Blackman waveform."""
+        """Initializes a new BlackmanWaveform."""
         super().__init__(duration, area=area)
 
     def function(self, t: float) -> float:
@@ -133,7 +133,7 @@ class Blackman(Waveform):
         return pulser.BlackmanWaveform(duration, self.area)
 
 
-class PiecewiseLinear(CompositeWaveform):
+class PiecewiseLinearWaveform(CompositeWaveform):
     """A piecewise linear waveform.
 
     Creates a composite waveform of N ramps that linearly interpolate
@@ -151,21 +151,21 @@ class PiecewiseLinear(CompositeWaveform):
     ) -> None:
         if not (isinstance(durations, (list, tuple)) or isinstance(values, (list, tuple))):
             raise TypeError(
-                "A PiecewiseLinear waveform requires a list or tuple of durations and values."
+                "A PiecewiseLinearWaveform requires a list or tuple of durations and values."
             )
 
         if len(durations) + 1 != len(values) or len(durations) == 1:
             raise ValueError(
-                "A PiecewiseLinear waveform requires N durations and N + 1 values, for N >= 2."
+                "A PiecewiseLinearWaveform requires N durations and N + 1 values, for N >= 2."
             )
 
         for duration in durations:
             if duration == 0.0:
-                raise ValueError("A PiecewiseLinear interval cannot have zero duration.")
+                raise ValueError("A PiecewiseLinearWaveform interval cannot have zero duration.")
 
         self.values = values
 
-        wfs = [Ramp(dur, values[i], values[i + 1]) for i, dur in enumerate(durations)]
+        wfs = [RampWaveform(dur, values[i], values[i + 1]) for i, dur in enumerate(durations)]
 
         super().__init__(*wfs)
 
@@ -173,7 +173,7 @@ class PiecewiseLinear(CompositeWaveform):
         return "Piecewise linear waveform:\n"
 
 
-class Interpolated(Waveform):
+class InterpolatedWaveform(Waveform):
     """A waveform created from shape-preserving interpolation of data points.
 
     This class creates a smooth waveform by interpolating between specified data points
@@ -200,11 +200,11 @@ class Interpolated(Waveform):
     Example:
         >>> # Create a waveform with 4 points over 100ns
         >>> values = [0.0, 1.0, 0.5, 0.0]
-        >>> wf = Interpolated(100, values)
+        >>> wf = InterpolatedWaveform(100, values)
         >>>
         >>> # Create with custom timing
         >>> times = [0.0, 0.2, 0.8, 1.0]  # Non-uniform spacing
-        >>> wf = Interpolated(100, values, times)
+        >>> wf = InterpolatedWaveform(100, values, times)
     """
 
     def __init__(
@@ -265,7 +265,7 @@ class Interpolated(Waveform):
         )
 
 
-class Sin(Waveform):
+class SinWaveform(Waveform):
     """An arbitrary sine over a given duration.
 
     Arguments:

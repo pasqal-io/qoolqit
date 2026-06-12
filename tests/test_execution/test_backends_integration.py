@@ -4,9 +4,10 @@ import numpy as np
 import pytest
 from pulser.backend import Backend, Occupation
 
-from qoolqit import AnalogDevice, Constant, Drive, MockDevice, QuantumProgram, Register
+from qoolqit import AnalogDevice, Drive, MockDevice, QuantumProgram, Register
 from qoolqit.devices import Device
 from qoolqit.execution import BackendType, EmulationConfig, JobStatus, LocalEmulator
+from qoolqit.waveforms import ConstantWaveform
 
 
 @pytest.mark.parametrize("rotation_angle", [0.3 * np.pi])
@@ -19,7 +20,7 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
 
     # Create and run a quantum program with different backends
     duration = 5
-    drive = Drive(amplitude=Constant(duration, rotation_angle / duration), phase=0)
+    drive = Drive(amplitude=ConstantWaveform(duration, rotation_angle / duration), phase=0)
     # atoms far away, no interaction
     register = Register.from_coordinates([(-10, -10), (10, 10)])
     program = QuantumProgram(register, drive)
@@ -47,7 +48,7 @@ def test_results(backend_type: Backend, device: Device) -> None:
 
     # Create a quantum program
     register = Register.from_coordinates([(x, 0.0) for x in np.arange(4)])
-    drive = Drive(amplitude=Constant(100, 0.2), phase=0)
+    drive = Drive(amplitude=ConstantWaveform(100, 0.2), phase=0)
     program = QuantumProgram(register, drive)
     program.compile_to(device)
 

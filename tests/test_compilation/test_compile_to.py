@@ -9,17 +9,18 @@ import pytest
 from pulser import AnalogDevice as PulserAnalogDevice
 from pulser.sampler import sample
 
-from qoolqit import AnalogDevice, Constant, Drive, MockDevice, QuantumProgram, Register
+from qoolqit import AnalogDevice, Drive, MockDevice, QuantumProgram, Register
 from qoolqit.drive import DetuningMapModulator
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
+from qoolqit.waveforms import ConstantWaveform
 
 
 @pytest.mark.parametrize("profile", [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT])
 def test_compilation_single_qubit(profile: CompilerProfile) -> None:
     """Test compilation of a single-qubit program."""
     register = Register(qubits={"q0": (0.0, 0.0)})
-    drive = Drive(amplitude=Constant(2.0, 0.2))
+    drive = Drive(amplitude=ConstantWaveform(2.0, 0.2))
     program = QuantumProgram(register=register, drive=drive)
 
     # Test compilation on the default profile
@@ -43,10 +44,10 @@ def test_compilation_with_dmm(profile: CompilerProfile) -> None:
     """Test compilation of a program with a DMM."""
     register = Register(qubits={"q0": (0.0, 0.7), "q1": (-0.5, -0.5), "q2": (0.5, -0.5)})
 
-    amplitude = Constant(5.0, 0.5)
-    detuning = Constant(5.0, -1.23)
+    amplitude = ConstantWaveform(5.0, 0.5)
+    detuning = ConstantWaveform(5.0, -1.23)
     dmm = DetuningMapModulator(
-        waveform=Constant(5.0, -1.23), weights={"q0": 0.1, "q1": 0.2, "q2": 0.9}
+        waveform=ConstantWaveform(5.0, -1.23), weights={"q0": 0.1, "q1": 0.2, "q2": 0.9}
     )
     drive = Drive(amplitude=amplitude, detuning=detuning, dmm=dmm)
     program = QuantumProgram(register=register, drive=drive)
@@ -73,7 +74,7 @@ def test_compilation_with_dmm(profile: CompilerProfile) -> None:
 def test_compile_to_wrong_device_type() -> None:
     """Test compilation to a device with a different type."""
     register = Register(qubits={"q0": (0.0, 0.0)})
-    drive = Drive(amplitude=Constant(2.0, 0.2))
+    drive = Drive(amplitude=ConstantWaveform(2.0, 0.2))
     program = QuantumProgram(register=register, drive=drive)
     with pytest.raises(TypeError, match="`device` must be of type `qoolqit.devices.Device`."):
         program.compile_to(device="I'm not a device")  # type: ignore [arg-type]

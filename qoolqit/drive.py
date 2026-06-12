@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
 
-from qoolqit.waveforms import CompositeWaveform, Delay, Waveform
+from qoolqit.waveforms import CompositeWaveform, DelayWaveform, Waveform
 
 __all__ = ["DetuningMapModulator", "Drive"]
 
@@ -85,14 +85,14 @@ class Drive:
 
         Example:
             >>> from qoolqit import Drive
-            >>> from qoolqit.waveforms import Constant, Ramp
+            >>> from qoolqit.waveforms import ConstantWaveform, RampWaveform
             >>>
             >>> # Simple constant drive
-            >>> drive = Drive(amplitude=Constant(10.0, 1.5))
+            >>> drive = Drive(amplitude=ConstantWaveform(10.0, 1.5))
             >>>
             >>> # Drive with time-varying amplitude and detuning
-            >>> amp = Ramp(5.0, 0.0, 2.0)
-            >>> det = Constant(5.0, -1.0)
+            >>> amp = RampWaveform(5.0, 0.0, 2.0)
+            >>> det = ConstantWaveform(5.0, -1.0)
             >>> drive = Drive(amplitude=amp, detuning=det, phase=0.5)
         """
 
@@ -104,7 +104,7 @@ class Drive:
             raise ValueError("'amplitude' must be positive.")
 
         self._amplitude = amplitude
-        self._detuning = detuning if detuning is not None else Delay(amplitude.duration)
+        self._detuning = detuning if detuning is not None else DelayWaveform(amplitude.duration)
 
         self._amplitude_orig = self._amplitude
         self._detuning_orig = self._detuning
@@ -112,10 +112,10 @@ class Drive:
         # adjust amplitude and detuning waveforms to match the duration
         if self._amplitude.duration > self._detuning.duration:
             extra_duration = self._amplitude.duration - self._detuning.duration
-            self._detuning = CompositeWaveform(self._detuning, Delay(extra_duration))
+            self._detuning = CompositeWaveform(self._detuning, DelayWaveform(extra_duration))
         elif self._detuning.duration > self._amplitude.duration:
             extra_duration = self._detuning.duration - self._amplitude.duration
-            self._amplitude = CompositeWaveform(self._amplitude, Delay(extra_duration))
+            self._amplitude = CompositeWaveform(self._amplitude, DelayWaveform(extra_duration))
 
         self._duration = self._amplitude.duration
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
