@@ -48,6 +48,9 @@ __all__ = [
     "DigitalAnalogDevice",
     "MockDevice",
     "Device",
+    # Deprecated short-form aliases (e.g. "Blackman", "Constant", ...) are intentionally
+    # excluded from __all__. They are handled dynamically via __getattr__ below so that
+    # they do not appear in auto-complete or wildcard imports, discouraging new usage.
 ]
 
 
@@ -60,24 +63,24 @@ store_package_version_metadata("qoolqit", __version__)
 # Deprecated aliases — will be removed in a future release.
 # ---------------------------------------------------------------------------
 
+_DEPRECATED_WAVEFORM_ALIASES: dict[str, type] = {
+    "Blackman": BlackmanWaveform,
+    "Constant": ConstantWaveform,
+    "Delay": DelayWaveform,
+    "Interpolated": InterpolatedWaveform,
+    "PiecewiseLinear": PiecewiseLinearWaveform,
+    "Ramp": RampWaveform,
+    "Sin": SinWaveform,
+}
+
 
 def __getattr__(name: str) -> type:
-    _deprecated = {
-        "Blackman": BlackmanWaveform,
-        "Constant": ConstantWaveform,
-        "Delay": DelayWaveform,
-        "Interpolated": InterpolatedWaveform,
-        "PiecewiseLinear": PiecewiseLinearWaveform,
-        "Ramp": RampWaveform,
-        "Sin": SinWaveform,
-    }
-
     # No else condition since Python only calls __getattr__ on a module
     # when the normal lookup has already failed.
-    if name in _deprecated:
-        new_name = _deprecated[name]
+    if name in _DEPRECATED_WAVEFORM_ALIASES:
+        new_name = _DEPRECATED_WAVEFORM_ALIASES[name]
         warnings.warn(
-            f"{name} is deprecated and will be removed in a future release. "
+            f"{name} is deprecated and will be removed in v1.4. "
             f"Use the equivalent {new_name.__name__} instead.",
             DeprecationWarning,
             stacklevel=2,
