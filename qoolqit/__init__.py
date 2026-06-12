@@ -80,6 +80,7 @@ def __getattr__(name: str) -> type:
             f"{name} is deprecated and will be removed in a future release. "
             f"Use the equivalent {new_name.__name__} instead.",
             DeprecationWarning,
+            stacklevel=2,
         )
         return new_name
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
