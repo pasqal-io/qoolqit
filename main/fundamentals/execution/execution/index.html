@@ -2815,7 +2815,7 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-1">
@@ -2828,7 +2828,7 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalogDevice</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">QuantumProgram</span><span class="p">,</span> <span class="n">Ramp</span><span class="p">,</span> <span class="n">Register</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalogDevice</span><span class="p">,</span> <span class="n">ConstantWaveform</span><span class="p">,</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">QuantumProgram</span><span class="p">,</span> <span class="n">RampWaveform</span><span class="p">,</span> <span class="n">Register</span>
 
 <span class="c1"># Create the register</span>
 <span class="n">register</span> <span class="o">=</span> <span class="n">Register</span><span class="o">.</span><span class="n">from_coordinates</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)])</span>
@@ -2840,8 +2840,8 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 <span class="n">T</span> <span class="o">=</span> <span class="mf">25.0</span>
 
 <span class="c1"># Defining the drive</span>
-<span class="n">wf_amp</span> <span class="o">=</span> <span class="n">Constant</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
-<span class="n">wf_det</span> <span class="o">=</span> <span class="n">Ramp</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">delta_i</span><span class="p">,</span> <span class="n">delta_f</span><span class="p">)</span>
+<span class="n">wf_amp</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+<span class="n">wf_det</span> <span class="o">=</span> <span class="n">RampWaveform</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">delta_i</span><span class="p">,</span> <span class="n">delta_f</span><span class="p">)</span>
 <span class="n">drive</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">wf_amp</span><span class="p">,</span> <span class="n">detuning</span> <span class="o">=</span> <span class="n">wf_det</span><span class="p">)</span>
 
 <span class="c1"># Creating the program</span>
@@ -2850,7 +2850,7 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 <span class="c1"># Compiling the program to a device</span>
 <span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">AnalogDevice</span><span class="p">())</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">from qoolqit import AnalogDevice, Constant, Drive, QuantumProgram, Ramp, Register
+<div class="clipboard-copy-txt" id="cell-1">from qoolqit import AnalogDevice, ConstantWaveform, Drive, QuantumProgram, RampWaveform, Register
 
 # Create the register
 register = Register.from_coordinates([(0,1), (0,-1), (2,0)])
@@ -2862,8 +2862,8 @@ delta_f = -delta_i
 T = 25.0
 
 # Defining the drive
-wf_amp = Constant(T, omega)
-wf_det = Ramp(T, delta_i, delta_f)
+wf_amp = ConstantWaveform(T, omega)
+wf_det = RampWaveform(T, delta_i, delta_f)
 drive = Drive(amplitude = wf_amp, detuning = wf_det)
 
 # Creating the program

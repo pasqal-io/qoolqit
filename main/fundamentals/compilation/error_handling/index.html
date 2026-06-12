@@ -2817,7 +2817,7 @@ graph.draw()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [40]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
@@ -2831,14 +2831,14 @@ graph.draw()</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Drive</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Interpolated</span><span class="p">,</span> <span class="n">Ramp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">InterpolatedWaveform</span><span class="p">,</span> <span class="n">RampWaveform</span>
 
 <span class="c1"># Interpolated waveform: smooth curve through specified values</span>
-<span class="n">omega_wf</span> <span class="o">=</span> <span class="n">Interpolated</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">omega_wf</span> <span class="o">=</span> <span class="n">InterpolatedWaveform</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="c1"># Ramp waveform</span>
-<span class="n">delta_wf</span> <span class="o">=</span> <span class="n">Ramp</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">final_value</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">delta_wf</span> <span class="o">=</span> <span class="n">RampWaveform</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">final_value</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="c1"># Combine into a Drivejupyter kernelspec list</span>
+<span class="c1"># Combine into a Drive</span>
 <span class="n">drive</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span>
     <span class="n">amplitude</span><span class="o">=</span><span class="n">omega_wf</span><span class="p">,</span>
     <span class="n">detuning</span><span class="o">=</span><span class="n">delta_wf</span>
@@ -2847,14 +2847,14 @@ graph.draw()</div>
 <span class="n">drive</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-2">from qoolqit import Drive
-from qoolqit.waveforms import Interpolated, Ramp
+from qoolqit.waveforms import InterpolatedWaveform, RampWaveform
 
 # Interpolated waveform: smooth curve through specified values
-omega_wf = Interpolated(duration=50, values=[0, 1, 0])
+omega_wf = InterpolatedWaveform(duration=50, values=[0, 1, 0])
 # Ramp waveform
-delta_wf = Ramp(duration=50, initial_value=-2, final_value=2)
+delta_wf = RampWaveform(duration=50, initial_value=-2, final_value=2)
 
-# Combine into a Drivejupyter kernelspec list
+# Combine into a Drive
 drive = Drive(
     amplitude=omega_wf,
     detuning=delta_wf
@@ -2997,7 +2997,7 @@ First let us define a small function that output the quantum program we want to 
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [43]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
@@ -3012,15 +3012,15 @@ First let us define a small function that output the quantum program we want to 
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Or use built-in graph patterns</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGraph</span><span class="p">,</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">QuantumProgram</span><span class="p">,</span> <span class="n">Register</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Interpolated</span><span class="p">,</span> <span class="n">Ramp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">RampWaveform</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_program</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">amp</span><span class="p">,</span><span class="n">det</span><span class="p">):</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">DataGraph</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">L</span><span class="p">)</span>
     <span class="n">register</span> <span class="o">=</span> <span class="n">Register</span><span class="o">.</span><span class="n">from_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>  <span class="c1"># LxL square lattice</span>
 
-    <span class="n">omega_wf</span> <span class="o">=</span> <span class="n">Interpolated</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-    <span class="n">delta_wf</span> <span class="o">=</span> <span class="n">Ramp</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=-</span><span class="n">det</span><span class="p">,</span> <span class="n">final_value</span><span class="o">=</span><span class="n">det</span><span class="p">)</span>
+    <span class="n">omega_wf</span> <span class="o">=</span> <span class="n">InterpolatedWaveform</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">amp</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">delta_wf</span> <span class="o">=</span> <span class="n">RampWaveform</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=-</span><span class="n">det</span><span class="p">,</span> <span class="n">final_value</span><span class="o">=</span><span class="n">det</span><span class="p">)</span>
 
     <span class="n">drive</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">omega_wf</span><span class="p">,</span> <span class="n">detuning</span><span class="o">=</span><span class="n">delta_wf</span><span class="p">)</span>
 
@@ -3028,15 +3028,15 @@ First let us define a small function that output the quantum program we want to 
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-5"># Or use built-in graph patterns
 from qoolqit import DataGraph, Drive, QuantumProgram, Register
-from qoolqit.waveforms import Interpolated, Ramp
+from qoolqit.waveforms import RampWaveform
 
 
 def create_program(L,amp,det):
     graph = DataGraph.square(m=L, n=L)
     register = Register.from_graph(graph)  # LxL square lattice
 
-    omega_wf = Interpolated(duration=50, values=[0, amp, 0])
-    delta_wf = Ramp(duration=50, initial_value=-det, final_value=det)
+    omega_wf = InterpolatedWaveform(duration=50, values=[0, amp, 0])
+    delta_wf = RampWaveform(duration=50, initial_value=-det, final_value=det)
 
     drive = Drive(amplitude=omega_wf, detuning=delta_wf)
 

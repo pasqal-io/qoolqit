@@ -3096,7 +3096,7 @@ register.draw()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
@@ -3109,32 +3109,32 @@ register.draw()</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">Delay</span><span class="p">,</span> <span class="n">Ramp</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstantWaveform</span><span class="p">,</span> <span class="n">DelayWaveform</span><span class="p">,</span> <span class="n">RampWaveform</span>
 
 <span class="c1"># An empty waveform</span>
-<span class="n">wf1</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">wf1</span> <span class="o">=</span> <span class="n">DelayWaveform</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">wf1</span><span class="p">)</span>
 
 <span class="c1"># A waveform with a constant value</span>
-<span class="n">wf2</span> <span class="o">=</span> <span class="n">Constant</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="n">wf2</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">wf2</span><span class="p">)</span>
 
 <span class="c1"># A waveform that ramps linearly between two values</span>
-<span class="n">wf3</span> <span class="o">=</span> <span class="n">Ramp</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">wf3</span> <span class="o">=</span> <span class="n">RampWaveform</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">wf3</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">from qoolqit import Constant, Delay, Ramp
+<div class="clipboard-copy-txt" id="cell-6">from qoolqit import ConstantWaveform, DelayWaveform, RampWaveform
 
 # An empty waveform
-wf1 = Delay(1.0)
+wf1 = DelayWaveform(1.0)
 print(wf1)
 
 # A waveform with a constant value
-wf2 = Constant(1.0, 2.0)
+wf2 = ConstantWaveform(1.0, 2.0)
 print(wf2)
 
 # A waveform that ramps linearly between two values
-wf3 = Ramp(1.0, -1.0, 1.0)
+wf3 = RampWaveform(1.0, -1.0, 1.0)
 print(wf3)</div>
 </div>
 </div>
@@ -3347,7 +3347,7 @@ For the full set of available options please refer to the <a href="../../referen
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
@@ -3360,16 +3360,16 @@ For the full set of available options please refer to the <a href="../../referen
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Interpolated</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">InterpolatedWaveform</span>
 
 <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="n">wf_interpolated</span> <span class="o">=</span> <span class="n">Interpolated</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+<span class="n">wf_interpolated</span> <span class="o">=</span> <span class="n">InterpolatedWaveform</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
 <span class="n">wf_interpolated</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10">from qoolqit import Interpolated
+<div class="clipboard-copy-txt" id="cell-10">from qoolqit import InterpolatedWaveform
 
 values = np.sin(np.linspace(0,2*np.pi, 10))
-wf_interpolated = Interpolated(100, values)
+wf_interpolated = InterpolatedWaveform(100, values)
 wf_interpolated.draw()</div>
 </div>
 </div>
@@ -3585,7 +3585,7 @@ Here is an example on how to create a drive:</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
@@ -3598,11 +3598,11 @@ Here is an example on how to create a drive:</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">Interpolated</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstantWaveform</span><span class="p">,</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">InterpolatedWaveform</span>
 
 <span class="c1"># Defining two waveforms</span>
-<span class="n">amplitude</span> <span class="o">=</span> <span class="n">Constant</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">Interpolated</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
-<span class="n">detuning</span> <span class="o">=</span> <span class="n">Ramp</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">Constant</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">amplitude</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">InterpolatedWaveform</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">detuning</span> <span class="o">=</span> <span class="n">RampWaveform</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
 <span class="c1"># Defining the drive</span>
 <span class="n">drive</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span>
@@ -3614,11 +3614,11 @@ Here is an example on how to create a drive:</p>
 <span class="n">drive</span> <span class="o">=</span> <span class="n">drive</span> <span class="o">&gt;&gt;</span> <span class="n">drive</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">drive</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-14">from qoolqit import Constant, Drive, Interpolated
+<div class="clipboard-copy-txt" id="cell-14">from qoolqit import ConstantWaveform, Drive, InterpolatedWaveform
 
 # Defining two waveforms
-amplitude = Constant(duration=5.0, value=1.0) &gt;&gt; Interpolated(10.0, [0.0, 0.8, 0.8, 0.0])
-detuning = Ramp(8.0, -1.0, 1.0) &gt;&gt; Constant(4.0, 1.0)
+amplitude = ConstantWaveform(5.0, value=1.0) &gt;&gt; InterpolatedWaveform(10.0, [0.0, 0.8, 0.8, 0.0])
+detuning = RampWaveform(8.0, -1.0, 1.0) &gt;&gt; ConstantWaveform(4.0, 1.0)
 
 # Defining the drive
 drive = Drive(
@@ -3644,7 +3644,7 @@ print(drive)</div>
 | 0.00 ≤ t &lt; 5.00: Constant(t, 1.00)
 | 5.00 ≤ t &lt; 15.00: Interpolated(t)
 | 15.00 ≤ t &lt; 20.00: Constant(t, 1.00)
-| 20.00 ≤ t ≤ 30.00: Interpolated(t)
+| 20.00 ≤ t ≤ 30.00: InterpolatedWaveform(t)
 detuning: 
 | 0.00 ≤ t &lt; 8.00: Ramp(t, -1.00, 1.00)
 | 8.00 ≤ t &lt; 12.00: Constant(t, 1.00)
@@ -3733,7 +3733,7 @@ At a given time, therefore, each qubit local detuning contribution is given by t
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
@@ -3748,14 +3748,14 @@ At a given time, therefore, each qubit local detuning contribution is given by t
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">DetuningMapModulator</span>
 
-<span class="n">dmm_waveform</span> <span class="o">=</span> <span class="n">Constant</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">dmm_waveform</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">dmm_weights</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mf">0.3</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mf">0.8</span><span class="p">}</span>
 <span class="n">dmm</span> <span class="o">=</span> <span class="n">DetuningMapModulator</span><span class="p">(</span><span class="n">dmm_waveform</span><span class="p">,</span> <span class="n">dmm_weights</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dmm</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-16">from qoolqit.drive import DetuningMapModulator
 
-dmm_waveform = Constant(10.0, -1.0)
+dmm_waveform = ConstantWaveform(10.0, -1.0)
 dmm_weights = {0:0.1, 1:0.3, 2:0.8}
 dmm = DetuningMapModulator(dmm_waveform, dmm_weights)
 print(dmm)</div>
@@ -3794,7 +3794,7 @@ print(dmm)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-17">
@@ -3807,11 +3807,11 @@ print(dmm)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">drive</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">Constant</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">dmm</span><span class="o">=</span><span class="n">dmm</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">drive</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">ConstantWaveform</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">dmm</span><span class="o">=</span><span class="n">dmm</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">drive</span><span class="p">)</span>
 <span class="n">drive</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-17">drive = Drive(amplitude=Constant(10.0,1.0), dmm=dmm)
+<div class="clipboard-copy-txt" id="cell-17">drive = Drive(amplitude=ConstantWaveform(10.0,1.0), dmm=dmm)
 print(drive)
 drive.draw()</div>
 </div>

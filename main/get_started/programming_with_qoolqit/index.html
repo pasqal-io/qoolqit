@@ -2942,7 +2942,7 @@ register.draw()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
@@ -2956,16 +2956,16 @@ register.draw()</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Drive</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">Interpolated</span><span class="p">,</span> <span class="n">Ramp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstantWaveform</span><span class="p">,</span> <span class="n">InterpolatedWaveform</span><span class="p">,</span> <span class="n">RampWaveform</span>
 
 <span class="c1"># Interpolated waveform: smooth curve through specified values</span>
-<span class="n">omega_wf</span> <span class="o">=</span> <span class="n">Interpolated</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">omega_wf</span> <span class="o">=</span> <span class="n">InterpolatedWaveform</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 
 <span class="c1"># Constant waveform</span>
-<span class="n">delta_wf</span> <span class="o">=</span> <span class="n">Constant</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">delta_wf</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1"># Ramp waveform</span>
-<span class="n">delta_wf</span> <span class="o">=</span> <span class="n">Ramp</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">final_value</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">delta_wf</span> <span class="o">=</span> <span class="n">RampWaveform</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">final_value</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="c1"># Combine into a Drive</span>
 <span class="n">drive</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span>
@@ -2976,16 +2976,16 @@ register.draw()</div>
 <span class="n">drive</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-3">from qoolqit import Drive
-from qoolqit.waveforms import Constant, Interpolated, Ramp
+from qoolqit.waveforms import ConstantWaveform, InterpolatedWaveform, RampWaveform
 
 # Interpolated waveform: smooth curve through specified values
-omega_wf = Interpolated(duration=10, values=[0, 1, 0])
+omega_wf = InterpolatedWaveform(duration=10, values=[0, 1, 0])
 
 # Constant waveform
-delta_wf = Constant(duration=10, value=-2)
+delta_wf = ConstantWaveform(duration=10, value=-2)
 
 # Ramp waveform
-delta_wf = Ramp(duration=10, initial_value=-2, final_value=2)
+delta_wf = RampWaveform(duration=10, initial_value=-2, final_value=2)
 
 # Combine into a Drive
 drive = Drive(
@@ -3247,7 +3247,7 @@ results = job.results()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
@@ -3265,7 +3265,7 @@ results = job.results()</div>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">QuantumProgram</span><span class="p">,</span> <span class="n">Register</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.devices</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalogDevice</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">BitStrings</span><span class="p">,</span> <span class="n">EmulationConfig</span><span class="p">,</span> <span class="n">LocalEmulator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Constant</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstantWaveform</span>
 
 <span class="c1"># Two qubits at unit distance =&gt; maximum interaction J = 1</span>
 <span class="n">register</span> <span class="o">=</span> <span class="n">Register</span><span class="o">.</span><span class="n">from_coordinates</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span>
@@ -3274,14 +3274,14 @@ results = job.results()</div>
 
 <span class="c1"># Blockade regime: Omega &lt;&lt; J =&gt; double excitation is suppressed</span>
 <span class="n">drive_blockade</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span>
-    <span class="n">amplitude</span><span class="o">=</span><span class="n">Constant</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>  <span class="c1"># Omega = 0.3 &lt;&lt; 1</span>
-    <span class="n">detuning</span><span class="o">=</span><span class="n">Constant</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">amplitude</span><span class="o">=</span><span class="n">ConstantWaveform</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>  <span class="c1"># Omega = 0.3 &lt;&lt; 1</span>
+    <span class="n">detuning</span><span class="o">=</span><span class="n">ConstantWaveform</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 <span class="p">)</span>
 
 <span class="c1"># Non-blockade regime: Omega &gt;&gt; J =&gt; drive dominates, both atoms can be excited</span>
 <span class="n">drive_no_blockade</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span>
-    <span class="n">amplitude</span><span class="o">=</span><span class="n">Constant</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span>  <span class="c1"># Omega = 2.0 &gt;&gt; 1</span>
-    <span class="n">detuning</span><span class="o">=</span><span class="n">Constant</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">amplitude</span><span class="o">=</span><span class="n">ConstantWaveform</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span>  <span class="c1"># Omega = 2.0 &gt;&gt; 1</span>
+    <span class="n">detuning</span><span class="o">=</span><span class="n">ConstantWaveform</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-7">import numpy as np
@@ -3289,7 +3289,7 @@ results = job.results()</div>
 from qoolqit import Drive, QuantumProgram, Register
 from qoolqit.devices import AnalogDevice
 from qoolqit.execution import BitStrings, EmulationConfig, LocalEmulator
-from qoolqit.waveforms import Constant
+from qoolqit.waveforms import ConstantWaveform
 
 # Two qubits at unit distance =&gt; maximum interaction J = 1
 register = Register.from_coordinates([(0, 0), (1, 0)])
@@ -3298,14 +3298,14 @@ duration = 10
 
 # Blockade regime: Omega &lt;&lt; J =&gt; double excitation is suppressed
 drive_blockade = Drive(
-    amplitude=Constant(duration, 0.3),  # Omega = 0.3 &lt;&lt; 1
-    detuning=Constant(duration, 0.0)
+    amplitude=ConstantWaveform(duration, 0.3),  # Omega = 0.3 &lt;&lt; 1
+    detuning=ConstantWaveform(duration, 0.0)
 )
 
 # Non-blockade regime: Omega &gt;&gt; J =&gt; drive dominates, both atoms can be excited
 drive_no_blockade = Drive(
-    amplitude=Constant(duration, 2.0),  # Omega = 2.0 &gt;&gt; 1
-    detuning=Constant(duration, 0.0)
+    amplitude=ConstantWaveform(duration, 2.0),  # Omega = 2.0 &gt;&gt; 1
+    detuning=ConstantWaveform(duration, 0.0)
 )</div>
 </div>
 </div>
