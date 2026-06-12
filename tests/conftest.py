@@ -9,7 +9,7 @@ import pytest
 from qoolqit.drive import DetuningMapModulator, Drive
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
-from qoolqit.waveforms import Ramp, Waveform
+from qoolqit.waveforms import RampWaveform, Waveform
 
 
 @pytest.fixture
@@ -40,13 +40,13 @@ def random_waveform_factory() -> (
         n = rng.integers(2, 5)
         durations = rng.uniform(1.0, 2.0, size=n)
         durations *= rng.uniform(0.05 * max_duration, max_duration) / np.sum(durations)
-        wf: Waveform = Ramp(
+        wf: Waveform = RampWaveform(
             durations[0],
             initial_value=rng.uniform(min_value, max_value),
             final_value=rng.uniform(min_value, max_value),
         )
         for i in range(1, n):
-            wf = wf >> Ramp(
+            wf = wf >> RampWaveform(
                 durations[i],
                 initial_value=rng.uniform(min_value, max_value),
                 final_value=rng.uniform(min_value, max_value),
@@ -63,8 +63,8 @@ def dmm_program(
     def _generate_program() -> QuantumProgram:
         rng = np.random.default_rng()
         register = random_linear_register_factory(1.0, rng)
-        wf_amp = Ramp(1.0, 0.5, 0.5)
-        wf_det = Ramp(1.0, -0.2, -0.5)
+        wf_amp = RampWaveform(1.0, 0.5, 0.5)
+        wf_det = RampWaveform(1.0, -0.2, -0.5)
         dmm = DetuningMapModulator(
             weights={q: uniform(0.1, 0.99) for q in register.qubits_ids},
             waveform=wf_det,
