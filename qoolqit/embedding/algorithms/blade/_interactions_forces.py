@@ -56,13 +56,15 @@ def compute_target_weights_distances_by_weight_diff_limit(
 ) -> Any:
     with np.errstate(divide="ignore", invalid="ignore"):
         weight_differences = target_weights - current_weights
+
+    max_non_overflowing_value = 0.9 * np.sqrt(np.finfo(weight_differences.dtype).max)
+    weight_differences = np.clip(
+        weight_differences, -max_non_overflowing_value, max_non_overflowing_value
+    )
+
     n = len(weight_differences)
     weight_differences[range(n), range(n)] = 0
     logger.debug(f"{weight_differences=}")
-    # significant_weight_difference = np.max(np.abs(weight_differences)) / 100
-
-    weight_difference_threshold = np.max(np.abs(weight_differences)) * weight_relative_threshold
-    logger.debug(f"{weight_difference_threshold=}")
 
     reduced_weight_differences = weight_differences * (1 - weight_relative_threshold)
     step_target_weights = current_weights + reduced_weight_differences
@@ -77,11 +79,16 @@ def compute_target_weights_distances_by_weight_diff_limit(
     ) / 2  # division by 2 because both forces will be applied on both atoms of each pair
     logger.debug(f"{distances_to_walk=}")
 
-    weighted_vectors = reduced_weight_differences[:, :, np.newaxis] * unitary_vectors
+    chosen_weights_l1 = reduced_weight_differences[:, :, np.newaxis]
+    chosen_weights_l2 = chosen_weights_l1**2 * np.sign(chosen_weights_l1)
+
+    weighted_vectors = chosen_weights_l2 * unitary_vectors
     weighted_vectors[distances_to_walk == 0] = 0.0
 
     assert not np.any(np.isnan(weighted_vectors))
     logger.debug(f"{weighted_vectors=}")
+
+    assert not np.any(np.isnan(distances_to_walk))
 
     return weighted_vectors, distances_to_walk
 

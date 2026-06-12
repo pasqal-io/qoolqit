@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import InitVar, dataclass
-from typing import Callable
+from typing import Callable, Final
 
 import networkx as nx
 import numpy as np
@@ -182,8 +182,7 @@ def update_positions(
             ),
         )
 
-    for u, force in enumerate(resulting_forces_vectors):
-        positions[u] += force
+    positions += resulting_forces_vectors
 
     assert not np.any(np.isnan(positions))
 
@@ -220,7 +219,7 @@ def evolve_with_forces_through_dim_change(
     final_ratio: float | None = None,
     compute_weight_relative_threshold_by_step: Callable[[int], float],
     compute_max_distance_to_walk_by_step: Callable[
-        [int, float | None], float | tuple[float, float, float]
+        [int, float], float | tuple[float, float, float]
     ],
     compute_regulation_cursor_by_step: Callable[[int], float],
     draw_weighted_graph: bool = False,
@@ -253,6 +252,9 @@ def evolve_with_forces_through_dim_change(
         )
         assert np.unique(positions, axis=0).shape == positions.shape
         positions = scaling * positions
+        assert np.unique(positions, axis=0).shape == positions.shape
+        assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
+
         if draw_step:
             distances = scipy.spatial.distance.pdist(positions)
             print(
@@ -267,7 +269,14 @@ def evolve_with_forces_through_dim_change(
             weight_relative_threshold=compute_weight_relative_threshold_by_step(step),
             min_dist=min_dist,
             max_radius=max_radius,
-            max_distance_to_walk=compute_max_distance_to_walk_by_step(step, max_radius),
+            max_distance_to_walk=compute_max_distance_to_walk_by_step(
+                step,
+                (
+                    max_radius
+                    if max_radius is not None
+                    else np.max(scipy.spatial.distance.pdist(positions))
+                ),
+            ),
             regulation_cursor=compute_regulation_cursor_by_step(step),
             draw_step=draw_step,
             step=step,
@@ -275,11 +284,14 @@ def evolve_with_forces_through_dim_change(
         )
         assert np.unique(positions, axis=0).shape == positions.shape
         assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
+
         positions = dim_shrinker.applied_step(positions)
+        assert np.unique(positions, axis=0).shape == positions.shape
+        assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
 
     removed_position_dims = positions[:, final_dimensions:]
     assert np.all(
-        np.isclose(removed_position_dims, 0)
+        np.isclose(removed_position_dims, 0, atol=1e-5)
     ), f"Shrunk dimensions {removed_position_dims=} should only contain zeros"
 
     return positions[:, :final_dimensions], min_dist
@@ -312,7 +324,7 @@ def evolve_with_dimension_transition(
     stop_step: int,
     compute_weight_relative_threshold_by_step: Callable[[int], float],
     compute_max_distance_to_walk_by_step: Callable[
-        [int, float | None], float | tuple[float, float, float]
+        [int, float], float | tuple[float, float, float]
     ],
     compute_regulation_cursor_by_step: Callable[[int], float],
     target_interactions: np.ndarray,
@@ -331,13 +343,22 @@ def evolve_with_dimension_transition(
     if final_dimensions < starting_dimensions and pca:
         try:
             from sklearn.decomposition import PCA
-        except ImportError:
+        except ImportError as e:
             raise ModuleNotFoundError(
-                "To use `pca=True` in the BLaDE algorithm, "
-                "please install the `scikit-learn` library."
-            )
-        pca_inst = PCA(n_components=starting_dimensions)
+                "To use `pca=True` in the BLaDE algorithm, please install `scikit-learn`."
+            ) from e
+
+        n_components = min(*positions.shape)
+
+        if n_components < 1:
+            raise ValueError(f"PCA impossible: positions.shape={positions.shape}")
+
+        pca_inst = PCA(n_components=n_components)
         positions = pca_inst.fit_transform(positions)
+
+        if positions.shape[1] < starting_dimensions:
+            pad = starting_dimensions - positions.shape[1]
+            positions = np.pad(positions, ((0, 0), (0, pad)), mode="constant")
 
     elif final_dimensions > starting_dimensions:
         positions = augment_dimensions_with_random_values(
@@ -372,10 +393,8 @@ def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
     return np.min(distance_matrix[upper_diagonal_mask])  # type: ignore
 
 
-def default_compute_max_distance_to_walk(progress: float, max_radial_dist: float | None) -> float:
+def default_compute_max_distance_to_walk(progress: float, max_radial_dist: float) -> float:
     """Default function with rapid then slow decrease to zero of the walking distance."""
-    if max_radial_dist is None:
-        return float(np.inf)
     return float(2 * max_radial_dist * (1 - np.sin(np.pi / 2 * progress)))
 
 
@@ -384,21 +403,41 @@ def default_compute_ratio_step_factors(progress: float) -> float:
     return float(np.interp(progress, xp=[0, 3 / 5, 1], fp=[2, 0.94, 0.98]))
 
 
+default_dimensions: Final[tuple[int, ...]] = (5, 4, 3, 2, 2, 2)
+default_pca: Final[bool] = True
+default_steps_per_round: Final[int] = 200
+
+
+def default_compute_weight_relative_threshold(cursor: float) -> float:
+    """Default function for a low constant weight relative threshold."""
+    return 0.1
+
+
+def default_compute_regulation_cursor(progress: float) -> float:
+    """Default function for a low constant regulation cursor."""
+    return 0.1
+
+
+default_ratio_rerun: Final[int] = 2
+
+
 def _blade(
     matrix: np.ndarray,
     *,
     max_min_dist_ratio: float | None = None,
-    dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2),
+    dimensions: tuple[int, ...] = default_dimensions,
     starting_positions: np.ndarray | None = None,
-    pca: bool = False,
-    steps_per_round: int = 200,
-    compute_weight_relative_threshold: Callable[[float], float] = (lambda _: 0.1),
+    pca: bool = default_pca,
+    steps_per_round: int = default_steps_per_round,
+    compute_weight_relative_threshold: Callable[
+        [float], float
+    ] = default_compute_weight_relative_threshold,
     compute_max_distance_to_walk: Callable[
-        [float, float | None], float | tuple[float, float, float]
+        [float, float], float | tuple[float, float, float]
     ] = default_compute_max_distance_to_walk,
-    compute_regulation_cursor: Callable[[float], float] = (lambda _: 0.1),
+    compute_regulation_cursor: Callable[[float], float] = default_compute_regulation_cursor,
     compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors,
-    ratio_rerun: int = 2,
+    ratio_rerun: int = default_ratio_rerun,
     draw_steps: bool | list[int] = False,
     draw_weighted_graph: bool = False,
     draw_differences: bool = False,
@@ -446,11 +485,11 @@ def _blade(
             `update_positions` to learn more).
         compute_max_distance_to_walk: Function that is called at each step.
             It takes a float number between 0 and 1 that represents the progress
-            on the steps, and takes another argument that is set to `None` when
-            `max_min_dist_ratio` is not enabled, otherwise, it is set to
-            the maximum radial distance for the current step.
-            It must return a float number that limits the distances
-            nodes can move at one step (see `update_positions` to learn more).
+            on the steps, and takes another argument that is set to the current
+            largest pairwise distance when `max_min_dist_ratio` is not enabled,
+            otherwise, it is set to the maximum radial distance for the current
+            step. It must return a float number that limits the distances
+            nodes can move at one step  (see `update_positions` to learn more).
         compute_regulation_cursor: Function that is called at each step.
             It takes a float number between 0 and 1 that represents the progress
             on the steps. It must return a float number between 0 (no regulation)
@@ -483,6 +522,7 @@ def _blade(
         assert not torch.all(matrix == 0)
 
     graph = Qubo.from_matrix(matrix).as_graph()
+    graph.add_nodes_from(range(matrix.shape[0]))
     matrix = np.array(
         nx.adjacency_matrix(graph, nodelist=list(range(len(matrix))), weight="weight").toarray()
     )
@@ -523,7 +563,7 @@ def _blade(
         return compute_weight_relative_threshold(step_to_progress(step))
 
     def compute_max_distance_to_walk_by_step(
-        step: int, max_radial_dist: float | None
+        step: int, max_radial_dist: float
     ) -> float | tuple[float, float, float]:
         return compute_max_distance_to_walk(step_to_progress(step), max_radial_dist)
 
@@ -585,17 +625,19 @@ class BladeConfig(EmbedderConfig):
     """Configuration parameters to embed with BLaDE."""
 
     max_min_dist_ratio: float | None = None
-    dimensions: tuple[int, ...] = (5, 4, 3, 2, 2, 2)
+    dimensions: tuple[int, ...] = default_dimensions
     starting_positions: np.ndarray | None = None
-    pca: bool = False
-    steps_per_round: int = 200
-    compute_weight_relative_threshold: Callable[[float], float] = lambda _: 0.1
-    compute_max_distance_to_walk: Callable[
-        [float, float | None], float | tuple[float, float, float]
-    ] = default_compute_max_distance_to_walk
-    compute_regulation_cursor: Callable[[float], float] = lambda _: 0.1
+    pca: bool = default_pca
+    steps_per_round: int = default_steps_per_round
+    compute_weight_relative_threshold: Callable[[float], float] = (
+        default_compute_weight_relative_threshold
+    )
+    compute_max_distance_to_walk: Callable[[float, float], float | tuple[float, float, float]] = (
+        default_compute_max_distance_to_walk
+    )
+    compute_regulation_cursor: Callable[[float], float] = default_compute_regulation_cursor
     compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors
-    ratio_rerun: int = 2
+    ratio_rerun: int = default_ratio_rerun
     device: InitVar[Device | None] = None
 
     def __post_init__(self, device: Device | None) -> None:
