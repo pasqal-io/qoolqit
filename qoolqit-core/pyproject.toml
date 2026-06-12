@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "qoolqit-core"
+description = "Work in progress to define QoolQit core library with minimal dependencies."
+readme = "README.md"
+version = "0.0.1"
+requires-python = ">=3.10"
+license = { text = "MIT-derived" }
+keywords = ["quantum"]
+maintainers = [
+  { name = "Stefano Grava", email = "s.grava-ext@pasqal.com" },
+  { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+
+dependencies = [
+  "pulser-core >= 1.8",
+]
