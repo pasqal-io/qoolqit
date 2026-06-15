@@ -16,7 +16,6 @@ from qoolqit.waveforms import (
     InterpolatedWaveform,
     PiecewiseLinearWaveform,
     RampWaveform,
-    SinWaveform,
     Waveform,
 )
 from qoolqit.waveforms.utils import round_to_sum
@@ -81,34 +80,6 @@ def test_ramp() -> None:
     assert min_val <= value <= max_val
     assert wf.max() == max_val
     assert wf.min() == min_val
-
-
-def test_sin() -> None:
-    duration = 1.0
-    amplitude = random.random()
-    omega = random.random()
-    phi = random.random()
-    shift = random.random()
-
-    wf = SinWaveform(duration, amplitude, omega, phi, shift)
-
-    assert wf.amplitude == amplitude
-    assert wf.omega == omega
-    assert wf.phi == phi
-    assert wf.shift == shift
-
-    n_points = 100
-    t_array = t_array = np.random.uniform(low=-1.0, high=2.0, size=(n_points,))
-    approx_max = wf.max()
-    approx_min = wf.min()
-    random_samples_max = np.max(wf(t_array))
-    random_samples_min = np.min(wf(t_array))
-    assert (approx_max > random_samples_max) or np.isclose(
-        approx_max, random_samples_max, atol=1e-05
-    )
-    assert (approx_min > random_samples_min) or np.isclose(
-        approx_min, random_samples_min, atol=1e-05
-    )
 
 
 def test_blackman() -> None:

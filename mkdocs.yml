@@ -25,7 +25,6 @@ nav:
   - Extended usage:
     - Adimensionalization: extended_usage/adimensionalization.md
     - Custom embedders: extended_usage/custom_embedders.ipynb
-    - Custom waveforms: extended_usage/custom_waveforms.ipynb
   - Applications:
     - tutorials/index.md
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
