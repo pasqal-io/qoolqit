@@ -36,9 +36,7 @@ def _compute_limited_constraint_forces(*, force: Force, max_distance_to_walk: fl
     np.divide(max_distance_to_walk, norms, out=temperatures, where=(norms != 0))
     limited_resulting_forces = resulting_forces * np.minimum(1, temperatures[:, np.newaxis])
 
-    assert not np.any(np.isinf(limited_resulting_forces)) and not np.any(
-        np.isnan(limited_resulting_forces)
-    )
+    assert np.all(np.isfinite(limited_resulting_forces))
 
     return limited_resulting_forces
 

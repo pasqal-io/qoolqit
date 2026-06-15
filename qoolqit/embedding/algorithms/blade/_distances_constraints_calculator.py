@@ -51,8 +51,7 @@ def compute_best_scaling_for_qubo(
 
     best_scaling = np.clip(best_scaling, 0.1, 10)
 
-    assert not np.isnan(best_scaling)
-    assert not np.isinf(best_scaling)
+    assert np.isfinite(best_scaling)
     assert best_scaling > 0
 
     return best_scaling

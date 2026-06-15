@@ -40,7 +40,7 @@ def compute_target_weights_by_dist_limit(
     )
 
     modulated_target_weights = normalized_interaction(rectified_modulated_target_distances)
-    assert not np.any(np.isinf(modulated_target_weights))
+    assert np.all(np.isfinite(modulated_target_weights))
 
     return modulated_target_weights
 
@@ -67,7 +67,7 @@ def compute_target_weights_distances_by_weight_diff_limit(
     step_target_weights = current_weights + reduced_weight_differences
 
     step_target_distances = normalized_best_dist(step_target_weights)
-    assert not np.any(np.isinf(step_target_distances))
+    assert np.all(np.isfinite(step_target_distances))
 
     distances_to_walk = (
         distance_matrix - step_target_distances
