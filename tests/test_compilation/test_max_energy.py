@@ -6,11 +6,12 @@ from typing import Callable
 
 import numpy as np
 import pytest
+from numpy.typing import ArrayLike
+from pulser.sampler import sample
 from pulser.sequence import Sequence as PulserSequence
 
 from qoolqit import (
     AnalogDevice,
-    Constant,
     Device,
     DigitalAnalogDevice,
     Drive,
@@ -20,9 +21,10 @@ from qoolqit import (
 )
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
+from qoolqit.waveforms import ConstantWaveform, InterpolatedWaveform
 
 
-class TestWorkingPointCompilerProfile:
+class TestMaxEnergyCompilerProfile:
     profile = CompilerProfile.MAX_ENERGY
 
     @pytest.fixture(autouse=True)
@@ -70,8 +72,8 @@ class TestWorkingPointCompilerProfile:
     def test_catch_compilation_error_max_abs_detuning(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
         amp_max_value = 0.5
-        amplitude = Constant(50, value=amp_max_value)
-        detuning = Constant(50, value=20.26)
+        amplitude = ConstantWaveform(50, value=amp_max_value)
+        detuning = ConstantWaveform(50, value=20.26)
         drive = Drive(amplitude=amplitude, detuning=detuning)
         program = QuantumProgram(register, drive)
         device = AnalogDevice()
@@ -82,15 +84,17 @@ class TestWorkingPointCompilerProfile:
             max_abs_det_allowed = device.specs["max_abs_detuning"] / ENERGY
             with pytest.raises(
                 CompilationError,
-                match="To compile your program, set the maximum absolute"
-                f" detuning below {max_abs_det_allowed}",
+                match=(
+                    f"To compile this program on the selected device `{device.name}`, "
+                    f"set the maximum absolute detuning below {max_abs_det_allowed}"
+                ),
             ):
                 program.compile_to(AnalogDevice(), profile=self.profile)
 
     def test_catch_compilation_error_max_duration(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
         duration = 300
-        amplitude = Constant(duration, value=0.5)
+        amplitude = ConstantWaveform(duration, value=0.5)
         drive = Drive(amplitude=amplitude)
         program = QuantumProgram(register, drive)
         device = AnalogDevice()
@@ -99,13 +103,16 @@ class TestWorkingPointCompilerProfile:
         ENERGY = device._target_amp_adim / amplitude.max()
         if device.specs["max_duration"]:
             max_duration_allowed = device.specs["max_duration"] * ENERGY
-            msg = f"To compile your program, set the drive's duration below {max_duration_allowed}"
+            msg = (
+                f"To compile this program on the selected device `{device.name}`, "
+                f"set the drive's duration below {max_duration_allowed}"
+            )
             with pytest.raises(CompilationError, match=msg):
                 program.compile_to(AnalogDevice(), profile=self.profile)
 
     def test_catch_compilation_error_max_radial_distance(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (9.0, 0.0)})
-        drive = Drive(amplitude=Constant(13.0, 0.5))
+        drive = Drive(amplitude=ConstantWaveform(13.0, 0.5))
         program = QuantumProgram(register, drive)
         device = AnalogDevice()
 
@@ -114,8 +121,33 @@ class TestWorkingPointCompilerProfile:
         if device.specs["max_radial_distance"]:
             max_radial_distance_allowed = device.specs["max_radial_distance"] * ENERGY ** (1 / 6)
             msg = (
-                "To compile your program, set the maximum radial"
-                f" distance below {max_radial_distance_allowed}"
+                f"To compile this program on the selected device `{device.name}`, "
+                f"the maximum radial distance must be below {max_radial_distance_allowed}"
             )
             with pytest.raises(CompilationError, match=msg):
                 program.compile_to(AnalogDevice(), profile=self.profile)
+
+    @pytest.mark.parametrize("device", [AnalogDevice(), DigitalAnalogDevice(), MockDevice()])
+    @pytest.mark.parametrize(
+        "values",
+        [
+            [0.0, 0.5, 1.0, 0.5, 0.0],
+            np.sin(np.linspace(0, 2 * np.pi, 10)) ** 2,
+            [0.7504049424354939, 0.1, 0.1, 0.0],
+        ],
+    )
+    def test_compilation_InterpolatedWaveform(self, device: Device, values: ArrayLike) -> None:
+        register = Register.from_coordinates([[0, 0], [0, 1]])
+        amp_wave = InterpolatedWaveform(duration=60.0, values=values)
+        drive = Drive(amplitude=amp_wave)
+        program = QuantumProgram(register=register, drive=drive)
+        program.compile_to(device=device, profile=self.profile)
+
+        # check this program is compiled to ~ device max amplitude
+        if device._max_amp is not None:
+            # extract sequence max amplitude
+            seq_sample = sample(program.compiled_sequence)
+            seq_max_amp = max(seq_sample.channel_samples["rydberg"].amp)
+
+            np.testing.assert_allclose(seq_max_amp, device._max_amp, atol=1e-8)
+            assert seq_max_amp < device._max_amp

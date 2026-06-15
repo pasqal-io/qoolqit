@@ -6,6 +6,7 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
 from qoolqit.drive import Drive
+from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.register import Register
@@ -28,18 +29,21 @@ class QuantumProgram:
         if not isinstance(register, Register):
             raise TypeError("`register` must be of type Register.")
         self._register = register
+
         if not isinstance(drive, Drive):
             raise TypeError("`drive` must be of type Drive.")
+        if drive.dmm is not None:
+            dmm_weights = drive.dmm.weights
+            for qid in dmm_weights.keys():
+                if qid not in register.qubits:
+                    raise ValueError(
+                        "In this QuantumProgram, the drive's detuning modulator map (DMM) "
+                        f"and the register do not match: qubit {qid} appears in the DMM "
+                        "but is not defined in the register."
+                    )
+
         self._drive = drive
         self._compiled_sequence: PulserSequence | None = None
-        for detuning in drive.weighted_detunings:
-            for key in detuning.weights.keys():
-                if key not in register.qubits:
-                    raise ValueError(
-                        "In this QuantumProgram, the drive and the register "
-                        f"do not match: qubit {key} appears in the drive but "
-                        "is not defined in the register."
-                    )
 
     @property
     def register(self) -> Register:
@@ -78,25 +82,78 @@ class QuantumProgram:
         return header + register + drive + compiled + device
 
     def compile_to(
-        self, device: Device, profile: CompilerProfile = CompilerProfile.MAX_ENERGY
+        self,
+        device: Device,
+        profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
+        device_max_duration_ratio: float | None = None,
     ) -> None:
-        """Compiles the given program to a device.
+        """Compiles the quantum program for execution on a specific device.
 
-        Arguments:
-            device: the Device to compile to.
+        The compilation process adapts the program to the device's constraints while
+        preserving the relative ratios of the original program parameters. Different
+        compilation profiles optimize for specific objectives:
+
+        - CompilerProfile.MAX_ENERGY (default): Scales the program to utilize the device's
+            maximum capabilities. The drive amplitude and the register positions are rescaled
+            to achieve respectively the maximum amplitude and the minimum pairwise distance
+            compatible with the input program and the device's constraints.
+        - CompilerProfile.WORKING_POINT: .
+
+        Further options DO NOT preserve the input program, but rather adapts the program to
+        the device's constraint. Programs compiled this way are not guaranteed to be portable
+        across devices.
+
+        - device_max_duration_ratio: Rescale the drive duration to a fraction of the
+            device's maximum allowed duration.
+            This option is useful in adiabatic protocols where one simply seek to
+            minimize the time derivative of the drive's amplitude.
+
+        Args:
+            device: The target device for compilation. Must be a QoolQit Device.
+            profile: The compilation strategy to optimize the program.
+                Defaults to CompilerProfile.MAX_ENERGY.
+            device_max_duration_ratio: Whether to set the program duration to a fraction of
+                the device's maximum allowed duration. Must be a number in the range (0, 1].
+                Can only be set if the device has a maximum allowed duration.
+
+        Raises:
+            CompilationError: If the compilation fails due to device constraints.
         """
-        compiler = SequenceCompiler(self.register, self.drive, device, profile)
+        if not isinstance(device, Device):
+            raise TypeError("`device` must be of type `qoolqit.devices.Device`.")
+
+        if device_max_duration_ratio is not None:
+            if device._max_duration is None:
+                raise ValueError(
+                    "Cannot set `device_max_duration_ratio` because the target device "
+                    "does not have a maximum allowed duration."
+                )
+            if not (0 < device_max_duration_ratio <= 1):
+                raise ValueError(
+                    "`device_max_duration_ratio` must be between 0 and 1, "
+                    f"got {device_max_duration_ratio} instead."
+                )
+
+        # Check if device supports DMM and has a DMM channel
+        if self.drive.dmm is not None:
+            if not device._device.dmm_channels:
+                raise CompilationError(
+                    "The device does not support DMM. Please use a device that supports DMM."
+                )
+
+        compiler = SequenceCompiler(
+            self.register, self.drive, device, profile, device_max_duration_ratio
+        )
         self._device = device
         self._compiled_sequence = compiler.compile_sequence()
 
     def draw(
         self,
-        n_points: int = 500,
         compiled: bool = False,
         return_fig: bool = False,
     ) -> Figure | None:
         if not compiled:
-            return self.drive.draw(n_points=n_points, return_fig=return_fig)
+            return self.drive.draw(return_fig=return_fig)
         else:
             if not self.is_compiled:
                 raise ValueError(

@@ -6,22 +6,22 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "0.4.0"
+version = "1.1.1"
 requires-python = ">=3.10"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
 authors = [
-  { name = "João Moutinho", email = "joao.moutinho@pasqal.com" },
-  { name = "Stefano Grava", email = "s.grava-ext@pasqal.com" },
-  { name = "Vytautas Abramavicius", email = "vytautas.abramavicius@pasqal.com" },
-  { name = "Roland Guichard", email = "roland.guichard@pasqal.com" },
-  { name = "David Teller", email = "david.teller@pasqal.com" },
-  { name = "Manu Lahariya", email = "manu.lahariya@pasqal.com" },
-  { name = "Charles MOUSSA", email = "charles.moussa@pasqal.com" },
-  { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
+  { name = "Antoine Bussy", email = "antoine.bussy@pasqal.com" },
+  { name = "Charles Moussa"},
   { name = "Clément de Terrasson de Montleau", email = "clement.de-terrasson@pasqal.com" },
-  { name = "Mathieu Garrigues", email = "mathieu.garrigues@pasqal.com" }
-
+  { name = "David Teller"},
+  { name = "João Moutinho"},
+  { name = "Manu Lahariya"},
+  { name = "Mathieu Garrigues", email = "mathieu.garrigues@pasqal.com" },
+  { name = "Roland Guichard"},
+  { name = "Stefano Grava", email = "s.grava-ext@pasqal.com" },
+  { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
+  { name = "Vytautas Abramavicius"},
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -35,8 +35,8 @@ classifiers = [
 ]
 
 dependencies = [
-  "pulser[torch]~=1.6.2",
-  "networkx~=3.4",
+  "pulser[torch]>=1.8.0",
+  "networkx>=3.4",
 ]
 
 [project.optional-dependencies]
@@ -61,11 +61,8 @@ dev = [
   "mkdocs-material",
   "mkdocstrings-python",
   "mkdocs-section-index",
-  "mkdocs-jupyter==0.24.7", # Don't let it update to 0.25 as it doesn't render LaTeX in notebooks!
-  "mkdocs-exclude",
-  "markdown-exec",
+  "mkdocs-jupyter",
   "mike",
-  "nbconvert",
 ]
 
 [project.urls]
@@ -73,16 +70,8 @@ Documentation = "https://pasqal-io.github.io/qoolqit/latest"
 Issues = "https://github.com/pasqal-io/qoolqit/issues"
 Source = "https://github.com/pasqal-io/qoolqit"
 
-[tool.hatch.metadata]
-allow-direct-references = true
-allow-ambiguous-features = true
-
 [tool.hatch.envs.default]
 features = ["dev"]
-
-[tool.hatch.envs.default.scripts]
-test = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs {args}"
-test_tutorials = "pytest --nbmake docs/tutorials"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -93,28 +82,6 @@ filterwarnings = [
   "ignore:`torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`:DeprecationWarning",
   "ignore:`torch.jit.script` is not supported in Python 3.14:DeprecationWarning",
 ]
-
-[tool.hatch.envs.docs]
-features = ["dev"]
-
-[tool.hatch.envs.docs.scripts]
-build = "mkdocs build --clean --strict"
-serve = "mkdocs serve --dev-addr localhost:8000"
-
-[[tool.hatch.envs.test.matrix]]
-python = ["310", "311", "312", "313"]
-
-[tool.hatch.build.targets.sdist]
-exclude = [
-    "/.gitignore",
-    "/.pre-commit-config.yml",
-    "/tests",
-    "/docs",
-    "/examples",
-]
-
-[tool.hatch.build.targets.wheel]
-packages = ["qoolqit"]
 
 [tool.coverage.run]
 branch = true

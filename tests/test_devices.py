@@ -6,7 +6,13 @@ import numpy as np
 import pytest
 from pulser_pasqal import PasqalCloud
 
-from qoolqit import AnalogDevice, Device, DigitalAnalogDevice, MockDevice
+from qoolqit import (
+    AnalogDevice,
+    AnalogDeviceWithDMM,
+    Device,
+    DigitalAnalogDevice,
+    MockDevice,
+)
 from qoolqit.devices.unit_converter import UnitConverter
 
 
@@ -52,7 +58,9 @@ def test_unit_converter() -> None:
         converter.factors = (random.random(), random.random(), random.random())
 
 
-@pytest.mark.parametrize("device", [AnalogDevice(), DigitalAnalogDevice(), MockDevice()])
+@pytest.mark.parametrize(
+    "device", [AnalogDevice(), AnalogDeviceWithDMM(), DigitalAnalogDevice(), MockDevice()]
+)
 def test_device_init_and_units(device: Device) -> None:
 
     TIME_ORIG, ENERGY_ORIG, DISTANCE_ORIG = device.converter.factors
@@ -101,6 +109,13 @@ def test_default_device_specs() -> None:
         "max_radial_distance": 12.5,
     }
     assert digital_analog_device.specs == expected_digital_analog_specs
+
+
+@pytest.mark.parametrize("device", [AnalogDeviceWithDMM(), DigitalAnalogDevice()])
+def test_devices_with_dmm(device: Device) -> None:
+    pulser_device = device._device
+    dmm_channel_ids = tuple(pulser_device.dmm_channels.keys())
+    assert dmm_channel_ids == ("dmm_0",)
 
 
 def test_device_properties() -> None:

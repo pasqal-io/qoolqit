@@ -45,19 +45,23 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType, ConfigType]):
             algorithm: a callable to the algorithm function.
             config: a config dataclass holding parameter values for the algorithm.
         """
-
-        algo_signature = inspect.signature(algorithm)
-
         if not isinstance(config, EmbedderConfig):
             raise TypeError(
                 "The config must be an instance of a dataclass inheriting from EmbedderConfig."
             )
 
-        if not set(config.dict().keys()) <= set(algo_signature.parameters):
-            raise KeyError(
+        algo_signature = inspect.signature(algorithm)
+        config_keys = set(config.dict().keys())
+        algo_signature_keys = set(algo_signature.parameters.keys())
+        if not config_keys <= algo_signature_keys:
+            config_keys_str = "\n".join(f"\t- {key}" for key in config_keys)
+            algo_keys_str = "\n".join(f"\t- {key}" for key in algo_signature_keys)
+            raise TypeError(
                 f"Config {config.__class__.__name__} is not compatible with the "
                 + f"algorithm {algorithm.__name__}, as not all configuration fields "
-                + "correspond to keyword arguments in the algorithm function."
+                + "correspond to keyword arguments in the algorithm function.\n\n"
+                + f"Config {config.__class__.__name__} keys:\n{config_keys_str}\n\n"
+                + f"Algorithm signature parameters:\n{algo_keys_str}"
             )
 
         self._algorithm = algorithm

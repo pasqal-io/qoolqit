@@ -1,5 +1,3 @@
-# How to Contribute
-
 We're grateful for your interest in contributing to QoolQit! Please follow our guidelines to ensure a smooth contribution process.
 
 ## Reporting an Issue or Proposing a Feature
@@ -55,7 +53,7 @@ git push --set-upstream origin <your initials>/<branch name>
 
   This will automatically take you into an environment with the necessary dependencies.
 
-### Useful Things for your workflow: Linting and Testing
+### Useful things for your workflow: Linting and Testing
 
 Use `pre-commit` hooks to make sure that the code is properly linted before pushing a new commit. Make sure that the unit tests and type checks are passing since the merge request will not be accepted if the automatic CI/CD pipeline do not pass.
 
@@ -65,3 +63,13 @@ pre-commit install
 pre-commit run --all-files
 pytest
 ```
+
+## Contributing Terms
+
+Finally, before contributing, please take a moment to review the following:
+
+- [Code of Conduct](./CODE_OF_CONDUCT.md)
+- [Contributor Agreement](./CONTRIBUTOR_AGREEMENT.md)
+- [License](https://github.com/pasqal-io/qoolqit/blob/main/LICENSE.md)
+
+By contributing, you agree to follow and accept these documents.

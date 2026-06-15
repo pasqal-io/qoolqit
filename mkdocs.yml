@@ -1,54 +1,64 @@
-site_name: QoolQit
-repo_url: "https://github.com/pasqal-io/qoolqit"
-repo_name: "QoolQit"
+site_name: QoolQit Documentation
+site_author: Pasqal
+repo_name: pasqal-io/qoolqit
+repo_url: https://github.com/pasqal-io/qoolqit
+copyright: © 2026, Pasqal
+
 
 nav:
   - Overview: index.md
   - Get started:
     - Install: get_started/install.md
     - Programming a neutral atom QPU: get_started/qoolqit_model.md
-    - Programming with QoolQit: tutorials/programming_with_qoolqit.ipynb
+    - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
-    - Introduction: fundamentals/introduction.md
-    - Graphs: fundamentals/graphs.md
-    - Problem embedding: fundamentals/embedding.md
-    - Registers: fundamentals/registers.md
-    - Waveforms: fundamentals/waveforms.md
-    - Drive Hamiltonian: fundamentals/drives.md
-    - Devices: fundamentals/devices.md
-    - Quantum programs: fundamentals/programs.md
-    - Compilation: fundamentals/compilation.md
-    - Execution: fundamentals/execution.md
+    - fundamentals/introduction.md
+    - Graphs: fundamentals/graphs.ipynb
+    - Embedding: fundamentals/embedding.ipynb
+    - Quantum Program: fundamentals/quantum_program.ipynb
+    - Compilation:
+      - Compiling a Quantum Program: fundamentals/compilation/rationale.md
+      - Devices and Compilation: fundamentals/compilation/device_and_compilation.ipynb
+      - Error handling: fundamentals/compilation/error_handling.ipynb
+    - Execution:
+      - fundamentals/execution/execution.ipynb
   - Extended usage:
     - Adimensionalization: extended_usage/adimensionalization.md
-    - Emulation configuration: extended_usage/execution_config.md
-    - Custom embedders: extended_usage/custom_embedders.md
-    - Custom waveforms: extended_usage/custom_waveforms.md
+    - Custom embedders: extended_usage/custom_embedders.ipynb
+    - Custom waveforms: extended_usage/custom_waveforms.ipynb
   - Applications:
+    - tutorials/index.md
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
-  - API reference: reference/api.md
+  - API reference:
+    - qoolqit: reference/qoolqit.md
+    - qoolqit.embedding: reference/embedding.md
+    - qoolqit.graphs: reference/graphs.md
+    - qoolqit.register: reference/register.md
+    - qoolqit.waveforms: reference/waveforms.md
+    - qoolqit.drive: reference/drive.md
+    - qoolqit.program: reference/program.md
+    - qoolqit.devices: reference/devices.md
+    - qoolqit.execution: reference/execution.md
+    - qoolqit.exceptions: reference/exceptions.md
+    - qoolqit.internals: reference/internals.md
   - Contribute:
     - How to contribute: CONTRIBUTING.md
     - Code of conduct: CODE_OF_CONDUCT.md
-    - License: LICENSE.md
     - Contributor Agreement: CONTRIBUTOR_AGREEMENT.md
-
 
 theme:
   name: material
   custom_dir: docs/extras/overrides/
   logo: extras/assets/logo/qoolqit_symbol_white.svg
   features:
-    - content.code.annotate
     - content.code.copy
-    - content.action.view
-    - content.action.edit
     - content.tooltips
     - navigation.indexes
     - navigation.sections
     - navigation.tabs
     - navigation.top
     - navigation.tracking
+    - navigation.footer
     - search.highlight
     - search.suggest
 
@@ -56,21 +66,19 @@ theme:
   - media: "(prefers-color-scheme: light)"
     scheme: default
     primary: custom
-    accent: custom
     toggle:
       icon: material/weather-sunny
       name: Switch to dark mode
   - media: "(prefers-color-scheme: dark)"
     scheme: slate
-    primary: black
-    accent: light green
+    primary: custom
     toggle:
       icon: material/weather-night
       name: Switch to light mode
 
 markdown_extensions:
-- admonition  # for notes
-- pymdownx.arithmatex: # for mathjax
+- admonition
+- pymdownx.arithmatex:
     generic: true
 - pymdownx.highlight:
     default_lang: python
@@ -85,9 +93,11 @@ markdown_extensions:
 plugins:
 - search
 - section-index
-- markdown-exec
+- autorefs
 - mkdocs-jupyter:
-    include: ["./docs/tutorials/*.ipynb"] # only notebooks in tutorials
+    include: ["*.ipynb"]
+    include_requirejs: true
+    custom_mathjax_url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe"
 - mkdocstrings:
     handlers:
       python:
@@ -96,17 +106,17 @@ plugins:
           backlinks: tree
           docstring_options:
             ignore_init_summary: true
+            warn_missing_types: false  # griffe: pulser/backend/results.py:287: No type or annotation for parameter 'observable_tag'
           docstring_section_style: list
           filters: public
-          heading_level: 1
+          heading_level: 2
           inherited_members: true
           merge_init_into_class: true
           parameter_headings: true
           type_parameter_headings: true
-          preload_modules: [qoolqit]
+          preload_modules: [qoolqit, pulser]
           relative_crossrefs: true
           scoped_crossrefs: true
-          separate_signature: true
           show_bases: false
           show_inheritance_diagram: false
           show_root_heading: true
@@ -123,7 +133,6 @@ plugins:
 # For mathjax
 extra_javascript:
   - extras/javascripts/mathjax.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 watch:

@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 import math
-from typing import Any, Optional
 
 import numpy as np
 import pulser
 from numpy.typing import ArrayLike
 from pulser.parametrized import ParamObj
-from scipy import interpolate
+from scipy.interpolate import PchipInterpolator
 
 from qoolqit.waveforms.base_waveforms import CompositeWaveform, Waveform
 
 
-class Delay(Waveform):
+class DelayWaveform(Waveform):
     """An empty waveform."""
 
     def function(self, t: float) -> float:
@@ -28,7 +27,7 @@ class Delay(Waveform):
         return pulser.ConstantWaveform(duration, 0.0)
 
 
-class Ramp(Waveform):
+class RampWaveform(Waveform):
     """A ramp that linearly interpolates between an initial and final value.
 
     Arguments:
@@ -62,7 +61,7 @@ class Ramp(Waveform):
         return pulser.RampWaveform(duration, self.initial_value, self.final_value)
 
 
-class Constant(Waveform):
+class ConstantWaveform(Waveform):
     """A constant waveform over a given duration.
 
     Arguments:
@@ -92,7 +91,7 @@ class Constant(Waveform):
         return pulser.ConstantWaveform(duration, self.value)
 
 
-class Blackman(Waveform):
+class BlackmanWaveform(Waveform):
     """A Blackman window of a specified duration and area under the curve.
 
     Implements the Blackman window shaped waveform
@@ -109,14 +108,14 @@ class Blackman(Waveform):
 
     Example:
         ```python
-        blackman_wf = Blackman(100.0, area=3.14)
+        blackman_wf = BlackmanWaveform(100.0, area=3.14)
         ```
     """
 
     area: float
 
     def __init__(self, duration: float, area: float) -> None:
-        """Initializes a new Blackman waveform."""
+        """Initializes a new BlackmanWaveform."""
         super().__init__(duration, area=area)
 
     def function(self, t: float) -> float:
@@ -134,7 +133,7 @@ class Blackman(Waveform):
         return pulser.BlackmanWaveform(duration, self.area)
 
 
-class PiecewiseLinear(CompositeWaveform):
+class PiecewiseLinearWaveform(CompositeWaveform):
     """A piecewise linear waveform.
 
     Creates a composite waveform of N ramps that linearly interpolate
@@ -152,21 +151,21 @@ class PiecewiseLinear(CompositeWaveform):
     ) -> None:
         if not (isinstance(durations, (list, tuple)) or isinstance(values, (list, tuple))):
             raise TypeError(
-                "A PiecewiseLinear waveform requires a list or tuple of durations and values."
+                "A PiecewiseLinearWaveform requires a list or tuple of durations and values."
             )
 
         if len(durations) + 1 != len(values) or len(durations) == 1:
             raise ValueError(
-                "A PiecewiseLinear waveform requires N durations and N + 1 values, for N >= 2."
+                "A PiecewiseLinearWaveform requires N durations and N + 1 values, for N >= 2."
             )
 
         for duration in durations:
             if duration == 0.0:
-                raise ValueError("A PiecewiseLinear interval cannot have zero duration.")
+                raise ValueError("A PiecewiseLinearWaveform interval cannot have zero duration.")
 
         self.values = values
 
-        wfs = [Ramp(dur, values[i], values[i + 1]) for i, dur in enumerate(durations)]
+        wfs = [RampWaveform(dur, values[i], values[i + 1]) for i, dur in enumerate(durations)]
 
         super().__init__(*wfs)
 
@@ -174,56 +173,74 @@ class PiecewiseLinear(CompositeWaveform):
         return "Piecewise linear waveform:\n"
 
 
-class Interpolated(Waveform):
-    """A waveform created from interpolation of a set of data points.
+class InterpolatedWaveform(Waveform):
+    """A waveform created from shape-preserving interpolation of data points.
 
-    Arguments:
-        duration (int): The waveform duration (in ns).
-        values (ArrayLike): Values of the interpolation points. Must be a list of castable
-            to float or a parametrized object.
-        times (ArrayLike): Fractions of the total duration (between 0 and 1),
-            indicating where to place each value on the time axis. Must
-            be a list of castable to float or a parametrized object. If
-            not given, the values are spread evenly throughout the full
-            duration of the waveform.
-        interpolator: The SciPy interpolation class
-            to use. Supports "PchipInterpolator" and "interp1d".
+    This class creates a smooth waveform by interpolating between specified data points
+    using PCHIP (Piecewise Cubic Hermite Interpolating Polynomial) interpolation. The
+    interpolating curve preserves the shape of the input data:
+    bounds (avoiding under/overshooting), monotonicity, and convexity.
+
+    Uses scipy's PchipInterpolator for the interpolation.
+
+    Attributes:
+        duration: The waveform duration.
+        values: Array-like sequence of waveform values at the interpolation points.
+            Must be convertible to float. These values define the amplitude of the
+            waveform at the corresponding time points.
+        times: Optional array-like sequence of fractional times in the range [0, 1]
+            indicating where to place each value on the time axis. Must have the same
+            length as `values`. If not provided, values are distributed evenly across
+            the waveform duration. Default is None.
+
+    Raises:
+    ValueError: If `times` contains values outside [0, 1] or if `times` and
+        `values` have different lengths.
+
+    Example:
+        >>> # Create a waveform with 4 points over 100ns
+        >>> values = [0.0, 1.0, 0.5, 0.0]
+        >>> wf = InterpolatedWaveform(100, values)
+        >>>
+        >>> # Create with custom timing
+        >>> times = [0.0, 0.2, 0.8, 1.0]  # Non-uniform spacing
+        >>> wf = InterpolatedWaveform(100, values, times)
     """
-
-    _valid_interpolators = ("PchipInterpolator", "interp1d")
 
     def __init__(
         self,
         duration: float,
         values: ArrayLike,
-        times: Optional[ArrayLike] = None,
-        interpolator: str = "PchipInterpolator",
-        **interpolator_kwargs: Any,
+        times: ArrayLike | None = None,
     ):
-        """Initializes a new Interpolated waveform."""
+        """Initialize an Interpolated waveform.
+
+        Args:
+            duration: The total duration of the waveform. Must be positive.
+            values: Array-like sequence of waveform values at interpolation points.
+                Can be a list, tuple, numpy array, or any sequence convertible to float.
+            times: Optional array-like sequence of fractional times in [0, 1]. If provided,
+                must have the same length as `values`. If None, values are evenly spaced
+                across the duration. Default is None.
+
+        Raises:
+            ValueError: If any value in `times` is outside [0, 1], or if `times` and
+                `values` have different lengths.
+        """
         super().__init__(duration)
         self._values = np.array(values, dtype=float)
-        if times:  # fractional times in [0,1]
-            if any([(ft < 0) or (ft > 1) for ft in times]):
-                raise ValueError("All values in `times` must be in [0,1].")
+        if times is not None:
             self._times = np.array(times, dtype=float)
-            if len(times) != len(self._values):
+            if any([(ft < 0) or (ft > 1) for ft in self._times]):
+                raise ValueError("All values in `times` must be in [0,1].")
+            if len(self._times) != len(self._values):
                 raise ValueError(
                     "Arguments `values` and `times` must be arrays of the same length."
                 )
         else:
             self._times = np.linspace(0, 1, num=len(self._values))
 
-        if interpolator not in self._valid_interpolators:
-            raise ValueError(
-                f"Invalid interpolator '{interpolator}', only "
-                "accepts: " + ", ".join(self._valid_interpolators)
-            )
-        self._interpolator = interpolator
-        self._interpolator_kwargs = interpolator_kwargs
-
-        interp_cls = getattr(interpolate, interpolator)
-        self._interp_func = interp_cls(duration * self._times, self._values, **interpolator_kwargs)
+        self._interp_func = PchipInterpolator(duration * self._times, values)
 
     def function(self, t: float) -> float:
         return float(self._interp_func(t))
@@ -234,17 +251,21 @@ class Interpolated(Waveform):
     def max(self) -> float:
         return float(self._values.max())
 
-    def _to_pulser(self, duration: int) -> ParamObj | pulser.InterpolatedWaveform:
+    def _to_pulser(
+        self,
+        duration: int,
+        energy_factor: float = 1.0,
+    ) -> ParamObj | pulser.InterpolatedWaveform:
+        truncated_values = self._values * energy_factor
         return pulser.InterpolatedWaveform(
             duration,
-            values=self._values,
+            values=truncated_values,
             times=self._times,
-            interpolator=self._interpolator,
-            **self._interpolator_kwargs,
+            interpolator="PchipInterpolator",
         )
 
 
-class Sin(Waveform):
+class SinWaveform(Waveform):
     """An arbitrary sine over a given duration.
 
     Arguments:

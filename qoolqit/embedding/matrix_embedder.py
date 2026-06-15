@@ -7,7 +7,7 @@ from qoolqit.graphs import DataGraph
 from .algorithms import (
     BladeConfig,
     InteractionEmbedderConfig,
-    blade,
+    _blade,
     interaction_embedding,
 )
 from .base_embedder import BaseEmbedder, ConfigType
@@ -54,7 +54,7 @@ class Blade(MatrixToGraphEmbedder[BladeConfig]):
         Args:
             config (BladeConfig): configuration object for the BLaDE algorithm.
         """
-        super().__init__(blade, config=config)
+        super().__init__(_blade, config=config)
 
     def embed(self, data: np.ndarray) -> DataGraph:
         """Return a DataGraph with coordinates that embeds the input matrix.

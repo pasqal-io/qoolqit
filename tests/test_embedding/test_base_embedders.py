@@ -29,7 +29,11 @@ def test_custom_embedders() -> None:
     class WrongParamConfig(EmbedderConfig):  # type: ignore
         param2: float = 1.0
 
-    with pytest.raises(KeyError):
+    with pytest.raises(
+        TypeError,
+        match="Config WrongParamConfig is not compatible with the algorithm some_embedding_algo, "
+        "as not all configuration fields correspond to keyword arguments in the algorithm",
+    ):
         GraphToGraphEmbedder(some_embedding_algo, WrongParamConfig())
 
     # Embedding function returns unexpected data

@@ -7,7 +7,8 @@ import torch
 from torch_geometric.data import Data
 
 from qoolqit.graphs import DataGraph, random_edge_list
-from qoolqit.utils import ATOL_64
+
+ATOL_64 = 1e-14
 
 
 @pytest.mark.parametrize("graph_type", ["circle", "line", "random_ud"])
@@ -76,8 +77,12 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
         graph = DataGraph.from_matrix(data)
 
     data = data + data.T
+    data_copy = data.copy()  # Make a copy to test the original data
 
     graph = DataGraph.from_matrix(data)
+
+    # Check input data matrix has not been modified
+    np.testing.assert_equal(data, data_copy)
 
     assert len(graph.node_weights) == graph.number_of_nodes()
     assert len(graph.edge_weights) == graph.number_of_edges()
@@ -86,21 +91,18 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
 
     data_diag = np.diag(data)
     node_weights = list(graph.node_weights.values())
-    assert np.allclose(node_weights, data_diag)
+    np.testing.assert_allclose(node_weights, data_diag)
 
-    # Remove diagonal and some random values from the data
+    # Build a fresh matrix for the second sub-test: zero out the diagonal and some random edges
     almost_zero = ATOL_64
-
-    np.fill_diagonal(data, almost_zero)
-
+    data2 = data_copy.copy()
+    np.fill_diagonal(data2, almost_zero)
     random_edges_removal = random_edge_list(range(n_nodes), k=4)
-
     i_list, j_list = zip(*random_edges_removal)
+    data2[i_list, j_list] = almost_zero
+    data2[j_list, i_list] = almost_zero
 
-    data[i_list, j_list] = almost_zero
-    data[j_list, i_list] = almost_zero
-
-    graph = DataGraph.from_matrix(data)
+    graph = DataGraph.from_matrix(data2)
 
     assert not graph.has_node_weights
     assert graph.has_edge_weights
@@ -111,10 +113,10 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
     n_edges = graph.number_of_edges()
     idx = [2 * i for i in range(n_edges)]
 
-    data_edge_weights = np.sort(data[data.nonzero()])[idx]
+    data_edge_weights = np.sort(data2[data2 >= 1e-7])[idx]
     edge_weights = sorted(list(graph.edge_weights.values()))
 
-    assert np.allclose(edge_weights, data_edge_weights)
+    np.testing.assert_allclose(edge_weights, data_edge_weights)
 
 
 def test_triangular() -> None:

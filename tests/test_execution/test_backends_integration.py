@@ -4,9 +4,10 @@ import numpy as np
 import pytest
 from pulser.backend import Backend, Occupation
 
-from qoolqit import AnalogDevice, Constant, Drive, MockDevice, QuantumProgram, Register
+from qoolqit import AnalogDevice, Drive, MockDevice, QuantumProgram, Register
 from qoolqit.devices import Device
-from qoolqit.execution import BackendType, EmulationConfig, LocalEmulator
+from qoolqit.execution import BackendType, EmulationConfig, JobStatus, LocalEmulator
+from qoolqit.waveforms import ConstantWaveform
 
 
 @pytest.mark.parametrize("rotation_angle", [0.3 * np.pi])
@@ -19,14 +20,16 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
 
     # Create and run a quantum program with different backends
     duration = 5
-    drive = Drive(amplitude=Constant(duration, rotation_angle / duration), phase=0)
+    drive = Drive(amplitude=ConstantWaveform(duration, rotation_angle / duration), phase=0)
     # atoms far away, no interaction
     register = Register.from_coordinates([(-10, -10), (10, 10)])
     program = QuantumProgram(register, drive)
     program.compile_to(device=MockDevice())
     emulation_config = EmulationConfig(observables=(Occupation(),))
     emulator = LocalEmulator(backend_type=backend_type, emulation_config=emulation_config)
-    res = emulator.run(program)[0]
+    job = emulator.run(program)
+    assert job.get_status() == JobStatus.DONE
+    res = job.results()
 
     final_r_pop = res.occupation
     # Check if the final theoretical state vector matches the expected one
@@ -45,29 +48,35 @@ def test_results(backend_type: Backend, device: Device) -> None:
 
     # Create a quantum program
     register = Register.from_coordinates([(x, 0.0) for x in np.arange(4)])
-    drive = Drive(amplitude=Constant(100, 0.2), phase=0)
+    drive = Drive(amplitude=ConstantWaveform(100, 0.2), phase=0)
     program = QuantumProgram(register, drive)
     program.compile_to(device)
 
     # Run with QUTIP backend as reference
-    runs = 1001  # how many bitstrings to sample
+    num_shots = 1001  # how many bitstrings to sample
     steps = 20
     evaluation_times = np.linspace(0, 1, steps).tolist()
     config = EmulationConfig(observables=(Occupation(evaluation_times=evaluation_times),))
-    qutip_emulator = LocalEmulator(emulation_config=config, runs=runs)
-    qutip_res = qutip_emulator.run(program)[0]
+    qutip_emulator = LocalEmulator(emulation_config=config, num_shots=num_shots)
+    qutip_job = qutip_emulator.run(program)
+    assert qutip_job.get_status() == JobStatus.DONE
+    qutip_res = qutip_job.results()
     qutip_occupation = qutip_res.occupation
-    # assert final time bitstrings dict is present, with `runs` entries
+    # assert final time bitstrings dict is present, with `num_shots` entries
     qutip_bitstrings = qutip_res.final_bitstrings
-    assert sum(qutip_bitstrings.values()) == runs
+    assert sum(qutip_bitstrings.values()) == num_shots
 
     # Run with other backend
-    other_emulator = LocalEmulator(backend_type=backend_type, emulation_config=config, runs=runs)
-    other_res = other_emulator.run(program)[0]
+    other_emulator = LocalEmulator(
+        backend_type=backend_type, emulation_config=config, num_shots=num_shots
+    )
+    other_job = other_emulator.run(program)
+    assert other_job.get_status() == JobStatus.DONE
+    other_res = other_job.results()
     other_occupation = other_res.occupation
-    # assert final time bitstrings dict is present, with `runs` entries
+    # assert final time bitstrings dict is present, with `num_shots` entries
     other_bitstrings = other_res.final_bitstrings
-    assert sum(other_bitstrings.values()) == runs
+    assert sum(other_bitstrings.values()) == num_shots
 
     # Test result observables tags
     expected_tags = {"occupation", "bitstrings"}
@@ -79,14 +88,6 @@ def test_results(backend_type: Backend, device: Device) -> None:
     # Test evaluation times
     qutip_eval_times = qutip_res.get_result_times("occupation")
     np.testing.assert_allclose(qutip_eval_times, evaluation_times, atol=1e-12)
-    # Emulators below:
-    # - skip the t=0 evaluation time
-    # - alter user input evaluation times
-    # - will fail for even steps
-    # TODO: review this test when https://github.com/pasqal-io/emulators/issues/169 is solved
     other_eval_times = other_res.get_result_times("occupation")
-    np.testing.assert_allclose(other_eval_times, evaluation_times[1:], atol=0.01)
-
-    # value comparison of result is not fair because of different evaluation times
-    # TODO: review this test when https://github.com/pasqal-io/emulators/issues/169 is solved
-    np.testing.assert_allclose(qutip_occupation[1:], other_occupation, atol=0.1)
+    np.testing.assert_allclose(other_eval_times, evaluation_times, atol=0.01)
+    np.testing.assert_allclose(qutip_occupation, other_occupation, atol=0.01)

@@ -10,9 +10,6 @@ from typing import TYPE_CHECKING, Any
 
 import networkx as nx
 import numpy as np
-from numpy.typing import ArrayLike
-
-from qoolqit.utils import ATOL_32
 
 from .base_graph import BaseGraph
 from .utils import random_coords
@@ -33,8 +30,6 @@ class DataGraph(BaseGraph):
             edges: set of edge tuples (i, j)
         """
         super().__init__(edges)
-
-    # classmethods
 
     @classmethod
     def line(cls, n: int, spacing: float = 1.0) -> DataGraph:
@@ -259,7 +254,7 @@ class DataGraph(BaseGraph):
         return graph
 
     @classmethod
-    def from_matrix(cls, data: ArrayLike) -> DataGraph:
+    def from_matrix(cls, data: np.ndarray) -> DataGraph:
         """Constructs a graph from a symmetric square matrix.
 
         The diagonal values are set as the node weights. For each entry (i, j)
@@ -267,27 +262,30 @@ class DataGraph(BaseGraph):
         M[i, j] is set as its weight.
 
         Arguments:
-            data: symmetric square matrix.
+            data: real symmetric square matrix.
         """
         if data.ndim != 2:
             raise ValueError("2D Matrix required.")
-        if not np.allclose(data, data.T, rtol=0.0, atol=ATOL_32):
+        if not np.allclose(data, data.T, rtol=0.0, atol=1e-7):
             raise ValueError("Matrix must be symmetric.")
+
+        # Absolute values below this tolerance are treated as zeros.
+        # The corresponding node or edge weight is neglected (weight = None).
+        nonzero_tol = 1e-7
 
         diag = np.diag(data)
         n_nodes = len(diag)
-        node_weights = {i: diag[i] for i in range(n_nodes)}
-        if np.allclose(diag, np.zeros(n_nodes), rtol=0.0, atol=ATOL_32):
+        if np.allclose(diag, np.zeros(n_nodes), rtol=0.0, atol=nonzero_tol):
             node_weights = {i: None for i in range(n_nodes)}
         else:
             node_weights = {i: diag[i].item() for i in range(n_nodes)}
 
-        data[data <= ATOL_32] = 0.0
-        non_zero = data.nonzero()
-        i_list = non_zero[0].tolist()
-        j_list = non_zero[1].tolist()
-
-        edge_list = [(i, j) for i, j in zip(i_list, j_list) if i < j]
+        edge_list = [
+            (i, j)
+            for i in range(n_nodes)
+            for j in range(i + 1, n_nodes)
+            if (np.abs(data[i, j]) >= nonzero_tol)
+        ]
         edge_weights = {(i, j): data[i, j].item() for i, j in edge_list}
 
         graph = cls.from_nodes(range(n_nodes))

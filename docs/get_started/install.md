@@ -28,16 +28,11 @@ If you wish to install directly from the source, for example, if you are develop
   git clone https://github.com/pasqal-io/qoolqit.git
   ```
 
-2) Setup an environment for developing. From your `qoolqit` folder run:
+2) Setup an environment for developing. From your `qoolqit` folder, again install with your favorite environment/package managers.
+  On `venv`/`pip`, for example:
 
   ```sh
   python -m venv .venv
   source .venv/bin/activate
   pip install -e .[dev]
-  ```
-
-  Alternatively, you can use [Hatch](https://hatch.pypa.io/latest/):
-
-  ```sh
-  hatch shell
   ```

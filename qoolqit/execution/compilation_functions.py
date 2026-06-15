@@ -10,9 +10,10 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.devices import Device
-from qoolqit.drive import Drive, Waveform, WeightedDetuning
+from qoolqit.drive import DetuningMapModulator, Drive, Waveform
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
+from qoolqit.waveforms import InterpolatedWaveform
 
 
 class CompilerProfile(Enum):
@@ -41,7 +42,7 @@ class WaveformConverter:
     Additionally, requires the clock period of the device to round the duration.
     """
 
-    def __init__(self, device: Device, time: float, energy: float):
+    def __init__(self, device: Device, time: float, energy: float) -> None:
         self._time = time
         self._energy = energy
         self._clock_period = device._clock_period
@@ -57,6 +58,14 @@ class WaveformConverter:
     def convert(self, waveform: Waveform) -> ParamObj | PulserWaveform:
         """Convert a QoolQit waveform into a equivalent Pulser waveform."""
         pulser_duration = self._pulser_duration(waveform)
+
+        # Interpolated to be converted differently because of round off issue:
+        # see https://github.com/pasqal-io/qoolqit/issues/288
+        # see https://github.com/pasqal-io/Pulser/issues/1051
+        if isinstance(waveform, InterpolatedWaveform):
+            wf = waveform._to_pulser(duration=pulser_duration, energy_factor=self._energy)
+            return wf
+
         return waveform._to_pulser(duration=pulser_duration) * self._energy
 
 
@@ -65,6 +74,7 @@ def basic_compilation(
     drive: Drive,
     device: Device,
     profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
+    device_max_duration_ratio: float | None = None,
 ) -> PulserSequence:
     """Compiles a QoolQit program to a PulserSequence.
 
@@ -78,24 +88,34 @@ def basic_compilation(
     maximum allowed amplitude.
     Otherwise, the program is scaled to match the device's minimum allowed pairwise distance.
 
-    If the device requires a layout, it is automatically generated.
-
     Args:
         register: QoolQit Register.
         drive: QoolQit Drive.
         device: QoolQit Device.
+        device_max_duration_ratio: optionally set the program duration to a fraction
+            of the device's maximum allowed duration.
 
     Returns:
         PulserSequence: The compiled program as a pulser.Sequence object.
+
+    Note:
+        - If the register contains only one qubit, the program is scaled to match the device's
+            maximum allowed amplitude.
+        - If the device requires a layout, it is automatically generated.
     """
     if profile == CompilerProfile.WORKING_POINT:
         TIME, ENERGY, DISTANCE = device.converter.factors
-        _validate_program_default_profile(register, drive, device)
+        _validate_program_default_profile(register, drive, device, device_max_duration_ratio)
     elif profile == CompilerProfile.MAX_ENERGY:
-        # fix compilation strategy according to the program energy ratio Ω_max/J_max
-        program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
-        device_energy_ratio = device._energy_ratio
-        if program_energy_ratio > device_energy_ratio:
+        if register.n_qubits > 1:
+            # fix compilation strategy according to the program energy ratio Ω_max/J_max
+            program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
+            device_energy_ratio = device._energy_ratio
+            use_max_amp = program_energy_ratio > device_energy_ratio
+        else:
+            use_max_amp = True
+
+        if use_max_amp:
             # map to the maximum amplitude allowed on the device
             ENERGY = device._target_amp / drive.amplitude.max()
             TIME, ENERGY, DISTANCE = device.converter.factors_from_energy(ENERGY)
@@ -103,9 +123,14 @@ def basic_compilation(
             # map to the minimum pairwise distance allowed on the device
             DISTANCE = device._target_dist / register.min_distance()
             TIME, ENERGY, DISTANCE = device.converter.factors_from_distance(DISTANCE)
-        _validate_program_max_energy_profile(register, drive, device)
+        _validate_program_max_energy_profile(register, drive, device, device_max_duration_ratio)
     else:
         raise ValueError(f"Invalid CompilerProfile: {profile}")
+
+    # if device_max_duration_ratio is set and the device has max_duration
+    # set the duration to the fraction of device's maximum duration.
+    if device_max_duration_ratio and device._max_duration:
+        TIME = device_max_duration_ratio * device._max_duration / drive.duration
 
     # Build pulser pulse and register
     wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
@@ -121,56 +146,42 @@ def basic_compilation(
     pulser_sequence.declare_channel("rydberg", "rydberg_global")
     pulser_sequence.add(pulser_pulse, "rydberg")
 
-    if len(drive.weighted_detunings) > 0:
-        # Add detuning map
-        channels = list(device._device.dmm_channels.keys())
-        if len(channels) == 0:
-            raise ValueError(
-                f"This program specifies {len(drive.weighted_detunings)} detunings but "
-                "the device doesn't offer any DMM channel to execute them."
-            )
-
-        detuning_adder = _DetuningAdder(wf_converter, pulser_register, pulser_sequence)
-
-        # If our device supports reusable channels, we can declare multiple
-        # DMM channels with the same specs
-        if pulser_device.reusable_channels:
-            # Arbitrarily pick the first channel.
-            dmm_id = channels[0]
-            for detuning in drive.weighted_detunings:
-                detuning_adder.add_detuning(dmm_id, detuning)
-        # Do we have enough channels for our detunings?
-        elif len(channels) >= len(drive.weighted_detunings):
-            for dmm_id, detuning in zip(channels, drive.weighted_detunings):
-                detuning_adder.add_detuning(dmm_id, detuning)
-        else:
-            raise ValueError(
-                f"This program specifies {len(drive.weighted_detunings)} detunings but "
-                f"the device only offers {len(channels)} DMM channels to execute them."
-            )
+    # Add dmm, if specified in the drive.
+    if drive.dmm is not None:
+        dmm_adder = _DMMAdder(wf_converter, pulser_register, pulser_sequence)
+        # support only for a single DMM channel
+        dmm_id = list(device._device.dmm_channels.keys())[0]
+        dmm_adder.add_dmm(dmm_id, drive.dmm)
 
     return pulser_sequence
 
 
-class _DetuningAdder:
+class _DMMAdder:
+    """Utility class to add a DMM to a Pulser sequence."""
+
     def __init__(
         self,
         wf_converter: WaveformConverter,
         pulser_register: PulserRegister,
         pulser_sequence: PulserSequence,
     ):
+        """Initialize the DMM adder.
+
+        Args:
+            wf_converter: converter of waveforms to pulser units.
+            pulser_register: pulser register to define a detuning map qubit_id -> weight.
+            pulser_sequence: pulser sequence to add DMM to.
+        """
         self._wf_converter = wf_converter
         self._pulser_register = pulser_register
         self._pulser_sequence = pulser_sequence
 
-    def add_detuning(self, dmm_id: str, detuning: WeightedDetuning) -> None:
+    def add_dmm(self, dmm_id: str, dmm: DetuningMapModulator) -> None:
         # conversion may be needed for pulser register as only str keys are accepted
-        converted_weights = {
-            k if isinstance(k, str) else str(k): v for k, v in detuning.weights.items()
-        }
+        converted_weights = {k if isinstance(k, str) else str(k): v for k, v in dmm.weights.items()}
         detuning_map = self._pulser_register.define_detuning_map(detuning_weights=converted_weights)
         self._pulser_sequence.config_detuning_map(detuning_map, dmm_id=dmm_id)
-        waveform = self._wf_converter.convert(detuning.waveform)
+        waveform = self._wf_converter.convert(dmm.waveform)
         self._pulser_sequence.add_dmm_detuning(waveform, dmm_id)
 
 
@@ -178,6 +189,7 @@ def _validate_program_default_profile(
     register: Register,
     drive: Drive,
     device: Device,
+    device_max_duration_ratio: float | None,
 ) -> None:
     """Validate that the program respect the device specs.
 
@@ -208,13 +220,16 @@ def _validate_program_default_profile(
         )
         raise CompilationError(msg + f"{device}")
 
-    duration = drive.duration
-    if specs["max_duration"] and (duration > specs["max_duration"]):
-        msg = (
-            f"The drive's duration {duration:.4f} "
-            "goes over the maximum value allowed for the chosen device:\n"
-        )
-        raise CompilationError(msg + f"{device}")
+    # only check drive if device has a maximum duration
+    # and it is not manually set with device_max_duration_ratio
+    if specs["max_duration"] and (device_max_duration_ratio is None):
+        duration = drive.duration
+        if duration > specs["max_duration"]:
+            msg = (
+                f"The drive's duration {duration:.4f} "
+                "goes over the maximum value allowed for the chosen device:\n"
+            )
+            raise CompilationError(msg + f"{device}")
 
     if register.n_qubits > 1:
         min_distance = register.min_distance()
@@ -238,6 +253,7 @@ def _validate_program_max_energy_profile(
     register: Register,
     drive: Drive,
     device: Device,
+    device_max_duration_ratio: float | None,
 ) -> None:
     """Validate that the program respect the given device specifications.
 
@@ -257,11 +273,15 @@ def _validate_program_max_energy_profile(
     # Get profile factors in the adimensional basis, not conversion factors to pulser
     # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
     # this part can be removed when compilation return a QuantumProgram that can be directly checked
-    program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
-    device_energy_ratio = device._energy_ratio
-    specs = device.specs
+    if register.n_qubits > 1:
+        program_energy_ratio = drive.amplitude.max() * register.min_distance() ** 6
+        device_energy_ratio = device._energy_ratio
+        use_max_amp = program_energy_ratio > device_energy_ratio
+    else:
+        use_max_amp = True
+
     # fix compilation strategy according to the program energy ratio Ω_max/J_max
-    if program_energy_ratio > device_energy_ratio:
+    if use_max_amp:
         ENERGY = device._target_amp_adim / drive.amplitude.max()
         TIME, DISTANCE = 1 / ENERGY, ENERGY ** (-1 / 6)
     else:
@@ -273,27 +293,7 @@ def _validate_program_max_energy_profile(
         " for the selected device, the following exception was raised:\n\n"
     )
 
-    max_abs_detuning = max(abs(drive.detuning.min()), abs(drive.detuning.max()))
-    if specs["max_abs_detuning"]:
-        max_abs_detuning_to_compile = specs["max_abs_detuning"] / ENERGY
-        if max_abs_detuning > max_abs_detuning_to_compile:
-            msg = (
-                "The drive's maximum absolute detuning went over the maximum value allowed.\n"
-                "To compile your program, set the "
-                f"maximum absolute detuning below {max_abs_detuning_to_compile}"
-            )
-            raise CompilationError(msg_init + msg)
-
-    duration = drive.duration
-    if specs["max_duration"]:
-        max_duration_to_compile = specs["max_duration"] / TIME
-        if duration > max_duration_to_compile:
-            msg = (
-                "The drive's duration went over the maximum value allowed.\n"
-                "To compile your program, set the "
-                f"drive's duration below {max_duration_to_compile}"
-            )
-            raise CompilationError(msg_init + msg)
+    specs = device.specs
 
     max_radial_distance = register.max_radial_distance()
     if specs["max_radial_distance"]:
@@ -301,7 +301,31 @@ def _validate_program_max_energy_profile(
         if max_radial_distance > max_radial_distance_to_compile:
             msg = (
                 "The register's maximum radial distance went over the maximum value allowed.\n"
-                "To compile your program, set the "
-                f"maximum radial distance below {max_radial_distance_to_compile}"
+                f"To compile this program on the selected device `{device.name}`, "
+                f"the maximum radial distance must be below {max_radial_distance_to_compile}"
+            )
+            raise CompilationError(msg_init + msg)
+
+    max_abs_detuning = max(abs(drive.detuning.min()), abs(drive.detuning.max()))
+    if specs["max_abs_detuning"]:
+        max_abs_detuning_to_compile = specs["max_abs_detuning"] / ENERGY
+        if max_abs_detuning > max_abs_detuning_to_compile:
+            msg = (
+                "The drive's maximum absolute detuning went over the maximum value allowed.\n"
+                f"To compile this program on the selected device `{device.name}`, set the "
+                f"maximum absolute detuning below {max_abs_detuning_to_compile}"
+            )
+            raise CompilationError(msg_init + msg)
+
+    # only check drive if device has a maximum duration
+    # and it is not manually set with device_max_duration_ratio
+    if specs["max_duration"] and (device_max_duration_ratio is None):
+        duration = drive.duration
+        max_duration_to_compile = specs["max_duration"] / TIME
+        if duration > max_duration_to_compile:
+            msg = (
+                "The drive's duration went over the maximum value allowed.\n"
+                f"To compile this program on the selected device `{device.name}`, set the "
+                f"drive's duration below {max_duration_to_compile}"
             )
             raise CompilationError(msg_init + msg)
