@@ -551,7 +551,7 @@ def test_raises_distance_ratio_exception_when_ratio_cannot_be_met() -> None:
     np.fill_diagonal(random_symmetric, 0)
 
     with pytest.raises(DistanceRatioException) as exc_info:
-        blade(
+        _blade(
             random_symmetric,
             max_min_dist_ratio=impossible_required_ratio,
             ratio_rerun=0,
@@ -564,7 +564,7 @@ def test_raises_distance_ratio_exception_when_ratio_cannot_be_met() -> None:
 
 def test_embed_medium_dense_register() -> None:
     size = 17
-    expected_ratio = 2.2
+    expected_ratio = 2.22
 
     seed = 0
 

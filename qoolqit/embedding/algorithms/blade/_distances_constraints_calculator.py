@@ -34,10 +34,9 @@ def compute_best_scaling_for_qubo(
     difference_ceiling = np.maximum(0.0, percentile)
 
     if filter_differences:
-        weights = np.where(
-            differences > difference_ceiling,
-            difference_ceiling / differences,
-            1.0,
+        weights = np.ones_like(differences)
+        np.divide(
+            difference_ceiling, differences, out=weights, where=differences > difference_ceiling
         )
     else:
         weights = np.ones_like(differences)
@@ -69,7 +68,7 @@ def compute_best_scaling_for_pos(
     """
 
     distance_matrix = distance_matrix_from_positions(positions)
-    current_weights = np.triu(normalized_interaction(distance_matrix), k=1)
+    current_weights = normalized_interaction(distance_matrix)
 
     return compute_best_scaling_for_qubo(
         target_interactions=target_interactions,
