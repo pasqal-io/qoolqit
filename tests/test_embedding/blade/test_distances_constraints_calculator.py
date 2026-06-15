@@ -8,6 +8,21 @@ from qoolqit.embedding.algorithms.blade._distances_constraints_calculator import
 from qoolqit.embedding.algorithms.blade._helpers import interaction_matrix_from_positions
 
 
+def test_scaling_exact() -> None:
+    np.random.seed(0)
+    positions = np.random.uniform(0, 1, size=(4, 2))
+    interactions = interaction_matrix_from_positions(positions)
+    assert np.allclose(
+        compute_best_scaling_for_pos(target_interactions=interactions, positions=positions), 1
+    )
+    assert np.allclose(
+        compute_best_scaling_for_pos(target_interactions=interactions, positions=positions * 2), 0.5
+    )
+    assert np.allclose(
+        compute_best_scaling_for_pos(target_interactions=interactions, positions=positions / 2), 2
+    )
+
+
 def test_scaling() -> None:
     positions = np.array(
         [

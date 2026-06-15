@@ -14,7 +14,10 @@ QoolQit works in a **dimensionless framework**. This solves a key challenge in p
 
 QoolQit separates the **program you want to implement** from the **hardware scale used to realize it**. This makes it possible to develop analog quantum algorithms in a device-agnostic way, while still compiling them consistently to realistic hardware constraints.
 
-![QoolQit demo](./extras/assets/qoolqit_demo.gif)
+<video width="100%" autoplay loop muted>
+  <source src="./extras/assets/qoolqit_demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 With QoolQit you can:
 

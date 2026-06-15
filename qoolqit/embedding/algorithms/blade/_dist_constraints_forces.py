@@ -44,7 +44,7 @@ def compute_max_dist_constraint_forces(
     max_unitary_vectors = positions / np.linalg.norm(positions, axis=1)[:, np.newaxis]
     max_unitary_vectors[positions == 0] = 0
     max_weighted_vectors = -max_weights[:, np.newaxis] * max_unitary_vectors
-    assert not np.any(np.isinf(max_weighted_vectors))
+    assert np.all(np.isfinite(max_weighted_vectors))
     max_force = Force(
         weighted_vectors=max_weighted_vectors, distances_to_walk=max_distances_to_walk
     )

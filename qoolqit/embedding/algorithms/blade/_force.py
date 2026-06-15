@@ -70,8 +70,19 @@ class Force:
     distances_to_walk: np.ndarray
 
     def __post_init__(self) -> None:
+        """Check values, shapes and cleaning and caching.
+
+        Set to null vectors the weighted_vectors whose norm is numerically
+        computed to zero (even a non-zero short vector may have a null
+        computed norm due to numerical limits).
+        """
+
         assert self.weighted_vectors.shape[:-1] == self.distances_to_walk.shape
-        assert not np.any(np.isnan(self.weighted_vectors))
+        assert np.all(np.isfinite(self.distances_to_walk))
+        assert np.all(np.isfinite(self.weighted_vectors))
+        cleaned = self.weighted_vectors.copy()
+        cleaned[self.vector_weights == 0] = 0.0
+        object.__setattr__(self, "weighted_vectors", cleaned)
         self.maximum_temperatures
 
     def get_nb_dims(self) -> int:
