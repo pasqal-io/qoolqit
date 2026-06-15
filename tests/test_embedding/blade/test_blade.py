@@ -14,7 +14,6 @@ from qoolqit.devices import Device
 from qoolqit.embedding import BladeConfig
 from qoolqit.embedding.algorithms.blade._helpers import (
     distance_matrix_from_positions,
-    interaction_matrix_from_distances,
     interaction_matrix_from_positions,
     normalized_best_dist,
     normalized_interaction,
@@ -138,7 +137,7 @@ def test_weight_differences_discrepancy() -> None:
         ]
     )
 
-    target_interactions = interaction_matrix_from_distances(target_pairwise_distances)
+    target_interactions = normalized_interaction(target_pairwise_distances, format="triu")
     target_interactions += target_interactions.T
 
     for weight_relative_threshold in (0, 0.1, 0.9, 1):
@@ -198,7 +197,7 @@ def small_weight_difference_params() -> SimpleNamespace:
     target_pairwise_distances[0, 1] = pairs_target_dists[0]
     target_pairwise_distances[2, 3] = pairs_target_dists[1]
 
-    target_interactions = interaction_matrix_from_distances(target_pairwise_distances)
+    target_interactions = normalized_interaction(target_pairwise_distances, format="triu")
     target_interactions += target_interactions.T
 
     return SimpleNamespace(

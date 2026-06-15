@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-import warnings
 from dataclasses import InitVar, dataclass
 from typing import Callable
 
@@ -21,7 +20,7 @@ from ._dist_constraints_forces import (
     compute_min_dist_constraint_forces,
 )
 from ._distances_constraints_calculator import DistancesConstraintsCalculator
-from ._helpers import distance_matrix_from_positions, interaction_matrix_from_distances
+from ._helpers import distance_matrix_from_positions, normalized_interaction
 from ._interactions_forces import compute_interaction_forces
 from ._qubo_mapper import Qubo
 from .drawing import draw_graph_including_actual_weights, draw_update_positions_step
@@ -32,20 +31,10 @@ logger = logging.getLogger(__name__)
 def _compute_limited_constraint_forces(*, force: Force, max_distance_to_walk: float) -> np.ndarray:
     resulting_forces = force.get_resulting_forces(force.get_temperature())
     norms = np.linalg.norm(resulting_forces, axis=-1)
-    with warnings.catch_warnings():
-        warnings.filterwarnings(
-            "ignore", message="invalid value encountered in divide", category=RuntimeWarning
-        )
-        warnings.filterwarnings(
-            "ignore", message="divide by zero encountered in divide", category=RuntimeWarning
-        )
-        limited_resulting_forces = (
-            resulting_forces
-            * np.minimum(
-                1,
-                np.where(norms == 0, 0, max_distance_to_walk / norms),
-            )[:, np.newaxis]
-        )
+
+    temperatures = np.zeros_like(norms)
+    np.divide(max_distance_to_walk, norms, out=temperatures, where=(norms != 0))
+    limited_resulting_forces = resulting_forces * np.minimum(1, temperatures[:, np.newaxis])
 
     assert not np.any(np.isinf(limited_resulting_forces)) and not np.any(
         np.isnan(limited_resulting_forces)
@@ -186,7 +175,7 @@ def update_positions(
             max_constr_resulting_forces=limited_max_constr_resulting_forces,
             resulting_forces_vectors=resulting_forces_vectors,
             target_interactions=target_interactions,
-            current_interactions=interaction_matrix_from_distances(distance_matrix),
+            current_interactions=normalized_interaction(distance_matrix, format="triu"),
             min_dist=min_dist,
             max_radius=max_radius,
             max_dist_to_walk=max_distance_to_walk,

@@ -1,37 +1,67 @@
 from __future__ import annotations
 
-import warnings
-from typing import Any, TypeVar
+from typing import Any, Literal, TypeVar
 
 import numpy as np
 
 Value = TypeVar("Value", float, np.ndarray)
+FormatType = Literal["full", "triu", "sym"]
 
 
-def normalized_interaction(dist: Value) -> Value:
-    with warnings.catch_warnings():
-        warnings.filterwarnings(
-            "ignore", message="divide by zero encountered in divide", category=RuntimeWarning
-        )
-        result = 1 / dist**6
+def _format_return(input: Value, ret: np.ndarray, *, format: FormatType) -> Value:
+    if isinstance(input, float) or isinstance(input, int):
+        return float(ret)
 
-    if isinstance(result, np.ndarray) and result.ndim == 2:
-        np.fill_diagonal(result, 0)
+    if input.ndim == 1:
+        return ret
 
-    return result
+    match format:
+        case "full":
+            return ret
+        case "triu":
+            return np.triu(ret, k=1)
+        case "sym":
+            return np.triu(ret, k=1) + np.tril(ret, k=-1)
+        case _:
+            raise ValueError(f"Invalid format: {format}")
 
 
-def normalized_best_dist(weight: Value) -> Value:
-    with warnings.catch_warnings():
-        warnings.filterwarnings(
-            "ignore", message="divide by zero encountered in divide", category=RuntimeWarning
-        )
-        result = (1 / weight) ** (1 / 6)
+def normalized_interaction(dist: Value, *, format: FormatType = "sym") -> Value:
+    """Convert pairwise distances into interactions.
 
-    if isinstance(result, np.ndarray) and result.ndim == 2:
-        np.fill_diagonal(result, 0)
+    Args:
+        dist: Pairwise distances between nodes.
+        format: Format of the output if `dist` is a numpy array. Can be "full"
+        (all values), "triu" (upper triangle without diagonal), or "sym"
+        (upper and lower triangles without diagonal).
+    """
 
-    return result  # type: ignore[no-any-return]
+    interactions = np.divide(
+        1, dist**6, out=np.full_like(dist, np.inf, dtype=float), where=(dist != 0)
+    )
+
+    # following type ignore is required probably due to a bug of mypy
+    # (it works if the function's content is copied-pasted here)
+    return _format_return(input=dist, ret=interactions, format=format)  # type: ignore
+
+
+def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
+    """Convert pairwise distances into interactions.
+
+    Args:
+        dist: Pairwise distances between nodes.
+        format: Format of the output if `dist` is a numpy array. Can be "full"
+        (all values), "triu" (upper triangle without diagonal), or "sym"
+        (upper and lower triangles without diagonal).
+    """
+
+    dists = np.divide(
+        1, weight ** (1 / 6), out=np.full_like(weight, np.inf, dtype=float), where=(weight != 0)
+    )
+
+    # following type ignore is required probably due to a bug of mypy
+    # (it works if the function's content is copied-pasted here)
+    return _format_return(input=weight, ret=dists, format=format)  # type: ignore
 
 
 def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
@@ -39,16 +69,8 @@ def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
     return np.linalg.norm(position_differences, axis=2)
 
 
-def interaction_matrix_from_distances(distance_matrix: np.ndarray) -> np.ndarray:
-    current_weights = normalized_interaction(distance_matrix)
-    current_weights = np.triu(current_weights, k=1)
-    return current_weights
-
-
 def interaction_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
-    return interaction_matrix_from_distances(
-        distance_matrix=distance_matrix_from_positions(positions)
-    )
+    return normalized_interaction(distance_matrix_from_positions(positions), format="triu")
 
 
 def normalized_distance(target: np.ndarray, actual: np.ndarray) -> np.floating[Any]:
