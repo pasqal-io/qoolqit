@@ -156,13 +156,9 @@ def update_positions(
     )
     logger.debug(f"{resulting_forces_vectors=}")
 
-    assert not np.any(np.isinf(interaction_resulting_forces)) and not np.any(
-        np.isnan(interaction_resulting_forces)
-    )
-    assert not np.any(np.isinf(min_constr_resulting_forces)) and not np.any(
-        np.isnan(min_constr_resulting_forces)
-    )
-    assert not np.any(np.isinf(max_constr_resulting_forces)) and not np.any(np.isnan(positions))
+    assert np.all(np.isfinite(interaction_resulting_forces))
+    assert np.all(np.isfinite(min_constr_resulting_forces))
+    assert np.all(np.isfinite(max_constr_resulting_forces))
 
     if draw_step:
         draw_update_positions_step(
@@ -184,7 +180,7 @@ def update_positions(
 
     positions += resulting_forces_vectors
 
-    assert not np.any(np.isnan(positions))
+    assert np.all(np.isfinite(positions))
 
     if draw_step:
         logger.debug(f"Resulting positions = {dict(enumerate(positions))}")
@@ -253,7 +249,7 @@ def evolve_with_forces_through_dim_change(
         assert np.unique(positions, axis=0).shape == positions.shape
         positions = scaling * positions
         assert np.unique(positions, axis=0).shape == positions.shape
-        assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
+        assert np.all(np.isfinite(positions))
 
         if draw_step:
             distances = scipy.spatial.distance.pdist(positions)
@@ -261,7 +257,6 @@ def evolve_with_forces_through_dim_change(
                 f"After {scaling=}, max/min is "
                 f"{np.max(distances)/np.min(distances)} with target {max_radius}/{min_dist}"
             )
-        assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
 
         positions = update_positions(
             positions=positions,
@@ -283,11 +278,11 @@ def evolve_with_forces_through_dim_change(
             draw_weighted_graph=draw_step and draw_weighted_graph,
         )
         assert np.unique(positions, axis=0).shape == positions.shape
-        assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
+        assert np.all(np.isfinite(positions))
 
         positions = dim_shrinker.applied_step(positions)
         assert np.unique(positions, axis=0).shape == positions.shape
-        assert not np.any(np.isinf(positions)) and not np.any(np.isnan(positions))
+        assert np.all(np.isfinite(positions))
 
     removed_position_dims = positions[:, final_dimensions:]
     assert np.all(
