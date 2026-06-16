@@ -15,14 +15,14 @@ def round_to_sum(values: list[float]) -> list[int]:
         ```
     """
     rounded_values = [round(el) for el in values]
-    reminders = [el - rel for rel, el in zip(rounded_values, values)]
-    sum_reminders = round(sum(reminders))
-    p = np.argsort(reminders)
+    remainders = [el - rel for rel, el in zip(rounded_values, values)]
+    sum_remainders = round(sum(remainders))
+    p = np.argsort(remainders)
 
-    for i in range(abs(sum_reminders)):
-        if sum_reminders < 0:
+    for i in range(abs(sum_remainders)):
+        if sum_remainders < 0:
             rounded_values[p[i]] -= 1
-        if sum_reminders > 0:
+        if sum_remainders > 0:
             rounded_values[p[-1 - i]] += 1
 
     return rounded_values
