@@ -37,7 +37,7 @@ jobs:
       run: |
         pytest -vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs
     - name: Upload coverage data
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: "coverage-data"
         path: .coverage.*
