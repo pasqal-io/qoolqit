@@ -1,10 +1,13 @@
 from __future__ import annotations
+
+import math
 from unittest.mock import MagicMock
 
-import pytest
-from qoolqit.waveforms import Waveform, CompositeWaveform
-from pulser.waveforms import Waveform as PulserWaveform
 import numpy as np
+import pytest
+from pulser.waveforms import Waveform as PulserWaveform
+
+from qoolqit.waveforms import CompositeWaveform, Waveform
 
 
 class TestWaveform:
@@ -31,7 +34,7 @@ class TestWaveform:
 
         def function(self, t: float) -> float:
             freq = np.pi / self.duration
-            return self.amplitude * np.sin(freq * t)
+            return self.amplitude * math.sin(freq * t)
 
         def max(self) -> float:
             return self.amplitude
@@ -49,7 +52,10 @@ class TestWaveform:
 
         with pytest.raises(
             Exception,
-            match="Can't instantiate abstract class MockWaveformMissingMethods without an implementation for abstract methods '_to_pulser', 'max', 'min'",
+            match=(
+                "Can't instantiate abstract class MockWaveformMissingMethods "
+                "without an implementation for abstract methods '_to_pulser', 'max', 'min'"
+            ),
         ):
             MockWaveformMissingMethods(10.0)  # type: ignore
 
