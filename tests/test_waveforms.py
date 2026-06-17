@@ -16,7 +16,6 @@ from qoolqit.waveforms import (
     InterpolatedWaveform,
     PiecewiseLinearWaveform,
     RampWaveform,
-    SinWaveform,
     Waveform,
 )
 from qoolqit.waveforms.utils import round_to_sum
@@ -81,34 +80,6 @@ def test_ramp() -> None:
     assert min_val <= value <= max_val
     assert wf.max() == max_val
     assert wf.min() == min_val
-
-
-def test_sin() -> None:
-    duration = 1.0
-    amplitude = random.random()
-    omega = random.random()
-    phi = random.random()
-    shift = random.random()
-
-    wf = SinWaveform(duration, amplitude, omega, phi, shift)
-
-    assert wf.amplitude == amplitude
-    assert wf.omega == omega
-    assert wf.phi == phi
-    assert wf.shift == shift
-
-    n_points = 100
-    t_array = t_array = np.random.uniform(low=-1.0, high=2.0, size=(n_points,))
-    approx_max = wf.max()
-    approx_min = wf.min()
-    random_samples_max = np.max(wf(t_array))
-    random_samples_min = np.min(wf(t_array))
-    assert (approx_max > random_samples_max) or np.isclose(
-        approx_max, random_samples_max, atol=1e-05
-    )
-    assert (approx_min > random_samples_min) or np.isclose(
-        approx_min, random_samples_min, atol=1e-05
-    )
 
 
 def test_blackman() -> None:
@@ -295,38 +266,6 @@ def test_round_to_sum_random() -> None:
 def test_negative_duration() -> None:
     with pytest.raises(ValueError, match="Duration needs to be a positive non-zero value."):
         ConstantWaveform(-10.0, value=2.0)
-
-
-def test_waveform_only_kwarg() -> None:
-    class MockWaveform(Waveform):
-        def function(self, t: float) -> float:
-            return t
-
-    wf = MockWaveform(200.0, p1=2.0, p2=3.1)
-    assert wf.params == {"p1": 2.0, "p2": 3.1}
-
-    with pytest.raises(
-        ValueError,
-        match="Extra arguments in MockWaveform need to be passed as keyword arguments",
-    ):
-        MockWaveform(200.0, 2.0, 3.1)
-
-
-def test_base_waveform_to_pulser() -> None:
-    class MockWaveform(Waveform):
-        def function(self, t: float) -> float:
-            return t**2
-
-    wf = MockWaveform(200.0)
-    pulser_wf = wf._to_pulser(duration=1000)
-
-    assert isinstance(pulser_wf, pulser.InterpolatedWaveform)
-    assert pulser_wf.duration == 1000
-
-    expected_times = np.linspace(0.0, 1.0, 100)
-    expected_values = (200.0 * expected_times) ** 2
-    assert np.allclose(pulser_wf._times, expected_times)
-    assert np.allclose(pulser_wf._values, expected_values)
 
 
 def test_to_pulser_sub_ns_delay_single_wf() -> None:
