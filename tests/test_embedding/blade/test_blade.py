@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import warnings
 from types import SimpleNamespace
 from typing import Any
 
-import networkx as nx
 import numpy as np
 import pytest
 import scipy
@@ -14,7 +14,6 @@ from qoolqit.devices import Device
 from qoolqit.embedding import Blade, BladeConfig
 from qoolqit.embedding.algorithms.blade._helpers import (
     distance_matrix_from_positions,
-    interaction_matrix_from_distances,
     interaction_matrix_from_positions,
     normalized_best_dist,
     normalized_interaction,
@@ -24,6 +23,7 @@ from qoolqit.embedding.algorithms.blade.blade import (
     _blade,
     update_positions,
 )
+from qoolqit.embedding.algorithms.blade.exceptions import DistanceRatioException
 
 
 @pytest.mark.parametrize(
@@ -137,7 +137,7 @@ def test_weight_differences_discrepancy() -> None:
         ]
     )
 
-    target_interactions = interaction_matrix_from_distances(target_pairwise_distances)
+    target_interactions = normalized_interaction(target_pairwise_distances, format="triu")
     target_interactions += target_interactions.T
 
     for weight_relative_threshold in (0, 0.1, 0.9, 1):
@@ -197,7 +197,7 @@ def small_weight_difference_params() -> SimpleNamespace:
     target_pairwise_distances[0, 1] = pairs_target_dists[0]
     target_pairwise_distances[2, 3] = pairs_target_dists[1]
 
-    target_interactions = interaction_matrix_from_distances(target_pairwise_distances)
+    target_interactions = normalized_interaction(target_pairwise_distances, format="triu")
     target_interactions += target_interactions.T
 
     return SimpleNamespace(
@@ -395,6 +395,7 @@ def test_initial_positions_with_fewer_dimensions_than_starting_dimensions() -> N
             [0, 0, 0, 0],
         ]
     )
+
     expected_interactions = np.triu(normalized_interaction(expected_distances), k=1)
 
     starting_positions = np.array([[-1, 1], [1, 1], [1, -1], [-1, -1]])
@@ -463,22 +464,25 @@ def test_drawing() -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    interactions_graph = nx.Graph()
-    interactions_graph.add_nodes_from([i for i in range(2)])
-    interactions_graph.add_edge(0, 1, weight=normalized_interaction(1))
-
     qubo = np.array([[0, normalized_interaction(1)], [0, 0]])
     qubo = qubo + qubo.T
 
     plt.close("all")
     assert len(plt.get_fignums()) == 0
-    update_positions(
-        positions=np.array([[-10, 0], [10, 0]]),
-        target_interactions=qubo,
-        max_radius=1,
-        max_distance_to_walk=(0, 0, 1),
-        draw_step=True,
-    )
+
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message="FigureCanvasAgg is non-interactive, and thus cannot be shown",
+            category=UserWarning,
+        )
+        update_positions(
+            positions=np.array([[-10, 0], [10, 0]]),
+            target_interactions=qubo,
+            max_radius=1,
+            max_distance_to_walk=(0, 0, 1),
+            draw_step=True,
+        )
     assert len(plt.get_fignums()) > 0
     plt.close("all")
 
@@ -538,9 +542,29 @@ def test_embed_3_nodes(dimensions: tuple[int, ...], steps_per_round: int) -> Non
     np.testing.assert_allclose(quality, 0.0, atol=1e-2)
 
 
+def test_raises_distance_ratio_exception_when_ratio_cannot_be_met() -> None:
+    size = 20
+    impossible_required_ratio = 1.01
+
+    random_matrix = np.random.rand(size, size)
+    random_symmetric = (random_matrix + random_matrix.T) / 2
+    np.fill_diagonal(random_symmetric, 0)
+
+    with pytest.raises(DistanceRatioException) as exc_info:
+        _blade(
+            random_symmetric,
+            max_min_dist_ratio=impossible_required_ratio,
+            ratio_rerun=0,
+        )
+
+    assert exc_info.value.positions is not None
+    assert isinstance(exc_info.value.positions, np.ndarray)
+    assert exc_info.value.positions.shape == (size, 2)
+
+
 def test_embed_medium_dense_register() -> None:
     size = 17
-    expected_ratio = 2.2
+    expected_ratio = 2.22
 
     seed = 0
 
