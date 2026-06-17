@@ -46,7 +46,7 @@ def normalized_interaction(dist: Value, *, format: FormatType = "sym") -> Value:
 
 
 def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
-    """Convert pairwise distances into interactions.
+    """Convert pairwise interactions into distances.
 
     Args:
         dist: Pairwise distances between nodes.
