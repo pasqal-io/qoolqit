@@ -4437,43 +4437,43 @@ radial distance and the minimum pairwise distance between atoms.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/algorithms/blade/blade.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-638">638</a></span>
-<span class="normal"><a href="#__codelineno-0-639">639</a></span>
-<span class="normal"><a href="#__codelineno-0-640">640</a></span>
-<span class="normal"><a href="#__codelineno-0-641">641</a></span>
-<span class="normal"><a href="#__codelineno-0-642">642</a></span>
-<span class="normal"><a href="#__codelineno-0-643">643</a></span>
-<span class="normal"><a href="#__codelineno-0-644">644</a></span>
-<span class="normal"><a href="#__codelineno-0-645">645</a></span>
-<span class="normal"><a href="#__codelineno-0-646">646</a></span>
-<span class="normal"><a href="#__codelineno-0-647">647</a></span>
-<span class="normal"><a href="#__codelineno-0-648">648</a></span>
-<span class="normal"><a href="#__codelineno-0-649">649</a></span>
-<span class="normal"><a href="#__codelineno-0-650">650</a></span>
-<span class="normal"><a href="#__codelineno-0-651">651</a></span>
-<span class="normal"><a href="#__codelineno-0-652">652</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-652">652</a></span>
 <span class="normal"><a href="#__codelineno-0-653">653</a></span>
 <span class="normal"><a href="#__codelineno-0-654">654</a></span>
 <span class="normal"><a href="#__codelineno-0-655">655</a></span>
-<span class="normal"><a href="#__codelineno-0-656">656</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-638" name="__codelineno-0-638"></a><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-639" name="__codelineno-0-639"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Post initialization of the `BladeConfig` dataclass.</span>
-<a id="__codelineno-0-640" name="__codelineno-0-640"></a>
-<a id="__codelineno-0-641" name="__codelineno-0-641"></a><span class="sd">    Set the `max_min_dist_ratio` argument of the `blade_embedding` algorithm</span>
-<a id="__codelineno-0-642" name="__codelineno-0-642"></a><span class="sd">    based on the specification of the selected device.</span>
-<a id="__codelineno-0-643" name="__codelineno-0-643"></a>
-<a id="__codelineno-0-644" name="__codelineno-0-644"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-645" name="__codelineno-0-645"></a><span class="sd">        device (Device): the QoolQit device to use to set the maximum ratio between the maximum</span>
-<a id="__codelineno-0-646" name="__codelineno-0-646"></a><span class="sd">            radial distance and the minimum pairwise distance between atoms.</span>
-<a id="__codelineno-0-647" name="__codelineno-0-647"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-648" name="__codelineno-0-648"></a>    <span class="k">if</span> <span class="n">device</span><span class="p">:</span>
-<a id="__codelineno-0-649" name="__codelineno-0-649"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span><span class="p">:</span>
-<a id="__codelineno-0-650" name="__codelineno-0-650"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-<a id="__codelineno-0-651" name="__codelineno-0-651"></a>                <span class="s2">&quot;`max_min_dist_ratio` and `device` attributes should not be set simultaneously.&quot;</span>
-<a id="__codelineno-0-652" name="__codelineno-0-652"></a>            <span class="p">)</span>
-<a id="__codelineno-0-653" name="__codelineno-0-653"></a>        <span class="n">min_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_min_distance</span>
-<a id="__codelineno-0-654" name="__codelineno-0-654"></a>        <span class="n">max_radial_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_max_radial_distance</span>
-<a id="__codelineno-0-655" name="__codelineno-0-655"></a>        <span class="k">if</span> <span class="n">max_radial_distance</span> <span class="ow">and</span> <span class="n">min_distance</span><span class="p">:</span>
-<a id="__codelineno-0-656" name="__codelineno-0-656"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span> <span class="o">=</span> <span class="n">max_radial_distance</span> <span class="o">/</span> <span class="n">min_distance</span>
+<span class="normal"><a href="#__codelineno-0-656">656</a></span>
+<span class="normal"><a href="#__codelineno-0-657">657</a></span>
+<span class="normal"><a href="#__codelineno-0-658">658</a></span>
+<span class="normal"><a href="#__codelineno-0-659">659</a></span>
+<span class="normal"><a href="#__codelineno-0-660">660</a></span>
+<span class="normal"><a href="#__codelineno-0-661">661</a></span>
+<span class="normal"><a href="#__codelineno-0-662">662</a></span>
+<span class="normal"><a href="#__codelineno-0-663">663</a></span>
+<span class="normal"><a href="#__codelineno-0-664">664</a></span>
+<span class="normal"><a href="#__codelineno-0-665">665</a></span>
+<span class="normal"><a href="#__codelineno-0-666">666</a></span>
+<span class="normal"><a href="#__codelineno-0-667">667</a></span>
+<span class="normal"><a href="#__codelineno-0-668">668</a></span>
+<span class="normal"><a href="#__codelineno-0-669">669</a></span>
+<span class="normal"><a href="#__codelineno-0-670">670</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-652" name="__codelineno-0-652"></a><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-653" name="__codelineno-0-653"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Post initialization of the `BladeConfig` dataclass.</span>
+<a id="__codelineno-0-654" name="__codelineno-0-654"></a>
+<a id="__codelineno-0-655" name="__codelineno-0-655"></a><span class="sd">    Set the `max_min_dist_ratio` argument of the `blade_embedding` algorithm</span>
+<a id="__codelineno-0-656" name="__codelineno-0-656"></a><span class="sd">    based on the specification of the selected device.</span>
+<a id="__codelineno-0-657" name="__codelineno-0-657"></a>
+<a id="__codelineno-0-658" name="__codelineno-0-658"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-659" name="__codelineno-0-659"></a><span class="sd">        device (Device): the QoolQit device to use to set the maximum ratio between the maximum</span>
+<a id="__codelineno-0-660" name="__codelineno-0-660"></a><span class="sd">            radial distance and the minimum pairwise distance between atoms.</span>
+<a id="__codelineno-0-661" name="__codelineno-0-661"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-662" name="__codelineno-0-662"></a>    <span class="k">if</span> <span class="n">device</span><span class="p">:</span>
+<a id="__codelineno-0-663" name="__codelineno-0-663"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span><span class="p">:</span>
+<a id="__codelineno-0-664" name="__codelineno-0-664"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+<a id="__codelineno-0-665" name="__codelineno-0-665"></a>                <span class="s2">&quot;`max_min_dist_ratio` and `device` attributes should not be set simultaneously.&quot;</span>
+<a id="__codelineno-0-666" name="__codelineno-0-666"></a>            <span class="p">)</span>
+<a id="__codelineno-0-667" name="__codelineno-0-667"></a>        <span class="n">min_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_min_distance</span>
+<a id="__codelineno-0-668" name="__codelineno-0-668"></a>        <span class="n">max_radial_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_max_radial_distance</span>
+<a id="__codelineno-0-669" name="__codelineno-0-669"></a>        <span class="k">if</span> <span class="n">max_radial_distance</span> <span class="ow">and</span> <span class="n">min_distance</span><span class="p">:</span>
+<a id="__codelineno-0-670" name="__codelineno-0-670"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span> <span class="o">=</span> <span class="n">max_radial_distance</span> <span class="o">/</span> <span class="n">min_distance</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

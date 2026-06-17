@@ -2380,14 +2380,26 @@ to draw the differences between current and target interactions.</p>
         </li>
     </ul>
 
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+              <code><span title="qoolqit.embedding.algorithms.blade.exceptions.DistanceRatioException">DistanceRatioException</span></code>
+            –
+          <div class="doc-md-description">
+            <p>If <code>max_min_dist_ratio</code> is set and the algorithm
+cannot satisfy the distance ratio constraint after exhausting all
+reruns (as defined by <code>ratio_rerun</code>). The partial result is still
+accessible via the <code>positions</code> attribute of the exception.</p>
+          </div>
+        </li>
+    </ul>
+
           
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/algorithms/blade/blade.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-419">419</a></span>
-<span class="normal"><a href="#__codelineno-0-420">420</a></span>
-<span class="normal"><a href="#__codelineno-0-421">421</a></span>
-<span class="normal"><a href="#__codelineno-0-422">422</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-422">422</a></span>
 <span class="normal"><a href="#__codelineno-0-423">423</a></span>
 <span class="normal"><a href="#__codelineno-0-424">424</a></span>
 <span class="normal"><a href="#__codelineno-0-425">425</a></span>
@@ -2580,203 +2592,228 @@ to draw the differences between current and target interactions.</p>
 <span class="normal"><a href="#__codelineno-0-612">612</a></span>
 <span class="normal"><a href="#__codelineno-0-613">613</a></span>
 <span class="normal"><a href="#__codelineno-0-614">614</a></span>
-<span class="normal"><a href="#__codelineno-0-615">615</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-419" name="__codelineno-0-419"></a><span class="k">def</span><span class="w"> </span><span class="nf">_blade</span><span class="p">(</span>
-<a id="__codelineno-0-420" name="__codelineno-0-420"></a>    <span class="n">matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-<a id="__codelineno-0-421" name="__codelineno-0-421"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-422" name="__codelineno-0-422"></a>    <span class="n">max_min_dist_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-423" name="__codelineno-0-423"></a>    <span class="n">dimensions</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_dimensions</span><span class="p">,</span>
-<a id="__codelineno-0-424" name="__codelineno-0-424"></a>    <span class="n">starting_positions</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-425" name="__codelineno-0-425"></a>    <span class="n">pca</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">default_pca</span><span class="p">,</span>
-<a id="__codelineno-0-426" name="__codelineno-0-426"></a>    <span class="n">steps_per_round</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">default_steps_per_round</span><span class="p">,</span>
-<a id="__codelineno-0-427" name="__codelineno-0-427"></a>    <span class="n">compute_weight_relative_threshold</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
-<a id="__codelineno-0-428" name="__codelineno-0-428"></a>        <span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span>
-<a id="__codelineno-0-429" name="__codelineno-0-429"></a>    <span class="p">]</span> <span class="o">=</span> <span class="n">default_compute_weight_relative_threshold</span><span class="p">,</span>
-<a id="__codelineno-0-430" name="__codelineno-0-430"></a>    <span class="n">compute_max_distance_to_walk</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
-<a id="__codelineno-0-431" name="__codelineno-0-431"></a>        <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
-<a id="__codelineno-0-432" name="__codelineno-0-432"></a>    <span class="p">]</span> <span class="o">=</span> <span class="n">default_compute_max_distance_to_walk</span><span class="p">,</span>
-<a id="__codelineno-0-433" name="__codelineno-0-433"></a>    <span class="n">compute_regulation_cursor</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_compute_regulation_cursor</span><span class="p">,</span>
-<a id="__codelineno-0-434" name="__codelineno-0-434"></a>    <span class="n">compute_ratio_step_factors</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_compute_ratio_step_factors</span><span class="p">,</span>
-<a id="__codelineno-0-435" name="__codelineno-0-435"></a>    <span class="n">ratio_rerun</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">default_ratio_rerun</span><span class="p">,</span>
-<a id="__codelineno-0-436" name="__codelineno-0-436"></a>    <span class="n">draw_steps</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-437" name="__codelineno-0-437"></a>    <span class="n">draw_weighted_graph</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-438" name="__codelineno-0-438"></a>    <span class="n">draw_differences</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-439" name="__codelineno-0-439"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<a id="__codelineno-0-440" name="__codelineno-0-440"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Embed an interaction matrix or QUBO with the BLaDE algorithm.</span>
-<a id="__codelineno-0-441" name="__codelineno-0-441"></a>
-<a id="__codelineno-0-442" name="__codelineno-0-442"></a><span class="sd">    Note:</span>
-<a id="__codelineno-0-443" name="__codelineno-0-443"></a><span class="sd">        This function is private and not part of the public API.</span>
-<a id="__codelineno-0-444" name="__codelineno-0-444"></a><span class="sd">        It is documented here for internal reference only.</span>
-<a id="__codelineno-0-445" name="__codelineno-0-445"></a>
-<a id="__codelineno-0-446" name="__codelineno-0-446"></a><span class="sd">    BLaDE stands for Balanced Latently Dimensional Embedder.</span>
-<a id="__codelineno-0-447" name="__codelineno-0-447"></a><span class="sd">    It compute positions for nodes so that their interactions</span>
-<a id="__codelineno-0-448" name="__codelineno-0-448"></a><span class="sd">    approach the desired values. The interactions assume that the</span>
-<a id="__codelineno-0-449" name="__codelineno-0-449"></a><span class="sd">    interaction coefficient of the device is set to 1.</span>
-<a id="__codelineno-0-450" name="__codelineno-0-450"></a><span class="sd">    Its typical target is on interaction matrices or QUBOs, but it can also be used</span>
-<a id="__codelineno-0-451" name="__codelineno-0-451"></a><span class="sd">    for MIS with limitations if the adjacency matrix is converted into a QUBO.</span>
-<a id="__codelineno-0-452" name="__codelineno-0-452"></a><span class="sd">    The general principle is based on the Fruchterman-Reingold algorithm.</span>
-<a id="__codelineno-0-453" name="__codelineno-0-453"></a>
-<a id="__codelineno-0-454" name="__codelineno-0-454"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-455" name="__codelineno-0-455"></a><span class="sd">        matrix: An objective interaction matrix or QUBO between the nodes. It must</span>
-<a id="__codelineno-0-456" name="__codelineno-0-456"></a><span class="sd">            be either symmetrical or triangular.</span>
-<a id="__codelineno-0-457" name="__codelineno-0-457"></a><span class="sd">        max_min_dist_ratio: If present, set the maximum ratio between</span>
-<a id="__codelineno-0-458" name="__codelineno-0-458"></a><span class="sd">            the maximum radial distance and the minimum pairwise distances.</span>
-<a id="__codelineno-0-459" name="__codelineno-0-459"></a><span class="sd">        dimensions: List of numbers of dimensions to explore one</span>
-<a id="__codelineno-0-460" name="__codelineno-0-460"></a><span class="sd">            after the other. A list with one value is equivalent to a list containing</span>
-<a id="__codelineno-0-461" name="__codelineno-0-461"></a><span class="sd">            twice the same value. For a 2D embedding, the last value should be 2.</span>
-<a id="__codelineno-0-462" name="__codelineno-0-462"></a><span class="sd">            Increasing the number of intermediate dimensions can help to escape</span>
-<a id="__codelineno-0-463" name="__codelineno-0-463"></a><span class="sd">            from local minima.</span>
-<a id="__codelineno-0-464" name="__codelineno-0-464"></a><span class="sd">        starting_positions: If provided, initial positions to start from. Otherwise,</span>
-<a id="__codelineno-0-465" name="__codelineno-0-465"></a><span class="sd">            random positions will be generated. The number of dimensions of the</span>
-<a id="__codelineno-0-466" name="__codelineno-0-466"></a><span class="sd">            starting positions must be lower than or equal to the first dimension</span>
-<a id="__codelineno-0-467" name="__codelineno-0-467"></a><span class="sd">            to explore. If it is lower, it is added dimensions filled with</span>
-<a id="__codelineno-0-468" name="__codelineno-0-468"></a><span class="sd">            random values.</span>
-<a id="__codelineno-0-469" name="__codelineno-0-469"></a><span class="sd">        pca: Whether to apply Principal Component Analysis to prioritize dimensions</span>
-<a id="__codelineno-0-470" name="__codelineno-0-470"></a><span class="sd">            to keep when transitioning from a space to a space with fewer dimensions.</span>
-<a id="__codelineno-0-471" name="__codelineno-0-471"></a><span class="sd">            It is disabled by default because it can raise an error when there are</span>
-<a id="__codelineno-0-472" name="__codelineno-0-472"></a><span class="sd">            too many dimensions compared to the number of nodes.</span>
-<a id="__codelineno-0-473" name="__codelineno-0-473"></a><span class="sd">        steps_per_round: Number of elementary steps to perform for each dimension</span>
-<a id="__codelineno-0-474" name="__codelineno-0-474"></a><span class="sd">            transition, where at each step move vectors are computed and applied</span>
-<a id="__codelineno-0-475" name="__codelineno-0-475"></a><span class="sd">            on the nodes.</span>
-<a id="__codelineno-0-476" name="__codelineno-0-476"></a><span class="sd">        compute_weight_relative_threshold: Function that is called at each step.</span>
-<a id="__codelineno-0-477" name="__codelineno-0-477"></a><span class="sd">            It takes a float number between 0 and 1 that represents the progress</span>
-<a id="__codelineno-0-478" name="__codelineno-0-478"></a><span class="sd">            on the steps. It must return a float number between 0 and 1 that gives</span>
-<a id="__codelineno-0-479" name="__codelineno-0-479"></a><span class="sd">            a threshold determining which weights are significant (see</span>
-<a id="__codelineno-0-480" name="__codelineno-0-480"></a><span class="sd">            `update_positions` to learn more).</span>
-<a id="__codelineno-0-481" name="__codelineno-0-481"></a><span class="sd">        compute_max_distance_to_walk: Function that is called at each step.</span>
-<a id="__codelineno-0-482" name="__codelineno-0-482"></a><span class="sd">            It takes a float number between 0 and 1 that represents the progress</span>
-<a id="__codelineno-0-483" name="__codelineno-0-483"></a><span class="sd">            on the steps, and takes another argument that is set to the current</span>
-<a id="__codelineno-0-484" name="__codelineno-0-484"></a><span class="sd">            largest pairwise distance when `max_min_dist_ratio` is not enabled,</span>
-<a id="__codelineno-0-485" name="__codelineno-0-485"></a><span class="sd">            otherwise, it is set to the maximum radial distance for the current</span>
-<a id="__codelineno-0-486" name="__codelineno-0-486"></a><span class="sd">            step. It must return a float number that limits the distances</span>
-<a id="__codelineno-0-487" name="__codelineno-0-487"></a><span class="sd">            nodes can move at one step  (see `update_positions` to learn more).</span>
-<a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="sd">        compute_regulation_cursor: Function that is called at each step.</span>
-<a id="__codelineno-0-489" name="__codelineno-0-489"></a><span class="sd">            It takes a float number between 0 and 1 that represents the progress</span>
-<a id="__codelineno-0-490" name="__codelineno-0-490"></a><span class="sd">            on the steps. It must return a float number between 0 (no regulation)</span>
-<a id="__codelineno-0-491" name="__codelineno-0-491"></a><span class="sd">            and 1 (full regulation) that uniformizes the ability for the forces</span>
-<a id="__codelineno-0-492" name="__codelineno-0-492"></a><span class="sd">            to achieve their objectives at each step by changing priorities.</span>
-<a id="__codelineno-0-493" name="__codelineno-0-493"></a><span class="sd">        ratio_rerun: When the distance ratio constraint is not met, it defines</span>
-<a id="__codelineno-0-494" name="__codelineno-0-494"></a><span class="sd">            the maximum number of times the algorithm applies additional</span>
-<a id="__codelineno-0-495" name="__codelineno-0-495"></a><span class="sd">            computation steps putting the priority on the constraint.</span>
-<a id="__codelineno-0-496" name="__codelineno-0-496"></a><span class="sd">        compute_ratio_step_factors: Function that is called at the boundaries of</span>
-<a id="__codelineno-0-497" name="__codelineno-0-497"></a><span class="sd">            the rounds. It defines the target ratio the enforce during the</span>
-<a id="__codelineno-0-498" name="__codelineno-0-498"></a><span class="sd">            evolution. It acts as a multiplying factor on the target ratio.</span>
-<a id="__codelineno-0-499" name="__codelineno-0-499"></a><span class="sd">        draw_steps: If it is a boolean, it defines whether to globally enable</span>
-<a id="__codelineno-0-500" name="__codelineno-0-500"></a><span class="sd">            drawing and traces for nodes and forces (for all steps). If it is a</span>
-<a id="__codelineno-0-501" name="__codelineno-0-501"></a><span class="sd">            list of integers, it defines a subset of steps to enable such drawing.</span>
-<a id="__codelineno-0-502" name="__codelineno-0-502"></a><span class="sd">            Requires installing the seaborn library.</span>
-<a id="__codelineno-0-503" name="__codelineno-0-503"></a><span class="sd">        draw_weighted_graph: For each step with drawing enabled, defines whether</span>
-<a id="__codelineno-0-504" name="__codelineno-0-504"></a><span class="sd">            to draw a weighted graph representing interactions.</span>
-<a id="__codelineno-0-505" name="__codelineno-0-505"></a><span class="sd">        draw_differences: For each step with drawing enabled, defines whether</span>
-<a id="__codelineno-0-506" name="__codelineno-0-506"></a><span class="sd">            to draw the differences between current and target interactions.</span>
-<a id="__codelineno-0-507" name="__codelineno-0-507"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-508" name="__codelineno-0-508"></a>
-<a id="__codelineno-0-509" name="__codelineno-0-509"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-<a id="__codelineno-0-510" name="__codelineno-0-510"></a>        <span class="n">dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<a id="__codelineno-0-511" name="__codelineno-0-511"></a>
-<a id="__codelineno-0-512" name="__codelineno-0-512"></a>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span>
-<a id="__codelineno-0-513" name="__codelineno-0-513"></a>
-<a id="__codelineno-0-514" name="__codelineno-0-514"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<a id="__codelineno-0-515" name="__codelineno-0-515"></a>        <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">matrix</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-<a id="__codelineno-0-516" name="__codelineno-0-516"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-517" name="__codelineno-0-517"></a>        <span class="k">assert</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">matrix</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-<a id="__codelineno-0-518" name="__codelineno-0-518"></a>
-<a id="__codelineno-0-519" name="__codelineno-0-519"></a>    <span class="n">graph</span> <span class="o">=</span> <span class="n">Qubo</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span><span class="o">.</span><span class="n">as_graph</span><span class="p">()</span>
-<a id="__codelineno-0-520" name="__codelineno-0-520"></a>    <span class="n">graph</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-<a id="__codelineno-0-521" name="__codelineno-0-521"></a>    <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-<a id="__codelineno-0-522" name="__codelineno-0-522"></a>        <span class="n">nx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">))),</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;weight&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
-<a id="__codelineno-0-523" name="__codelineno-0-523"></a>    <span class="p">)</span>
-<a id="__codelineno-0-524" name="__codelineno-0-524"></a>
-<a id="__codelineno-0-525" name="__codelineno-0-525"></a>    <span class="k">if</span> <span class="n">starting_positions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-526" name="__codelineno-0-526"></a>        <span class="n">positions</span> <span class="o">=</span> <span class="n">generate_random_positions</span><span class="p">(</span><span class="n">target_interactions</span><span class="o">=</span><span class="n">matrix</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<a id="__codelineno-0-527" name="__codelineno-0-527"></a>    <span class="k">elif</span> <span class="n">starting_positions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-<a id="__codelineno-0-528" name="__codelineno-0-528"></a>        <span class="n">positions</span> <span class="o">=</span> <span class="n">augment_dimensions_with_random_values</span><span class="p">(</span>
-<a id="__codelineno-0-529" name="__codelineno-0-529"></a>            <span class="n">starting_positions</span><span class="p">,</span> <span class="n">new_dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">starting_positions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<a id="__codelineno-0-530" name="__codelineno-0-530"></a>        <span class="p">)</span>
-<a id="__codelineno-0-531" name="__codelineno-0-531"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-532" name="__codelineno-0-532"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-533" name="__codelineno-0-533"></a>            <span class="sa">f</span><span class="s2">&quot;The number of dimensions in the starting positions &quot;</span>
-<a id="__codelineno-0-534" name="__codelineno-0-534"></a>            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">starting_positions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> is greater than the starting &quot;</span>
-<a id="__codelineno-0-535" name="__codelineno-0-535"></a>            <span class="sa">f</span><span class="s2">&quot;number of dimensions </span><span class="si">{</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span>
-<a id="__codelineno-0-536" name="__codelineno-0-536"></a>        <span class="p">)</span>
-<a id="__codelineno-0-537" name="__codelineno-0-537"></a>
-<a id="__codelineno-0-538" name="__codelineno-0-538"></a>    <span class="n">total_steps</span> <span class="o">=</span> <span class="n">steps_per_round</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-<a id="__codelineno-0-539" name="__codelineno-0-539"></a>
-<a id="__codelineno-0-540" name="__codelineno-0-540"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">step_to_progress</span><span class="p">(</span><span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-541" name="__codelineno-0-541"></a>        <span class="k">return</span> <span class="n">step</span> <span class="o">/</span> <span class="p">(</span><span class="n">total_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-<a id="__codelineno-0-542" name="__codelineno-0-542"></a>
-<a id="__codelineno-0-543" name="__codelineno-0-543"></a>    <span class="n">steps_ratios</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-544" name="__codelineno-0-544"></a>
-<a id="__codelineno-0-545" name="__codelineno-0-545"></a>    <span class="k">if</span> <span class="n">max_min_dist_ratio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-546" name="__codelineno-0-546"></a>        <span class="n">steps_ratios</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-547" name="__codelineno-0-547"></a>            <span class="n">max_min_dist_ratio</span> <span class="o">*</span> <span class="n">compute_ratio_step_factors</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
-<a id="__codelineno-0-548" name="__codelineno-0-548"></a>            <span class="k">for</span> <span class="n">progress</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">))</span>
-<a id="__codelineno-0-549" name="__codelineno-0-549"></a>        <span class="p">]</span>
-<a id="__codelineno-0-550" name="__codelineno-0-550"></a>        <span class="n">starting_min</span> <span class="o">=</span> <span class="n">_compute_min_pairwise_distance</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
-<a id="__codelineno-0-551" name="__codelineno-0-551"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-552" name="__codelineno-0-552"></a>        <span class="n">steps_ratios</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
-<a id="__codelineno-0-553" name="__codelineno-0-553"></a>        <span class="n">starting_min</span> <span class="o">=</span> <span class="kc">None</span>
-<a id="__codelineno-0-554" name="__codelineno-0-554"></a>
-<a id="__codelineno-0-555" name="__codelineno-0-555"></a>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">steps_ratios</span><span class="p">)</span>
-<a id="__codelineno-0-556" name="__codelineno-0-556"></a>
-<a id="__codelineno-0-557" name="__codelineno-0-557"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">compute_weight_relative_threshold_by_step</span><span class="p">(</span><span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-558" name="__codelineno-0-558"></a>        <span class="k">return</span> <span class="n">compute_weight_relative_threshold</span><span class="p">(</span><span class="n">step_to_progress</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
-<a id="__codelineno-0-559" name="__codelineno-0-559"></a>
-<a id="__codelineno-0-560" name="__codelineno-0-560"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">compute_max_distance_to_walk_by_step</span><span class="p">(</span>
-<a id="__codelineno-0-561" name="__codelineno-0-561"></a>        <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_radial_dist</span><span class="p">:</span> <span class="nb">float</span>
-<a id="__codelineno-0-562" name="__codelineno-0-562"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<a id="__codelineno-0-563" name="__codelineno-0-563"></a>        <span class="k">return</span> <span class="n">compute_max_distance_to_walk</span><span class="p">(</span><span class="n">step_to_progress</span><span class="p">(</span><span class="n">step</span><span class="p">),</span> <span class="n">max_radial_dist</span><span class="p">)</span>
-<a id="__codelineno-0-564" name="__codelineno-0-564"></a>
-<a id="__codelineno-0-565" name="__codelineno-0-565"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">compute_regulation_cursor_by_step</span><span class="p">(</span><span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-566" name="__codelineno-0-566"></a>        <span class="k">return</span> <span class="n">compute_regulation_cursor</span><span class="p">(</span><span class="n">step_to_progress</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
-<a id="__codelineno-0-567" name="__codelineno-0-567"></a>
-<a id="__codelineno-0-568" name="__codelineno-0-568"></a>    <span class="k">for</span> <span class="n">dim_idx</span><span class="p">,</span> <span class="n">start_ratio</span><span class="p">,</span> <span class="n">final_ratio</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-<a id="__codelineno-0-569" name="__codelineno-0-569"></a>        <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">steps_ratios</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">steps_ratios</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-<a id="__codelineno-0-570" name="__codelineno-0-570"></a>    <span class="p">):</span>
-<a id="__codelineno-0-571" name="__codelineno-0-571"></a>        <span class="n">positions</span><span class="p">,</span> <span class="n">starting_min</span> <span class="o">=</span> <span class="n">evolve_with_dimension_transition</span><span class="p">(</span>
-<a id="__codelineno-0-572" name="__codelineno-0-572"></a>            <span class="n">target_interactions</span><span class="o">=</span><span class="n">matrix</span><span class="p">,</span>
-<a id="__codelineno-0-573" name="__codelineno-0-573"></a>            <span class="n">dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">,</span>
-<a id="__codelineno-0-574" name="__codelineno-0-574"></a>            <span class="n">starting_min</span><span class="o">=</span><span class="n">starting_min</span><span class="p">,</span>
-<a id="__codelineno-0-575" name="__codelineno-0-575"></a>            <span class="n">pca</span><span class="o">=</span><span class="n">pca</span><span class="p">,</span>
-<a id="__codelineno-0-576" name="__codelineno-0-576"></a>            <span class="n">start_step</span><span class="o">=</span><span class="n">dim_idx</span> <span class="o">*</span> <span class="n">steps_per_round</span><span class="p">,</span>
-<a id="__codelineno-0-577" name="__codelineno-0-577"></a>            <span class="n">stop_step</span><span class="o">=</span><span class="p">(</span><span class="n">dim_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">steps_per_round</span><span class="p">,</span>
-<a id="__codelineno-0-578" name="__codelineno-0-578"></a>            <span class="n">compute_weight_relative_threshold_by_step</span><span class="o">=</span><span class="n">compute_weight_relative_threshold_by_step</span><span class="p">,</span>
-<a id="__codelineno-0-579" name="__codelineno-0-579"></a>            <span class="n">compute_max_distance_to_walk_by_step</span><span class="o">=</span><span class="n">compute_max_distance_to_walk_by_step</span><span class="p">,</span>
-<a id="__codelineno-0-580" name="__codelineno-0-580"></a>            <span class="n">compute_regulation_cursor_by_step</span><span class="o">=</span><span class="n">compute_regulation_cursor_by_step</span><span class="p">,</span>
-<a id="__codelineno-0-581" name="__codelineno-0-581"></a>            <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span>
-<a id="__codelineno-0-582" name="__codelineno-0-582"></a>            <span class="n">final_ratio</span><span class="o">=</span><span class="n">final_ratio</span><span class="p">,</span>
-<a id="__codelineno-0-583" name="__codelineno-0-583"></a>            <span class="n">dim_idx</span><span class="o">=</span><span class="n">dim_idx</span><span class="p">,</span>
-<a id="__codelineno-0-584" name="__codelineno-0-584"></a>            <span class="n">start_ratio</span><span class="o">=</span><span class="n">start_ratio</span><span class="p">,</span>
-<a id="__codelineno-0-585" name="__codelineno-0-585"></a>            <span class="n">draw_steps</span><span class="o">=</span><span class="n">draw_steps</span><span class="p">,</span>
-<a id="__codelineno-0-586" name="__codelineno-0-586"></a>            <span class="n">draw_weighted_graph</span><span class="o">=</span><span class="n">draw_weighted_graph</span><span class="p">,</span>
-<a id="__codelineno-0-587" name="__codelineno-0-587"></a>            <span class="n">draw_differences</span><span class="o">=</span><span class="n">draw_differences</span><span class="p">,</span>
-<a id="__codelineno-0-588" name="__codelineno-0-588"></a>        <span class="p">)</span>
-<a id="__codelineno-0-589" name="__codelineno-0-589"></a>
-<a id="__codelineno-0-590" name="__codelineno-0-590"></a>    <span class="k">if</span> <span class="n">max_min_dist_ratio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-591" name="__codelineno-0-591"></a>        <span class="n">max_radial_dist</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
-<a id="__codelineno-0-592" name="__codelineno-0-592"></a>        <span class="n">min_atom_dist</span> <span class="o">=</span> <span class="n">_compute_min_pairwise_distance</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
-<a id="__codelineno-0-593" name="__codelineno-0-593"></a>        <span class="n">output_ratio</span> <span class="o">=</span> <span class="n">max_radial_dist</span> <span class="o">/</span> <span class="n">min_atom_dist</span>
-<a id="__codelineno-0-594" name="__codelineno-0-594"></a>        <span class="k">if</span> <span class="n">output_ratio</span> <span class="o">&gt;</span> <span class="n">max_min_dist_ratio</span><span class="p">:</span>
-<a id="__codelineno-0-595" name="__codelineno-0-595"></a>
-<a id="__codelineno-0-596" name="__codelineno-0-596"></a>            <span class="k">if</span> <span class="n">ratio_rerun</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-<a id="__codelineno-0-597" name="__codelineno-0-597"></a>                <span class="k">return</span> <span class="n">_blade</span><span class="p">(</span>
-<a id="__codelineno-0-598" name="__codelineno-0-598"></a>                    <span class="n">matrix</span><span class="o">=</span><span class="n">matrix</span><span class="p">,</span>
-<a id="__codelineno-0-599" name="__codelineno-0-599"></a>                    <span class="n">max_min_dist_ratio</span><span class="o">=</span><span class="n">max_min_dist_ratio</span><span class="p">,</span>
-<a id="__codelineno-0-600" name="__codelineno-0-600"></a>                    <span class="n">dimensions</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-<a id="__codelineno-0-601" name="__codelineno-0-601"></a>                    <span class="n">starting_positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span>
-<a id="__codelineno-0-602" name="__codelineno-0-602"></a>                    <span class="n">steps_per_round</span><span class="o">=</span><span class="n">steps_per_round</span><span class="p">,</span>
-<a id="__codelineno-0-603" name="__codelineno-0-603"></a>                    <span class="n">compute_max_distance_to_walk</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">max_radial_dist</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-0-604" name="__codelineno-0-604"></a>                    <span class="n">compute_ratio_step_factors</span><span class="o">=</span><span class="k">lambda</span> <span class="n">progress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
-<a id="__codelineno-0-605" name="__codelineno-0-605"></a>                        <span class="n">progress</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">fp</span><span class="o">=</span><span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">]</span>
-<a id="__codelineno-0-606" name="__codelineno-0-606"></a>                    <span class="p">),</span>
-<a id="__codelineno-0-607" name="__codelineno-0-607"></a>                    <span class="n">ratio_rerun</span><span class="o">=</span><span class="n">ratio_rerun</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-0-608" name="__codelineno-0-608"></a>                <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-615">615</a></span>
+<span class="normal"><a href="#__codelineno-0-616">616</a></span>
+<span class="normal"><a href="#__codelineno-0-617">617</a></span>
+<span class="normal"><a href="#__codelineno-0-618">618</a></span>
+<span class="normal"><a href="#__codelineno-0-619">619</a></span>
+<span class="normal"><a href="#__codelineno-0-620">620</a></span>
+<span class="normal"><a href="#__codelineno-0-621">621</a></span>
+<span class="normal"><a href="#__codelineno-0-622">622</a></span>
+<span class="normal"><a href="#__codelineno-0-623">623</a></span>
+<span class="normal"><a href="#__codelineno-0-624">624</a></span>
+<span class="normal"><a href="#__codelineno-0-625">625</a></span>
+<span class="normal"><a href="#__codelineno-0-626">626</a></span>
+<span class="normal"><a href="#__codelineno-0-627">627</a></span>
+<span class="normal"><a href="#__codelineno-0-628">628</a></span>
+<span class="normal"><a href="#__codelineno-0-629">629</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-422" name="__codelineno-0-422"></a><span class="k">def</span><span class="w"> </span><span class="nf">_blade</span><span class="p">(</span>
+<a id="__codelineno-0-423" name="__codelineno-0-423"></a>    <span class="n">matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<a id="__codelineno-0-424" name="__codelineno-0-424"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-425" name="__codelineno-0-425"></a>    <span class="n">max_min_dist_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-426" name="__codelineno-0-426"></a>    <span class="n">dimensions</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_dimensions</span><span class="p">,</span>
+<a id="__codelineno-0-427" name="__codelineno-0-427"></a>    <span class="n">starting_positions</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-428" name="__codelineno-0-428"></a>    <span class="n">pca</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">default_pca</span><span class="p">,</span>
+<a id="__codelineno-0-429" name="__codelineno-0-429"></a>    <span class="n">steps_per_round</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">default_steps_per_round</span><span class="p">,</span>
+<a id="__codelineno-0-430" name="__codelineno-0-430"></a>    <span class="n">compute_weight_relative_threshold</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+<a id="__codelineno-0-431" name="__codelineno-0-431"></a>        <span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span>
+<a id="__codelineno-0-432" name="__codelineno-0-432"></a>    <span class="p">]</span> <span class="o">=</span> <span class="n">default_compute_weight_relative_threshold</span><span class="p">,</span>
+<a id="__codelineno-0-433" name="__codelineno-0-433"></a>    <span class="n">compute_max_distance_to_walk</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+<a id="__codelineno-0-434" name="__codelineno-0-434"></a>        <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+<a id="__codelineno-0-435" name="__codelineno-0-435"></a>    <span class="p">]</span> <span class="o">=</span> <span class="n">default_compute_max_distance_to_walk</span><span class="p">,</span>
+<a id="__codelineno-0-436" name="__codelineno-0-436"></a>    <span class="n">compute_regulation_cursor</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_compute_regulation_cursor</span><span class="p">,</span>
+<a id="__codelineno-0-437" name="__codelineno-0-437"></a>    <span class="n">compute_ratio_step_factors</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_compute_ratio_step_factors</span><span class="p">,</span>
+<a id="__codelineno-0-438" name="__codelineno-0-438"></a>    <span class="n">ratio_rerun</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">default_ratio_rerun</span><span class="p">,</span>
+<a id="__codelineno-0-439" name="__codelineno-0-439"></a>    <span class="n">draw_steps</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-440" name="__codelineno-0-440"></a>    <span class="n">draw_weighted_graph</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-441" name="__codelineno-0-441"></a>    <span class="n">draw_differences</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-442" name="__codelineno-0-442"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<a id="__codelineno-0-443" name="__codelineno-0-443"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Embed an interaction matrix or QUBO with the BLaDE algorithm.</span>
+<a id="__codelineno-0-444" name="__codelineno-0-444"></a>
+<a id="__codelineno-0-445" name="__codelineno-0-445"></a><span class="sd">    Note:</span>
+<a id="__codelineno-0-446" name="__codelineno-0-446"></a><span class="sd">        This function is private and not part of the public API.</span>
+<a id="__codelineno-0-447" name="__codelineno-0-447"></a><span class="sd">        It is documented here for internal reference only.</span>
+<a id="__codelineno-0-448" name="__codelineno-0-448"></a>
+<a id="__codelineno-0-449" name="__codelineno-0-449"></a><span class="sd">    BLaDE stands for Balanced Latently Dimensional Embedder.</span>
+<a id="__codelineno-0-450" name="__codelineno-0-450"></a><span class="sd">    It compute positions for nodes so that their interactions</span>
+<a id="__codelineno-0-451" name="__codelineno-0-451"></a><span class="sd">    approach the desired values. The interactions assume that the</span>
+<a id="__codelineno-0-452" name="__codelineno-0-452"></a><span class="sd">    interaction coefficient of the device is set to 1.</span>
+<a id="__codelineno-0-453" name="__codelineno-0-453"></a><span class="sd">    Its typical target is on interaction matrices or QUBOs, but it can also be used</span>
+<a id="__codelineno-0-454" name="__codelineno-0-454"></a><span class="sd">    for MIS with limitations if the adjacency matrix is converted into a QUBO.</span>
+<a id="__codelineno-0-455" name="__codelineno-0-455"></a><span class="sd">    The general principle is based on the Fruchterman-Reingold algorithm.</span>
+<a id="__codelineno-0-456" name="__codelineno-0-456"></a>
+<a id="__codelineno-0-457" name="__codelineno-0-457"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-458" name="__codelineno-0-458"></a><span class="sd">        matrix: An objective interaction matrix or QUBO between the nodes. It must</span>
+<a id="__codelineno-0-459" name="__codelineno-0-459"></a><span class="sd">            be either symmetrical or triangular.</span>
+<a id="__codelineno-0-460" name="__codelineno-0-460"></a><span class="sd">        max_min_dist_ratio: If present, set the maximum ratio between</span>
+<a id="__codelineno-0-461" name="__codelineno-0-461"></a><span class="sd">            the maximum radial distance and the minimum pairwise distances.</span>
+<a id="__codelineno-0-462" name="__codelineno-0-462"></a><span class="sd">        dimensions: List of numbers of dimensions to explore one</span>
+<a id="__codelineno-0-463" name="__codelineno-0-463"></a><span class="sd">            after the other. A list with one value is equivalent to a list containing</span>
+<a id="__codelineno-0-464" name="__codelineno-0-464"></a><span class="sd">            twice the same value. For a 2D embedding, the last value should be 2.</span>
+<a id="__codelineno-0-465" name="__codelineno-0-465"></a><span class="sd">            Increasing the number of intermediate dimensions can help to escape</span>
+<a id="__codelineno-0-466" name="__codelineno-0-466"></a><span class="sd">            from local minima.</span>
+<a id="__codelineno-0-467" name="__codelineno-0-467"></a><span class="sd">        starting_positions: If provided, initial positions to start from. Otherwise,</span>
+<a id="__codelineno-0-468" name="__codelineno-0-468"></a><span class="sd">            random positions will be generated. The number of dimensions of the</span>
+<a id="__codelineno-0-469" name="__codelineno-0-469"></a><span class="sd">            starting positions must be lower than or equal to the first dimension</span>
+<a id="__codelineno-0-470" name="__codelineno-0-470"></a><span class="sd">            to explore. If it is lower, it is added dimensions filled with</span>
+<a id="__codelineno-0-471" name="__codelineno-0-471"></a><span class="sd">            random values.</span>
+<a id="__codelineno-0-472" name="__codelineno-0-472"></a><span class="sd">        pca: Whether to apply Principal Component Analysis to prioritize dimensions</span>
+<a id="__codelineno-0-473" name="__codelineno-0-473"></a><span class="sd">            to keep when transitioning from a space to a space with fewer dimensions.</span>
+<a id="__codelineno-0-474" name="__codelineno-0-474"></a><span class="sd">            It is disabled by default because it can raise an error when there are</span>
+<a id="__codelineno-0-475" name="__codelineno-0-475"></a><span class="sd">            too many dimensions compared to the number of nodes.</span>
+<a id="__codelineno-0-476" name="__codelineno-0-476"></a><span class="sd">        steps_per_round: Number of elementary steps to perform for each dimension</span>
+<a id="__codelineno-0-477" name="__codelineno-0-477"></a><span class="sd">            transition, where at each step move vectors are computed and applied</span>
+<a id="__codelineno-0-478" name="__codelineno-0-478"></a><span class="sd">            on the nodes.</span>
+<a id="__codelineno-0-479" name="__codelineno-0-479"></a><span class="sd">        compute_weight_relative_threshold: Function that is called at each step.</span>
+<a id="__codelineno-0-480" name="__codelineno-0-480"></a><span class="sd">            It takes a float number between 0 and 1 that represents the progress</span>
+<a id="__codelineno-0-481" name="__codelineno-0-481"></a><span class="sd">            on the steps. It must return a float number between 0 and 1 that gives</span>
+<a id="__codelineno-0-482" name="__codelineno-0-482"></a><span class="sd">            a threshold determining which weights are significant (see</span>
+<a id="__codelineno-0-483" name="__codelineno-0-483"></a><span class="sd">            `update_positions` to learn more).</span>
+<a id="__codelineno-0-484" name="__codelineno-0-484"></a><span class="sd">        compute_max_distance_to_walk: Function that is called at each step.</span>
+<a id="__codelineno-0-485" name="__codelineno-0-485"></a><span class="sd">            It takes a float number between 0 and 1 that represents the progress</span>
+<a id="__codelineno-0-486" name="__codelineno-0-486"></a><span class="sd">            on the steps, and takes another argument that is set to the current</span>
+<a id="__codelineno-0-487" name="__codelineno-0-487"></a><span class="sd">            largest pairwise distance when `max_min_dist_ratio` is not enabled,</span>
+<a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="sd">            otherwise, it is set to the maximum radial distance for the current</span>
+<a id="__codelineno-0-489" name="__codelineno-0-489"></a><span class="sd">            step. It must return a float number that limits the distances</span>
+<a id="__codelineno-0-490" name="__codelineno-0-490"></a><span class="sd">            nodes can move at one step  (see `update_positions` to learn more).</span>
+<a id="__codelineno-0-491" name="__codelineno-0-491"></a><span class="sd">        compute_regulation_cursor: Function that is called at each step.</span>
+<a id="__codelineno-0-492" name="__codelineno-0-492"></a><span class="sd">            It takes a float number between 0 and 1 that represents the progress</span>
+<a id="__codelineno-0-493" name="__codelineno-0-493"></a><span class="sd">            on the steps. It must return a float number between 0 (no regulation)</span>
+<a id="__codelineno-0-494" name="__codelineno-0-494"></a><span class="sd">            and 1 (full regulation) that uniformizes the ability for the forces</span>
+<a id="__codelineno-0-495" name="__codelineno-0-495"></a><span class="sd">            to achieve their objectives at each step by changing priorities.</span>
+<a id="__codelineno-0-496" name="__codelineno-0-496"></a><span class="sd">        ratio_rerun: When the distance ratio constraint is not met, it defines</span>
+<a id="__codelineno-0-497" name="__codelineno-0-497"></a><span class="sd">            the maximum number of times the algorithm applies additional</span>
+<a id="__codelineno-0-498" name="__codelineno-0-498"></a><span class="sd">            computation steps putting the priority on the constraint.</span>
+<a id="__codelineno-0-499" name="__codelineno-0-499"></a><span class="sd">        compute_ratio_step_factors: Function that is called at the boundaries of</span>
+<a id="__codelineno-0-500" name="__codelineno-0-500"></a><span class="sd">            the rounds. It defines the target ratio the enforce during the</span>
+<a id="__codelineno-0-501" name="__codelineno-0-501"></a><span class="sd">            evolution. It acts as a multiplying factor on the target ratio.</span>
+<a id="__codelineno-0-502" name="__codelineno-0-502"></a><span class="sd">        draw_steps: If it is a boolean, it defines whether to globally enable</span>
+<a id="__codelineno-0-503" name="__codelineno-0-503"></a><span class="sd">            drawing and traces for nodes and forces (for all steps). If it is a</span>
+<a id="__codelineno-0-504" name="__codelineno-0-504"></a><span class="sd">            list of integers, it defines a subset of steps to enable such drawing.</span>
+<a id="__codelineno-0-505" name="__codelineno-0-505"></a><span class="sd">            Requires installing the seaborn library.</span>
+<a id="__codelineno-0-506" name="__codelineno-0-506"></a><span class="sd">        draw_weighted_graph: For each step with drawing enabled, defines whether</span>
+<a id="__codelineno-0-507" name="__codelineno-0-507"></a><span class="sd">            to draw a weighted graph representing interactions.</span>
+<a id="__codelineno-0-508" name="__codelineno-0-508"></a><span class="sd">        draw_differences: For each step with drawing enabled, defines whether</span>
+<a id="__codelineno-0-509" name="__codelineno-0-509"></a><span class="sd">            to draw the differences between current and target interactions.</span>
+<a id="__codelineno-0-510" name="__codelineno-0-510"></a>
+<a id="__codelineno-0-511" name="__codelineno-0-511"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-512" name="__codelineno-0-512"></a><span class="sd">        DistanceRatioException: If `max_min_dist_ratio` is set and the algorithm</span>
+<a id="__codelineno-0-513" name="__codelineno-0-513"></a><span class="sd">            cannot satisfy the distance ratio constraint after exhausting all</span>
+<a id="__codelineno-0-514" name="__codelineno-0-514"></a><span class="sd">            reruns (as defined by `ratio_rerun`). The partial result is still</span>
+<a id="__codelineno-0-515" name="__codelineno-0-515"></a><span class="sd">            accessible via the `positions` attribute of the exception.</span>
+<a id="__codelineno-0-516" name="__codelineno-0-516"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-517" name="__codelineno-0-517"></a>
+<a id="__codelineno-0-518" name="__codelineno-0-518"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<a id="__codelineno-0-519" name="__codelineno-0-519"></a>        <span class="n">dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<a id="__codelineno-0-520" name="__codelineno-0-520"></a>
+<a id="__codelineno-0-521" name="__codelineno-0-521"></a>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+<a id="__codelineno-0-522" name="__codelineno-0-522"></a>
+<a id="__codelineno-0-523" name="__codelineno-0-523"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<a id="__codelineno-0-524" name="__codelineno-0-524"></a>        <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">matrix</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-525" name="__codelineno-0-525"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-526" name="__codelineno-0-526"></a>        <span class="k">assert</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">matrix</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-527" name="__codelineno-0-527"></a>
+<a id="__codelineno-0-528" name="__codelineno-0-528"></a>    <span class="n">graph</span> <span class="o">=</span> <span class="n">Qubo</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span><span class="o">.</span><span class="n">as_graph</span><span class="p">()</span>
+<a id="__codelineno-0-529" name="__codelineno-0-529"></a>    <span class="n">graph</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<a id="__codelineno-0-530" name="__codelineno-0-530"></a>    <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+<a id="__codelineno-0-531" name="__codelineno-0-531"></a>        <span class="n">nx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">))),</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;weight&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+<a id="__codelineno-0-532" name="__codelineno-0-532"></a>    <span class="p">)</span>
+<a id="__codelineno-0-533" name="__codelineno-0-533"></a>
+<a id="__codelineno-0-534" name="__codelineno-0-534"></a>    <span class="k">if</span> <span class="n">starting_positions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-535" name="__codelineno-0-535"></a>        <span class="n">positions</span> <span class="o">=</span> <span class="n">generate_random_positions</span><span class="p">(</span><span class="n">target_interactions</span><span class="o">=</span><span class="n">matrix</span><span class="p">,</span> <span class="n">dimension</span><span class="o">=</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<a id="__codelineno-0-536" name="__codelineno-0-536"></a>    <span class="k">elif</span> <span class="n">starting_positions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+<a id="__codelineno-0-537" name="__codelineno-0-537"></a>        <span class="n">positions</span> <span class="o">=</span> <span class="n">augment_dimensions_with_random_values</span><span class="p">(</span>
+<a id="__codelineno-0-538" name="__codelineno-0-538"></a>            <span class="n">starting_positions</span><span class="p">,</span> <span class="n">new_dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">starting_positions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<a id="__codelineno-0-539" name="__codelineno-0-539"></a>        <span class="p">)</span>
+<a id="__codelineno-0-540" name="__codelineno-0-540"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-541" name="__codelineno-0-541"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<a id="__codelineno-0-542" name="__codelineno-0-542"></a>            <span class="sa">f</span><span class="s2">&quot;The number of dimensions in the starting positions &quot;</span>
+<a id="__codelineno-0-543" name="__codelineno-0-543"></a>            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">starting_positions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> is greater than the starting &quot;</span>
+<a id="__codelineno-0-544" name="__codelineno-0-544"></a>            <span class="sa">f</span><span class="s2">&quot;number of dimensions </span><span class="si">{</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span>
+<a id="__codelineno-0-545" name="__codelineno-0-545"></a>        <span class="p">)</span>
+<a id="__codelineno-0-546" name="__codelineno-0-546"></a>
+<a id="__codelineno-0-547" name="__codelineno-0-547"></a>    <span class="n">total_steps</span> <span class="o">=</span> <span class="n">steps_per_round</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-0-548" name="__codelineno-0-548"></a>
+<a id="__codelineno-0-549" name="__codelineno-0-549"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">step_to_progress</span><span class="p">(</span><span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-0-550" name="__codelineno-0-550"></a>        <span class="k">return</span> <span class="n">step</span> <span class="o">/</span> <span class="p">(</span><span class="n">total_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-0-551" name="__codelineno-0-551"></a>
+<a id="__codelineno-0-552" name="__codelineno-0-552"></a>    <span class="n">steps_ratios</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-553" name="__codelineno-0-553"></a>
+<a id="__codelineno-0-554" name="__codelineno-0-554"></a>    <span class="k">if</span> <span class="n">max_min_dist_ratio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-555" name="__codelineno-0-555"></a>        <span class="n">steps_ratios</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-0-556" name="__codelineno-0-556"></a>            <span class="n">max_min_dist_ratio</span> <span class="o">*</span> <span class="n">compute_ratio_step_factors</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+<a id="__codelineno-0-557" name="__codelineno-0-557"></a>            <span class="k">for</span> <span class="n">progress</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">))</span>
+<a id="__codelineno-0-558" name="__codelineno-0-558"></a>        <span class="p">]</span>
+<a id="__codelineno-0-559" name="__codelineno-0-559"></a>        <span class="n">starting_min</span> <span class="o">=</span> <span class="n">_compute_min_pairwise_distance</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+<a id="__codelineno-0-560" name="__codelineno-0-560"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-561" name="__codelineno-0-561"></a>        <span class="n">steps_ratios</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span>
+<a id="__codelineno-0-562" name="__codelineno-0-562"></a>        <span class="n">starting_min</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-0-563" name="__codelineno-0-563"></a>
+<a id="__codelineno-0-564" name="__codelineno-0-564"></a>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">steps_ratios</span><span class="p">)</span>
+<a id="__codelineno-0-565" name="__codelineno-0-565"></a>
+<a id="__codelineno-0-566" name="__codelineno-0-566"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">compute_weight_relative_threshold_by_step</span><span class="p">(</span><span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-0-567" name="__codelineno-0-567"></a>        <span class="n">progress</span> <span class="o">=</span> <span class="n">step_to_progress</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+<a id="__codelineno-0-568" name="__codelineno-0-568"></a>        <span class="n">weight_relative_threshold</span> <span class="o">=</span> <span class="n">compute_weight_relative_threshold</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+<a id="__codelineno-0-569" name="__codelineno-0-569"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">weight_relative_threshold</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">):</span>
+<a id="__codelineno-0-570" name="__codelineno-0-570"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<a id="__codelineno-0-571" name="__codelineno-0-571"></a>                <span class="sa">f</span><span class="s2">&quot;Invalid weight relative threshold </span><span class="si">{</span><span class="n">weight_relative_threshold</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">progress</span><span class="si">=}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-572" name="__codelineno-0-572"></a>            <span class="p">)</span>
+<a id="__codelineno-0-573" name="__codelineno-0-573"></a>        <span class="k">return</span> <span class="n">weight_relative_threshold</span>
+<a id="__codelineno-0-574" name="__codelineno-0-574"></a>
+<a id="__codelineno-0-575" name="__codelineno-0-575"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">compute_max_distance_to_walk_by_step</span><span class="p">(</span>
+<a id="__codelineno-0-576" name="__codelineno-0-576"></a>        <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_radial_dist</span><span class="p">:</span> <span class="nb">float</span>
+<a id="__codelineno-0-577" name="__codelineno-0-577"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<a id="__codelineno-0-578" name="__codelineno-0-578"></a>        <span class="k">return</span> <span class="n">compute_max_distance_to_walk</span><span class="p">(</span><span class="n">step_to_progress</span><span class="p">(</span><span class="n">step</span><span class="p">),</span> <span class="n">max_radial_dist</span><span class="p">)</span>
+<a id="__codelineno-0-579" name="__codelineno-0-579"></a>
+<a id="__codelineno-0-580" name="__codelineno-0-580"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">compute_regulation_cursor_by_step</span><span class="p">(</span><span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-0-581" name="__codelineno-0-581"></a>        <span class="k">return</span> <span class="n">compute_regulation_cursor</span><span class="p">(</span><span class="n">step_to_progress</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
+<a id="__codelineno-0-582" name="__codelineno-0-582"></a>
+<a id="__codelineno-0-583" name="__codelineno-0-583"></a>    <span class="k">for</span> <span class="n">dim_idx</span><span class="p">,</span> <span class="n">start_ratio</span><span class="p">,</span> <span class="n">final_ratio</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+<a id="__codelineno-0-584" name="__codelineno-0-584"></a>        <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimensions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">steps_ratios</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">steps_ratios</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<a id="__codelineno-0-585" name="__codelineno-0-585"></a>    <span class="p">):</span>
+<a id="__codelineno-0-586" name="__codelineno-0-586"></a>        <span class="n">positions</span><span class="p">,</span> <span class="n">starting_min</span> <span class="o">=</span> <span class="n">evolve_with_dimension_transition</span><span class="p">(</span>
+<a id="__codelineno-0-587" name="__codelineno-0-587"></a>            <span class="n">target_interactions</span><span class="o">=</span><span class="n">matrix</span><span class="p">,</span>
+<a id="__codelineno-0-588" name="__codelineno-0-588"></a>            <span class="n">dimensions</span><span class="o">=</span><span class="n">dimensions</span><span class="p">,</span>
+<a id="__codelineno-0-589" name="__codelineno-0-589"></a>            <span class="n">starting_min</span><span class="o">=</span><span class="n">starting_min</span><span class="p">,</span>
+<a id="__codelineno-0-590" name="__codelineno-0-590"></a>            <span class="n">pca</span><span class="o">=</span><span class="n">pca</span><span class="p">,</span>
+<a id="__codelineno-0-591" name="__codelineno-0-591"></a>            <span class="n">start_step</span><span class="o">=</span><span class="n">dim_idx</span> <span class="o">*</span> <span class="n">steps_per_round</span><span class="p">,</span>
+<a id="__codelineno-0-592" name="__codelineno-0-592"></a>            <span class="n">stop_step</span><span class="o">=</span><span class="p">(</span><span class="n">dim_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">steps_per_round</span><span class="p">,</span>
+<a id="__codelineno-0-593" name="__codelineno-0-593"></a>            <span class="n">compute_weight_relative_threshold_by_step</span><span class="o">=</span><span class="n">compute_weight_relative_threshold_by_step</span><span class="p">,</span>
+<a id="__codelineno-0-594" name="__codelineno-0-594"></a>            <span class="n">compute_max_distance_to_walk_by_step</span><span class="o">=</span><span class="n">compute_max_distance_to_walk_by_step</span><span class="p">,</span>
+<a id="__codelineno-0-595" name="__codelineno-0-595"></a>            <span class="n">compute_regulation_cursor_by_step</span><span class="o">=</span><span class="n">compute_regulation_cursor_by_step</span><span class="p">,</span>
+<a id="__codelineno-0-596" name="__codelineno-0-596"></a>            <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span>
+<a id="__codelineno-0-597" name="__codelineno-0-597"></a>            <span class="n">final_ratio</span><span class="o">=</span><span class="n">final_ratio</span><span class="p">,</span>
+<a id="__codelineno-0-598" name="__codelineno-0-598"></a>            <span class="n">dim_idx</span><span class="o">=</span><span class="n">dim_idx</span><span class="p">,</span>
+<a id="__codelineno-0-599" name="__codelineno-0-599"></a>            <span class="n">start_ratio</span><span class="o">=</span><span class="n">start_ratio</span><span class="p">,</span>
+<a id="__codelineno-0-600" name="__codelineno-0-600"></a>            <span class="n">draw_steps</span><span class="o">=</span><span class="n">draw_steps</span><span class="p">,</span>
+<a id="__codelineno-0-601" name="__codelineno-0-601"></a>            <span class="n">draw_weighted_graph</span><span class="o">=</span><span class="n">draw_weighted_graph</span><span class="p">,</span>
+<a id="__codelineno-0-602" name="__codelineno-0-602"></a>            <span class="n">draw_differences</span><span class="o">=</span><span class="n">draw_differences</span><span class="p">,</span>
+<a id="__codelineno-0-603" name="__codelineno-0-603"></a>        <span class="p">)</span>
+<a id="__codelineno-0-604" name="__codelineno-0-604"></a>
+<a id="__codelineno-0-605" name="__codelineno-0-605"></a>    <span class="k">if</span> <span class="n">max_min_dist_ratio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-606" name="__codelineno-0-606"></a>        <span class="n">max_radial_dist</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+<a id="__codelineno-0-607" name="__codelineno-0-607"></a>        <span class="n">min_atom_dist</span> <span class="o">=</span> <span class="n">_compute_min_pairwise_distance</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+<a id="__codelineno-0-608" name="__codelineno-0-608"></a>        <span class="n">output_ratio</span> <span class="o">=</span> <span class="n">max_radial_dist</span> <span class="o">/</span> <span class="n">min_atom_dist</span>
 <a id="__codelineno-0-609" name="__codelineno-0-609"></a>
-<a id="__codelineno-0-610" name="__codelineno-0-610"></a>            <span class="nb">print</span><span class="p">(</span>
-<a id="__codelineno-0-611" name="__codelineno-0-611"></a>                <span class="sa">f</span><span class="s2">&quot;[Warning] Output ratio </span><span class="si">{</span><span class="n">output_ratio</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-612" name="__codelineno-0-612"></a>                <span class="sa">f</span><span class="s2">&quot; is higher than required </span><span class="si">{</span><span class="n">max_min_dist_ratio</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-613" name="__codelineno-0-613"></a>            <span class="p">)</span>
-<a id="__codelineno-0-614" name="__codelineno-0-614"></a>
-<a id="__codelineno-0-615" name="__codelineno-0-615"></a>    <span class="k">return</span> <span class="n">positions</span>
+<a id="__codelineno-0-610" name="__codelineno-0-610"></a>        <span class="k">if</span> <span class="n">output_ratio</span> <span class="o">&gt;</span> <span class="n">max_min_dist_ratio</span><span class="p">:</span>
+<a id="__codelineno-0-611" name="__codelineno-0-611"></a>            <span class="k">if</span> <span class="n">ratio_rerun</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-0-612" name="__codelineno-0-612"></a>                <span class="k">return</span> <span class="n">_blade</span><span class="p">(</span>
+<a id="__codelineno-0-613" name="__codelineno-0-613"></a>                    <span class="n">matrix</span><span class="o">=</span><span class="n">matrix</span><span class="p">,</span>
+<a id="__codelineno-0-614" name="__codelineno-0-614"></a>                    <span class="n">max_min_dist_ratio</span><span class="o">=</span><span class="n">max_min_dist_ratio</span><span class="p">,</span>
+<a id="__codelineno-0-615" name="__codelineno-0-615"></a>                    <span class="n">dimensions</span><span class="o">=</span><span class="p">(</span><span class="n">dimensions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-0-616" name="__codelineno-0-616"></a>                    <span class="n">starting_positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span>
+<a id="__codelineno-0-617" name="__codelineno-0-617"></a>                    <span class="n">steps_per_round</span><span class="o">=</span><span class="n">steps_per_round</span><span class="p">,</span>
+<a id="__codelineno-0-618" name="__codelineno-0-618"></a>                    <span class="n">compute_max_distance_to_walk</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">max_radial_dist</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-0-619" name="__codelineno-0-619"></a>                    <span class="n">compute_ratio_step_factors</span><span class="o">=</span><span class="k">lambda</span> <span class="n">progress</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
+<a id="__codelineno-0-620" name="__codelineno-0-620"></a>                        <span class="n">progress</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">fp</span><span class="o">=</span><span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">]</span>
+<a id="__codelineno-0-621" name="__codelineno-0-621"></a>                    <span class="p">),</span>
+<a id="__codelineno-0-622" name="__codelineno-0-622"></a>                    <span class="n">ratio_rerun</span><span class="o">=</span><span class="n">ratio_rerun</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-623" name="__codelineno-0-623"></a>                <span class="p">)</span>
+<a id="__codelineno-0-624" name="__codelineno-0-624"></a>
+<a id="__codelineno-0-625" name="__codelineno-0-625"></a>            <span class="k">raise</span> <span class="n">DistanceRatioException</span><span class="p">(</span>
+<a id="__codelineno-0-626" name="__codelineno-0-626"></a>                <span class="n">required_ratio</span><span class="o">=</span><span class="n">max_min_dist_ratio</span><span class="p">,</span> <span class="n">output_ratio</span><span class="o">=</span><span class="n">output_ratio</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="n">positions</span>
+<a id="__codelineno-0-627" name="__codelineno-0-627"></a>            <span class="p">)</span>
+<a id="__codelineno-0-628" name="__codelineno-0-628"></a>
+<a id="__codelineno-0-629" name="__codelineno-0-629"></a>    <span class="k">return</span> <span class="n">positions</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
