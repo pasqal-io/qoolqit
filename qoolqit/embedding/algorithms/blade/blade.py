@@ -10,6 +10,8 @@ import scipy
 import torch
 
 from qoolqit.devices.device import Device
+from qoolqit.embedding.algorithms.blade._force import Force
+from qoolqit.embedding.algorithms.blade.exceptions import DistanceRatioException
 from qoolqit.embedding.base_embedder import EmbedderConfig
 
 from ._dimension_shrinker import DimensionShrinker
@@ -18,12 +20,25 @@ from ._dist_constraints_forces import (
     compute_min_dist_constraint_forces,
 )
 from ._distances_constraints_calculator import DistancesConstraintsCalculator
-from ._helpers import distance_matrix_from_positions, interaction_matrix_from_distances
+from ._helpers import distance_matrix_from_positions, normalized_interaction
 from ._interactions_forces import compute_interaction_forces
 from ._qubo_mapper import Qubo
 from .drawing import draw_graph_including_actual_weights, draw_update_positions_step
 
 logger = logging.getLogger(__name__)
+
+
+def _compute_limited_constraint_forces(*, force: Force, max_distance_to_walk: float) -> np.ndarray:
+    resulting_forces = force.get_resulting_forces(force.get_temperature())
+    norms = np.linalg.norm(resulting_forces, axis=-1)
+
+    temperatures = np.zeros_like(norms)
+    np.divide(max_distance_to_walk, norms, out=temperatures, where=(norms != 0))
+    limited_resulting_forces = resulting_forces * np.minimum(1, temperatures[:, np.newaxis])
+
+    assert np.all(np.isfinite(limited_resulting_forces))
+
+    return limited_resulting_forces
 
 
 def update_positions(
@@ -102,13 +117,20 @@ def update_positions(
     regulated_interaction_force = interaction_force.regulated(regulation_cursor=regulation_cursor)
 
     if draw_step:
-        temp_ratio_before = np.max(np.triu(interaction_force.maximum_temperatures, k=1)) / np.min(
-            interaction_force.maximum_temperatures
+        min_temperature = np.min(interaction_force.maximum_temperatures)
+        temp_ratio_before = (
+            None
+            if min_temperature == np.inf
+            else np.max(np.triu(interaction_force.maximum_temperatures, k=1)) / min_temperature
         )
         print(f"temperature ratio before regulation: {temp_ratio_before}")
-        temp_ratio_after = np.max(
-            np.triu(regulated_interaction_force.maximum_temperatures, k=1)
-        ) / np.min(regulated_interaction_force.maximum_temperatures)
+        regulated_min_temperature = np.min(regulated_interaction_force.maximum_temperatures)
+        temp_ratio_after = (
+            None
+            if regulated_min_temperature == np.inf
+            else np.max(np.triu(regulated_interaction_force.maximum_temperatures, k=1))
+            / regulated_min_temperature
+        )
         print(f"temperature ratio after regulation: {temp_ratio_after}")
 
     min_constr_force = compute_min_dist_constraint_forces(
@@ -125,29 +147,12 @@ def update_positions(
         regulated_interaction_force.get_temperature()
     )
 
-    min_constr_resulting_forces = min_constr_force.get_resulting_forces(
-        min_constr_force.get_temperature()
+    limited_min_constr_resulting_forces = _compute_limited_constraint_forces(
+        force=min_constr_force, max_distance_to_walk=min_constr_max_distance_to_walk
     )
-    limited_min_constr_resulting_forces = (
-        min_constr_resulting_forces
-        * np.minimum(
-            1,
-            min_constr_max_distance_to_walk / np.linalg.norm(min_constr_resulting_forces, axis=-1),
-        )[:, np.newaxis]
+    limited_max_constr_resulting_forces = _compute_limited_constraint_forces(
+        force=max_constr_force, max_distance_to_walk=max_constr_max_distance_to_walk
     )
-    limited_min_constr_resulting_forces[min_constr_resulting_forces == 0] = 0
-
-    max_constr_resulting_forces = max_constr_force.get_resulting_forces(
-        max_constr_force.get_temperature()
-    )
-    limited_max_constr_resulting_forces = (
-        max_constr_resulting_forces
-        * np.minimum(
-            1,
-            max_constr_max_distance_to_walk / np.linalg.norm(max_constr_resulting_forces, axis=-1),
-        )[:, np.newaxis]
-    )
-    limited_max_constr_resulting_forces[max_constr_resulting_forces == 0] = 0
 
     resulting_forces_vectors = (
         interaction_resulting_forces
@@ -157,18 +162,16 @@ def update_positions(
     logger.debug(f"{resulting_forces_vectors=}")
 
     assert np.all(np.isfinite(interaction_resulting_forces))
-    assert np.all(np.isfinite(min_constr_resulting_forces))
-    assert np.all(np.isfinite(max_constr_resulting_forces))
 
     if draw_step:
         draw_update_positions_step(
             positions,
             interaction_resulting_forces=interaction_resulting_forces,
-            min_constr_resulting_forces=min_constr_resulting_forces,
-            max_constr_resulting_forces=max_constr_resulting_forces,
+            min_constr_resulting_forces=limited_min_constr_resulting_forces,
+            max_constr_resulting_forces=limited_max_constr_resulting_forces,
             resulting_forces_vectors=resulting_forces_vectors,
             target_interactions=target_interactions,
-            current_interactions=interaction_matrix_from_distances(distance_matrix),
+            current_interactions=normalized_interaction(distance_matrix, format="triu"),
             min_dist=min_dist,
             max_radius=max_radius,
             max_dist_to_walk=max_distance_to_walk,
@@ -504,6 +507,12 @@ def _blade(
             to draw a weighted graph representing interactions.
         draw_differences: For each step with drawing enabled, defines whether
             to draw the differences between current and target interactions.
+
+    Raises:
+        DistanceRatioException: If `max_min_dist_ratio` is set and the algorithm
+            cannot satisfy the distance ratio constraint after exhausting all
+            reruns (as defined by `ratio_rerun`). The partial result is still
+            accessible via the `positions` attribute of the exception.
     """
 
     if len(dimensions) == 1:
@@ -555,7 +564,13 @@ def _blade(
     assert len(dimensions) == len(steps_ratios)
 
     def compute_weight_relative_threshold_by_step(step: int) -> float:
-        return compute_weight_relative_threshold(step_to_progress(step))
+        progress = step_to_progress(step)
+        weight_relative_threshold = compute_weight_relative_threshold(progress)
+        if not (0 < weight_relative_threshold <= 1):
+            raise ValueError(
+                f"Invalid weight relative threshold {weight_relative_threshold} at {progress=}"
+            )
+        return weight_relative_threshold
 
     def compute_max_distance_to_walk_by_step(
         step: int, max_radial_dist: float
@@ -591,13 +606,13 @@ def _blade(
         max_radial_dist = max(np.linalg.norm(positions, axis=-1))
         min_atom_dist = _compute_min_pairwise_distance(positions)
         output_ratio = max_radial_dist / min_atom_dist
-        if output_ratio > max_min_dist_ratio:
 
+        if output_ratio > max_min_dist_ratio:
             if ratio_rerun > 0:
                 return _blade(
                     matrix=matrix,
                     max_min_dist_ratio=max_min_dist_ratio,
-                    dimensions=(2, 2, 2),
+                    dimensions=(dimensions[-1],) * 3,
                     starting_positions=positions,
                     steps_per_round=steps_per_round,
                     compute_max_distance_to_walk=lambda x, max_radial_dist: 0,
@@ -607,9 +622,8 @@ def _blade(
                     ratio_rerun=ratio_rerun - 1,
                 )
 
-            print(
-                f"[Warning] Output ratio {output_ratio}"
-                f" is higher than required {max_min_dist_ratio}"
+            raise DistanceRatioException(
+                required_ratio=max_min_dist_ratio, output_ratio=output_ratio, positions=positions
             )
 
     return positions
