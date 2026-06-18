@@ -14,14 +14,19 @@ from qoolqit.waveforms.utils import round_to_sum
 
 
 class Waveform(ABC):
-    """Base class for waveforms.
+    """Abstract base class for time-bounded waveforms.
 
-    A Waveform is a function of time for t >= 0. Custom waveforms can be defined by
-    inheriting from the base class and overriding the `function` method corresponding
-    to the function f(t) that returns the value of the waveform evaluated at time t.
+    A waveform is a scalar function of time defined over a finite interval [0, duration].
+    Outside this interval, it evaluates to zero.
 
-    A waveform is always a 1D function, so if it includes other parameters, these should be
-    passed and saved at initialization for usage within the `function` method.
+    To define a custom waveform, subclass this class and implement:
+        - `function(t)`: the waveform value at time t within [0, duration].
+        - `max()`: the maximum value of the waveform.
+        - `min()`: the minimum value of the waveform.
+        - `_to_pulser(duration)`: conversion to a Pulser-compatible waveform.
+
+    Any additional parameters (e.g. amplitude, frequency) should be passed as keyword
+    arguments to `__init__` and are automatically stored and accessible as attributes.
     """
 
     def __init__(
@@ -34,7 +39,7 @@ class Waveform(ABC):
 
         Arguments:
             duration: the total duration of the waveform.
-            *kwargs: optional keyword arguments for the waveform function.
+            **kwargs: optional keyword arguments for the waveform function.
         """
 
         if duration <= 0:
@@ -54,18 +59,22 @@ class Waveform(ABC):
     @abstractmethod
     def function(self, t: float) -> float:
         """Evaluates the waveform function at a given time t."""
+        pass
 
     @abstractmethod
     def max(self) -> float:
         """Get the maximum value of the waveform."""
+        pass
 
     @abstractmethod
     def min(self) -> float:
         """Get the minimum value of the waveform."""
+        pass
 
     @abstractmethod
     def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
         """Converts QoolQit waveform to a Pulser Waveform."""
+        pass
 
     @property
     def duration(self) -> float:
@@ -77,7 +86,7 @@ class Waveform(ABC):
         """Dictionary of parameters used by the waveform."""
         return self._params_dict
 
-    def __single_call__(self, t: float) -> float:
+    def _single_call(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
 
     @overload
@@ -87,21 +96,14 @@ class Waveform(ABC):
     def __call__(self, t: list[float] | np.ndarray) -> list | np.ndarray: ...
 
     def __call__(self, t: float | list[float] | np.ndarray) -> float | list[float] | np.ndarray:
-        if isinstance(t, list | np.ndarray):
-            value_array: list[float] | np.ndarray
-            if isinstance(t, np.ndarray):
-                value_array = np.array([self.__single_call__(ti) for ti in t])
-            elif isinstance(t, list):
-                value_array = [self.__single_call__(ti) for ti in t]
-            else:
-                raise TypeError(
-                    "Waveform array calling is supported on Python lists or NumPy arrays."
-                )
-            return value_array
-        else:
-            return self.__single_call__(t)
+        if isinstance(t, np.ndarray):
+            return np.vectorize(self._single_call)(t)
+        if isinstance(t, list):
+            return [self._single_call(ti) for ti in t]
+        return self._single_call(t)
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
+        """Returns a new CompositeWaveform composed of this waveform and another."""
         if isinstance(other, Waveform):
             if isinstance(other, CompositeWaveform):
                 return CompositeWaveform(self, *other._waveforms)
