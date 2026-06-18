@@ -195,13 +195,10 @@ class CompositeWaveform(Waveform):
     def function(self, t: float) -> float:
         """Identifies the right waveform in the composition and evaluates it at time t."""
         idx = np.searchsorted(self.times, t, side="right") - 1
-        if idx == -1:
-            return 0.0
+
+        # fix t==self.times[-1], include right boundary since searchsorted excludes it
         if idx == self.n_waveforms:
-            if t == self.times[-1]:
-                idx = idx - 1
-            else:
-                return 0.0
+            idx = idx - 1
 
         local_t = t - self.times[idx]
         value: float = self.waveforms[idx](local_t)
