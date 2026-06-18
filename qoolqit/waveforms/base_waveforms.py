@@ -143,12 +143,15 @@ class Waveform(ABC):
 
 
 class CompositeWaveform(Waveform):
-    """Base class for composite waveforms.
+    """A concatenation of waveforms played sequentially.
 
-    A CompositeWaveform stores a sequence of waveforms occurring one after the other
-    by the order given. When it is evaluated at time t, the corresponding waveform
-    from the sequence is identified depending on the duration of each one, and it is
-    then evaluated for a time t' = t minus the duration of all previous waveforms.
+    Waveforms are joined in the given order, each starting where the previous one ends,
+    and the composition can be used as a single waveform.
+
+    Attributes:
+        waveforms: a list of waveforms in the composition.
+        durations: a list of durations of each individual waveform.
+        times: a list of times when each individual waveform starts.
     """
 
     def __init__(self, *waveforms: Waveform) -> None:
@@ -156,6 +159,10 @@ class CompositeWaveform(Waveform):
 
         Arguments:
             waveforms: an iterator over waveforms.
+
+        Raises:
+            TypeError: if any argument is not an instance of Waveform.
+            ValueError: if no waveforms are provided.
         """
         if not all(isinstance(wf, Waveform) for wf in waveforms):
             raise TypeError("All arguments must be instances of Waveform.")
