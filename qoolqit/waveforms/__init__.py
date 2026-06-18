@@ -8,7 +8,6 @@ from qoolqit.waveforms.waveforms import (
     InterpolatedWaveform,
     PiecewiseLinearWaveform,
     RampWaveform,
-    SinWaveform,
 )
 
 __all__ = [
@@ -18,7 +17,6 @@ __all__ = [
     "InterpolatedWaveform",
     "PiecewiseLinearWaveform",
     "RampWaveform",
-    "SinWaveform",
     "CompositeWaveform",
     "Waveform",
 ]

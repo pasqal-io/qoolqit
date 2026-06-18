@@ -10,7 +10,6 @@ from qoolqit.waveforms import (
     InterpolatedWaveform,
     PiecewiseLinearWaveform,
     RampWaveform,
-    SinWaveform,
 )
 
 
@@ -23,7 +22,6 @@ from qoolqit.waveforms import (
         ("Interpolated", InterpolatedWaveform),
         ("PiecewiseLinear", PiecewiseLinearWaveform),
         ("Ramp", RampWaveform),
-        ("Sin", SinWaveform),
     ],
 )
 def test_waveforms_deprecation_warning(deprecated_name: str, expected_type: type) -> None:
