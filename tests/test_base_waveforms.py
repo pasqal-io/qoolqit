@@ -1,3 +1,5 @@
+"""Test the Waveform base class."""
+
 from __future__ import annotations
 
 import math
@@ -11,11 +13,18 @@ from qoolqit.waveforms import CompositeWaveform, Waveform
 
 
 class TestWaveform:
-    """Test the base Waveform class."""
+    """Test the base Waveform class.
+
+    Methods `max`, `min`, `_to_pulser` are tested in the subclasses concrete implementation.
+
+    Attributes:
+        MockWaveform: A mock waveform for testing.
+        SinWaveform: A sine waveform for testing.
+    """
 
     class MockWaveform(Waveform):
         def function(self, t: float) -> float:
-            return 2 * t
+            return 2 * t + 1.0
 
         def max(self) -> float:
             return 1.0
@@ -79,7 +88,7 @@ class TestWaveform:
         wf = self.MockWaveform(10.0)
 
         # scalar call
-        assert wf(3.0) == wf.function(3.0)  # 2 * 3.0 = 6.0
+        assert wf(3.0) == wf.function(3.0)  # 2 * 3.0 + 1.0 = 7.0
 
         # list call returns a list with element-wise values
         result_list = wf([1.0, 2.0, 3.0])
@@ -111,12 +120,23 @@ class TestWaveform:
 
         wf_composed = wf1 >> wf2
 
-        # t=5.0 is within wf1: local_t=5.0, function=2*5.0=10.0
+        # test out of bounds cases, expecting 0.0
+        # t=-1.0 is before the left boundary: returns 0.0
+        np.testing.assert_allclose(wf_composed(-1.0), 0.0)
+        # t=40.2 is is beyond the right boundary: returns 0.0
+        np.testing.assert_allclose(wf_composed(40.2), 0.0)
+
+        # test within bounds cases
+        # t=0.0 is the left boundary of wf1 (inclusive): local_t=0.0, function=2*0.0+1.0=1.0
+        np.testing.assert_allclose(wf_composed(0.0), wf1.function(0.0))
+        # t=5.0 is within wf1: local_t=5.0, function=2*5.0+1.0=11.0
         np.testing.assert_allclose(wf_composed(5.0), wf1.function(5.0))
         # t=11.1 is the start of wf2: local_t=0.0, function=0.5*sin(0)=0.0
         np.testing.assert_allclose(wf_composed(11.1), wf2.function(0.0))
         # t=21.1 is within wf2: local_t=10.0
         np.testing.assert_allclose(wf_composed(21.1), wf2.function(10.0))
+        # t=31.2 is the right boundary of wf2 (inclusive): local_t=20.1
+        np.testing.assert_allclose(wf_composed(31.2), wf2.function(20.1))
 
     def test_composition_order(self) -> None:
         wf1 = self.MockWaveform(11.1)
