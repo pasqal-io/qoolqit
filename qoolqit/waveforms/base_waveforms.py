@@ -125,9 +125,6 @@ class Waveform(ABC):
             return self.__single_call__(t)
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
-        return self.__rrshift__(other)
-
-    def __rrshift__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
             if isinstance(other, CompositeWaveform):
                 return CompositeWaveform(self, *other._waveforms)
@@ -247,9 +244,6 @@ class CompositeWaveform(Waveform):
         return max([wf.max() for wf in self.waveforms])
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
-        return self.__rrshift__(other)
-
-    def __rrshift__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
             if isinstance(other, CompositeWaveform):
                 return CompositeWaveform(*self.waveforms, *other.waveforms)

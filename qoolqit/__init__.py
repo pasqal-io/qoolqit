@@ -26,7 +26,6 @@ from qoolqit.waveforms import (
     InterpolatedWaveform,
     PiecewiseLinearWaveform,
     RampWaveform,
-    SinWaveform,
 )
 
 __all__ = [
@@ -37,7 +36,6 @@ __all__ = [
     "InterpolatedWaveform",
     "PiecewiseLinearWaveform",
     "RampWaveform",
-    "SinWaveform",
     "Drive",
     "Register",
     "QuantumProgram",
@@ -70,7 +68,6 @@ _DEPRECATED_WAVEFORM_ALIASES: dict[str, type] = {
     "Interpolated": InterpolatedWaveform,
     "PiecewiseLinear": PiecewiseLinearWaveform,
     "Ramp": RampWaveform,
-    "Sin": SinWaveform,
 }
 
 

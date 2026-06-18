@@ -263,33 +263,3 @@ class InterpolatedWaveform(Waveform):
             times=self._times,
             interpolator="PchipInterpolator",
         )
-
-
-class SinWaveform(Waveform):
-    """An arbitrary sine over a given duration.
-
-    Arguments:
-        duration: the total duration.
-        amplitude: the amplitude of the sine wave.
-        omega: the frequency of the sine wave.
-        phi: the phase of the sine wave.
-        shift: the vertical shift of the sine wave.
-    """
-
-    amplitude: float
-    omega: float
-    phi: float
-    shift: float
-
-    def __init__(
-        self,
-        duration: float,
-        amplitude: float = 1.0,
-        omega: float = 1.0,
-        phi: float = 0.0,
-        shift: float = 0.0,
-    ) -> None:
-        super().__init__(duration, amplitude=amplitude, omega=omega, phi=phi, shift=shift)
-
-    def function(self, t: float) -> float:
-        return self.amplitude * math.sin(self.omega * t + self.phi) + self.shift
