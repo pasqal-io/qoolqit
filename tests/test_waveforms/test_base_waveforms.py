@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
@@ -27,13 +26,13 @@ class TestWaveform:
             return 2 * t + 1.0
 
         def max(self) -> float:
-            return 1.0
+            raise NotImplementedError
 
         def min(self) -> float:
-            return 0.0
+            raise NotImplementedError
 
         def _to_pulser(self, duration: int) -> PulserWaveform:
-            return MagicMock(spec=PulserWaveform)
+            raise NotImplementedError
 
     class SinWaveform(Waveform):
         amplitude: float
@@ -46,13 +45,13 @@ class TestWaveform:
             return self.amplitude * math.sin(freq * t)
 
         def max(self) -> float:
-            return self.amplitude
+            raise NotImplementedError
 
         def min(self) -> float:
-            return 0.0
+            raise NotImplementedError
 
         def _to_pulser(self, duration: int) -> PulserWaveform:
-            return MagicMock(spec=PulserWaveform)
+            raise NotImplementedError
 
     def test_waveform_init_stores_params(self) -> None:
         wf = self.MockWaveform(200.0, p1=2.0, p2=3.1)
