@@ -1,3 +1,5 @@
+"""Abstract base classes for scalar waveforms and their sequential composition."""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
