@@ -1,4 +1,4 @@
-"""Abstract base classes for scalar waveforms and their sequential composition."""
+"""Base classes for scalar waveforms and their sequential composition."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from qoolqit.waveforms.utils import round_to_sum
 
 
 class Waveform(ABC):
-    """Abstract base class for time-bounded waveforms.
+    """Base class for time-bounded waveforms.
 
     A waveform is a scalar function of time defined over a finite interval [0, duration].
     Outside this interval, it evaluates to zero.
