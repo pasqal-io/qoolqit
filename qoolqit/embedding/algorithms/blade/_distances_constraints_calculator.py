@@ -34,10 +34,9 @@ def compute_best_scaling_for_qubo(
     difference_ceiling = np.maximum(0.0, percentile)
 
     if filter_differences:
-        weights = np.where(
-            differences > difference_ceiling,
-            difference_ceiling / differences,
-            1.0,
+        weights = np.ones_like(differences)
+        np.divide(
+            difference_ceiling, differences, out=weights, where=differences > difference_ceiling
         )
     else:
         weights = np.ones_like(differences)
@@ -50,8 +49,9 @@ def compute_best_scaling_for_qubo(
         / np.sum(weights * embedded_interactions_triu * target_interactions_triu)
     ) ** (1 / 6)
 
-    assert not np.isnan(best_scaling)
-    assert not np.isinf(best_scaling)
+    best_scaling = np.clip(best_scaling, 0.1, 10)
+
+    assert np.isfinite(best_scaling)
     assert best_scaling > 0
 
     return best_scaling
@@ -67,11 +67,7 @@ def compute_best_scaling_for_pos(
     """
 
     distance_matrix = distance_matrix_from_positions(positions)
-
-    current_weights = np.vectorize(normalized_interaction, signature="(m,n)->(m,n)")(
-        dist=distance_matrix
-    )
-    current_weights = np.triu(current_weights, k=1)
+    current_weights = normalized_interaction(distance_matrix)
 
     return compute_best_scaling_for_qubo(
         target_interactions=target_interactions,
@@ -109,18 +105,18 @@ class DistancesConstraintsCalculator:
 
         assert 0 <= step_cursor <= 1
 
+        if self.final_ratio is None:
+            return 1, None, None
+
+        assert self.starting_ratio is not None
+
+        step_ratio = self.final_ratio + (1 - step_cursor) * (self.starting_ratio - self.final_ratio)
+
         scaling_factor = compute_best_scaling_for_pos(
             target_interactions=self.target_interactions,
             positions=positions,
             draw_differences=draw_differences,
         )
-
-        if self.final_ratio is None:
-            return scaling_factor, None, None
-
-        assert self.starting_ratio is not None
-
-        step_ratio = self.final_ratio + (1 - step_cursor) * (self.starting_ratio - self.final_ratio)
 
         scaled_min = self.current_min * scaling_factor
         self.current_min, current_max = scaled_min, scaled_min * step_ratio

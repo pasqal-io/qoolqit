@@ -18,11 +18,11 @@ jobs:
             id-token: write
         steps:
         - name: Check out QoolQit
-          uses: actions/checkout@v4
+          uses: actions/checkout@v6
           with:
             ref: ${{ github.ref }}
         - name: Set up Python
-          uses: actions/setup-python@v5
+          uses: actions/setup-python@v6
           with:
             python-version: '3.12'
         - name: Install Python dependencies
@@ -49,9 +49,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         - name: Checkout QoolQit
-          uses: actions/checkout@v4
+          uses: actions/checkout@v6
         - name: Set up Python 3.12
-          uses: actions/setup-python@v5
+          uses: actions/setup-python@v6
           with:
             python-version: '3.12'
         - name: Install QoolQit with development dependencies

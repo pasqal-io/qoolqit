@@ -1,3 +1,5 @@
+"""Composable, time-bounded scalar waveforms for pulse-level quantum control."""
+
 from __future__ import annotations
 
 from qoolqit.waveforms.base_waveforms import CompositeWaveform, Waveform
@@ -8,7 +10,6 @@ from qoolqit.waveforms.waveforms import (
     InterpolatedWaveform,
     PiecewiseLinearWaveform,
     RampWaveform,
-    SinWaveform,
 )
 
 __all__ = [
@@ -18,7 +19,6 @@ __all__ = [
     "InterpolatedWaveform",
     "PiecewiseLinearWaveform",
     "RampWaveform",
-    "SinWaveform",
     "CompositeWaveform",
     "Waveform",
 ]
