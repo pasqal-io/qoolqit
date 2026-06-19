@@ -39,7 +39,7 @@ class Waveform(ABC):
     ) -> None:
         """Initializes the Waveform.
 
-        Arguments:
+        Args:
             duration: the total duration of the waveform.
             **kwargs: optional keyword arguments for the waveform function.
         """
