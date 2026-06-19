@@ -100,7 +100,7 @@ class Waveform(ABC):
             self._approximate_min_max()
         return cast(float, self._min)
 
-    def __single_call__(self, t: float) -> float:
+    def _single_call(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
 
     @overload
@@ -110,19 +110,11 @@ class Waveform(ABC):
     def __call__(self, t: list[float] | np.ndarray) -> list | np.ndarray: ...
 
     def __call__(self, t: float | list[float] | np.ndarray) -> float | list[float] | np.ndarray:
-        if isinstance(t, list | np.ndarray):
-            value_array: list[float] | np.ndarray
-            if isinstance(t, np.ndarray):
-                value_array = np.array([self.__single_call__(ti) for ti in t])
-            elif isinstance(t, list):
-                value_array = [self.__single_call__(ti) for ti in t]
-            else:
-                raise TypeError(
-                    "Waveform array calling is supported on Python lists or NumPy arrays."
-                )
-            return value_array
-        else:
-            return self.__single_call__(t)
+        if isinstance(t, np.ndarray):
+            return np.vectorize(self._single_call)(t)
+        if isinstance(t, list):
+            return [self._single_call(ti) for ti in t]
+        return self._single_call(t)
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
