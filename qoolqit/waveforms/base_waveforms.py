@@ -231,10 +231,8 @@ class CompositeWaveform(Waveform):
 
     def function(self, t: float) -> float:
         idx = np.searchsorted(self.times, t, side="right") - 1
-
-        # clamp idx to the last waveform
-        if idx == self.n_waveforms:
-            idx = idx - 1
+        # clip to valid waveform index range
+        idx = np.clip(idx, 0, self.n_waveforms - 1)
 
         local_t = t - self.times[idx]
         value: float = self.waveforms[idx](local_t)
