@@ -237,8 +237,8 @@ class CompositeWaveform(Waveform):
             idx = idx - 1
 
         local_t = t - self.times[idx]
-        value = self.waveforms[idx](local_t)
-        return cast(float, value)
+        value: float = self.waveforms[idx](local_t)
+        return value
 
     def max(self) -> float:
         """Get the maximum value of the waveform."""
