@@ -73,7 +73,7 @@ class Waveform(ABC):
 
     @abstractmethod
     def function(self, t: float) -> float:
-        """Evaluates the waveform function at a given time t."""
+        """Evaluates the waveform function at time t."""
         ...
 
     def _approximate_min_max(self) -> None:
@@ -230,15 +230,9 @@ class CompositeWaveform(Waveform):
         return len(self.waveforms)
 
     def function(self, t: float) -> float:
-        """Identifies the right waveform in the composition and evaluates it at time t."""
         idx = np.searchsorted(self.times, t, side="right") - 1
-        if idx == -1:
-            return 0.0
-        if idx == self.n_waveforms:
-            if t == self.times[-1]:
-                idx = idx - 1
-            else:
-                return 0.0
+        # clip to valid waveform index range
+        idx = np.clip(idx, 0, self.n_waveforms - 1)
 
         local_t = t - self.times[idx]
         value: float = self.waveforms[idx](local_t)
