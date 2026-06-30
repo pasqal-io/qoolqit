@@ -264,17 +264,25 @@ def test_interpolated_wrong_times_len() -> None:
         InterpolatedWaveform(10, values=[0, 1], times=[0, 0.5, 0.8])
 
 
-def test_interpolated_mul() -> None:
+@pytest.mark.parametrize(
+    "times",
+    [
+        None,
+        np.array([0.0, 0.1, 0.5, 0.9, 1.0]),  # non-uniform times
+    ],
+)
+def test_interpolated_mul(times: np.ndarray | None) -> None:
     values = np.array([3.15826815, 4.50277306, 3.38569084, 4.82395945, 1.41445813])
     scaling = 3.4
 
-    wf = InterpolatedWaveform(3.45, values=values)
+    wf = InterpolatedWaveform(3.45, values=values, times=times)
     scaled = wf * scaling
     assert scaled is not wf
     assert isinstance(scaled, InterpolatedWaveform)
     assert scaled.duration == wf.duration
     expected_values = values * scaling
     np.testing.assert_allclose(scaled._values, expected_values)
+    np.testing.assert_allclose(scaled._times, wf._times)
 
 
 def test_interpolated_to_pulser() -> None:
@@ -432,3 +440,12 @@ def test_to_pulser_sub_ns_delay_composite_wf() -> None:
     assert isinstance(pulser_waveform, pulser.CompositeWaveform)
     assert len(pulser_waveform.waveforms) == 2
     assert pulser_waveform.duration == 1223
+
+
+def test_rmul() -> None:
+    """Test that right-hand multiplication delegates to __mul__."""
+    scaling_factor = 3.4
+    wf = ConstantWaveform(2.0, value=1.1)
+    wf_right_multiplied = 3.4 * wf
+    assert isinstance(wf_right_multiplied, ConstantWaveform)
+    assert wf_right_multiplied.value == scaling_factor * wf.value
