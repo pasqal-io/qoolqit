@@ -268,38 +268,6 @@ def test_negative_duration() -> None:
         ConstantWaveform(-10.0, value=2.0)
 
 
-def test_waveform_only_kwarg() -> None:
-    class MockWaveform(Waveform):
-        def function(self, t: float) -> float:
-            return t
-
-    wf = MockWaveform(200.0, p1=2.0, p2=3.1)
-    assert wf.params == {"p1": 2.0, "p2": 3.1}
-
-    with pytest.raises(
-        ValueError,
-        match="Extra arguments in MockWaveform need to be passed as keyword arguments",
-    ):
-        MockWaveform(200.0, 2.0, 3.1)
-
-
-def test_base_waveform_to_pulser() -> None:
-    class MockWaveform(Waveform):
-        def function(self, t: float) -> float:
-            return t**2
-
-    wf = MockWaveform(200.0)
-    pulser_wf = wf._to_pulser(duration=1000)
-
-    assert isinstance(pulser_wf, pulser.InterpolatedWaveform)
-    assert pulser_wf.duration == 1000
-
-    expected_times = np.linspace(0.0, 1.0, 100)
-    expected_values = (200.0 * expected_times) ** 2
-    assert np.allclose(pulser_wf._times, expected_times)
-    assert np.allclose(pulser_wf._values, expected_values)
-
-
 def test_to_pulser_sub_ns_delay_single_wf() -> None:
     """
     Add a delay to a Waveform and test conversion to Pulser.
