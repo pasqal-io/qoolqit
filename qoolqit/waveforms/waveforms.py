@@ -109,7 +109,7 @@ class ConstantWaveform(Waveform):
 class BlackmanWaveform(Waveform):
     """A Blackman window of a specified duration and area under the curve.
 
-    Implements the Blackman window shaped waveform
+    Implements the positive Blackman window shaped waveform
         blackman(t) = A*(0.42 - 0.5*cos(αt) + 0.08*cos(2αt))
                   A = area/(0.42*duration)
                   α = 2π/duration
@@ -136,7 +136,8 @@ class BlackmanWaveform(Waveform):
     def function(self, t: float) -> float:
         alpha = 2 * math.pi / self.duration
         A = self.area / (0.42 * self.duration)
-        return A * (0.42 - 0.5 * math.cos(alpha * t) + 0.08 * math.cos(2 * alpha * t))
+        value = A * (0.42 - 0.5 * math.cos(alpha * t) + 0.08 * math.cos(2 * alpha * t))
+        return max(value, 0.0)
 
     def max(self) -> float:
         return self.area / (0.42 * self.duration)
@@ -164,13 +165,9 @@ class PiecewiseLinearWaveform(CompositeWaveform):
 
     def __init__(
         self,
-        durations: list | tuple,
-        values: list | tuple,
+        durations: list[float] | tuple[float, ...] | np.ndarray,
+        values: list[float] | tuple[float, ...] | np.ndarray,
     ) -> None:
-        if not (isinstance(durations, (list, tuple)) or isinstance(values, (list, tuple))):
-            raise TypeError(
-                "A PiecewiseLinearWaveform requires a list or tuple of durations and values."
-            )
 
         if len(durations) + 1 != len(values) or len(durations) == 1:
             raise ValueError(
@@ -186,6 +183,11 @@ class PiecewiseLinearWaveform(CompositeWaveform):
         wfs = [RampWaveform(dur, values[i], values[i + 1]) for i, dur in enumerate(durations)]
 
         super().__init__(*wfs)
+
+    def __mul__(self, other: float) -> CompositeWaveform:
+        return PiecewiseLinearWaveform(
+            self.durations, values=[value * other for value in self.values]
+        )
 
     def __repr_header__(self) -> str:
         return "Piecewise linear waveform:\n"
