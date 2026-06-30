@@ -6,6 +6,7 @@ import numpy as np
 import pulser
 import pytest
 from numpy.typing import ArrayLike
+from scipy.integrate import quad
 
 from qoolqit.waveforms import (
     BlackmanWaveform,
@@ -137,6 +138,10 @@ def test_blackman_init() -> None:
     assert wf.duration == 11.0
     assert wf.area == area
     assert wf.params == {"area": area}
+
+    # test area as integral
+    res, _ = quad(wf, 0.0, wf.duration)
+    assert np.isclose(res, area)
 
 
 def test_blackman_samples() -> None:
