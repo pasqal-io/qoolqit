@@ -31,6 +31,9 @@ class TestWaveform:
         def min(self) -> float:
             raise NotImplementedError
 
+        def __mul__(self, other: float) -> Waveform:
+            raise NotImplementedError
+
         def _to_pulser(self, duration: int) -> PulserWaveform:
             raise NotImplementedError
 
@@ -48,6 +51,9 @@ class TestWaveform:
             raise NotImplementedError
 
         def min(self) -> float:
+            raise NotImplementedError
+
+        def __mul__(self, other: float) -> Waveform:
             raise NotImplementedError
 
         def _to_pulser(self, duration: int) -> PulserWaveform:

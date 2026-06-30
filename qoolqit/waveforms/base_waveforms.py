@@ -74,6 +74,11 @@ class Waveform(ABC):
         pass
 
     @abstractmethod
+    def __mul__(self, other: float) -> Waveform:
+        """Rescale this waveform by a scalar."""
+        pass
+
+    @abstractmethod
     def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
         """Converts QoolQit waveform to a Pulser Waveform."""
         pass
@@ -216,6 +221,9 @@ class CompositeWaveform(Waveform):
     def min(self) -> float:
         """Get the minimum value of the waveform."""
         return min([wf.min() for wf in self.waveforms])
+
+    def __mul__(self, other: float) -> CompositeWaveform:
+        return CompositeWaveform(*[wf * other for wf in self.waveforms])
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):

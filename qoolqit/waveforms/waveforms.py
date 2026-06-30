@@ -25,6 +25,9 @@ class DelayWaveform(Waveform):
     def min(self) -> float:
         return 0.0
 
+    def __mul__(self, other: float) -> Waveform:
+        return self
+
     def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
         return pulser.ConstantWaveform(duration, 0.0)
 
@@ -59,6 +62,13 @@ class RampWaveform(Waveform):
     def min(self) -> float:
         return min([self.initial_value, self.final_value])
 
+    def __mul__(self, other: float) -> Waveform:
+        return RampWaveform(
+            self.duration,
+            initial_value=self.initial_value * other,
+            final_value=self.final_value * other,
+        )
+
     def _to_pulser(self, duration: int) -> ParamObj | pulser.RampWaveform:
         return pulser.RampWaveform(duration, self.initial_value, self.final_value)
 
@@ -88,6 +98,9 @@ class ConstantWaveform(Waveform):
 
     def min(self) -> float:
         return self.value
+
+    def __mul__(self, other: float) -> Waveform:
+        return ConstantWaveform(self.duration, value=self.value * other)
 
     def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
         return pulser.ConstantWaveform(duration, self.value)
@@ -130,6 +143,9 @@ class BlackmanWaveform(Waveform):
 
     def min(self) -> float:
         return 0.0
+
+    def __mul__(self, other: float) -> Waveform:
+        return BlackmanWaveform(self.duration, area=self.area * other)
 
     def _to_pulser(self, duration: int) -> ParamObj | pulser.BlackmanWaveform:
         return pulser.BlackmanWaveform(duration, self.area)
@@ -252,6 +268,9 @@ class InterpolatedWaveform(Waveform):
 
     def max(self) -> float:
         return float(self._values.max())
+
+    def __mul__(self, other: float) -> Waveform:
+        return InterpolatedWaveform(self.duration, self._values * other, self._times)
 
     def _to_pulser(
         self,
