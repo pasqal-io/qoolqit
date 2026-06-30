@@ -46,7 +46,9 @@ def test_delay_min_max() -> None:
 def test_delay_mul() -> None:
     wf = DelayWaveform(duration=1.0)
     scaled = wf * 2.0
-    assert scaled is wf
+    assert scaled is not wf
+    assert isinstance(scaled, DelayWaveform)
+    assert scaled.duration == wf.duration
 
 
 def test_delay_to_pulser() -> None:

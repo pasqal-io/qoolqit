@@ -78,6 +78,10 @@ class Waveform(ABC):
         """Rescale this waveform by a scalar."""
         pass
 
+    def __rmul__(self, other: float) -> Waveform:
+        """Rescale this waveform by a scalar (right-hand multiplication)."""
+        return self.__mul__(other)
+
     @abstractmethod
     def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
         """Converts QoolQit waveform to a Pulser Waveform."""

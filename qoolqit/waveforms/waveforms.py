@@ -26,7 +26,7 @@ class DelayWaveform(Waveform):
         return 0.0
 
     def __mul__(self, other: float) -> Waveform:
-        return self
+        return DelayWaveform(self.duration)
 
     def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
         return pulser.ConstantWaveform(duration, 0.0)
