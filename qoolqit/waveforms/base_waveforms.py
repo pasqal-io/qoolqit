@@ -25,6 +25,7 @@ class Waveform(ABC):
         - `function(t)`: the waveform value at time t within [0, duration].
         - `max()`: the maximum value of the waveform.
         - `min()`: the minimum value of the waveform.
+        - `__mul__(scalar)`: rescale this waveform by a scalar factor.
         - `_to_pulser(duration)`: conversion to a Pulser-compatible waveform.
 
     Any additional parameters (e.g. amplitude, frequency) should be passed as keyword
@@ -72,6 +73,15 @@ class Waveform(ABC):
     def min(self) -> float:
         """Get the minimum value of the waveform."""
         pass
+
+    @abstractmethod
+    def __mul__(self, other: float) -> Waveform:
+        """Rescale this waveform by a scalar."""
+        pass
+
+    def __rmul__(self, other: float) -> Waveform:
+        """Rescale this waveform by a scalar (right-hand multiplication)."""
+        return self.__mul__(other)
 
     @abstractmethod
     def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
@@ -216,6 +226,9 @@ class CompositeWaveform(Waveform):
     def min(self) -> float:
         """Get the minimum value of the waveform."""
         return min([wf.min() for wf in self.waveforms])
+
+    def __mul__(self, other: float) -> CompositeWaveform:
+        return CompositeWaveform(*[wf * other for wf in self.waveforms])
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):

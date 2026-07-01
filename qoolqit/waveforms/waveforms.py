@@ -25,6 +25,9 @@ class DelayWaveform(Waveform):
     def min(self) -> float:
         return 0.0
 
+    def __mul__(self, other: float) -> Waveform:
+        return DelayWaveform(self.duration)
+
     def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
         return pulser.ConstantWaveform(duration, 0.0)
 
@@ -59,6 +62,13 @@ class RampWaveform(Waveform):
     def min(self) -> float:
         return min([self.initial_value, self.final_value])
 
+    def __mul__(self, other: float) -> Waveform:
+        return RampWaveform(
+            self.duration,
+            initial_value=self.initial_value * other,
+            final_value=self.final_value * other,
+        )
+
     def _to_pulser(self, duration: int) -> ParamObj | pulser.RampWaveform:
         return pulser.RampWaveform(duration, self.initial_value, self.final_value)
 
@@ -89,6 +99,9 @@ class ConstantWaveform(Waveform):
     def min(self) -> float:
         return self.value
 
+    def __mul__(self, other: float) -> Waveform:
+        return ConstantWaveform(self.duration, value=self.value * other)
+
     def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
         return pulser.ConstantWaveform(duration, self.value)
 
@@ -96,7 +109,7 @@ class ConstantWaveform(Waveform):
 class BlackmanWaveform(Waveform):
     """A Blackman window of a specified duration and area under the curve.
 
-    Implements the Blackman window shaped waveform
+    Implements the positive Blackman window shaped waveform
         blackman(t) = A*(0.42 - 0.5*cos(αt) + 0.08*cos(2αt))
                   A = area/(0.42*duration)
                   α = 2π/duration
@@ -123,13 +136,17 @@ class BlackmanWaveform(Waveform):
     def function(self, t: float) -> float:
         alpha = 2 * math.pi / self.duration
         A = self.area / (0.42 * self.duration)
-        return A * (0.42 - 0.5 * math.cos(alpha * t) + 0.08 * math.cos(2 * alpha * t))
+        value = A * (0.42 - 0.5 * math.cos(alpha * t) + 0.08 * math.cos(2 * alpha * t))
+        return max(value, 0.0)
 
     def max(self) -> float:
         return self.area / (0.42 * self.duration)
 
     def min(self) -> float:
         return 0.0
+
+    def __mul__(self, other: float) -> Waveform:
+        return BlackmanWaveform(self.duration, area=self.area * other)
 
     def _to_pulser(self, duration: int) -> ParamObj | pulser.BlackmanWaveform:
         return pulser.BlackmanWaveform(duration, self.area)
@@ -148,13 +165,9 @@ class PiecewiseLinearWaveform(CompositeWaveform):
 
     def __init__(
         self,
-        durations: list | tuple,
-        values: list | tuple,
+        durations: list[float] | tuple[float, ...] | np.ndarray,
+        values: list[float] | tuple[float, ...] | np.ndarray,
     ) -> None:
-        if not (isinstance(durations, (list, tuple)) or isinstance(values, (list, tuple))):
-            raise TypeError(
-                "A PiecewiseLinearWaveform requires a list or tuple of durations and values."
-            )
 
         if len(durations) + 1 != len(values) or len(durations) == 1:
             raise ValueError(
@@ -170,6 +183,11 @@ class PiecewiseLinearWaveform(CompositeWaveform):
         wfs = [RampWaveform(dur, values[i], values[i + 1]) for i, dur in enumerate(durations)]
 
         super().__init__(*wfs)
+
+    def __mul__(self, other: float) -> CompositeWaveform:
+        return PiecewiseLinearWaveform(
+            self.durations, values=[value * other for value in self.values]
+        )
 
     def __repr_header__(self) -> str:
         return "Piecewise linear waveform:\n"
@@ -252,6 +270,9 @@ class InterpolatedWaveform(Waveform):
 
     def max(self) -> float:
         return float(self._values.max())
+
+    def __mul__(self, other: float) -> Waveform:
+        return InterpolatedWaveform(self.duration, self._values * other, self._times)
 
     def _to_pulser(
         self,

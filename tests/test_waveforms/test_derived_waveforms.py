@@ -21,90 +21,168 @@ from qoolqit.waveforms import (
 from qoolqit.waveforms.utils import round_to_sum
 
 
-def test_delay() -> None:
+def test_delay_init() -> None:
     with pytest.raises(ValueError):
-        wf = DelayWaveform(duration=0.0)
+        DelayWaveform(duration=0.0)
 
     with pytest.raises(ValueError):
-        wf = DelayWaveform(duration=-1.0)
+        DelayWaveform(duration=-1.0)
 
-    duration = 1.0
+    duration = 2.1
     wf = DelayWaveform(duration)
 
-    t_val = random.random()
-
     assert wf.duration == duration
-    assert wf(t_val) == 0.0
-    assert wf.max() == 0.0
+
+    t_val = [0.0, 0.1, 0.2, 1.3, 2.0, 2.1]
+    np.testing.assert_array_equal(wf(t_val), 0.0)
+
+
+def test_delay_min_max() -> None:
+    wf = DelayWaveform(duration=1.0)
     assert wf.min() == 0.0
+    assert wf.max() == 0.0
 
 
-def test_constant() -> None:
-    duration = 1.0
-    value = random.random()
-
-    wf = ConstantWaveform(duration, value)
-
-    assert wf.value == value
-
-    t_val = random.random()
-
-    assert wf(0.0 - t_val) == 0.0
-    assert wf(t_val) == value
-    assert wf(duration + t_val) == 0.0
-    assert wf.max() == value
-    assert wf.min() == value
-
-    n_points = 10
-    t_array = np.random.rand(n_points)
-    assert isinstance(wf(t_array), np.ndarray)
-    assert len(wf(t_array)) == n_points
-
-    t_list = [random.random() for i in range(n_points)]
-    assert isinstance(wf(t_list), list)
-    assert len(wf(t_list)) == n_points
+def test_delay_mul() -> None:
+    wf = DelayWaveform(duration=1.0)
+    scaled = wf * 2.0
+    assert scaled is not wf
+    assert isinstance(scaled, DelayWaveform)
+    assert scaled.duration == wf.duration
 
 
-def test_ramp() -> None:
-    duration = 1.0
-    initial_value = random.random()
-    final_value = random.random()
-    wf = RampWaveform(duration, initial_value, final_value)
-
-    t_val = random.random()
-
-    assert wf.initial_value == initial_value
-    assert wf.final_value == final_value
-    min_val, max_val = min([initial_value, final_value]), max([initial_value, final_value])
-    value: float = wf(t_val)
-    assert min_val <= value <= max_val
-    assert wf.max() == max_val
-    assert wf.min() == min_val
+def test_delay_to_pulser() -> None:
+    wf = DelayWaveform(duration=1.0)
+    pulser_duration = 100
+    pulser_wf = wf._to_pulser(duration=pulser_duration)
+    assert isinstance(pulser_wf, pulser.ConstantWaveform)
+    assert pulser_wf.duration == pulser_duration
+    assert np.all(pulser_wf.samples == 0.0)
 
 
-def test_blackman() -> None:
+def test_constant_init() -> None:
+    wf = ConstantWaveform(10.0, value=2.7)
+    assert wf.duration == 10.0
+    assert wf.value == 2.7
+
+
+@pytest.mark.parametrize(
+    "duration, times",
+    [
+        (1.57843, np.random.uniform(0.0, 1.57843, size=10)),
+        (11.7, [11.7 * random.random() for _ in range(11)]),
+    ],
+)
+def test_constant_samples(duration: float, times: list[float] | np.ndarray) -> None:
+    value = 2.3
+    wf = ConstantWaveform(duration, value=value)
+
+    wf_samples = wf(times)
+    assert isinstance(wf_samples, type(times))
+    assert len(wf_samples) == len(times)
+
+    np.testing.assert_allclose(wf_samples, value)
+    assert all(val <= wf.max() for val in wf_samples)
+    assert all(val >= wf.min() for val in wf_samples)
+
+
+def test_constant_min_max() -> None:
+    wf = ConstantWaveform(duration=1.0, value=np.pi)
+    assert wf.min() == np.pi
+    assert wf.max() == np.pi
+
+
+def test_constant_mul() -> None:
+    wf = ConstantWaveform(duration=1.0, value=np.pi)
+    scaled = wf * 2.0
+    assert scaled is not wf
+    assert isinstance(scaled, ConstantWaveform)
+    assert scaled.duration == wf.duration
+    assert scaled.value == wf.value * 2.0
+
+
+def test_ramp_init() -> None:
+    wf = RampWaveform(duration=5.0, initial_value=-1.3, final_value=1.0)
+    assert wf.duration == 5.0
+    assert wf.initial_value == -1.3
+    assert wf.final_value == 1.0
+
+
+def test_ramp_samples() -> None:
+    wf = RampWaveform(duration=5.0, initial_value=-1.3, final_value=1.0)
+    times = np.linspace(0.0, 5.0, 100)
+    samples = wf(times)
+    assert isinstance(samples, np.ndarray)
+    assert len(samples) == len(times)
+    assert np.all(samples >= wf.min())
+    assert np.all(samples <= wf.max())
+
+
+def test_ramp_min_max() -> None:
+    wf = RampWaveform(duration=5.0, initial_value=-1.3, final_value=1.0)
+    assert wf.min() == -1.3
+    assert wf.max() == 1.0
+
+
+def test_ramp_mul() -> None:
+    wf = RampWaveform(duration=5.0, initial_value=-1.3, final_value=1.0)
+    scaled = wf * 2.0
+    assert scaled is not wf
+    assert isinstance(scaled, RampWaveform)
+    assert scaled.duration == wf.duration
+    assert scaled.initial_value == wf.initial_value * 2.0
+    assert scaled.final_value == wf.final_value * 2.0
+
+
+def test_blackman_init() -> None:
+    area = 1.5 * np.pi
+    wf = BlackmanWaveform(duration=11.0, area=area)
+    assert wf.duration == 11.0
+    assert wf.area == area
+    assert wf.params == {"area": area}
+
+    # test area as integral
+    res, _ = quad(wf, 0.0, wf.duration)
+    assert np.isclose(res, area)
+
+
+def test_blackman_samples() -> None:
+    wf = BlackmanWaveform(duration=1.0, area=np.pi)
+    times = np.linspace(0.0, wf.duration, 25)
+    samples = wf(times)
+    assert isinstance(samples, np.ndarray)
+    assert np.all(samples >= wf.min())
+    assert np.all(samples <= wf.max())
+
+
+def test_blackman_min_max() -> None:
+    wf = BlackmanWaveform(duration=5.0, area=np.pi)
+    assert wf.min() == 0.0
+    expected_max = wf.area / (0.42 * wf.duration)
+    np.testing.assert_allclose(wf.max(), expected_max)
+
+
+def test_blackman_mul() -> None:
+    wf = BlackmanWaveform(duration=5.0, area=np.pi)
+    scaled = wf * 3.0
+    assert scaled is not wf
+    assert isinstance(scaled, BlackmanWaveform)
+    assert scaled.duration == wf.duration
+    assert scaled.area == wf.area * 3.0
+
+
+def test_blackman_to_pulser() -> None:
     duration = 11.0
     area = 1.5 * np.pi
     blackman = BlackmanWaveform(duration, area=area)
-
-    assert blackman.duration == duration
-    assert blackman.area == area
-    assert blackman.params == {"area": area}
-
-    assert np.isclose(blackman.max(), area / (0.42 * duration))
-    assert blackman.min() == 0.0
-
-    # test area as integral
-    res, _ = quad(blackman, 0.0, blackman.duration)
-    assert np.isclose(res, area)
-
     pulser_blackman = blackman._to_pulser(duration=200)
     assert isinstance(pulser_blackman, pulser.BlackmanWaveform)
     assert pulser_blackman.duration == 200
+    assert pulser_blackman._area == area
 
 
 @pytest.mark.parametrize("n_pieces", [3, 4, 5])
-def test_piecewise(n_pieces: int) -> None:
+def test_piecewise_init(n_pieces: int) -> None:
 
     durations = [1.0 for _ in range(n_pieces)]
     values = np.random.rand(n_pieces + 1).tolist()
@@ -125,13 +203,36 @@ def test_piecewise(n_pieces: int) -> None:
     assert wf.n_waveforms == n_pieces
 
 
-def test_interpolated() -> None:
+def test_piecewise_samples() -> None:
+    durations = np.array([1.0, 2.0, 3.0])
+    values = np.array([-2.1, 5.3, 3.12, 1.04])
+    wf = PiecewiseLinearWaveform(durations, values=values)
+    times = np.linspace(0.0, wf.duration, 100)
+    samples = wf(times)
+    assert isinstance(samples, np.ndarray)
+    assert len(samples) == len(times)
+    assert np.all(samples >= wf.min())
+    assert np.all(samples <= wf.max())
+
+
+def test_piecewise_mul() -> None:
+    wf = PiecewiseLinearWaveform([1.0, 2.0, 3.0], values=[-1.3, 1.0, 2.0, 3.0])
+    scaled = wf * 2.0
+    assert scaled is not wf
+    assert isinstance(scaled, PiecewiseLinearWaveform)
+    assert scaled.duration == wf.duration
+    expected_values = np.array([-1.3, 1.0, 2.0, 3.0]) * 2.0
+    np.testing.assert_allclose(scaled.values, expected_values)
+    assert scaled.times == wf.times
+
+
+def test_interpolated_samples() -> None:
     values = [-2.1, 5.3, 3.12, 1.04]
     duration = 100
     interpolated = InterpolatedWaveform(duration, values=values)
 
     expected_fractional_times = np.linspace(0, 1, len(values))
-    assert np.allclose(interpolated._times, expected_fractional_times)
+    np.testing.assert_allclose(interpolated._times, expected_fractional_times)
 
     waveform_times = duration * expected_fractional_times
     interpolated_values = interpolated(waveform_times)
@@ -140,7 +241,7 @@ def test_interpolated() -> None:
     assert all(val >= interpolated.min() for val in interpolated_values)
 
 
-def test_interpolated_with_times() -> None:
+def test_interpolated_samples_with_times() -> None:
     values = [0.1, 0.3, -0.5, 1.0]
     times = [0.0, 0.2, 0.8, 1.0]
     duration = 100
@@ -148,6 +249,7 @@ def test_interpolated_with_times() -> None:
 
     waveform_times = duration * np.array(times, dtype=float)
     interpolated_values = interpolated(waveform_times)
+    np.testing.assert_allclose(interpolated_values, values)
     assert all(val <= interpolated.max() for val in interpolated_values)
     assert all(val >= interpolated.min() for val in interpolated_values)
 
@@ -160,6 +262,33 @@ def test_interpolated_fractional_times() -> None:
 def test_interpolated_wrong_times_len() -> None:
     with pytest.raises(ValueError, match="must be arrays of the same length."):
         InterpolatedWaveform(10, values=[0, 1], times=[0, 0.5, 0.8])
+
+
+@pytest.mark.parametrize(
+    "times",
+    [
+        None,
+        np.array([0.0, 0.1, 0.5, 0.9, 1.0]),  # non-uniform times
+    ],
+)
+def test_interpolated_mul(times: np.ndarray | None) -> None:
+    values = np.array([3.15826815, 4.50277306, 3.38569084, 4.82395945, 1.41445813])
+    scaling = 3.4
+
+    wf = InterpolatedWaveform(3.45, values=values, times=times)
+    scaled = wf * scaling
+    assert scaled is not wf
+    assert isinstance(scaled, InterpolatedWaveform)
+    assert scaled.duration == wf.duration
+    expected_values = values * scaling
+    np.testing.assert_allclose(scaled._values, expected_values)
+    np.testing.assert_allclose(scaled._times, wf._times)
+
+    # check that also samples are scaled correctly
+    times = np.linspace(0, wf.duration, 17)
+    wf_samples = wf(times)
+    scaled_samples = scaled(times)
+    np.testing.assert_allclose(scaled_samples, wf_samples * scaling, atol=1e-8)
 
 
 def test_interpolated_to_pulser() -> None:
@@ -317,3 +446,12 @@ def test_to_pulser_sub_ns_delay_composite_wf() -> None:
     assert isinstance(pulser_waveform, pulser.CompositeWaveform)
     assert len(pulser_waveform.waveforms) == 2
     assert pulser_waveform.duration == 1223
+
+
+def test_rmul() -> None:
+    """Test that right-hand multiplication delegates to __mul__."""
+    scaling_factor = 3.4
+    wf = ConstantWaveform(2.0, value=1.1)
+    wf_right_multiplied = 3.4 * wf
+    assert isinstance(wf_right_multiplied, ConstantWaveform)
+    assert wf_right_multiplied.value == scaling_factor * wf.value
