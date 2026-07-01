@@ -1,24 +1,17 @@
 # QoolQit model
 
-In Rydberg neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**. The interaction strength between two atoms decreases rapidly with their separation $r$ (as $1/r^6$), while the laser beams determine how strongly each atom is driven.
-
-As a result, the behavior of the system is not set by absolute values alone, but by the **interplay between geometry (distances) and control strength (laser power)**. Different combinations of these quantities can lead to equivalent physical behavior, as long as their relative scales are preserved.
-
-!!! info "Take-home message 1"
-    QoolQit introduces a **dimensionless reference frame** where all quantities are expressed in function of an **interaction reference**.
-
-The quantum system is thus described by the sum of two energetic contributions, the interaction and the driving one, as described by the following Hamiltonian:
+In Rydberg neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**, as described by the following Hamiltonian:
 
 $$
-\tilde{H}(t) =
+\tilde{H}(\tilde{t}) =
 \underbrace{\sum_{i<j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j}_{\text{interactions}}
 +
-\underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2}
+\underbrace{\sum_i \frac{\tilde{\Omega}(\tilde{t})}{2}
 \left(
-\cos\phi(t)\,\hat{\sigma}^x_i - \sin\phi(t)\,\hat{\sigma}^y_i
+\cos\phi(\tilde{t})\,\hat{\sigma}^x_i - \sin\phi(\tilde{t})\,\hat{\sigma}^y_i
 \right)}_{\text{global drive}}
 -
-\underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i\,\tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}.
+\underbrace{\sum_i \left( \tilde{\delta}(\tilde{t}) + \epsilon_i\,\tilde{\Delta}(\tilde{t}) \right) \hat{n}_i}_{\text{detuning}}.
 $$
 
 Here, $\hat{n}_i = \frac{1}{2}(1 + \hat{\sigma}^z_i)$ is the Rydberg occupation operator of atom $i$, and the $\hat{\sigma}^{x,y,z}_i$ are the Pauli operators:
@@ -31,9 +24,34 @@ $$
 \sigma^z=\begin{pmatrix} 1 & 0 \\ 0 & -1\end{pmatrix}.
 $$
 
+The following table summarizes the parameters appearing in the Hamiltonian and their allowed ranges.
+
+| Symbol | Description | Range |
+|--------|-------------|-------|
+| $\tilde{r}_{ij}$ | Distance between atom $i$ and $j$ | $\geq 1$ |
+| $\tilde{J}_{ij}=1/\tilde{r}_{ij}^6$ | Coupling between sites $i$ and $j$ | $[0,\,1]$ |
+| $\tilde{\Omega}(\tilde{t})$ | Global drive amplitude, affecting all sites equally | $\geq 0$ |
+| $\tilde{\delta}(\tilde{t})$ | Global detuning, affecting all sites equally | any real value |
+| $\phi$ | Global phase | $[0,\,2\pi]$ |
+| $\tilde{\Delta}(\tilde{t})$ | Local detuning amplitude | $\leq 0$ |
+| $\epsilon_i$ | Local detuning weight for site $i$ | $[0,\,1]$ |
+| $\tilde{t}$ | Dimensionless time | $> 0$ |
+
+
+
+ The interaction strength between two atoms decreases rapidly with their separation $r$ (as $1/r^6$), while the laser beams determine how strongly each atom is driven.
+
+As a result, the behavior of the system is not set by absolute values alone, but by the **interplay between geometry (distances) and control strength (laser power)**. Different combinations of these quantities can lead to equivalent physical behavior, as long as their relative scales are preserved.
+
+!!! info "Take-home message 1"
+    QoolQit introduces a **dimensionless reference frame** where all quantities are expressed in function of an **interaction reference**.
+
+The quantum system is thus described by the sum of two energetic contributions, the interaction and the driving one,
+
+
 - The interaction $\tilde{J}_{ij}$ follows the $1/r^6$ Rydberg scaling, normalized so that the maximum can be at most equal to $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
-- $\tilde{\Omega}(t)$, $\tilde{\delta}(t)$ and $\phi$ are laser parameters (amplitude, detuning and phase) and are measured relative to the maximum interaction strength, which is equal to $1$.
-- $\tilde{\Delta}(t)$ defines an additional detuning that can be applied locally to each qubit as modulated by the set of weights $\epsilon_i$.
+- $\tilde{\Omega}(\tilde{t})$, $\tilde{\delta}(\tilde{t})$ and $\phi$ are laser parameters (amplitude, detuning and phase) and are measured relative to the maximum interaction strength, which is equal to $1$.
+- $\tilde{\Delta}(\tilde{t})$ defines an additional detuning that can be applied locally to each qubit as modulated by the set of weights $\epsilon_i$.
 - Times $\tilde{t}$ are measured relative to the interaction timescale.
 
 This means that programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
@@ -42,17 +60,7 @@ This means that programs are **hardware-independent until compilation**: drive s
     The actual physical scale, such as the precise distances or laser amplitudes, is determined later during the **compilation step**, when targeting a specific device.
 
 More details about the connection to physical units are provided in the section [Adimensionalization and Compilation](../extended_usage/adimensionalization.md).
-The following table summarizes the parameters appearing in the Hamiltonian and their allowed ranges.
 
-| Symbol | Description | Range |
-|--------|-------------|-------|
-| $\tilde{J}_{ij}$ | Dimensionless coupling between sites $i$ and $j$ | $[0,\,1]$ |
-| $\tilde{\Omega}(t)$ | Global drive amplitude, affecting all sites equally | $\geq 0$ |
-| $\tilde{\delta}(t)$ | Global detuning, affecting all sites equally | any real value |
-| $\phi(t)$ | Global phase | $[0,\,2\pi]$ |
-| $\tilde{\Delta}(t)$ | Local detuning amplitude | $\leq 0$ |
-| $\epsilon_i$ | Local detuning weight for site $i$ | $[0,\,1]$ |
-| $\tilde{t}$ | Dimensionless time | $> 0$ |
 
 The introduced many-body Hamiltonian has rich dynamics, resulting from the interplay between the driving and interaction terms over time.
 To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength,
