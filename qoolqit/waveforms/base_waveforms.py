@@ -25,6 +25,7 @@ class Waveform(ABC):
         - `function(t)`: the waveform value at time t within [0, duration].
         - `max()`: the maximum value of the waveform.
         - `min()`: the minimum value of the waveform.
+        - `__mul__(scalar)`: rescale this waveform by a scalar factor.
         - `_to_pulser(duration)`: conversion to a Pulser-compatible waveform.
 
     Any additional parameters (e.g. amplitude, frequency) should be passed as keyword
