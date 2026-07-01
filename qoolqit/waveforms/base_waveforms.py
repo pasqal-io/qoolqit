@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, cast, overload
+from typing import Any, overload
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,9 +14,6 @@ from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.waveforms.utils import round_to_sum
 
-# Default number of points used to resolve the full waveform duration
-N_POINTS = 500
-
 
 class Waveform(ABC):
     """Base class for scalar time-bounded waveforms.
@@ -26,6 +23,10 @@ class Waveform(ABC):
 
     To define a custom waveform, subclass this class and implement:
         - `function(t)`: the waveform value at time t within [0, duration].
+        - `max()`: the maximum value of the waveform.
+        - `min()`: the minimum value of the waveform.
+        - `__mul__(scalar)`: rescale this waveform by a scalar factor.
+        - `_to_pulser(duration)`: conversion to a Pulser-compatible waveform.
 
     Any additional parameters (e.g. amplitude, frequency) should be passed as keyword
     arguments to `__init__` and are automatically stored and accessible as attributes.
@@ -55,11 +56,37 @@ class Waveform(ABC):
         self._duration = duration
         self._params_dict = kwargs
 
-        self._max: float | None = None
-        self._min: float | None = None
-
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    @abstractmethod
+    def function(self, t: float) -> float:
+        """Evaluates the waveform function at a given time t."""
+        pass
+
+    @abstractmethod
+    def max(self) -> float:
+        """Get the maximum value of the waveform."""
+        pass
+
+    @abstractmethod
+    def min(self) -> float:
+        """Get the minimum value of the waveform."""
+        pass
+
+    @abstractmethod
+    def __mul__(self, other: float) -> Waveform:
+        """Rescale this waveform by a scalar."""
+        pass
+
+    def __rmul__(self, other: float) -> Waveform:
+        """Rescale this waveform by a scalar (right-hand multiplication)."""
+        return self.__mul__(other)
+
+    @abstractmethod
+    def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
+        """Converts QoolQit waveform to a Pulser Waveform."""
+        pass
 
     @property
     def duration(self) -> float:
@@ -70,40 +97,6 @@ class Waveform(ABC):
     def params(self) -> dict[str, float | np.ndarray]:
         """Dictionary of parameters used by the waveform."""
         return self._params_dict
-
-    @abstractmethod
-    def function(self, t: float) -> float:
-        """Evaluates the waveform function at time t."""
-        ...
-
-    def _approximate_min_max(self) -> None:
-        t_array = np.linspace(0.0, self.duration, N_POINTS)
-        self._max = np.max(self(t_array)).item()
-        self._min = np.min(self(t_array)).item()
-
-    def max(self) -> float:
-        """Get the approximate maximum value of the waveform.
-
-        This is a brute-force method that samples the waveform over a
-        pre-defined number of points to find the maximum value in the
-        duration. Custom waveforms that have an easy to compute
-        maximum value should override this method.
-        """
-        if self._max is None:
-            self._approximate_min_max()
-        return cast(float, self._max)
-
-    def min(self) -> float:
-        """Get the approximate minimum value of the waveform.
-
-        This is a brute-force method that samples the waveform over a
-        pre-defined number of points to find the minimum value in the
-        duration. Custom waveforms that have an easy to compute
-        maximum value should override this method.
-        """
-        if self._min is None:
-            self._approximate_min_max()
-        return cast(float, self._min)
 
     def _single_call(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
@@ -144,24 +137,12 @@ class Waveform(ABC):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
-    def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
-        """Convert an arbitrary Qoolqit waveform to a `pulser.InterpolatedWaveform`.
-
-        To keep a compact representation the maximum number of samples to interpolate is set to 100.
-        """
-        n_samples = min(100, duration)
-        times = np.linspace(0.0, self.duration, n_samples)
-        samples = self(times)
-        return pulser.InterpolatedWaveform(duration, samples)
-
-    def draw(
-        self, n_points: int = N_POINTS, return_fig: bool = False, **kwargs: Any
-    ) -> Figure | None:
+    def draw(self, n_points: int = 500, return_fig: bool = False, **kwargs: Any) -> Figure | None:
         fig, ax = plt.subplots(1, 1, figsize=(8, 4), dpi=150)
         ax.grid(True)
         t_array = np.linspace(0.0, self.duration, n_points)
         y_array = self(t_array)
-        ax.plot(t_array, self(t_array))
+        ax.plot(t_array, y_array)
         ax.fill_between(t_array, y_array, color="skyblue", alpha=0.4)
         ax.set_xlabel("Time t")
         ax.set_ylabel("Waveform")
@@ -241,6 +222,13 @@ class CompositeWaveform(Waveform):
     def max(self) -> float:
         """Get the maximum value of the waveform."""
         return max([wf.max() for wf in self.waveforms])
+
+    def min(self) -> float:
+        """Get the minimum value of the waveform."""
+        return min([wf.min() for wf in self.waveforms])
+
+    def __mul__(self, other: float) -> CompositeWaveform:
+        return CompositeWaveform(*[wf * other for wf in self.waveforms])
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
