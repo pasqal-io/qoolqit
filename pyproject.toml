@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling >= 1.26"]
 build-backend = "hatchling.build"
 
 [project]
@@ -23,15 +23,17 @@ authors = [
   { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
   { name = "Vytautas Abramavicius"},
 ]
+maintainers = [
+  {name = "Stefano Grava", email = "s.grava-ext@pasqal.com"},
+  { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
+]
 classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Programming Language :: Python",
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
 dependencies = [
