@@ -7,7 +7,7 @@ from pulser.backend.abc import EmulatorBackend
 from pulser.backend.config import EmulationConfig
 from pulser.backend.qpu import QPUBackend
 from pulser.backend.remote import RemoteConnection
-from pulser_pasqal.backends import EmuFreeBackendV2, RemoteEmulatorBackend
+from pasqal_cloud.backends import RemoteEmuFreeBackend, RemoteEmulatorBackend
 from pulser_simulation import QutipBackendV2
 
 from qoolqit.execution import job
@@ -131,17 +131,17 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
 
     Args:
         backend_type (type): backend type. Must be a subtype of
-            `pulser_pasqal.backends.RemoteEmulatorBackend`.
+            `pasqal_cloud.backends.RemoteEmulatorBackend`.
         connection (RemoteConnection): connection to execute the program on remote backends.
         emulation_config (EmulationConfig): optional configuration object emulators.
         num_shots (int): number of bitstring samples to collect from the final quantum state.
 
     Examples:
         ```python
-        from pulser_pasqal import PasqalCloud
+        from pasqal_cloud import PasqalCloudConnection
         from qoolqit.execution import RemoteEmulator, BackendType
-        connection = PasqalCloud(username=..., password=..., project_id=...)
-        backend = RemoteEmulator(backend_type=BackendType.EmuFreeBackendV2, connection=connection)
+        connection = PasqalCloudConnection(username=..., password=..., project_id=...)
+        backend = RemoteEmulator(backend_type=BackendType.RemoteEmuFreeBackend, connection=connection)
         ```
         then
         ```python
@@ -156,7 +156,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
     def __init__(
         self,
         *,
-        backend_type: type[RemoteEmulatorBackend] = EmuFreeBackendV2,
+        backend_type: type[RemoteEmulatorBackend] = RemoteEmuFreeBackend,
         connection: RemoteConnection,
         emulation_config: EmulationConfig | None = None,
         num_shots: int | None = None,
@@ -204,10 +204,10 @@ class QPU(PulserRemoteBackend):
     Examples:
         Using Pasqal Cloud:
         ```python
-        from pulser_pasqal import PasqalCloud
+        from pasqal_cloud import PasqalCloudConnection
         from qoolqit.execution import QPU
 
-        connection = PasqalCloud(
+        connection = PasqalCloudConnection(
             username="your_username",
             password="your_password",
             project_id="your_project_id"

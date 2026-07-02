@@ -10,7 +10,7 @@ from pulser.backend.config import BackendConfig
 from pulser.backend.qpu import QPUBackend
 from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
 from pulser.sequence import Sequence as PulserSequence
-from pulser_pasqal.backends import RemoteEmulatorBackend
+from pasqal_cloud.backends import RemoteEmulatorBackend
 
 from qoolqit.execution import QPU, LocalEmulator, RemoteEmulator
 from qoolqit.program import QuantumProgram
