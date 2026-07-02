@@ -49,31 +49,14 @@ Importantly, in QoolQit, the dimensionless Hamiltonian is obtained dividing by $
 !!! info "Take-home message 1"
     QoolQit introduces a **dimensionless model** where all quantities are expressed relative to an **interaction reference**.
 
-Such reference makes the program definition hardware independent and has several fundamental and practical advantages.
-Fundamentals are:
-1. Remove hardware constants: By defining a new unit of energy all device-dependent constants are factored out.
-2. Identify Scales: It establishes fundamental energy scale that apply universally across similar systems regardless of their physical size.
-3. Hardware-agnostic algorithm development: developers can build algorithms/programs focusing on ideas rather then hardware specifications.
+Such reference makes the program definition hardware independent and has several advantages:
+- Remove hardware constants: By defining a new unit of energy all device-dependent constants are factored out.
+- Dimensionless parameters: dimensionless drive and interaction strengths, allows to easily explore different physical regimes.
+- Hardware-agnostic algorithm development: developers can build algorithms/programs focusing on ideas rather then hardware specifications.
 
-On the practical side:
-1. Since $\tilde{J}_{ij}=1/\tilde{r}_{ij}^{6}$ follows Rydberg scaling and can be at most equal to $1$, also $\tilde{r}_{min}\geq 1$, i.e. the minimum pairwise distance is $1$.
-
-
-As a result, the behavior of the system is not set by absolute values alone, but by the **interplay between geometry (distances) and control strength (laser power)**. Different combinations of these quantities can lead to equivalent physical behavior, as long as their relative scales are preserved.
-
-
+Moreover, on the practical side, since $\tilde{J}_{ij}=1/\tilde{r}_{ij}^{6}$ follows Rydberg scaling and can be at most equal to $1$, also $\tilde{r}_{min}\geq 1$, i.e. the minimum pairwise distance that can be realized is always $1$.
 Finally, also time is made dimensionless, $\tilde{t}=tJ_{max}^{d}$, to realize an equivalent dynamics.
 
-As anticipated, the energy reference $J_{\text{max}}^{d}$ is a constant determined by the actual hardware
-This means that programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
-
-!!! info "Take-home message 2"
-    The actual physical scale, such as the precise distances or laser amplitudes, is determined later during the **compilation step**, when targeting a specific device.
-
-More details about the connection to physical units are provided in the section [Adimensionalization and Compilation](../extended_usage/adimensionalization.md).
-
-
-The introduced many-body Hamiltonian has rich dynamics, resulting from the interplay between the driving and interaction terms over time.
 To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength, $J_{\text{max}} \leq 1$, is what matters.
 
 ## Drive regimes
@@ -106,10 +89,13 @@ As described above, a QoolQit program is written in **dimensionless units**. Thi
 
 However, the values that can actually be implemented are constrained by the **hardware**. Real devices only allow certain ranges of interaction strengths, drive amplitudes, detunings, and evolution times. Therefore, an important task of QoolQit is to take the dimensionless program specified by the user and map it to a set of parameters that can be realized on the chosen hardware. We refer to this step as **compilation**.
 
-
 !!! info
     Compilation is the step where QoolQit takes a dimensionless program and rescales it into hardware-realizable parameters, while preserving physical invariants.
 
+!!! info "Take-home message 2"
+    The actual physical scale $J_{\text{max}}^{d}$, such as the precise distances or laser amplitudes, is determined during the **compilation step**, when targeting a specific device.
+
+More details about the connection to physical units are provided in the section [Adimensionalization and Compilation](../extended_usage/adimensionalization.md).
 
 A convenient way to understand this is to first work entirely in dimensionless units. As mentioned above, the key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here $\max_{\tilde{t}}$ stands for the maximum over time).
 
