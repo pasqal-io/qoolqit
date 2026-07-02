@@ -1,6 +1,6 @@
 # QoolQit model
 
-In Rydberg neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**, as described by the following Hamiltonian:
+In Rydberg neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**, as described by the following  dimensionless Hamiltonian:
 
 $$
 \tilde{H}(\tilde{t}) =
@@ -37,6 +37,7 @@ The following table summarizes the parameters appearing in the Hamiltonian and t
 | $\epsilon_i$ | Local detuning weight for site $i$ | $[0,\,1]$ |
 | $\tilde{t}$ | Dimensionless time | $> 0$ |
 
+Importantly, the Hamiltonian is expressed in terms 
 
 
  The interaction strength between two atoms decreases rapidly with their separation $r$ (as $1/r^6$), while the laser beams determine how strongly each atom is driven.
