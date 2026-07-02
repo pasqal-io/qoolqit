@@ -4,7 +4,7 @@ import random
 
 import numpy as np
 import pytest
-from pulser_pasqal import PasqalCloud
+from pasqal_cloud import PasqalCloudConnection
 
 from qoolqit import (
     AnalogDevice,
@@ -155,7 +155,7 @@ def test_device_properties() -> None:
 
 
 def test_device_from_connection() -> None:
-    fresnel_device = Device.from_connection(PasqalCloud(), "FRESNEL")
+    fresnel_device = Device.from_connection(PasqalCloudConnection(), "FRESNEL")
     assert fresnel_device.name == "FRESNEL"
 
     expected_fresnel_specs = {
@@ -174,4 +174,4 @@ def test_device_from_connection_not_available() -> None:
     with pytest.raises(
         ValueError, match="Device HELLO_WORLD is not available through the provided connection."
     ):
-        Device.from_connection(connection=PasqalCloud(), name="HELLO_WORLD")
+        Device.from_connection(connection=PasqalCloudConnection(), name="HELLO_WORLD")
