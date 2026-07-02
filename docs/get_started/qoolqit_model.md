@@ -1,24 +1,22 @@
 # QoolQit model
 
-In Rydberg neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**. The interaction strength between two atoms decreases rapidly with their separation $r$ (as $1/r^6$), while the laser beams determine how strongly each atom is driven.
+On this page, you will learn about:
+- The QoolQit dimensionless model for Rydberg neutral-atom systems
+- Drive strength and time regimes in the dynamics
+- The meaning of compilation
 
-As a result, the behavior of the system is not set by absolute values alone, but by the **interplay between geometry (distances) and control strength (laser power)**. Different combinations of these quantities can lead to equivalent physical behavior, as long as their relative scales are preserved.
-
-!!! info "Take-home message 1"
-    QoolQit introduces a **dimensionless reference frame** where all quantities are expressed in function of an **interaction reference**.
-
-The quantum system is thus described by the sum of two energetic contributions, the interaction and the driving one, as described by the following Hamiltonian:
+In Rydberg neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**, as described by the following dimensionless Hamiltonian:
 
 $$
-\tilde{H}(t) =
+\tilde{H}(\tilde{t}) = \frac{H}{J_{\text{max}}} =
 \underbrace{\sum_{i<j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j}_{\text{interactions}}
 +
-\underbrace{\sum_i \frac{\tilde{\Omega}(t)}{2}
+\underbrace{\sum_i \frac{\tilde{\Omega}(\tilde{t})}{2}
 \left(
-\cos\phi(t)\,\hat{\sigma}^x_i - \sin\phi(t)\,\hat{\sigma}^y_i
+\cos(\phi) \hat{\sigma}^x_i - \sin(\phi)\hat{\sigma}^y_i
 \right)}_{\text{global drive}}
 -
-\underbrace{\sum_i \left( \tilde{\delta}(t) + \epsilon_i\,\tilde{\Delta}(t) \right) \hat{n}_i}_{\text{detuning}}.
+\underbrace{\sum_i \left( \tilde{\delta}(\tilde{t}) + \epsilon_i\,\tilde{\Delta}(\tilde{t}) \right) \hat{n}_i}_{\text{detuning}}.
 $$
 
 Here, $\hat{n}_i = \frac{1}{2}(1 + \hat{\sigma}^z_i)$ is the Rydberg occupation operator of atom $i$, and the $\hat{\sigma}^{x,y,z}_i$ are the Pauli operators:
@@ -31,37 +29,35 @@ $$
 \sigma^z=\begin{pmatrix} 1 & 0 \\ 0 & -1\end{pmatrix}.
 $$
 
-- The interaction $\tilde{J}_{ij}$ follows the $1/r^6$ Rydberg scaling, normalized so that the maximum can be at most equal to $1$: $\tilde{J}_{ij} = \tilde{r}_{ij}^{-6}$ and $\max(\tilde{J}_{ij}) = 1$.
-- $\tilde{\Omega}(t)$, $\tilde{\delta}(t)$ and $\phi$ are laser parameters (amplitude, detuning and phase) and are measured relative to the maximum interaction strength, which is equal to $1$.
-- $\tilde{\Delta}(t)$ defines an additional detuning that can be applied locally to each qubit as modulated by the set of weights $\epsilon_i$.
-- Times $\tilde{t}$ are measured relative to the interaction timescale.
-
-This means that programs are **hardware-independent until compilation**: drive strengths are naturally expressed as multiples of the interaction strength, and the same program can be compiled to different devices without modification.
-
-!!! info "Take-home message 2"
-    The actual physical scale, such as the precise distances or laser amplitudes, is determined later during the **compilation step**, when targeting a specific device.
-
-More details about the connection to physical units are provided in the section [Adimensionalization and Compilation](../extended_usage/adimensionalization.md).
 The following table summarizes the parameters appearing in the Hamiltonian and their allowed ranges.
 
 | Symbol | Description | Range |
 |--------|-------------|-------|
-| $\tilde{J}_{ij}$ | Dimensionless coupling between sites $i$ and $j$ | $[0,\,1]$ |
-| $\tilde{\Omega}(t)$ | Global drive amplitude, affecting all sites equally | $\geq 0$ |
-| $\tilde{\delta}(t)$ | Global detuning, affecting all sites equally | any real value |
-| $\phi(t)$ | Global phase | $[0,\,2\pi]$ |
-| $\tilde{\Delta}(t)$ | Local detuning amplitude | $\leq 0$ |
-| $\epsilon_i$ | Local detuning weight for site $i$ | $[0,\,1]$ |
+| $\tilde{r}_{ij}$ | Distance between atom $i$ and $j$ | $\geq 1$ |
+| $\tilde{J}_{ij}=1/\tilde{r}_{ij}^6$ | Distance-dependent coupling between sites $i$ and $j$. Sets how strongly excited atoms interact. | $[0,\,1]$ |
+| $\tilde{\Omega}(\tilde{t})$ | Global time-dependent drive's amplitude. Sets how strongly the atoms are driven. | $\geq 0$ |
+| $\tilde{\delta}(\tilde{t})$ | Global time-dependent drive's detuning | any real value |
+| $\phi$ | Global drive's phase | $[0,\,2\pi]$ |
+| $\tilde{\Delta}(\tilde{t})$ | Additional global time-dependent drive's detuning | $\leq 0$ |
+| $\epsilon_i$ | Local detuning weight for site $i$ to locally modulate $\tilde{\Delta}$ | $[0,\,1]$ |
 | $\tilde{t}$ | Dimensionless time | $> 0$ |
 
-The introduced many-body Hamiltonian has rich dynamics, resulting from the interplay between the driving and interaction terms over time.
-To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength,
+We call a **quantum program** the collection of all these parameters, which fully specify the time dependent Hamiltonian defined above.
 
-$$
-\tilde J_{\text{max}} \;=\; \max_{i<j}\tilde J_{ij} \;\leq\; 1,
-$$
+Importantly, in QoolQit, the dimensionless Hamiltonian is obtained dividing by $J_{\text{max}}^{d}$, the maximum available coupling strength that can be realized on a hardware device.
 
-is what matters.
+!!! info "Take-home message 1"
+    QoolQit introduces a **dimensionless model** where all quantities are expressed relative to an **interaction reference**.
+
+Such reference makes the program definition hardware independent and has several advantages:
+- Remove hardware constants: By defining a new unit of energy all device-dependent constants are factored out.
+- Dimensionless parameters: dimensionless drive and interaction strengths, allows to easily explore different physical regimes.
+- Hardware-agnostic algorithm development: developers can build algorithms/programs focusing on ideas rather then hardware specifications.
+
+Moreover, on the practical side, since $\tilde{J}_{ij}=1/\tilde{r}_{ij}^{6}$ follows Rydberg scaling and can be at most equal to $1$, also $\tilde{r}_{min}\geq 1$, i.e. the minimum pairwise distance that can be realized is always $1$.
+Finally, also time is made dimensionless, $\tilde{t}=tJ_{max}^{d}$, to realize an equivalent dynamics.
+
+To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength, $J_{\text{max}} \leq 1$, is what matters.
 
 ## Drive regimes
 
@@ -91,16 +87,21 @@ Next we will discuss the compilation, the crucial step to translate a QoolQit di
 
 As described above, a QoolQit program is written in **dimensionless units**. This means that the user specifies the problem in terms of dimensionless quantities, independently of any particular device.
 
-However, the values that can actually be implemented are constrained by the **hardware**. Real devices only allow certain ranges of interaction strengths, drive amplitudes, detunings, and evolution times. Therefore, an important task of QoolQit is to take the dimensionless program specified by the user and map it to a set of parameters that can be realized on the chosen hardware. We refer to this step as **compilation**.
+However, the values that can actually be implemented are constrained by the **hardware**. Real devices only allow certain ranges of interaction strengths, drive amplitudes, detunings, and evolution times.
 
+!!! info "Take-home message 2"
+    The actual physical scale $J_{\text{max}}^{d}$, such as the precise distances or laser amplitudes, is determined during the **compilation step**, when targeting a specific device.
+
+More details about the connection to physical units are provided in the section [Adimensionalization and Compilation](../extended_usage/adimensionalization.md).
+
+Therefore, an important task of QoolQit is to take the dimensionless program specified by the user and map it to a set of parameters that can be realized on the chosen hardware. We refer to this step as **compilation**.
 
 !!! info
     Compilation is the step where QoolQit takes a dimensionless program and rescales it into hardware-realizable parameters, while preserving physical invariants.
 
-
 A convenient way to understand this is to first work entirely in dimensionless units. As mentioned above, the key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here $\max_{\tilde{t}}$ stands for the maximum over time).
 
-This means that compilation does **not** change the dimensionless physics of the program. Instead, it rescales the program so that it lies inside the region that can be implemented on a given device.
+This means that compilation does **not** change the physics of the program. Instead, it rescales the program so that it lies inside the region that can be implemented on a given device.
 
 
 ### Example
@@ -109,19 +110,18 @@ Consider the figure below:
 
 ![Compilation diagram](../extras/assets/compilation.svg)
 
-The valid compilation region of a device is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2,$. The bound $\tilde{J} \leq 1$ is compatible with a minimum spacing $a$ allowed in the register distance equal to $a_{\text{min}}=1$.
+The valid compilation region of a device is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2$. The bound $\tilde{J} \leq 1$ is compatible with a minimum spacing $a$ allowed in the register distance equal to $a_{\text{min}}=1$.
 
-We define two programs by specifying the maximum adimensional amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the adimensional interaction between nearest neighbor atoms in the register $\tilde{J}=\frac{1}{\tilde{a^6}}$.  We define the following tuples:
+We define two programs by specifying the maximum amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the interaction between nearest neighbor atoms in the register $\tilde{J}=\frac{1}{\tilde{a^6}}$.  We define the following tuples:
 
 1. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4)$,
 2. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)$
 
-
 The lines correspond to the programs with fixed ratio $\tilde{\Omega}/\tilde{J}=2/5$ and $\tilde{\Omega}/\tilde{J}=1/7$.
-At compilation Qoolqit checks the energy ratio and the valid region of compilation and maximizes the $\tilde{\Omega}$.
+At compilation QoolQit checks the energy ratio and the valid region of compilation and maximizes the $\tilde{\Omega}$.
 
 1. The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 2/5$.
-2. The point $(0.7,0.1)$ is inside, but the drive amplitude can be larger.QoolQit rescales it to the maximum possible $\tilde{\Omega}$ while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7$.
+2. The point $(0.7,0.1)$ is inside, but the drive amplitude can be larger. QoolQit rescales it to the maximum possible $\tilde{\Omega}$ while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7$.
 
 The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying dimensionless problem is the same.
 
