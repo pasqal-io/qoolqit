@@ -8,7 +8,7 @@ On this page, you will learn about:
 In Rydberg neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**, as described by the following dimensionless Hamiltonian:
 
 $$
-\tilde{H}(\tilde{t}) = \frac{H}{J_{\text{max}}} =
+\tilde{H}(\tilde{t}) = \frac{H}{J_{\text{max}}^{d}} =
 \underbrace{\sum_{i<j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j}_{\text{interactions}}
 +
 \underbrace{\sum_i \frac{\tilde{\Omega}(\tilde{t})}{2}
@@ -57,7 +57,7 @@ Such reference makes the program definition hardware independent and has several
 Moreover, on the practical side, since $\tilde{J}_{ij}=1/\tilde{r}_{ij}^{6}$ follows Rydberg scaling and can be at most equal to $1$, also $\tilde{r}_{min}\geq 1$, i.e. the minimum pairwise distance that can be realized is always $1$.
 Finally, also time is made dimensionless, $\tilde{t}=tJ_{max}^{d}$, to realize an equivalent dynamics.
 
-To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength, $J_{\text{max}} \leq 1$, is what matters.
+To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength, $\tilde{J}_{\text{max}} \leq 1$, is what matters.
 
 ## Drive regimes
 
