@@ -29,7 +29,7 @@ $$
 \sigma^z=\begin{pmatrix} 1 & 0 \\ 0 & -1\end{pmatrix}.
 $$
 
-The following table summarizes the parameters appearing in the Hamiltonian and their allowed ranges.
+The following table summarizes the parameters defining the Hamiltonian and their allowed ranges. Collectively, these parameters define a **quantum program**, which fully specifies the time-dependent Hamiltonian introduced above.
 
 | Symbol | Description | Range |
 |--------|-------------|-------|
@@ -42,9 +42,8 @@ The following table summarizes the parameters appearing in the Hamiltonian and t
 | $\epsilon_i$ | Local detuning weight for site $i$ to locally modulate $\tilde{\Delta}$ | $[0,\,1]$ |
 | $\tilde{t}$ | Dimensionless time | $> 0$ |
 
-We call a **quantum program** the collection of all these parameters, which fully specify the time dependent Hamiltonian defined above.
 
-Importantly, in QoolQit, the dimensionless Hamiltonian is obtained dividing by $J_{\text{max}}^{d}$, the maximum available coupling strength that can be realized on a hardware device.
+Importantly, in QoolQit, the dimensionless Hamiltonian is obtained dividing by $J_{\text{max}}^{d}$, the maximum available interaction strength that can be realized on a hardware device.
 
 !!! info "Take-home message 1"
     QoolQit introduces a **dimensionless model** where all quantities are expressed relative to an **interaction reference**.
