@@ -49,10 +49,13 @@ Importantly, in QoolQit, the dimensionless Hamiltonian is obtained dividing by $
 !!! info "Take-home message 1"
     QoolQit introduces a **dimensionless model** where all quantities are expressed relative to an **interaction reference**.
 
-Such reference makes the program definition hardware independent and has several advantages:
-- Remove hardware constants: By defining a new unit of energy all device-dependent constants are factored out.
-- Dimensionless parameters: dimensionless drive and interaction strengths, allows to easily explore different physical regimes.
-- Hardware-agnostic algorithm development: developers can build algorithms/programs focusing on ideas rather then hardware specifications.
+Such a reference makes the program definition hardware independent and provides several advantages:
+
+* **Removal of hardware-specific constants:** By defining a new unit of energy, all device-dependent constants are factored out.
+* **Dimensionless parameters:** Expressing drive and interaction strengths as dimensionless quantities makes it easier to explore different physical regimes.
+* **Portability:** Programs can be transferred across different devices and hardware generations with minimal modifications, improving reproducibility and reducing platform-specific code.
+* **Hardware-agnostic algorithm development:** Developers can design algorithms that focus on the underlying physics and computational logic rather than hardware-specific implementation details.
+
 
 Moreover, on the practical side, since $\tilde{J}_{ij}=1/\tilde{r}_{ij}^{6}$ follows Rydberg scaling and can be at most equal to $1$, also $\tilde{r}_{min}\geq 1$, i.e. the minimum pairwise distance that can be realized is always $1$.
 Finally, also time is made dimensionless, $\tilde{t}=tJ_{max}^{d}$, to realize an equivalent dynamics.
