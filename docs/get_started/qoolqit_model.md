@@ -60,18 +60,18 @@ $$\tilde{J}_{ij}\leq 1$$
 !!! info "Take-home message 1"
     QoolQit introduces a **dimensionless model** where all quantities are expressed relative to an **interaction reference**.
 
-Such a reference makes the program definition hardware independent and provides several advantages:
+Such reference makes the program definition hardware independent and provides several advantages:
 
 * **Removal of hardware-specific constants:** By defining a new unit of energy, all device-dependent constants are factored out.
 * **Dimensionless parameters:** Expressing drive and interaction strengths as dimensionless quantities makes it easier to explore different physical regimes.
 * **Portability:** Programs can be transferred across different devices and hardware generations with minimal modifications, improving reproducibility and reducing platform-specific code.
 * **Hardware-agnostic algorithm development:** Developers can design algorithms that focus on the underlying physics and computational logic rather than hardware-specific implementation details.
 
-To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength, $\tilde{J}_{\text{max}} \leq 1$, is what matters.
+To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength is what matters.
 
 ## Drive regimes
 
-Because $\tilde{\Omega}$ is expressed relative to the maximum interaction strength, strong and weak drive regimes are defined independently of the specific geometry:
+Since the drive's amplitude $\tilde{\Omega}$ is expressed relative to the maximum interaction strength, strong and weak drive regimes are defined independently of the specific geometry:
 
 | Regime | Condition | Intuition |
 |--------|-----------|-----------|
