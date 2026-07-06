@@ -1,4 +1,4 @@
-# QoolQit model
+# Programming a neutral-atom QPU
 
 On this page, you will learn about:
 
@@ -6,7 +6,7 @@ On this page, you will learn about:
 - Drive strength and time regimes in the dynamics
 - The meaning of compilation
 
-## Dimensionless Hamiltonian
+## QoolQit dimensionless model
 
 In Rydberg neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**, as described by the following dimensionless Hamiltonian:
 
@@ -22,7 +22,7 @@ $$
 \underbrace{\sum_i \left( \tilde{\delta}(\tilde{t}) + \epsilon_i\,\tilde{\Delta}(\tilde{t}) \right) \hat{n}_i}_{\text{detuning}}.
 $$
 
-Here, $\hat{n}_i = \frac{1}{2}(1 + \hat{\sigma}^z_i)$ is the Rydberg occupation operator of atom $i$, and the $\hat{\sigma}^{x,y,z}_i$ are the Pauli operators:
+Here, $\hat{n}_i = \frac{1}{2}(1 + \hat{\sigma}^z_i)$ is the Rydberg occupation operator of atom $i$ (measuring how much of the Rydberg state is excited), and the $\hat{\sigma}^{x,y,z}_i$ are the Pauli operators:
 
 $$
 \sigma^x=\begin{pmatrix} 0 & 1 \\ 1 & 0\end{pmatrix},
@@ -36,18 +36,18 @@ The following table summarizes the dimensionless parameters defining the Hamilto
 
 | Symbol | Description | Range |
 |--------|-------------|-------|
-| $\tilde{r}_{ij}$ | Distance between atom $i$ and $j$ | $\geq 1$ |
-| $\tilde{J}_{ij}=1/\tilde{r}_{ij}^6$ | Distance-dependent coupling between sites $i$ and $j$. Sets how strongly excited atoms interact. | $[0,\,1]$ |
+| $\tilde{r}_{ij}$ | Distance between atom sites $i$ and $j$ | $\geq 1$ |
+| $\tilde{J}_{ij}=1/\tilde{r}_{ij}^6$ | Distance-dependent coupling between atom sites $i$ and $j$. Sets how strongly excited atoms interact. | $[0,\,1]$ |
 | $\tilde{\Omega}(\tilde{t})$ | Global time-dependent drive's amplitude. Sets how strongly the atoms are driven. | $\geq 0$ |
 | $\tilde{\delta}(\tilde{t})$ | Global time-dependent drive's detuning | any real value |
 | $\phi$ | Global drive's phase | $[0,\,2\pi]$ |
 | $\tilde{\Delta}(\tilde{t})$ | Additional global time-dependent drive's detuning | $\leq 0$ |
-| $\epsilon_i$ | Local detuning weight for site $i$ to locally modulate $\tilde{\Delta}$ | $[0,\,1]$ |
+| $\epsilon_i$ | Local detuning weight for atom $i$ to locally modulate $\tilde{\Delta}$ | $[0,\,1]$ |
 | $\tilde{t}$ | Dimensionless time | $> 0$ |
 
-## Interaction reference
+### Interaction reference
 
-In QoolQit, the dimensionless Hamiltonian is obtained by rescaling the interaction and the drive terms such that, equivalently:
+In QoolQit, the dimensionless Hamiltonian is obtained from the physical Hamiltonian (see [Derivation](#derivation)) by rescaling the interaction and the drive terms such that, equivalently:
 
 - The minimum pairwise distance between atoms is $1$:
 
@@ -69,7 +69,7 @@ Such reference makes the program definition hardware independent and provides se
 
 To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength is what matters.
 
-## Drive regimes
+### Drive regimes
 
 Since the drive's amplitude $\tilde{\Omega}$ is expressed relative to the maximum interaction strength, strong and weak drive regimes are defined independently of the specific geometry:
 
@@ -79,7 +79,7 @@ Since the drive's amplitude $\tilde{\Omega}$ is expressed relative to the maximu
 | Balanced | $\tilde{\Omega} \sim \tilde J_{\text{max}}$ | Controls and interactions compete |
 | Weak drive | $\tilde{\Omega} \ll \tilde J_{\text{max}}$ | Interactions dominate; blockade and correlation effects are strong |
 
-## Time regimes
+### Time regimes
 
 In an interacting many-body system, time can be naturally measured relative to the timescale on which interactions generate correlations. Roughly speaking, a time $\tilde{t} \sim 1/\tilde J_{\text{max}}$ is enough for nearest-neighbor sites to begin developing correlations. More generally, $\tilde{t} \sim n/\tilde J_{\text{max}}$ can be interpreted as the timescale on which correlations may have propagated over a distance of order $n$ lattice spacings.
 
@@ -91,7 +91,23 @@ In an interacting many-body system, time can be naturally measured relative to t
 
 Since all physical regimes are characterized by parameters relative to the maximum interaction strength, QoolQit's choice of dimensionless units is natural: interactions are always of order unity, providing an intuitive reference scale for all other quantities.
 
-## Derivation
+## Compilation
+
+As described above, a QoolQit program is expressed in dimensionless units, allowing users to define problems independently of any specific hardware platform.
+
+In contrast, hardware specifications are given in physical units and and can only realize a limited range of parameter values. As a result, the dimensionless program parameters must be translated into physical interaction strengths, drive amplitudes, detunings, and evolution times that lie within the capabilities of the target device (if possible).
+We refer to this step as **compilation**.
+
+!!! info "Compilation"
+    Compilation is the step where QoolQit takes a dimensionless program and rescales it into hardware-realizable parameters, while preserving physical invariants.
+
+Practically, as anticipated in the previous section, a device choice will set the interaction energy reference.
+
+!!! info "Take-home message 2"
+    The actual physical scale $J_{\text{max}}^{d}$, such as the precise distances or laser amplitudes, is determined during the **compilation step**, when targeting a specific device.
+
+
+### Derivation
 
 This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, precisely defining the reference interaction energy. In physical units, the Rydberg Hamiltonian reads:
 
@@ -143,20 +159,6 @@ Most programs are built starting from the definition of a set of coordinates for
 
 Next we will discuss the compilation, the crucial step to translate a QoolQit dimensionless program to a sequence of operations that can be realized on a real neutral-atom-based QPU.
 
-## Compilation
-
-As described above, a QoolQit program is expressed in dimensionless units, allowing users to define problems independently of any specific hardware platform.
-
-In contrast, hardware specifications are given in physical units and and can only realize a limited range of parameter values. As a result, the dimensionless program parameters must be translated into physical interaction strengths, drive amplitudes, detunings, and evolution times that lie within the capabilities of the target device (if possible).
-We refer to this step as **compilation**.
-
-!!! info "Compilation"
-    Compilation is the step where QoolQit takes a dimensionless program and rescales it into hardware-realizable parameters, while preserving physical invariants.
-
-Practically, as anticipated in the previous section, a device choice will set the interaction energy reference.
-
-!!! info "Take-home message 2"
-    The actual physical scale $J_{\text{max}}^{d}$, such as the precise distances or laser amplitudes, is determined during the **compilation step**, when targeting a specific device.
 
 ### Example
 
