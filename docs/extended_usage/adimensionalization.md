@@ -1,4 +1,4 @@
-# Adimensionalization and Compilation
+# Compilation
 
 In this section, you will learn how to:
 

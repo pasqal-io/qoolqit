@@ -112,14 +112,16 @@ $$
 
 Every neutral-atom device is characterized by a minimum allowed atom separation $r_{\text{min}}^{d}$, determined by hardware constraints. This minimum spacing corresponds to the largest pairwise interaction the device can produce:
 
-$$
-J_{\text{max}}^{d} = \frac{C_6}{(r_{\text{min}}^{d})^{6}}.
-$$
+!!! info "Maximum interaction energy"
+
+    $$
+    J_{\text{max}}^{d} = \frac{C_6}{(r_{\text{min}}^{d})^{6}}.
+    $$
+
+    Both $r_{\text{min}}^{d}$ and $J_{\text{max}}^{d}$ are **device constants**. They are determined by the particular hardware on which the program is executed.
 
 QoolQit takes this $J_{\text{max}}^{d}$ as the **reference energy scale** for adimensionalization, and the corresponding minimum spacing as the reference distance.
 
-!!! info "Key point"
-    Both $r_{\text{min}}$ and $J_{\text{max}}$ are **device constants**. They are fixed by the specific hardware chosen to run a program.
 
 All Hamiltonian parameters are expressed relative to this fixed scale:
 
@@ -137,9 +139,7 @@ $$
 \tilde{\Delta} = \frac{\Delta}{J_{\text{max}}}.
 $$
 
-Most programs are built starting from the definition of a set of coordinates for the atoms (register), or equivalently an interaction matrix. For this reason, renormalization brings an important advantage: it provides a natural constraint for program feasibility.
-
-Since, $J_{\text{max}}^{d}$ is the largest interaction the device can produce, under this renormalization, every physically realizable register satisfies $\min_{i<j}\tilde r_{ij} \geq 1$ or equivalently $\max_{i<j}\tilde J_{ij} \leq 1$.
+Most programs are built starting from the definition of a set of coordinates for the atoms (register), or equivalently an interaction matrix. For this reason renormalization provides a natural constraint for program feasibility. Since, $J_{\text{max}}^{d}$ is the largest interaction the device can produce, every physically realizable register satisfies $\tilde r_{ij} \geq 1$ or equivalently $\tilde J_{ij} \leq 1$.
 
 Next we will discuss the compilation, the crucial step to translate a QoolQit dimensionless program to a sequence of operations that can be realized on a real neutral-atom-based QPU.
 
@@ -157,8 +157,6 @@ Practically, as anticipated in the previous section, a device choice will set th
 
 !!! info "Take-home message 2"
     The actual physical scale $J_{\text{max}}^{d}$, such as the precise distances or laser amplitudes, is determined during the **compilation step**, when targeting a specific device.
-
-More details about the connection to physical units are provided in the section [Adimensionalization and Compilation](../extended_usage/adimensionalization.md).
 
 ### Example
 
