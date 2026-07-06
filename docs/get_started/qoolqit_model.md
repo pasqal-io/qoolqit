@@ -1,14 +1,17 @@
 # QoolQit model
 
 On this page, you will learn about:
+
 - The QoolQit dimensionless model for Rydberg neutral-atom systems
 - Drive strength and time regimes in the dynamics
 - The meaning of compilation
 
+## Dimensionless Hamiltonian
+
 In Rydberg neutral-atom systems, atoms interact through a combination of **distance-dependent interactions** and **laser-driven controls**, as described by the following dimensionless Hamiltonian:
 
 $$
-\tilde{H}(\tilde{t}) = \frac{H}{J_{\text{max}}^{d}} =
+\tilde{H}(\tilde{t}) =
 \underbrace{\sum_{i<j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j}_{\text{interactions}}
 +
 \underbrace{\sum_i \frac{\tilde{\Omega}(\tilde{t})}{2}
@@ -29,7 +32,7 @@ $$
 \sigma^z=\begin{pmatrix} 1 & 0 \\ 0 & -1\end{pmatrix}.
 $$
 
-The following table summarizes the parameters defining the Hamiltonian and their allowed ranges. Collectively, these parameters define a **quantum program**, which fully specifies the time-dependent Hamiltonian introduced above.
+The following table summarizes the dimensionless parameters defining the Hamiltonian and their allowed ranges. Collectively, these parameters define a **quantum program**, which fully specifies the time-dependent Hamiltonian introduced above.
 
 | Symbol | Description | Range |
 |--------|-------------|-------|
@@ -42,8 +45,17 @@ The following table summarizes the parameters defining the Hamiltonian and their
 | $\epsilon_i$ | Local detuning weight for site $i$ to locally modulate $\tilde{\Delta}$ | $[0,\,1]$ |
 | $\tilde{t}$ | Dimensionless time | $> 0$ |
 
+## Interaction reference
 
-Importantly, in QoolQit, the dimensionless Hamiltonian is obtained dividing by $J_{\text{max}}^{d}$, the maximum available interaction strength that can be realized on a hardware device.
+In QoolQit, the dimensionless Hamiltonian is obtained by rescaling the interaction and the drive terms such that, equivalently:
+
+- The minimum pairwise distance between atoms is $1$:
+
+$$\tilde{r}_{ij}\geq 1$$
+
+- The maximum interaction energy (since $\tilde{J}_{ij}=1/\tilde{r}_{ij}^{6}$) is 1:
+
+$$\tilde{J}_{ij}\leq 1$$
 
 !!! info "Take-home message 1"
     QoolQit introduces a **dimensionless model** where all quantities are expressed relative to an **interaction reference**.
@@ -54,10 +66,6 @@ Such a reference makes the program definition hardware independent and provides 
 * **Dimensionless parameters:** Expressing drive and interaction strengths as dimensionless quantities makes it easier to explore different physical regimes.
 * **Portability:** Programs can be transferred across different devices and hardware generations with minimal modifications, improving reproducibility and reducing platform-specific code.
 * **Hardware-agnostic algorithm development:** Developers can design algorithms that focus on the underlying physics and computational logic rather than hardware-specific implementation details.
-
-
-Moreover, on the practical side, since $\tilde{J}_{ij}=1/\tilde{r}_{ij}^{6}$ follows Rydberg scaling and can be at most equal to $1$, also $\tilde{r}_{min}\geq 1$, i.e. the minimum pairwise distance that can be realized is always $1$.
-Finally, also time is made dimensionless, $\tilde{t}=tJ_{max}^{d}$, to realize an equivalent dynamics.
 
 To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength, $\tilde{J}_{\text{max}} \leq 1$, is what matters.
 
@@ -82,6 +90,56 @@ In an interacting many-body system, time can be naturally measured relative to t
 | Long time | $\tilde{t} \gg 1/\tilde J_{\text{max}}$ | Correlations and many-body interaction effects have had time to spread across the system |
 
 Since all physical regimes are characterized by parameters relative to the maximum interaction strength, QoolQit's choice of dimensionless units is natural: interactions are always of order unity, providing an intuitive reference scale for all other quantities.
+
+## Derivation
+
+This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, precisely defining the reference interaction energy. In physical units, the Rydberg Hamiltonian reads:
+
+$$
+H(t) =
+\underbrace{\sum_{i<j} \frac{C_6}{r_{ij}^{6}} \hat{n}_{i} \hat{n}_{j}}_{\text{interactions}}
++
+\underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos(\phi)\,\hat{\sigma}_{i}^{x} - \sin(\phi)\,\hat{\sigma}_{i}^{y}\right)}_{\text{global drive}}
+-
+\underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_{i}}_{\text{detuning}}.
+$$
+
+| Symbol | Description | units |
+|--------|-------------|-------|
+| $C_6(n)$ | Interaction coefficient for Rydberg level $n$. Also depends on the atomic species. | $\mathrm{rad/\mu s}\times\mu\mathrm{m}^6$ |
+| $r_{ij}$ | Physical distance between atom $i$ and $j$ | $\mu\mathrm{m}$ |
+| $\Omega(t)$, $\delta(t)$, $\Delta(t)$ | Physical drive parameters | $\mathrm{rad/\mu s}$ |
+
+Every neutral-atom device is characterized by a minimum allowed atom separation $r_{\text{min}}^{d}$, determined by hardware constraints. This minimum spacing corresponds to the largest pairwise interaction the device can produce:
+
+$$
+J_{\text{max}}^{d} = \frac{C_6}{(r_{\text{min}}^{d})^{6}}.
+$$
+
+QoolQit takes this $J_{\text{max}}^{d}$ as the **reference energy scale** for adimensionalization, and the corresponding minimum spacing as the reference distance.
+
+!!! info "Key point"
+    Both $r_{\text{min}}$ and $J_{\text{max}}$ are **device constants**. They are fixed by the specific hardware chosen to run a program.
+
+All Hamiltonian parameters are expressed relative to this fixed scale:
+
+$$
+\tilde{r}_{ij} = \frac{r_{ij}}{r_{\text{min}}},
+\qquad
+\tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6} = \frac{C_6/r_{ij}^6}{J_{\text{max}}},
+$$
+
+$$
+\tilde{\Omega} = \frac{\Omega}{J_{\text{max}}},
+\qquad
+\tilde{\delta} = \frac{\delta}{J_{\text{max}}},
+\qquad
+\tilde{\Delta} = \frac{\Delta}{J_{\text{max}}}.
+$$
+
+Most programs are built starting from the definition of a set of coordinates for the atoms (register), or equivalently an interaction matrix. For this reason, renormalization brings an important advantage: it provides a natural constraint for program feasibility.
+
+Since, $J_{\text{max}}^{d}$ is the largest interaction the device can produce, under this renormalization, every physically realizable register satisfies $\min_{i<j}\tilde r_{ij} \geq 1$ or equivalently $\max_{i<j}\tilde J_{ij} \leq 1$.
 
 Next we will discuss the compilation, the crucial step to translate a QoolQit dimensionless program to a sequence of operations that can be realized on a real neutral-atom-based QPU.
 
