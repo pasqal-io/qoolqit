@@ -57,8 +57,8 @@ $$\tilde{r}_{ij}\geq 1$$
 
 $$\tilde{J}_{ij}\leq 1$$
 
-!!! info "Take-home message 1"
-    QoolQit introduces a **dimensionless model** where all quantities are expressed relative to an **interaction reference**.
+!!! info "QoolQit Model"
+    QoolQit introduces a **dimensionless model** where all quantities are expressed relative to an **interaction reference**, such that $\tilde{r}_{ij}\geq 1$ and $\tilde{J}_{ij}\leq 1$.
 
 Such reference makes the program definition hardware independent and provides several advantages:
 
@@ -67,7 +67,7 @@ Such reference makes the program definition hardware independent and provides se
 * **Portability:** Programs can be transferred across different devices and hardware generations with minimal modifications, improving reproducibility and reducing platform-specific code.
 * **Hardware-agnostic algorithm development:** Developers can design algorithms that focus on the underlying physics and computational logic rather than hardware-specific implementation details.
 
-To help users understand how to define a concrete program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength is what matters.
+To help users understand how to define a program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength is what matters. Thus QoolQit's choice of dimensionless units is natural: interactions are always of order unity, providing an intuitive reference scale for all other quantities.
 
 ### Drive regimes
 
@@ -89,17 +89,21 @@ In an interacting many-body system, time can be naturally measured relative to t
 | Intermediate time | $\tilde{t} \sim 1/\tilde J_{\text{max}}$ | Interactions begin to visibly affect the dynamics; nearest-neighbor correlations can emerge |
 | Long time | $\tilde{t} \gg 1/\tilde J_{\text{max}}$ | Correlations and many-body interaction effects have had time to spread across the system |
 
-Since all physical regimes are characterized by parameters relative to the maximum interaction strength, QoolQit's choice of dimensionless units is natural: interactions are always of order unity, providing an intuitive reference scale for all other quantities.
-
 ## Compilation
 
-As described above, a QoolQit program is expressed in dimensionless units, allowing users to define problems independently of any specific hardware platform.
+A QoolQit program is expressed in dimensionless units, allowing users to define problems independently of any specific hardware platform.
+In contrast, hardware specifications are given in physical units and and can only realize a limited range of parameter values.
+Thus, before executing it on real hardware, a program must be compiled in two steps:
 
-In contrast, hardware specifications are given in physical units and and can only realize a limited range of parameter values. As a result, the dimensionless program parameters must be translated into physical interaction strengths, drive amplitudes, detunings, and evolution times that lie within the capabilities of the target device (if possible).
-We refer to this step as **compilation**.
+- **Dimensionalization**: Conversion into physical interaction strengths, drive amplitudes, detunings, and evolution times that fall within the capabilities of the target device (if possible).
 
-!!! info "Compilation"
-    Compilation is the step where QoolQit takes a dimensionless program and rescales it into hardware-realizable parameters, while preserving physical invariants.
+- **Translation**: Conversion into a lower-level representation that can directly instruct the target hardware (e.g., a [Pulser sequence](https://docs.pasqal.com/pulser/)).
+
+We refer to this overall two-step process as **compilation**.
+
+!!! info "Compilation in QoolQit"
+
+    Translating a program to physical units and a set of hardware executable instructions.
 
 Practically, as anticipated in the previous section, a device choice will set the interaction energy reference.
 
@@ -109,7 +113,7 @@ Practically, as anticipated in the previous section, a device choice will set th
 
 ### Derivation
 
-This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, precisely defining the reference interaction energy. In physical units, the Rydberg Hamiltonian reads:
+This section describes how QoolQit's dimensionless formulation connects to real physical quantities, precisely defining the reference interaction energy. In physical units, the Rydberg Hamiltonian reads:
 
 $$
 H(t) =
