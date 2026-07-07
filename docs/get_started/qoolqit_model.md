@@ -98,7 +98,6 @@ In contrast, hardware specifications are given in physical units and and can onl
 Thus, before executing it on real hardware, a program must be compiled in two steps:
 
 - **Dimensionalization**: Conversion of dimensionless parameters into physical units of energy, distances and times, to fall within the capabilities of the target device (if possible).
-
 - **Translation**: Conversion into a lower-level representation that can directly instruct the target hardware (e.g., a [Pulser sequence](https://docs.pasqal.com/pulser/)).
 
 We refer to this overall two-step process as **compilation**.
