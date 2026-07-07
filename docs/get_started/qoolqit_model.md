@@ -89,13 +89,15 @@ In an interacting many-body system, time can be naturally measured relative to t
 | Intermediate time | $\tilde{t} \sim 1/\tilde J_{\text{max}}$ | Interactions begin to visibly affect the dynamics; nearest-neighbor correlations can emerge |
 | Long time | $\tilde{t} \gg 1/\tilde J_{\text{max}}$ | Correlations and many-body interaction effects have had time to spread across the system |
 
+Next we will discuss the compilation, the crucial step to translate a QoolQit dimensionless program to a sequence of operations that can be realized on a real neutral-atom-based QPU.
+
 ## Compilation
 
 A QoolQit program is expressed in dimensionless units, allowing users to define problems independently of any specific hardware platform.
 In contrast, hardware specifications are given in physical units and and can only realize a limited range of parameter values.
 Thus, before executing it on real hardware, a program must be compiled in two steps:
 
-- **Dimensionalization**: Conversion into physical interaction strengths, drive amplitudes, detunings, and evolution times that fall within the capabilities of the target device (if possible).
+- **Dimensionalization**: Conversion of dimensionless parameters into physical units of energy, distances and times, to fall within the capabilities of the target device (if possible).
 
 - **Translation**: Conversion into a lower-level representation that can directly instruct the target hardware (e.g., a [Pulser sequence](https://docs.pasqal.com/pulser/)).
 
@@ -107,13 +109,14 @@ We refer to this overall two-step process as **compilation**.
 
 Practically, as anticipated in the previous section, a device choice will set the interaction energy reference.
 
-!!! info "Take-home message 2"
+!!! note "Take-home message 2"
     The actual physical scale $J_{\text{max}}^{d}$, such as the precise distances or laser amplitudes, is determined during the **compilation step**, when targeting a specific device.
 
 
 ### Derivation
 
-This section describes how QoolQit's dimensionless formulation connects to real physical quantities, precisely defining the reference interaction energy. In physical units, the Rydberg Hamiltonian reads:
+This section describes how QoolQit's dimensionless formulation connects to real physical quantities, precisely defining the reference interaction energy.
+In physical units, the Rydberg Hamiltonian reads:
 
 $$
 H(t) =
@@ -127,8 +130,9 @@ $$
 | Symbol | Description | units |
 |--------|-------------|-------|
 | $C_6(n)$ | Interaction coefficient for Rydberg level $n$. Also depends on the atomic species. | $\mathrm{rad/\mu s}\times\mu\mathrm{m}^6$ |
-| $r_{ij}$ | Physical distance between atom $i$ and $j$ | $\mu\mathrm{m}$ |
-| $\Omega(t)$, $\delta(t)$, $\Delta(t)$ | Physical drive parameters | $\mathrm{rad/\mu s}$ |
+| $r_{ij}$ | Physical distance between atoms site $i$ and $j$. | $\mu\mathrm{m}$ |
+| $\Omega(t)$, $\delta(t)$, $\Delta(t)$ | Physical drive parameters. | $\mathrm{rad/\mu s}$ |
+| $t$ | Physical time. | $\mathrm{ns}$ |
 
 Every neutral-atom device is characterized by a minimum allowed atom separation $r_{\text{min}}^{d}$, determined by hardware constraints. This minimum spacing corresponds to the largest pairwise interaction the device can produce:
 
@@ -146,55 +150,19 @@ QoolQit takes this $J_{\text{max}}^{d}$ as the **reference energy scale** for ad
 All Hamiltonian parameters are expressed relative to this fixed scale:
 
 $$
-\tilde{r}_{ij} = \frac{r_{ij}}{r_{\text{min}}},
+\tilde{r}_{ij} = \frac{r_{ij}}{r_{\text{min}}^{d}},
 \qquad
-\tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6} = \frac{C_6/r_{ij}^6}{J_{\text{max}}},
+\tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6} = \frac{C_6/r_{ij}^6}{J_{\text{max}}^{d}},
 $$
 
 $$
-\tilde{\Omega} = \frac{\Omega}{J_{\text{max}}},
+\tilde{\Omega} = \frac{\Omega}{J_{\text{max}}^{d}},
 \qquad
-\tilde{\delta} = \frac{\delta}{J_{\text{max}}},
+\tilde{\delta} = \frac{\delta}{J_{\text{max}}^{d}},
 \qquad
-\tilde{\Delta} = \frac{\Delta}{J_{\text{max}}}.
+\tilde{\Delta} = \frac{\Delta}{J_{\text{max}}^{d}}.
 $$
 
-Most programs are built starting from the definition of a set of coordinates for the atoms (register), or equivalently an interaction matrix. For this reason renormalization provides a natural constraint for program feasibility. Since, $J_{\text{max}}^{d}$ is the largest interaction the device can produce, every physically realizable register satisfies $\tilde r_{ij} \geq 1$ or equivalently $\tilde J_{ij} \leq 1$.
-
-Next we will discuss the compilation, the crucial step to translate a QoolQit dimensionless program to a sequence of operations that can be realized on a real neutral-atom-based QPU.
-
-
-### Example
-
-As mentioned above, compilation does **not** change the physics of the program. Instead, it rescales the program so that it lies inside the region that can be implemented on a given device.
-
-Consider the figure below:
-
-![Compilation diagram](../extras/assets/compilation.svg)
-
-The valid parameters region (green box) of a device is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2$. The bound $\tilde{J} \leq 1$ is compatible with a minimum spacing $a$ allowed in the register distance equal to $a_{\text{min}}=1$.
-
-The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here $\max_{\tilde{t}}$ stands for the maximum over time).
-
-We define two programs by specifying the maximum amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the interaction between nearest neighbor atoms in the register $\tilde{J}=\frac{1}{\tilde{a^6}}$. We define the following tuples:
-
-1. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4)$,
-2. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)$
-
-The lines correspond to the programs with fixed ratio $\tilde{\Omega}/\tilde{J}=2/5$ and $\tilde{\Omega}/\tilde{J}=1/7$.
-At compilation QoolQit checks the energy ratio and the valid region of compilation and maximizes the $\tilde{\Omega}$.
-
-1. The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 2/5$.
-2. The point $(0.7,0.1)$ is inside, but the drive amplitude can be larger. QoolQit rescales it to the maximum possible $\tilde{\Omega}$ while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7$.
-
-The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying dimensionless problem is the same.
-
-### What changes under compilation?
-
-What is preserved by compilation is the ratio $\max_{\tilde t}\tilde\Omega/\tilde J$ — that is, the relative balance between drive and interactions, which defines the line on which the program lives and encodes the physics of the problem.
-
-What changes are the **dimensionless values themselves**: compilation slides the program along its line, multiplying $\tilde J$, $\tilde\Omega$, and $\tilde\delta$ by a common factor $\alpha$ chosen as large as possible while keeping the program inside the device's feasible region.
-
-For instance, compiling the program $(\tilde J, \max_{\tilde t}\tilde\Omega) = (1, 0.4)$ to $(0.5, 0.2)$ corresponds to a rescaling factor $\alpha = 0.5$. The ratio $2/5$ is preserved, but the dimensionless interaction is halved, meaning the closest pair of atoms is placed further apart and the dimensionless drive is halved so that it saturates the device maximum.
-
-Finally, compilation also rescales time: if the dimensionless Hamiltonian is multiplied by $\alpha$, dimensionless time must be divided by $\alpha$ in order to preserve the unitary evolution. A full derivation and concrete numerical examples are given in [Adimensionalization and Compilation](../extended_usage/adimensionalization.md).
+Most programs are built starting from the definition of a set of coordinates for the atoms (register), or equivalently an interaction matrix.
+For this reason renormalization provides a natural constraint for program feasibility.
+Since, $J_{\text{max}}^{d}$ is the largest interaction the device can produce, every physically realizable register satisfies $\tilde r_{ij} \geq 1$ or equivalently $\tilde J_{ij} \leq 1$.
