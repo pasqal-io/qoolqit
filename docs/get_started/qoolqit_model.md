@@ -106,11 +106,9 @@ We refer to this overall two-step process as **compilation**.
 
     Translating a program to physical units and a set of hardware executable instructions.
 
-Practically, as anticipated in the previous section, a device choice will set the interaction energy reference.
-
-!!! note "Take-home message 2"
-    The actual physical scale $J_{\text{max}}^{d}$, such as the precise distances or laser amplitudes, is determined during the **compilation step**, when targeting a specific device.
-
+As anticipated, the choice of device sets the reference interaction energy.
+Consequently, the conversion to physical units, such as distances and laser amplitudes, is determined during the compilation step for the target device.
+The next section introduces the dimensionless model used in QoolQit, provides a brief derivation, and explains how the corresponding conversion factors to physical units are obtained.
 
 ### Derivation
 
