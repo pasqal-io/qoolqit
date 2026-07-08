@@ -84,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adimensionalization-and-compilation" class="md-skip">
+        <a href="#compilation" class="md-skip">
           Skip to content
         </a>
       
@@ -548,7 +548,7 @@
   <span class="md-ellipsis">
     
   
-    Programming a neutral atom QPU
+    Programming a neutral-atom QPU
   
 
     
@@ -1069,29 +1069,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#physical-hamiltonian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Physical Hamiltonian
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-energy-and-dimensionless-hamiltonian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference energy and dimensionless Hamiltonian
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compilation" class="md-nav__link">
+  <a href="#compilation_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Compilation
@@ -1906,29 +1884,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#physical-hamiltonian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Physical Hamiltonian
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-energy-and-dimensionless-hamiltonian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference energy and dimensionless Hamiltonian
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compilation" class="md-nav__link">
+  <a href="#compilation_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Compilation
@@ -2052,116 +2008,16 @@
   
 
 
-<h1 id="adimensionalization-and-compilation">Adimensionalization and Compilation</h1>
+<h1 id="compilation">Compilation</h1>
 <p>In this section, you will learn how to:</p>
 <ul>
-<li>relate the physical Rydberg Hamiltonian to QoolQit’s dimensionless Hamiltonian,</li>
-<li>define the reference interaction <span class="arithmatex">\(J_{\text{max}}\)</span> and reference distance <span class="arithmatex">\(r_{\text{min}}\)</span>,</li>
 <li>understand how compilation chooses the physical scale of an implementation,</li>
 <li>distinguish drive-limited and interaction-limited compilation,</li>
 <li>see why time must be rescaled together with the Hamiltonian</li>
 </ul>
-<hr />
-<p>This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, and how compilation maps an abstract programs onto actual hardware.</p>
+<p>This section describes how QoolQit’s compilation maps an abstract programs onto actual hardware.</p>
 <p>This page assumes the knowledge of the <a href="../../get_started/qoolqit_model/">QoolQit Model</a> page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.</p>
-<p>Here, we make that idea precise by defining a reference interaction, the corresponding reference distance, and the mapping between dimensionless and physical quantities.</p>
-<hr />
-<h2 id="physical-hamiltonian">Physical Hamiltonian</h2>
-<p>In physical units, the Rydberg Hamiltonian is</p>
-<div class="arithmatex">\[
-H(t) =
-\underbrace{\sum_{i&lt;j} \frac{C_6}{r_{ij}^{6}} \hat{n}_i \hat{n}_j}_{\text{interactions}}
-+
-\underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\,\hat{\sigma}_i^y\right)}_{\text{global drive}}
--
-\underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i}_{\text{detuning}}.
-\]</div>
-<p>Here <span class="arithmatex">\(\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)\)</span> is the Rydberg occupation operator.</p>
-<table>
-<thead>
-<tr>
-<th>Symbol</th>
-<th>Description</th>
-<th>Typical units</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><span class="arithmatex">\(C_6(n)\)</span></td>
-<td>Interaction coefficient for Rydberg level <span class="arithmatex">\(n\)</span></td>
-<td><span class="arithmatex">\(\mathrm{rad/s}\times\mu\mathrm{m}^6\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(\Omega(t)\)</span></td>
-<td>Global Rabi frequency (drive amplitude)</td>
-<td><span class="arithmatex">\(\mathrm{rad/s}\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(\delta(t)\)</span></td>
-<td>Global detuning</td>
-<td><span class="arithmatex">\(\mathrm{rad/s}\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(\Delta(t)\)</span></td>
-<td>Local detuning amplitude</td>
-<td><span class="arithmatex">\(\mathrm{rad/s}\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(\phi(t)\)</span></td>
-<td>Drive phase</td>
-<td><span class="arithmatex">\([0,2\pi)\)</span></td>
-</tr>
-<tr>
-<td><span class="arithmatex">\(\epsilon_i\)</span></td>
-<td>Local detuning weight</td>
-<td><span class="arithmatex">\([0,1]\)</span></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="reference-energy-and-dimensionless-hamiltonian">Reference energy and dimensionless Hamiltonian</h2>
-<p>Every neutral-atom device is characterized by a minimum allowed atom separation <span class="arithmatex">\(r_{\text{min}}\)</span>, determined by hardware constraints. This minimum spacing corresponds to the largest pairwise interaction the device can produce:</p>
-<div class="arithmatex">\[
-J_{\text{max}} \;=\; \frac{C_6}{r_{\text{min}}^{6}}.
-\]</div>
-<p>QoolQit takes this <span class="arithmatex">\(J_{\text{max}}\)</span> as the <strong>reference energy scale</strong> for adimensionalization, and the corresponding minimum spacing as the reference distance.</p>
-<div class="admonition info">
-<p class="admonition-title">Key point</p>
-<p>Both <span class="arithmatex">\(r_{\text{min}}\)</span> and <span class="arithmatex">\(J_{\text{max}}\)</span> are <strong>device constants</strong>. They are fixed by the hardware specification and do not depend on the user's program. They are not chosen by compilation.</p>
-</div>
-<p>All Hamiltonian parameters are expressed relative to this fixed scale:</p>
-<div class="arithmatex">\[
-\tilde{r}_{ij} = \frac{r_{ij}}{r_{\text{min}}},
-\qquad
-\tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6} = \frac{C_6/r_{ij}^6}{J_{\text{max}}},
-\]</div>
-<div class="arithmatex">\[
-\tilde{\Omega} = \frac{\Omega}{J_{\text{max}}},
-\qquad
-\tilde{\delta} = \frac{\delta}{J_{\text{max}}},
-\qquad
-\tilde{\Delta} = \frac{\Delta}{J_{\text{max}}}.
-\]</div>
-<p>Dividing the physical Hamiltonian by <span class="arithmatex">\(J_{\text{max}}\)</span> yields the dimensionless <a href="../../get_started/qoolqit_model/">QoolQit Model</a>:</p>
-<div class="arithmatex">\[
-\tilde{H}(t) =
-\sum_{i&lt;j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j
-+
-\sum_i \frac{\tilde{\Omega}(t)}{2}
-\left(
-\cos\phi(t)\,\hat{\sigma}^x_i - \sin\phi(t)\,\hat{\sigma}^y_i
-\right)
--
-\sum_i \left(\tilde{\delta}(t) + \epsilon_i\tilde{\Delta}(t)\right)\hat{n}_i.
-\]</div>
-<p>Most programs are built starting from the definition of a set of coordinates for the atoms (register), or equivalently an interaction matrix. For this reason, renormalization brings an important advantage: it provides a natural constraint for program feasibility.</p>
-<p>Since, <span class="arithmatex">\(J_{\text{max}}\)</span> is the largest interaction the device can produce, under this renormalization, every physically realizable register satisfies:</p>
-<div class="arithmatex">\[
-\min_{i&lt;j}\tilde r_{ij} \geq 1,
-\qquad\text{equivalently}\qquad
-\max_{i&lt;j}\tilde J_{ij} \leq 1,
-\]</div>
-<h2 id="compilation">Compilation</h2>
+<h2 id="compilation_1">Compilation</h2>
 <h3 id="from-dimensionless-programs-to-physical-hardware">From dimensionless programs to physical hardware</h3>
 <p>A QoolQit program is specified in terms of dimensionless quantities (<span class="arithmatex">\(\tilde{J}_{ij}\)</span>, <span class="arithmatex">\(\tilde{\Omega}(t)\)</span>, <span class="arithmatex">\(\tilde{\delta}(t)\)</span>, <span class="arithmatex">\(\tilde t\)</span>). Once the device, and therefore <span class="arithmatex">\(J_{\text{max}}\)</span> and <span class="arithmatex">\(r_{\text{min}}\)</span> are fixed, the conversion to physical units is <strong>completely determined</strong>:</p>
 <div class="arithmatex">\[
