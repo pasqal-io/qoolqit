@@ -8,16 +8,12 @@ In this page, you will learn about:
 
 ## Compiling a quantum program
 
-QoolQit programs are written using dimensionless units, making them hardware-independent.
-Qubit positions use dimensionless coordinates, waveforms have dimensionless amplitudes and detunings, and time is measured in units of a reference interaction energy called $J_{max}^{d}$.
-This device-agnostic approach allows the same program to be compiled and executed on any compatible quantum hardware.
+QoolQit programs are written in dimensionless units, allowing the same program to be compiled and executed on any compatible quantum hardware.
 
-Compilation transforms these dimensionless quantities into concrete physical values and translates the QoolQit program into low-level instructions for real quantum processing units (QPUs).
-The compilation process:
+As a reminder, the compilation process:
 
-1. Converts all dimensionless times, energies, and distances into their physical equivalents.
-2. Rescales the program to satisfy device-specific hardware constraints.
-3. Generates a Pulser `Sequence` containing the low-level instructions for QPU execution.
+- Converts all dimensionless program's parameters, times, energies, and distances into their physical equivalents.
+- Generates a Pulser `Sequence` containing the low-level instructions for QPU execution.
 
 The conversion rules ensure that the dimensionless Hamiltonian $\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ produce identical unitary evolution.
 For a complete mathematical derivation, see the [Get Started: Programming a Neutral Atom QPU](../../get_started/qoolqit_model.md#derivation) page.
@@ -31,23 +27,24 @@ r_{ij} = \left(\frac{C_6}{J_{max}^{d}}\right)^{1/6}	\tilde{r}_{ij},
 \qquad
 \delta(t) = J_{max}^{d}\,	\tilde{\delta}(	\tilde{t}),
 \qquad
-t = \frac{	\tilde{t}}{J_{max}^{d}}.
+t = \tilde{t}/J_{max}^{d}.
 $$
 
 Setting $J_{max}^{d}$ determines the physical amplitude scale, detuning scale, runtime, and atom spacings all at once.
 
-The compilation output is stored internally as a Pulser `Sequence`, which contains the instructions for QPU execution.
+Finally, when a program is compiled, the compilation output is stored internally as a Pulser `Sequence`, which contains the instructions for QPU execution.
 Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
 For more details about Pulser's scope and capabilities, visit [Pasqal's documentation portal](https://docs.pasqal.com/pulser/).
 
 ## Compilation profiles
 
 Add small intro to profiles...
+Qoolqit offers two basic strategies
 
 ### Maximum energy (default)
 
-A device imposes hardware constraints and limits the range of parameters in a program. The two most important ones for
-compilation are:
+A device imposes hardware constraints and limits the range of parameters in a program.
+The two most important ones for compilation are:
 
 - a **maximum drive amplitude** $\Omega_{\max}$, which defines $J_{max}^{d}$ through
   the relation $J_{max}^{d} = \Omega / \tilde{\Omega} \le \Omega_{\max} / 	\tilde{\Omega}_{\max}$;
