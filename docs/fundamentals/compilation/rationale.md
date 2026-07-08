@@ -1,9 +1,9 @@
-In this page, you will learn:
+Before reading this page, we suggest starting with the [Get Started: Programming a Neutral Atom QPU](../../get_started/qoolqit_model.md) guide, which introduces the QoolQit dimensionless model and provides a first insight into compilation.
 
-- What the compilation step does and why it's important
-- How dimensionless units work in QoolQit
-- Compilation strategies: default and working point (in progress)
-- Hardware modulation and noise
+In this page, you will learn about:
+
+- Compilation strategies: default and working point
+- Hardware modulation and noise emulation
 
 
 ## Compiling a quantum program
@@ -12,14 +12,15 @@ QoolQit programs are written using dimensionless units, making them hardware-ind
 Qubit positions use dimensionless coordinates, waveforms have dimensionless amplitudes and detunings, and time is measured in units of a reference interaction energy called $J_{max}^{d}$.
 This device-agnostic approach allows the same program to be compiled and executed on any compatible quantum hardware.
 
-Compilation transforms these dimensionless quantities into concrete physical values and translates the QoolQit program into low-level instructions for real quantum processing units (QPUs). The compilation process:
+Compilation transforms these dimensionless quantities into concrete physical values and translates the QoolQit program into low-level instructions for real quantum processing units (QPUs).
+The compilation process:
 
 1. Converts all dimensionless times, energies, and distances into their physical equivalents.
 2. Rescales the program to satisfy device-specific hardware constraints.
 3. Generates a Pulser `Sequence` containing the low-level instructions for QPU execution.
 
 The conversion rules ensure that the dimensionless Hamiltonian $\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ produce identical unitary evolution.
-For a complete mathematical derivation, see the [Adimensionalization and Compilation](../../extended_usage/adimensionalization.md) page.
+For a complete mathematical derivation, see the [Get Started: Programming a Neutral Atom QPU](../../get_started/qoolqit_model.md#derivation) page.
 
 The essential conversion relationships are:
 
@@ -39,13 +40,17 @@ The compilation output is stored internally as a Pulser `Sequence`, which contai
 Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
 For more details about Pulser's scope and capabilities, visit [Pasqal's documentation portal](https://docs.pasqal.com/pulser/).
 
-### Default compilation
+## Compilation profiles
 
-A device imposes hardware constraints on the compiled program. The two most important ones for
+Add small intro to profiles...
+
+### Maximum energy (default)
+
+A device imposes hardware constraints and limits the range of parameters in a program. The two most important ones for
 compilation are:
 
 - a **maximum drive amplitude** $\Omega_{\max}$, which defines $J_{max}^{d}$ through
-  the relation $J_{max}^{d} = \Omega / 	\tilde{\Omega} \le \Omega_{\max} / 	\tilde{\Omega}_{\max}$;
+  the relation $J_{max}^{d} = \Omega / \tilde{\Omega} \le \Omega_{\max} / 	\tilde{\Omega}_{\max}$;
 - a **minimum atom spacing** $r_{\min}$, which defines $J_{max}^{d}$ through the distance
   relation $r_{ij} = (C_6/J_{max}^{d})^{1/6}	\tilde{r}_{ij} \ge r_{\min}$, i.e.
   $J_{max}^{d} \le C_6 / (r_{\min}/	\tilde{r}_{\min})^6$.
@@ -70,7 +75,7 @@ The following figure illustrates both scenarios:
 
 ![Compilation diagram](../../extras/assets/compilation_rationale.svg)
 
-The users works by default at $\tilde{J}=1.0$. When the program's energy ratio exceeds the device's energy ratio, the drive amplitude bound is reached first (blue line). The largest valid $J_0$ is then obtained by **rescaling the amplitude limit** to the maximum allowed value (as denoted by the arrow).
+The user works by default at $\tilde{J}=1.0$. When the program's energy ratio exceeds the device's energy ratio, the drive amplitude bound is reached first (blue line). The largest valid $J_0$ is then obtained by **rescaling the amplitude limit** to the maximum allowed value (as denoted by the arrow).
 
 In this regime the compiled program runs at **maximum device amplitude**, and the physical atom spacings are larger than the device minimum.
 
@@ -93,8 +98,8 @@ Consider the figure below:
 ![Compilation diagram](../../extras/assets/compilation.svg)
 
 The green box highlights the valid parameter region for the interaction energy $\tilde{J}_{ij}$ and the driving amplitude $\tilde{\Omega}$.
-As described in the [QoolQit model](../../get_started/qoolqit_model.md) page, the interaction energy is bounded by 1 by construction: QoolQit's adimensionalization enforces $\tilde{J}{ij} = J_{ij}/J_{max}^{d} \leq 1$ across all devices.
-The driving amplitude (more precisely, its maximum over time) is instead constrained to a device-dependent upper bound, $\tilde{\Omega} = \Omega/J_{max}^{d} \lesssim \Omega_{max}^{d}/J_{max}^{d} = 0.2$.
+As described in the [QoolQit model](../../get_started/qoolqit_model.md) page, the interaction energy is bounded by 1 by construction: QoolQit's adimensionalization enforces $\tilde{J}_{ij} = J_{ij}/J_{max}^{d} \leq 1$ across all devices.
+The driving amplitude (more precisely, its maximum over time) is instead constrained to a device-dependent upper bound. In this example, we take $\Omega_{max}^{d}/J_{max}^{d} = 0.2$, so that $\tilde{\Omega} = \Omega/J_{max}^{d} \lesssim 0.2$.
 
 The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here $\max_{\tilde{t}}$ stands for the maximum over time).
 
@@ -104,7 +109,7 @@ We define two programs by specifying the maximum amplitude in time $\max_{\tilde
 2. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)$
 
 The lines correspond to the programs with fixed ratio $\tilde{\Omega}/\tilde{J}=2/5$ and $\tilde{\Omega}/\tilde{J}=1/7$.
-At compilation QoolQit checks the energy ratio and the valid region of compilation and maximizes the $\tilde{\Omega}$.
+At compilation, QoolQit checks the energy ratio against the device's valid region and rescales the program to maximize $\tilde{\Omega}$ within that region.
 
 1. The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 2/5$.
 2. The point $(0.7,0.1)$ is inside, but the drive amplitude can be larger. QoolQit rescales it to the maximum possible $\tilde{\Omega}$ while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7$.
