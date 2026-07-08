@@ -1,101 +1,15 @@
-# Adimensionalization and Compilation
+# Compilation
 
 In this section, you will learn how to:
 
-- relate the physical Rydberg Hamiltonian to QoolQit’s dimensionless Hamiltonian,
-- define the reference interaction $J_{\text{max}}$ and reference distance $r_{\text{min}}$,
 - understand how compilation chooses the physical scale of an implementation,
 - distinguish drive-limited and interaction-limited compilation,
 - see why time must be rescaled together with the Hamiltonian
 
----
 
-This section describes how QoolQit’s dimensionless formulation connects to real physical quantities, and how compilation maps an abstract programs onto actual hardware.
+This section describes how QoolQit’s compilation maps an abstract programs onto actual hardware.
 
 This page assumes the knowledge of the [QoolQit Model](../get_started/qoolqit_model.md) page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.
-
-Here, we make that idea precise by defining a reference interaction, the corresponding reference distance, and the mapping between dimensionless and physical quantities.
-
----
-
-## Physical Hamiltonian
-
-In physical units, the Rydberg Hamiltonian is
-
-$$
-H(t) =
-\underbrace{\sum_{i<j} \frac{C_6}{r_{ij}^{6}} \hat{n}_i \hat{n}_j}_{\text{interactions}}
-+
-\underbrace{\sum_i \frac{\Omega(t)}{2}\left(\cos\phi(t)\,\hat{\sigma}_i^x - \sin\phi(t)\,\hat{\sigma}_i^y\right)}_{\text{global drive}}
--
-\underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_i}_{\text{detuning}}.
-$$
-
-Here $\hat{n}=\frac{1}{2}\left(1+\hat{\sigma}^z\right)$ is the Rydberg occupation operator.
-
-| Symbol | Description | Typical units |
-|--------|-------------|---------------|
-| $C_6(n)$ | Interaction coefficient for Rydberg level $n$ | $\mathrm{rad/s}\times\mu\mathrm{m}^6$ |
-| $\Omega(t)$ | Global Rabi frequency (drive amplitude) | $\mathrm{rad/s}$ |
-| $\delta(t)$ | Global detuning | $\mathrm{rad/s}$ |
-| $\Delta(t)$ | Local detuning amplitude | $\mathrm{rad/s}$ |
-| $\phi(t)$ | Drive phase | $[0,2\pi)$ |
-| $\epsilon_i$ | Local detuning weight | $[0,1]$ |
-
----
-
-## Reference energy and dimensionless Hamiltonian
-
-Every neutral-atom device is characterized by a minimum allowed atom separation $r_{\text{min}}$, determined by hardware constraints. This minimum spacing corresponds to the largest pairwise interaction the device can produce:
-
-$$
-J_{\text{max}} \;=\; \frac{C_6}{r_{\text{min}}^{6}}.
-$$
-
-QoolQit takes this $J_{\text{max}}$ as the **reference energy scale** for adimensionalization, and the corresponding minimum spacing as the reference distance.
-
-!!! info "Key point"
-    Both $r_{\text{min}}$ and $J_{\text{max}}$ are **device constants**. They are fixed by the hardware specification and do not depend on the user's program. They are not chosen by compilation.
-
-All Hamiltonian parameters are expressed relative to this fixed scale:
-
-$$
-\tilde{r}_{ij} = \frac{r_{ij}}{r_{\text{min}}},
-\qquad
-\tilde{J}_{ij} = \frac{1}{\tilde{r}_{ij}^6} = \frac{C_6/r_{ij}^6}{J_{\text{max}}},
-$$
-
-$$
-\tilde{\Omega} = \frac{\Omega}{J_{\text{max}}},
-\qquad
-\tilde{\delta} = \frac{\delta}{J_{\text{max}}},
-\qquad
-\tilde{\Delta} = \frac{\Delta}{J_{\text{max}}}.
-$$
-
-Dividing the physical Hamiltonian by $J_{\text{max}}$ yields the dimensionless [QoolQit Model](../get_started/qoolqit_model.md):
-
-$$
-\tilde{H}(t) =
-\sum_{i<j} \tilde{J}_{ij}\,\hat{n}_i \hat{n}_j
-+
-\sum_i \frac{\tilde{\Omega}(t)}{2}
-\left(
-\cos\phi(t)\,\hat{\sigma}^x_i - \sin\phi(t)\,\hat{\sigma}^y_i
-\right)
--
-\sum_i \left(\tilde{\delta}(t) + \epsilon_i\tilde{\Delta}(t)\right)\hat{n}_i.
-$$
-
-Most programs are built starting from the definition of a set of coordinates for the atoms (register), or equivalently an interaction matrix. For this reason, renormalization brings an important advantage: it provides a natural constraint for program feasibility.
-
-Since, $J_{\text{max}}$ is the largest interaction the device can produce, under this renormalization, every physically realizable register satisfies:
-
-$$
-\min_{i<j}\tilde r_{ij} \geq 1,
-\qquad\text{equivalently}\qquad
-\max_{i<j}\tilde J_{ij} \leq 1,
-$$
 
 ## Compilation
 
