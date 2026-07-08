@@ -9,7 +9,7 @@ In this page, you will learn:
 ## Compiling a quantum program
 
 QoolQit programs are written using dimensionless units, making them hardware-independent.
-Qubit positions use dimensionless coordinates, waveforms have dimensionless amplitudes and detunings, and time is measured in units of a reference interaction energy called $J_{max}$.
+Qubit positions use dimensionless coordinates, waveforms have dimensionless amplitudes and detunings, and time is measured in units of a reference interaction energy called $J_{max}^{d}$.
 This device-agnostic approach allows the same program to be compiled and executed on any compatible quantum hardware.
 
 Compilation transforms these dimensionless quantities into concrete physical values and translates the QoolQit program into low-level instructions for real quantum processing units (QPUs). The compilation process:
@@ -24,16 +24,16 @@ For a complete mathematical derivation, see the [Adimensionalization and Compila
 The essential conversion relationships are:
 
 $$
-r_{ij} = \left(\frac{C_6}{J_{max}}\right)^{1/6}	\tilde{r}_{ij},
+r_{ij} = \left(\frac{C_6}{J_{max}^{d}}\right)^{1/6}	\tilde{r}_{ij},
 \qquad
-\Omega(t) = J_{max}\,	\tilde{\Omega}(	\tilde{t}),
+\Omega(t) = J_{max}^{d}\,	\tilde{\Omega}(	\tilde{t}),
 \qquad
-\delta(t) = J_0\,	\tilde{\delta}(	\tilde{t}),
+\delta(t) = J_{max}^{d}\,	\tilde{\delta}(	\tilde{t}),
 \qquad
-t = \frac{	\tilde{t}}{J_{max}}.
+t = \frac{	\tilde{t}}{J_{max}^{d}}.
 $$
 
-Setting $J_{max}$ determines the physical amplitude scale, detuning scale, runtime, and atom spacings all at once.
+Setting $J_{max}^{d}$ determines the physical amplitude scale, detuning scale, runtime, and atom spacings all at once.
 
 The compilation output is stored internally as a Pulser `Sequence`, which contains the instructions for QPU execution.
 Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
@@ -44,13 +44,13 @@ For more details about Pulser's scope and capabilities, visit [Pasqal's document
 A device imposes hardware constraints on the compiled program. The two most important ones for
 compilation are:
 
-- a **maximum drive amplitude** $\Omega_{\max}$, which defines $J_0$ through
-  the relation $J_0 = \Omega / 	\tilde{\Omega} \le \Omega_{\max} / 	\tilde{\Omega}_{\max}$;
-- a **minimum atom spacing** $r_{\min}$, which defines $J_0$ through the distance
-  relation $r_{ij} = (C_6/J_0)^{1/6}	\tilde{r}_{ij} \ge r_{\min}$, i.e.
-  $J_0 \le C_6 / (r_{\min}/	\tilde{r}_{\min})^6$.
+- a **maximum drive amplitude** $\Omega_{\max}$, which defines $J_{max}^{d}$ through
+  the relation $J_{max}^{d} = \Omega / 	\tilde{\Omega} \le \Omega_{\max} / 	\tilde{\Omega}_{\max}$;
+- a **minimum atom spacing** $r_{\min}$, which defines $J_{max}^{d}$ through the distance
+  relation $r_{ij} = (C_6/J_{max}^{d})^{1/6}	\tilde{r}_{ij} \ge r_{\min}$, i.e.
+  $J_{max}^{d} \le C_6 / (r_{\min}/	\tilde{r}_{\min})^6$.
 
-QoolQit always picks the **largest $J_0$ consistent with these hardware constraints**, because a
+QoolQit always picks the **largest energy scale consistent with these hardware constraints**, because a
 larger reference scale realizes the same dimensionless program with a higher physical amplitude and a
 shorter physical runtime — the most efficient use of the hardware.
 
@@ -85,13 +85,16 @@ In this regime the compiled register uses the smallest physical spacing the devi
 
 #### Example
 
-As mentioned above, compilation does **not** change the physics of the program. Instead, it rescales the program so that it lies inside the region that can be implemented on a given device.
+As mentioned above, compilation does **not** change the physics of the program.
+Instead, it rescales the program so that it lies inside the region that can be implemented on a given device.
 
 Consider the figure below:
 
 ![Compilation diagram](../../extras/assets/compilation.svg)
 
-The valid parameters region (green box) of a device is constrained by $\tilde{J} \leq 1, \;\tilde{\Omega} \leq 0.2$. The bound $\tilde{J} \leq 1$ is compatible with a minimum spacing $a$ allowed in the register distance equal to $a_{\text{min}}=1$.
+The green box highlights the valid parameter region for the interaction energy $\tilde{J}_{ij}$ and the driving amplitude $\tilde{\Omega}$.
+As described in the [QoolQit model](../../get_started/qoolqit_model.md) page, the interaction energy is bounded by 1 by construction: QoolQit's adimensionalization enforces $\tilde{J}{ij} = J_{ij}/J_{max}^{d} \leq 1$ across all devices.
+The driving amplitude (more precisely, its maximum over time) is instead constrained to a device-dependent upper bound, $\tilde{\Omega} = \Omega/J_{max}^{d} \lesssim \Omega_{max}^{d}/J_{max}^{d} = 0.2$.
 
 The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here $\max_{\tilde{t}}$ stands for the maximum over time).
 
@@ -137,6 +140,7 @@ The net effect on the drive is always visible when inspecting the compiled seque
 
 
 ### Noise
-**Noise sources** encompass various forms of environmental and systematic errors that introduce unwanted fluctuations or systematic shifts in the quantum system parameters during execution. As before, to include noise sources in the emulation of a program, emulators must be configured with the flag `noise_model`, as described in [Execution](../execution/execution.ipynb).
+**Noise sources** encompass various forms of environmental and systematic errors that introduce unwanted fluctuations or systematic shifts in the quantum system parameters during execution.
+As before, to include noise sources in the emulation of a program, emulators must be configured with the flag `noise_model`, as described in [Execution](../execution/execution.ipynb).
 
 Finally, for more detailed information on [hardware modulation](https://docs.pasqal.com/pulser/tutorials/output_mod_eom/) and [noise sources](https://docs.pasqal.com/pulser/noise_model/), consult the comprehensive discussions available in the Pulser documentation.
