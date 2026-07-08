@@ -2,7 +2,7 @@ Before reading this page, we suggest starting with the [Get Started: Programming
 
 In this page, you will learn about:
 
-- Compilation strategies: default and working point
+- Compilation profiles: default and working point
 - Hardware modulation and noise emulation
 
 
@@ -34,7 +34,7 @@ Setting $J_{max}^{d}$ determines the physical amplitude scale, detuning scale, r
 
 Finally, when a program is compiled, the compilation output is stored internally as a Pulser `Sequence`, which contains the instructions for QPU execution.
 Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
-For more details about Pulser's scope and capabilities, visit [Pasqal's documentation portal](https://docs.pasqal.com/pulser/).
+For more details about Pulser's scope and capabilities, visit [Pulser documentation](https://docs.pasqal.com/pulser/).
 
 ## Compilation profiles
 
@@ -46,9 +46,9 @@ Qoolqit offers two basic strategies
 A device imposes hardware constraints and limits the range of parameters in a program.
 The two most important ones for compilation are:
 
-- a **maximum drive amplitude** $\Omega_{\max}$, which defines $J_{max}^{d}$ through
+- **maximum drive amplitude**: $\Omega_{\max}$, which defines $J_{max}^{d}$ through
   the relation $J_{max}^{d} = \Omega / \tilde{\Omega} \le \Omega_{\max} / 	\tilde{\Omega}_{\max}$;
-- a **minimum atom spacing** $r_{\min}$, which defines $J_{max}^{d}$ through the distance
+- **minimum atom spacing**: $r_{\min}$, which defines $J_{max}^{d}$ through the distance
   relation $r_{ij} = (C_6/J_{max}^{d})^{1/6}	\tilde{r}_{ij} \ge r_{\min}$, i.e.
   $J_{max}^{d} \le C_6 / (r_{\min}/	\tilde{r}_{\min})^6$.
 
