@@ -95,10 +95,10 @@ Next we will discuss the compilation, the crucial step to translate a QoolQit di
 
 A QoolQit program is expressed in dimensionless units, allowing users to define problems independently of any specific hardware platform.
 In contrast, hardware specifications are given in physical units and and can only realize a limited range of parameter values.
-Thus, before executing it on real hardware, a program must be compiled in two steps:
+Thus, before executing it on real hardware, a program must be compiled. This happens in two steps:
 
-- **Dimensionalization**: Conversion of dimensionless parameters into physical units of energy, distances and times, to fall within the capabilities of the target device (if possible).
-- **Translation**: Conversion into a lower-level representation that can directly instruct the target hardware (e.g., a [Pulser sequence](https://docs.pasqal.com/pulser/)).
+- **Dimensionalization**: Converts dimensionless parameters into physical units of energy, distance, and time so that they are compatible with the capabilities of the target device, when possible.
+- **Translation**: Compiles the program into a lower-level representation that can directly instruct the target hardware (e.g., a [Pulser sequence](https://docs.pasqal.com/pulser/)).
 
 We refer to this overall two-step process as **compilation**.
 
