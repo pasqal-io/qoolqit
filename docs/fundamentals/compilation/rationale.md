@@ -39,7 +39,7 @@ For more details about Pulser's scope and capabilities, visit [Pulser documentat
 
 ## Compilation profiles
 
-Besides dimensionalization, every rescaling $t,H \rightarrow t/\alpha, \alpha H$ will produce in theory a physically equivalent program.
+Besides dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will produce in theory a physically equivalent program.
 At the moment, QoolQit provides a single simple compilation strategy, which seeks maximizing the energy scale of the input program.
 
 
