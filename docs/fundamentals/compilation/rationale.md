@@ -23,14 +23,15 @@ The essential conversion relationships are:
 $$
 r_{ij} = \left(\frac{C_6}{J_{max}^{d}}\right)^{1/6}	\tilde{r}_{ij},
 \qquad
-\Omega(t) = J_{max}^{d}\,	\tilde{\Omega}(	\tilde{t}),
+\Omega(t) = J_{max}^{d}\tilde{\Omega}(\tilde{t}),
 \qquad
-\delta(t) = J_{max}^{d}\,	\tilde{\delta}(	\tilde{t}),
+\delta(t) = J_{max}^{d}\tilde{\delta}(\tilde{t}),
 \qquad
 t = \tilde{t}/J_{max}^{d}.
 $$
 
-Setting $J_{max}^{d}$ determines the physical amplitude scale, detuning scale, runtime, and atom spacings all at once.
+Compiling a QoolQit program to a particular device, will set the conversion factor $J_{max}^{d}=C_6/(r_{\text{min}}^{d})^6$, setting amplitude, detuning, runtime, and atom spacings scales all at once.
+It is important to remind that such constant **depends** on the particular hardware of choice, being $C_6$ an interaction coefficient that depends on the specific Rydberg level of a specific atomic species used in the QPU, while $r_{\text{min}}^{d}$ is the minimum pairwise distance that can be realized.
 
 Finally, when a program is compiled, the compilation output is stored internally as a Pulser `Sequence`, which contains the instructions for QPU execution.
 Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
@@ -38,8 +39,7 @@ For more details about Pulser's scope and capabilities, visit [Pulser documentat
 
 ## Compilation profiles
 
-Add small intro to profiles...
-Qoolqit offers two basic strategies
+
 
 ### Maximum energy (default)
 
@@ -72,7 +72,9 @@ The following figure illustrates both scenarios:
 
 ![Compilation diagram](../../extras/assets/compilation_rationale.svg)
 
-The user works by default at $\tilde{J}=1.0$. When the program's energy ratio exceeds the device's energy ratio, the drive amplitude bound is reached first (blue line). The largest valid $J_0$ is then obtained by **rescaling the amplitude limit** to the maximum allowed value (as denoted by the arrow).
+The user works by default at $\tilde{J}=1.0$.
+When the program's energy ratio exceeds the device's energy ratio, the drive amplitude bound is reached first (blue line).
+The largest valid $J_0$ is then obtained by **rescaling the amplitude limit** to the maximum allowed value (as denoted by the arrow).
 
 In this regime the compiled program runs at **maximum device amplitude**, and the physical atom spacings are larger than the device minimum.
 
