@@ -31,7 +31,7 @@ t = \tilde{t}/J_{max}^{d}.
 $$
 
 Compiling a QoolQit program to a particular device, will set the conversion factor $J_{max}^{d}=C_6/(r_{\text{min}}^{d})^6$, setting amplitude, detuning, runtime, and atom spacings scales all at once.
-It is important to remind that such constant **depends** on the particular hardware of choice, being $C_6$ an interaction coefficient that depends on the specific Rydberg level of a specific atomic species used in the QPU, while $r_{\text{min}}^{d}$ is the minimum pairwise distance that can be realized.
+It is important to remind that such constant **depends on the particular hardware** of choice, being $C_6$ an interaction coefficient that depends on the specific Rydberg level of a specific atomic species used in the QPU, while $r_{\text{min}}^{d}$ is the minimum pairwise distance that can be realized.
 
 Finally, when a program is compiled, the compilation output is stored internally as a Pulser `Sequence`, which contains the instructions for QPU execution.
 Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
@@ -39,6 +39,8 @@ For more details about Pulser's scope and capabilities, visit [Pulser documentat
 
 ## Compilation profiles
 
+Besides dimensionalization, every rescaling $t,H \rightarrow t/\alpha, \alpha H$ will produce in theory a physically equivalent program.
+At the moment, QoolQit provides a single simple compilation strategy, which seeks maximizing the energy scale of the input program.
 
 
 ### Maximum energy (default)
@@ -126,10 +128,10 @@ For instance, compiling the program $(\tilde J, \max_{\tilde t}\tilde\Omega) = (
 Finally, compilation also rescales time: if the dimensionless Hamiltonian is multiplied by $\alpha$, dimensionless time must be divided by $\alpha$ in order to preserve the unitary evolution. A full derivation and concrete numerical examples are given in [Adimensionalization and Compilation](../../extended_usage/adimensionalization.md).
 
 
+### Working point
 
-### Working point compilation
-In progress...
-
+The working point does not apply any rescaling on top of the dimensionalization of the quantum program.
+It is designed for users that really want to control the precise physical values of drive's amplitude and detuning, distances and time, and opt-out from the default compilation profile.
 
 
 ## Hardware effects
