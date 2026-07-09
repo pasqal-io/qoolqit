@@ -7,7 +7,7 @@ In this section, you will learn how to:
 - see why time must be rescaled together with the Hamiltonian
 
 
-This section describes how QoolQit’s compilation maps an abstract programs onto actual hardware.
+This section describes how QoolQit's compilation maps an abstract programs onto actual hardware.
 
 This page assumes the knowledge of the [QoolQit Model](../get_started/qoolqit_model.md) page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.
 
@@ -145,23 +145,10 @@ $$
 A larger $\alpha$, that is a program with larger amplitude and interaction, yields a shorter physical runtime. This is consistent with the compilation strategy: by maximizing $\alpha$, QoolQit produces the fastest physical implementation compatible with the device constraints.
 
 
-## Physical interpretation of dimensionless time
-
-Let us define the strongest dimensional interaction **present in the register** as
-
-$$
-\tilde J_{\text{max}} \;=\; \max_{i<j}\tilde J_{ij} \;\leq\; 1.
-$$
-
-In an interacting many-body system, the product $\tilde J_{\text{max}}\tilde t$ (and so the time $\tilde t$) has a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb-Robinson picture, correlations spread at a finite speed set by the interaction scale. In concrete:
-
-- $\tilde t \ll 1/\tilde{J}_{\text{max}}$ corresponds to evolution that is too short for interactions to significantly affect the dynamics;
-- $\tilde t \sim 1/\tilde{J}_{\text{max}}$ corresponds to the timescale on which nearest-neighbor correlations can begin to emerge;
-- $\tilde t \sim n/\tilde{J}_{\text{max}}$ can be interpreted as the timescale on which correlations may have propagated across a distance of order $n$ lattice spacings, assuming approximately ballistic spreading.
-
 ## Special case: a single atom
 
-The interpretation above relies on interactions being physically present. For a single atom, however, there are no pairwise interaction terms, so $J_0$ is no longer an intrinsic dynamical scale of the problem.
+The interpretation above relies on interactions being physically present.
+For a single atom, however, there are no pairwise interaction terms, so $J_0$ is no longer an intrinsic dynamical scale of the problem.
 
 Mathematically, the dimensionless convention still works exactly as before: one may still define
 
