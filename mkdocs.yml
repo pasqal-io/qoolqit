@@ -111,11 +111,10 @@ plugins:
           heading_level: 2
           inherited_members: true
           merge_init_into_class: true
-          parameter_headings: true
-          type_parameter_headings: true
           preload_modules: [qoolqit, pulser]
           relative_crossrefs: true
           scoped_crossrefs: true
+          separate_signature: true
           show_bases: false
           show_inheritance_diagram: false
           show_root_heading: true
