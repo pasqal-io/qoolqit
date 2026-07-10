@@ -114,7 +114,7 @@ plugins:
           preload_modules: [qoolqit, pulser]
           relative_crossrefs: true
           scoped_crossrefs: true
-          separate_signature: true
+          separate_signature: true  # uses black/ruff if available to format signatures
           show_bases: false
           show_inheritance_diagram: false
           show_root_heading: true
