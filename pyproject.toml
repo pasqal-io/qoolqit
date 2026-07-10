@@ -58,7 +58,7 @@ dev = [
   "pre-commit",
   "ipykernel",
   "nbmake",
-  "mkdocs",
+  "mkdocs==1.6.1",
   "mkdocs-material",
   "mkdocstrings-python",
   "mkdocs-section-index",
