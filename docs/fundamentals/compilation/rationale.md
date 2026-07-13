@@ -56,10 +56,11 @@ The green box highlights the valid parameter region for the interaction energy $
 As described in the [QoolQit model](../../get_started/qoolqit_model.md) page, the interaction energy is bounded by 1 by construction: QoolQit's adimensionalization enforces $\tilde{J}_{ij} = J_{ij}/J_{max}^{d} \leq 1$ across all devices.
 The driving amplitude (more precisely, its maximum over time) is instead constrained to a device-dependent upper bound. In this example, we take $\Omega_{max}^{d}/J_{max}^{d} = 0.2$, so that $\tilde{\Omega} = \Omega/J_{max}^{d} \lesssim 0.2$.
 
-The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane.
+The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane.
 Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here $\max_{\tilde{t}}$ stands for the maximum over time).
 
-We define two programs by specifying the maximum amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the interaction between nearest neighbor atoms in the register $\tilde{J}=\frac{1}{\tilde{a^6}}$. We define the following tuples:
+We define two programs by specifying the maximum amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the interaction between nearest neighbor atoms in the register $\tilde{J}$.
+We define the following tuples:
 
 1. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4)$,
 2. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)$
@@ -74,7 +75,7 @@ At compilation, QoolQit checks the energy ratio against the device's valid regio
     In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below $\Omega_{\max}$.
 
 
-The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying dimensionless problem is the same.
+The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying physics encoded in the program is the same.
 
 ### Working point
 The working point does not apply any rescaling on top of the dimensionalization of the quantum program.

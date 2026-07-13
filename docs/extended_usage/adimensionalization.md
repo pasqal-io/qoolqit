@@ -146,7 +146,6 @@ A larger $\alpha$, that is a program with larger amplitude and interaction, yiel
 
 
 ## Special case: a single atom
-
 The interpretation above relies on interactions being physically present.
 For a single atom, however, there are no pairwise interaction terms, so $J_0$ is no longer an intrinsic dynamical scale of the problem.
 
