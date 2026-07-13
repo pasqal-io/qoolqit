@@ -80,7 +80,9 @@ The dimensionless content is unchanged: the ratio between drive and interaction 
 ### Working point
 The working point does not apply any rescaling on top of the dimensionalization of the quantum program.
 Unlike the default maximum energy profile, it preserves the user-chosen physical scales instead of maximizing the device energy scale.
+In terms of the figure above, this is equivalent to fixing a point in the $(\tilde{J}, \tilde{\Omega})$ plane: if that point lies inside the green region, or more generally satisfies the device specifications, the program will compile.
 It is designed for users who really want to control the precise physical values of drive amplitude, detuning, distances, and time, and opt out of the default compilation profile.
+Finally, the device specifications can be inspected, as shown in [Devices and Compilation](./device_and_compilation.ipynb).
 
 ## Hardware effects
 Real quantum hardware introduces deviations between the ideal compiled program and its actual execution.
