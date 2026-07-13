@@ -64,6 +64,7 @@ dev = [
   "mkdocs-section-index",
   "mkdocs-jupyter",
   "mike",
+  "ruff>=0.15.21",
 ]
 
 [project.urls]
