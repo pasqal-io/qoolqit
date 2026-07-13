@@ -54,6 +54,7 @@ dev = [
   "jupyter",
   "pytest",
   "pytest-cov",
+  "pytest-markdown-docs",
   "pre-commit",
   "ipykernel",
   "nbmake",
@@ -75,7 +76,7 @@ features = ["dev"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit"
+addopts = "-vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs"
 xfail_strict = true
 filterwarnings = [
   "ignore:`torch_geometric.distributed` has been deprecated since 2.7.0 and will no longer be maintained:DeprecationWarning",
