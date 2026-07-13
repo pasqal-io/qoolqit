@@ -893,26 +893,25 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Compiling a quantum program">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compilation-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compilation profiles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compilation profiles">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#default-compilation" class="md-nav__link">
+  <a href="#maximum-energy-default" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Default compilation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Default compilation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
+        Maximum energy (default)
       
     </span>
   </a>
@@ -920,26 +919,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#what-changes-under-compilation" class="md-nav__link">
+  <a href="#working-point" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What changes under compilation?
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#working-point-compilation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Working point compilation
+        Working point
       
     </span>
   </a>
@@ -1892,26 +1875,25 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Compiling a quantum program">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compilation-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compilation profiles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compilation profiles">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#default-compilation" class="md-nav__link">
+  <a href="#maximum-energy-default" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Default compilation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Default compilation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
+        Maximum energy (default)
       
     </span>
   </a>
@@ -1919,26 +1901,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#what-changes-under-compilation" class="md-nav__link">
+  <a href="#working-point" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What changes under compilation?
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#working-point-compilation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Working point compilation
+        Working point
       
     </span>
   </a>
@@ -2011,103 +1977,80 @@
 
   <h1>Compiling a Quantum Program</h1>
 
-<p>In this page, you will learn:</p>
+<p>Before reading this page, we suggest starting with the <a href="../../../get_started/qoolqit_model/">Get Started: Programming a Neutral Atom QPU</a> guide, which introduces the QoolQit dimensionless model and provides a first insight into compilation.</p>
+<p>On this page, you will learn about:</p>
 <ul>
-<li>What the compilation step does and why it's important</li>
-<li>How dimensionless units work in QoolQit</li>
-<li>Compilation strategies: default and working point (in progress)</li>
-<li>Hardware modulation and noise</li>
+<li>Compilation profiles: default and working point</li>
+<li>Hardware modulation and noise emulation</li>
 </ul>
 <h2 id="compiling-a-quantum-program">Compiling a quantum program</h2>
-<p>QoolQit programs are written using dimensionless units, making them hardware-independent.
-Qubit positions use dimensionless coordinates, waveforms have dimensionless amplitudes and detunings, and time is measured in units of a reference interaction energy called <span class="arithmatex">\(J_{max}^{d}\)</span>.
-This device-agnostic approach allows the same program to be compiled and executed on any compatible quantum hardware.</p>
-<p>Compilation transforms these dimensionless quantities into concrete physical values and translates the QoolQit program into low-level instructions for real quantum processing units (QPUs). The compilation process:</p>
-<ol>
-<li>Converts all dimensionless times, energies, and distances into their physical equivalents.</li>
-<li>Rescales the program to satisfy device-specific hardware constraints.</li>
+<p>QoolQit programs are written in dimensionless units, allowing the same program to be compiled and executed on any compatible quantum hardware.</p>
+<p>As a reminder, the compilation process:</p>
+<ul>
+<li>Converts all dimensionless program's parameters, times, energies, and distances into their physical equivalents.</li>
 <li>Generates a Pulser <code>Sequence</code> containing the low-level instructions for QPU execution.</li>
-</ol>
+</ul>
 <p>The conversion rules ensure that the dimensionless Hamiltonian <span class="arithmatex">\(\tilde{H}(\tilde{t})\)</span> and the physical Hamiltonian <span class="arithmatex">\(H(t)\)</span> produce identical unitary evolution.
-For a complete mathematical derivation, see the <a href="../../../extended_usage/adimensionalization/">Adimensionalization and Compilation</a> page.</p>
+For a complete mathematical derivation, see the <a href="../../../get_started/qoolqit_model/#derivation">Get Started: Programming a Neutral Atom QPU</a> page.</p>
 <p>The essential conversion relationships are:</p>
 <div class="arithmatex">\[
-r_{ij} = \left(\frac{C_6}{J_{max}^{d}}\right)^{1/6} \tilde{r}_{ij},
+r_{ij} = \left(\frac{C_6}{J_{\max}^{d}}\right)^{1/6} \tilde{r}_{ij},
 \qquad
-\Omega(t) = J_{max}^{d}\,   \tilde{\Omega}( \tilde{t}),
+\Omega(t) = J_{\max}^{d}\tilde{\Omega}(\tilde{t}),
 \qquad
-\delta(t) = J_{max}^{d}\,   \tilde{\delta}( \tilde{t}),
+\delta(t) = J_{\max}^{d}\tilde{\delta}(\tilde{t}),
 \qquad
-t = \frac{  \tilde{t}}{J_{max}^{d}}.
+t = \tilde{t}/J_{\max}^{d}.
 \]</div>
-<p>Setting <span class="arithmatex">\(J_{max}^{d}\)</span> determines the physical amplitude scale, detuning scale, runtime, and atom spacings all at once.</p>
-<p>The compilation output is stored internally as a Pulser <code>Sequence</code>, which contains the instructions for QPU execution.
+<p>Compiling a QoolQit program to a particular device will set the conversion factor, <span class="arithmatex">\(J_{\max}^{d}=C_6/(r_{\min}^{d})^6\)</span>, which sets the scales for amplitude, detuning, runtime, and atom spacing all at once.
+It is important to note that this constant <strong>depends on the particular hardware</strong> of choice, since <span class="arithmatex">\(C_6\)</span> is an interaction coefficient that depends on the specific Rydberg level of a specific atomic species used in the QPU, while <span class="arithmatex">\(r_{\min}^{d}\)</span> is the minimum pairwise distance that can be realized.</p>
+<p>Finally, when a program is compiled, the compilation output is stored internally as a Pulser <code>Sequence</code>, which contains the instructions for QPU execution.
 Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
-For more details about Pulser's scope and capabilities, visit <a href="https://docs.pasqal.com/pulser/">Pasqal's documentation portal</a>.</p>
-<h3 id="default-compilation">Default compilation</h3>
-<p>A device imposes hardware constraints on the compiled program. The two most important ones for
-compilation are:</p>
-<ul>
-<li>a <strong>maximum drive amplitude</strong> <span class="arithmatex">\(\Omega_{\max}\)</span>, which defines <span class="arithmatex">\(J_{max}^{d}\)</span> through
-  the relation <span class="arithmatex">\(J_{max}^{d} = \Omega /  \tilde{\Omega} \le \Omega_{\max} /  \tilde{\Omega}_{\max}\)</span>;</li>
-<li>a <strong>minimum atom spacing</strong> <span class="arithmatex">\(r_{\min}\)</span>, which defines <span class="arithmatex">\(J_{max}^{d}\)</span> through the distance
-  relation <span class="arithmatex">\(r_{ij} = (C_6/J_{max}^{d})^{1/6}    \tilde{r}_{ij} \ge r_{\min}\)</span>, i.e.
-  <span class="arithmatex">\(J_{max}^{d} \le C_6 / (r_{\min}/ \tilde{r}_{\min})^6\)</span>.</li>
-</ul>
-<p>QoolQit always picks the <strong>largest energy scale consistent with these hardware constraints</strong>, because a
-larger reference scale realizes the same dimensionless program with a higher physical amplitude and a
-shorter physical runtime — the most efficient use of the hardware.</p>
-<p>The determining factor is which constraint becomes active first, based on comparing the dimensionless program ratio,</p>
-<div class="arithmatex">\[
-\frac{\tilde{\Omega}_{\max}}{\tilde{J}_{\max}} = \tilde{\Omega}_{\max} \cdot \tilde{r}_{\min}^6,
-\]</div>
-<p>which characterizes the program, compared with the corresponding device ratio</p>
-<div class="arithmatex">\[
-\frac{\Omega_{\max}}{J_{\max}} = \frac{\Omega_{\max} \cdot r_{\min}^6}{C_6}.
-\]</div>
-<p>The following figure illustrates both scenarios:</p>
-<p><img alt="Compilation diagram" src="../../../extras/assets/compilation_rationale.svg" /></p>
-<p>The users works by default at <span class="arithmatex">\(\tilde{J}=1.0\)</span>. When the program's energy ratio exceeds the device's energy ratio, the drive amplitude bound is reached first (blue line). The largest valid <span class="arithmatex">\(J_0\)</span> is then obtained by <strong>rescaling the amplitude limit</strong> to the maximum allowed value (as denoted by the arrow).</p>
-<p>In this regime the compiled program runs at <strong>maximum device amplitude</strong>, and the physical atom spacings are larger than the device minimum.</p>
-<p>When the program's energy ratio is within the device budget, the minimum-spacing constraint is reached first (red line). The largest valid <span class="arithmatex">\(J_0\)</span> is obtained by <strong>saturating the distance limit</strong>.</p>
-<p>In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below <span class="arithmatex">\(\Omega_{\max}\)</span>.</p>
-<div class="admonition note">
-<p class="admonition-title">QoolQit always maximizes the physical energy scale</p>
-<p>In both cases, QoolQit selects the largest feasible reference scale <span class="arithmatex">\(J_0\)</span>. Doing so
-gives the fastest possible physical runtime for the program, since <span class="arithmatex">\(t = \tilde{t}/J_0\)</span>
-decreases as <span class="arithmatex">\(J_0\)</span> increases.</p>
-</div>
-<h4 id="example">Example</h4>
-<p>As mentioned above, compilation does <strong>not</strong> change the physics of the program.
-Instead, it rescales the program so that it lies inside the region that can be implemented on a given device.</p>
-<p>Consider the figure below:</p>
+For more details about Pulser's scope and capabilities, visit <a href="https://docs.pasqal.com/pulser/">Pulser documentation</a>.</p>
+<h2 id="compilation-profiles">Compilation profiles</h2>
+<p>Besides dimensionalization, every rescaling <span class="arithmatex">\(\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)\)</span> will produce in theory a physically equivalent program.
+At the moment, QoolQit provides a simple compilation strategy that seeks to maximize the energy scale of the input program.</p>
+<h3 id="maximum-energy-default">Maximum energy (default)</h3>
+<p>A device imposes hardware constraints and limits the range of parameters in a program.
+The two most important ones for compilation are the maximum drive amplitude <span class="arithmatex">\(\Omega_{\max}^{d}\)</span> and the minimum atom spacing <span class="arithmatex">\(r_{\min}^{d}\)</span>.</p>
+<p>The maximum energy strategy always picks the <strong>largest energy scale</strong> that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
+Indeed, a larger reference scale realizes the same dimensionless program with a higher drive amplitude (higher signal-to-noise ratio), a shorter physical runtime (less noise), and shorter distances between atoms (more compact registers can host more atoms/qubits).</p>
+<p>The following figure illustrates two key scenarios:</p>
 <p><img alt="Compilation diagram" src="../../../extras/assets/compilation.svg" /></p>
 <p>The green box highlights the valid parameter region for the interaction energy <span class="arithmatex">\(\tilde{J}_{ij}\)</span> and the driving amplitude <span class="arithmatex">\(\tilde{\Omega}\)</span>.
-As described in the <a href="../../../get_started/qoolqit_model/">QoolQit model</a> page, the interaction energy is bounded by 1 by construction: QoolQit's adimensionalization enforces <span class="arithmatex">\(\tilde{J}{ij} = J_{ij}/J_{max}^{d} \leq 1\)</span> across all devices.
-The driving amplitude (more precisely, its maximum over time) is instead constrained to a device-dependent upper bound, <span class="arithmatex">\(\tilde{\Omega} = \Omega/J_{max}^{d} \lesssim \Omega_{max}^{d}/J_{max}^{d} = 0.2\)</span>.</p>
-<p>The key idea is that the program is defined by <strong>ratios</strong>, not by absolute scales. For example, fixing the ratio <span class="arithmatex">\(\frac{\max_{\tilde{t}}\tilde{\Omega}}{\tilde{J}}\)</span> defines a line in the <span class="arithmatex">\((\tilde{J},\tilde{\Omega})\)</span> plane. Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here <span class="arithmatex">\(\max_{\tilde{t}}\)</span> stands for the maximum over time).</p>
-<p>We define two programs by specifying the maximum amplitude in time <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}\)</span> and the interaction between nearest neighbor atoms in the register <span class="arithmatex">\(\tilde{J}=\frac{1}{\tilde{a^6}}\)</span>. We define the following tuples:</p>
+As described in the <a href="../../../get_started/qoolqit_model/">QoolQit model</a> page, the interaction energy is bounded by 1 by construction: QoolQit's adimensionalization enforces <span class="arithmatex">\(\tilde{J}_{ij} = J_{ij}/J_{\max}^{d} \leq 1\)</span> across all devices.
+The driving amplitude (more precisely, its maximum over time) is instead constrained to a device-dependent upper bound. In this example, we take <span class="arithmatex">\(\Omega_{\max}^{d}/J_{\max}^{d} = 0.2\)</span>, so that <span class="arithmatex">\(\tilde{\Omega} = \Omega/J_{\max}^{d} \lesssim 0.2\)</span>.</p>
+<p>The key idea is that the program is defined by <strong>ratios</strong>, not by absolute scales. For example, fixing the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J}\)</span> defines a line in the <span class="arithmatex">\((\tilde{J},\tilde{\Omega})\)</span> plane.
+Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here <span class="arithmatex">\(\max_{\tilde{t}}\)</span> stands for the maximum over time).</p>
+<p>We define two programs by specifying the maximum amplitude in time <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}\)</span> and the interaction between nearest neighbor atoms in the register <span class="arithmatex">\(\tilde{J}\)</span>.
+We define the following tuples:</p>
 <ol>
 <li><span class="arithmatex">\((\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4)\)</span>,</li>
 <li><span class="arithmatex">\((\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)\)</span></li>
 </ol>
 <p>The lines correspond to the programs with fixed ratio <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}=2/5\)</span> and <span class="arithmatex">\(\tilde{\Omega}/\tilde{J}=1/7\)</span>.
-At compilation QoolQit checks the energy ratio and the valid region of compilation and maximizes the <span class="arithmatex">\(\tilde{\Omega}\)</span>.</p>
+At compilation, QoolQit checks the energy ratio against the device's valid region and rescales the program to maximize <span class="arithmatex">\(\tilde{\Omega}\)</span> within that region.</p>
 <ol>
-<li>The point <span class="arithmatex">\((1,0.4)\)</span> is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 2/5\)</span>.</li>
-<li>The point <span class="arithmatex">\((0.7,0.1)\)</span> is inside, but the drive amplitude can be larger. QoolQit rescales it to the maximum possible <span class="arithmatex">\(\tilde{\Omega}\)</span> while preserving the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7\)</span>.</li>
+<li>
+<p>The point <span class="arithmatex">\((1,0.4)\)</span> is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 2/5\)</span>.
+    In this regime the compiled program runs at <strong>maximum device amplitude</strong>, and the physical atom spacings are larger than the device minimum.</p>
+</li>
+<li>
+<p>The point <span class="arithmatex">\((0.7,0.1)\)</span> is inside the valid region, but the drive amplitude can be larger. QoolQit rescales it to the maximum possible <span class="arithmatex">\(\tilde{\Omega}\)</span> while preserving the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7\)</span>.
+    In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below <span class="arithmatex">\(\Omega_{\max}\)</span>.</p>
+</li>
 </ol>
-<p>The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying dimensionless problem is the same.</p>
-<h4 id="what-changes-under-compilation">What changes under compilation?</h4>
-<p>What is preserved by compilation is the ratio <span class="arithmatex">\(\max_{\tilde t}\tilde\Omega/\tilde J\)</span> — that is, the relative balance between drive and interactions, which defines the line on which the program lives and encodes the physics of the problem.</p>
-<p>What changes are the <strong>dimensionless values themselves</strong>: compilation slides the program along its line, multiplying <span class="arithmatex">\(\tilde J\)</span>, <span class="arithmatex">\(\tilde\Omega\)</span>, and <span class="arithmatex">\(\tilde\delta\)</span> by a common factor <span class="arithmatex">\(\alpha\)</span> chosen as large as possible while keeping the program inside the device's feasible region.</p>
-<p>For instance, compiling the program <span class="arithmatex">\((\tilde J, \max_{\tilde t}\tilde\Omega) = (1, 0.4)\)</span> to <span class="arithmatex">\((0.5, 0.2)\)</span> corresponds to a rescaling factor <span class="arithmatex">\(\alpha = 0.5\)</span>. The ratio <span class="arithmatex">\(2/5\)</span> is preserved, but the dimensionless interaction is halved, meaning the closest pair of atoms is placed further apart and the dimensionless drive is halved so that it saturates the device maximum.</p>
-<p>Finally, compilation also rescales time: if the dimensionless Hamiltonian is multiplied by <span class="arithmatex">\(\alpha\)</span>, dimensionless time must be divided by <span class="arithmatex">\(\alpha\)</span> in order to preserve the unitary evolution. A full derivation and concrete numerical examples are given in <a href="../../../extended_usage/adimensionalization/">Adimensionalization and Compilation</a>.</p>
-<h3 id="working-point-compilation">Working point compilation</h3>
-<p>In progress...</p>
+<p>The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying physics encoded in the program is the same.</p>
+<h3 id="working-point">Working point</h3>
+<p>The working point does not apply any rescaling on top of the dimensionalization of the quantum program.
+Unlike the default maximum energy profile, it preserves the user-chosen physical scales instead of maximizing the device energy scale.
+In terms of the figure above, this is equivalent to fixing a point in the <span class="arithmatex">\((\tilde{J}, \tilde{\Omega})\)</span> plane: if that point lies inside the green region, or more generally satisfies the device specifications, the program will compile.
+It is designed for users who really want to control the precise physical values of drive amplitude, detuning, distances, and time, and opt out of the default compilation profile.
+Finally, the device specifications can be inspected, as shown in <a href="../device_and_compilation/">Devices and Compilation</a>.</p>
 <h2 id="hardware-effects">Hardware effects</h2>
-<p>Real quantum hardware introduces deviations between the ideal compiled program and its actual execution. These effects can be categorized into two main classes: hardware modulation and noise sources.</p>
-<p>Importantly, in both cases, these effects can be included by configuring emulators, as detailed in the <a href="../../execution/execution/">Execution</a> page of this documentation.</p>
+<p>Real quantum hardware introduces deviations between the ideal compiled program and its actual execution.
+These effects can be categorized into two main classes: hardware modulation and noise sources.
+Importantly, in both cases, these effects can be included by configuring emulators, as detailed in the <a href="../../execution/execution/">Execution</a> page of this documentation.</p>
 <h3 id="hardware-modulation">Hardware modulation</h3>
 <p><strong>Hardware modulation</strong> arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions) the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
 The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in <a href="../device_and_compilation/">Devices and Compilation</a>. Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag <code>with_hardware_modulation=true</code>, as described in <a href="../../execution/execution/">Execution</a>.</p>

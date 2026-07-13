@@ -1152,17 +1152,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#physical-interpretation-of-dimensionless-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Physical interpretation of dimensionless time
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#special-case-a-single-atom" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1967,17 +1956,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#physical-interpretation-of-dimensionless-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Physical interpretation of dimensionless time
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#special-case-a-single-atom" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2015,7 +1993,7 @@
 <li>distinguish drive-limited and interaction-limited compilation,</li>
 <li>see why time must be rescaled together with the Hamiltonian</li>
 </ul>
-<p>This section describes how QoolQit’s compilation maps an abstract programs onto actual hardware.</p>
+<p>This section describes how QoolQit's compilation maps an abstract programs onto actual hardware.</p>
 <p>This page assumes the knowledge of the <a href="../../get_started/qoolqit_model/">QoolQit Model</a> page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.</p>
 <h2 id="compilation_1">Compilation</h2>
 <h3 id="from-dimensionless-programs-to-physical-hardware">From dimensionless programs to physical hardware</h3>
@@ -2108,19 +2086,9 @@ i\frac{d}{d\tilde t}|\psi(\tilde t) \rangle = \tilde H(\tilde t)|\psi(\tilde t) 
 T \;=\; \frac{\tilde T/\alpha}{J_{\text{max}}} \;=\; \frac{\tilde T}{\alpha\,J_{\text{max}}}.
 \]</div>
 <p>A larger <span class="arithmatex">\(\alpha\)</span>, that is a program with larger amplitude and interaction, yields a shorter physical runtime. This is consistent with the compilation strategy: by maximizing <span class="arithmatex">\(\alpha\)</span>, QoolQit produces the fastest physical implementation compatible with the device constraints.</p>
-<h2 id="physical-interpretation-of-dimensionless-time">Physical interpretation of dimensionless time</h2>
-<p>Let us define the strongest dimensional interaction <strong>present in the register</strong> as</p>
-<div class="arithmatex">\[
-\tilde J_{\text{max}} \;=\; \max_{i&lt;j}\tilde J_{ij} \;\leq\; 1.
-\]</div>
-<p>In an interacting many-body system, the product <span class="arithmatex">\(\tilde J_{\text{max}}\tilde t\)</span> (and so the time <span class="arithmatex">\(\tilde t\)</span>) has a natural physical interpretation in terms of the buildup and propagation of correlations. Following the Lieb-Robinson picture, correlations spread at a finite speed set by the interaction scale. In concrete:</p>
-<ul>
-<li><span class="arithmatex">\(\tilde t \ll 1/\tilde{J}_{\text{max}}\)</span> corresponds to evolution that is too short for interactions to significantly affect the dynamics;</li>
-<li><span class="arithmatex">\(\tilde t \sim 1/\tilde{J}_{\text{max}}\)</span> corresponds to the timescale on which nearest-neighbor correlations can begin to emerge;</li>
-<li><span class="arithmatex">\(\tilde t \sim n/\tilde{J}_{\text{max}}\)</span> can be interpreted as the timescale on which correlations may have propagated across a distance of order <span class="arithmatex">\(n\)</span> lattice spacings, assuming approximately ballistic spreading.</li>
-</ul>
 <h2 id="special-case-a-single-atom">Special case: a single atom</h2>
-<p>The interpretation above relies on interactions being physically present. For a single atom, however, there are no pairwise interaction terms, so <span class="arithmatex">\(J_0\)</span> is no longer an intrinsic dynamical scale of the problem.</p>
+<p>The interpretation above relies on interactions being physically present.
+For a single atom, however, there are no pairwise interaction terms, so <span class="arithmatex">\(J_0\)</span> is no longer an intrinsic dynamical scale of the problem.</p>
 <p>Mathematically, the dimensionless convention still works exactly as before: one may still define</p>
 <div class="arithmatex">\[
 \tilde t = \frac{J_0}{\hbar}t
