@@ -1,4 +1,4 @@
-name: Build docs and preview on PRs
+name: Docs
 
 on:
     pull_request:
@@ -12,6 +12,7 @@ concurrency: preview-${{ github.ref }}
 
 jobs:
     build-docs:
+        name: Build docs
         if: github.event.action != 'closed' # No need to build docs when PR is closed
         runs-on: ubuntu-latest
         steps:
@@ -35,6 +36,7 @@ jobs:
                   path: ./site/
 
     deploy-docs-preview:
+        name: Deploy docs preview
         runs-on: ubuntu-latest
         needs: build-docs
         if: always()
