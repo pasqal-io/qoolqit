@@ -100,7 +100,7 @@ class Register:
 
         Args:
             ax: an optional matplotlib Axes instance to draw on.
-                If None, it will use the current Axes.
+                If None, a new Axes will be created.
         """
         if ax is None:
             _, ax = plt.subplots()
