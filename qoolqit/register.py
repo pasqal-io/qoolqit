@@ -95,18 +95,19 @@ class Register:
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
 
-    def draw(self, ax: Axes | None = None) -> None:
+    def draw(self, ax: Axes | None = None, marker_size: int = 100) -> None:
         """Draw the register.
 
         Args:
             ax: an optional matplotlib Axes instance to draw on.
                 If None, a new Axes will be created.
+            marker_size: size of the qubit markers in points squared. Defaults to 100.
         """
         if ax is None:
             _, ax = plt.subplots()
 
-        marker_size = 100
-        annotation_offset = marker_size**0.5  # in points, 2 times the marker radius
+        marker_radius = marker_size**0.5 / 2  # in points
+        annotation_offset = 2 * marker_radius  # place label just outside the marker
 
         x, y = zip(*self.qubits.values())
         ax.scatter(x, y, s=marker_size, color="green")
