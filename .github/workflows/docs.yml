@@ -59,4 +59,4 @@ jobs:
               with:
                   source-dir: ./site/
                   preview-branch: gh-pages
-                  qr_code: false
+                  qr-code: false
