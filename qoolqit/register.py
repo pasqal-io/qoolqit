@@ -1,15 +1,10 @@
 from __future__ import annotations
 
-from math import ceil
-
 import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
-from matplotlib.ticker import MultipleLocator
+from matplotlib.axes import Axes
 
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
 from qoolqit.graphs.utils import radial_distances
-
-__all__ = ["Register"]
 
 
 class Register:
@@ -100,46 +95,34 @@ class Register:
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
 
-    def draw(self, return_fig: bool = False) -> Figure | None:
+    def draw(self, ax: Axes | None = None) -> None:
         """Draw the register.
 
-        Arguments:
-            return_fig: boolean argument to return the matplotlib figure.
+        Args:
+            ax: an optional matplotlib Axes instance to draw on.
+                If None, it will use the current Axes.
         """
-        fig, ax = plt.subplots(1, 1, figsize=(4, 4), dpi=150)
-        ax.set_aspect("equal")
+        if ax is None:
+            _, ax = plt.subplots()
 
-        x_coords, y_coords = zip(*self.qubits.values())
-        x_min, x_max = min(x_coords), max(x_coords)
-        y_min, y_max = min(y_coords), max(y_coords)
+        marker_size = 100
+        annotation_offset = marker_size**0.5  # in points, 2 times the marker radius
 
-        grid_x_min, grid_x_max = min(-1, x_min), max(1, x_max)
-        grid_y_min, grid_y_max = min(-1, y_min), max(1, y_max)
+        x, y = zip(*self.qubits.values())
+        ax.scatter(x, y, s=marker_size, color="green")
 
-        grid_scale = ceil(max(grid_x_max - grid_x_min, grid_y_max - grid_y_min))
+        for i, qubit_id in enumerate(self.qubits_ids):
+            ax.annotate(
+                qubit_id,
+                xy=(x[i], y[i]),
+                xytext=(annotation_offset, annotation_offset),
+                textcoords="offset points",
+                ha="center",
+                va="center",
+            )
 
         ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
         ax.set_axisbelow(True)
         ax.set_xlabel("x")
         ax.set_ylabel("y")
-
-        eps = 0.05 * grid_scale
-        ax.set_xlim(grid_x_min - eps, grid_x_max + eps)
-        ax.set_ylim(grid_y_min - eps, grid_y_max + eps)
-
-        possible_multiples = [0.2, 0.25, 0.5, 1.0, 2.0, 2.5, 5.0, 10.0]
-        grid_multiple = min(possible_multiples, key=lambda x: abs(x - grid_scale / 8))
-        majorLocatorX = MultipleLocator(grid_multiple)
-        majorLocatorY = MultipleLocator(grid_multiple)
-        ax.xaxis.set_major_locator(majorLocatorX)
-        ax.yaxis.set_major_locator(majorLocatorY)
-
-        ax.scatter(x_coords, y_coords, s=50, color="darkgreen")
-
-        ax.tick_params(axis="both", which="both", labelbottom=True, labelleft=True, labelsize=8)
-
-        if return_fig:
-            plt.close()
-            return fig
-        else:
-            return None
+        ax.margins(0.1)
