@@ -1,0 +1,59 @@
+name: Build docs and preview on PRs
+
+on:
+    pull_request:
+        types:
+            - opened
+            - reopened
+            - synchronize
+            - closed
+
+concurrency: preview-${{ github.ref }}
+
+jobs:
+    build-docs:
+        if: github.event.action != 'closed' # No need to build docs when PR is closed
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout QoolQit
+              uses: actions/checkout@v7
+
+            - name: Set up Python
+              uses: actions/setup-python@v6
+              with:
+                  python-version: '3.14'
+
+            - name: Install QoolQit & build documentation
+              run: |
+                pip install -e .[dev]
+                mkdocs build --clean --strict
+
+            - name: Upload site artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: site
+                  path: ./site/
+
+    deploy-docs-preview:
+        runs-on: ubuntu-latest
+        needs: build-docs
+        if: always()
+        permissions:
+            contents: write
+            pull-requests: write
+        steps:
+            - name: Checkout QoolQit
+              uses: actions/checkout@v7
+
+            - name: Download site artifact
+              if: github.event.action != 'closed'
+              uses: actions/download-artifact@v4
+              with:
+                  name: site
+                  path: ./site/
+
+            - name: Deploy preview
+              uses: rossjrw/pr-preview-action@v1
+              with:
+                  source-dir: ./site/
+                  preview-branch: gh-pages
