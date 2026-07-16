@@ -29,3 +29,8 @@ repos:
     rev: v1.0.0
     hooks:
       - id: pydocstringformatter
+
+- repo: https://github.com/kynan/nbstripout
+  rev: 0.9.1
+  hooks:
+    - id: nbstripout
