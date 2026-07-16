@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from math import ceil
+from typing import Any
 
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
@@ -9,25 +10,35 @@ from matplotlib.ticker import MultipleLocator
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
 from qoolqit.graphs.utils import radial_distances
 
-__all__ = ["Register"]
-
 
 class Register:
     """The Register in QoolQit, representing a set of qubits with coordinates."""
 
-    def __init__(self, qubits: dict) -> None:
+    def __init__(self, qubits: dict[Any, tuple[float, float]]) -> None:
         """Default constructor for the Register.
 
-        Arguments:
+        Args:
             qubits: a dictionary of qubits and respective coordinates {q: (x, y), ...}.
+
+        Raises:
+            TypeError: If the qubits argument is not a dictionary.
+            ValueError: If the qubits argument is empty.
+            TypeError: If the coordinate for a qubit is not a 2-tuple (x, y).
         """
         if not isinstance(qubits, dict):
             raise TypeError(
                 "Register must be initialized with a dictionary of "
-                "qubits and respective coordinates {q: (x, y), ...}."
+                "qubits ids and respective coordinates {q: (x, y), ...}."
             )
+        if len(qubits) == 0:
+            raise ValueError("Register cannot be empty.")
+        for key, val in qubits.items():
+            if not (isinstance(val, (tuple, list)) and len(val) == 2):
+                raise TypeError(
+                    f"Coordinate for qubit {key!r} must be a 2-tuple (x, y), got {val!r}."
+                )
 
-        self._qubits: dict = qubits
+        self._qubits = qubits
 
     @classmethod
     def from_graph(cls, graph: DataGraph) -> Register:
