@@ -131,7 +131,7 @@ plugins:
 
 # For mathjax
 extra_javascript:
-  - javascripts/mathjax.js
+  - extras/javascripts/mathjax.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML
 
