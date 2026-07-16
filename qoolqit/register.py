@@ -107,7 +107,7 @@ class Register:
             _, ax = plt.subplots()
 
         marker_radius = marker_size**0.5 / 2  # in points
-        annotation_offset = 2 * marker_radius  # place label just outside the marker
+        annotation_offset = 1.5 * marker_radius  # place label just outside the marker
 
         x, y = zip(*self.qubits.values())
         ax.scatter(x, y, s=marker_size, color="green")
