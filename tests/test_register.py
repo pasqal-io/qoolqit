@@ -9,6 +9,56 @@ from qoolqit.graphs import DataGraph
 from qoolqit.register import Register
 
 
+@pytest.mark.parametrize(
+    "qubits",
+    [
+        {"a": (0, 0), "b": (1, 0), "c": (0, 1)},
+        {1: [0, 0], 2: [1, 0]},
+        {0: np.array([0.1, 1.2]), 1: np.array([-0.7, -0.4]), 2: np.array([5.0, 0.0])},
+    ],
+)
+def test_register_init(qubits: dict) -> None:
+    reg = Register(qubits)
+
+    assert reg.n_qubits == len(qubits)
+
+    for k, v in reg.qubits.items():
+        assert k in qubits
+        np.testing.assert_allclose(v, qubits[k])
+    assert reg.qubits_ids == list(qubits.keys())
+
+
+def test_empty_register() -> None:
+    with pytest.raises(ValueError, match="empty"):
+        Register({})  # type: ignore [call-arg]
+
+
+def test_wrong_qubits_type() -> None:
+    with pytest.raises(
+        TypeError,
+        match="Register must be initialized with a dictionary of ",
+    ):
+        Register("I'm not a dict")  # type: ignore [arg-type]
+
+
+@pytest.mark.parametrize(
+    "qubits",
+    [
+        {0: (1, 2, 3)},
+        {"q0": np.array([1.0, -2.0]), "q1": np.array([[-1.0, -1.0], [-1.0, -1.0]])},
+        {7: 32},
+    ],
+)
+def test_invalid_coordinates(qubits: dict) -> None:
+    with pytest.raises(ValueError, match="must be a tuple, list, or array of length 2, got"):
+        Register(qubits)
+
+
+def test_wrong_from_coordinates_type() -> None:
+    with pytest.raises(TypeError, match="from_coordinates"):
+        Register.from_coordinates({"a": (0.0, 0.0)})  # type: ignore [arg-type]
+
+
 @pytest.mark.parametrize("n_qubits", [3, 4, 10])
 def test_register_from_coordinates(n_qubits: int) -> None:
 

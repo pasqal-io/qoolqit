@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from math import ceil
-from typing import Any
 
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.figure import Figure
 from matplotlib.ticker import MultipleLocator
 
@@ -12,9 +12,30 @@ from qoolqit.graphs.utils import radial_distances
 
 
 class Register:
-    """The Register in QoolQit, representing a set of qubits with coordinates."""
+    """The Register in QoolQit, representing a set of qubits with coordinates.
 
-    def __init__(self, qubits: dict[Any, tuple[float, float]]) -> None:
+    Attributes:
+        qubits: a dictionary of qubits and respective coordinates {q: (x, y),...}.
+        qubit_ids: a list of qubit ids.
+        n_qubits: the number of qubits in the register.
+
+    Examples:
+        From a dictionary of qubit ids and coordinates:
+
+        >>> reg = Register({"a": (0.0, 0.0), "b": (1.0, 0.0), "c": (0.0, 1.0)})
+        >>> reg = Register({0: (0.0, 0.0), 1: (1.0, 0.0), 2: (0.0, 1.0)})
+
+        From a list of coordinates (qubit ids are assigned automatically as integers):
+
+        >>> reg = Register.from_coordinates([(0.0, 0.0), (1.0, 0.0), (0.0, 1.0)])
+
+        Using numpy arrays as coordinates:
+
+        >>> import numpy as np
+        >>> reg = Register({"a": np.array([0.0, 0.0]), "b": np.array([1.0, 0.0])})
+    """
+
+    def __init__(self, qubits: dict) -> None:
         """Default constructor for the Register.
 
         Args:
@@ -23,7 +44,7 @@ class Register:
         Raises:
             TypeError: If the qubits argument is not a dictionary.
             ValueError: If the qubits argument is empty.
-            TypeError: If the coordinate for a qubit is not a 2-tuple (x, y).
+            ValueError: If the coordinate for a qubit is not a tuple, list or array of length 2.
         """
         if not isinstance(qubits, dict):
             raise TypeError(
@@ -32,13 +53,22 @@ class Register:
             )
         if len(qubits) == 0:
             raise ValueError("Register cannot be empty.")
+
         for key, val in qubits.items():
-            if not (isinstance(val, (tuple, list)) and len(val) == 2):
-                raise TypeError(
-                    f"Coordinate for qubit {key!r} must be a 2-tuple (x, y), got {val!r}."
+            val_array = val
+            if isinstance(val, (tuple, list)):
+                val_array = np.asarray(val, dtype=float)
+            valid = val_array.ndim == 1 and val_array.shape[0] == 2
+            if not valid:
+                raise ValueError(
+                    f"Coordinate for qubit {key!r} must be a tuple, list, or array of length 2, "
+                    f"got {val!r}."
                 )
 
-        self._qubits = qubits
+        self._qubits = {
+            key: (np.asarray(val, dtype=float) if isinstance(val, (tuple, list)) else val)
+            for key, val in qubits.items()
+        }
 
     @classmethod
     def from_graph(cls, graph: DataGraph) -> Register:
@@ -65,15 +95,16 @@ class Register:
         """
         if not isinstance(coords, list):
             raise TypeError(
-                "Register must be initialized with a dictionary of qubit and coordinates."
+                "Register.from_coordinates must be initialized with a list of"
+                " coordinates [(x, y), ...]."
             )
         coords_dict = {i: pos for i, pos in enumerate(coords)}
         return cls(coords_dict)
 
     @property
     def qubits(self) -> dict:
-        """Returns the dictionary of qubits and respective coordinates."""
-        return self._qubits
+        """Returns a copy of the dictionary of qubits and respective coordinates."""
+        return dict(self._qubits)
 
     @property
     def qubits_ids(self) -> list:
