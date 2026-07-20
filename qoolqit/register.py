@@ -22,10 +22,10 @@ except ImportError:
 
 
 class Register:
-    """The Register in QoolQit, representing a set of qubits with coordinates.
+    """The Register in QoolQit, representing a set of qubit ids with coordinates.
 
     Attributes:
-        qubits: a dictionary of qubits and respective coordinates {q: (x, y),...}.
+        qubits: a dictionary of qubit ids and respective coordinates {q: (x, y),...}.
         qubits_ids: a list of qubit ids.
         n_qubits: the number of qubits in the register.
 
@@ -43,6 +43,11 @@ class Register:
 
         >>> import numpy as np
         >>> reg = Register({"a": np.array([0.0, 0.0]), "b": np.array([1.0, 0.0])})
+
+        Using torch tensors as coordinates:
+
+        >>> import torch
+        >>> reg = Register({"a": torch.tensor([0.0, 0.0]), "b": torch.tensor([1.0, 0.0])})
     """
 
     def __init__(
