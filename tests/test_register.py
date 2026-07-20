@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import importlib
 import random
 from unittest import mock
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 import torch
@@ -12,15 +14,17 @@ from qoolqit.register import Register
 
 
 def test_register_without_torch() -> None:
+    import qoolqit.register as register_module
+
     # Remove torch from sys.modules and block the import
     with mock.patch.dict("sys.modules", {"torch": None}):
-        # Re-import register so the try/except runs again
-        import importlib
+        # Reload register so the try/except runs again
+        importlib.reload(register_module)
+        assert register_module._has_torch is False
 
-        import qoolqit.register as reg_module
-
-        importlib.reload(reg_module)
-        assert reg_module._has_torch is False
+    # Reload the module to its original state
+    importlib.reload(register_module)
+    assert register_module._has_torch is True
 
 
 @pytest.mark.parametrize(
@@ -144,3 +148,14 @@ def test_radial_distances() -> None:
     radial_dists = register.radial_distances()
     expected_radial_distances = {i: 0.3 * np.sqrt(2) for i in range(3)}
     assert radial_dists == expected_radial_distances
+
+
+def test_draw() -> None:
+    # Just check that no exception is raised
+    reg = Register({"a": (0.0, 0.0), "b": (1.0, 0.0)})
+    reg.draw()
+
+    # to ax
+    fig, ax = plt.subplots()
+    reg.draw(ax=ax, marker_size=50)
+    plt.close(fig)
