@@ -3035,19 +3035,12 @@ $$</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># TFIM reference parameters: the quantum critical point sits at h = J.</span>
-<span class="n">J</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># TFIM transverse field; the critical point sits at h = J = 1</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">1.0</span>
 
-<span class="c1"># --- Mapping to Rydberg drive parameters -------------------------------------</span>
-<span class="c1"># The derived Ising form carries J_eff = J_nn/4 on sigma^z sigma^z and h_eff = Omega/2</span>
-<span class="c1"># on sigma^x. Ground states depend only on the RATIO h_eff/J_eff, so matching it to</span>
-<span class="c1"># the target ratio h/J gives  Omega = (J_nn/2) * (h/J).</span>
-<span class="n">J_nn</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">interactions</span><span class="p">()[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>      <span class="c1"># nearest-neighbour coupling, = 1 at unit spacing</span>
-<span class="n">OMEGA_R</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">J_nn</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="n">J</span><span class="p">)</span>           <span class="c1"># -&gt; 1/2 at the critical point</span>
-
-<span class="c1"># Self-check: the effective model must sit exactly at the TFIM critical ratio.</span>
-<span class="n">ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">OMEGA_R</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">J_nn</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>       <span class="c1"># = h_eff / J_eff</span>
-<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">ratio</span><span class="p">,</span> <span class="n">h</span> <span class="o">/</span> <span class="n">J</span><span class="p">),</span> <span class="s2">"drive is not at the TFIM critical ratio"</span>
+<span class="c1"># Mapping to Rydberg parameters</span>
+<span class="n">J_nn</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">interactions</span><span class="p">()[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>   <span class="c1"># nearest-neighbour coupling, = 1 at unit spacing</span>
+<span class="n">OMEGA_R</span> <span class="o">=</span> <span class="n">J_nn</span> <span class="o">/</span> <span class="mi">2</span>                    <span class="c1"># = 1/2 at the critical point</span>
 
 <span class="c1"># Residual local detuning due to interactions with neighbors</span>
 <span class="n">hz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
@@ -3064,22 +3057,14 @@ $$</p>
 <span class="n">device</span> <span class="o">=</span> <span class="n">AnalogDevice</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"N = </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> atoms on a ring"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"J_nn = </span><span class="si">{</span><span class="n">J_nn</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">   h_eff/J_eff = </span><span class="si">{</span><span class="n">ratio</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  (must equal h/J = </span><span class="si">{</span><span class="n">h</span><span class="o">/</span><span class="n">J</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> at criticality)"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Omega = </span><span class="si">{</span><span class="n">OMEGA_R</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">   delta = </span><span class="si">{</span><span class="n">DELTA</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"J_nn = </span><span class="si">{</span><span class="n">J_nn</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">   Omega = </span><span class="si">{</span><span class="n">OMEGA_R</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">   delta = </span><span class="si">{</span><span class="n">DELTA</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># TFIM reference parameters: the quantum critical point sits at h = J.
-J, h = 1.0, 1.0
+<div class="clipboard-copy-txt" id="cell-4"># TFIM transverse field; the critical point sits at h = J = 1
+h = 1.0
 
-# --- Mapping to Rydberg drive parameters -------------------------------------
-# The derived Ising form carries J_eff = J_nn/4 on sigma^z sigma^z and h_eff = Omega/2
-# on sigma^x. Ground states depend only on the RATIO h_eff/J_eff, so matching it to
-# the target ratio h/J gives  Omega = (J_nn/2) * (h/J).
-J_nn = graph.interactions()[(0, 1)]      # nearest-neighbour coupling, = 1 at unit spacing
-OMEGA_R = 0.5 * J_nn * (h / J)           # -&gt; 1/2 at the critical point
-
-# Self-check: the effective model must sit exactly at the TFIM critical ratio.
-ratio = (OMEGA_R / 2) / (J_nn / 4)       # = h_eff / J_eff
-assert np.isclose(ratio, h / J), "drive is not at the TFIM critical ratio"
+# Mapping to Rydberg parameters
+J_nn = graph.interactions()[(0, 1)]   # nearest-neighbour coupling, = 1 at unit spacing
+OMEGA_R = J_nn / 2                    # = 1/2 at the critical point
 
 # Residual local detuning due to interactions with neighbors
 hz = np.zeros(N)
@@ -3096,8 +3081,7 @@ register = Register.from_graph(graph)
 device = AnalogDevice()
 
 print(f"N = {N} atoms on a ring")
-print(f"J_nn = {J_nn:.4f}   h_eff/J_eff = {ratio:.4f}  (must equal h/J = {h/J:.1f} at criticality)")
-print(f"Omega = {OMEGA_R:.4f}   delta = {DELTA:.4f}")</div>
+print(f"J_nn = {J_nn:.4f}   Omega = {OMEGA_R:.4f}   delta = {DELTA:.4f}")</div>
 </div>
 </div>
 </div>
@@ -3111,8 +3095,7 @@ print(f"Omega = {OMEGA_R:.4f}   delta = {DELTA:.4f}")</div>
 <pre>Local detuning due to interactions: [1.02287553 1.02287553 1.02287553 1.02287553 1.02287553 1.02287553
  1.02287553 1.02287553 1.02287553 1.02287553 1.02287553 1.02287553]
 N = 12 atoms on a ring
-J_nn = 1.0000   h_eff/J_eff = 1.0000  (must equal h/J = 1.0 at criticality)
-Omega = 0.5000   delta = 1.0229
+J_nn = 1.0000   Omega = 0.5000   delta = 1.0229
 </pre>
 </div>
 </div>
