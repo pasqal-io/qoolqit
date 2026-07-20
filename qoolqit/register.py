@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
 from matplotlib.ticker import MultipleLocator
+from numpy.typing import ArrayLike
 
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
 from qoolqit.graphs.utils import radial_distances
@@ -46,7 +47,9 @@ class Register:
         >>> reg = Register({"a": np.array([0.0, 0.0]), "b": np.array([1.0, 0.0])})
     """
 
-    def __init__(self, qubits: dict) -> None:
+    def __init__(
+        self, qubits: dict[str, ArrayLike | torch.Tensor] | dict[int, ArrayLike | torch.Tensor]
+    ) -> None:
         """Default constructor for the Register.
 
         Args:
