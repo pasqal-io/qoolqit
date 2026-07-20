@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from math import ceil
+from typing import TYPE_CHECKING
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,13 +11,23 @@ from matplotlib.ticker import MultipleLocator
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
 from qoolqit.graphs.utils import radial_distances
 
+if TYPE_CHECKING:
+    import torch
+
+try:
+    import torch
+
+    _has_torch = True
+except ImportError:
+    _has_torch = False
+
 
 class Register:
     """The Register in QoolQit, representing a set of qubits with coordinates.
 
     Attributes:
         qubits: a dictionary of qubits and respective coordinates {q: (x, y),...}.
-        qubit_ids: a list of qubit ids.
+        qubits_ids: a list of qubit ids.
         n_qubits: the number of qubits in the register.
 
     Examples:
@@ -44,7 +55,8 @@ class Register:
         Raises:
             TypeError: If the qubits argument is not a dictionary.
             ValueError: If the qubits argument is empty.
-            ValueError: If the coordinate for a qubit is not a tuple, list or array of length 2.
+            ValueError: If the coordinate for a qubit is not a tuple, list or
+                numpy or torch array of length 2.
         """
         if not isinstance(qubits, dict):
             raise TypeError(
@@ -54,21 +66,26 @@ class Register:
         if len(qubits) == 0:
             raise ValueError("Register cannot be empty.")
 
+        parsed = {}
         for key, val in qubits.items():
-            val_array = val
-            if isinstance(val, (tuple, list)):
-                val_array = np.asarray(val, dtype=float)
-            valid = val_array.ndim == 1 and val_array.shape[0] == 2
-            if not valid:
+            try:
+                if _has_torch and isinstance(val, torch.Tensor):
+                    parsed[key] = torch.asarray(val, dtype=torch.float64)
+                else:
+                    parsed[key] = np.asarray(val, dtype=float)
+            except (ValueError, TypeError) as err:
                 raise ValueError(
-                    f"Coordinate for qubit {key!r} must be a tuple, list, or array of length 2, "
-                    f"got {val!r}."
+                    f"Coordinate for qubit {key!r} must be castable to an array of floats."
+                ) from err
+
+            converted = parsed[key]
+            if converted.ndim != 1 or converted.shape[0] != 2:
+                raise ValueError(
+                    f"Coordinate for qubit {key!r} must be a 1D "
+                    f"tuple, list, or array of length 2, got {val!r}."
                 )
 
-        self._qubits = {
-            key: (np.asarray(val, dtype=float) if isinstance(val, (tuple, list)) else val)
-            for key, val in qubits.items()
-        }
+        self._qubits = parsed
 
     @classmethod
     def from_graph(cls, graph: DataGraph) -> Register:
@@ -114,7 +131,7 @@ class Register:
     @property
     def n_qubits(self) -> int:
         """Number of qubits in the Register."""
-        return len(self.qubits)
+        return len(self._qubits)
 
     def distances(self) -> dict:
         """Distance between each qubit pair."""
@@ -151,7 +168,14 @@ class Register:
         fig, ax = plt.subplots(1, 1, figsize=(4, 4), dpi=150)
         ax.set_aspect("equal")
 
-        x_coords, y_coords = zip(*self.qubits.values())
+        x_coords, y_coords = zip(
+            *[
+                np.asarray(
+                    v.detach() if (_has_torch and isinstance(v, torch.Tensor)) else v, dtype=float
+                )
+                for v in self.qubits.values()
+            ]
+        )
         x_min, x_max = min(x_coords), max(x_coords)
         y_min, y_max = min(y_coords), max(y_coords)
 

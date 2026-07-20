@@ -1,12 +1,26 @@
 from __future__ import annotations
 
 import random
+from unittest import mock
 
 import numpy as np
 import pytest
+import torch
 
 from qoolqit.graphs import DataGraph
 from qoolqit.register import Register
+
+
+def test_register_without_torch() -> None:
+    # Remove torch from sys.modules and block the import
+    with mock.patch.dict("sys.modules", {"torch": None}):
+        # Re-import register so the try/except runs again
+        import importlib
+
+        import qoolqit.register as reg_module
+
+        importlib.reload(reg_module)
+        assert reg_module._has_torch is False
 
 
 @pytest.mark.parametrize(
@@ -15,17 +29,26 @@ from qoolqit.register import Register
         {"a": (0, 0), "b": (1, 0), "c": (0, 1)},
         {1: [0, 0], 2: [1, 0]},
         {0: np.array([0.1, 1.2]), 1: np.array([-0.7, -0.4]), 2: np.array([5.0, 0.0])},
+        {
+            "q0": torch.tensor([0.0, 0.0], dtype=torch.float64),
+            "q1": torch.tensor([1.2, 0.0], dtype=torch.float64),
+            "q2": torch.tensor([0.6, 1.04], dtype=torch.float64),
+        },
     ],
 )
-def test_register_init(qubits: dict) -> None:
+def test_init(qubits: dict) -> None:
     reg = Register(qubits)
 
     assert reg.n_qubits == len(qubits)
+    assert reg.qubits_ids == list(qubits.keys())
 
     for k, v in reg.qubits.items():
         assert k in qubits
-        np.testing.assert_allclose(v, qubits[k])
-    assert reg.qubits_ids == list(qubits.keys())
+        if isinstance(v, torch.Tensor):
+            assert torch.allclose(v, qubits[k])
+        else:
+            assert isinstance(v, np.ndarray)
+            np.testing.assert_allclose(v, qubits[k])
 
 
 def test_empty_register() -> None:
@@ -33,7 +56,7 @@ def test_empty_register() -> None:
         Register({})  # type: ignore [call-arg]
 
 
-def test_wrong_qubits_type() -> None:
+def test_init_wrong_qubits_type() -> None:
     with pytest.raises(
         TypeError,
         match="Register must be initialized with a dictionary of ",
@@ -49,12 +72,25 @@ def test_wrong_qubits_type() -> None:
         {7: 32},
     ],
 )
-def test_invalid_coordinates(qubits: dict) -> None:
-    with pytest.raises(ValueError, match="must be a tuple, list, or array of length 2, got"):
+def test_init_invalid_coordinate_shape(qubits: dict) -> None:
+    with pytest.raises(ValueError, match="must be a 1D tuple, list, or array of length 2, got"):
         Register(qubits)
 
 
-def test_wrong_from_coordinates_type() -> None:
+@pytest.mark.parametrize(
+    "qubits",
+    [
+        {"3": np.array(["a", "b"])},
+    ],
+)
+def test_init_invalid_coordinate_type(qubits: dict) -> None:
+    with pytest.raises(
+        ValueError, match="Coordinate for qubit '3' must be castable to an array of floats."
+    ):
+        Register(qubits)
+
+
+def test_from_coordinates_wrong_type() -> None:
     with pytest.raises(TypeError, match="from_coordinates"):
         Register.from_coordinates({"a": (0.0, 0.0)})  # type: ignore [arg-type]
 
