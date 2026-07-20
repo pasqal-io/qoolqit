@@ -1,93 +1,100 @@
-In this page, you will learn how to:
+Before reading this page, we suggest starting with the [Get Started: Programming a Neutral Atom QPU](../../get_started/qoolqit_model.md) guide, which introduces the QoolQit dimensionless model and provides a first insight into compilation.
 
-- create built-in QoolQit devices,
-- fetch available hardware devices from a connection,
-- build a QoolQit device from a Pulser device,
-- understand what compilation does in QoolQit,
-- compile a dimensionless program to a target device,
-- inspect the compiled Pulser `Sequence`,
-- visualize both the original program and its compiled version.
+On this page, you will learn about:
 
----
+- Compilation profiles: default and working point
+- Hardware modulation and noise emulation
+
 
 ## Compiling a quantum program
 
-A QoolQit program is written entirely in dimensionless units: qubit positions are expressed as
-dimensionless coordinates, waveforms carry dimensionless amplitudes and detunings, and time is
-measured in units of a reference interaction energy, that we call $J_0$. This device-agnostic formulation
-means that the same program can be compiled and run on any compatible hardware.
+QoolQit programs are written in dimensionless units, allowing the same program to be compiled and executed on any compatible quantum hardware.
 
-Compilation is the step that converts these dimensionless quantities into concrete physical values
-that a real Pulser device can execute. Concretely, it:
+As a reminder, the compilation process:
 
-1. Selects a physical reference scale $J_0$ that is consistent with the device's hardware constraints.
-2. Converts all dimensionless times, energies, and distances into their physical counterparts.
-3. Builds and returns a Pulser `Sequence` ready for emulation or execution on a QPU.
+- Converts all dimensionless program's parameters, times, energies, and distances into their physical equivalents.
+- Generates a Pulser `Sequence` containing the low-level instructions for QPU execution.
 
-The conversion rules are derived from the requirement that the dimensionless Hamiltonian
-$\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ generate the same unitary evolution.
-A full derivation is given in the [Adimensionalization](../../extended_usage/adimensionalization.md)
-page. The key identities are:
+The conversion rules ensure that the dimensionless Hamiltonian $\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ produce identical unitary evolution.
+For a complete mathematical derivation, see the [Get Started: Programming a Neutral Atom QPU](../../get_started/qoolqit_model.md#derivation) page.
+
+The essential conversion relationships are:
 
 $$
-r_{ij} = \left(\frac{C_6}{J_0}\right)^{1/6}	\tilde{r}_{ij},
+r_{ij} = \left(\frac{C_6}{J_{\max}^{d}}\right)^{1/6} \tilde{r}_{ij},
 \qquad
-\Omega(t) = J_0\,	\tilde{\Omega}(	\tilde{t}),
+\Omega(t) = J_{\max}^{d}\tilde{\Omega}(\tilde{t}),
 \qquad
-\delta(t) = J_0\,	\tilde{\delta}(	\tilde{t}),
+\delta(t) = J_{\max}^{d}\tilde{\delta}(\tilde{t}),
 \qquad
-t = \frac{	\tilde{t}}{J_0}.
+t = \tilde{t}/J_{\max}^{d}.
 $$
 
-Choosing $J_0$ therefore simultaneously sets the physical amplitude scale, the detuning scale,
-the physical runtime, and the physical atom spacings.
+Compiling a QoolQit program to a particular device will set the conversion factor, $J_{\max}^{d}=C_6/(r_{\min}^{d})^6$, which sets the scales for amplitude, detuning, runtime, and atom spacing all at once.
+It is important to note that this constant **depends on the particular hardware** of choice, since $C_6$ is an interaction coefficient that depends on the specific Rydberg level of a specific atomic species used in the QPU, while $r_{\min}^{d}$ is the minimum pairwise distance that can be realized.
 
----
+Finally, when a program is compiled, the compilation output is stored internally as a Pulser `Sequence`, which contains the instructions for QPU execution.
+Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
+For more details about Pulser's scope and capabilities, visit [Pulser documentation](https://docs.pasqal.com/pulser/).
 
-### Default compilation
+## Compilation profiles
+Besides dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will produce in theory a physically equivalent program.
+At the moment, QoolQit provides a simple compilation strategy that seeks to maximize the energy scale of the input program.
 
-A device imposes hardware constraints on the compiled program. The two most important ones for
-compilation are:
+### Maximum energy (default)
+A device imposes hardware constraints and limits the range of parameters in a program.
+The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the minimum atom spacing $r_{\min}^{d}$.
 
-- a **maximum drive amplitude** $\Omega_{\max}$, which defines $J_0$ through
-  the relation $J_0 = \Omega / 	\tilde{\Omega} \le \Omega_{\max} / 	\tilde{\Omega}_{\max}$;
-- a **minimum atom spacing** $r_{\min}$, which defines $J_0$ through the distance
-  relation $r_{ij} = (C_6/J_0)^{1/6}	\tilde{r}_{ij} \ge r_{\min}$, i.e.
-  $J_0 \le C_6 / (r_{\min}/	\tilde{r}_{\min})^6$.
+The maximum energy strategy always picks the **largest energy scale** that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
+Indeed, a larger reference scale realizes the same dimensionless program with a higher drive amplitude (higher signal-to-noise ratio), a shorter physical runtime (less noise), and shorter distances between atoms (more compact registers can host more atoms/qubits).
 
-QoolQit always picks the **largest $J_0$ consistent with these hardware constraints**, because a
-larger reference scale realizes the same dimensionless program with a higher physical amplitude and a
-shorter physical runtime — the most efficient use of the hardware.
+The following figure illustrates two key scenarios:
 
-Which constraint becomes binding first depends on the dimensionless ratio
+![Compilation diagram](../../extras/assets/compilation.svg)
 
-$$
-\frac{\tilde{\Omega}_{\max}}{\tilde{J}_{\max}} = \tilde{\Omega}_{\max} \cdot \tilde{r}_{\min}^6
-$$
+The green box highlights the valid parameter region for the interaction energy $\tilde{J}_{ij}$ and the driving amplitude $\tilde{\Omega}$.
+As described in the [QoolQit model](../../get_started/qoolqit_model.md) page, the interaction energy is bounded by 1 by construction: QoolQit's adimensionalization enforces $\tilde{J}_{ij} = J_{ij}/J_{\max}^{d} \leq 1$ across all devices.
+The driving amplitude (more precisely, its maximum over time) is instead constrained to a device-dependent upper bound. In this example, we take $\Omega_{\max}^{d}/J_{\max}^{d} = 0.2$, so that $\tilde{\Omega} = \Omega/J_{\max}^{d} \lesssim 0.2$.
 
-which characterizes the program, compared with the corresponding device ratio
+The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane.
+Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here $\max_{\tilde{t}}$ stands for the maximum over time).
 
-$$
-\frac{\Omega_{\max}}{J_{\max}} = \frac{\Omega_{\max} \cdot r_{\min}^6}{C_6}.
-$$
+We define two programs by specifying the maximum amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the interaction between nearest neighbor atoms in the register $\tilde{J}$.
+We define the following tuples:
 
-These two example are shown in the following figure
+1. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4)$,
+2. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)$
 
-![Compilation diagram](../../extras/assets/compilation_rationale.svg)
+The lines correspond to the programs with fixed ratio $\tilde{\Omega}/\tilde{J}=2/5$ and $\tilde{\Omega}/\tilde{J}=1/7$.
+At compilation, QoolQit checks the energy ratio against the device's valid region and rescales the program to maximize $\tilde{\Omega}$ within that region.
 
-The users works by default at $\tilde{J}=1.0$. When the program's energy ratio exceeds the device's energy ratio, the drive amplitude bound is reached first (blue line). The largest valid $J_0$ is then obtained by **rescaling the amplitude limit** to the maximum allowed value (as denoted by the arrow).
+1. The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 2/5$.
+    In this regime the compiled program runs at **maximum device amplitude**, and the physical atom spacings are larger than the device minimum.
 
-In this regime the compiled program runs at **maximum device amplitude**, and the physical atom spacings are larger than the device minimum.
-
-When the program's energy ratio is within the device budget, the minimum-spacing constraint is reached first (red line). The largest valid $J_0$ is obtained by **saturating the distance limit**.
-
-In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below $\Omega_{\max}$.
-
-!!! note "QoolQit always maximizes the physical energy scale"
-    In both cases, QoolQit selects the largest feasible reference scale $J_0$. Doing so
-    gives the fastest possible physical runtime for the program, since $t = \tilde{t}/J_0$
-    decreases as $J_0$ increases.
+2. The point $(0.7,0.1)$ is inside the valid region, but the drive amplitude can be larger. QoolQit rescales it to the maximum possible $\tilde{\Omega}$ while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7$.
+    In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below $\Omega_{\max}$.
 
 
-### Working point compilation
-In progress...
+The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying physics encoded in the program is the same.
+
+### Working point
+The working point does not apply any rescaling on top of the dimensionalization of the quantum program.
+Unlike the default maximum energy profile, it preserves the user-chosen physical scales instead of maximizing the device energy scale.
+In terms of the figure above, this is equivalent to fixing a point in the $(\tilde{J}, \tilde{\Omega})$ plane: if that point lies inside the green region, or more generally satisfies the device specifications, the program will compile.
+It is designed for users who really want to control the precise physical values of drive amplitude, detuning, distances, and time, and opt out of the default compilation profile.
+Finally, the device specifications can be inspected, as shown in [Devices and Compilation](./device_and_compilation.ipynb).
+
+## Hardware effects
+Real quantum hardware introduces deviations between the ideal compiled program and its actual execution.
+These effects can be categorized into two main classes: hardware modulation and noise sources.
+Importantly, in both cases, these effects can be included by configuring emulators, as detailed in the [Execution](../execution/execution.ipynb) page of this documentation.
+
+### Hardware modulation
+**Hardware modulation** arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions) the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
+The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in [Devices and Compilation](./device_and_compilation.ipynb). Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag `with_hardware_modulation=true`, as described in [Execution](../execution/execution.ipynb).
+
+### Noise
+**Noise sources** encompass various forms of environmental and systematic errors that introduce unwanted fluctuations or systematic shifts in the quantum system parameters during execution.
+As before, to include noise sources in the emulation of a program, emulators must be configured with the flag `noise_model`, as described in [Execution](../execution/execution.ipynb).
+
+Finally, for more detailed information on [hardware modulation](https://docs.pasqal.com/pulser/tutorials/output_mod_eom/) and [noise sources](https://docs.pasqal.com/pulser/noise_model/), consult the comprehensive discussions available in the Pulser documentation.

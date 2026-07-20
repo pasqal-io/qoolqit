@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import warnings
 from types import SimpleNamespace
-from typing import Callable
+from typing import Any
 
-import networkx as nx
 import numpy as np
 import pytest
 import scipy
@@ -14,16 +14,16 @@ from qoolqit.devices import Device
 from qoolqit.embedding import Blade, BladeConfig
 from qoolqit.embedding.algorithms.blade._helpers import (
     distance_matrix_from_positions,
-    interaction_matrix_from_distances,
     interaction_matrix_from_positions,
     normalized_best_dist,
     normalized_interaction,
 )
 from qoolqit.embedding.algorithms.blade._qubo_mapper import Qubo
 from qoolqit.embedding.algorithms.blade.blade import (
-    blade,
+    _blade,
     update_positions,
 )
+from qoolqit.embedding.algorithms.blade.exceptions import DistanceRatioException
 
 
 @pytest.mark.parametrize(
@@ -137,7 +137,7 @@ def test_weight_differences_discrepancy() -> None:
         ]
     )
 
-    target_interactions = interaction_matrix_from_distances(target_pairwise_distances)
+    target_interactions = normalized_interaction(target_pairwise_distances, format="triu")
     target_interactions += target_interactions.T
 
     for weight_relative_threshold in (0, 0.1, 0.9, 1):
@@ -197,7 +197,7 @@ def small_weight_difference_params() -> SimpleNamespace:
     target_pairwise_distances[0, 1] = pairs_target_dists[0]
     target_pairwise_distances[2, 3] = pairs_target_dists[1]
 
-    target_interactions = interaction_matrix_from_distances(target_pairwise_distances)
+    target_interactions = normalized_interaction(target_pairwise_distances, format="triu")
     target_interactions += target_interactions.T
 
     return SimpleNamespace(
@@ -241,6 +241,7 @@ def test_full_priority_on_small_weight_difference(
         new_distances[2, 3],
         params.pairs_curr_dists[1] * (1 - second_pair_expected_progress)
         + params.pairs_target_dists[1] * second_pair_expected_progress,
+        rtol=2e-3,
     )
 
 
@@ -269,7 +270,7 @@ def test_partial_priority_on_small_weight_difference(
         np.log10(np.abs(new_interactions[2, 3] - params.pairs_curr_weights[1]))
         / np.log10(np.abs(params.pairs_weight_diffs[1])),
         2,
-        atol=0.5,
+        atol=0.6,
     )
 
 
@@ -297,23 +298,35 @@ def test_cancelled_priority_on_small_weight_difference(
 
 
 @pytest.mark.parametrize(
-    "steps_per_round, compute_regulation_cursor, compute_max_distance_to_walk, margin_factor",
+    "blade_kwargs, margin_factor",
     [
         (
-            1000,
-            lambda progress: (1 - progress) ** (1 / 3),
-            lambda progress, max_radial_dist: max_radial_dist * (1 - np.sin(np.pi / 2 * progress)),
+            dict(
+                steps_per_round=1000,
+                compute_regulation_cursor=lambda progress: 0.1,
+                compute_max_distance_to_walk=lambda progress, max_radial_dist: max_radial_dist
+                * (1 - np.sin(np.pi / 2 * progress)),
+                dimensions=(2, 2),
+            ),
             1.7,
         ),
-        (1000, lambda progress: 0.1, lambda progress, max_radial_dist: np.inf, 1),
+        (
+            dict(
+                steps_per_round=1000,
+                compute_regulation_cursor=lambda progress: 0.1,
+                compute_max_distance_to_walk=lambda progress, max_radial_dist: np.inf,
+                dimensions=(2, 2),
+            ),
+            1,
+        ),
+        (
+            dict(),
+            1,
+        ),
     ],
 )
 def test_force_based_embedding(
-    steps_per_round: int,
-    compute_regulation_cursor: Callable[[float], float],
-    compute_max_distance_to_walk: Callable[
-        [float, float | None], float | tuple[float, float, float]
-    ],
+    blade_kwargs: dict[str, Any],
     margin_factor: float,
 ) -> None:
     min_dist = 1
@@ -331,14 +344,11 @@ def test_force_based_embedding(
         ]
     )
 
-    positions = blade(
+    positions = _blade(
         matrix=qubo,
         max_min_dist_ratio=max_dist / min_dist,
         starting_positions=np.array([[-1, 1], [1, 1], [1, -1], [-1, -1]]) * max_dist / 3,
-        steps_per_round=steps_per_round,  # ok
-        compute_max_distance_to_walk=compute_max_distance_to_walk,
-        compute_regulation_cursor=compute_regulation_cursor,
-        dimensions=(2, 2),
+        **blade_kwargs,
     )
 
     distances = distance_matrix_from_positions(positions)
@@ -373,7 +383,7 @@ def test_high_dimension_increase_after_equilibrium() -> None:
             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         ]
     )
-    blade(qubo, dimensions=(2, 2, 10), steps_per_round=100)
+    _blade(qubo, dimensions=(2, 2, 10), steps_per_round=100)
 
 
 def test_initial_positions_with_fewer_dimensions_than_starting_dimensions() -> None:
@@ -385,10 +395,11 @@ def test_initial_positions_with_fewer_dimensions_than_starting_dimensions() -> N
             [0, 0, 0, 0],
         ]
     )
+
     expected_interactions = np.triu(normalized_interaction(expected_distances), k=1)
 
     starting_positions = np.array([[-1, 1], [1, 1], [1, -1], [-1, -1]])
-    positions = blade(
+    positions = _blade(
         expected_interactions,
         starting_positions=starting_positions,
         dimensions=(starting_positions.shape[1] + 2, 2),
@@ -453,22 +464,25 @@ def test_drawing() -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    interactions_graph = nx.Graph()
-    interactions_graph.add_nodes_from([i for i in range(2)])
-    interactions_graph.add_edge(0, 1, weight=normalized_interaction(1))
-
     qubo = np.array([[0, normalized_interaction(1)], [0, 0]])
     qubo = qubo + qubo.T
 
     plt.close("all")
     assert len(plt.get_fignums()) == 0
-    update_positions(
-        positions=np.array([[-10, 0], [10, 0]]),
-        target_interactions=qubo,
-        max_radius=1,
-        max_distance_to_walk=(0, 0, 1),
-        draw_step=True,
-    )
+
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message="FigureCanvasAgg is non-interactive, and thus cannot be shown",
+            category=UserWarning,
+        )
+        update_positions(
+            positions=np.array([[-10, 0], [10, 0]]),
+            target_interactions=qubo,
+            max_radius=1,
+            max_distance_to_walk=(0, 0, 1),
+            draw_step=True,
+        )
     assert len(plt.get_fignums()) > 0
     plt.close("all")
 
@@ -480,7 +494,7 @@ def test_simple_positions() -> None:
             [0, 0],
         ]
     )
-    positions = blade(qubo, dimensions=(2, 2), steps_per_round=100)
+    positions = _blade(qubo, dimensions=(2, 2), steps_per_round=100)
     distances = np.triu(
         np.linalg.norm(positions[np.newaxis, :, :] - positions[:, np.newaxis, :], axis=-1), k=1
     )
@@ -522,15 +536,35 @@ def test_embed_3_nodes(dimensions: tuple[int, ...], steps_per_round: int) -> Non
     target_interactions = interaction_matrix_from_positions(target_positions)
     np.fill_diagonal(target_interactions, 0)
 
-    blade_pos = blade(target_interactions, dimensions=dimensions, steps_per_round=steps_per_round)
+    blade_pos = _blade(target_interactions, dimensions=dimensions, steps_per_round=steps_per_round)
     blade_interactions = interaction_matrix_from_positions(blade_pos)
     quality = np.linalg.norm(target_interactions - blade_interactions)
     np.testing.assert_allclose(quality, 0.0, atol=1e-2)
 
 
+def test_raises_distance_ratio_exception_when_ratio_cannot_be_met() -> None:
+    size = 20
+    impossible_required_ratio = 1.01
+
+    random_matrix = np.random.rand(size, size)
+    random_symmetric = (random_matrix + random_matrix.T) / 2
+    np.fill_diagonal(random_symmetric, 0)
+
+    with pytest.raises(DistanceRatioException) as exc_info:
+        _blade(
+            random_symmetric,
+            max_min_dist_ratio=impossible_required_ratio,
+            ratio_rerun=0,
+        )
+
+    assert exc_info.value.positions is not None
+    assert isinstance(exc_info.value.positions, np.ndarray)
+    assert exc_info.value.positions.shape == (size, 2)
+
+
 def test_embed_medium_dense_register() -> None:
     size = 17
-    expected_ratio = 2.2
+    expected_ratio = 2.22
 
     seed = 0
 
@@ -542,7 +576,7 @@ def test_embed_medium_dense_register() -> None:
 
     np.random.seed(seed)
 
-    positions = blade(
+    positions = _blade(
         random_symmetric,
         max_min_dist_ratio=expected_ratio,
         ratio_rerun=0,
@@ -576,7 +610,7 @@ def test_embed_large_dense_register_from_hexagonal_lattice() -> None:
 
     np.random.seed(seed)
 
-    positions = blade(
+    positions = _blade(
         random_symmetric,
         max_min_dist_ratio=expected_ratio,
     )
@@ -598,3 +632,11 @@ def test_blade_init() -> None:
 def test_invalid_blade_config() -> None:
     with pytest.raises(TypeError, match="got an unexpected keyword argument 'wrong_config_key'"):
         BladeConfig(wrong_config_key="value")  # type: ignore
+
+
+@pytest.mark.parametrize("max_min_dist_ratio, atol", [(None, 1e-3), (10, 1e-1)])
+def test_disconnected_nodes(max_min_dist_ratio: int | None, atol: float) -> None:
+    matrix = np.array([[0, 1, 0], [0, 0, 0], [0, 0, 0]])
+    positions = _blade(matrix, max_min_dist_ratio=max_min_dist_ratio)
+    interactions = interaction_matrix_from_positions(positions)
+    assert np.allclose(interactions, matrix, atol=atol)

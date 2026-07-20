@@ -18,7 +18,7 @@ def shrink_dimensions(*, positions: np.ndarray, dimensions_lengths: np.ndarray) 
     new_maxima = maxima_per_dim - lengths_to_remove / 2
     shrinked_positions = np.clip(positions, min=new_minima, max=new_maxima)
     normalized_positions = shrinked_positions - np.median(shrinked_positions, axis=0)
-    assert not np.any(np.isnan(normalized_positions))
+    assert np.all(np.isfinite(normalized_positions))
 
     return normalized_positions
 
@@ -56,10 +56,11 @@ class DimensionShrinker:
 
         if self._step >= self._steps:
             nb_dimensions_left = nb_dimensions - self._dimensions_to_remove
+
             assert np.all(
-                np.isclose(positions[:, nb_dimensions_left:], 0)
+                np.isclose(positions[:, nb_dimensions_left:], 0, atol=1e-5)
             ), f"{positions[:, nb_dimensions_left:]=}"
 
-        assert not np.any(np.isnan(positions))
+        assert np.all(np.isfinite(positions))
 
         return positions

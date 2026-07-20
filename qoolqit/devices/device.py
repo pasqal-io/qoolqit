@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from dataclasses import replace
 from typing import Callable, Optional
 
 import pulser
@@ -233,6 +234,26 @@ class AnalogDevice(Device):
         super().__init__(pulser_device=pulser.AnalogDevice)
 
 
+class AnalogDeviceWithDMM(Device):
+    """A realistic device with DMM for analog sequence execution."""
+
+    def __init__(self) -> None:
+        dmm_channel = pulser.channels.dmm.DMM(
+            clock_period=4,
+            min_duration=16,
+            max_duration=6000,
+            mod_bandwidth=8,
+            bottom_detuning=-2 * math.pi * 20,
+            total_bottom_detuning=-2 * math.pi * 20,
+        )
+        # Create a virtual device that can be modified to add a DMM channel.
+        pulser_virtual_device = pulser.AnalogDevice.to_virtual()
+        pulser_device = replace(
+            pulser_virtual_device, dmm_objects=(dmm_channel,), name="AnalogDeviceWithDMM"
+        )
+        super().__init__(pulser_device=pulser_device)
+
+
 class DigitalAnalogDevice(Device):
     """A device with digital and analog capabilities."""
 
@@ -242,5 +263,5 @@ class DigitalAnalogDevice(Device):
 
 def available_default_devices() -> None:
     """Show the default available devices in QooQit."""
-    for dev in (AnalogDevice(), DigitalAnalogDevice(), MockDevice()):
+    for dev in (AnalogDevice(), AnalogDeviceWithDMM(), MockDevice()):
         dev.info()

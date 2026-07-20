@@ -35,17 +35,15 @@ def modulate_cursor(
         weak_cursor, middle_value=1 / (1 / center_value - 1), stiffness=stiffness
     )
 
-    out_mid = (
-        strong_cursor * weak_coeff_multiplier / (1 + strong_cursor * (weak_coeff_multiplier - 1))
+    return (
+        strong_cursor
+        * weak_coeff_multiplier
+        / np.where(
+            (strong_cursor == 1) & (weak_cursor == 0),
+            np.inf,
+            (1 + strong_cursor * (weak_coeff_multiplier - 1)),
+        )
     )
-
-    out = np.where(
-        (strong_cursor == 1) & (weak_cursor == 0),
-        0,
-        out_mid,
-    )
-
-    return out
 
 
 def clip_modulate_cursor(
@@ -70,8 +68,19 @@ class Force:
     distances_to_walk: np.ndarray
 
     def __post_init__(self) -> None:
+        """Check values, shapes and cleaning and caching.
+
+        Set to null vectors the weighted_vectors whose norm is numerically
+        computed to zero (even a non-zero short vector may have a null
+        computed norm due to numerical limits).
+        """
+
         assert self.weighted_vectors.shape[:-1] == self.distances_to_walk.shape
-        assert not np.any(np.isnan(self.weighted_vectors))
+        assert np.all(np.isfinite(self.distances_to_walk))
+        assert np.all(np.isfinite(self.weighted_vectors))
+        cleaned = self.weighted_vectors.copy()
+        cleaned[self.vector_weights == 0] = 0.0
+        object.__setattr__(self, "weighted_vectors", cleaned)
         self.maximum_temperatures
 
     def get_nb_dims(self) -> int:
@@ -85,18 +94,28 @@ class Force:
         regulation_cursor: float = 0,
     ) -> "Force":
         min_temperature = np.min(self.maximum_temperatures)
-        temperature_ratios = self.maximum_temperatures / min_temperature
-        weight_ratios = self.vector_weights / np.max(self.vector_weights)
-        used_cursors = clip_modulate_cursor(
-            strong_cursor=regulation_cursor, weak_cursor=weight_ratios
-        )
-        regulated_temperature_ratios = temperature_ratios ** (1 - used_cursors)
-        regulated_weighted_vectors = (
-            self.weighted_vectors
-            * self._fit_to_dims(temperature_ratios)
-            / self._fit_to_dims(regulated_temperature_ratios)
-        )
-        regulated_weighted_vectors[self.weighted_vectors == 0] = 0
+
+        if min_temperature != np.inf:
+            temperature_ratios = self.maximum_temperatures / min_temperature
+            weight_ratios = self.vector_weights / np.max(self.vector_weights)
+            used_cursors = clip_modulate_cursor(
+                strong_cursor=regulation_cursor, weak_cursor=weight_ratios
+            )
+            regulated_temperature_ratios = temperature_ratios ** (1 - used_cursors)
+
+            regulated_weighted_vectors = (
+                self.weighted_vectors
+                * np.where(
+                    self.weighted_vectors == 0,
+                    np.zeros_like(self.weighted_vectors),
+                    self._fit_to_dims(temperature_ratios),
+                )
+                / self._fit_to_dims(regulated_temperature_ratios)
+            )
+
+        else:
+            regulated_weighted_vectors = np.zeros_like(self.weighted_vectors)
+
         return Force(
             weighted_vectors=regulated_weighted_vectors,
             distances_to_walk=self.distances_to_walk,

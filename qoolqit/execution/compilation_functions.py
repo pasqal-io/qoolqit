@@ -10,10 +10,10 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.devices import Device
-from qoolqit.drive import Drive, Waveform, WeightedDetuning
+from qoolqit.drive import DetuningMapModulator, Drive, Waveform
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
-from qoolqit.waveforms import Interpolated
+from qoolqit.waveforms import InterpolatedWaveform
 
 
 class CompilerProfile(Enum):
@@ -62,7 +62,7 @@ class WaveformConverter:
         # Interpolated to be converted differently because of round off issue:
         # see https://github.com/pasqal-io/qoolqit/issues/288
         # see https://github.com/pasqal-io/Pulser/issues/1051
-        if isinstance(waveform, Interpolated):
+        if isinstance(waveform, InterpolatedWaveform):
             wf = waveform._to_pulser(duration=pulser_duration, energy_factor=self._energy)
             return wf
 
@@ -146,56 +146,42 @@ def basic_compilation(
     pulser_sequence.declare_channel("rydberg", "rydberg_global")
     pulser_sequence.add(pulser_pulse, "rydberg")
 
-    if len(drive.weighted_detunings) > 0:
-        # Add detuning map
-        channels = list(device._device.dmm_channels.keys())
-        if len(channels) == 0:
-            raise ValueError(
-                f"This program specifies {len(drive.weighted_detunings)} detunings but "
-                "the device doesn't offer any DMM channel to execute them."
-            )
-
-        detuning_adder = _DetuningAdder(wf_converter, pulser_register, pulser_sequence)
-
-        # If our device supports reusable channels, we can declare multiple
-        # DMM channels with the same specs
-        if pulser_device.reusable_channels:
-            # Arbitrarily pick the first channel.
-            dmm_id = channels[0]
-            for detuning in drive.weighted_detunings:
-                detuning_adder.add_detuning(dmm_id, detuning)
-        # Do we have enough channels for our detunings?
-        elif len(channels) >= len(drive.weighted_detunings):
-            for dmm_id, detuning in zip(channels, drive.weighted_detunings):
-                detuning_adder.add_detuning(dmm_id, detuning)
-        else:
-            raise ValueError(
-                f"This program specifies {len(drive.weighted_detunings)} detunings but "
-                f"the device only offers {len(channels)} DMM channels to execute them."
-            )
+    # Add dmm, if specified in the drive.
+    if drive.dmm is not None:
+        dmm_adder = _DMMAdder(wf_converter, pulser_register, pulser_sequence)
+        # support only for a single DMM channel
+        dmm_id = list(device._device.dmm_channels.keys())[0]
+        dmm_adder.add_dmm(dmm_id, drive.dmm)
 
     return pulser_sequence
 
 
-class _DetuningAdder:
+class _DMMAdder:
+    """Utility class to add a DMM to a Pulser sequence."""
+
     def __init__(
         self,
         wf_converter: WaveformConverter,
         pulser_register: PulserRegister,
         pulser_sequence: PulserSequence,
     ):
+        """Initialize the DMM adder.
+
+        Args:
+            wf_converter: converter of waveforms to pulser units.
+            pulser_register: pulser register to define a detuning map qubit_id -> weight.
+            pulser_sequence: pulser sequence to add DMM to.
+        """
         self._wf_converter = wf_converter
         self._pulser_register = pulser_register
         self._pulser_sequence = pulser_sequence
 
-    def add_detuning(self, dmm_id: str, detuning: WeightedDetuning) -> None:
+    def add_dmm(self, dmm_id: str, dmm: DetuningMapModulator) -> None:
         # conversion may be needed for pulser register as only str keys are accepted
-        converted_weights = {
-            k if isinstance(k, str) else str(k): v for k, v in detuning.weights.items()
-        }
+        converted_weights = {k if isinstance(k, str) else str(k): v for k, v in dmm.weights.items()}
         detuning_map = self._pulser_register.define_detuning_map(detuning_weights=converted_weights)
         self._pulser_sequence.config_detuning_map(detuning_map, dmm_id=dmm_id)
-        waveform = self._wf_converter.convert(detuning.waveform)
+        waveform = self._wf_converter.convert(dmm.waveform)
         self._pulser_sequence.add_dmm_detuning(waveform, dmm_id)
 
 

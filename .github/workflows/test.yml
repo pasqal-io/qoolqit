@@ -25,9 +25,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout QoolQit
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install QoolQit with development dependencies
@@ -37,7 +37,7 @@ jobs:
       run: |
         pytest -vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs
     - name: Upload coverage data
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: "coverage-data"
         path: .coverage.*
@@ -48,11 +48,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout QoolQit
-      uses: actions/checkout@v4
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v5
+      uses: actions/checkout@v7
+    - name: Set up Python
+      uses: actions/setup-python@v6
       with:
-        python-version: '3.12'
+        python-version: '3.14'
     - name: Install QoolQit with development dependencies
       run: |
         pip install -e .[dev]

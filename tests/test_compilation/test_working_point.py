@@ -10,7 +10,6 @@ from pulser.sequence import Sequence as PulserSequence
 
 from qoolqit import (
     AnalogDevice,
-    Constant,
     Device,
     DigitalAnalogDevice,
     Drive,
@@ -20,6 +19,7 @@ from qoolqit import (
 )
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
+from qoolqit.waveforms import ConstantWaveform
 
 
 class TestWorkingPointCompilerProfile:
@@ -66,7 +66,7 @@ class TestWorkingPointCompilerProfile:
 
     def test_catch_compilation_error_max_amp(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
-        drive = Drive(amplitude=Constant(50, value=0.5))
+        drive = Drive(amplitude=ConstantWaveform(50, value=0.5))
         program = QuantumProgram(register, drive)
 
         with pytest.raises(
@@ -80,7 +80,7 @@ class TestWorkingPointCompilerProfile:
 
     def test_catch_compilation_error_min_dist(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (0.78, 0.0)})
-        drive = Drive(amplitude=Constant(50, value=0.2))
+        drive = Drive(amplitude=ConstantWaveform(50, value=0.2))
         program = QuantumProgram(register, drive)
 
         with pytest.raises(
@@ -94,7 +94,9 @@ class TestWorkingPointCompilerProfile:
 
     def test_catch_compilation_error_max_det(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (1.0, 1.0)})
-        drive = Drive(amplitude=Constant(50, value=0.2), detuning=Constant(50, value=100))
+        drive = Drive(
+            amplitude=ConstantWaveform(50, value=0.2), detuning=ConstantWaveform(50, value=100)
+        )
         program = QuantumProgram(register, drive)
 
         with pytest.raises(
@@ -108,7 +110,7 @@ class TestWorkingPointCompilerProfile:
 
     def test_catch_compilation_error_max_duration(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (1.0, 1.0)})
-        drive = Drive(amplitude=Constant(351.2, value=0.1))
+        drive = Drive(amplitude=ConstantWaveform(351.2, value=0.1))
         program = QuantumProgram(register, drive)
 
         with pytest.raises(
@@ -122,7 +124,7 @@ class TestWorkingPointCompilerProfile:
 
     def test_catch_compilation_error_max_dist(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (9.0, 0.0)})
-        drive = Drive(amplitude=Constant(13.0, 0.2))
+        drive = Drive(amplitude=ConstantWaveform(13.0, 0.2))
         program = QuantumProgram(register, drive)
 
         with pytest.raises(

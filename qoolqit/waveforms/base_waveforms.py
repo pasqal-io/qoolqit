@@ -1,7 +1,9 @@
+"""Base classes for scalar time-bounded waveforms and their sequential composition."""
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, cast, overload
+from typing import Any, overload
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,19 +14,22 @@ from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.waveforms.utils import round_to_sum
 
-# Default number of points used to resolve the full waveform duration
-N_POINTS = 500
-
 
 class Waveform(ABC):
-    """Base class for waveforms.
+    """Base class for scalar time-bounded waveforms.
 
-    A Waveform is a function of time for t >= 0. Custom waveforms can be defined by
-    inheriting from the base class and overriding the `function` method corresponding
-    to the function f(t) that returns the value of the waveform evaluated at time t.
+    A waveform is a scalar function of time defined over a finite interval [0, duration].
+    Outside this interval, it evaluates to zero.
 
-    A waveform is always a 1D function, so if it includes other parameters, these should be
-    passed and saved at initialization for usage within the `function` method.
+    To define a custom waveform, subclass this class and implement:
+        - `function(t)`: the waveform value at time t within [0, duration].
+        - `max()`: the maximum value of the waveform.
+        - `min()`: the minimum value of the waveform.
+        - `__mul__(scalar)`: rescale this waveform by a scalar factor.
+        - `_to_pulser(duration)`: conversion to a Pulser-compatible waveform.
+
+    Any additional parameters (e.g. amplitude, frequency) should be passed as keyword
+    arguments to `__init__` and are automatically stored and accessible as attributes.
     """
 
     def __init__(
@@ -35,8 +40,9 @@ class Waveform(ABC):
     ) -> None:
         """Initializes the Waveform.
 
-        Arguments:
+        Args:
             duration: the total duration of the waveform.
+            **kwargs: optional keyword arguments for the waveform function.
         """
 
         if duration <= 0:
@@ -50,11 +56,37 @@ class Waveform(ABC):
         self._duration = duration
         self._params_dict = kwargs
 
-        self._max: float | None = None
-        self._min: float | None = None
-
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    @abstractmethod
+    def function(self, t: float) -> float:
+        """Evaluates the waveform function at a given time t."""
+        pass
+
+    @abstractmethod
+    def max(self) -> float:
+        """Get the maximum value of the waveform."""
+        pass
+
+    @abstractmethod
+    def min(self) -> float:
+        """Get the minimum value of the waveform."""
+        pass
+
+    @abstractmethod
+    def __mul__(self, other: float) -> Waveform:
+        """Rescale this waveform by a scalar."""
+        pass
+
+    def __rmul__(self, other: float) -> Waveform:
+        """Rescale this waveform by a scalar (right-hand multiplication)."""
+        return self.__mul__(other)
+
+    @abstractmethod
+    def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
+        """Converts QoolQit waveform to a Pulser Waveform."""
+        pass
 
     @property
     def duration(self) -> float:
@@ -66,41 +98,7 @@ class Waveform(ABC):
         """Dictionary of parameters used by the waveform."""
         return self._params_dict
 
-    @abstractmethod
-    def function(self, t: float) -> float:
-        """Evaluates the waveform function at a given time t."""
-        ...
-
-    def _approximate_min_max(self) -> None:
-        t_array = np.linspace(0.0, self.duration, N_POINTS)
-        self._max = np.max(self(t_array)).item()
-        self._min = np.min(self(t_array)).item()
-
-    def max(self) -> float:
-        """Get the approximate maximum value of the waveform.
-
-        This is a brute-force method that samples the waveform over a
-        pre-defined number of points to find the maximum value in the
-        duration. Custom waveforms that have an easy to compute
-        maximum value should override this method.
-        """
-        if self._max is None:
-            self._approximate_min_max()
-        return cast(float, self._max)
-
-    def min(self) -> float:
-        """Get the approximate minimum value of the waveform.
-
-        This is a brute-force method that samples the waveform over a
-        pre-defined number of points to find the minimum value in the
-        duration. Custom waveforms that have an easy to compute
-        maximum value should override this method.
-        """
-        if self._min is None:
-            self._approximate_min_max()
-        return cast(float, self._min)
-
-    def __single_call__(self, t: float) -> float:
+    def _single_call(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
 
     @overload
@@ -110,24 +108,14 @@ class Waveform(ABC):
     def __call__(self, t: list[float] | np.ndarray) -> list | np.ndarray: ...
 
     def __call__(self, t: float | list[float] | np.ndarray) -> float | list[float] | np.ndarray:
-        if isinstance(t, list | np.ndarray):
-            value_array: list[float] | np.ndarray
-            if isinstance(t, np.ndarray):
-                value_array = np.array([self.__single_call__(ti) for ti in t])
-            elif isinstance(t, list):
-                value_array = [self.__single_call__(ti) for ti in t]
-            else:
-                raise TypeError(
-                    "Waveform array calling is supported on Python lists or NumPy arrays."
-                )
-            return value_array
-        else:
-            return self.__single_call__(t)
+        if isinstance(t, np.ndarray):
+            return np.vectorize(self._single_call)(t)
+        if isinstance(t, list):
+            return [self._single_call(ti) for ti in t]
+        return self._single_call(t)
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
-        return self.__rrshift__(other)
-
-    def __rrshift__(self, other: Waveform) -> CompositeWaveform:
+        """Returns a new CompositeWaveform composed of this waveform and another."""
         if isinstance(other, Waveform):
             if isinstance(other, CompositeWaveform):
                 return CompositeWaveform(self, *other._waveforms)
@@ -149,24 +137,12 @@ class Waveform(ABC):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
-    def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
-        """Convert an arbitrary Qoolqit waveform to a `pulser.InterpolatedWaveform`.
-
-        To keep a compact representation the maximum number of samples to interpolate is set to 100.
-        """
-        n_samples = min(100, duration)
-        times = np.linspace(0.0, self.duration, n_samples)
-        samples = self(times)
-        return pulser.InterpolatedWaveform(duration, samples)
-
-    def draw(
-        self, n_points: int = N_POINTS, return_fig: bool = False, **kwargs: Any
-    ) -> Figure | None:
+    def draw(self, n_points: int = 500, return_fig: bool = False, **kwargs: Any) -> Figure | None:
         fig, ax = plt.subplots(1, 1, figsize=(8, 4), dpi=150)
         ax.grid(True)
         t_array = np.linspace(0.0, self.duration, n_points)
         y_array = self(t_array)
-        ax.plot(t_array, self(t_array))
+        ax.plot(t_array, y_array)
         ax.fill_between(t_array, y_array, color="skyblue", alpha=0.4)
         ax.set_xlabel("Time t")
         ax.set_ylabel("Waveform")
@@ -178,12 +154,15 @@ class Waveform(ABC):
 
 
 class CompositeWaveform(Waveform):
-    """Base class for composite waveforms.
+    """A concatenation of waveforms played sequentially.
 
-    A CompositeWaveform stores a sequence of waveforms occurring one after the other
-    by the order given. When it is evaluated at time t, the corresponding waveform
-    from the sequence is identified depending on the duration of each one, and it is
-    then evaluated for a time t' = t minus the duration of all previous waveforms.
+    Waveforms are joined in the given order, each starting where the previous one ends,
+    and the composition can be used as a single waveform.
+
+    Attributes:
+        waveforms: a list of waveforms in the composition.
+        durations: a list of durations of each individual waveform.
+        times: a list of times when each individual waveform starts.
     """
 
     def __init__(self, *waveforms: Waveform) -> None:
@@ -191,6 +170,10 @@ class CompositeWaveform(Waveform):
 
         Arguments:
             waveforms: an iterator over waveforms.
+
+        Raises:
+            TypeError: if any argument is not an instance of Waveform.
+            ValueError: if no waveforms are provided.
         """
         if not all(isinstance(wf, Waveform) for wf in waveforms):
             raise TypeError("All arguments must be instances of Waveform.")
@@ -228,15 +211,9 @@ class CompositeWaveform(Waveform):
         return len(self.waveforms)
 
     def function(self, t: float) -> float:
-        """Identifies the right waveform in the composition and evaluates it at time t."""
         idx = np.searchsorted(self.times, t, side="right") - 1
-        if idx == -1:
-            return 0.0
-        if idx == self.n_waveforms:
-            if t == self.times[-1]:
-                idx = idx - 1
-            else:
-                return 0.0
+        # clip to valid waveform index range
+        idx = np.clip(idx, 0, self.n_waveforms - 1)
 
         local_t = t - self.times[idx]
         value: float = self.waveforms[idx](local_t)
@@ -246,10 +223,14 @@ class CompositeWaveform(Waveform):
         """Get the maximum value of the waveform."""
         return max([wf.max() for wf in self.waveforms])
 
-    def __rshift__(self, other: Waveform) -> CompositeWaveform:
-        return self.__rrshift__(other)
+    def min(self) -> float:
+        """Get the minimum value of the waveform."""
+        return min([wf.min() for wf in self.waveforms])
 
-    def __rrshift__(self, other: Waveform) -> CompositeWaveform:
+    def __mul__(self, other: float) -> CompositeWaveform:
+        return CompositeWaveform(*[wf * other for wf in self.waveforms])
+
+    def __rshift__(self, other: Waveform) -> CompositeWaveform:
         if isinstance(other, Waveform):
             if isinstance(other, CompositeWaveform):
                 return CompositeWaveform(*self.waveforms, *other.waveforms)

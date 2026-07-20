@@ -6,21 +6,22 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "1.0.1"
+version = "1.2.0"
 requires-python = ">=3.10"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
 authors = [
-  { name = "Charles Moussa", email = "charles.moussa@pasqal.com" },
+  { name = "Antoine Bussy", email = "antoine.bussy@pasqal.com" },
+  { name = "Charles Moussa"},
   { name = "Clément de Terrasson de Montleau", email = "clement.de-terrasson@pasqal.com" },
-  { name = "David Teller", email = "david.teller@pasqal.com" },
-  { name = "João Moutinho", email = "joao.moutinho@pasqal.com" },
-  { name = "Manu Lahariya", email = "manu.lahariya@pasqal.com" },
+  { name = "David Teller"},
+  { name = "João Moutinho"},
+  { name = "Manu Lahariya"},
   { name = "Mathieu Garrigues", email = "mathieu.garrigues@pasqal.com" },
-  { name = "Roland Guichard", email = "roland.guichard@pasqal.com" },
+  { name = "Roland Guichard"},
   { name = "Stefano Grava", email = "s.grava-ext@pasqal.com" },
   { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
-  { name = "Vytautas Abramavicius", email = "vytautas.abramavicius@pasqal.com" },
+  { name = "Vytautas Abramavicius"},
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -34,8 +35,9 @@ classifiers = [
 ]
 
 dependencies = [
-  "pulser[torch]>=1.7.0",
   "networkx>=3.4",
+  "numpy>=2",
+  "pulser[torch]>=1.8.0",
 ]
 
 [project.optional-dependencies]
@@ -56,13 +58,13 @@ dev = [
   "pre-commit",
   "ipykernel",
   "nbmake",
-  "mkdocs",
+  "mkdocs==1.6.1",
   "mkdocs-material",
   "mkdocstrings-python",
   "mkdocs-section-index",
   "mkdocs-jupyter",
-  "markdown-exec",
   "mike",
+  "ruff>=0.15.21",
 ]
 
 [project.urls]

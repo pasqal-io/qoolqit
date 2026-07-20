@@ -1,4 +1,4 @@
-This section introduces the core concepts used throughout QoolQit, following the typical workflow: define a problem, embed it into hardware, then build, compile, and execute a quantum program.
+This section introduces the core concepts used throughout QoolQit, following the typical workflow: define a problem, embed it into a quantum program, compile, and execute.
 
 ---
 
@@ -19,7 +19,7 @@ The first part focuses on **problem definition and embedding**.
       - the standard embedding workflow
       - available built-in embedders
 
-  Advanced users can define [custom embedders](../extended_usage/custom_embedders.md) with custom inputs, outputs, and parameters.
+  Advanced users can define [custom embedders](../extended_usage/custom_embedders.ipynb) with custom inputs, outputs, and parameters.
 
 ---
 
