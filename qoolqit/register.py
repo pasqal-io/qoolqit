@@ -176,9 +176,7 @@ class Register:
 
         x, y = zip(
             *[
-                np.asarray(
-                    v.detach() if (_has_torch and isinstance(v, torch.Tensor)) else v, dtype=float
-                )
+                v.detach().numpy() if (_has_torch and isinstance(v, torch.Tensor)) else v
                 for v in self.qubits.values()
             ]
         )
