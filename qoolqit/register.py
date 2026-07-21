@@ -22,20 +22,20 @@ except ImportError:
 
 
 class Register:
-    """The Register in QoolQit, representing a set of qubit ids with coordinates.
+    """A QoolQit register mapping qubit IDs to 2D coordinates.
 
     Attributes:
-        qubits: a dictionary of qubit ids and respective coordinates {q: (x, y),...}.
-        qubits_ids: a list of qubit ids.
+        qubits: a dictionary of qubit IDs and respective coordinates {q: (x, y),...}.
+        qubits_ids: a list of qubit IDs.
         n_qubits: the number of qubits in the register.
 
     Examples:
-        From a dictionary of qubit ids and coordinates:
+        From a dictionary of qubit IDs and coordinates:
 
         >>> reg = Register({"a": (0.0, 0.0), "b": (1.0, 0.0), "c": (0.0, 1.0)})
         >>> reg = Register({0: (0.0, 0.0), 1: (1.0, 0.0), 2: (0.0, 1.0)})
 
-        From a list of coordinates (qubit ids are assigned automatically as integers):
+        From a list of coordinates (qubit IDs are assigned automatically as integers):
 
         >>> reg = Register.from_coordinates([(0.0, 0.0), (1.0, 0.0), (0.0, 1.0)])
 
