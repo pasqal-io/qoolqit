@@ -51,7 +51,8 @@ class Register:
     """
 
     def __init__(
-        self, qubits: dict[str, ArrayLike | torch.Tensor] | dict[int, ArrayLike | torch.Tensor]
+        self,
+        qubits: dict[str, ArrayLike | torch.Tensor] | dict[int, ArrayLike | torch.Tensor],
     ) -> None:
         """Default constructor for the Register.
 
@@ -59,16 +60,13 @@ class Register:
             qubits: a dictionary of qubits and respective coordinates {q: (x, y), ...}.
 
         Raises:
-            TypeError: If the qubits argument is not a dictionary.
-            ValueError: If the qubits argument is empty.
-            ValueError: If the coordinate for a qubit is not a tuple, list or
-                numpy or torch array of length 2.
+            TypeError: If `qubits` is not a dictionary.
+            ValueError: If `qubits` is empty.
+            ValueError: If a qubit coordinate cannot be converted to an array of
+                floats, or if the converted coordinate is not a point in 2D.
         """
         if not isinstance(qubits, dict):
-            raise TypeError(
-                "Register must be initialized with a dictionary of "
-                "qubits ids and respective coordinates {q: (x, y), ...}."
-            )
+            raise TypeError("`qubits` must be a dictionary mapping qubit ids to coordinates.")
         if len(qubits) == 0:
             raise ValueError("Register cannot be empty.")
 
@@ -81,15 +79,13 @@ class Register:
                     parsed[key] = np.asarray(val, dtype=float)
             except (ValueError, TypeError) as err:
                 raise ValueError(
-                    f"Coordinate for qubit {key!r} must be castable to an array of floats."
+                    f"Coordinate for qubit {key!r} must be castable to an array of floats, "
+                    f"got {val!r}."
                 ) from err
 
             converted = parsed[key]
             if converted.ndim != 1 or converted.shape[0] != 2:
-                raise ValueError(
-                    f"Coordinate for qubit {key!r} must be a 1D "
-                    f"tuple, list, or array of length 2, got {val!r}."
-                )
+                raise ValueError(f"Coordinate for qubit {key!r} must be a 2D point, got {val!r}.")
 
         self._qubits = parsed
 
@@ -181,7 +177,7 @@ class Register:
 
         x, y = zip(
             *[
-                v.detach().numpy() if (_has_torch and isinstance(v, torch.Tensor)) else v
+                (v.detach().numpy() if (_has_torch and isinstance(v, torch.Tensor)) else v)
                 for v in self.qubits.values()
             ]
         )

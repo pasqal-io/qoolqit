@@ -56,14 +56,14 @@ def test_init(qubits: dict) -> None:
 
 
 def test_empty_register() -> None:
-    with pytest.raises(ValueError, match="empty"):
+    with pytest.raises(ValueError, match=r"Register cannot be empty\."):
         Register({})  # type: ignore [call-arg]
 
 
 def test_init_wrong_qubits_type() -> None:
     with pytest.raises(
         TypeError,
-        match="Register must be initialized with a dictionary of ",
+        match=r"`qubits` must be a dictionary mapping qubit ids to coordinates",
     ):
         Register("I'm not a dict")  # type: ignore [arg-type]
 
@@ -77,7 +77,7 @@ def test_init_wrong_qubits_type() -> None:
     ],
 )
 def test_init_invalid_coordinate_shape(qubits: dict) -> None:
-    with pytest.raises(ValueError, match="must be a 1D tuple, list, or array of length 2, got"):
+    with pytest.raises(ValueError, match="must be a 2D point, got"):
         Register(qubits)
 
 
@@ -89,7 +89,8 @@ def test_init_invalid_coordinate_shape(qubits: dict) -> None:
 )
 def test_init_invalid_coordinate_type(qubits: dict) -> None:
     with pytest.raises(
-        ValueError, match="Coordinate for qubit '3' must be castable to an array of floats."
+        ValueError,
+        match=r"Coordinate for qubit '3' must be castable to an array of floats, got",
     ):
         Register(qubits)
 
