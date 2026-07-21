@@ -1,12 +1,12 @@
-## Install from PyPi
-QoolQit can be installed from PyPi with your favorite pyproject-compatible Python manager.
-On `pip`, for example:
+## Install from PyPI
+QoolQit can be installed from PyPI with your favorite pyproject-compatible Python manager.
+Using `pip`, for example:
 
 ```sh
 pip install qoolqit
 ```
 
-!!! tip "Don't forget to create a virtual environment fist!"
+!!! tip "Don't forget to create a virtual environment first!"
 
 ## Add QoolQit as a dependency
 For usage within a project with a corresponding `pyproject.toml` file, you can add
@@ -20,7 +20,7 @@ dependencies = [
 ```
 
 ## Install from source
-If you wish to install directly from the source, for example, if you are developing code for QoolQit, you can:
+If you are developing code for QoolQit, you can install it directly from source:
 
 1) Clone the [QoolQit GitHub repository](https://github.com/pasqal-io/qoolqit)
 
@@ -28,8 +28,8 @@ If you wish to install directly from the source, for example, if you are develop
   git clone https://github.com/pasqal-io/qoolqit.git
   ```
 
-2) Setup an environment for developing. From your `qoolqit` folder, again install with your favorite environment/package managers.
-  On `venv`/`pip`, for example:
+2) From your `qoolqit` folder, create a virtual environment and install the project in editable mode.
+  Using `venv` and `pip`, for example:
 
   ```sh
   python -m venv .venv
