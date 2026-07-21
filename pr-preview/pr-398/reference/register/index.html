@@ -2132,7 +2132,7 @@
           <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Register&lt;/span&gt; (&lt;code&gt;qoolqit.register.Register&lt;/code&gt;)" href="#qoolqit.register.Register">Register</a></code></b>
           –
           <div class="doc-md-description">
-            <p>The Register in QoolQit, representing a set of qubit ids with coordinates.</p>
+            <p>A QoolQit register mapping qubit IDs to 2D coordinates.</p>
           </div>
         </li>
     </ul>
@@ -2172,7 +2172,7 @@
 
 
 
-        <p>The Register in QoolQit, representing a set of qubit ids with coordinates.</p>
+        <p>A QoolQit register mapping qubit IDs to 2D coordinates.</p>
 
 
 <p><span class="doc-section-title">Attributes:</span></p>
@@ -2187,7 +2187,7 @@
               (<code><span title="dict">dict</span></code>)
           –
           <div class="doc-md-description">
-            <p>a dictionary of qubit ids and respective coordinates {q: (x, y),...}.</p>
+            <p>a dictionary of qubit IDs and respective coordinates {q: (x, y),...}.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -2200,7 +2200,7 @@
               (<code><span title="list">list</span></code>)
           –
           <div class="doc-md-description">
-            <p>a list of qubit ids.</p>
+            <p>a list of qubit IDs.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -2220,11 +2220,11 @@
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <p>From a dictionary of qubit ids and coordinates:</p>
+    <p>From a dictionary of qubit IDs and coordinates:</p>
     <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">reg</span> <span class="o">=</span> <span class="n">Register</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)})</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">reg</span> <span class="o">=</span> <span class="n">Register</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="mi">2</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)})</span>
 </code></pre></div>
-    <p>From a list of coordinates (qubit ids are assigned automatically as integers):</p>
+    <p>From a list of coordinates (qubit IDs are assigned automatically as integers):</p>
     <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">reg</span> <span class="o">=</span> <span class="n">Register</span><span class="o">.</span><span class="n">from_coordinates</span><span class="p">([(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)])</span>
 </code></pre></div>
     <p>Using numpy arrays as coordinates:</p>
