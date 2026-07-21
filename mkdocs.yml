@@ -27,7 +27,7 @@ nav:
     - Custom embedders: extended_usage/custom_embedders.ipynb
   - Applications:
     - tutorials/index.md
-    - Solving a QUBO: tutorials/solving_a_qubo.ipynb
+    - Solving a QUBO problem: tutorials/solving_a_qubo.ipynb
   - API reference:
     - qoolqit: reference/qoolqit.md
     - qoolqit.embedding: reference/embedding.md
