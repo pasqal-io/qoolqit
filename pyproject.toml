@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "1.1.1"
+version = "1.2.0"
 requires-python = ">=3.10"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
@@ -58,12 +58,13 @@ dev = [
   "pre-commit",
   "ipykernel",
   "nbmake",
-  "mkdocs",
+  "mkdocs==1.6.1",
   "mkdocs-material",
   "mkdocstrings-python",
   "mkdocs-section-index",
   "mkdocs-jupyter",
   "mike",
+  "ruff>=0.15.21",
 ]
 
 [project.urls]
