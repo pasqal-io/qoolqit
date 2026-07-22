@@ -4058,9 +4058,9 @@ target_state = StateVector.from_state_amplitudes(
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Configure observables: occupation, correlation matrix, and fidelity vs. the ED target.</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">EmulationConfig</span><span class="p">(</span>
     <span class="n">observables</span><span class="o">=</span><span class="p">(</span>
-        <span class="n">Occupation</span><span class="p">(</span><span class="n">evaluation_times</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">]),</span>
-        <span class="n">CorrelationMatrix</span><span class="p">(</span><span class="n">evaluation_times</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">]),</span>
-        <span class="n">Fidelity</span><span class="p">(</span><span class="n">evaluation_times</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="n">state</span><span class="o">=</span><span class="n">target_state</span><span class="p">),</span>
+        <span class="n">Occupation</span><span class="p">(),</span>
+        <span class="n">CorrelationMatrix</span><span class="p">(),</span>
+        <span class="n">Fidelity</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">target_state</span><span class="p">),</span>
     <span class="p">),</span>
     <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">WARN</span>
 <span class="p">)</span>
@@ -4091,9 +4091,9 @@ target_state = StateVector.from_state_amplitudes(
 <div class="clipboard-copy-txt" id="cell-13"># Configure observables: occupation, correlation matrix, and fidelity vs. the ED target.
 config = EmulationConfig(
     observables=(
-        Occupation(evaluation_times=[1.0]),
-        CorrelationMatrix(evaluation_times=[1.0]),
-        Fidelity(evaluation_times=[1.0], state=target_state),
+        Occupation(),
+        CorrelationMatrix(),
+        Fidelity(state=target_state),
     ),
     log_level=logging.WARN
 )
