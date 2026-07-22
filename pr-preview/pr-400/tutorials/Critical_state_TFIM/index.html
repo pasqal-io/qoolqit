@@ -2899,7 +2899,7 @@ $$</p>
 <p>$$
 \sum_{i&lt;j} J_{ij}\,\sigma^z_i\sigma^z_j \;\approx\; \sum_i \sigma^z_i \sigma^z_{i+1},
 $$</p>
-<p>with the periodic identification $\sigma^z_{N+1}\equiv \sigma^z_1$ coming from the circle's closed topology — exactly the nearest-neighbor Ising ring we want, and the natural setting for studying bulk properties of the TFIM.</p>
+<p>with the periodic identification $\sigma^z_{N+1}\equiv \sigma^z_1$ coming from the circle's closed topology, exactly the nearest-neighbor Ising ring we want, and the natural setting for studying bulk properties of the TFIM.</p>
 <p>We can check this directly with <code>graph.interactions</code> which returns a dictionary with the value of $J_{ij}$</p>
 </div>
 </div>
@@ -3003,16 +3003,16 @@ print(graph.interactions()[(0,1)]/graph.interactions()[(0,2)])</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Taking $\Omega_R = J_{nn}/2$, the derived Hamiltonian becomes</p>
+<p>The mapping from TFIM parameters to Rydberg drive parameters is then:</p>
+<ul>
+<li><strong>Rabi frequency:</strong> $\Omega(t)\equiv\Omega_R=J_{nn}/2=1/2$, which sets the transverse field.</li>
+<li><strong>Detuning:</strong> $\delta(t)$, chosen to compensate the residual local longitudinal field $h_i^z = \frac{1}{2}\sum_{j\neq i} J_{ij}$, so that the $\sigma^z_i$ term in the derived Hamiltonian vanishes and a pure transverse-field Ising model is left behind. We can compute it directly from the <code>graph.interactions()</code> dictionary for any qubit; thanks to the ring's translational symmetry it is the same for every site. Therefore, the physical detuning is a constant offset: $\delta(t)=\Delta$.</li>
+</ul>
+<p>The derived Hamiltonian becomes</p>
 <p>$$
 H \;=\; \frac{J_{nn}}{4}\sum_i \sigma^z_i\sigma^z_{i+1} \;+\; \frac{\Omega_R}{2}\sum_j \sigma^x_j \;=\; \frac{1}{4}\,H_{\text{TFIM}}
 $$</p>
 <p>at the critical point $h=J=1$. A global rescaling of the Hamiltonian does not change the structure of the spectrum (nor the eigenstates), so this is exactly the critical state we are after.</p>
-<p>The mapping from TFIM parameters to Rydberg drive parameters is then:</p>
-<ul>
-<li><strong>Rabi frequency:</strong> $\Omega(t)\equiv\Omega_R=J_{nn}/2=1/2$, which sets the transverse field.</li>
-<li><strong>Detuning:</strong> $\delta(t)$, chosen to compensate the residual local longitudinal field $h_i^z = \frac{1}{2}\sum_{j\neq i} J_{ij}$, so that the $\sigma^z_i$ term in the derived Hamiltonian vanishes and a pure transverse-field Ising model is left behind. We compute it directly from the <code>graph.interactions()</code> dictionary for any qubit; thanks to the ring's translational symmetry it is the same for every qubit. The physical detuning is then this constant offset: $\delta(t)=\Delta$.</li>
-</ul>
 </div>
 </div>
 </div>
