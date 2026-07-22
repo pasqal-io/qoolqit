@@ -246,7 +246,11 @@ class AnalogDeviceWithDMM(Device):
             bottom_detuning=-2 * math.pi * 20,
             total_bottom_detuning=-2 * math.pi * 20,
         )
-        pulser_device = replace(pulser.AnalogDevice.to_virtual(), dmm_objects=(dmm_channel,))
+        # Create a virtual device that can be modified to add a DMM channel.
+        pulser_virtual_device = pulser.AnalogDevice.to_virtual()
+        pulser_device = replace(
+            pulser_virtual_device, dmm_objects=(dmm_channel,), name="AnalogDeviceWithDMM"
+        )
         super().__init__(pulser_device=pulser_device)
 
 
@@ -259,5 +263,5 @@ class DigitalAnalogDevice(Device):
 
 def available_default_devices() -> None:
     """Show the default available devices in QooQit."""
-    for dev in (AnalogDevice(), AnalogDeviceWithDMM(), DigitalAnalogDevice(), MockDevice()):
+    for dev in (AnalogDevice(), AnalogDeviceWithDMM(), MockDevice()):
         dev.info()
