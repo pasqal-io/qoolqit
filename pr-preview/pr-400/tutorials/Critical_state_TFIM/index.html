@@ -4010,27 +4010,18 @@ print(f"Target &lt;n&gt; = {np.mean(occ_t):.4f}")</div>
 <span class="n">n_ops</span> <span class="o">=</span> <span class="p">[</span><span class="n">local_operator</span><span class="p">(</span><span class="n">N_OP</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
 
 <span class="c1"># Each n_op is diagonal with real 0/1 entries; take the real part before casting to int.</span>
-<span class="n">occ_per_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">op</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span><span class="o">.</span><span class="n">real</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">n_ops</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>  <span class="c1"># (dim, N)</span>
-<span class="n">GR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">"g"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">])</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">GR</span><span class="p">[</span><span class="n">occ_per_state</span><span class="p">]]</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 
-<span class="n">amplitudes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">psi_gs</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)))</span>
-<span class="n">target_state</span> <span class="o">=</span> <span class="n">StateVector</span><span class="o">.</span><span class="n">from_state_amplitudes</span><span class="p">(</span>
-    <span class="n">eigenstates</span><span class="o">=</span><span class="p">(</span><span class="s2">"g"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">),</span> <span class="n">amplitudes</span><span class="o">=</span><span class="n">amplitudes</span>
-<span class="p">)</span>
+<span class="n">target_state</span> <span class="o">=</span> <span class="n">StateVector</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">psi_gs</span><span class="p">))</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-12"># Convert the ED ground state to an emu_sv StateVector for the Fidelity observable
 n_ops = [local_operator(N_OP, j, N) for j in range(N)]
 
 # Each n_op is diagonal with real 0/1 entries; take the real part before casting to int.
-occ_per_state = np.stack([op.diagonal().real for op in n_ops], axis=1).astype(int)  # (dim, N)
-GR = np.array(["g", "r"])
-labels = ["".join(row) for row in GR[occ_per_state]]
+import torch
 
-amplitudes = dict(zip(labels, psi_gs.astype(float)))
-target_state = StateVector.from_state_amplitudes(
-    eigenstates=("g", "r"), amplitudes=amplitudes
-)</div>
+target_state = StateVector(torch.asarray(psi_gs))
+</div>
 </div>
 </div>
 </div>
@@ -4083,8 +4074,8 @@ target_state = StateVector.from_state_amplitudes(
     <span class="n">fid_vs_t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tagged</span><span class="p">[</span><span class="s2">"fidelity"</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
 
 <span class="c1"># Occupation and correlations from the final (largest-t~, most adiabatic) run.</span>
-<span class="n">occ_p</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tagged</span><span class="p">[</span><span class="s2">"occupation"</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">real</span>
-<span class="n">corr_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tagged</span><span class="p">[</span><span class="s2">"correlation_matrix"</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">real</span>
+<span class="n">occ_p</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tagged</span><span class="p">[</span><span class="s2">"occupation"</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">corr_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tagged</span><span class="p">[</span><span class="s2">"correlation_matrix"</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">conn_p</span> <span class="o">=</span> <span class="n">corr_p</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">occ_p</span><span class="p">,</span> <span class="n">occ_p</span><span class="p">)</span>
 <span class="n">fid</span>    <span class="o">=</span> <span class="n">fid_vs_t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
@@ -4116,8 +4107,8 @@ for i, t in enumerate(t_sweep):
     fid_vs_t[i] = float(np.asarray(tagged["fidelity"][-1]).real)
 
 # Occupation and correlations from the final (largest-t~, most adiabatic) run.
-occ_p  = np.asarray(tagged["occupation"][-1]).real
-corr_p = np.asarray(tagged["correlation_matrix"][-1]).real
+occ_p  = np.asarray(tagged["occupation"][-1])
+corr_p = np.asarray(tagged["correlation_matrix"][-1])
 conn_p = corr_p - np.outer(occ_p, occ_p)
 fid    = fid_vs_t[-1]</div>
 </div>
