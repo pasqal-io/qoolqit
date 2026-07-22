@@ -3461,10 +3461,10 @@ $$</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span><span class="p">,</span> <span class="n">identity</span><span class="p">,</span> <span class="n">kron</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">eigsh</span>
 
-<span class="n">I2</span> <span class="o">=</span> <span class="n">identity</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"csr"</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
-<span class="n">SIGMA_X</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">))</span>
-<span class="n">SIGMA_Z</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">))</span>
-<span class="n">N_OP</span>    <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">))</span>
+<span class="n">I2</span> <span class="o">=</span> <span class="n">identity</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"csr"</span><span class="p">)</span>
+<span class="n">SIGMA_X</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]))</span>
+<span class="n">SIGMA_Z</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">]]))</span>
+<span class="n">N_OP</span>    <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]))</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">local_operator</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -3497,7 +3497,7 @@ $$</p>
 <span class="sd">        omega (float): Rabi frequency driving sigma^x on every site.</span>
 <span class="sd">        delta (float): Detuning driving -n_i on every site.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        scipy.sparse.csr_matrix: The (2**N, 2**N) complex Hamiltonian.</span>
+<span class="sd">        scipy.sparse.csr_matrix: The (2**N, 2**N) Hamiltonian.</span>
 <span class="sd">    """</span>
     <span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">N</span>
 
@@ -3505,7 +3505,7 @@ $$</p>
     <span class="n">x_ops</span> <span class="o">=</span> <span class="p">[</span><span class="n">local_operator</span><span class="p">(</span><span class="n">SIGMA_X</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
 
     <span class="c1"># Drive terms: (omega/2) sigma^x_j - delta n_j, summed over all sites.</span>
-    <span class="n">H</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">((</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">((</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
         <span class="n">H</span> <span class="o">=</span> <span class="n">H</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">x_ops</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">n_ops</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
 
@@ -3522,7 +3522,7 @@ $$</p>
 <span class="n">evals</span><span class="p">,</span> <span class="n">evecs</span> <span class="o">=</span> <span class="n">eigsh</span><span class="p">(</span><span class="n">H_target</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">"SA"</span><span class="p">)</span>
 <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">evals</span><span class="p">)</span>
 <span class="n">evals</span><span class="p">,</span> <span class="n">evecs</span> <span class="o">=</span> <span class="n">evals</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">evecs</span><span class="p">[:,</span> <span class="n">order</span><span class="p">]</span>
-<span class="n">psi_gs</span> <span class="o">=</span> <span class="n">evecs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+<span class="n">psi_gs</span> <span class="o">=</span> <span class="n">evecs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"E_0 = </span><span class="si">{</span><span class="n">evals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">,  E_1 = </span><span class="si">{</span><span class="n">evals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">,  gap = </span><span class="si">{</span><span class="n">evals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">evals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-8">from functools import reduce
@@ -3530,10 +3530,10 @@ $$</p>
 from scipy.sparse import csr_matrix, identity, kron
 from scipy.sparse.linalg import eigsh
 
-I2 = identity(2, format="csr", dtype=np.complex128)
-SIGMA_X = csr_matrix(np.array([[0, 1], [1, 0]], dtype=np.complex128))
-SIGMA_Z = csr_matrix(np.array([[1, 0], [0, -1]], dtype=np.complex128))
-N_OP    = csr_matrix(np.diag([0.0, 1.0]).astype(np.complex128))
+I2 = identity(2, format="csr")
+SIGMA_X = csr_matrix(np.array([[0, 1.], [1., 0]]))
+SIGMA_Z = csr_matrix(np.array([[1., 0], [0, -1.]]))
+N_OP    = csr_matrix(np.diag([0.0, 1.0]))
 
 def local_operator(op, site, N):
     """
@@ -3566,7 +3566,7 @@ def build_target_hamiltonian(N, graph, omega, delta):
         omega (float): Rabi frequency driving sigma^x on every site.
         delta (float): Detuning driving -n_i on every site.
     Returns:
-        scipy.sparse.csr_matrix: The (2**N, 2**N) complex Hamiltonian.
+        scipy.sparse.csr_matrix: The (2**N, 2**N) Hamiltonian.
     """
     dim = 2 ** N
 
@@ -3574,7 +3574,7 @@ def build_target_hamiltonian(N, graph, omega, delta):
     x_ops = [local_operator(SIGMA_X, j, N) for j in range(N)]
 
     # Drive terms: (omega/2) sigma^x_j - delta n_j, summed over all sites.
-    H = csr_matrix((dim, dim), dtype=np.complex128)
+    H = csr_matrix((dim, dim))
     for j in range(N):
         H = H + 0.5 * omega * x_ops[j] - delta * n_ops[j]
 
@@ -3591,7 +3591,7 @@ H_target = build_target_hamiltonian(N, graph, OMEGA_R, DELTA)
 evals, evecs = eigsh(H_target, k=2, which="SA")
 order = np.argsort(evals)
 evals, evecs = evals[order], evecs[:, order]
-psi_gs = evecs[:, 0].astype(np.complex128)
+psi_gs = evecs[:, 0]
 print(f"E_0 = {evals[0]:.6f},  E_1 = {evals[1]:.6f},  gap = {evals[1] - evals[0]:.6f}")</div>
 </div>
 </div>
@@ -3832,13 +3832,13 @@ $$</p>
 <span class="sd">        h (float): Transverse field strength.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        scipy.sparse.csr_matrix: The (2**N, 2**N) complex Hamiltonian.</span>
+<span class="sd">        scipy.sparse.csr_matrix: The (2**N, 2**N) Hamiltonian.</span>
 <span class="sd">    """</span>
     <span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">N</span>
     <span class="n">z_ops</span> <span class="o">=</span> <span class="p">[</span><span class="n">local_operator</span><span class="p">(</span><span class="n">SIGMA_Z</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
     <span class="n">x_ops</span> <span class="o">=</span> <span class="p">[</span><span class="n">local_operator</span><span class="p">(</span><span class="n">SIGMA_X</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
 
-    <span class="n">H</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">((</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">((</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
     <span class="c1"># Interaction terms on the ring: sum_i sigma^z_i sigma^z_{i+1}, with (i+1) mod N</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
         <span class="n">H</span> <span class="o">=</span> <span class="n">H</span> <span class="o">+</span> <span class="n">z_ops</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">@</span> <span class="n">z_ops</span><span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span><span class="p">]</span>
@@ -3850,7 +3850,7 @@ $$</p>
 <span class="c1"># Ground state of the ideal periodic TFIM, and its overlap with the Rydberg target.</span>
 <span class="n">H_TFIM</span> <span class="o">=</span> <span class="n">build_TFIM_hamiltonian</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
 <span class="n">evals_tfim</span><span class="p">,</span> <span class="n">evecs_tfim</span> <span class="o">=</span> <span class="n">eigsh</span><span class="p">(</span><span class="n">H_TFIM</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">"SA"</span><span class="p">)</span>
-<span class="n">psi_TFIM_gs</span> <span class="o">=</span> <span class="n">evecs_tfim</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+<span class="n">psi_TFIM_gs</span> <span class="o">=</span> <span class="n">evecs_tfim</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
 
 <span class="n">overlap_tfim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vdot</span><span class="p">(</span><span class="n">psi_TFIM_gs</span><span class="p">,</span> <span class="n">psi_gs</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Overlap between ideal TFIM ground state and Rydberg target: </span><span class="si">{</span><span class="n">overlap_tfim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -3868,13 +3868,13 @@ $$</p>
         h (float): Transverse field strength.
 
     Returns:
-        scipy.sparse.csr_matrix: The (2**N, 2**N) complex Hamiltonian.
+        scipy.sparse.csr_matrix: The (2**N, 2**N) Hamiltonian.
     """
     dim = 2 ** N
     z_ops = [local_operator(SIGMA_Z, j, N) for j in range(N)]
     x_ops = [local_operator(SIGMA_X, j, N) for j in range(N)]
 
-    H = csr_matrix((dim, dim), dtype=np.complex128)
+    H = csr_matrix((dim, dim))
     # Interaction terms on the ring: sum_i sigma^z_i sigma^z_{i+1}, with (i+1) mod N
     for i in range(N):
         H = H + z_ops[i] @ z_ops[(i + 1) % N]
@@ -3886,7 +3886,7 @@ $$</p>
 # Ground state of the ideal periodic TFIM, and its overlap with the Rydberg target.
 H_TFIM = build_TFIM_hamiltonian(N, h)
 evals_tfim, evecs_tfim = eigsh(H_TFIM, k=1, which="SA")
-psi_TFIM_gs = evecs_tfim[:, 0].astype(np.complex128)
+psi_TFIM_gs = evecs_tfim[:, 0]
 
 overlap_tfim = np.abs(np.vdot(psi_TFIM_gs, psi_gs)) ** 2
 print(f"Overlap between ideal TFIM ground state and Rydberg target: {overlap_tfim:.4f}")</div>
@@ -4032,7 +4032,7 @@ print(f"Target &lt;n&gt; = {np.mean(occ_t):.4f}")</div>
 <span class="n">GR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">"g"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">])</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">GR</span><span class="p">[</span><span class="n">occ_per_state</span><span class="p">]]</span>
 
-<span class="n">amplitudes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">psi_gs</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">complex</span><span class="p">)))</span>
+<span class="n">amplitudes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">psi_gs</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)))</span>
 <span class="n">target_state</span> <span class="o">=</span> <span class="n">StateVector</span><span class="o">.</span><span class="n">from_state_amplitudes</span><span class="p">(</span>
     <span class="n">eigenstates</span><span class="o">=</span><span class="p">(</span><span class="s2">"g"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">),</span> <span class="n">amplitudes</span><span class="o">=</span><span class="n">amplitudes</span>
 <span class="p">)</span>
@@ -4045,7 +4045,7 @@ occ_per_state = np.stack([op.diagonal().real for op in n_ops], axis=1).astype(in
 GR = np.array(["g", "r"])
 labels = ["".join(row) for row in GR[occ_per_state]]
 
-amplitudes = dict(zip(labels, psi_gs.astype(complex)))
+amplitudes = dict(zip(labels, psi_gs.astype(float)))
 target_state = StateVector.from_state_amplitudes(
     eigenstates=("g", "r"), amplitudes=amplitudes
 )</div>
