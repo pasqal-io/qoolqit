@@ -28,6 +28,7 @@ nav:
   - Applications:
     - tutorials/index.md
     - Solving a QUBO: tutorials/solving_a_qubo.ipynb
+    - Solving a MWIS: tutorials/Solving_a_MWIS.ipynb
   - API reference:
     - qoolqit: reference/qoolqit.md
     - qoolqit.embedding: reference/embedding.md
