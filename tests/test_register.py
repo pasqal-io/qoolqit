@@ -1,12 +1,103 @@
 from __future__ import annotations
 
+import importlib
 import random
+from unittest import mock
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pytest
+import torch
 
 from qoolqit.graphs import DataGraph
 from qoolqit.register import Register
+
+
+def test_register_without_torch() -> None:
+    import qoolqit.register as register_module
+
+    # Remove torch from sys.modules and block the import
+    with mock.patch.dict("sys.modules", {"torch": None}):
+        # Reload register so the try/except runs again
+        importlib.reload(register_module)
+        assert register_module._has_torch is False
+
+    # Reload the module to its original state
+    importlib.reload(register_module)
+    assert register_module._has_torch is True
+
+
+@pytest.mark.parametrize(
+    "qubits",
+    [
+        {"a": (0, 0), "b": (1, 0), "c": (0, 1)},
+        {1: [0, 0], 2: [1, 0]},
+        {0: np.array([0.1, 1.2]), 1: np.array([-0.7, -0.4]), 2: np.array([5.0, 0.0])},
+        {
+            "q0": torch.tensor([0.0, 0.0], dtype=torch.float64),
+            "q1": torch.tensor([1.2, 0.0], dtype=torch.float64),
+            "q2": torch.tensor([0.6, 1.04], dtype=torch.float64),
+        },
+    ],
+)
+def test_init(qubits: dict) -> None:
+    reg = Register(qubits)
+
+    assert reg.n_qubits == len(qubits)
+    assert reg.qubits_ids == list(qubits.keys())
+
+    for k, v in reg.qubits.items():
+        assert k in qubits
+        if isinstance(v, torch.Tensor):
+            assert torch.allclose(v, qubits[k])
+        else:
+            assert isinstance(v, np.ndarray)
+            np.testing.assert_allclose(v, qubits[k])
+
+
+def test_empty_register() -> None:
+    with pytest.raises(ValueError, match=r"Register cannot be empty\."):
+        Register({})  # type: ignore [call-arg]
+
+
+def test_init_wrong_qubits_type() -> None:
+    with pytest.raises(
+        TypeError,
+        match=r"`qubits` must be a dictionary mapping qubit ids to coordinates",
+    ):
+        Register("I'm not a dict")  # type: ignore [arg-type]
+
+
+@pytest.mark.parametrize(
+    "qubits",
+    [
+        {0: (1, 2, 3)},
+        {"q0": np.array([1.0, -2.0]), "q1": np.array([[-1.0, -1.0], [-1.0, -1.0]])},
+        {7: 32},
+    ],
+)
+def test_init_invalid_coordinate_shape(qubits: dict) -> None:
+    with pytest.raises(ValueError, match="must be a 2D point, got"):
+        Register(qubits)
+
+
+@pytest.mark.parametrize(
+    "qubits",
+    [
+        {"3": np.array(["a", "b"])},
+    ],
+)
+def test_init_invalid_coordinate_type(qubits: dict) -> None:
+    with pytest.raises(
+        ValueError,
+        match=r"Coordinate for qubit '3' must be castable to an array of floats, got",
+    ):
+        Register(qubits)
+
+
+def test_from_coordinates_wrong_type() -> None:
+    with pytest.raises(TypeError, match="from_coordinates"):
+        Register.from_coordinates({"a": (0.0, 0.0)})  # type: ignore [arg-type]
 
 
 @pytest.mark.parametrize("n_qubits", [3, 4, 10])
@@ -58,3 +149,14 @@ def test_radial_distances() -> None:
     radial_dists = register.radial_distances()
     expected_radial_distances = {i: 0.3 * np.sqrt(2) for i in range(3)}
     assert radial_dists == expected_radial_distances
+
+
+def test_draw() -> None:
+    # Just check that no exception is raised
+    reg = Register({"a": (0.0, 0.0), "b": (1.0, 0.0)})
+    reg.draw()
+
+    # to ax
+    fig, ax = plt.subplots()
+    reg.draw(ax=ax, marker_size=50)
+    plt.close(fig)

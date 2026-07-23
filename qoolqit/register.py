@@ -1,28 +1,93 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.axes import Axes
+from numpy.typing import ArrayLike
 
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
 from qoolqit.graphs.utils import radial_distances
 
+if TYPE_CHECKING:
+    import torch
+
+try:
+    import torch
+
+    _has_torch = True
+except ImportError:
+    _has_torch = False
+
 
 class Register:
-    """The Register in QoolQit, representing a set of qubits with coordinates."""
+    """A QoolQit register mapping qubit IDs to 2D coordinates.
 
-    def __init__(self, qubits: dict) -> None:
+    Attributes:
+        qubits: a dictionary of qubit IDs and respective coordinates {q: (x, y),...}.
+        qubits_ids: a list of qubit IDs.
+        n_qubits: the number of qubits in the register.
+
+    Examples:
+        From a dictionary of qubit IDs and coordinates:
+
+        >>> reg = Register({"a": (0.0, 0.0), "b": (1.0, 0.0), "c": (0.0, 1.0)})
+        >>> reg = Register({0: (0.0, 0.0), 1: (1.0, 0.0), 2: (0.0, 1.0)})
+
+        From a list of coordinates (qubit IDs are assigned automatically as integers):
+
+        >>> reg = Register.from_coordinates([(0.0, 0.0), (1.0, 0.0), (0.0, 1.0)])
+
+        Using numpy arrays as coordinates:
+
+        >>> import numpy as np
+        >>> reg = Register({"a": np.array([0.0, 0.0]), "b": np.array([1.0, 0.0])})
+
+        Using torch tensors as coordinates:
+
+        >>> import torch
+        >>> reg = Register({"a": torch.tensor([0.0, 0.0]), "b": torch.tensor([1.0, 0.0])})
+    """
+
+    def __init__(
+        self,
+        qubits: dict[str, ArrayLike | torch.Tensor] | dict[int, ArrayLike | torch.Tensor],
+    ) -> None:
         """Default constructor for the Register.
 
-        Arguments:
+        Args:
             qubits: a dictionary of qubits and respective coordinates {q: (x, y), ...}.
+
+        Raises:
+            TypeError: If `qubits` is not a dictionary.
+            ValueError: If `qubits` is empty.
+            ValueError: If a qubit coordinate cannot be converted to an array of
+                floats, or if the converted coordinate is not a point in 2D.
         """
         if not isinstance(qubits, dict):
-            raise TypeError(
-                "Register must be initialized with a dictionary of "
-                "qubits and respective coordinates {q: (x, y), ...}."
-            )
+            raise TypeError("`qubits` must be a dictionary mapping qubit ids to coordinates.")
+        if len(qubits) == 0:
+            raise ValueError("Register cannot be empty.")
 
-        self._qubits: dict = qubits
+        parsed = {}
+        for key, val in qubits.items():
+            try:
+                if _has_torch and isinstance(val, torch.Tensor):
+                    parsed[key] = torch.asarray(val, dtype=torch.float64)
+                else:
+                    parsed[key] = np.asarray(val, dtype=float)
+            except (ValueError, TypeError) as err:
+                raise ValueError(
+                    f"Coordinate for qubit {key!r} must be castable to an array of floats, "
+                    f"got {val!r}."
+                ) from err
+
+            converted = parsed[key]
+            if converted.ndim != 1 or converted.shape[0] != 2:
+                raise ValueError(f"Coordinate for qubit {key!r} must be a 2D point, got {val!r}.")
+
+        self._qubits = parsed
 
     @classmethod
     def from_graph(cls, graph: DataGraph) -> Register:
@@ -49,15 +114,16 @@ class Register:
         """
         if not isinstance(coords, list):
             raise TypeError(
-                "Register must be initialized with a dictionary of qubit and coordinates."
+                "Register.from_coordinates must be initialized with a list of"
+                " coordinates [(x, y), ...]."
             )
         coords_dict = {i: pos for i, pos in enumerate(coords)}
         return cls(coords_dict)
 
     @property
     def qubits(self) -> dict:
-        """Returns the dictionary of qubits and respective coordinates."""
-        return self._qubits
+        """Returns a copy of the dictionary of qubits and respective coordinates."""
+        return dict(self._qubits)
 
     @property
     def qubits_ids(self) -> list:
@@ -67,7 +133,7 @@ class Register:
     @property
     def n_qubits(self) -> int:
         """Number of qubits in the Register."""
-        return len(self.qubits)
+        return len(self._qubits)
 
     def distances(self) -> dict:
         """Distance between each qubit pair."""
@@ -109,7 +175,12 @@ class Register:
         marker_radius = marker_size**0.5 / 2  # in points
         annotation_offset = 1.5 * marker_radius  # place label just outside the marker
 
-        x, y = zip(*self.qubits.values())
+        x, y = zip(
+            *[
+                (v.detach().numpy() if (_has_torch and isinstance(v, torch.Tensor)) else v)
+                for v in self.qubits.values()
+            ]
+        )
         ax.scatter(x, y, s=marker_size, color="green")
 
         for i, qubit_id in enumerate(self.qubits_ids):
