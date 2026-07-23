@@ -28,7 +28,7 @@ nav:
   - Applications:
     - tutorials/index.md
     - Solving a QUBO problem: tutorials/solving_a_qubo.ipynb
-    - Quantum State Preparation: tutorials/Critical_state_TFIM.ipynb
+    - Preparing the critical state of the Transverse-Field Ising Model: tutorials/Critical_state_TFIM.ipynb
   - API reference:
     - qoolqit: reference/qoolqit.md
     - qoolqit.embedding: reference/embedding.md
