@@ -27,7 +27,8 @@ nav:
     - Custom embedders: extended_usage/custom_embedders.ipynb
   - Applications:
     - tutorials/index.md
-    - Solving a QUBO problem: tutorials/solving_a_qubo.ipynb
+    - Solving a QUBO: tutorials/solving_a_qubo.ipynb
+    - Solving a MWIS: tutorials/Solving_a_MWIS.ipynb
     - Preparing the TFIM critical state: tutorials/Critical_state_TFIM.ipynb
   - API reference:
     - qoolqit: reference/qoolqit.md
