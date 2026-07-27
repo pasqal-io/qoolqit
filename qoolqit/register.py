@@ -109,6 +109,9 @@ class Register:
         validated_coords = [self._validate_coord(k, c) for k, c in qubits.items()]
         self._coords = self._stack_coords(validated_coords)
 
+    def __len__(self) -> int:
+        return len(self._qubits_ids)
+
     @staticmethod
     def _validate_coord(
         key: str | int, coord: Sequence[float] | npt.NDArray[np.float64] | torch.Tensor
@@ -192,7 +195,7 @@ class Register:
     @property
     def n_qubits(self) -> int:
         """Number of qubits in the Register."""
-        return len(self.qubits_ids)
+        return len(self)
 
     def distances(self) -> dict:
         """Distance between each qubit pair."""
