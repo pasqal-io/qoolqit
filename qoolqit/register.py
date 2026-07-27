@@ -46,6 +46,12 @@ def _norm(x: npt.NDArray[np.float64] | torch.Tensor) -> np.float64 | torch.Tenso
     return np.linalg.norm(x)
 
 
+def _copy(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
+    if _is_torch(x):
+        return x.clone()
+    return np.copy(x)
+
+
 class Register:
     """A QoolQit register mapping qubit IDs to 2D coordinates.
 
@@ -116,17 +122,20 @@ class Register:
             ) from err
 
         if valid_coord.ndim != 1 or valid_coord.shape[0] != 2:
-            raise ValueError(f"Coordinate for qubit {key!r} must be a 2D point, " f"got {coord!r}.")
+            raise ValueError(f"Coordinate for qubit {key!r} must be a 2D point, got {coord!r}.")
         return valid_coord
 
     @staticmethod
     def _stack_coords(
         coords: Sequence[npt.NDArray[np.float64] | torch.Tensor],
     ) -> npt.NDArray[np.float64] | torch.Tensor:
-        """Stack already-validated 2D coordinates into a single (n, 2) array."""
+        """Stack already-validated 2D coordinates into a single (n, 2) array.
+
+        If any of the coordinates are torch tensors, the result will also be a torch tensor.
+        """
         if any(_is_torch(c) for c in coords):
-            return torch.vstack([torch.asarray(c, dtype=torch.float64) for c in coords])
-        return np.asarray(coords, dtype=np.float64)
+            return torch.vstack([c if _is_torch(c) else torch.asarray(c) for c in coords])
+        return np.asarray(coords)
 
     @classmethod
     def from_graph(cls, graph: DataGraph) -> Register:
@@ -173,7 +182,7 @@ class Register:
     @property
     def qubits(self) -> dict:
         """Returns a dictionary of qubits and respective coordinates."""
-        return {qubit_id: coord for qubit_id, coord in zip(self._qubits_ids, self._coords)}
+        return {qid: _copy(coord) for qid, coord in zip(self._qubits_ids, self._coords)}
 
     @property
     def qubits_ids(self) -> tuple[str | int, ...]:

@@ -97,6 +97,28 @@ def test_init_invalid_coordinate_type(qubits: dict) -> None:
         Register(qubits)
 
 
+@pytest.mark.parametrize(
+    "qubits",
+    [
+        {"q0": [0.0, 3.0], "q1": [1.0, 0.0]},
+        {"q0": (np.pi, np.pi)},
+        {"q0": np.array([1.0, 0.0])},
+        {1: torch.tensor([0.0, 3.0]), 2: torch.tensor([1.0, 3.0], requires_grad=True)},
+    ],
+)
+def test_qubits_dict_copy(qubits: dict) -> None:
+    register = Register(qubits)
+    qubits1 = register.qubits
+    qubits2 = register.qubits
+
+    for key in qubits:
+        # Check that the qubits are not the same object (to verify that they are distinct copies)
+        assert qubits1[key] is not qubits2[key]
+
+        qubits1[key][0] = 0.01
+        assert qubits1[key][0] != qubits2[key][0]
+
+
 def test_from_coordinates_wrong_type() -> None:
     with pytest.raises(TypeError, match="from_coordinates"):
         Register.from_coordinates({"a": (0.0, 0.0)})  # type: ignore [arg-type]
