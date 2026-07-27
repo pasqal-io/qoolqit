@@ -6394,9 +6394,7 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 <span class="normal"><a href="#__codelineno-0-124">124</a></span>
 <span class="normal"><a href="#__codelineno-0-125">125</a></span>
 <span class="normal"><a href="#__codelineno-0-126">126</a></span>
-<span class="normal"><a href="#__codelineno-0-127">127</a></span>
-<span class="normal"><a href="#__codelineno-0-128">128</a></span>
-<span class="normal"><a href="#__codelineno-0-129">129</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-127">127</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the pointwise sum of this waveform and another (or a scalar).&quot;&quot;&quot;</span>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a>        <span class="c1"># local import to avoid a circular import with waveforms.waveforms</span>
@@ -6404,10 +6402,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>        <span class="n">other</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a>            <span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a>        <span class="p">)</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6463,21 +6459,21 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/waveforms/base_waveforms.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-136">136</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-134">134</a></span>
+<span class="normal"><a href="#__codelineno-0-135">135</a></span>
+<span class="normal"><a href="#__codelineno-0-136">136</a></span>
 <span class="normal"><a href="#__codelineno-0-137">137</a></span>
 <span class="normal"><a href="#__codelineno-0-138">138</a></span>
 <span class="normal"><a href="#__codelineno-0-139">139</a></span>
 <span class="normal"><a href="#__codelineno-0-140">140</a></span>
-<span class="normal"><a href="#__codelineno-0-141">141</a></span>
-<span class="normal"><a href="#__codelineno-0-142">142</a></span>
-<span class="normal"><a href="#__codelineno-0-143">143</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeWaveform</span><span class="p">:</span>
-<a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a new CompositeWaveform composed of this waveform and another.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
-<a id="__codelineno-0-140" name="__codelineno-0-140"></a>            <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">_waveforms</span><span class="p">)</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
-<a id="__codelineno-0-142" name="__codelineno-0-142"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-143" name="__codelineno-0-143"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composing with object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-141">141</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-134" name="__codelineno-0-134"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeWaveform</span><span class="p">:</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a new CompositeWaveform composed of this waveform and another.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-136" name="__codelineno-0-136"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a>            <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">_waveforms</span><span class="p">)</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composing with object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6708,9 +6704,7 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 <span class="normal"><a href="#__codelineno-0-124">124</a></span>
 <span class="normal"><a href="#__codelineno-0-125">125</a></span>
 <span class="normal"><a href="#__codelineno-0-126">126</a></span>
-<span class="normal"><a href="#__codelineno-0-127">127</a></span>
-<span class="normal"><a href="#__codelineno-0-128">128</a></span>
-<span class="normal"><a href="#__codelineno-0-129">129</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-127">127</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the pointwise sum of this waveform and another (or a scalar).&quot;&quot;&quot;</span>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a>        <span class="c1"># local import to avoid a circular import with waveforms.waveforms</span>
@@ -6718,10 +6712,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>        <span class="n">other</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a>            <span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a>        <span class="p">)</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6777,21 +6769,21 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/waveforms/base_waveforms.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-136">136</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-134">134</a></span>
+<span class="normal"><a href="#__codelineno-0-135">135</a></span>
+<span class="normal"><a href="#__codelineno-0-136">136</a></span>
 <span class="normal"><a href="#__codelineno-0-137">137</a></span>
 <span class="normal"><a href="#__codelineno-0-138">138</a></span>
 <span class="normal"><a href="#__codelineno-0-139">139</a></span>
 <span class="normal"><a href="#__codelineno-0-140">140</a></span>
-<span class="normal"><a href="#__codelineno-0-141">141</a></span>
-<span class="normal"><a href="#__codelineno-0-142">142</a></span>
-<span class="normal"><a href="#__codelineno-0-143">143</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeWaveform</span><span class="p">:</span>
-<a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a new CompositeWaveform composed of this waveform and another.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
-<a id="__codelineno-0-140" name="__codelineno-0-140"></a>            <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">_waveforms</span><span class="p">)</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
-<a id="__codelineno-0-142" name="__codelineno-0-142"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-143" name="__codelineno-0-143"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composing with object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-141">141</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-134" name="__codelineno-0-134"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeWaveform</span><span class="p">:</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a new CompositeWaveform composed of this waveform and another.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-136" name="__codelineno-0-136"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a>            <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">_waveforms</span><span class="p">)</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composing with object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -10783,9 +10775,7 @@ for any value R in that interval, the following condition is true:</p>
 <span class="normal"><a href="#__codelineno-0-124">124</a></span>
 <span class="normal"><a href="#__codelineno-0-125">125</a></span>
 <span class="normal"><a href="#__codelineno-0-126">126</a></span>
-<span class="normal"><a href="#__codelineno-0-127">127</a></span>
-<span class="normal"><a href="#__codelineno-0-128">128</a></span>
-<span class="normal"><a href="#__codelineno-0-129">129</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-127">127</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the pointwise sum of this waveform and another (or a scalar).&quot;&quot;&quot;</span>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a>        <span class="c1"># local import to avoid a circular import with waveforms.waveforms</span>
@@ -10793,10 +10783,8 @@ for any value R in that interval, the following condition is true:</p>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>        <span class="n">other</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a>            <span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a>        <span class="p">)</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -10852,21 +10840,21 @@ for any value R in that interval, the following condition is true:</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/waveforms/base_waveforms.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-136">136</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-134">134</a></span>
+<span class="normal"><a href="#__codelineno-0-135">135</a></span>
+<span class="normal"><a href="#__codelineno-0-136">136</a></span>
 <span class="normal"><a href="#__codelineno-0-137">137</a></span>
 <span class="normal"><a href="#__codelineno-0-138">138</a></span>
 <span class="normal"><a href="#__codelineno-0-139">139</a></span>
 <span class="normal"><a href="#__codelineno-0-140">140</a></span>
-<span class="normal"><a href="#__codelineno-0-141">141</a></span>
-<span class="normal"><a href="#__codelineno-0-142">142</a></span>
-<span class="normal"><a href="#__codelineno-0-143">143</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeWaveform</span><span class="p">:</span>
-<a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a new CompositeWaveform composed of this waveform and another.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
-<a id="__codelineno-0-140" name="__codelineno-0-140"></a>            <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">_waveforms</span><span class="p">)</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
-<a id="__codelineno-0-142" name="__codelineno-0-142"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-143" name="__codelineno-0-143"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composing with object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-141">141</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-134" name="__codelineno-0-134"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeWaveform</span><span class="p">:</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a new CompositeWaveform composed of this waveform and another.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-136" name="__codelineno-0-136"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a>            <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">_waveforms</span><span class="p">)</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composing with object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -11149,8 +11137,12 @@ unit conversion.</p>
       <a href="../embedding/#qoolqit.embedding"><code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;embedding</a>
   </span>
 
-            <span class="doc doc-backlink-crumb last">
+            <span class="doc doc-backlink-crumb">
       <a href="../embedding/#qoolqit.embedding.BladeConfig"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BladeConfig</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb last">
+      <a href="../embedding/#qoolqit.embedding.BladeConfig.__post_init__"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__post_init__</a>
   </span>
 
       </li>
@@ -13010,9 +13002,7 @@ across the duration. Default is None.</p>
 <span class="normal"><a href="#__codelineno-0-124">124</a></span>
 <span class="normal"><a href="#__codelineno-0-125">125</a></span>
 <span class="normal"><a href="#__codelineno-0-126">126</a></span>
-<span class="normal"><a href="#__codelineno-0-127">127</a></span>
-<span class="normal"><a href="#__codelineno-0-128">128</a></span>
-<span class="normal"><a href="#__codelineno-0-129">129</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-127">127</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the pointwise sum of this waveform and another (or a scalar).&quot;&quot;&quot;</span>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a>        <span class="c1"># local import to avoid a circular import with waveforms.waveforms</span>
@@ -13020,10 +13010,8 @@ across the duration. Default is None.</p>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>        <span class="n">other</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a>            <span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a>        <span class="p">)</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -13079,21 +13067,21 @@ across the duration. Default is None.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/waveforms/base_waveforms.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-136">136</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-134">134</a></span>
+<span class="normal"><a href="#__codelineno-0-135">135</a></span>
+<span class="normal"><a href="#__codelineno-0-136">136</a></span>
 <span class="normal"><a href="#__codelineno-0-137">137</a></span>
 <span class="normal"><a href="#__codelineno-0-138">138</a></span>
 <span class="normal"><a href="#__codelineno-0-139">139</a></span>
 <span class="normal"><a href="#__codelineno-0-140">140</a></span>
-<span class="normal"><a href="#__codelineno-0-141">141</a></span>
-<span class="normal"><a href="#__codelineno-0-142">142</a></span>
-<span class="normal"><a href="#__codelineno-0-143">143</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeWaveform</span><span class="p">:</span>
-<a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a new CompositeWaveform composed of this waveform and another.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
-<a id="__codelineno-0-140" name="__codelineno-0-140"></a>            <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">_waveforms</span><span class="p">)</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
-<a id="__codelineno-0-142" name="__codelineno-0-142"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-143" name="__codelineno-0-143"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composing with object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-141">141</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-134" name="__codelineno-0-134"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeWaveform</span><span class="p">:</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a new CompositeWaveform composed of this waveform and another.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-136" name="__codelineno-0-136"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a>            <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">_waveforms</span><span class="p">)</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composing with object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -13923,9 +13911,7 @@ through the given N+1 values.</p>
 <span class="normal"><a href="#__codelineno-0-124">124</a></span>
 <span class="normal"><a href="#__codelineno-0-125">125</a></span>
 <span class="normal"><a href="#__codelineno-0-126">126</a></span>
-<span class="normal"><a href="#__codelineno-0-127">127</a></span>
-<span class="normal"><a href="#__codelineno-0-128">128</a></span>
-<span class="normal"><a href="#__codelineno-0-129">129</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-127">127</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the pointwise sum of this waveform and another (or a scalar).&quot;&quot;&quot;</span>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a>        <span class="c1"># local import to avoid a circular import with waveforms.waveforms</span>
@@ -13933,10 +13919,8 @@ through the given N+1 values.</p>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>        <span class="n">other</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a>            <span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a>        <span class="p">)</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -13992,11 +13976,11 @@ through the given N+1 values.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/waveforms/base_waveforms.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-241">241</a></span>
-<span class="normal"><a href="#__codelineno-0-242">242</a></span>
-<span class="normal"><a href="#__codelineno-0-243">243</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="k">def</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-242" name="__codelineno-0-242"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the maximum value of the waveform.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-243" name="__codelineno-0-243"></a>    <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="n">wf</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span><span class="p">])</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-239">239</a></span>
+<span class="normal"><a href="#__codelineno-0-240">240</a></span>
+<span class="normal"><a href="#__codelineno-0-241">241</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="k">def</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the maximum value of the waveform.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a>    <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="n">wf</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span><span class="p">])</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -14022,11 +14006,11 @@ through the given N+1 values.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/waveforms/base_waveforms.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-245">245</a></span>
-<span class="normal"><a href="#__codelineno-0-246">246</a></span>
-<span class="normal"><a href="#__codelineno-0-247">247</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-245" name="__codelineno-0-245"></a><span class="k">def</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the minimum value of the waveform.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-247" name="__codelineno-0-247"></a>    <span class="k">return</span> <span class="nb">min</span><span class="p">([</span><span class="n">wf</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span><span class="p">])</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-243">243</a></span>
+<span class="normal"><a href="#__codelineno-0-244">244</a></span>
+<span class="normal"><a href="#__codelineno-0-245">245</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="k">def</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the minimum value of the waveform.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a>    <span class="k">return</span> <span class="nb">min</span><span class="p">([</span><span class="n">wf</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="k">for</span> <span class="n">wf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveforms</span><span class="p">])</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -14846,9 +14830,7 @@ Can only be set if the device has a maximum allowed duration.</p>
 <span class="normal"><a href="#__codelineno-0-124">124</a></span>
 <span class="normal"><a href="#__codelineno-0-125">125</a></span>
 <span class="normal"><a href="#__codelineno-0-126">126</a></span>
-<span class="normal"><a href="#__codelineno-0-127">127</a></span>
-<span class="normal"><a href="#__codelineno-0-128">128</a></span>
-<span class="normal"><a href="#__codelineno-0-129">129</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-127">127</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Waveform</span><span class="p">:</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the pointwise sum of this waveform and another (or a scalar).&quot;&quot;&quot;</span>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a>        <span class="c1"># local import to avoid a circular import with waveforms.waveforms</span>
@@ -14856,10 +14838,8 @@ Can only be set if the device has a maximum allowed duration.</p>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>        <span class="n">other</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a>            <span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a>        <span class="p">)</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding an object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="k">return</span> <span class="n">SumWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -14915,21 +14895,21 @@ Can only be set if the device has a maximum allowed duration.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/waveforms/base_waveforms.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-136">136</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-134">134</a></span>
+<span class="normal"><a href="#__codelineno-0-135">135</a></span>
+<span class="normal"><a href="#__codelineno-0-136">136</a></span>
 <span class="normal"><a href="#__codelineno-0-137">137</a></span>
 <span class="normal"><a href="#__codelineno-0-138">138</a></span>
 <span class="normal"><a href="#__codelineno-0-139">139</a></span>
 <span class="normal"><a href="#__codelineno-0-140">140</a></span>
-<span class="normal"><a href="#__codelineno-0-141">141</a></span>
-<span class="normal"><a href="#__codelineno-0-142">142</a></span>
-<span class="normal"><a href="#__codelineno-0-143">143</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeWaveform</span><span class="p">:</span>
-<a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a new CompositeWaveform composed of this waveform and another.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
-<a id="__codelineno-0-140" name="__codelineno-0-140"></a>            <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">_waveforms</span><span class="p">)</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
-<a id="__codelineno-0-142" name="__codelineno-0-142"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-143" name="__codelineno-0-143"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composing with object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-141">141</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-134" name="__codelineno-0-134"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompositeWaveform</span><span class="p">:</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a new CompositeWaveform composed of this waveform and another.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-136" name="__codelineno-0-136"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a>            <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">_waveforms</span><span class="p">)</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="k">return</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Composing with object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported.&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
