@@ -64,7 +64,7 @@ def test_empty_register() -> None:
 def test_init_wrong_qubits_type() -> None:
     with pytest.raises(
         TypeError,
-        match=r"`qubits` must be a dictionary mapping qubit ids to coordinates",
+        match=r"`qubits` must be a Mapping of qubit ids to coordinates",
     ):
         Register("I'm not a dict")  # type: ignore [arg-type]
 
