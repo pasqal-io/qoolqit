@@ -26,7 +26,7 @@ class Waveform(ABC):
         - `max()`: the maximum value of the waveform.
         - `min()`: the minimum value of the waveform.
         - `__mul__(scalar)`: rescale this waveform by a scalar factor.
-        - `__add__(Waveform | float)`: add the waveform or scalar. 
+        - `__add__(Waveform | float)`: add the waveform or scalar.
         - `_to_pulser(duration)`: conversion to a Pulser-compatible waveform.
 
     Any additional parameters (e.g. amplitude, frequency) should be passed as keyword
@@ -114,7 +114,7 @@ class Waveform(ABC):
         if isinstance(t, list):
             return [self._single_call(ti) for ti in t]
         return self._single_call(t)
-        
+
     def __add__(self, other: Waveform | float) -> Waveform:
         """Returns the pointwise sum of this waveform and another (or a scalar)."""
         if isinstance(other, (int, float)):
@@ -123,9 +123,7 @@ class Waveform(ABC):
 
             other = ConstantWaveform(self.duration, float(other))
         if not isinstance(other, Waveform):
-            raise NotImplementedError(
-                f"Adding an object of type {type(other)} is not supported."
-            )
+            raise NotImplementedError(f"Adding an object of type {type(other)} is not supported.")
         return SumWaveform(self, other)
 
     __radd__ = __add__
