@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import TYPE_CHECKING, Any, Mapping, TypeGuard
+from collections.abc import Mapping, Sequence
+from typing import TYPE_CHECKING, Any, TypeGuard
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -95,7 +95,7 @@ class Register:
                 floats, or if the converted coordinate is not a point in 2D.
         """
         if not isinstance(qubits, Mapping):
-            raise TypeError("`qubits` must be a dictionary mapping qubit ids to coordinates.")
+            raise TypeError("`qubits` must be a Mapping of qubit ids to coordinates.")
         if not qubits:
             raise ValueError("Register cannot be empty.")
 
@@ -155,11 +155,12 @@ class Register:
     ) -> Register:
         """Initializes a Register from a sequence or array of coordinates.
 
-        Qubit IDs are assigned automatically as strings "0", "1", ...
+        Qubit IDs are assigned as integers 0,1,...,N, where N is the number of coordinates.
 
         Args:
             coords: a sequence of 2D coordinates, i.e. [(x, y), ...].
                 Each coordinate must be castable to a numpy or torch array of shape (2,).
+                If `coords` is a numpy array or a torch tensor, it must be 2D and of shape (N, 2).
         """
         if isinstance(coords, Mapping):
             raise TypeError(
