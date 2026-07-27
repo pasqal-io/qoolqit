@@ -1,17 +1,18 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Any, Mapping, TypeGuard
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 from matplotlib.axes import Axes
-from numpy.typing import ArrayLike
 
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
-from qoolqit.graphs.utils import radial_distances
 
 if TYPE_CHECKING:
     import torch
+
 
 try:
     import torch
@@ -19,6 +20,30 @@ try:
     _has_torch = True
 except ImportError:
     _has_torch = False
+
+
+def _is_torch(val: Any) -> TypeGuard[torch.Tensor]:
+    return _has_torch and isinstance(val, torch.Tensor)
+
+
+def _to_array(
+    val: Sequence[float] | npt.NDArray[np.float64] | torch.Tensor,
+) -> npt.NDArray[np.float64] | torch.Tensor:
+    """Convert a value to a float array.
+
+    Returns a torch tensor if the value is itself a tensor, otherwise a numpy
+    array.
+    """
+    if _is_torch(val):
+        return val.to(dtype=torch.float64)
+    return np.asarray(val, dtype=np.float64)
+
+
+def _norm(x: npt.NDArray[np.float64] | torch.Tensor) -> np.float64 | torch.Tensor:
+    if _is_torch(x):
+        norm: torch.Tensor = torch.linalg.norm(x)
+        return norm
+    return np.linalg.norm(x)
 
 
 class Register:
@@ -35,7 +60,7 @@ class Register:
         >>> reg = Register({"a": (0.0, 0.0), "b": (1.0, 0.0), "c": (0.0, 1.0)})
         >>> reg = Register({0: (0.0, 0.0), 1: (1.0, 0.0), 2: (0.0, 1.0)})
 
-        From a list of coordinates (qubit IDs are assigned automatically as integers):
+        From a list of coordinates (qubit IDs are assigned automatically as strings "0", "1", ...):
 
         >>> reg = Register.from_coordinates([(0.0, 0.0), (1.0, 0.0), (0.0, 1.0)])
 
@@ -52,48 +77,62 @@ class Register:
 
     def __init__(
         self,
-        qubits: dict[str, ArrayLike | torch.Tensor] | dict[int, ArrayLike | torch.Tensor],
+        qubits: (
+            Mapping[str, Sequence[float] | npt.NDArray[np.float64] | torch.Tensor]
+            | Mapping[int, Sequence[float] | npt.NDArray[np.float64] | torch.Tensor]
+        ),
     ) -> None:
         """Default constructor for the Register.
 
         Args:
-            qubits: a dictionary of qubits and respective coordinates {q: (x, y), ...}.
+            qubits: a dictionary of qubits and respective 2D coordinates {q: (x, y), ...}.
+                Each coordinate must be castable to a numpy or torch array of shape (2,).
 
         Raises:
             TypeError: If `qubits` is not a dictionary.
-            ValueError: If `qubits` is empty.
+            ValueError: If `qubits` dictionary is empty.
             ValueError: If a qubit coordinate cannot be converted to an array of
                 floats, or if the converted coordinate is not a point in 2D.
         """
-        if not isinstance(qubits, dict):
+        if not isinstance(qubits, Mapping):
             raise TypeError("`qubits` must be a dictionary mapping qubit ids to coordinates.")
-        if len(qubits) == 0:
+        if not qubits:
             raise ValueError("Register cannot be empty.")
 
-        parsed = {}
-        for key, val in qubits.items():
-            try:
-                if _has_torch and isinstance(val, torch.Tensor):
-                    parsed[key] = torch.asarray(val, dtype=torch.float64)
-                else:
-                    parsed[key] = np.asarray(val, dtype=float)
-            except (ValueError, TypeError) as err:
-                raise ValueError(
-                    f"Coordinate for qubit {key!r} must be castable to an array of floats, "
-                    f"got {val!r}."
-                ) from err
+        self._qubits_ids: tuple[str | int, ...] = tuple(qubits.keys())
+        validated_coords = [self._validate_coord(k, c) for k, c in qubits.items()]
+        self._coords = self._stack_coords(validated_coords)
 
-            converted = parsed[key]
-            if converted.ndim != 1 or converted.shape[0] != 2:
-                raise ValueError(f"Coordinate for qubit {key!r} must be a 2D point, got {val!r}.")
+    @staticmethod
+    def _validate_coord(
+        key: str | int, coord: Sequence[float] | npt.NDArray[np.float64] | torch.Tensor
+    ) -> npt.NDArray[np.float64] | torch.Tensor:
+        try:
+            valid_coord = _to_array(coord)
+        except (ValueError, TypeError) as err:
+            raise ValueError(
+                f"Coordinate for qubit {key!r} must be castable "
+                f"to an array of floats, got {coord!r}."
+            ) from err
 
-        self._qubits = parsed
+        if valid_coord.ndim != 1 or valid_coord.shape[0] != 2:
+            raise ValueError(f"Coordinate for qubit {key!r} must be a 2D point, " f"got {coord!r}.")
+        return valid_coord
+
+    @staticmethod
+    def _stack_coords(
+        coords: Sequence[npt.NDArray[np.float64] | torch.Tensor],
+    ) -> npt.NDArray[np.float64] | torch.Tensor:
+        """Stack already-validated 2D coordinates into a single (n, 2) array."""
+        if any(_is_torch(c) for c in coords):
+            return torch.vstack([torch.asarray(c, dtype=torch.float64) for c in coords])
+        return np.asarray(coords, dtype=np.float64)
 
     @classmethod
     def from_graph(cls, graph: DataGraph) -> Register:
         """Initializes a Register from a graph that has coordinates.
 
-        Arguments:
+        Args:
             graph: a DataGraph instance.
         """
 
@@ -106,38 +145,48 @@ class Register:
         return cls(graph.coords)
 
     @classmethod
-    def from_coordinates(cls, coords: list) -> Register:
-        """Initializes a Register from a list of coordinates.
+    def from_coordinates(
+        cls,
+        coords: (
+            Sequence[Sequence[float] | npt.NDArray[np.float64] | torch.Tensor]
+            | npt.NDArray[np.float64]
+            | torch.Tensor
+        ),
+    ) -> Register:
+        """Initializes a Register from a sequence or array of coordinates.
 
-        Arguments:
-            coords: a list of coordinates [(x, y), ...]
+        Qubit IDs are assigned automatically as strings "0", "1", ...
+
+        Args:
+            coords: a sequence of 2D coordinates, i.e. [(x, y), ...].
+                Each coordinate must be castable to a numpy or torch array of shape (2,).
         """
-        if not isinstance(coords, list):
+        if isinstance(coords, Mapping):
             raise TypeError(
-                "Register.from_coordinates must be initialized with a list of"
-                " coordinates [(x, y), ...]."
+                "Register.from_coordinates expects a sequence of coordinates [(x, y), ...]; "
+                "pass an id-to-coordinate mapping to Register(...) directly."
             )
         coords_dict = {i: pos for i, pos in enumerate(coords)}
         return cls(coords_dict)
 
     @property
     def qubits(self) -> dict:
-        """Returns a copy of the dictionary of qubits and respective coordinates."""
-        return dict(self._qubits)
+        """Returns a dictionary of qubits and respective coordinates."""
+        return {qubit_id: coord for qubit_id, coord in zip(self._qubits_ids, self._coords)}
 
     @property
-    def qubits_ids(self) -> list:
-        """Returns the qubit keys."""
-        return list(self._qubits.keys())
+    def qubits_ids(self) -> tuple[str | int, ...]:
+        """Returns the qubit IDs."""
+        return self._qubits_ids
 
     @property
     def n_qubits(self) -> int:
         """Number of qubits in the Register."""
-        return len(self._qubits)
+        return len(self.qubits_ids)
 
     def distances(self) -> dict:
         """Distance between each qubit pair."""
-        pairs = all_node_pairs(list(self.qubits.keys()))
+        pairs = all_node_pairs(self.qubits_ids)
         return distances(self.qubits, pairs)
 
     def min_distance(self) -> float:
@@ -147,7 +196,7 @@ class Register:
 
     def radial_distances(self) -> dict:
         """Radial distance of each qubit from the origin."""
-        return radial_distances(self.qubits)
+        return {qid: _norm(coord) for qid, coord in zip(self.qubits_ids, self._coords)}
 
     def max_radial_distance(self) -> float:
         """Maximum radial distance between all qubits."""
@@ -175,18 +224,12 @@ class Register:
         marker_radius = marker_size**0.5 / 2  # in points
         annotation_offset = 1.5 * marker_radius  # place label just outside the marker
 
-        x, y = zip(
-            *[
-                (v.detach().numpy() if (_has_torch and isinstance(v, torch.Tensor)) else v)
-                for v in self.qubits.values()
-            ]
-        )
-        ax.scatter(x, y, s=marker_size, color="green")
-
-        for i, qubit_id in enumerate(self.qubits_ids):
+        coords = self._coords.detach().cpu().numpy() if _is_torch(self._coords) else self._coords
+        for xi, yi, qid in zip(coords[:, 0], coords[:, 1], self.qubits_ids):
+            ax.scatter(xi, yi, s=marker_size, color="green")
             ax.annotate(
-                qubit_id,
-                xy=(x[i], y[i]),
+                str(qid),
+                xy=(xi, yi),
                 xytext=(annotation_offset, annotation_offset),
                 textcoords="offset points",
                 ha="center",

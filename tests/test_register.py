@@ -30,7 +30,7 @@ def test_register_without_torch() -> None:
 @pytest.mark.parametrize(
     "qubits",
     [
-        {"a": (0, 0), "b": (1, 0), "c": (0, 1)},
+        {"a": (0, 0), "b": (1, 0), "c": [0, 1]},
         {1: [0, 0], 2: [1, 0]},
         {0: np.array([0.1, 1.2]), 1: np.array([-0.7, -0.4]), 2: np.array([5.0, 0.0])},
         {
@@ -38,13 +38,14 @@ def test_register_without_torch() -> None:
             "q1": torch.tensor([1.2, 0.0], dtype=torch.float64),
             "q2": torch.tensor([0.6, 1.04], dtype=torch.float64),
         },
+        {"q0": [torch.tensor(0.0), torch.tensor(1.0)]},
     ],
 )
 def test_init(qubits: dict) -> None:
     reg = Register(qubits)
 
     assert reg.n_qubits == len(qubits)
-    assert reg.qubits_ids == list(qubits.keys())
+    assert reg.qubits_ids == tuple(qubits.keys())
 
     for k, v in reg.qubits.items():
         assert k in qubits
@@ -74,6 +75,7 @@ def test_init_wrong_qubits_type() -> None:
         {0: (1, 2, 3)},
         {"q0": np.array([1.0, -2.0]), "q1": np.array([[-1.0, -1.0], [-1.0, -1.0]])},
         {7: 32},
+        {"q_inf": np.array([np.inf, 0.1]), "q_nan": np.array([[0.1, np.nan]])},
     ],
 )
 def test_init_invalid_coordinate_shape(qubits: dict) -> None:
@@ -102,7 +104,7 @@ def test_from_coordinates_wrong_type() -> None:
 
 @pytest.mark.parametrize("n_qubits", [3, 4, 10])
 def test_register_from_coordinates(n_qubits: int) -> None:
-
+    random.seed(0)  # Ensure reproducibility
     coords = [(random.random(), random.random()) for _ in range(n_qubits)]
     qubits = {i: coords[i] for i in range(n_qubits)}
 
