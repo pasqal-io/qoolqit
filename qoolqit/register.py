@@ -39,11 +39,11 @@ def _to_array(
     return np.asarray(val, dtype=np.float64)
 
 
-def _norm(x: npt.NDArray[np.float64] | torch.Tensor) -> np.float64 | torch.Tensor:
+def _norm(x: npt.NDArray[np.float64] | torch.Tensor) -> float:
     if _is_torch(x):
-        norm: torch.Tensor = torch.linalg.norm(x)
-        return norm
-    return np.linalg.norm(x)
+        norm = torch.linalg.norm(x)
+    norm = np.linalg.norm(x)
+    return float(norm)
 
 
 def _copy(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
