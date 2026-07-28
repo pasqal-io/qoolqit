@@ -48,17 +48,12 @@ def _norm(x: npt.NDArray[np.float64] | torch.Tensor) -> np.float64 | torch.Tenso
 
 def _copy(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
     if _is_torch(x):
-        return x.clone()
+        return x.clone().detach()
     return np.copy(x)
 
 
 class Register:
     """A QoolQit register mapping qubit IDs to 2D coordinates.
-
-    Attributes:
-        qubits: a dictionary of qubit IDs and respective coordinates {q: (x, y),...}.
-        qubits_ids: a list of qubit IDs.
-        n_qubits: the number of qubits in the register.
 
     Examples:
         From a dictionary of qubit IDs and coordinates:
@@ -95,7 +90,7 @@ class Register:
                 Each coordinate must be castable to a numpy or torch array of shape (2,).
 
         Raises:
-            TypeError: If `qubits` is not a dictionary.
+            TypeError: If `qubits` is not a Mapping.
             ValueError: If `qubits` dictionary is empty.
             ValueError: If a qubit coordinate cannot be converted to an array of
                 floats, or if the converted coordinate is not a point in 2D.
@@ -167,12 +162,15 @@ class Register:
     ) -> Register:
         """Initializes a Register from a sequence or array of coordinates.
 
-        Qubit IDs are assigned as integers 0,1,...,N, where N is the number of coordinates.
+        Qubit IDs are assigned as integers 0,1,...,N-1, where N is the number of coordinates.
 
         Args:
             coords: a sequence of 2D coordinates, i.e. [(x, y), ...].
                 Each coordinate must be castable to a numpy or torch array of shape (2,).
                 If `coords` is a numpy array or a torch tensor, it must be 2D and of shape (N, 2).
+
+        Raises:
+            TypeError: If `coords` is a Mapping.
         """
         if isinstance(coords, Mapping):
             raise TypeError(
