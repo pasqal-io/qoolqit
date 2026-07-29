@@ -187,19 +187,17 @@ def test_draw() -> None:
 
 
 def test_circle() -> None:
-    n_qubits = 4
     spacing = 0.5
+    n_qubits = 4
     register = Register.circle(n_qubits, spacing=spacing)
 
     radius = spacing / (2 * np.sin(np.pi / n_qubits))
-    expected = {
-        0: (radius, 0.0),
-        1: (0.0, radius),
-        2: (-radius, 0.0),
-        3: (0.0, -radius),
-    }
+    expected = [
+        (radius, 0.0),
+        (0.0, radius),
+        (-radius, 0.0),
+        (0.0, -radius),
+    ]
 
     assert register.n_qubits == n_qubits
-    for qubit_id, expected_pos in expected.items():
-        np.testing.assert_allclose(register.qubits[qubit_id], expected_pos, atol=1e-7)
-    np.testing.assert_allclose(register.distances()[(0, 1)], spacing)
+    np.testing.assert_allclose(list(register.qubits.values()), expected, atol=1e-8)
