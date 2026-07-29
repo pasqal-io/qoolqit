@@ -184,3 +184,16 @@ def test_draw() -> None:
     fig, ax = plt.subplots()
     reg.draw(ax=ax, marker_size=50)
     plt.close(fig)
+
+
+def test_triangular() -> None:
+    spacing = 0.5
+    register = Register.triangular(1, 1, spacing=spacing)
+    h = spacing * np.sqrt(3) / 2
+    expected = [
+        (-spacing / 2, -h / 3),
+        (spacing / 2, -h / 3),
+        (0.0, 2 * h / 3),
+    ]
+    assert register.n_qubits == 3
+    np.testing.assert_allclose(list(register.qubits.values()), expected, atol=1e-8)
