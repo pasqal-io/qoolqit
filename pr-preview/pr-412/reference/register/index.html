@@ -2907,8 +2907,10 @@ floats, or if the converted coordinate is not a point in 2D.</p>
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">draw</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">ax</span><span class="p">:</span> <span class="n"><span title="matplotlib.axes.Axes">Axes</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">marker_size</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">100</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">ax</span><span class="p">:</span> <span class="n"><span title="matplotlib.axes.Axes">Axes</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">marker_size</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">node_color</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2937,6 +2939,16 @@ If None, a new Axes will be created.</p>
           –
           <div class="doc-md-description">
             <p>size of the qubit markers in points squared. Defaults to 100.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>node_color</code></b>
+              (<code><span title="str">str</span></code>, default:
+                  <code>&#39;green&#39;</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>color of the qubit markers. Defaults to "green".</p>
           </div>
         </li>
     </ul>
@@ -2975,37 +2987,43 @@ If None, a new Axes will be created.</p>
 <span class="normal"><a href="#__codelineno-0-269">269</a></span>
 <span class="normal"><a href="#__codelineno-0-270">270</a></span>
 <span class="normal"><a href="#__codelineno-0-271">271</a></span>
-<span class="normal"><a href="#__codelineno-0-272">272</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-242" name="__codelineno-0-242"></a><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">marker_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw the register.</span>
-<a id="__codelineno-0-244" name="__codelineno-0-244"></a>
-<a id="__codelineno-0-245" name="__codelineno-0-245"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">        ax: an optional matplotlib Axes instance to draw on.</span>
-<a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">            If None, a new Axes will be created.</span>
-<a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">        marker_size: size of the qubit markers in points squared. Defaults to 100.</span>
-<a id="__codelineno-0-249" name="__codelineno-0-249"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-250" name="__codelineno-0-250"></a>    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-251" name="__codelineno-0-251"></a>        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a>
-<a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="n">marker_radius</span> <span class="o">=</span> <span class="n">marker_size</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># in points</span>
-<a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="n">annotation_offset</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">marker_radius</span>  <span class="c1"># place label just outside the marker</span>
+<span class="normal"><a href="#__codelineno-0-272">272</a></span>
+<span class="normal"><a href="#__codelineno-0-273">273</a></span>
+<span class="normal"><a href="#__codelineno-0-274">274</a></span>
+<span class="normal"><a href="#__codelineno-0-275">275</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-242" name="__codelineno-0-242"></a><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span>
+<a id="__codelineno-0-243" name="__codelineno-0-243"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">marker_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">node_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw the register.</span>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a>
+<a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">        ax: an optional matplotlib Axes instance to draw on.</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a><span class="sd">            If None, a new Axes will be created.</span>
+<a id="__codelineno-0-250" name="__codelineno-0-250"></a><span class="sd">        marker_size: size of the qubit markers in points squared. Defaults to 100.</span>
+<a id="__codelineno-0-251" name="__codelineno-0-251"></a><span class="sd">        node_color: color of the qubit markers. Defaults to &quot;green&quot;.</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a>        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <a id="__codelineno-0-255" name="__codelineno-0-255"></a>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a>    <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coords</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="k">if</span> <span class="n">_is_torch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_coords</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coords</span>
-<a id="__codelineno-0-257" name="__codelineno-0-257"></a>    <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">qid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">qubits_ids</span><span class="p">):</span>
-<a id="__codelineno-0-258" name="__codelineno-0-258"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">marker_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-259" name="__codelineno-0-259"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
-<a id="__codelineno-0-260" name="__codelineno-0-260"></a>            <span class="nb">str</span><span class="p">(</span><span class="n">qid</span><span class="p">),</span>
-<a id="__codelineno-0-261" name="__codelineno-0-261"></a>            <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">),</span>
-<a id="__codelineno-0-262" name="__codelineno-0-262"></a>            <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">annotation_offset</span><span class="p">,</span> <span class="n">annotation_offset</span><span class="p">),</span>
-<a id="__codelineno-0-263" name="__codelineno-0-263"></a>            <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-264" name="__codelineno-0-264"></a>            <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-265" name="__codelineno-0-265"></a>            <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-266" name="__codelineno-0-266"></a>        <span class="p">)</span>
-<a id="__codelineno-0-267" name="__codelineno-0-267"></a>
-<a id="__codelineno-0-268" name="__codelineno-0-268"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgray&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
-<a id="__codelineno-0-269" name="__codelineno-0-269"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-270" name="__codelineno-0-270"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-271" name="__codelineno-0-271"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-272" name="__codelineno-0-272"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">margins</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a>    <span class="n">marker_radius</span> <span class="o">=</span> <span class="n">marker_size</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># in points</span>
+<a id="__codelineno-0-257" name="__codelineno-0-257"></a>    <span class="n">annotation_offset</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">marker_radius</span>  <span class="c1"># place label just outside the marker</span>
+<a id="__codelineno-0-258" name="__codelineno-0-258"></a>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a>    <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coords</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="k">if</span> <span class="n">_is_torch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_coords</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coords</span>
+<a id="__codelineno-0-260" name="__codelineno-0-260"></a>    <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">qid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">qubits_ids</span><span class="p">):</span>
+<a id="__codelineno-0-261" name="__codelineno-0-261"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">marker_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">node_color</span><span class="p">)</span>
+<a id="__codelineno-0-262" name="__codelineno-0-262"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a>            <span class="nb">str</span><span class="p">(</span><span class="n">qid</span><span class="p">),</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a>            <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">),</span>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a>            <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">annotation_offset</span><span class="p">,</span> <span class="n">annotation_offset</span><span class="p">),</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a>            <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a>            <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a>            <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-269" name="__codelineno-0-269"></a>        <span class="p">)</span>
+<a id="__codelineno-0-270" name="__codelineno-0-270"></a>
+<a id="__codelineno-0-271" name="__codelineno-0-271"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgray&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<a id="__codelineno-0-272" name="__codelineno-0-272"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-273" name="__codelineno-0-273"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-274" name="__codelineno-0-274"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-275" name="__codelineno-0-275"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">margins</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
