@@ -179,6 +179,25 @@ class Register:
         coords_dict = {i: pos for i, pos in enumerate(coords)}
         return cls(coords_dict)
 
+    @classmethod
+    def circle(cls, n_qubits: int, spacing: float = 1.0) -> Register:
+        """Initializes a Register with qubits arranged in a circle.
+
+        Args:
+            n_qubits: number of qubits to place in the circle.
+            spacing: distance between adjacent qubits. Defaults to 1.0.
+        """
+        if n_qubits < 1:
+            raise ValueError("Number of qubits must be at least 1.")
+        if spacing <= 0:
+            raise ValueError("Spacing must be positive.")
+        if n_qubits == 1:
+            return cls.from_coordinates([(0.0, 0.0)])
+        radius = spacing / (2 * np.sin(np.pi / n_qubits))
+        angles = np.linspace(0, 2 * np.pi, n_qubits, endpoint=False)
+        coords = [(radius * np.cos(a), radius * np.sin(a)) for a in angles]
+        return cls.from_coordinates(coords)
+
     @property
     def qubits(self) -> dict:
         """Returns a dictionary of qubits and respective coordinates."""
