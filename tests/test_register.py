@@ -184,3 +184,22 @@ def test_draw() -> None:
     fig, ax = plt.subplots()
     reg.draw(ax=ax, marker_size=50)
     plt.close(fig)
+
+
+def test_rectangular() -> None:
+    spacing = 0.5
+    register = Register.rectangular(3, 3, spacing=spacing)
+    expected = [
+        (-spacing, -spacing),
+        (-spacing, 0.0),
+        (-spacing, spacing),
+        (0.0, -spacing),
+        (0.0, 0.0),
+        (0.0, spacing),
+        (spacing, -spacing),
+        (spacing, 0.0),
+        (spacing, spacing),
+    ]
+
+    assert register.n_qubits == 9
+    np.testing.assert_allclose(list(register.qubits.values()), expected, atol=1e-8)
