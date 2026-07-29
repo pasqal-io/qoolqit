@@ -189,6 +189,10 @@ class Register:
             n: number of columns of triangles.
             spacing: distance between adjacent qubits. Defaults to 1.0.
         """
+        if m < 1 or n < 1:
+            raise ValueError("`m` and `n` must both be at least 1.")
+        if spacing <= 0:
+            raise ValueError("`spacing` must be positive.")
         graph = nx.triangular_lattice_graph(m, n, with_positions=True)
         pos = nx.get_node_attributes(graph, "pos")
         coords = np.array([(x * spacing, y * spacing) for x, y in pos.values()])
