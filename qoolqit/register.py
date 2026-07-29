@@ -4,6 +4,7 @@ from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any, TypeGuard
 
 import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 import numpy.typing as npt
 from matplotlib.axes import Axes
@@ -178,6 +179,21 @@ class Register:
             )
         coords_dict = {i: pos for i, pos in enumerate(coords)}
         return cls(coords_dict)
+
+    @classmethod
+    def triangular(cls, m: int, n: int, spacing: float = 1.0) -> Register:
+        """Constructs a triangular lattice register.
+
+        Args:
+            m: number of rows of triangles.
+            n: number of columns of triangles.
+            spacing: distance between adjacent qubits. Defaults to 1.0.
+        """
+        graph = nx.triangular_lattice_graph(m, n, with_positions=True)
+        pos = nx.get_node_attributes(graph, "pos")
+        coords = np.array([(x * spacing, y * spacing) for x, y in pos.values()])
+        coords -= coords.mean(axis=0)
+        return cls.from_coordinates(coords)
 
     @property
     def qubits(self) -> dict:
