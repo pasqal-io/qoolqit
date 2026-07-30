@@ -181,23 +181,26 @@ class Register:
         return cls(coords_dict)
 
     @classmethod
-    def rectangular(cls, rows: int, cols: int, spacing: float = 1.0) -> Register:
+    def rectangular(
+        cls, rows: int, cols: int, row_spacing: float = 1.0, col_spacing: float = 1.0
+    ) -> Register:
         """Initializes a rectangular Register of qubits.
 
         Args:
             rows: number of rows in the rectangle.
             cols: number of columns in the rectangle.
-            spacing: distance between adjacent qubits. Defaults to 1.0.
+            row_spacing: distance between adjacent qubits in the row direction. Defaults to 1.0.
+            col_spacing: distance between adjacent qubits in the column direction. Defaults to 1.0.
         """
         if rows < 1 or cols < 1:
             raise ValueError("Number of rows and columns must be at least 1.")
-        if spacing <= 0:
+        if row_spacing <= 0 or col_spacing <= 0:
             raise ValueError("Spacing must be positive.")
 
-        x_offset = (rows - 1) * spacing / 2.0
-        y_offset = (cols - 1) * spacing / 2.0
+        x_offset = (rows - 1) * row_spacing / 2.0
+        y_offset = (cols - 1) * col_spacing / 2.0
         coords = [
-            (i * spacing - x_offset, j * spacing - y_offset)
+            (i * row_spacing - x_offset, j * col_spacing - y_offset)
             for i in range(rows)
             for j in range(cols)
         ]
