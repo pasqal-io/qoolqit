@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 from matplotlib.axes import Axes
+from scipy.spatial.distance import cdist
 
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
 
@@ -50,6 +51,12 @@ def _copy(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
     if _is_torch(x):
         return x.clone().detach()
     return np.copy(x)
+
+
+def _pdist(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
+    if _is_torch(x):
+        return torch.cdist(x, x, p=2)
+    return cdist(x, x)
 
 
 class Register:
@@ -285,6 +292,20 @@ class Register:
     def interactions(self) -> dict:
         """Interaction 1/r^6 between each qubit pair."""
         return {p: 1.0 / (r**6) for p, r in self.distances().items()}
+
+    def interaction_matrix(self) -> npt.NDArray[np.float64] | torch.Tensor:
+        """Interaction 1/r^6 between each qubit pair, as a matrix (0 on the diagonal)."""
+        dist_matrix = _pdist(self._coords)
+        # modify or mask the diagonal to prevent division by zero
+        if _is_torch(dist_matrix):
+            # out-of-place to protect autograd: mask + where
+            diagonal_mask = torch.eye(dist_matrix.shape[0], dtype=torch.bool)
+            return torch.where(diagonal_mask, 0.0, dist_matrix ** (-6))
+        # No autograd to protect here, so mutating in-place is safe
+        np.fill_diagonal(dist_matrix, 1.0)
+        interactions = dist_matrix ** (-6)
+        np.fill_diagonal(interactions, 0.0)
+        return interactions
 
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
