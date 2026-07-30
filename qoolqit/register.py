@@ -208,6 +208,26 @@ class Register:
         return cls.from_coordinates(coords)
 
     @classmethod
+    def square(cls, n: int, spacing: float = 1.0) -> Register:
+        """Initializes a square Register of qubits.
+
+        Args:
+            n: number of qubits along each side of the square.
+            spacing: distance between adjacent qubits. Defaults to 1.0.
+        """
+        return cls.rectangular(n, n, row_spacing=spacing, col_spacing=spacing)
+
+    @classmethod
+    def line(cls, n: int, spacing: float = 1.0) -> Register:
+        """Initializes a Register with qubits arranged in a line.
+
+        Args:
+            n: number of qubits to place in the line.
+            spacing: distance between adjacent qubits. Defaults to 1.0.
+        """
+        return cls.rectangular(n, 1, row_spacing=spacing)
+
+    @classmethod
     def circle(cls, n: int, spacing: float = 1.0) -> Register:
         """Initializes a Register with qubits arranged in a circle.
 
