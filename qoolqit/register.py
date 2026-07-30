@@ -190,9 +190,9 @@ class Register:
             spacing: distance between adjacent qubits. Defaults to 1.0.
         """
         if m < 1 or n < 1:
-            raise ValueError("`m` and `n` must both be at least 1.")
+            raise ValueError("m and n must both be at least 1.")
         if spacing <= 0:
-            raise ValueError("`spacing` must be positive.")
+            raise ValueError("Spacing must be positive.")
 
         n_cols = (n + 1) // 2
         height = math.sqrt(3.0) / 2.0

@@ -204,12 +204,12 @@ def test_triangular() -> None:
 
 @pytest.mark.parametrize("m, n", [(0, 1), (1, 0), (0, 0), (-1, 2)])
 def test_triangular_invalid_m_n(m: int, n: int) -> None:
-    with pytest.raises(ValueError, match="`m` and `n` must both be at least 1."):
+    with pytest.raises(ValueError, match="m and n must both be at least 1."):
         Register.triangular(m, n, spacing=1.0)
 
 
 def test_triangular_invalid_spacing() -> None:
-    with pytest.raises(ValueError, match="spacing must be positive."):
+    with pytest.raises(ValueError, match="Spacing must be positive."):
         Register.triangular(1, 1, spacing=-1)
 
 
