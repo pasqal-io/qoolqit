@@ -184,3 +184,36 @@ def test_draw() -> None:
     fig, ax = plt.subplots()
     reg.draw(ax=ax, marker_size=50)
     plt.close(fig)
+
+
+def test_circle() -> None:
+    spacing = 0.5
+    n_qubits = 4
+    register = Register.circle(n_qubits, spacing=spacing)
+
+    radius = spacing / (2 * np.sin(np.pi / n_qubits))
+    expected = [
+        (radius, 0.0),
+        (0.0, radius),
+        (-radius, 0.0),
+        (0.0, -radius),
+    ]
+
+    assert register.n_qubits == n_qubits
+    np.testing.assert_allclose(register._coords, expected, atol=1e-8)
+
+
+def test_invalid_spacing() -> None:
+    with pytest.raises(ValueError, match="Spacing must be positive."):
+        Register.circle(2, spacing=-1)
+
+
+def test_invalid_n_qubits() -> None:
+    with pytest.raises(ValueError, match="Number of qubits must be at least 1."):
+        Register.circle(0, spacing=1.0)
+
+
+@pytest.mark.parametrize("n, spacing", [(2, 1.0), (5, 1.28)])
+def test_circle_min_distance(n: int, spacing: float) -> None:
+    register = Register.circle(n, spacing=spacing)
+    np.testing.assert_allclose(register.min_distance(), spacing, atol=1e-8)
