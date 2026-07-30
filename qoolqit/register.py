@@ -207,8 +207,10 @@ class Register:
         x_mean = sum(x for x, _ in coords) / len(coords)
         y_mean = sum(y for _, y in coords) / len(coords)
         coords = [(x - x_mean, y - y_mean) for x, y in coords]
-        
-    @classmethod    
+
+        return cls.from_coordinates(coords)
+
+    @classmethod
     def circle(cls, n: int, spacing: float = 1.0) -> Register:
         """Initializes a Register with qubits arranged in a circle.
 

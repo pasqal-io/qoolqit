@@ -211,6 +211,8 @@ def test_triangular_invalid_m_n(m: int, n: int) -> None:
 def test_triangular_invalid_spacing() -> None:
     with pytest.raises(ValueError, match="spacing must be positive."):
         Register.triangular(1, 1, spacing=-1)
+
+
 def test_circle() -> None:
     spacing = 0.5
     n_qubits = 4
