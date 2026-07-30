@@ -254,3 +254,26 @@ def test_invalid_n_qubits() -> None:
 def test_circle_min_distance(n: int, spacing: float) -> None:
     register = Register.circle(n, spacing=spacing)
     np.testing.assert_allclose(register.min_distance(), spacing, atol=1e-8)
+
+
+def test_square() -> None:
+    spacing = 0.5
+    register = Register.square(2, spacing=spacing)
+    expected = [
+        (-spacing / 2.0, -spacing / 2.0),
+        (-spacing / 2.0, spacing / 2.0),
+        (spacing / 2.0, -spacing / 2.0),
+        (spacing / 2.0, spacing / 2.0),
+    ]
+    assert register.n_qubits == 4
+    np.testing.assert_allclose(register._coords, expected, atol=1e-8)
+
+
+def test_line() -> None:
+    spacing = 0.5
+    n = 4
+    register = Register.line(n, spacing=spacing)
+    offset = (n - 1) * spacing / 2.0
+    expected = [(i * spacing - offset, 0.0) for i in range(n)]
+    assert register.n_qubits == n
+    np.testing.assert_allclose(register._coords, expected, atol=1e-8)
