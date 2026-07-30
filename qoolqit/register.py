@@ -209,6 +209,53 @@ class Register:
         coords = [(x - x_mean, y - y_mean) for x, y in coords]
 
         return cls.from_coordinates(coords)
+    
+    @classmethod  
+    def rectangular(
+        cls, rows: int, cols: int, row_spacing: float = 1.0, col_spacing: float = 1.0
+    ) -> Register:
+        """Initializes a rectangular Register of qubits.
+
+        Args:
+            rows: number of rows in the rectangle.
+            cols: number of columns in the rectangle.
+            row_spacing: distance between adjacent qubits in the row direction. Defaults to 1.0.
+            col_spacing: distance between adjacent qubits in the column direction. Defaults to 1.0.
+        """
+        if rows < 1 or cols < 1:
+            raise ValueError("Number of rows and columns must be at least 1.")
+        if row_spacing <= 0 or col_spacing <= 0:
+            raise ValueError("Spacing must be positive.")
+
+        x_offset = (rows - 1) * row_spacing / 2.0
+        y_offset = (cols - 1) * col_spacing / 2.0
+        coords = [
+            (i * row_spacing - x_offset, j * col_spacing - y_offset)
+            for i in range(rows)
+            for j in range(cols)
+        ]
+
+        return cls.from_coordinates(coords)
+
+    @classmethod
+    def square(cls, n: int, spacing: float = 1.0) -> Register:
+        """Initializes a square Register of qubits.
+
+        Args:
+            n: number of qubits along each side of the square.
+            spacing: distance between adjacent qubits. Defaults to 1.0.
+        """
+        return cls.rectangular(n, n, row_spacing=spacing, col_spacing=spacing)
+
+    @classmethod
+    def line(cls, n: int, spacing: float = 1.0) -> Register:
+        """Initializes a Register with qubits arranged in a line.
+
+        Args:
+            n: number of qubits to place in the line.
+            spacing: distance between adjacent qubits. Defaults to 1.0.
+        """
+        return cls.rectangular(n, 1, row_spacing=spacing)
 
     @classmethod
     def circle(cls, n: int, spacing: float = 1.0) -> Register:

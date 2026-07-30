@@ -211,6 +211,41 @@ def test_triangular_invalid_m_n(m: int, n: int) -> None:
 def test_triangular_invalid_spacing() -> None:
     with pytest.raises(ValueError, match="Spacing must be positive."):
         Register.triangular(1, 1, spacing=-1)
+def test_rectangular() -> None:
+    row_spacing = 0.5
+    col_spacing = 1.5
+    register = Register.rectangular(3, 3, row_spacing=row_spacing, col_spacing=col_spacing)
+    expected = [
+        (-row_spacing, -col_spacing),
+        (-row_spacing, 0.0),
+        (-row_spacing, col_spacing),
+        (0.0, -col_spacing),
+        (0.0, 0.0),
+        (0.0, col_spacing),
+        (row_spacing, -col_spacing),
+        (row_spacing, 0.0),
+        (row_spacing, col_spacing),
+    ]
+
+    assert register.n_qubits == 9
+    np.testing.assert_allclose(register._coords, expected, atol=1e-8)
+
+
+@pytest.mark.parametrize("rows, cols", [(0, 2), (2, 0), (0, 0), (-1, 2)])
+def test_invalid_rows_cols(rows: int, cols: int) -> None:
+    with pytest.raises(ValueError, match="Number of rows and columns must be at least 1."):
+        Register.rectangular(rows, cols, row_spacing=1.0, col_spacing=1.0)
+
+
+@pytest.mark.parametrize(
+    "rows, cols, row_spacing, col_spacing",
+    [(2, 3, 1.0, 1.23), (3, 3, 0.75, 2.75), (1, 5, 5.28, 1.28)],
+)
+def test_rectangular_min_distance(
+    rows: int, cols: int, row_spacing: float, col_spacing: float
+) -> None:
+    register = Register.rectangular(rows, cols, row_spacing=row_spacing, col_spacing=col_spacing)
+    np.testing.assert_allclose(register.min_distance(), min(row_spacing, col_spacing), atol=1e-8)
 
 
 def test_circle() -> None:
@@ -244,3 +279,26 @@ def test_invalid_n_qubits() -> None:
 def test_circle_min_distance(n: int, spacing: float) -> None:
     register = Register.circle(n, spacing=spacing)
     np.testing.assert_allclose(register.min_distance(), spacing, atol=1e-8)
+
+
+def test_square() -> None:
+    spacing = 0.5
+    register = Register.square(2, spacing=spacing)
+    expected = [
+        (-spacing / 2.0, -spacing / 2.0),
+        (-spacing / 2.0, spacing / 2.0),
+        (spacing / 2.0, -spacing / 2.0),
+        (spacing / 2.0, spacing / 2.0),
+    ]
+    assert register.n_qubits == 4
+    np.testing.assert_allclose(register._coords, expected, atol=1e-8)
+
+
+def test_line() -> None:
+    spacing = 0.5
+    n = 4
+    register = Register.line(n, spacing=spacing)
+    offset = (n - 1) * spacing / 2.0
+    expected = [(i * spacing - offset, 0.0) for i in range(n)]
+    assert register.n_qubits == n
+    np.testing.assert_allclose(register._coords, expected, atol=1e-8)
