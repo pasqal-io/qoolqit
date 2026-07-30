@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any, TypeGuard
 
@@ -180,22 +181,24 @@ class Register:
         return cls(coords_dict)
 
     @classmethod
-    def circle(cls, n_qubits: int, spacing: float = 1.0) -> Register:
+    def circle(cls, n: int, spacing: float = 1.0) -> Register:
         """Initializes a Register with qubits arranged in a circle.
 
         Args:
-            n_qubits: number of qubits to place in the circle.
+            n: number of qubits to place in the circle.
             spacing: distance between adjacent qubits. Defaults to 1.0.
         """
-        if n_qubits < 1:
+        if n < 1:
             raise ValueError("Number of qubits must be at least 1.")
         if spacing <= 0:
             raise ValueError("Spacing must be positive.")
-        if n_qubits == 1:
+        if n == 1:
             return cls.from_coordinates([(0.0, 0.0)])
-        radius = spacing / (2 * np.sin(np.pi / n_qubits))
-        angles = np.linspace(0, 2 * np.pi, n_qubits, endpoint=False)
-        coords = [(radius * np.cos(a), radius * np.sin(a)) for a in angles]
+
+        step = 2.0 * math.pi / n
+        r = spacing / (2.0 * math.sin(math.pi / n))
+        coords = [(math.cos(step * i) * r, math.sin(step * i) * r) for i in range(n)]
+
         return cls.from_coordinates(coords)
 
     @property
@@ -239,16 +242,13 @@ class Register:
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
 
-    def draw(
-        self, ax: Axes | None = None, marker_size: int = 100, node_color: str = "green"
-    ) -> None:
+    def draw(self, ax: Axes | None = None, marker_size: int = 100) -> None:
         """Draw the register.
 
         Args:
             ax: an optional matplotlib Axes instance to draw on.
                 If None, a new Axes will be created.
             marker_size: size of the qubit markers in points squared. Defaults to 100.
-            node_color: color of the qubit markers. Defaults to "green".
         """
         if ax is None:
             _, ax = plt.subplots()
@@ -258,7 +258,7 @@ class Register:
 
         coords = self._coords.detach().cpu().numpy() if _is_torch(self._coords) else self._coords
         for xi, yi, qid in zip(coords[:, 0], coords[:, 1], self.qubits_ids):
-            ax.scatter(xi, yi, s=marker_size, color=node_color)
+            ax.scatter(xi, yi, s=marker_size, color="green")
             ax.annotate(
                 str(qid),
                 xy=(xi, yi),
