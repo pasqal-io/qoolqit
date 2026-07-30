@@ -4,7 +4,7 @@ from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any, TypeGuard
 
 import matplotlib.pyplot as plt
-import networkx as nx
+import math
 import numpy as np
 import numpy.typing as npt
 from matplotlib.axes import Axes
@@ -193,10 +193,23 @@ class Register:
             raise ValueError("`m` and `n` must both be at least 1.")
         if spacing <= 0:
             raise ValueError("`spacing` must be positive.")
-        graph = nx.triangular_lattice_graph(m, n, with_positions=True)
-        pos = nx.get_node_attributes(graph, "pos")
-        coords = np.array([(x * spacing, y * spacing) for x, y in pos.values()])
-        coords -= coords.mean(axis=0)
+
+        n_cols = (n + 1) // 2
+        height = math.sqrt(3.0) / 2.0
+
+        coords = []
+        for j in range(m + 1):
+            # for odd `n`, the last node of every odd row is dropped
+            row_len = n_cols if (n % 2 and j % 2) else n_cols + 1
+            for i in range(row_len):
+                coords.append(
+                    ((i + 0.5 * (j % 2)) * spacing, height * j * spacing)
+                )
+
+        x_mean = sum(x for x, _ in coords) / len(coords)
+        y_mean = sum(y for _, y in coords) / len(coords)
+        coords = [(x - x_mean, y - y_mean) for x, y in coords]
+
         return cls.from_coordinates(coords)
 
     @property

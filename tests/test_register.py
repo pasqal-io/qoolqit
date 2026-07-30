@@ -5,6 +5,7 @@ import random
 from unittest import mock
 
 import matplotlib.pyplot as plt
+import math
 import numpy as np
 import pytest
 import torch
@@ -189,11 +190,22 @@ def test_draw() -> None:
 def test_triangular() -> None:
     spacing = 0.5
     register = Register.triangular(1, 1, spacing=spacing)
-    h = spacing * np.sqrt(3) / 2
+
+    h = math.sqrt(3.0) / 2.0 * spacing  # row height
     expected = [
-        (-spacing / 2, -h / 3),
-        (spacing / 2, -h / 3),
-        (0.0, 2 * h / 3),
+        (-spacing / 2.0, -h / 3.0),
+        (spacing / 2.0, -h / 3.0),
+        (0.0, 2.0 * h / 3.0),
     ]
+
     assert register.n_qubits == 3
-    np.testing.assert_allclose(list(register.qubits.values()), expected, atol=1e-8)
+    np.testing.assert_allclose(register._coords, expected, atol=1e-8)
+
+@pytest.mark.parametrize("m, n", [(0, 1), (1, 0), (0, 0), (-1, 2)])
+def test_triangular_invalid_m_n(m: int, n: int) -> None:
+    with pytest.raises(ValueError, match="`m` and `n` must both be at least 1."):
+        Register.triangular(m, n, spacing=1.0)
+
+def test_triangular_invalid_spacing() -> None:
+    with pytest.raises(ValueError, match="spacing must be positive."):
+        Register.triangular(1, 1, spacing=-1)
