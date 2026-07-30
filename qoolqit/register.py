@@ -207,6 +207,25 @@ class Register:
         x_mean = sum(x for x, _ in coords) / len(coords)
         y_mean = sum(y for _, y in coords) / len(coords)
         coords = [(x - x_mean, y - y_mean) for x, y in coords]
+        
+    @classmethod    
+    def circle(cls, n: int, spacing: float = 1.0) -> Register:
+        """Initializes a Register with qubits arranged in a circle.
+
+        Args:
+            n: number of qubits to place in the circle.
+            spacing: distance between adjacent qubits. Defaults to 1.0.
+        """
+        if n < 1:
+            raise ValueError("Number of qubits must be at least 1.")
+        if spacing <= 0:
+            raise ValueError("Spacing must be positive.")
+        if n == 1:
+            return cls.from_coordinates([(0.0, 0.0)])
+
+        step = 2.0 * math.pi / n
+        r = spacing / (2.0 * math.sin(math.pi / n))
+        coords = [(math.cos(step * i) * r, math.sin(step * i) * r) for i in range(n)]
 
         return cls.from_coordinates(coords)
 
