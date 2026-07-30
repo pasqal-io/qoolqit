@@ -209,8 +209,8 @@ class Register:
         coords = [(x - x_mean, y - y_mean) for x, y in coords]
 
         return cls.from_coordinates(coords)
-    
-    @classmethod  
+
+    @classmethod
     def rectangular(
         cls, rows: int, cols: int, row_spacing: float = 1.0, col_spacing: float = 1.0
     ) -> Register:
