@@ -214,6 +214,8 @@ def test_invalid_rows_cols(rows: int, cols: int) -> None:
 @pytest.mark.parametrize("rows, cols, spacing", [(2, 3, 1.0), (3, 3, 0.75), (1, 5, 1.28)])
 def test_rectangular_min_distance(rows: int, cols: int, spacing: float) -> None:
     register = Register.rectangular(rows, cols, spacing=spacing)
+
+
 def test_circle() -> None:
     spacing = 0.5
     n_qubits = 4

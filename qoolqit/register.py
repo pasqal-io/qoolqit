@@ -201,8 +201,10 @@ class Register:
             for i in range(rows)
             for j in range(cols)
         ]
-        
-    @classmethod    
+
+        return cls.from_coordinates(coords)
+
+    @classmethod
     def circle(cls, n: int, spacing: float = 1.0) -> Register:
         """Initializes a Register with qubits arranged in a circle.
 
