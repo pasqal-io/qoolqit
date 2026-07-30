@@ -202,4 +202,16 @@ def test_rectangular() -> None:
     ]
 
     assert register.n_qubits == 9
-    np.testing.assert_allclose(list(register.qubits.values()), expected, atol=1e-8)
+    np.testing.assert_allclose(register._coords, expected, atol=1e-8)
+
+
+@pytest.mark.parametrize("rows, cols", [(0, 2), (2, 0), (0, 0), (-1, 2)])
+def test_invalid_rows_cols(rows: int, cols: int) -> None:
+    with pytest.raises(ValueError, match="Number of rows and columns must be at least 1."):
+        Register.rectangular(rows, cols, spacing=1.0)
+
+
+@pytest.mark.parametrize("rows, cols, spacing", [(2, 3, 1.0), (3, 3, 0.75), (1, 5, 1.28)])
+def test_rectangular_min_distance(rows: int, cols: int, spacing: float) -> None:
+    register = Register.rectangular(rows, cols, spacing=spacing)
+    np.testing.assert_allclose(register.min_distance(), spacing, atol=1e-8)
