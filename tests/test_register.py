@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import importlib
+import math
 import random
 from unittest import mock
 
 import matplotlib.pyplot as plt
-import math
 import numpy as np
 import pytest
 import torch
@@ -201,10 +201,12 @@ def test_triangular() -> None:
     assert register.n_qubits == 3
     np.testing.assert_allclose(register._coords, expected, atol=1e-8)
 
+
 @pytest.mark.parametrize("m, n", [(0, 1), (1, 0), (0, 0), (-1, 2)])
 def test_triangular_invalid_m_n(m: int, n: int) -> None:
     with pytest.raises(ValueError, match="`m` and `n` must both be at least 1."):
         Register.triangular(m, n, spacing=1.0)
+
 
 def test_triangular_invalid_spacing() -> None:
     with pytest.raises(ValueError, match="spacing must be positive."):

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any, TypeGuard
 
 import matplotlib.pyplot as plt
-import math
 import numpy as np
 import numpy.typing as npt
 from matplotlib.axes import Axes
@@ -202,9 +202,7 @@ class Register:
             # for odd `n`, the last node of every odd row is dropped
             row_len = n_cols if (n % 2 and j % 2) else n_cols + 1
             for i in range(row_len):
-                coords.append(
-                    ((i + 0.5 * (j % 2)) * spacing, height * j * spacing)
-                )
+                coords.append(((i + 0.5 * (j % 2)) * spacing, height * j * spacing))
 
         x_mean = sum(x for x, _ in coords) / len(coords)
         y_mean = sum(y for _, y in coords) / len(coords)
