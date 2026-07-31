@@ -195,10 +195,10 @@ class Register:
             raise ValueError("Spacing must be positive.")
 
         height = math.sqrt(3.0) / 2.0
-        x_offset = (atoms_per_row - 1 + 0.5 * (rows > 1)) * spacing / 2.0
+        x_offset = ((atoms_per_row - 1) / 2.0 + (rows - 1) / 4.0) * spacing
         y_offset = (rows - 1) * height * spacing / 2.0
         coords = [
-            ((i + 0.5 * (j % 2)) * spacing - x_offset, j * height * spacing - y_offset)
+            ((i + 0.5 * j) * spacing - x_offset, j * height * spacing - y_offset)
             for j in range(rows)
             for i in range(atoms_per_row)
         ]
