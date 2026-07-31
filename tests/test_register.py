@@ -189,28 +189,27 @@ def test_draw() -> None:
 
 def test_triangular() -> None:
     spacing = 0.5
-    register = Register.triangular(1, 1, spacing=spacing)
-
+    register = Register.triangular(2, 2, spacing=spacing)
     h = math.sqrt(3.0) / 2.0 * spacing  # row height
     expected = [
-        (-spacing / 2.0, -h / 3.0),
-        (spacing / 2.0, -h / 3.0),
-        (0.0, 2.0 * h / 3.0),
+        (-0.75 * spacing, -h / 2.0),
+        (0.25 * spacing, -h / 2.0),
+        (-0.25 * spacing, h / 2.0),
+        (0.75 * spacing, h / 2.0),
     ]
-
-    assert register.n_qubits == 3
+    assert register.n_qubits == 4
     np.testing.assert_allclose(register._coords, expected, atol=1e-8)
 
 
-@pytest.mark.parametrize("m, n", [(0, 1), (1, 0), (0, 0), (-1, 2)])
-def test_triangular_invalid_m_n(m: int, n: int) -> None:
-    with pytest.raises(ValueError, match="m and n must both be at least 1."):
-        Register.triangular(m, n, spacing=1.0)
+@pytest.mark.parametrize("rows, atoms_per_row", [(0, 1), (1, 0), (0, 0), (-1, 2)])
+def test_triangular_invalid_rows_atoms(rows: int, atoms_per_row: int) -> None:
+    with pytest.raises(ValueError, match="Number of rows and atoms per row must be at least 1."):
+        Register.triangular(rows, atoms_per_row, spacing=1.0)
 
 
 def test_triangular_invalid_spacing() -> None:
     with pytest.raises(ValueError, match="Spacing must be positive."):
-        Register.triangular(1, 1, spacing=-1)
+        Register.triangular(2, 2, spacing=-1)
 
 
 def test_triangular_min_distance() -> None:

@@ -181,33 +181,27 @@ class Register:
         return cls(coords_dict)
 
     @classmethod
-    def triangular(cls, m: int, n: int, spacing: float = 1.0) -> Register:
-        """Constructs a triangular lattice register.
+    def triangular(cls, rows: int, atoms_per_row: int, spacing: float = 1.0) -> Register:
+        """Initializes a triangular lattice Register of qubits.
 
         Args:
-            m: number of rows of triangles.
-            n: number of columns of triangles.
+            rows: number of rows in the lattice.
+            atoms_per_row: number of qubits per row.
             spacing: distance between adjacent qubits. Defaults to 1.0.
         """
-        if m < 1 or n < 1:
-            raise ValueError("m and n must both be at least 1.")
+        if rows < 1 or atoms_per_row < 1:
+            raise ValueError("Number of rows and atoms per row must be at least 1.")
         if spacing <= 0:
             raise ValueError("Spacing must be positive.")
 
-        n_cols = (n + 1) // 2
         height = math.sqrt(3.0) / 2.0
-
-        coords = []
-        for j in range(m + 1):
-            # for odd `n`, the last node of every odd row is dropped
-            row_len = n_cols if (n % 2 and j % 2) else n_cols + 1
-            for i in range(row_len):
-                coords.append(((i + 0.5 * (j % 2)) * spacing, height * j * spacing))
-
-        x_mean = sum(x for x, _ in coords) / len(coords)
-        y_mean = sum(y for _, y in coords) / len(coords)
-        coords = [(x - x_mean, y - y_mean) for x, y in coords]
-
+        x_offset = (atoms_per_row - 1 + 0.5 * (rows > 1)) * spacing / 2.0
+        y_offset = (rows - 1) * height * spacing / 2.0
+        coords = [
+            ((i + 0.5 * (j % 2)) * spacing - x_offset, j * height * spacing - y_offset)
+            for j in range(rows)
+            for i in range(atoms_per_row)
+        ]
         return cls.from_coordinates(coords)
 
     @classmethod
