@@ -7,7 +7,7 @@ window.MathJax = {
   },
   options: {
     ignoreHtmlClass: ".*|",
-    processHtmlClass: "arithmatex|jp-RenderedMarkdown"
+    processHtmlClass: "arithmatex|jp-RenderedMarkdown|jp-RenderedHTMLCommon"
   }
 };
 
