@@ -188,6 +188,30 @@ class Register:
         return cls(coords_dict)
 
     @classmethod
+    def triangular(cls, rows: int, atoms_per_row: int, spacing: float = 1.0) -> Register:
+        """Initializes a triangular lattice Register of qubits.
+
+        Args:
+            rows: number of rows in the lattice.
+            atoms_per_row: number of qubits per row.
+            spacing: distance between adjacent qubits. Defaults to 1.0.
+        """
+        if rows < 1 or atoms_per_row < 1:
+            raise ValueError("Number of rows and atoms per row must be at least 1.")
+        if spacing <= 0:
+            raise ValueError("Spacing must be positive.")
+
+        height = math.sqrt(3.0) / 2.0
+        x_offset = ((atoms_per_row - 1) / 2.0 + 0.5 * (rows // 2) / rows) * spacing
+        y_offset = (rows - 1) * height * spacing / 2.0
+        coords = [
+            ((i + 0.5 * (j % 2)) * spacing - x_offset, j * height * spacing - y_offset)
+            for j in range(rows)
+            for i in range(atoms_per_row)
+        ]
+        return cls.from_coordinates(coords)
+
+    @classmethod
     def rectangular(
         cls, rows: int, cols: int, row_spacing: float = 1.0, col_spacing: float = 1.0
     ) -> Register:

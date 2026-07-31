@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+import math
 import random
 from unittest import mock
 
@@ -186,6 +187,37 @@ def test_draw() -> None:
     plt.close(fig)
 
 
+def test_triangular() -> None:
+    spacing = 0.5
+    register = Register.triangular(2, 2, spacing=spacing)
+    h = math.sqrt(3.0) / 2.0 * spacing  # row height
+    expected = [
+        (-0.75 * spacing, -h / 2.0),
+        (0.25 * spacing, -h / 2.0),
+        (-0.25 * spacing, h / 2.0),
+        (0.75 * spacing, h / 2.0),
+    ]
+    assert register.n_qubits == 4
+    np.testing.assert_allclose(register._coords, expected, atol=1e-8)
+
+
+@pytest.mark.parametrize("rows, atoms_per_row", [(0, 1), (1, 0), (0, 0), (-1, 2)])
+def test_triangular_invalid_rows_atoms(rows: int, atoms_per_row: int) -> None:
+    with pytest.raises(ValueError, match="Number of rows and atoms per row must be at least 1."):
+        Register.triangular(rows, atoms_per_row, spacing=1.0)
+
+
+def test_triangular_invalid_spacing() -> None:
+    with pytest.raises(ValueError, match="Spacing must be positive."):
+        Register.triangular(2, 2, spacing=-1)
+
+
+def test_triangular_min_distance() -> None:
+    spacing = 0.5
+    register = Register.triangular(2, 2, spacing=spacing)
+    np.testing.assert_allclose(register.min_distance(), spacing, atol=1e-8)
+
+
 def test_rectangular() -> None:
     row_spacing = 0.5
     col_spacing = 1.5
@@ -225,10 +257,10 @@ def test_rectangular_min_distance(
 
 def test_circle() -> None:
     spacing = 0.5
-    n_qubits = 4
-    register = Register.circle(n_qubits, spacing=spacing)
+    n = 4
+    register = Register.circle(n, spacing=spacing)
 
-    radius = spacing / (2 * np.sin(np.pi / n_qubits))
+    radius = spacing / (2 * np.sin(np.pi / n))
     expected = [
         (radius, 0.0),
         (0.0, radius),
@@ -236,16 +268,16 @@ def test_circle() -> None:
         (0.0, -radius),
     ]
 
-    assert register.n_qubits == n_qubits
+    assert register.n_qubits == n
     np.testing.assert_allclose(register._coords, expected, atol=1e-8)
 
 
-def test_invalid_spacing() -> None:
+def test_circle_invalid_spacing() -> None:
     with pytest.raises(ValueError, match="Spacing must be positive."):
         Register.circle(2, spacing=-1)
 
 
-def test_invalid_n_qubits() -> None:
+def test_circle_invalid_n() -> None:
     with pytest.raises(ValueError, match="Number of qubits must be at least 1."):
         Register.circle(0, spacing=1.0)
 
