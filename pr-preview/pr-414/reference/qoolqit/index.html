@@ -10992,8 +10992,12 @@ unit conversion.</p>
       <a href="../embedding/#qoolqit.embedding"><code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;embedding</a>
   </span>
 
-            <span class="doc doc-backlink-crumb last">
+            <span class="doc doc-backlink-crumb">
       <a href="../embedding/#qoolqit.embedding.BladeConfig"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BladeConfig</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb last">
+      <a href="../embedding/#qoolqit.embedding.BladeConfig.__post_init__"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__post_init__</a>
   </span>
 
       </li>
@@ -16169,10 +16173,10 @@ If <code>coords</code> is a numpy array or a torch tensor, it must be 2D and of 
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Spacing must be positive.&quot;</span><span class="p">)</span>
 <a id="__codelineno-0-196" name="__codelineno-0-196"></a>
 <a id="__codelineno-0-197" name="__codelineno-0-197"></a>    <span class="n">height</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
-<a id="__codelineno-0-198" name="__codelineno-0-198"></a>    <span class="n">x_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">atoms_per_row</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rows</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">spacing</span> <span class="o">/</span> <span class="mf">2.0</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a>    <span class="n">x_offset</span> <span class="o">=</span> <span class="p">((</span><span class="n">atoms_per_row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">spacing</span>
 <a id="__codelineno-0-199" name="__codelineno-0-199"></a>    <span class="n">y_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">rows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">height</span> <span class="o">*</span> <span class="n">spacing</span> <span class="o">/</span> <span class="mf">2.0</span>
 <a id="__codelineno-0-200" name="__codelineno-0-200"></a>    <span class="n">coords</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a>        <span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">j</span> <span class="o">%</span> <span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">spacing</span> <span class="o">-</span> <span class="n">x_offset</span><span class="p">,</span> <span class="n">j</span> <span class="o">*</span> <span class="n">height</span> <span class="o">*</span> <span class="n">spacing</span> <span class="o">-</span> <span class="n">y_offset</span><span class="p">)</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a>        <span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">j</span><span class="p">)</span> <span class="o">*</span> <span class="n">spacing</span> <span class="o">-</span> <span class="n">x_offset</span><span class="p">,</span> <span class="n">j</span> <span class="o">*</span> <span class="n">height</span> <span class="o">*</span> <span class="n">spacing</span> <span class="o">-</span> <span class="n">y_offset</span><span class="p">)</span>
 <a id="__codelineno-0-202" name="__codelineno-0-202"></a>        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">atoms_per_row</span><span class="p">)</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a>    <span class="p">]</span>
