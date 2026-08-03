@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING, Any, TypeGuard
+from typing import TYPE_CHECKING, Any, TypeGuard, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -53,10 +53,23 @@ def _copy(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
     return np.copy(x)
 
 
-def _pdist(x: npt.NDArray[np.float64] | torch.Tensor) -> npt.NDArray[np.float64] | torch.Tensor:
+def _pdist(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
     if _is_torch(x):
         return torch.cdist(x, x, p=2)
-    return cdist(x, x).astype(dtype=np.float64)
+    return np.asarray(cdist(x, x))
+
+
+def _fill_diagonal(
+    x: npt.NDArray[np.float64] | torch.Tensor, value: float
+) -> npt.NDArray[np.float64] | torch.Tensor:
+    if _is_torch(x):
+        # Out-of-place: avoids corrupting x's autograd graph.
+        diag = torch.full_like(x.diag(), value)
+        return torch.diagonal_scatter(x, diag)
+
+    x = cast(npt.NDArray[np.float64], x)  # TypeGuard narrows only the torch branch above.
+    np.fill_diagonal(x, value)
+    return x
 
 
 class Register:
@@ -320,18 +333,9 @@ class Register:
     def interaction_matrix(self) -> npt.NDArray[np.float64] | torch.Tensor:
         """Interaction 1/r^6 between each qubit pair, as a matrix (0 on the diagonal)."""
         dist_matrix = _pdist(self._coords)
-
-        # Avoid division-by-zero on the diagonal (where r_ii == 0):
-        # - torch: use a boolean diagonal mask and `torch.where` (out-of-place, autograd-safe).
-        # - numpy: set dist_matrix diagonal to 1.0 before exponentiation, then back to 0.0.
-        if _is_torch(dist_matrix):
-            diagonal_mask = torch.eye(dist_matrix.shape[0], dtype=torch.bool)
-            return torch.where(diagonal_mask, 0.0, dist_matrix ** (-6))
-
-        np.fill_diagonal(dist_matrix, 1.0)
-        interactions = dist_matrix ** (-6)
-        np.fill_diagonal(interactions, 0.0)
-        return interactions
+        interactions = _fill_diagonal(dist_matrix, 1.0)
+        interactions **= -6
+        return _fill_diagonal(interactions, 0.0)
 
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
