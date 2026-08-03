@@ -341,13 +341,16 @@ class Register:
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
 
-    def draw(self, ax: Axes | None = None, marker_size: int = 100) -> None:
+    def draw(
+        self, ax: Axes | None = None, marker_size: int = 100, node_color: str = "tab:green"
+    ) -> None:
         """Draw the register.
 
         Args:
             ax: an optional matplotlib Axes instance to draw on.
                 If None, a new Axes will be created.
             marker_size: size of the qubit markers in points squared. Defaults to 100.
+            node_color: color of the qubit markers. Defaults to "tab:green".
         """
         if ax is None:
             _, ax = plt.subplots()
@@ -357,7 +360,7 @@ class Register:
 
         coords = self._coords.detach().cpu().numpy() if _is_torch(self._coords) else self._coords
         for xi, yi, qid in zip(coords[:, 0], coords[:, 1], self.qubits_ids):
-            ax.scatter(xi, yi, s=marker_size, color="green")
+            ax.scatter(xi, yi, s=marker_size, color=node_color)
             ax.annotate(
                 str(qid),
                 xy=(xi, yi),
