@@ -75,7 +75,7 @@ def __getattr__(name: str) -> type:
     if name in _DEPRECATED_WAVEFORM_ALIASES:
         new_name = _DEPRECATED_WAVEFORM_ALIASES[name]
         warnings.warn(
-            f"{name} is deprecated and will be removed in v1.4. "
+            f"{name} is deprecated and will be removed in v2. "
             f"Use the equivalent {new_name.__name__} instead.",
             DeprecationWarning,
             stacklevel=2,
@@ -86,7 +86,7 @@ def __getattr__(name: str) -> type:
 
         warnings.warn(
             "Importing `DataGraph` directly from `qoolqit` is deprecated and will be "
-            "removed in v1.4. Use `from qoolqit.graphs import DataGraph` instead.",
+            "removed in v2. Use `from qoolqit.graphs import DataGraph` instead.",
             DeprecationWarning,
             stacklevel=2,
         )
