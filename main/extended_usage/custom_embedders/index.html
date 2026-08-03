@@ -2748,8 +2748,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGraph</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.embedding</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmbedderConfig</span><span class="p">,</span> <span class="n">GraphToGraphEmbedder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.graphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGraph</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">my_embedding_function</span><span class="p">(</span><span class="n">graph</span><span class="p">:</span> <span class="n">DataGraph</span><span class="p">,</span> <span class="n">param1</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataGraph</span><span class="p">:</span>
@@ -2772,8 +2772,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1">from dataclasses import dataclass
 
-from qoolqit import DataGraph
 from qoolqit.embedding import EmbedderConfig, GraphToGraphEmbedder
+from qoolqit.graphs import DataGraph
 
 
 def my_embedding_function(graph: DataGraph, param1: float) -&gt; DataGraph:

@@ -2809,14 +2809,16 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Or use built-in graph patterns</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGraph</span><span class="p">,</span> <span class="n">Register</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Register</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.graphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGraph</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">DataGraph</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">register</span> <span class="o">=</span> <span class="n">Register</span><span class="o">.</span><span class="n">from_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>  <span class="c1"># 2x2 square lattice</span>
 <span class="n">graph</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1"># Or use built-in graph patterns
-from qoolqit import DataGraph, Register
+from qoolqit import Register
+from qoolqit.graphs import DataGraph
 
 graph = DataGraph.square(m=2, n=2)
 register = Register.from_graph(graph)  # 2x2 square lattice
@@ -3039,7 +3041,8 @@ First let us define a small function that output the quantum program we want to 
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Or use built-in graph patterns</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGraph</span><span class="p">,</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">QuantumProgram</span><span class="p">,</span> <span class="n">Register</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">QuantumProgram</span><span class="p">,</span> <span class="n">Register</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.graphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGraph</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.waveforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">RampWaveform</span>
 
 
@@ -3055,7 +3058,8 @@ First let us define a small function that output the quantum program we want to 
     <span class="k">return</span> <span class="n">QuantumProgram</span><span class="p">(</span><span class="n">register</span><span class="o">=</span><span class="n">register</span><span class="p">,</span><span class="n">drive</span><span class="o">=</span><span class="n">drive</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-5"># Or use built-in graph patterns
-from qoolqit import DataGraph, Drive, QuantumProgram, Register
+from qoolqit import Drive, QuantumProgram, Register
+from qoolqit.graphs import DataGraph
 from qoolqit.waveforms import RampWaveform
 
 
