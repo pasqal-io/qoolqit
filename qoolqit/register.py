@@ -54,6 +54,7 @@ def _copy(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
 
 
 def _pdist(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
+    """Compute the distance matrix of a collection of vectors."""
     if _is_torch(x):
         return torch.cdist(x, x, p=2)
     return np.asarray(cdist(x, x))
