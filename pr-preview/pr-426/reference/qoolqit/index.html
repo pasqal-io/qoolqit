@@ -10917,7 +10917,7 @@ floats, or if the converted coordinate is not a point in 2D.</p>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">draw</span><span class="p">(</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">ax</span><span class="p">:</span> <span class="n"><span title="matplotlib.axes.Axes">Axes</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">marker_size</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">node_color</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;tab:blue&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">node_color</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;tab:green&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
@@ -10952,11 +10952,11 @@ If None, a new Axes will be created.</p>
         <li class="doc-section-item field-body">
             <b><code>node_color</code></b>
               (<code><span title="str">str</span></code>, default:
-                  <code>&#39;tab:blue&#39;</code>
+                  <code>&#39;tab:green&#39;</code>
 )
           –
           <div class="doc-md-description">
-            <p>color of the qubit markers. Defaults to "tab:blue".</p>
+            <p>color of the qubit markers. Defaults to "tab:green".</p>
           </div>
         </li>
     </ul>
@@ -10999,7 +10999,7 @@ If None, a new Axes will be created.</p>
 <span class="normal"><a href="#__codelineno-0-347">347</a></span>
 <span class="normal"><a href="#__codelineno-0-348">348</a></span>
 <span class="normal"><a href="#__codelineno-0-349">349</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-316" name="__codelineno-0-316"></a><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span>
-<a id="__codelineno-0-317" name="__codelineno-0-317"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">marker_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">node_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tab:blue&quot;</span>
+<a id="__codelineno-0-317" name="__codelineno-0-317"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">marker_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">node_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tab:green&quot;</span>
 <a id="__codelineno-0-318" name="__codelineno-0-318"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-319" name="__codelineno-0-319"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw the register.</span>
 <a id="__codelineno-0-320" name="__codelineno-0-320"></a>
@@ -11007,7 +11007,7 @@ If None, a new Axes will be created.</p>
 <a id="__codelineno-0-322" name="__codelineno-0-322"></a><span class="sd">        ax: an optional matplotlib Axes instance to draw on.</span>
 <a id="__codelineno-0-323" name="__codelineno-0-323"></a><span class="sd">            If None, a new Axes will be created.</span>
 <a id="__codelineno-0-324" name="__codelineno-0-324"></a><span class="sd">        marker_size: size of the qubit markers in points squared. Defaults to 100.</span>
-<a id="__codelineno-0-325" name="__codelineno-0-325"></a><span class="sd">        node_color: color of the qubit markers. Defaults to &quot;tab:blue&quot;.</span>
+<a id="__codelineno-0-325" name="__codelineno-0-325"></a><span class="sd">        node_color: color of the qubit markers. Defaults to &quot;tab:green&quot;.</span>
 <a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-327" name="__codelineno-0-327"></a>    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-328" name="__codelineno-0-328"></a>        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
