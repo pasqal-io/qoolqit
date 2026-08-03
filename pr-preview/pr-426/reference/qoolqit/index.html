@@ -6509,12 +6509,8 @@ unit conversion.</p>
       <a href="../embedding/#qoolqit.embedding"><code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;embedding</a>
   </span>
 
-            <span class="doc doc-backlink-crumb">
-      <a href="../embedding/#qoolqit.embedding.BladeConfig"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BladeConfig</a>
-  </span>
-
             <span class="doc doc-backlink-crumb last">
-      <a href="../embedding/#qoolqit.embedding.BladeConfig.__post_init__"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__post_init__</a>
+      <a href="../embedding/#qoolqit.embedding.BladeConfig"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BladeConfig</a>
   </span>
 
       </li>
@@ -10999,7 +10995,7 @@ If None, a new Axes will be created.</p>
 <a id="__codelineno-0-329" name="__codelineno-0-329"></a>
 <a id="__codelineno-0-330" name="__codelineno-0-330"></a>    <span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coords</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="k">if</span> <span class="n">_is_torch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_coords</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coords</span>
 <a id="__codelineno-0-331" name="__codelineno-0-331"></a>    <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">qid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">qubits_ids</span><span class="p">):</span>
-<a id="__codelineno-0-332" name="__codelineno-0-332"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">marker_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-332" name="__codelineno-0-332"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">marker_size</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">)</span>
 <a id="__codelineno-0-333" name="__codelineno-0-333"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
 <a id="__codelineno-0-334" name="__codelineno-0-334"></a>            <span class="nb">str</span><span class="p">(</span><span class="n">qid</span><span class="p">),</span>
 <a id="__codelineno-0-335" name="__codelineno-0-335"></a>            <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">),</span>
