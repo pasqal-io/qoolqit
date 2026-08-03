@@ -329,7 +329,7 @@ class Register:
 
         coords = self._coords.detach().cpu().numpy() if _is_torch(self._coords) else self._coords
         for xi, yi, qid in zip(coords[:, 0], coords[:, 1], self.qubits_ids):
-            ax.scatter(xi, yi, s=marker_size, color="green")
+            ax.scatter(xi, yi, s=marker_size, color="tab:blue")
             ax.annotate(
                 str(qid),
                 xy=(xi, yi),
