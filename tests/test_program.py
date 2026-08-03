@@ -5,10 +5,11 @@ from typing import Callable
 import pytest
 from pulser.sequence import Sequence as PulserSequence
 
-from qoolqit import AnalogDevice, DataGraph, DigitalAnalogDevice, MockDevice
+from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
 from qoolqit.drive import DetuningMapModulator, Drive
 from qoolqit.exceptions import CompilationError
+from qoolqit.graphs import DataGraph
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import ConstantWaveform
