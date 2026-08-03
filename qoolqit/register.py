@@ -53,10 +53,10 @@ def _copy(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
     return np.copy(x)
 
 
-def _pdist(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
+def _pdist(x: npt.NDArray[np.float64] | torch.Tensor) -> npt.NDArray[np.float64] | torch.Tensor:
     if _is_torch(x):
         return torch.cdist(x, x, p=2)
-    return cdist(x, x)
+    return cdist(x, x).astype(dtype=np.float64)
 
 
 class Register:
@@ -320,12 +320,14 @@ class Register:
     def interaction_matrix(self) -> npt.NDArray[np.float64] | torch.Tensor:
         """Interaction 1/r^6 between each qubit pair, as a matrix (0 on the diagonal)."""
         dist_matrix = _pdist(self._coords)
-        # modify or mask the diagonal to prevent division by zero
+
+        # Avoid division-by-zero on the diagonal (where r_ii == 0):
+        # - torch: use a boolean diagonal mask and `torch.where` (out-of-place, autograd-safe).
+        # - numpy: set dist_matrix diagonal to 1.0 before exponentiation, then back to 0.0.
         if _is_torch(dist_matrix):
-            # out-of-place to protect autograd: mask + where
             diagonal_mask = torch.eye(dist_matrix.shape[0], dtype=torch.bool)
             return torch.where(diagonal_mask, 0.0, dist_matrix ** (-6))
-        # No autograd to protect here, so mutating in-place is safe
+
         np.fill_diagonal(dist_matrix, 1.0)
         interactions = dist_matrix ** (-6)
         np.fill_diagonal(interactions, 0.0)
