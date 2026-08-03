@@ -16,7 +16,6 @@ from qoolqit.devices import (
 )
 from qoolqit.drive import Drive
 from qoolqit.execution.sequence_compiler import SequenceCompiler
-from qoolqit.graphs import DataGraph
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
 from qoolqit.waveforms import (
@@ -29,7 +28,6 @@ from qoolqit.waveforms import (
 )
 
 __all__ = [
-    "DataGraph",
     "BlackmanWaveform",
     "ConstantWaveform",
     "DelayWaveform",
@@ -77,10 +75,20 @@ def __getattr__(name: str) -> type:
     if name in _DEPRECATED_WAVEFORM_ALIASES:
         new_name = _DEPRECATED_WAVEFORM_ALIASES[name]
         warnings.warn(
-            f"{name} is deprecated and will be removed in v1.4. "
+            f"{name} is deprecated and will be removed in v2. "
             f"Use the equivalent {new_name.__name__} instead.",
             DeprecationWarning,
             stacklevel=2,
         )
         return new_name
+    if name == "DataGraph":
+        from qoolqit.graphs import DataGraph
+
+        warnings.warn(
+            "Importing `DataGraph` directly from `qoolqit` is deprecated and will be "
+            "removed in v2. Use `from qoolqit.graphs import DataGraph` instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return DataGraph
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
