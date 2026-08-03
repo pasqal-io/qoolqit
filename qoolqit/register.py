@@ -313,7 +313,9 @@ class Register:
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
 
-    def draw(self, ax: Axes | None = None, marker_size: int = 100, node_color: str = "tab:blue") -> None:
+    def draw(
+        self, ax: Axes | None = None, marker_size: int = 100, node_color: str = "tab:blue"
+    ) -> None:
         """Draw the register.
 
         Args:
