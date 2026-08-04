@@ -18,6 +18,7 @@ from qoolqit.drive import Drive
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
+from qoolqit.utils import colors
 from qoolqit.waveforms import (
     BlackmanWaveform,
     ConstantWaveform,
