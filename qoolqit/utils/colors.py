@@ -18,7 +18,6 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 
 import matplotlib as mpl
-import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
 __all__ = ["PALETTE", "DIVERGING", "SEQUENTIAL", "COLORMAPS"]
@@ -80,17 +79,9 @@ def register() -> None:
     """
     mpl.colors.get_named_colors_mapping().update(PALETTE)
 
-    # Skip names already present so repeated imports never clobber an existing
-    # colormap registered under the same name.
     for name, cmap in COLORMAPS.items():
-        try:  # Matplotlib >= 3.6
-            if name not in mpl.colormaps:
-                mpl.colormaps.register(cmap, name=name)
-        except AttributeError:  # older Matplotlib
-            try:
-                plt.register_cmap(name=name, cmap=cmap)
-            except ValueError:  # already registered
-                pass
+        if name not in mpl.colormaps:
+            mpl.colormaps.register(cmap, name=name)
 
 
 register()
