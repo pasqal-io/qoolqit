@@ -1,11 +1,10 @@
 """PASQAL/QoolQit brand colors and colormaps for Matplotlib.
 
-Importing this module registers extra names with Matplotlib.
-Every palette key uses the uniform ``<qualifier>_<hue>`` form. 
-Colors are registered both bare (``"mint_green"``) 
-and namespaced (``"pasqal:mint_green"``). Colormaps are
-``qq_<low>_<high>`` for diverging maps and ``qq_<hue>`` for sequential ones,
-each also available reversed with the usual ``_r`` suffix.
+Importing this module registers extra names with Matplotlib; it never touches
+``rcParams``, so existing plots are unaffected. Colors are registered both bare
+(``"mint_green"``) and namespaced (``"pasqal:mint_green"``). Colormaps follow
+``qq_<low>_<high>`` (diverging) and ``qq_<hue>`` (sequential), each also
+available reversed with the usual ``_r`` suffix.
 
 Examples:
     >>> import matplotlib.pyplot as plt
@@ -23,11 +22,12 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
-__all__ = ["PALETTE", "DIVERGING", "SEQUENTIAL", "COLORMAPS", "NAMESPACE", "register"]
+__all__ = ["PALETTE", "DIVERGING", "SEQUENTIAL", "COLORMAPS"]
 
 NAMESPACE = "pasqal"
 
-# Brand palette. Keys use the uniform <qualifier>_<hue> form (see module docstring).
+# Brand palette, keyed by <qualifier>_<hue>. The underscore keeps these from
+# colliding with any Matplotlib built-in color name.
 PALETTE: Mapping[str, str] = {
     "metal_blue": "#397378",
     "neon_purple": "#867BFA",
@@ -40,9 +40,9 @@ PALETTE: Mapping[str, str] = {
     "neutral_gray": "#506166",
 }
 
-# Colormaps map to palette keys, interpolated in order. Diverging maps go
-# <low> -> <center> -> <high>; the plain name uses the near-white center, the
-# _dark variant the near-black one.
+# Colormaps are palette keys interpolated in order. Diverging maps go
+# <low> -> <center> -> <high>: the plain name uses a near-white center, the
+# _dark variant a near-black one.
 DIVERGING: Mapping[str, Sequence[str]] = {
     "qq_purple_mint": ("neon_purple", "bright_green", "mint_green"),
     "qq_purple_mint_dark": ("neon_purple", "dark_green", "mint_green"),
@@ -79,18 +79,19 @@ COLORMAPS: Mapping[str, LinearSegmentedColormap] = _build_colormaps()
 def register(bare: bool = True) -> None:
     """Register the brand colors and colormaps with Matplotlib.
 
-    Called automatically on import. 
+    Called automatically on import; idempotent.
 
     Args:
         bare: Also register the palette under its plain keys (``"mint_green"``)
-            in addition to the namespaced ones (``"pasqal:mint_green"``). Safe
-            because underscore names cannot collide with Matplotlib built-ins.
+            alongside the namespaced ones (``"pasqal:mint_green"``).
     """
     names = {f"{NAMESPACE}:{key}": value for key, value in PALETTE.items()}
     if bare:
         names.update(PALETTE)
     mpl.colors.get_named_colors_mapping().update(names)
 
+    # Skip names already present so repeated imports never clobber an existing
+    # colormap registered under the same name.
     for name, cmap in COLORMAPS.items():
         try:  # Matplotlib >= 3.6
             if name not in mpl.colormaps:
@@ -100,5 +101,6 @@ def register(bare: bool = True) -> None:
                 plt.register_cmap(name=name, cmap=cmap)
             except ValueError:  # already registered
                 pass
+
 
 register()
