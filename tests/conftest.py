@@ -3,6 +3,10 @@ from __future__ import annotations
 from random import uniform
 from typing import Callable, Generator
 
+import matplotlib
+
+matplotlib.use("Agg")  # Use Agg backend for testing
+
 import numpy as np
 import pytest
 

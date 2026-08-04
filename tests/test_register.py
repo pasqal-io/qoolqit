@@ -309,3 +309,22 @@ def test_line() -> None:
     expected = [(i * spacing - offset, 0.0) for i in range(n)]
     assert register.n_qubits == n
     np.testing.assert_allclose(register._coords, expected, atol=1e-8)
+
+
+@pytest.mark.parametrize("d", [1.0, 1.3, 2.4])
+def test_simple_interaction_matrix(d: float) -> None:
+    coords = [(0.0, 0.0), (d, 0.0), (0.0, d)]
+    register = Register.from_coordinates(coords)
+    interaction_matrix = register.interaction_matrix()
+
+    J_01 = J_02 = 1 / d**6
+    J_12 = 1 / (np.sqrt(2) * d) ** 6
+    expected = np.array([[0.0, J_01, J_02], [J_01, 0.0, J_12], [J_02, J_12, 0.0]])
+    np.testing.assert_allclose(interaction_matrix, expected, atol=1e-8)
+
+    # from torch coords
+    torch_coords = torch.tensor(coords, dtype=torch.float64)
+    torch_register = Register.from_coordinates(torch_coords)
+    torch_interaction_matrix = torch_register.interaction_matrix()
+    assert isinstance(torch_interaction_matrix, torch.Tensor)
+    np.testing.assert_allclose(torch_interaction_matrix, expected, atol=1e-8)
