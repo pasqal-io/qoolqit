@@ -39,6 +39,14 @@ def test_basegraph_init(n_nodes: int) -> None:
     with pytest.raises(AttributeError):
         graph.max_distance()
 
+    no_coords_match = "Trying to compute distances for a graph without coordinates."
+
+    with pytest.raises(AttributeError, match=no_coords_match):
+        graph.interactions()
+
+    with pytest.raises(AttributeError, match=no_coords_match):
+        graph.interaction_matrix()
+
     with pytest.raises(AttributeError):
         graph.is_ud_graph()
 
@@ -59,6 +67,41 @@ def test_basegraph_init(n_nodes: int) -> None:
     assert len(graph.ud_edges(radius=0.0)) == 0
     assert len(graph.ud_edges(radius=1.0)) >= 1
     assert len(graph.ud_edges(radius=10.0 * scale)) == max_n_edges
+
+
+@pytest.mark.parametrize("n_nodes", [5, 10, 50])
+def test_basegraph_interaction_matrix(n_nodes: int) -> None:
+
+    n_edges = 2 * n_nodes
+
+    edge_list = random_edge_list(range(n_nodes), n_edges)
+    graph = BaseGraph(edge_list)
+
+    # Because a random edge list might leave one disconnected one
+    actual_n_nodes = len(graph.nodes)
+
+    no_coords_match = "Trying to compute distances for a graph without coordinates."
+
+    with pytest.raises(AttributeError, match=no_coords_match):
+        graph.interactions()
+
+    with pytest.raises(AttributeError, match=no_coords_match):
+        graph.interaction_matrix()
+
+    scale = ((actual_n_nodes**0.5) ** 0.5) / 2
+    coords = random_coords(actual_n_nodes, scale)
+    graph.coords = {i: pos for i, pos in zip(graph.nodes, coords)}
+
+    interaction_matrix = graph.interaction_matrix()
+    index = {node: i for i, node in enumerate(graph.nodes)}
+
+    assert interaction_matrix.shape == (actual_n_nodes, actual_n_nodes)
+    assert np.allclose(interaction_matrix, interaction_matrix.T)
+    assert np.allclose(np.diag(interaction_matrix), 0.0)
+
+    for (u, v), interaction in graph.interactions().items():
+        assert np.isclose(interaction_matrix[index[u], index[v]], interaction)
+        assert np.isclose(interaction_matrix[index[v], index[u]], interaction)
 
 
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
