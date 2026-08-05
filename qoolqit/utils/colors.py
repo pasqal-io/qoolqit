@@ -1,4 +1,4 @@
-"""PASQAL/QoolQit brand colors and colormaps for Matplotlib.
+"""QoolQit colors and colormaps for Matplotlib.
 
 Importing this module registers extra names with Matplotlib; it never touches
 ``rcParams``, so existing plots are unaffected. Palette entries become named
@@ -22,7 +22,7 @@ from matplotlib.colors import LinearSegmentedColormap
 
 __all__ = ["PALETTE", "DIVERGING", "SEQUENTIAL", "COLORMAPS"]
 
-# Brand palette, keyed by <qualifier>_<hue>. The underscore keeps these from
+# Qoolqit palette, keyed by <qualifier>_<hue>. The underscore keeps these from
 # colliding with any Matplotlib built-in color name.
 PALETTE: Mapping[str, str] = {
     "metal_blue": "#397378",
@@ -60,7 +60,7 @@ SEQUENTIAL: Mapping[str, Sequence[str]] = {
 
 
 def _build_colormaps() -> dict[str, LinearSegmentedColormap]:
-    """Build every brand colormap plus its reversed ``_r`` variant."""
+    """Build every colormap plus its reversed ``_r`` variant."""
     cmaps: dict[str, LinearSegmentedColormap] = {}
     for name, keys in {**DIVERGING, **SEQUENTIAL}.items():
         cmaps[name] = LinearSegmentedColormap.from_list(name, [PALETTE[key] for key in keys])
@@ -73,7 +73,7 @@ COLORMAPS: Mapping[str, LinearSegmentedColormap] = _build_colormaps()
 
 
 def register() -> None:
-    """Register the brand colors and colormaps with Matplotlib.
+    """Register the colors and colormaps with Matplotlib.
 
     Called automatically on import; idempotent.
     """
