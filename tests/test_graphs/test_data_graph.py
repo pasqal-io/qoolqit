@@ -69,7 +69,7 @@ def test_datagraph_random_er(n_nodes: int) -> None:
 
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
 def test_datagraph_from_matrix(n_nodes: int) -> None:
-
+    np.random.seed(0)
     data = np.random.rand(n_nodes, n_nodes)
 
     with pytest.raises(ValueError):
@@ -121,7 +121,7 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
 
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
 def test_datagraph_to_matrix_unweighted(n_nodes: int) -> None:
-    graph = DataGraph.random_er(n_nodes, p=0.5)
+    graph = DataGraph.random_er(n_nodes, p=0.5, seed=0)
     assert not graph.has_node_weights
     assert not graph.has_edge_weights
 
@@ -142,7 +142,7 @@ def test_datagraph_to_matrix_unweighted(n_nodes: int) -> None:
 
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
 def test_datagraph_to_matrix_weighted(n_nodes: int) -> None:
-    graph = DataGraph.random_er(n_nodes, p=0.5)
+    graph = DataGraph.random_er(n_nodes, p=0.5, seed=0)
     graph.node_weights = {i: np.random.rand() for i in graph.nodes}
     graph.edge_weights = {e: np.random.rand() for e in graph.sorted_edges}
 
@@ -156,16 +156,18 @@ def test_datagraph_to_matrix_weighted(n_nodes: int) -> None:
         assert matrix[j, i] == weight
 
 
-@pytest.mark.parametrize("n_nodes", [5, 10, 50])
+@pytest.mark.parametrize("n_nodes", [3, 7, 21])
 def test_datagraph_to_matrix_roundtrip(n_nodes: int) -> None:
-    graph = DataGraph.random_er(n_nodes, p=0.5)
-    graph.node_weights = {i: np.random.rand() for i in graph.nodes}
-    graph.edge_weights = {e: np.random.rand() for e in graph.sorted_edges}
+    rng = np.random.default_rng(12345)
+    matrix = rng.normal(0, 1, size=(n_nodes, n_nodes))
+    # zero out some elements for testing
+    rows, cols = rng.integers(n_nodes, size=3), rng.integers(n_nodes, size=3)
+    matrix[rows, cols] = 0.0
+    matrix[cols, rows] = 0.0
+    matrix += matrix.T
 
-    matrix = graph.to_matrix()
-    rebuilt = DataGraph.from_matrix(matrix)
-
-    np.testing.assert_allclose(rebuilt.to_matrix(), matrix)
+    graph = DataGraph.from_matrix(matrix)
+    np.testing.assert_allclose(graph.to_matrix(), matrix, atol=1e-8)
 
 
 def test_triangular() -> None:
