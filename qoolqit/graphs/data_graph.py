@@ -294,6 +294,33 @@ class DataGraph(BaseGraph):
         graph.edge_weights = edge_weights
         return graph
 
+    def to_matrix(self) -> np.ndarray:
+        """Return the graph as a real symmetric square matrix.
+
+        The inverse of `from_matrix`. Node weights are stored in the diagonal,
+        since self-loops are not supported. For each edge (i, j), the entries
+        M[i, j] and M[j, i] are set to its weight, or to 1.0 if the edge has
+        no weight set. Missing node weights are set to 0.0 in the diagonal.
+
+        Nodes are ordered by sorting `self.nodes`.
+        """
+        nodes = sorted(self.nodes)
+        n_nodes = len(nodes)
+        index = {node: i for i, node in enumerate(nodes)}
+
+        matrix = np.zeros((n_nodes, n_nodes))
+
+        for node, weight in self.node_weights.items():
+            if weight is not None:
+                matrix[index[node], index[node]] = weight
+
+        for (i, j), weight in self.edge_weights.items():
+            value = weight if weight is not None else 1.0
+            matrix[index[i], index[j]] = value
+            matrix[index[j], index[i]] = value
+
+        return matrix
+
     @classmethod
     def from_pyg(
         cls,

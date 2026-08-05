@@ -119,6 +119,55 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
     np.testing.assert_allclose(edge_weights, data_edge_weights)
 
 
+@pytest.mark.parametrize("n_nodes", [5, 10, 50])
+def test_datagraph_to_matrix_unweighted(n_nodes: int) -> None:
+    graph = DataGraph.random_er(n_nodes, p=0.5)
+    assert not graph.has_node_weights
+    assert not graph.has_edge_weights
+
+    matrix = graph.to_matrix()
+
+    np.testing.assert_equal(matrix, matrix.T)
+    np.testing.assert_equal(np.diag(matrix), np.zeros(n_nodes))
+
+    for i, j in graph.sorted_edges:
+        assert matrix[i, j] == 1.0
+        assert matrix[j, i] == 1.0
+
+    non_edges = graph.all_node_pairs - graph.sorted_edges
+    for i, j in non_edges:
+        assert matrix[i, j] == 0.0
+        assert matrix[j, i] == 0.0
+
+
+@pytest.mark.parametrize("n_nodes", [5, 10, 50])
+def test_datagraph_to_matrix_weighted(n_nodes: int) -> None:
+    graph = DataGraph.random_er(n_nodes, p=0.5)
+    graph.node_weights = {i: np.random.rand() for i in graph.nodes}
+    graph.edge_weights = {e: np.random.rand() for e in graph.sorted_edges}
+
+    matrix = graph.to_matrix()
+
+    np.testing.assert_equal(matrix, matrix.T)
+    np.testing.assert_allclose(np.diag(matrix), list(graph.node_weights.values()))
+
+    for (i, j), weight in graph.edge_weights.items():
+        assert matrix[i, j] == weight
+        assert matrix[j, i] == weight
+
+
+@pytest.mark.parametrize("n_nodes", [5, 10, 50])
+def test_datagraph_to_matrix_roundtrip(n_nodes: int) -> None:
+    graph = DataGraph.random_er(n_nodes, p=0.5)
+    graph.node_weights = {i: np.random.rand() for i in graph.nodes}
+    graph.edge_weights = {e: np.random.rand() for e in graph.sorted_edges}
+
+    matrix = graph.to_matrix()
+    rebuilt = DataGraph.from_matrix(matrix)
+
+    np.testing.assert_allclose(rebuilt.to_matrix(), matrix)
+
+
 def test_triangular() -> None:
     graph = DataGraph.triangular(2, 2, spacing=2.71)
 
