@@ -296,14 +296,14 @@ class DataGraph(BaseGraph):
         return graph
 
     def to_matrix(self) -> npt.NDArray[np.float64]:
-        """Return the connectivity matrix of this graph.
+        """Return the adjacency matrix of this graph.
 
         The inverse of `from_matrix`.
         Nodes are mapped to indices 0, ..., N-1 according to `self.nodes` insertion order.
-        - For each edge (i, j), the entries (i,j) and (j,i) are set to its weight,
-            or to 1.0 if the edge has no weight set.
         - Node weights are stored in the diagonal since self-loops are not supported.
             Nodes with no weight set (None) are left at 0.0 in the diagonal.
+        - For each edge (i, j), the entries (i,j) and (j,i) are set to its weight,
+            or to 1.0 if the edge has no weight set.
 
         Returns:
             Symmetric N x N matrix of dtype float64, where N is the number of nodes.
