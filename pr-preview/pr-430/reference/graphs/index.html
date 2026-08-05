@@ -5410,7 +5410,7 @@ for any value R in that interval, the following condition is true:</p>
             <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-method&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;to_matrix&lt;/span&gt; (&lt;code&gt;qoolqit.graphs.DataGraph.to_matrix&lt;/code&gt;)" href="#qoolqit.graphs.DataGraph.to_matrix">to_matrix</a></code></b>
             –
             <div class="doc-md-description">
-              <p>Return the connectivity matrix of this graph.</p>
+              <p>Return the adjacency matrix of this graph.</p>
             </div>
           </li>
           <li class="doc-section-item field-body">
@@ -8081,13 +8081,13 @@ minimum distance is R, leading to L ~ (R / 2) * sqrt(π * n).</p>
 
     <div class="doc doc-contents ">
 
-        <p>Return the connectivity matrix of this graph.</p>
+        <p>Return the adjacency matrix of this graph.</p>
 <p>The inverse of <code>from_matrix</code>.
 Nodes are mapped to indices 0, ..., N-1 according to <code>self.nodes</code> insertion order.
-- For each edge (i, j), the entries (i,j) and (j,i) are set to its weight,
-    or to 1.0 if the edge has no weight set.
 - Node weights are stored in the diagonal since self-loops are not supported.
-    Nodes with no weight set (None) are left at 0.0 in the diagonal.</p>
+    Nodes with no weight set (None) are left at 0.0 in the diagonal.
+- For each edge (i, j), the entries (i,j) and (j,i) are set to its weight,
+    or to 1.0 if the edge has no weight set.</p>
 
 
 <p><span class="doc-section-title">Returns:</span></p>
@@ -8132,14 +8132,14 @@ Nodes are mapped to indices 0, ..., N-1 according to <code>self.nodes</code> ins
 <span class="normal"><a href="#__codelineno-0-322">322</a></span>
 <span class="normal"><a href="#__codelineno-0-323">323</a></span>
 <span class="normal"><a href="#__codelineno-0-324">324</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-298" name="__codelineno-0-298"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
-<a id="__codelineno-0-299" name="__codelineno-0-299"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the connectivity matrix of this graph.</span>
+<a id="__codelineno-0-299" name="__codelineno-0-299"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the adjacency matrix of this graph.</span>
 <a id="__codelineno-0-300" name="__codelineno-0-300"></a>
 <a id="__codelineno-0-301" name="__codelineno-0-301"></a><span class="sd">    The inverse of `from_matrix`.</span>
 <a id="__codelineno-0-302" name="__codelineno-0-302"></a><span class="sd">    Nodes are mapped to indices 0, ..., N-1 according to `self.nodes` insertion order.</span>
-<a id="__codelineno-0-303" name="__codelineno-0-303"></a><span class="sd">    - For each edge (i, j), the entries (i,j) and (j,i) are set to its weight,</span>
-<a id="__codelineno-0-304" name="__codelineno-0-304"></a><span class="sd">        or to 1.0 if the edge has no weight set.</span>
-<a id="__codelineno-0-305" name="__codelineno-0-305"></a><span class="sd">    - Node weights are stored in the diagonal since self-loops are not supported.</span>
-<a id="__codelineno-0-306" name="__codelineno-0-306"></a><span class="sd">        Nodes with no weight set (None) are left at 0.0 in the diagonal.</span>
+<a id="__codelineno-0-303" name="__codelineno-0-303"></a><span class="sd">    - Node weights are stored in the diagonal since self-loops are not supported.</span>
+<a id="__codelineno-0-304" name="__codelineno-0-304"></a><span class="sd">        Nodes with no weight set (None) are left at 0.0 in the diagonal.</span>
+<a id="__codelineno-0-305" name="__codelineno-0-305"></a><span class="sd">    - For each edge (i, j), the entries (i,j) and (j,i) are set to its weight,</span>
+<a id="__codelineno-0-306" name="__codelineno-0-306"></a><span class="sd">        or to 1.0 if the edge has no weight set.</span>
 <a id="__codelineno-0-307" name="__codelineno-0-307"></a>
 <a id="__codelineno-0-308" name="__codelineno-0-308"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-309" name="__codelineno-0-309"></a><span class="sd">        Symmetric N x N matrix of dtype float64, where N is the number of nodes.</span>
