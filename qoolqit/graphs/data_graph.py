@@ -295,29 +295,26 @@ class DataGraph(BaseGraph):
         return graph
 
     def to_matrix(self) -> np.ndarray:
-        """Return the graph as a real symmetric square matrix.
+        """Return the connectivity matrix of this graph.
 
-        The inverse of `from_matrix`. Node weights are stored in the diagonal,
-        since self-loops are not supported. For each edge (i, j), the entries
-        M[i, j] and M[j, i] are set to its weight, or to 1.0 if the edge has
-        no weight set. Missing node weights are set to 0.0 in the diagonal.
-
-        Nodes are ordered by sorting `self.nodes`.
+        The inverse of `from_matrix`.
+        Nodes are mapped to indices 0,..N-1 according to `self.nodes` order.
+        - For each edge (i, j), the entries (i,j) and (j,i) are set to its weight,
+            or to 1.0 if the edge has no weight set.
+        - Node weights are stored in the diagonal since self-loops are not supported.
+            Missing node weights are set to 0.0 in the diagonal.
         """
-        nodes = sorted(self.nodes)
-        n_nodes = len(nodes)
-        index = {node: i for i, node in enumerate(nodes)}
-
-        matrix = np.zeros((n_nodes, n_nodes))
+        n_nodes = len(self.nodes)
+        index = {node: i for i, node in enumerate(self.nodes)}
+        matrix = np.zeros((n_nodes, n_nodes), dtype=np.float64)
 
         for node, weight in self.node_weights.items():
-            if weight is not None:
-                matrix[index[node], index[node]] = weight
+            i = index[node]
+            matrix[i, i] = weight if weight is not None else 0.0
 
-        for (i, j), weight in self.edge_weights.items():
-            value = weight if weight is not None else 1.0
-            matrix[index[i], index[j]] = value
-            matrix[index[j], index[i]] = value
+        for (u, v), weight in self.edge_weights.items():
+            i, j = index[u], index[v]
+            matrix[i, j] = matrix[j, i] = weight if weight is not None else 1.0
 
         return matrix
 
