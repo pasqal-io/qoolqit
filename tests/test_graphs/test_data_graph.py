@@ -170,6 +170,28 @@ def test_datagraph_to_matrix_roundtrip(n_nodes: int) -> None:
     np.testing.assert_allclose(graph.to_matrix(), matrix, atol=1e-8)
 
 
+def test_datagraph_to_matrix_custom_node_labels_and_none_weights() -> None:
+    # Ensure `to_matrix()` respects `self.nodes` ordering and handles None weights.
+    # Also ensures it works with non-0..N-1 node labels.
+    graph = DataGraph.from_nodes(["b", "a", "c"])  # preserve explicit order
+    graph.add_edges_from([("b", "a"), ("a", "c")])
+
+    # Mix of real weights and None
+    graph.node_weights = {"b": 2.0, "a": None, "c": -3.0}
+    # TOFIX: order is not guaranteed because DataGraph maintains arbitrarily sort edges
+    graph.edge_weights = {("a", "b"): None, ("a", "c"): 0.25}
+
+    matrix = graph.to_matrix()
+    expected = np.array(
+        [
+            [2.0, 1.0, 0.0],
+            [1.0, 0.0, 0.25],
+            [0.0, 0.25, -3.0],
+        ],
+    )
+    np.testing.assert_equal(matrix, expected)
+
+
 def test_triangular() -> None:
     graph = DataGraph.triangular(2, 2, spacing=2.71)
 
