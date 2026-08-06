@@ -28,11 +28,11 @@ class Device:
 
         From remote Pulser device:
         ```python
-        from pulser_pasqal import PasqalCloud
+        from pasqal_cloud import PasqalCloudConnection
         from qoolqit import Device
 
         # Fetch the remote device from the connection
-        connection = PasqalCloud()
+        connection = PasqalCloudConnection()
         pulser_fresnel_device = connection.fetch_available_devices()["FRESNEL"]
 
         # Wrap a Pulser device object into a QoolQit Device
@@ -209,8 +209,8 @@ class Device:
 
         Example:
         ```python
-        from pulser_pasqal import PasqalCloud
-        fresnel_device = Device.from_connection(connection=PasqalCloud(), name="FRESNEL")
+        from pasqal_cloud import PasqalCloudConnection
+        fresnel_device = Device.from_connection(connection=PasqalCloudConnection(), name="FRESNEL")
         ```
         """
         available_remote_devices = connection.fetch_available_devices()

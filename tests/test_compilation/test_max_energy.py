@@ -149,5 +149,7 @@ class TestMaxEnergyCompilerProfile:
             seq_sample = sample(program.compiled_sequence)
             seq_max_amp = max(seq_sample.channel_samples["rydberg"].amp)
 
-            np.testing.assert_allclose(seq_max_amp, device._max_amp, atol=1e-8)
+            # atol loosened because pulser 1.9 changed InterpolatedWaveform's sampling,
+            # so the discretized peak no longer matches the analytical max as tightly.
+            np.testing.assert_allclose(seq_max_amp, device._max_amp, atol=1e-5)
             assert seq_max_amp < device._max_amp
