@@ -5,6 +5,7 @@ from typing import Any
 import networkx as nx
 import numpy as np
 import pytest
+from scipy.spatial.distance import pdist, squareform
 from torch_geometric.data import Data
 
 from qoolqit.graphs import BaseGraph, random_coords, random_edge_list
@@ -69,39 +70,26 @@ def test_basegraph_init(n_nodes: int) -> None:
     assert len(graph.ud_edges(radius=10.0 * scale)) == max_n_edges
 
 
-@pytest.mark.parametrize("n_nodes", [5, 10, 50])
-def test_basegraph_interaction_matrix(n_nodes: int) -> None:
+@pytest.mark.parametrize("n_nodes", [3, 8, 13])
+def test_basegraph_interactions(n_nodes: int) -> None:
 
-    n_edges = 2 * n_nodes
+    rng = np.random.default_rng(0)
+    coords_array = rng.uniform(-1, 1, size=(n_nodes, 2))
+    graph = BaseGraph.from_coordinates([c for c in coords_array])
 
-    edge_list = random_edge_list(range(n_nodes), n_edges)
-    graph = BaseGraph(edge_list)
+    expected_interactions = {
+        (i, j): np.linalg.norm(coords_array[i] - coords_array[j]) ** (-6)
+        for i in range(n_nodes)
+        for j in range(i + 1, n_nodes)
+    }
+    expected_interaction_matrix = squareform(1 / pdist(coords_array) ** 6)
 
-    # Because a random edge list might leave one disconnected one
-    actual_n_nodes = len(graph.nodes)
+    interactions = graph.interactions()
+    assert isinstance(interactions, dict)
+    for (u, v), interaction in expected_interactions.items():
+        np.testing.assert_allclose(interactions[(u, v)], interaction, atol=1e-8)
 
-    no_coords_match = "Trying to compute distances for a graph without coordinates."
-
-    with pytest.raises(AttributeError, match=no_coords_match):
-        graph.interactions()
-
-    with pytest.raises(AttributeError, match=no_coords_match):
-        graph.interaction_matrix()
-
-    scale = ((actual_n_nodes**0.5) ** 0.5) / 2
-    coords = random_coords(actual_n_nodes, scale)
-    graph.coords = {i: pos for i, pos in zip(graph.nodes, coords)}
-
-    interaction_matrix = graph.interaction_matrix()
-    index = {node: i for i, node in enumerate(graph.nodes)}
-
-    assert interaction_matrix.shape == (actual_n_nodes, actual_n_nodes)
-    assert np.allclose(interaction_matrix, interaction_matrix.T)
-    assert np.allclose(np.diag(interaction_matrix), 0.0)
-
-    for (u, v), interaction in graph.interactions().items():
-        assert np.isclose(interaction_matrix[index[u], index[v]], interaction)
-        assert np.isclose(interaction_matrix[index[v], index[u]], interaction)
+    np.testing.assert_allclose(graph.interaction_matrix(), expected_interaction_matrix, atol=1e-8)
 
 
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
