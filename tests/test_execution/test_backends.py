@@ -5,12 +5,12 @@ from collections.abc import Sequence
 from unittest.mock import MagicMock, PropertyMock
 
 import pytest
+from pasqal_cloud.backends import RemoteEmulatorBackend
 from pulser.backend import BitStrings, EmulationConfig, EmulatorBackend, Results
 from pulser.backend.config import BackendConfig
 from pulser.backend.qpu import QPUBackend
 from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
 from pulser.sequence import Sequence as PulserSequence
-from pulser_pasqal.backends import RemoteEmulatorBackend
 
 from qoolqit.execution import QPU, LocalEmulator, RemoteEmulator
 from qoolqit.program import QuantumProgram

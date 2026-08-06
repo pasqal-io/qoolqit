@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any
 
 import networkx as nx
 import numpy as np
+import numpy.typing as npt
 
 from .base_graph import BaseGraph
 from .utils import random_coords
@@ -254,7 +255,7 @@ class DataGraph(BaseGraph):
         return graph
 
     @classmethod
-    def from_matrix(cls, data: np.ndarray) -> DataGraph:
+    def from_matrix(cls, data: npt.NDArray[np.float64]) -> DataGraph:
         """Constructs a graph from a symmetric square matrix.
 
         The diagonal values are set as the node weights. For each entry (i, j)
@@ -293,6 +294,34 @@ class DataGraph(BaseGraph):
         graph.node_weights = node_weights
         graph.edge_weights = edge_weights
         return graph
+
+    def to_matrix(self) -> npt.NDArray[np.float64]:
+        """Return the adjacency matrix of this graph.
+
+        The inverse of `from_matrix`.
+        Nodes are mapped to indices 0, ..., N-1 according to `self.nodes` insertion order.
+        - Node weights are stored in the diagonal since self-loops are not supported.
+            Nodes with no weight set (None) are left at 0.0 in the diagonal.
+        - For each edge (i, j), the entries (i,j) and (j,i) are set to its weight,
+            or to 1.0 if the edge has no weight set.
+
+        Returns:
+            Symmetric N x N matrix of dtype float64, where N is the number of nodes.
+        """
+        n_nodes = len(self.nodes)
+        index = {node: i for i, node in enumerate(self.nodes)}
+        matrix = np.zeros((n_nodes, n_nodes), dtype=np.float64)
+
+        for node, weight in self.node_weights.items():
+            if weight is not None:
+                i = index[node]
+                matrix[i, i] = weight
+
+        for (u, v), weight in self.edge_weights.items():
+            i, j = index[u], index[v]
+            matrix[i, j] = matrix[j, i] = weight if weight is not None else 1.0
+
+        return matrix
 
     @classmethod
     def from_pyg(
