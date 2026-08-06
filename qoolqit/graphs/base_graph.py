@@ -5,7 +5,6 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import networkx as nx
-import numpy as np
 from matplotlib.axes import Axes
 
 from .utils import (
@@ -246,25 +245,6 @@ class BaseGraph(nx.Graph):
     def interactions(self) -> dict:
         """Rydberg model interaction 1/r^6 between pair of nodes."""
         return {p: 1.0 / (r**6) for p, r in self.distances().items()}
-
-    def interaction_matrix(self) -> np.ndarray:
-        """Rydberg model interaction 1/r^6 between pairs of nodes, as a matrix.
-
-        Node ordering follows `self.nodes` insertion order.
-        The diagonal is 0, since there is no self-interaction.
-
-        Returns:
-            Symmetric N x N matrix of dtype float64, where N is the number of nodes.
-        """
-        index = {node: i for i, node in enumerate(self.nodes)}
-        n_nodes = len(index)
-        matrix = np.zeros((n_nodes, n_nodes), dtype=np.float64)
-
-        for (u, v), interaction in self.interactions().items():
-            i, j = index[u], index[v]
-            matrix[i, j] = matrix[j, i] = interaction
-
-        return matrix
 
     def min_distance(self, connected: bool | None = None) -> float:
         """Returns the minimum distance in the graph.
