@@ -76,6 +76,7 @@ def test_basegraph_interactions(n_nodes: int) -> None:
     rng = np.random.default_rng(0)
     coords_array = rng.uniform(-1, 1, size=(n_nodes, 2))
     graph = BaseGraph.from_coordinates([c for c in coords_array])
+    assert graph.has_coords
 
     expected_interactions = {
         (i, j): np.linalg.norm(coords_array[i] - coords_array[j]) ** (-6)

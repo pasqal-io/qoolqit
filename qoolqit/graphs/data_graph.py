@@ -43,8 +43,7 @@ class DataGraph(BaseGraph):
         coords = [(i * spacing, 0.0) for i in range(n)]
         graph = cls.from_coordinates(coords)
         edges = [(i, i + 1) for i in range(0, n - 1)]
-        graph.add_edges_from(edges)
-        graph._reset_dicts()
+        graph.add_edges_from(edges, weight=1.0)
         return graph
 
     @classmethod
@@ -70,8 +69,7 @@ class DataGraph(BaseGraph):
         ]
         edges = [(i, i + 1) for i in range(n - 1)] + [(n - 1, 0)]
         graph = cls.from_coordinates(coords)
-        graph.add_edges_from(edges)
-        graph._reset_dicts()
+        graph.add_edges_from(edges, weight=1.0)
         return graph
 
     @classmethod
@@ -86,7 +84,6 @@ class DataGraph(BaseGraph):
         base_graph = nx.erdos_renyi_graph(n, p, seed)
         graph = DataGraph.from_nodes(list(base_graph.nodes))
         graph.add_edges_from(base_graph.edges)
-        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -112,7 +109,6 @@ class DataGraph(BaseGraph):
 
         graph = cls.from_coordinates(final_pos)
         graph.add_edges_from(G.edges)
-        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -138,7 +134,6 @@ class DataGraph(BaseGraph):
 
         graph = cls.from_coordinates(final_pos)
         graph.add_edges_from(G.edges)
-        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -199,7 +194,6 @@ class DataGraph(BaseGraph):
 
         graph = cls.from_coordinates(final_coords)
         graph.add_edges_from(final_edges)
-        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -223,7 +217,6 @@ class DataGraph(BaseGraph):
 
         graph = DataGraph.from_coordinates(final_coords)
         graph.add_edges_from(G.edges)
-        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -251,7 +244,6 @@ class DataGraph(BaseGraph):
         graph = cls.from_coordinates(coords)
         edges = graph.ud_edges(radius)
         graph.add_edges_from(edges)
-        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -430,7 +422,6 @@ class DataGraph(BaseGraph):
 
         # Re-initialize QoolQit internal dicts for all nodes/edges
         graph._coords = {n: None for n in graph.nodes}
-        graph._reset_dicts()
 
         # pos → _coords (stored as list [x, y] by to_networkx)
         for node, node_data in nx_graph.nodes(data=True):
@@ -450,7 +441,7 @@ class DataGraph(BaseGraph):
                 v = int(data.edge_index[1, idx].item())
                 key = (min(u, v), max(u, v))
                 if key not in seen:
-                    graph._edge_weights[key] = edge_tensor[idx].item()
+                    graph.edge_weights[key] = edge_tensor[idx].item()
                     seen.add(key)
 
         return graph
@@ -536,7 +527,7 @@ class DataGraph(BaseGraph):
 
         # Export _coords → pos
         if self.has_coords:
-            positions = [self._coords[n] for n in sorted(self.nodes())]
+            positions = [self.coords[n] for n in sorted(self.nodes())]
             data.pos = torch.tensor(positions, dtype=torch.float64)
 
         # Export _node_weights → node_weights_attr
@@ -623,7 +614,7 @@ class DataGraph(BaseGraph):
     @property
     def node_weights(self) -> dict:
         """Return the dictionary of node weights."""
-        return self._node_weights
+        return nx.get_node_attributes(self, "weight", default=None)
 
     @node_weights.setter
     def node_weights(self, weights: list | dict) -> None:
@@ -643,12 +634,12 @@ class DataGraph(BaseGraph):
                     "Set of nodes in the given dictionary does not match the graph nodes."
                 )
             weights_dict = weights
-        self._node_weights = weights_dict
+        nx.set_node_attributes(self, weights_dict, "weight")
 
     @property
     def edge_weights(self) -> dict:
         """Return the dictionary of edge weights."""
-        return self._edge_weights
+        return nx.get_edge_attributes(self, "weight", default=1.0)
 
     @edge_weights.setter
     def edge_weights(self, weights: list | dict) -> None:
@@ -668,7 +659,7 @@ class DataGraph(BaseGraph):
                     "Set of edges in the given dictionary does not match the graph ordered edges."
                 )
             weights_dict = weights
-        self._edge_weights = weights_dict
+        nx.set_edge_attributes(self, weights_dict, "weight")
 
     def set_ud_edges(self, radius: float) -> None:
         """Reset the set of edges to be equal to the set of unit-disk edges."""

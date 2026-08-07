@@ -26,26 +26,6 @@ class BaseGraph(nx.Graph):
     distances, and checking if the graph is unit-disk.
     """
 
-    def __init__(self, edges: Iterable = []) -> None:
-        """
-        Default constructor for the BaseGraph.
-
-        Arguments:
-            edges: set of edge tuples (i, j)
-        """
-        if edges and not isinstance(edges, Iterable):
-            raise TypeError("Input is not a valid edge list.")
-
-        super().__init__()
-        self.add_edges_from(edges)
-        self._coords = {i: None for i in self.nodes}
-        self._reset_dicts()
-
-    def _reset_dicts(self) -> None:
-        """Reset the default weight dictionaries."""
-        self._node_weights = {n: None for n in self.nodes}
-        self._edge_weights = {e: None for e in self.sorted_edges}
-
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
         """Construct a base graph from a set of nodes.
@@ -55,8 +35,6 @@ class BaseGraph(nx.Graph):
         """
         graph = cls()
         graph.add_nodes_from(nodes)
-        graph._coords = {i: None for i in graph.nodes}
-        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -67,15 +45,11 @@ class BaseGraph(nx.Graph):
             coords: list or dictionary of coordinate pairs.
         """
         if isinstance(coords, list):
-            nodes = list(range(len(coords)))
-            coords_dict = {i: pos for i, pos in enumerate(coords)}
+            coords_tuple = ((i, {"pos": pos}) for i, pos in enumerate(coords))
         elif isinstance(coords, dict):
-            nodes = list(coords.keys())
-            coords_dict = coords
-        graph = cls.from_nodes(nodes)
-        graph._coords = coords_dict
-        graph._reset_dicts()
-        return graph
+            coords_tuple = ((key, {"pos": pos}) for key, pos in coords.items())
+
+        return cls.from_nodes(coords_tuple)
 
     @classmethod
     def from_nx(cls, g: nx.Graph) -> BaseGraph:
@@ -176,8 +150,8 @@ class BaseGraph(nx.Graph):
 
         Requires all nodes to have coordinates.
         """
-        is_any_coord_none = any(value is None for value in self._coords.values())
-        return not (is_any_coord_none or len(self._coords) == 0)
+        missing_pos = [node for node, data in self.nodes(data=True) if "pos" not in data]
+        return len(missing_pos) == 0
 
     @property
     def has_edges(self) -> bool:
@@ -190,7 +164,8 @@ class BaseGraph(nx.Graph):
 
         Requires all nodes to have a weight.
         """
-        return not ((None in self._node_weights.values()) or len(self._node_weights) == 0)
+        missing_weights = [n for n, data in self.nodes(data=True) if "weight" not in data]
+        return len(missing_weights) == 0
 
     @property
     def has_edge_weights(self) -> bool:
@@ -198,12 +173,13 @@ class BaseGraph(nx.Graph):
 
         Requires all edges to have a weight.
         """
-        return not ((None in self._edge_weights.values()) or len(self._edge_weights) == 0)
+        missing_weights = [(u, v) for u, v, data in self.edges(data=True) if "weight" not in data]
+        return len(missing_weights) == 0
 
     @property
     def coords(self) -> dict:
         """Return the dictionary of node coordinates."""
-        return self._coords
+        return nx.get_node_attributes(self, "pos", default=None)
 
     @coords.setter
     def coords(self, coords: list | dict) -> None:
@@ -221,9 +197,7 @@ class BaseGraph(nx.Graph):
                     "Set of nodes in the given dictionary does not match the graph nodes."
                 )
             coords_dict = coords
-        self._coords = coords_dict
-
-    # methods
+        nx.set_node_attributes(self, coords_dict, "pos")
 
     def distances(self, edge_list: Iterable | None = None) -> dict:
         """Returns a dictionary of distances for a given set of edges.
@@ -358,9 +332,9 @@ class BaseGraph(nx.Graph):
             if (len(args) > 0) or (scaling is None and spacing is None):
                 raise TypeError(msg)
             if scaling is None and spacing is not None:
-                self._coords = space_coords(self._coords, spacing)
+                self.coords = space_coords(self.coords, spacing)
             elif spacing is None and scaling is not None:
-                self._coords = scale_coords(self._coords, scaling)
+                self.coords = scale_coords(self.coords, scaling)
             else:
                 raise TypeError(msg)
         else:
