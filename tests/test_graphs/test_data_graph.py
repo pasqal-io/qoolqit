@@ -69,7 +69,7 @@ def test_datagraph_random_er(n_nodes: int) -> None:
 
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
 def test_datagraph_from_matrix(n_nodes: int) -> None:
-
+    np.random.seed(0)
     data = np.random.rand(n_nodes, n_nodes)
 
     with pytest.raises(ValueError):
@@ -117,6 +117,79 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
     edge_weights = sorted(list(graph.edge_weights.values()))
 
     np.testing.assert_allclose(edge_weights, data_edge_weights)
+
+
+@pytest.mark.parametrize("n_nodes", [5, 10, 50])
+def test_datagraph_to_matrix_unweighted(n_nodes: int) -> None:
+    graph = DataGraph.random_er(n_nodes, p=0.5, seed=0)
+    assert not graph.has_node_weights
+    assert not graph.has_edge_weights
+
+    matrix = graph.to_matrix()
+
+    np.testing.assert_equal(matrix, matrix.T)
+    np.testing.assert_equal(np.diag(matrix), np.zeros(n_nodes))
+
+    for i, j in graph.sorted_edges:
+        assert matrix[i, j] == 1.0
+        assert matrix[j, i] == 1.0
+
+    non_edges = graph.all_node_pairs - graph.sorted_edges
+    for i, j in non_edges:
+        assert matrix[i, j] == 0.0
+        assert matrix[j, i] == 0.0
+
+
+@pytest.mark.parametrize("n_nodes", [5, 10, 50])
+def test_datagraph_to_matrix_weighted(n_nodes: int) -> None:
+    graph = DataGraph.random_er(n_nodes, p=0.5, seed=0)
+    graph.node_weights = {i: np.random.rand() for i in graph.nodes}
+    graph.edge_weights = {e: np.random.rand() for e in graph.sorted_edges}
+
+    matrix = graph.to_matrix()
+
+    np.testing.assert_equal(matrix, matrix.T)
+    np.testing.assert_allclose(np.diag(matrix), list(graph.node_weights.values()))
+
+    for (i, j), weight in graph.edge_weights.items():
+        assert matrix[i, j] == weight
+        assert matrix[j, i] == weight
+
+
+@pytest.mark.parametrize("n_nodes", [3, 7, 21])
+def test_datagraph_to_matrix_roundtrip(n_nodes: int) -> None:
+    rng = np.random.default_rng(12345)
+    matrix = rng.normal(0, 1, size=(n_nodes, n_nodes))
+    # zero out some elements for testing
+    rows, cols = rng.integers(n_nodes, size=3), rng.integers(n_nodes, size=3)
+    matrix[rows, cols] = 0.0
+    matrix[cols, rows] = 0.0
+    matrix += matrix.T
+
+    graph = DataGraph.from_matrix(matrix)
+    np.testing.assert_allclose(graph.to_matrix(), matrix, atol=1e-8)
+
+
+def test_datagraph_to_matrix_custom_node_labels_and_none_weights() -> None:
+    # Ensure `to_matrix()` respects `self.nodes` ordering and handles None weights.
+    # Also ensures it works with non-0..N-1 node labels.
+    graph = DataGraph.from_nodes(["b", "a", "c"])  # preserve explicit order
+    graph.add_edges_from([("b", "a"), ("a", "c")])
+
+    # Mix of real weights and None
+    graph.node_weights = {"b": 2.0, "a": None, "c": -3.0}
+    # TOFIX: order is not guaranteed because DataGraph maintains arbitrarily sort edges
+    graph.edge_weights = {("a", "b"): None, ("a", "c"): 0.25}
+
+    matrix = graph.to_matrix()
+    expected = np.array(
+        [
+            [2.0, 1.0, 0.0],
+            [1.0, 0.0, 0.25],
+            [0.0, 0.25, -3.0],
+        ],
+    )
+    np.testing.assert_equal(matrix, expected)
 
 
 def test_triangular() -> None:

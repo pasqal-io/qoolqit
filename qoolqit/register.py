@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import math
 from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING, Any, TypeGuard
+from typing import TYPE_CHECKING, Any, TypeGuard, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 from matplotlib.axes import Axes
+from scipy.spatial.distance import cdist
 
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
 
@@ -50,6 +51,26 @@ def _copy(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
     if _is_torch(x):
         return x.clone().detach()
     return np.copy(x)
+
+
+def _pdist(x: npt.NDArray | torch.Tensor) -> npt.NDArray | torch.Tensor:
+    """Compute the distance matrix of a collection of vectors."""
+    if _is_torch(x):
+        return torch.cdist(x, x, p=2)
+    return np.asarray(cdist(x, x))
+
+
+def _fill_diagonal(
+    x: npt.NDArray[np.float64] | torch.Tensor, value: float
+) -> npt.NDArray[np.float64] | torch.Tensor:
+    if _is_torch(x):
+        # Out-of-place: avoids corrupting x's autograd graph.
+        diag = torch.full_like(x.diag(), value)
+        return torch.diagonal_scatter(x, diag)
+
+    x = cast(npt.NDArray[np.float64], x)  # TypeGuard narrows only the torch branch above.
+    np.fill_diagonal(x, value)
+    return x
 
 
 class Register:
@@ -309,6 +330,13 @@ class Register:
     def interactions(self) -> dict:
         """Interaction 1/r^6 between each qubit pair."""
         return {p: 1.0 / (r**6) for p, r in self.distances().items()}
+
+    def interaction_matrix(self) -> npt.NDArray[np.float64] | torch.Tensor:
+        """Interaction 1/r^6 between each qubit pair, as a matrix (0 on the diagonal)."""
+        dist_matrix = _pdist(self._coords)
+        interactions = _fill_diagonal(dist_matrix, 1.0)
+        interactions **= -6
+        return _fill_diagonal(interactions, 0.0)
 
     def __repr__(self) -> str:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
