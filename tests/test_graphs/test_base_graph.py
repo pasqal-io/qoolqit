@@ -28,7 +28,6 @@ def test_basegraph_init(n_nodes: int) -> None:
     assert len(graph.sorted_edges) == n_edges
     assert len(graph.sorted_edges) <= max_n_edges
     assert graph.sorted_edges == set(edge_list)
-    assert graph.has_edges
     assert not graph.has_coords
 
     with pytest.raises(AttributeError):
@@ -105,7 +104,6 @@ def test_basegraph_constructors(n_nodes: int) -> None:
     for graph in [graph1, graph2]:
         assert len(graph.edges) == 0
         assert len(graph.sorted_edges) == 0
-        assert not graph.has_edges
 
     assert not graph1.has_coords
     assert graph2.has_coords

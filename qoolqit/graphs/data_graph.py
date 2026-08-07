@@ -614,7 +614,7 @@ class DataGraph(BaseGraph):
     @property
     def node_weights(self) -> dict:
         """Return the dictionary of node weights."""
-        return nx.get_node_attributes(self, "weight", default=None)
+        return dict(self.nodes(data="weight"))
 
     @node_weights.setter
     def node_weights(self, weights: list | dict) -> None:
@@ -639,7 +639,7 @@ class DataGraph(BaseGraph):
     @property
     def edge_weights(self) -> dict:
         """Return the dictionary of edge weights."""
-        return nx.get_edge_attributes(self, "weight", default=1.0)
+        return dict(self.edges(data="weight"))
 
     @edge_weights.setter
     def edge_weights(self, weights: list | dict) -> None:
