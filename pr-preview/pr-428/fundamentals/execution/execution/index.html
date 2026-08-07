@@ -2836,8 +2836,8 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2898,19 +2898,6 @@ program = QuantumProgram(register, drive)
 
 # Compiling the program to a device
 program.compile_to(device=AnalogDevice())</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>/home/runner/work/qoolqit/qoolqit/qoolqit/execution/backends.py:10: DeprecationWarning: This package is replaced by pasqal-cloud (https://pypi.org/project/pasqal-cloud/) and is going to be removed in the future.
-  from pulser_pasqal.backends import EmuFreeBackendV2, RemoteEmulatorBackend
-</pre>
 </div>
 </div>
 </div>
@@ -3134,14 +3121,13 @@ final_bitstrings</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>Counter({'111': 818,
-         '110': 65,
-         '101': 54,
-         '011': 51,
-         '010': 5,
-         '001': 4,
-         '100': 2,
-         '000': 1})</pre>
+<pre>Counter({'111': 810,
+         '011': 66,
+         '110': 57,
+         '101': 55,
+         '010': 7,
+         '100': 4,
+         '001': 1})</pre>
 </div>
 </div>
 </div>
@@ -3356,23 +3342,23 @@ Again, for more information about Pasqal Cloud and other providers, please refer
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pulser_pasqal</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloud</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pasqal_cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloudConnection</span>
 
-<span class="c1"># connection = PasqalCloud(</span>
+<span class="c1"># connection = PasqalCloudConnection(</span>
 <span class="c1">#     username=USERNAME,  # Your username or email address for the Pasqal Cloud Platform</span>
 <span class="c1">#     password=PASSWORD,  # The password for your Pasqal Cloud Platform account</span>
 <span class="c1">#     project_id=PROJECT_ID,  # The ID of the project associated to your account</span>
 <span class="c1"># )</span>
-<span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloud</span><span class="p">()</span>
+<span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloudConnection</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8">from pulser_pasqal import PasqalCloud
+<div class="clipboard-copy-txt" id="cell-8">from pasqal_cloud import PasqalCloudConnection
 
-# connection = PasqalCloud(
+# connection = PasqalCloudConnection(
 #     username=USERNAME,  # Your username or email address for the Pasqal Cloud Platform
 #     password=PASSWORD,  # The password for your Pasqal Cloud Platform account
 #     project_id=PROJECT_ID,  # The ID of the project associated to your account
 # )
-connection = PasqalCloud()</div>
+connection = PasqalCloudConnection()</div>
 </div>
 </div>
 </div>
@@ -3425,15 +3411,15 @@ remote_emulator = RemoteEmulator(connection=connection)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>The <code>RemoteEmulator</code> supports the equivalent remote version of the above-mentioned backends, respectively <code>EmuFreeBackendV2</code> (default), <code>EmuSVBackend</code> and <code>EmuMPSBackend</code>.
+<p>The <code>RemoteEmulator</code> supports the equivalent remote version of the above-mentioned backends, respectively <code>RemoteEmuFreeBackend</code> (default), <code>RemoteSVBackend</code> and <code>RemoteMPSBackend</code>.
 Depending on your provider, however, some emulator backend might not be available to use.</p>
 <p>As before, also <code>RemoteEmulator</code> can be instantiated with:</p>
 <ul>
-<li><code>backend_type</code>: remote counterpart of local backends, namely <code>EmuFreeBackendV2</code> (default), <code>EmuSVBackend</code>, <code>EmuMPSBackend</code>.</li>
+<li><code>backend_type</code>: remote counterpart of local backends, namely <code>RemoteEmuFreeBackend</code> (default), <code>RemoteSVBackend</code>, <code>RemoteMPSBackend</code>.</li>
 <li><code>emulation_config</code>: same as local emulators. See <a href="#emulation-configuration">Emulation configuration</a>.</li>
 <li><code>num_shots</code>: same as local emulators.</li>
 </ul>
-<p>As an example, below, we specify to emulate the program with the <code>EmuFreeBackendV2</code> and a custom <code>EmulationConfig</code>:</p>
+<p>As an example, below, we specify to emulate the program with the <code>RemoteEmuFreeBackend</code> and a custom <code>EmulationConfig</code>:</p>
 </div>
 </div>
 </div>
@@ -3470,7 +3456,7 @@ Depending on your provider, however, some emulator backend might not be availabl
 
 <span class="c1"># initialize the remote emulator with the custom configuration and num_shots</span>
 <span class="n">remote_emulator</span> <span class="o">=</span> <span class="n">RemoteEmulator</span><span class="p">(</span>
-    <span class="n">backend_type</span><span class="o">=</span><span class="n">BackendType</span><span class="o">.</span><span class="n">EmuFreeBackendV2</span><span class="p">,</span>
+    <span class="n">backend_type</span><span class="o">=</span><span class="n">BackendType</span><span class="o">.</span><span class="n">RemoteEmuFreeBackend</span><span class="p">,</span>
     <span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span>
     <span class="n">emulation_config</span><span class="o">=</span><span class="n">emulation_config</span><span class="p">,</span>
     <span class="n">num_shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
@@ -3490,7 +3476,7 @@ emulation_config = EmulationConfig(observables=observables, with_modulation=True
 
 # initialize the remote emulator with the custom configuration and num_shots
 remote_emulator = RemoteEmulator(
-    backend_type=BackendType.EmuFreeBackendV2,
+    backend_type=BackendType.RemoteEmuFreeBackend,
     connection=connection,
     emulation_config=emulation_config,
     num_shots=1000,

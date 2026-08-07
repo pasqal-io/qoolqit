@@ -2711,8 +2711,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2751,19 +2751,6 @@ device_real = AnalogDevice()
 
 # An example of a real device with a DMM channel.
 device_real_digital = AnalogDeviceWithDMM()</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>/home/runner/work/qoolqit/qoolqit/qoolqit/execution/backends.py:10: DeprecationWarning: This package is replaced by pasqal-cloud (https://pypi.org/project/pasqal-cloud/) and is going to be removed in the future.
-  from pulser_pasqal.backends import EmuFreeBackendV2, RemoteEmulatorBackend
-</pre>
 </div>
 </div>
 </div>
@@ -2878,22 +2865,22 @@ The list of available ones can be fetched through the specific connection handle
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pulser_pasqal</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloud</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pasqal_cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloudConnection</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Device</span>
 
-<span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloud</span><span class="p">()</span>
+<span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloudConnection</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">())</span>
 
 <span class="c1"># fetch QoolQit device</span>
 <span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"FRESNEL"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">fresnel_device</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">from pulser_pasqal import PasqalCloud
+<div class="clipboard-copy-txt" id="cell-3">from pasqal_cloud import PasqalCloudConnection
 
 from qoolqit import Device
 
-connection = PasqalCloud()
+connection = PasqalCloudConnection()
 print(connection.fetch_available_devices())
 
 # fetch QoolQit device
@@ -2908,20 +2895,9 @@ print(fresnel_device)</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>&lt;string&gt;:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>{'FRESNEL_CAN1': FRESNEL_CAN1, 'FRESNEL': FRESNEL}
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>FRESNEL: 
+FRESNEL: 
  └── max_duration: 332.43763968
  └── max_amplitude: 0.20412370086269147
  └── max_abs_detuning: 1.134020560348286
@@ -2934,6 +2910,7 @@ print(fresnel_device)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
 <pre>&lt;string&gt;:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
+&lt;string&gt;:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
 </pre>
 </div>
 </div>

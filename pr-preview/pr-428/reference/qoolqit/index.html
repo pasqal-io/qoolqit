@@ -4810,8 +4810,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
         </li>
     </ul>
         <p>Example:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pulser_pasqal</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloud</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">PasqalCloud</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pasqal_cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloudConnection</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">PasqalCloudConnection</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
 </code></pre></div></p>
 
           
@@ -4864,8 +4864,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    Example:</span>
 <a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    ```python</span>
-<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    from pulser_pasqal import PasqalCloud</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    fresnel_device = Device.from_connection(connection=PasqalCloud(), name=&quot;FRESNEL&quot;)</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    from pasqal_cloud import PasqalCloudConnection</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    fresnel_device = Device.from_connection(connection=PasqalCloudConnection(), name=&quot;FRESNEL&quot;)</span>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    ```</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-216" name="__codelineno-0-216"></a>    <span class="n">available_remote_devices</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">()</span>
@@ -5243,8 +5243,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
         </li>
     </ul>
         <p>Example:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pulser_pasqal</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloud</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">PasqalCloud</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pasqal_cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloudConnection</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">PasqalCloudConnection</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
 </code></pre></div></p>
 
           
@@ -5297,8 +5297,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    Example:</span>
 <a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    ```python</span>
-<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    from pulser_pasqal import PasqalCloud</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    fresnel_device = Device.from_connection(connection=PasqalCloud(), name=&quot;FRESNEL&quot;)</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    from pasqal_cloud import PasqalCloudConnection</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    fresnel_device = Device.from_connection(connection=PasqalCloudConnection(), name=&quot;FRESNEL&quot;)</span>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    ```</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-216" name="__codelineno-0-216"></a>    <span class="n">available_remote_devices</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">()</span>
@@ -6321,11 +6321,11 @@ unit conversion.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">qoolqit_device</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">pulser_device</span><span class="o">=</span><span class="n">pulser_device</span><span class="p">)</span>
 </code></pre></div></p>
 <p>From remote Pulser device:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pulser_pasqal</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloud</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pasqal_cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloudConnection</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Device</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Fetch the remote device from the connection</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloud</span><span class="p">()</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloudConnection</span><span class="p">()</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">pulser_fresnel_device</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">()[</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">]</span>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Wrap a Pulser device object into a QoolQit Device</span>
@@ -6538,12 +6538,8 @@ unit conversion.</p>
       <a href="../embedding/#qoolqit.embedding"><code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;embedding</a>
   </span>
 
-            <span class="doc doc-backlink-crumb">
-      <a href="../embedding/#qoolqit.embedding.BladeConfig"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BladeConfig</a>
-  </span>
-
             <span class="doc doc-backlink-crumb last">
-      <a href="../embedding/#qoolqit.embedding.BladeConfig.__post_init__"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__post_init__</a>
+      <a href="../embedding/#qoolqit.embedding.BladeConfig"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BladeConfig</a>
   </span>
 
       </li>
@@ -6843,8 +6839,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
         </li>
     </ul>
         <p>Example:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pulser_pasqal</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloud</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">PasqalCloud</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pasqal_cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloudConnection</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">PasqalCloudConnection</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
 </code></pre></div></p>
 
           
@@ -6897,8 +6893,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    Example:</span>
 <a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    ```python</span>
-<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    from pulser_pasqal import PasqalCloud</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    fresnel_device = Device.from_connection(connection=PasqalCloud(), name=&quot;FRESNEL&quot;)</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    from pasqal_cloud import PasqalCloudConnection</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    fresnel_device = Device.from_connection(connection=PasqalCloudConnection(), name=&quot;FRESNEL&quot;)</span>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    ```</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-216" name="__codelineno-0-216"></a>    <span class="n">available_remote_devices</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">()</span>
@@ -7250,8 +7246,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
         </li>
     </ul>
         <p>Example:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pulser_pasqal</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloud</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">PasqalCloud</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pasqal_cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloudConnection</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">PasqalCloudConnection</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
 </code></pre></div></p>
 
           
@@ -7304,8 +7300,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    Example:</span>
 <a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    ```python</span>
-<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    from pulser_pasqal import PasqalCloud</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    fresnel_device = Device.from_connection(connection=PasqalCloud(), name=&quot;FRESNEL&quot;)</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    from pasqal_cloud import PasqalCloudConnection</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    fresnel_device = Device.from_connection(connection=PasqalCloudConnection(), name=&quot;FRESNEL&quot;)</span>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    ```</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-216" name="__codelineno-0-216"></a>    <span class="n">available_remote_devices</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">()</span>
@@ -8654,8 +8650,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
         </li>
     </ul>
         <p>Example:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pulser_pasqal</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloud</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">PasqalCloud</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pasqal_cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloudConnection</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">PasqalCloudConnection</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FRESNEL&quot;</span><span class="p">)</span>
 </code></pre></div></p>
 
           
@@ -8708,8 +8704,8 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    Example:</span>
 <a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    ```python</span>
-<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    from pulser_pasqal import PasqalCloud</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    fresnel_device = Device.from_connection(connection=PasqalCloud(), name=&quot;FRESNEL&quot;)</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    from pasqal_cloud import PasqalCloudConnection</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    fresnel_device = Device.from_connection(connection=PasqalCloudConnection(), name=&quot;FRESNEL&quot;)</span>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    ```</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-216" name="__codelineno-0-216"></a>    <span class="n">available_remote_devices</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">fetch_available_devices</span><span class="p">()</span>
