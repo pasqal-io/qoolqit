@@ -331,13 +331,13 @@ class DataGraph(BaseGraph):
 
         **Default attributes copied (if present on** ``data`` **):**
 
-        - Node: ``x``, ``pos`` (``pos`` is also stored in ``_coords``)
+        - Node: ``x``, ``pos`` (``pos`` is also stored in ``coords``)
         - Edge: ``edge_attr``
         - Graph: ``y``
 
         Use ``node_attrs``, ``edge_attrs``, ``graph_attrs`` for extras.
 
-        **QoolQit weights** (``_node_weights``, ``_edge_weights``) are not
+        **QoolQit weights** (``node_weights``, ``edge_weights``) are not
         populated automatically — use the explicit parameters:
 
         - ``node_weights_attr``: real-valued tensor of shape ``(N,)`` or
@@ -357,7 +357,7 @@ class DataGraph(BaseGraph):
             edge_weights_attr: Data attribute to use as edge weights.
 
         Returns:
-            DataGraph with ``_coords``, ``_node_weights``, ``_edge_weights``
+            DataGraph with ``coords``, ``node_weights``, ``edge_weights``
             populated where applicable.
 
         Raises:
@@ -416,24 +416,14 @@ class DataGraph(BaseGraph):
         )
 
         # Build the DataGraph: edges carry their data, nodes carry their data
-        graph = cls(nx_graph.edges(data=True))
-        graph.add_nodes_from(nx_graph.nodes(data=True))
-        graph.graph = nx_graph.graph
+        graph = cls(nx_graph)
 
-        # Re-initialize QoolQit internal dicts for all nodes/edges
-        graph._coords = {n: None for n in graph.nodes}
-
-        # pos → _coords (stored as list [x, y] by to_networkx)
-        for node, node_data in nx_graph.nodes(data=True):
-            if "pos" in node_data:
-                graph._coords[node] = tuple(node_data["pos"])  # type: ignore[assignment]
-
-        # node_weights_attr → _node_weights
+        # node_weights_attr → node_weights
         if node_tensor is not None:
             for i in range(data.num_nodes):
-                graph._node_weights[i] = node_tensor[i].item()
+                graph.nodes[i]["weight"] = node_tensor[i].item()
 
-        # edge_weights_attr → _edge_weights
+        # edge_weights_attr → edge_weights
         if edge_tensor is not None:
             seen: set = set()
             for idx in range(data.edge_index.shape[1]):
@@ -441,7 +431,7 @@ class DataGraph(BaseGraph):
                 v = int(data.edge_index[1, idx].item())
                 key = (min(u, v), max(u, v))
                 if key not in seen:
-                    graph.edge_weights[key] = edge_tensor[idx].item()
+                    graph.edges[key]["weight"] = edge_tensor[idx].item()
                     seen.add(key)
 
         return graph
@@ -467,10 +457,10 @@ class DataGraph(BaseGraph):
 
         **QoolQit internal dicts exported when populated:**
 
-        - ``_coords`` → ``data.pos`` (float64, shape ``(N, 2)``)
-        - ``_node_weights`` → ``data.<node_weights_attr>`` (float64, shape
+        - ``coords`` → ``data.pos`` (float64, shape ``(N, 2)``)
+        - ``node_weights`` → ``data.<node_weights_attr>`` (float64, shape
           ``(N,)``). Defaults to ``"weight"``.
-        - ``_edge_weights`` → ``data.<edge_weights_attr>`` (float64, shape
+        - ``edge_weights`` → ``data.<edge_weights_attr>`` (float64, shape
           ``(2*E,)``). Defaults to ``"edge_weight"``.
 
         Arguments:
@@ -525,23 +515,23 @@ class DataGraph(BaseGraph):
 
         data = from_networkx(filtered_graph)
 
-        # Export _coords → pos
+        # Export coords → pos
         if self.has_coords:
             positions = [self.coords[n] for n in sorted(self.nodes())]
             data.pos = torch.tensor(positions, dtype=torch.float64)
 
-        # Export _node_weights → node_weights_attr
+        # Export node_weights → node_weights_attr
         if self.has_node_weights:
-            weights = [self._node_weights[n] for n in sorted(self.nodes())]
+            weights = [self.node_weights[n] for n in sorted(self.nodes())]
             setattr(data, node_weights_attr, torch.tensor(weights, dtype=torch.float64))
 
-        # Export _edge_weights → edge_weights_attr (one value per directed edge in edge_index)
+        # Export edge_weights → edge_weights_attr (one value per directed edge in edge_index)
         if self.has_edge_weights:
             edge_weights: list[float] = []
             for i in range(data.edge_index.shape[1]):
                 u, v = int(data.edge_index[0, i].item()), int(data.edge_index[1, i].item())
                 edge_key = (min(u, v), max(u, v))
-                edge_weights.append(float(self._edge_weights[edge_key]))  # type: ignore[arg-type]
+                edge_weights.append(float(self.edge_weights[edge_key]))
             setattr(data, edge_weights_attr, torch.tensor(edge_weights, dtype=torch.float64))
 
         return data
@@ -611,57 +601,7 @@ class DataGraph(BaseGraph):
 
         return weights
 
-    @property
-    def node_weights(self) -> dict:
-        """Return the dictionary of node weights."""
-        return dict(self.nodes(data="weight"))
-
-    @node_weights.setter
-    def node_weights(self, weights: list | dict) -> None:
-        """Set the dictionary of node weights.
-
-        Arguments:
-            weights: list or dictionary of weights.
-        """
-        if isinstance(weights, list):
-            if len(weights) != self.number_of_nodes():
-                raise ValueError("Size of the weights list does not match the number of nodes.")
-            weights_dict = {i: w for i, w in zip(self.nodes, weights)}
-        elif isinstance(weights, dict):
-            nodes = set(weights.keys())
-            if set(self.nodes) != nodes:
-                raise ValueError(
-                    "Set of nodes in the given dictionary does not match the graph nodes."
-                )
-            weights_dict = weights
-        nx.set_node_attributes(self, weights_dict, "weight")
-
-    @property
-    def edge_weights(self) -> dict:
-        """Return the dictionary of edge weights."""
-        return dict(self.edges(data="weight"))
-
-    @edge_weights.setter
-    def edge_weights(self, weights: list | dict) -> None:
-        """Set the dictionary of edge weights.
-
-        Arguments:
-            weights: list or dictionary of weights.
-        """
-        if isinstance(weights, list):
-            if len(weights) != self.number_of_edges():
-                raise ValueError("Size of the weights list does not match the number of nodes.")
-            weights_dict = {i: w for i, w in zip(self.sorted_edges, weights)}
-        elif isinstance(weights, dict):
-            edges = set(weights.keys())
-            if set(self.sorted_edges) != edges:
-                raise ValueError(
-                    "Set of edges in the given dictionary does not match the graph ordered edges."
-                )
-            weights_dict = weights
-        nx.set_edge_attributes(self, weights_dict, "weight")
-
     def set_ud_edges(self, radius: float) -> None:
         """Reset the set of edges to be equal to the set of unit-disk edges."""
         super().set_ud_edges(radius=radius)
-        self._edge_weights = {e: None for e in self.sorted_edges}
+        self.edge_weights = {e: None for e in self.sorted_edges}

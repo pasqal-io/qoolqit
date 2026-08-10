@@ -74,17 +74,67 @@ class BaseGraph(nx.Graph):
     @property
     def has_coords(self) -> bool:
         """Check if the graph has coordinates on all nodes."""
-        return all(pos for _, pos in self.nodes(data="pos"))
+        return all("pos" in n for _, n in self.nodes(data=True))
 
     @property
     def has_node_weights(self) -> bool:
         """Check if the graph has node weights on all nodes."""
-        return all(w for _, w in self.nodes(data="weight"))
+        return all("weight" in n for _, n in self.nodes(data=True))
 
     @property
     def has_edge_weights(self) -> bool:
         """Check if the graph has edge weights on all edges."""
-        return all(w for _, _, w in self.edges(data="weight"))
+        return all("weight" in e for _, _, e in self.edges(data=True))
+
+    @property
+    def node_weights(self) -> dict:
+        """Return the dictionary of node weights."""
+        return dict(self.nodes(data="weight"))
+
+    @node_weights.setter
+    def node_weights(self, weights: list | dict) -> None:
+        """Set the dictionary of node weights.
+
+        Arguments:
+            weights: list or dictionary of weights.
+        """
+        if isinstance(weights, list):
+            if len(weights) != self.number_of_nodes():
+                raise ValueError("Size of the weights list does not match the number of nodes.")
+            weights_dict = {i: w for i, w in zip(self.nodes, weights)}
+        elif isinstance(weights, dict):
+            nodes = set(weights.keys())
+            if set(self.nodes) != nodes:
+                raise ValueError(
+                    "Set of nodes in the given dictionary does not match the graph nodes."
+                )
+            weights_dict = weights
+        nx.set_node_attributes(self, weights_dict, "weight")
+
+    @property
+    def edge_weights(self) -> dict:
+        """Return the dictionary of edge weights."""
+        return {(u, v): w for u, v, w in self.edges(data="weight")}
+
+    @edge_weights.setter
+    def edge_weights(self, weights: list | dict) -> None:
+        """Set the dictionary of edge weights.
+
+        Arguments:
+            weights: list or dictionary of weights.
+        """
+        if isinstance(weights, list):
+            if len(weights) != self.number_of_edges():
+                raise ValueError("Size of the weights list does not match the number of nodes.")
+            weights_dict = {i: w for i, w in zip(self.sorted_edges, weights)}
+        elif isinstance(weights, dict):
+            edges = set(weights.keys())
+            if set(self.sorted_edges) != edges:
+                raise ValueError(
+                    "Set of edges in the given dictionary does not match the graph ordered edges."
+                )
+            weights_dict = weights
+        nx.set_edge_attributes(self, weights_dict, "weight")
 
     @property
     def coords(self) -> dict:
@@ -272,9 +322,9 @@ class BaseGraph(nx.Graph):
             weight: represents the edge weight. Must be a real number.
 
         Returns an instance of the class with following attributes:
-            - _node_weights : dict[node, float or None]
-            - _edge_weights : dict[(u,v), float or None]
-            - _coords       : dict[node, (float,float) or None]
+            - node_weights : dict[node, float or None]
+            - edge_weights : dict[(u,v), float or None]
+            - coords       : dict[node, (float,float) or None]
         """
         if not isinstance(g, nx.Graph):
             raise TypeError("Input must be a networkx.Graph instance.")
@@ -329,15 +379,7 @@ class BaseGraph(nx.Graph):
                         f"got {type(weight)} instead."
                     )
 
-        # build the instance of the graph
-        graph = cls()
-        graph.add_nodes_from(g.nodes)
-        graph.add_edges_from(g.edges)
-        graph._node_weights = nx.get_node_attributes(g, "weight", default=None)
-        graph._coords = nx.get_node_attributes(g, "pos", default=None)
-        graph._edge_weights = nx.get_edge_attributes(g, "weight", default=None)
-
-        return graph
+        return cls(g)
 
     def draw(self, ax: Axes | None = None, **kwargs: Any) -> None:
         """Draw the graph.

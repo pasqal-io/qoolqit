@@ -187,9 +187,9 @@ def test_from_nx() -> None:
     assert set(g.edges) == set([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3)])
 
     # Check whether the coords exist and are all None
-    assert all(v is None for v in g._coords.values())
-    assert all(v is None for v in g._node_weights.values())
-    assert all(v is None for v in g._edge_weights.values())
+    assert all(v is None for v in g.coords.values())
+    assert all(v is None for v in g.node_weights.values())
+    assert all(v is None for v in g.edge_weights.values())
 
 
 def test_from_nx_with_weights_and_pos() -> None:
@@ -209,10 +209,10 @@ def test_from_nx_with_weights_and_pos() -> None:
     assert set(g.nodes) == {0, 1, 2}
     assert set(g.edges) == {(0, 1), (1, 2), (0, 2)}
 
-    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
-    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
+    assert g.node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+    assert g.edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
 
-    assert g._coords == {
+    assert g.coords == {
         0: (0.0, 0.0),
         1: (1.0, 0.0),
         2: (0.5, 1.0),
