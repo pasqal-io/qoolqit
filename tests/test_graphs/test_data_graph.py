@@ -103,8 +103,8 @@ def test_datagraph_from_matrix(n_nodes: int) -> None:
 
     graph = DataGraph.from_matrix(data2)
 
-    assert graph.has_node_weights
-    assert graph.has_edge_weights
+    assert not graph.has_node_weights
+    assert graph.has_edge_weights  # still has edge weights since edges with are removed
 
     for edge in random_edges_removal:
         assert edge not in graph.sorted_edges

@@ -268,8 +268,8 @@ class DataGraph(BaseGraph):
 
         diag = np.diag(data)
         n_nodes = len(diag)
-        if np.allclose(diag, np.zeros(n_nodes), rtol=0.0, atol=nonzero_tol):
-            node_weights = {i: None for i in range(n_nodes)}
+        if np.allclose(diag, np.zeros_like(diag), rtol=0.0, atol=nonzero_tol):
+            node_weights = None
         else:
             node_weights = {i: diag[i].item() for i in range(n_nodes)}
 
@@ -283,7 +283,8 @@ class DataGraph(BaseGraph):
 
         graph = cls.from_nodes(range(n_nodes))
         graph.add_edges_from(edge_list)
-        graph.node_weights = node_weights
+        if node_weights is not None:
+            graph.node_weights = node_weights
         graph.edge_weights = edge_weights
         return graph
 
