@@ -1,8 +1,3 @@
-# TODO:
-# - refactor this to reuse common methods in constructors
-# - refactor using rescale_coords method
-
-
 from __future__ import annotations
 
 from collections.abc import Iterable
