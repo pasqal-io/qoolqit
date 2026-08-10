@@ -23,15 +23,6 @@ if TYPE_CHECKING:
 class DataGraph(BaseGraph):
     """The main graph structure to represent problem data."""
 
-    def __init__(self, edges: Iterable = []) -> None:
-        """
-        Default constructor for the BaseGraph.
-
-        Arguments:
-            edges: set of edge tuples (i, j)
-        """
-        super().__init__(edges)
-
     @classmethod
     def line(cls, n: int, spacing: float = 1.0) -> DataGraph:
         """Constructs a line graph, with the respective coordinates.

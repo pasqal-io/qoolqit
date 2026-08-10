@@ -74,17 +74,23 @@ class BaseGraph(nx.Graph):
     @property
     def has_coords(self) -> bool:
         """Check if the graph has coordinates on all nodes."""
-        return all("pos" in n for _, n in self.nodes(data=True))
+        return self.number_of_nodes() > 0 and all(
+            pos is not None for _, pos in self.nodes(data="pos")
+        )
 
     @property
     def has_node_weights(self) -> bool:
         """Check if the graph has node weights on all nodes."""
-        return all("weight" in n for _, n in self.nodes(data=True))
+        return self.number_of_nodes() > 0 and all(
+            w is not None for _, w in self.nodes(data="weight")
+        )
 
     @property
     def has_edge_weights(self) -> bool:
         """Check if the graph has edge weights on all edges."""
-        return all("weight" in e for _, _, e in self.edges(data=True))
+        return self.number_of_edges() > 0 and all(
+            w is not None for _, _, w in self.edges(data="weight")
+        )
 
     @property
     def node_weights(self) -> dict:
@@ -165,7 +171,7 @@ class BaseGraph(nx.Graph):
         Distances are calculated directly from the coordinates. Raises an error
         if there are no coordinates on the graph.
 
-        Arguments:
+        Args:
             edge_list: set of edges.
         """
         if self.has_coords:
@@ -203,7 +209,7 @@ class BaseGraph(nx.Graph):
     def min_distance(self, connected: bool | None = None) -> float:
         """Returns the minimum distance in the graph.
 
-        Arguments:
+        Args:
             connected: if True/False, computes only over connected/disconnected nodes.
         """
         distance: float
@@ -265,7 +271,7 @@ class BaseGraph(nx.Graph):
     def ud_edges(self, radius: float) -> set:
         """Returns the set of edges given by the intersection of circles of a given radius.
 
-        Arguments:
+        Args:
             radius: the value
         """
         if self.has_coords:
@@ -283,7 +289,7 @@ class BaseGraph(nx.Graph):
 
         Accepts either a scaling or a spacing factor.
 
-        Arguments:
+        Args:
             scaling: value to scale by.
             spacing: value to set as the minimum distance in the graph.
         """
@@ -303,7 +309,7 @@ class BaseGraph(nx.Graph):
     def set_ud_edges(self, radius: float) -> None:
         """Reset the set of edges to be equal to the set of unit-disk edges.
 
-        Arguments:
+        Args:
             radius: the radius to use in determining the set of unit-disk edges.
         """
         self.remove_edges_from(list(self.edges))
