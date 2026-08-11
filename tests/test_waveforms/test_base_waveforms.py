@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 from pulser.waveforms import Waveform as PulserWaveform
 
-from qoolqit.waveforms import CompositeWaveform, Waveform
+from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, RampWaveform, Waveform
 
 
 class TestWaveform:
@@ -78,6 +78,12 @@ class TestWaveform:
         with pytest.raises(ValueError, match="Duration needs to be a positive non-zero value."):
             self.MockWaveform(-10.0)
 
+    @pytest.mark.parametrize("duration", [1, 3])
+    def test_float_duration(self, duration: int) -> None:
+        mock_wf = self.MockWaveform(duration)
+        assert isinstance(mock_wf.duration, float)
+        assert mock_wf.duration == float(duration)
+
     def test_call_outside_duration(self) -> None:
         wf = self.MockWaveform(1.0)
 
@@ -105,6 +111,29 @@ class TestWaveform:
         result_array = wf(t_array)
         assert isinstance(result_array, np.ndarray)
         np.testing.assert_array_equal(result_array, np.array([wf.function(t) for t in t_array]))
+
+    def test_call_ndarray_matches_list_when_function_returns_int(self) -> None:
+        """Regression test for https://github.com/pasqal-io/qoolqit/issues/439.
+
+        `np.vectorize` infers the output dtype from the first call, so a waveform whose
+        first sampled value happens to be a Python int (e.g. `ConstantWaveform(1, 0)`)
+        must not cause later float samples to be truncated to int.
+        """
+        wf1 = ConstantWaveform(1, 0)
+        wf2 = RampWaveform(1, 0, -2)
+        wf_composed = wf1 >> wf2
+
+        n = 20
+        T = 2
+        t_array = np.linspace(0, T, n)
+        t_list = [i * T / (n - 1) for i in range(n)]
+
+        result_array = wf_composed(t_array)
+        result_list = wf_composed(t_list)
+
+        assert isinstance(result_array, np.ndarray)
+        assert result_array.dtype == np.float64
+        np.testing.assert_allclose(result_array, result_list, atol=1e-8)
 
     def test_composition(self) -> None:
         wf1 = self.MockWaveform(11.1)
