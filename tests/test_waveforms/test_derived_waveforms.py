@@ -60,10 +60,17 @@ def test_delay_to_pulser() -> None:
     assert np.all(pulser_wf.samples == 0.0)
 
 
-def test_constant_init() -> None:
-    wf = ConstantWaveform(10.0, value=2.7)
-    assert wf.duration == 10.0
-    assert wf.value == 2.7
+@pytest.mark.parametrize("duration, value", [(1.57843, 2.7), (11.7, 3.4), (1, 2)])
+def test_constant_init(duration: float, value: float) -> None:
+    wf = ConstantWaveform(duration, value=value)
+    assert isinstance(wf.duration, float)
+    assert wf.duration == float(duration)
+    assert isinstance(wf.value, float)
+    assert wf.value == float(value)
+
+    # test single call
+    assert isinstance(wf(0.5), float)
+    assert wf(0.5) == float(value)
 
 
 @pytest.mark.parametrize(

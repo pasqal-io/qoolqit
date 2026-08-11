@@ -50,7 +50,9 @@ class RampWaveform(Waveform):
         initial_value: float,
         final_value: float,
     ) -> None:
-        super().__init__(duration, initial_value=initial_value, final_value=final_value)
+        super().__init__(
+            duration, initial_value=float(initial_value), final_value=float(final_value)
+        )
 
     def function(self, t: float) -> float:
         fraction = t / self._duration
@@ -88,7 +90,7 @@ class ConstantWaveform(Waveform):
         duration: float,
         value: float,
     ) -> None:
-        super().__init__(duration, value=value)
+        super().__init__(duration, value=float(value))
 
     def function(self, t: float) -> float:
         return self.value
@@ -131,7 +133,7 @@ class BlackmanWaveform(Waveform):
 
     def __init__(self, duration: float, area: float) -> None:
         """Initializes a new BlackmanWaveform."""
-        super().__init__(duration, area=area)
+        super().__init__(duration, area=float(area))
 
     def function(self, t: float) -> float:
         alpha = 2 * math.pi / self.duration
@@ -178,6 +180,8 @@ class PiecewiseLinearWaveform(CompositeWaveform):
             if duration == 0.0:
                 raise ValueError("A PiecewiseLinearWaveform interval cannot have zero duration.")
 
+        # Stored as-is (not cast to float): unlike the per-segment RampWaveforms below,
+        # this attribute can retain an int dtype if `values` is int-typed.
         self.values = values
 
         wfs = [RampWaveform(dur, values[i], values[i + 1]) for i, dur in enumerate(durations)]

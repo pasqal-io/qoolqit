@@ -53,7 +53,7 @@ class Waveform(ABC):
                 f"Extra arguments in {type(self).__name__} need to be passed as keyword arguments"
             )
 
-        self._duration = duration
+        self._duration = float(duration)
         self._params_dict = kwargs
 
         for key, value in kwargs.items():
@@ -99,7 +99,7 @@ class Waveform(ABC):
         return self._params_dict
 
     def _single_call(self, t: float) -> float:
-        return 0.0 if (t < 0.0 or t > self.duration) else self.function(t)
+        return 0.0 if (t < 0.0 or t > self.duration) else float(self.function(t))
 
     @overload
     def __call__(self, t: float) -> float: ...
@@ -109,7 +109,7 @@ class Waveform(ABC):
 
     def __call__(self, t: float | list[float] | np.ndarray) -> float | list[float] | np.ndarray:
         if isinstance(t, np.ndarray):
-            return np.vectorize(self._single_call)(t)
+            return np.vectorize(self._single_call, otypes=[float])(t)
         if isinstance(t, list):
             return [self._single_call(ti) for ti in t]
         return self._single_call(t)
