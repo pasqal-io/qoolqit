@@ -136,8 +136,8 @@ def test_hexagonal() -> None:
     assert edges == expected_edges
 
 
-def test_square() -> None:
-    graph = DataGraph.square(4, 4, spacing=2.71)
+def test_rectangular() -> None:
+    graph = DataGraph.rectangular(4, 4, spacing=2.71)
 
     expected_coords = {
         0: (0.0, 0.0),

@@ -216,18 +216,18 @@ class DataGraph(BaseGraph):
         return graph
 
     @classmethod
-    def square(
+    def rectangular(
         cls,
         m: int,
         n: int,
         spacing: float = 1.0,
     ) -> DataGraph:
         """
-        Constructs a square lattice graph, with respective coordinates.
+        Constructs a rectangular lattice graph, with respective coordinates.
 
         Arguments:
-            m: Number of rows of square.
-            n: Number of columns of square.
+            m: Number of rows of rectangle.
+            n: Number of columns of rectangle.
             spacing: The distance between adjacent nodes on the final lattice.
         """
         G = nx.grid_2d_graph(m, n)
@@ -238,6 +238,21 @@ class DataGraph(BaseGraph):
         graph.add_edges_from(G.edges)
         graph._reset_dicts()
         return graph
+
+    @classmethod
+    def square(
+        cls,
+        m: int,
+        spacing: float = 1.0,
+    ) -> DataGraph:
+        """
+        Constructs a square lattice graph, with respective coordinates.
+
+        Arguments:
+            m: Number of rows of the square.
+            spacing: The distance between adjacent nodes on the final lattice.
+        """
+        return cls.rectangular(m, m, spacing=spacing)
 
     @classmethod
     def random_ud(
