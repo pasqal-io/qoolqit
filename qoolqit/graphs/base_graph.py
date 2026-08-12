@@ -302,56 +302,6 @@ class BaseGraph(nx.Graph):
         nx.set_edge_attributes(self, weights_dict, "weight")
 
     @property
-    def node_weights(self) -> dict:
-        """Return the dictionary of node weights."""
-        return self._node_weights
-
-    @node_weights.setter
-    def node_weights(self, weights: list | dict) -> None:
-        """Set the dictionary of node weights.
-
-        Arguments:
-            weights: list or dictionary of weights.
-        """
-        if isinstance(weights, list):
-            if len(weights) != self.number_of_nodes():
-                raise ValueError("Size of the weights list does not match the number of nodes.")
-            weights_dict = {i: w for i, w in zip(self.nodes, weights)}
-        elif isinstance(weights, dict):
-            nodes = set(weights.keys())
-            if set(self.nodes) != nodes:
-                raise ValueError(
-                    "Set of nodes in the given dictionary does not match the graph nodes."
-                )
-            weights_dict = weights
-        self._node_weights = weights_dict
-
-    @property
-    def edge_weights(self) -> dict:
-        """Return the dictionary of edge weights."""
-        return self._edge_weights
-
-    @edge_weights.setter
-    def edge_weights(self, weights: list | dict) -> None:
-        """Set the dictionary of edge weights.
-
-        Arguments:
-            weights: list or dictionary of weights.
-        """
-        if isinstance(weights, list):
-            if len(weights) != self.number_of_edges():
-                raise ValueError("Size of the weights list does not match the number of nodes.")
-            weights_dict = {i: w for i, w in zip(self.sorted_edges, weights)}
-        elif isinstance(weights, dict):
-            edges = set(weights.keys())
-            if set(self.sorted_edges) != edges:
-                raise ValueError(
-                    "Set of edges in the given dictionary does not match the graph ordered edges."
-                )
-            weights_dict = weights
-        self._edge_weights = weights_dict
-
-    @property
     def coords(self) -> dict:
         """Return a dictionary of node coordinates."""
         return dict(self.nodes(data="pos"))
