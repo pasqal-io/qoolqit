@@ -472,7 +472,7 @@ class BaseGraph(nx.Graph):
 
         Uses the draw_networkx function from NetworkX.
 
-        Arguments:
+        Args:
             ax: Axes object to draw on. If None, uses the current Axes.
             **kwargs: keyword-arguments to pass to draw_networkx.
         """
