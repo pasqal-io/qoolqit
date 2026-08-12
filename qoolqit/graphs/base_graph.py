@@ -48,11 +48,8 @@ class BaseGraph(nx.Graph):
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
         """Construct a base graph from a set of nodes.
 
-        Args:
-            nodes: Iterable container.
-                Can be a container of nodes (list, dict, set, etc.) or
-                a container of (node, attribute dict) tuples.
-                Node attributes are updated using the attribute dict.
+        Arguments:
+            nodes: set of nodes.
         """
         graph = cls()
         graph.add_nodes_from(nodes)
@@ -62,11 +59,7 @@ class BaseGraph(nx.Graph):
     def from_coordinates(cls, coords: list | dict) -> BaseGraph:
         """Construct a base graph from a set of coordinates.
 
-        From a list of coordinates, nodes are labelled with their index.
-        From a dictionary, nodes are labelled with their keys.
-        Each node is added to the graph with its position as a node attribute `pos`.
-
-        Args:
+        Arguments:
             coords: list or dictionary of coordinate pairs.
         """
         if isinstance(coords, list):
@@ -254,7 +247,7 @@ class BaseGraph(nx.Graph):
     @property
     def node_weights(self) -> dict:
         """Return the dictionary of node weights."""
-        return dict(self.nodes(data="weight"))
+        return {n: w for n, w in self.nodes(data="weight")}
 
     @node_weights.setter
     def node_weights(self, weights: list | dict) -> None:
@@ -310,7 +303,7 @@ class BaseGraph(nx.Graph):
     def coords(self, coords: list | dict) -> None:
         """Set the dictionary of node coordinates.
 
-        Args:
+        Arguments:
             coords: list or dictionary of coordinate pairs.
         """
         if isinstance(coords, list):
@@ -330,7 +323,7 @@ class BaseGraph(nx.Graph):
         Distances are calculated directly from the coordinates. Raises an error
         if there are no coordinates on the graph.
 
-        Args:
+        Arguments:
             edge_list: set of edges.
         """
         if self.has_coords:
@@ -368,7 +361,7 @@ class BaseGraph(nx.Graph):
     def min_distance(self, connected: bool | None = None) -> float:
         """Returns the minimum distance in the graph.
 
-        Args:
+        Arguments:
             connected: if True/False, computes only over connected/disconnected nodes.
         """
         distance: float
@@ -430,7 +423,7 @@ class BaseGraph(nx.Graph):
     def ud_edges(self, radius: float) -> set:
         """Returns the set of edges given by the intersection of circles of a given radius.
 
-        Args:
+        Arguments:
             radius: the value
         """
         if self.has_coords:
@@ -448,7 +441,7 @@ class BaseGraph(nx.Graph):
 
         Accepts either a scaling or a spacing factor.
 
-        Args:
+        Arguments:
             scaling: value to scale by.
             spacing: value to set as the minimum distance in the graph.
         """
@@ -468,7 +461,7 @@ class BaseGraph(nx.Graph):
     def set_ud_edges(self, radius: float) -> None:
         """Reset the set of edges to be equal to the set of unit-disk edges.
 
-        Args:
+        Arguments:
             radius: the radius to use in determining the set of unit-disk edges.
         """
         self.remove_edges_from(list(self.edges))
@@ -479,7 +472,7 @@ class BaseGraph(nx.Graph):
 
         Uses the draw_networkx function from NetworkX.
 
-        Args:
+        Arguments:
             ax: Axes object to draw on. If None, uses the current Axes.
             **kwargs: keyword-arguments to pass to draw_networkx.
         """
