@@ -1,7 +1,4 @@
-# TODO:
-# - refactor this to reuse common methods in constructors
-# - refactor using rescale_coords method
-
+"""Graph structure for problem data, with named topology constructors and PyG interchange."""
 
 from __future__ import annotations
 
@@ -10,7 +7,6 @@ from typing import TYPE_CHECKING, Any
 
 import networkx as nx
 import numpy as np
-import numpy.typing as npt
 
 from .base_graph import BaseGraph
 from .utils import random_coords
@@ -21,7 +17,24 @@ if TYPE_CHECKING:
 
 
 class DataGraph(BaseGraph):
-    """The main graph structure to represent problem data."""
+    """Graph structure to represent problem data.
+
+    Represents a simple graph (undirected and without self-loops), with
+    node coordinates and node/edge weights, distance and Rydberg-interaction
+    calculations, conversion to/from adjacency matrix, unit-disk graph
+    analysis, and plotting (inherited from BaseGraph). Adds named topology
+    constructors and conversion to/from PyTorch Geometric data objects.
+
+    Attributes:
+        coords: Dict mapping each node to its 2D coordinate, or None if unset.
+        node_weights: Dict mapping each node to its weight, or None if unset.
+        edge_weights: Dict mapping each edge to its weight, or None if unset.
+
+    Note:
+        Named topology constructors: `line`, `circle`, `triangular`,
+        `hexagonal`, `heavy_hexagonal`, `square`, `random_er`, `random_ud`.
+        PyTorch Geometric conversion: `from_pyg`, `to_pyg`.
+    """
 
     def __init__(self, edges: Iterable = []) -> None:
         """
@@ -253,75 +266,6 @@ class DataGraph(BaseGraph):
         graph.add_edges_from(edges)
         graph._reset_dicts()
         return graph
-
-    @classmethod
-    def from_matrix(cls, data: npt.NDArray[np.float64]) -> DataGraph:
-        """Constructs a graph from a symmetric square matrix.
-
-        The diagonal values are set as the node weights. For each entry (i, j)
-        where M[i, j] != 0 an edge (i, j) is added to the graph and the value
-        M[i, j] is set as its weight.
-
-        Arguments:
-            data: real symmetric square matrix.
-        """
-        if data.ndim != 2:
-            raise ValueError("2D Matrix required.")
-        if not np.allclose(data, data.T, rtol=0.0, atol=1e-7):
-            raise ValueError("Matrix must be symmetric.")
-
-        # Absolute values below this tolerance are treated as zeros.
-        # The corresponding node or edge weight is neglected (weight = None).
-        nonzero_tol = 1e-7
-
-        diag = np.diag(data)
-        n_nodes = len(diag)
-        if np.allclose(diag, np.zeros(n_nodes), rtol=0.0, atol=nonzero_tol):
-            node_weights = {i: None for i in range(n_nodes)}
-        else:
-            node_weights = {i: diag[i].item() for i in range(n_nodes)}
-
-        edge_list = [
-            (i, j)
-            for i in range(n_nodes)
-            for j in range(i + 1, n_nodes)
-            if (np.abs(data[i, j]) >= nonzero_tol)
-        ]
-        edge_weights = {(i, j): data[i, j].item() for i, j in edge_list}
-
-        graph = cls.from_nodes(range(n_nodes))
-        graph.add_edges_from(edge_list)
-        graph.node_weights = node_weights
-        graph.edge_weights = edge_weights
-        return graph
-
-    def to_matrix(self) -> npt.NDArray[np.float64]:
-        """Return the adjacency matrix of this graph.
-
-        The inverse of `from_matrix`.
-        Nodes are mapped to indices 0, ..., N-1 according to `self.nodes` insertion order.
-        - Node weights are stored in the diagonal since self-loops are not supported.
-            Nodes with no weight set (None) are left at 0.0 in the diagonal.
-        - For each edge (i, j), the entries (i,j) and (j,i) are set to its weight,
-            or to 1.0 if the edge has no weight set.
-
-        Returns:
-            Symmetric N x N matrix of dtype float64, where N is the number of nodes.
-        """
-        n_nodes = len(self.nodes)
-        index = {node: i for i, node in enumerate(self.nodes)}
-        matrix = np.zeros((n_nodes, n_nodes), dtype=np.float64)
-
-        for node, weight in self.node_weights.items():
-            if weight is not None:
-                i = index[node]
-                matrix[i, i] = weight
-
-        for (u, v), weight in self.edge_weights.items():
-            i, j = index[u], index[v]
-            matrix[i, j] = matrix[j, i] = weight if weight is not None else 1.0
-
-        return matrix
 
     @classmethod
     def from_pyg(
@@ -619,56 +563,6 @@ class DataGraph(BaseGraph):
             )
 
         return weights
-
-    @property
-    def node_weights(self) -> dict:
-        """Return the dictionary of node weights."""
-        return self._node_weights
-
-    @node_weights.setter
-    def node_weights(self, weights: list | dict) -> None:
-        """Set the dictionary of node weights.
-
-        Arguments:
-            weights: list or dictionary of weights.
-        """
-        if isinstance(weights, list):
-            if len(weights) != self.number_of_nodes():
-                raise ValueError("Size of the weights list does not match the number of nodes.")
-            weights_dict = {i: w for i, w in zip(self.nodes, weights)}
-        elif isinstance(weights, dict):
-            nodes = set(weights.keys())
-            if set(self.nodes) != nodes:
-                raise ValueError(
-                    "Set of nodes in the given dictionary does not match the graph nodes."
-                )
-            weights_dict = weights
-        self._node_weights = weights_dict
-
-    @property
-    def edge_weights(self) -> dict:
-        """Return the dictionary of edge weights."""
-        return self._edge_weights
-
-    @edge_weights.setter
-    def edge_weights(self, weights: list | dict) -> None:
-        """Set the dictionary of edge weights.
-
-        Arguments:
-            weights: list or dictionary of weights.
-        """
-        if isinstance(weights, list):
-            if len(weights) != self.number_of_edges():
-                raise ValueError("Size of the weights list does not match the number of nodes.")
-            weights_dict = {i: w for i, w in zip(self.sorted_edges, weights)}
-        elif isinstance(weights, dict):
-            edges = set(weights.keys())
-            if set(self.sorted_edges) != edges:
-                raise ValueError(
-                    "Set of edges in the given dictionary does not match the graph ordered edges."
-                )
-            weights_dict = weights
-        self._edge_weights = weights_dict
 
     def set_ud_edges(self, radius: float) -> None:
         """Reset the set of edges to be equal to the set of unit-disk edges."""
