@@ -249,6 +249,7 @@ def test_to_matrix_weighted(n_nodes: int) -> None:
 
 
 @pytest.mark.parametrize("n_nodes", [3, 7, 21])
+@pytest.mark.parametrize("seed", [12345, 5481], ids=[f"seed{i}" for i in range(2)])
 def test_to_matrix_roundtrip(n_nodes: int) -> None:
     rng = np.random.default_rng(12345)
     matrix = rng.normal(0, 1, size=(n_nodes, n_nodes))
