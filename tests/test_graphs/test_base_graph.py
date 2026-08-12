@@ -209,9 +209,6 @@ def test_from_matrix(n_nodes: int) -> None:
 def test_to_matrix_unweighted(n_nodes: int) -> None:
     graph = BaseGraph.from_nodes(range(n_nodes))
     graph.add_edges_from(random_edge_list(range(n_nodes), k=2 * n_nodes))
-    # FIXME: _edge_weights is a snapshot that goes stale after add_edges_from;
-    # see issue #431 (edge_weights does not reflect edges added after construction).
-    graph._reset_dicts()
     assert not graph.has_node_weights
     assert not graph.has_edge_weights
 

@@ -73,7 +73,7 @@ class DataGraph(BaseGraph):
         ]
         edges = [(i, i + 1) for i in range(n - 1)] + [(n - 1, 0)]
         graph = cls.from_coordinates(coords)
-        graph.add_edges_from(edges, weight=1.0)
+        graph.add_edges_from(edges)
         return graph
 
     @classmethod
