@@ -137,7 +137,7 @@ def test_hexagonal() -> None:
 
 
 def test_rectangular() -> None:
-    graph = DataGraph.rectangular(4, 4, spacing=2.71)
+    graph = DataGraph.rectangular(4, 4, row_spacing=2.71, col_spacing=2.71)
 
     expected_coords = {
         0: (0.0, 0.0),

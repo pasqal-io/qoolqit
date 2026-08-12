@@ -220,7 +220,8 @@ class DataGraph(BaseGraph):
         cls,
         m: int,
         n: int,
-        spacing: float = 1.0,
+        row_spacing: float = 1.0,
+        col_spacing: float = 1.0,
     ) -> DataGraph:
         """
         Constructs a rectangular lattice graph, with respective coordinates.
@@ -228,10 +229,11 @@ class DataGraph(BaseGraph):
         Arguments:
             m: Number of rows of rectangle.
             n: Number of columns of rectangle.
-            spacing: The distance between adjacent nodes on the final lattice.
+            row_spacing: distance between adjacent qubits in the row direction. Defaults to 1.0.
+            col_spacing: distance between adjacent qubits in the column direction. Defaults to 1.0.
         """
         G = nx.grid_2d_graph(m, n)
-        final_coords = [(x * spacing, y * spacing) for (x, y) in list(G.nodes)]
+        final_coords = [(x * row_spacing, y * col_spacing) for (x, y) in list(G.nodes)]
         G = nx.convert_node_labels_to_integers(G)
 
         graph = DataGraph.from_coordinates(final_coords)
@@ -252,7 +254,7 @@ class DataGraph(BaseGraph):
             m: Number of rows of the square.
             spacing: The distance between adjacent nodes on the final lattice.
         """
-        return cls.rectangular(m, m, spacing=spacing)
+        return cls.rectangular(m, m, row_spacing=spacing, col_spacing=spacing)
 
     @classmethod
     def random_ud(
