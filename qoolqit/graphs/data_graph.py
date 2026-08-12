@@ -1,3 +1,5 @@
+"""Graph structure for problem data, with named topology constructors and PyG interchange."""
+
 from __future__ import annotations
 
 from collections.abc import Iterable
@@ -5,7 +7,6 @@ from typing import TYPE_CHECKING, Any
 
 import networkx as nx
 import numpy as np
-import numpy.typing as npt
 
 from .base_graph import BaseGraph
 from .utils import random_coords
@@ -16,7 +17,24 @@ if TYPE_CHECKING:
 
 
 class DataGraph(BaseGraph):
-    """The main graph structure to represent problem data."""
+    """Graph structure to represent problem data.
+
+    Represents a simple graph (undirected and without self-loops), with
+    node coordinates and node/edge weights, distance and Rydberg-interaction
+    calculations, conversion to/from adjacency matrix, unit-disk graph
+    analysis, and plotting (inherited from BaseGraph). Adds named topology
+    constructors and conversion to/from PyTorch Geometric data objects.
+
+    Attributes:
+        coords: Dict mapping each node to its 2D coordinate, or None if unset.
+        node_weights: Dict mapping each node to its weight, or None if unset.
+        edge_weights: Dict mapping each edge to its weight, or None if unset.
+
+    Note:
+        Named topology constructors: `line`, `circle`, `triangular`,
+        `hexagonal`, `heavy_hexagonal`, `square`, `random_er`, `random_ud`.
+        PyTorch Geometric conversion: `from_pyg`, `to_pyg`.
+    """
 
     @classmethod
     def line(cls, n: int, spacing: float = 1.0) -> DataGraph:
@@ -60,7 +78,7 @@ class DataGraph(BaseGraph):
 
     @classmethod
     def random_er(cls, n: int, p: float, seed: int | None = None) -> DataGraph:
-        """Constructs an Erdős–Rényi random graph.
+        """Constructs an Erdős-Rényi random graph.
 
         Arguments:
             n: number of nodes.
