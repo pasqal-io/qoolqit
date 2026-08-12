@@ -64,6 +64,40 @@ class BaseGraph(nx.Graph):
         self._node_weights = {n: None for n in self.nodes}
         self._edge_weights = {e: None for e in self.sorted_edges}
 
+    def add_edges_from(self, ebunch_to_add: Iterable, **attr: Any) -> None:
+        """Add all the edges in ebunch_to_add, keeping weight/coord dicts in sync.
+
+        `nx.Graph.add_edges_from` is used directly by the NetworkX layer and,
+        unlike the alternative constructors here, does not go through
+        `_reset_dicts()`. Left unhandled, edges (and any nodes they
+        implicitly create) added after construction are silently missing
+        from `_edge_weights`, `_node_weights` and `_coords` -- see #431.
+
+        Any newly-added node or edge is seeded with a weight/coordinate of
+        None, matching `_reset_dicts()`'s convention. Existing entries are
+        left untouched.
+
+        Arguments:
+            ebunch_to_add: container of edges, as accepted by NetworkX.
+            attr: edge data (or labels or objects) assigned via keyword
+                arguments, as accepted by NetworkX.
+        """
+        super().add_edges_from(ebunch_to_add, **attr)
+        if not hasattr(self, "_edge_weights"):
+            # Called from __init__ (via the initial `self.add_edges_from(edges)`),
+            # before `_reset_dicts()` has run for the first time. The constructor
+            # performs the initial sync itself right after, so there is nothing
+            # to do here yet.
+            return
+        for n in self.nodes:
+            if n not in self._node_weights:
+                self._node_weights[n] = None
+            if n not in self._coords:
+                self._coords[n] = None
+        for e in self.sorted_edges:
+            if e not in self._edge_weights:
+                self._edge_weights[e] = None
+
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
         """Construct a base graph from a set of nodes.

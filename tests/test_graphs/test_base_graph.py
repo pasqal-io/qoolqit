@@ -210,9 +210,9 @@ def test_from_matrix(n_nodes: int) -> None:
 def test_to_matrix_unweighted(n_nodes: int) -> None:
     graph = BaseGraph.from_nodes(range(n_nodes))
     graph.add_edges_from(random_edge_list(range(n_nodes), k=2 * n_nodes))
-    # FIXME: _edge_weights is a snapshot that goes stale after add_edges_from;
-    # see issue #431 (edge_weights does not reflect edges added after construction).
-    graph._reset_dicts()
+    # add_edges_from() now keeps _node_weights/_edge_weights in sync on its
+    # own (see issue #431), so the _reset_dicts() workaround that used to be
+    # needed here is gone.
     assert not graph.has_node_weights
     assert not graph.has_edge_weights
 
@@ -229,6 +229,38 @@ def test_to_matrix_unweighted(n_nodes: int) -> None:
     for i, j in non_edges:
         assert matrix[i, j] == 0.0
         assert matrix[j, i] == 0.0
+
+
+def test_add_edges_from_updates_weights_and_coords() -> None:
+    """Regression test for #431.
+
+    `edge_weights` (and `node_weights`/`coords`, for the same reason) must
+    reflect edges added via `add_edges_from` after construction, not just
+    the edges present at construction time.
+    """
+    graph = BaseGraph.from_nodes([0, 1, 2])
+
+    # Edges added post-construction must show up with a None weight, not be
+    # silently missing.
+    graph.add_edges_from([(0, 1), (1, 2)])
+    assert graph.edge_weights == {(0, 1): None, (1, 2): None}
+    assert graph.node_weights == {0: None, 1: None, 2: None}
+
+    # Existing weights must not be clobbered by a later add_edges_from call.
+    graph.edge_weights = {(0, 1): 1.5, (1, 2): 2.5}
+    graph.node_weights = {0: 0.1, 1: 0.2, 2: 0.3}
+    graph.add_edges_from([(0, 2)])
+    assert graph.edge_weights == {(0, 1): 1.5, (1, 2): 2.5, (0, 2): None}
+    assert graph.node_weights == {0: 0.1, 1: 0.2, 2: 0.3}
+
+    # Edges that implicitly introduce brand-new nodes must extend
+    # node_weights/coords for those nodes too, instead of leaving them
+    # missing (which would otherwise surface later as a KeyError).
+    graph._coords = {0: (0.0, 0.0), 1: (1.0, 0.0), 2: (2.0, 0.0)}
+    graph.add_edges_from([(2, 3)])
+    assert 3 in graph.node_weights and graph.node_weights[3] is None
+    assert 3 in graph.coords and graph.coords[3] is None
+    assert graph.edge_weights[(2, 3)] is None
 
 
 @pytest.mark.parametrize("n_nodes", [5, 10, 50])
