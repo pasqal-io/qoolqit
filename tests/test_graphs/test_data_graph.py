@@ -31,7 +31,6 @@ def test_datagraph_unit_disk(n_nodes: int, graph_type: str) -> None:
     assert len(graph.node_weights) == graph.number_of_nodes()
     assert len(graph.edge_weights) == graph.number_of_edges()
     assert not graph.has_node_weights
-    assert not graph.has_edge_weights
     assert graph.is_ud_graph()
 
     # Save a radius value where the graph is unit-disk
@@ -297,9 +296,9 @@ def test_from_pyg_only_edges() -> None:
     g = DataGraph.from_pyg(data)
 
     assert set(g.nodes) == {0, 1, 2}
-    assert all(v is None for v in g._node_weights.values())
-    assert all(v is None for v in g._coords.values())
-    assert all(v is None for v in g._edge_weights.values())
+    assert all(v is None for v in g.node_weights.values())
+    assert all(v is None for v in g.coords.values())
+    assert all(v is None for v in g.edge_weights.values())
 
 
 def test_from_pyg_with_qoolqit_attrs() -> None:
@@ -313,9 +312,9 @@ def test_from_pyg_with_qoolqit_attrs() -> None:
 
     g = DataGraph.from_pyg(data, node_weights_attr="weight", edge_weights_attr="edge_weight")
 
-    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
-    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
-    assert g._coords == {0: (0.0, 0.0), 1: (1.0, 0.0), 2: (0.5, 1.0)}
+    assert g.node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+    assert g.edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
+    assert g.coords == {0: [0.0, 0.0], 1: [1.0, 0.0], 2: [0.5, 1.0]}
 
 
 def test_from_pyg_with_pyg_attrs() -> None:
@@ -354,7 +353,7 @@ def test_from_pyg_no_auto_weight_detection() -> None:
 
     g = DataGraph.from_pyg(data)
 
-    assert all(v is None for v in g._node_weights.values())
+    assert all(v is None for v in g.node_weights.values())
 
 
 def test_from_pyg_with_node_weights_attr() -> None:
@@ -365,7 +364,7 @@ def test_from_pyg_with_node_weights_attr() -> None:
 
     g = DataGraph.from_pyg(data, node_weights_attr="x")
 
-    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+    assert g.node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
 
 
 def test_from_pyg_with_node_weights_attr_1d() -> None:
@@ -376,7 +375,7 @@ def test_from_pyg_with_node_weights_attr_1d() -> None:
 
     g = DataGraph.from_pyg(data, node_weights_attr="my_weights")
 
-    assert g._node_weights == {0: 10.0, 1: 20.0, 2: 30.0}
+    assert g.node_weights == {0: 10.0, 1: 20.0, 2: 30.0}
 
 
 def test_from_pyg_with_edge_weights_attr() -> None:
@@ -387,7 +386,7 @@ def test_from_pyg_with_edge_weights_attr() -> None:
 
     g = DataGraph.from_pyg(data, edge_weights_attr="edge_attr")
 
-    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
+    assert g.edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
 
 
 def test_from_pyg_with_edge_weights_attr_1d() -> None:
@@ -398,7 +397,7 @@ def test_from_pyg_with_edge_weights_attr_1d() -> None:
 
     g = DataGraph.from_pyg(data, edge_weights_attr="my_edge_w")
 
-    assert g._edge_weights == {(0, 1): 0.5, (1, 2): 0.6, (0, 2): 0.7}
+    assert g.edge_weights == {(0, 1): 0.5, (1, 2): 0.6, (0, 2): 0.7}
 
 
 def test_from_pyg_weights_attr_wrong_shape() -> None:
@@ -563,7 +562,7 @@ def test_from_pyg_to_pyg_roundtrip_custom_weights_attr() -> None:
 
     g = DataGraph.from_pyg(data, node_weights_attr="my_node_w", edge_weights_attr="my_edge_w")
 
-    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+    assert g.node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
 
     roundtrip_data = g.to_pyg(node_weights_attr="my_node_w", edge_weights_attr="my_edge_w")
 

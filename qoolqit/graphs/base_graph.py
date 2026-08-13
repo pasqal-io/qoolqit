@@ -44,26 +44,6 @@ class BaseGraph(nx.Graph):
         Plotting: `draw`.
     """
 
-    def __init__(self, edges: Iterable = []) -> None:
-        """
-        Default constructor for the BaseGraph.
-
-        Arguments:
-            edges: set of edge tuples (i, j)
-        """
-        if edges and not isinstance(edges, Iterable):
-            raise TypeError("Input is not a valid edge list.")
-
-        super().__init__()
-        self.add_edges_from(edges)
-        self._coords = {i: None for i in self.nodes}
-        self._reset_dicts()
-
-    def _reset_dicts(self) -> None:
-        """Reset the default weight dictionaries."""
-        self._node_weights = {n: None for n in self.nodes}
-        self._edge_weights = {e: None for e in self.sorted_edges}
-
     @classmethod
     def from_nodes(cls, nodes: Iterable) -> BaseGraph:
         """Construct a base graph from a set of nodes.
@@ -73,8 +53,6 @@ class BaseGraph(nx.Graph):
         """
         graph = cls()
         graph.add_nodes_from(nodes)
-        graph._coords = {i: None for i in graph.nodes}
-        graph._reset_dicts()
         return graph
 
     @classmethod
@@ -85,15 +63,11 @@ class BaseGraph(nx.Graph):
             coords: list or dictionary of coordinate pairs.
         """
         if isinstance(coords, list):
-            nodes = list(range(len(coords)))
-            coords_dict = {i: pos for i, pos in enumerate(coords)}
+            coords_tuple = ((i, {"pos": pos}) for i, pos in enumerate(coords))
         elif isinstance(coords, dict):
-            nodes = list(coords.keys())
-            coords_dict = coords
-        graph = cls.from_nodes(nodes)
-        graph._coords = coords_dict
-        graph._reset_dicts()
-        return graph
+            coords_tuple = ((key, {"pos": pos}) for key, pos in coords.items())
+
+        return cls.from_nodes(coords_tuple)
 
     @classmethod
     def from_nx(cls, g: nx.Graph) -> BaseGraph:
@@ -108,9 +82,9 @@ class BaseGraph(nx.Graph):
             weight: represents the edge weight. Must be a real number.
 
         Returns an instance of the class with following attributes:
-            - _node_weights : dict[node, float or None]
-            - _edge_weights : dict[(u,v), float or None]
-            - _coords       : dict[node, (float,float) or None]
+            - node_weights : dict[node, float or None]
+            - edge_weights : dict[(u,v), float or None]
+            - coords       : dict[node, (float,float) or None]
         """
         if not isinstance(g, nx.Graph):
             raise TypeError("Input must be a networkx.Graph instance.")
@@ -165,15 +139,7 @@ class BaseGraph(nx.Graph):
                         f"got {type(weight)} instead."
                     )
 
-        # build the instance of the graph
-        graph = cls()
-        graph.add_nodes_from(g.nodes)
-        graph.add_edges_from(g.edges)
-        graph._node_weights = nx.get_node_attributes(g, "weight", default=None)
-        graph._coords = nx.get_node_attributes(g, "pos", default=None)
-        graph._edge_weights = nx.get_edge_attributes(g, "weight", default=None)
-
-        return graph
+        return cls(g)
 
     @classmethod
     def from_matrix(cls, data: npt.NDArray[np.float64]) -> BaseGraph:
@@ -259,38 +225,29 @@ class BaseGraph(nx.Graph):
 
     @property
     def has_coords(self) -> bool:
-        """Check if the graph has coordinates.
-
-        Requires all nodes to have coordinates.
-        """
-        is_any_coord_none = any(value is None for value in self._coords.values())
-        return not (is_any_coord_none or len(self._coords) == 0)
-
-    @property
-    def has_edges(self) -> bool:
-        """Check if the graph has edges."""
-        return len(self.edges) > 0
+        """Check if the graph has coordinates on all nodes."""
+        return self.number_of_nodes() > 0 and all(
+            pos is not None for _, pos in self.nodes(data="pos")
+        )
 
     @property
     def has_node_weights(self) -> bool:
-        """Check if the graph has node weights.
-
-        Requires all nodes to have a weight.
-        """
-        return not ((None in self._node_weights.values()) or len(self._node_weights) == 0)
+        """Check if the graph has node weights on all nodes."""
+        return self.number_of_nodes() > 0 and all(
+            w is not None for _, w in self.nodes(data="weight")
+        )
 
     @property
     def has_edge_weights(self) -> bool:
-        """Check if the graph has edge weights.
-
-        Requires all edges to have a weight.
-        """
-        return not ((None in self._edge_weights.values()) or len(self._edge_weights) == 0)
+        """Check if the graph has edge weights on all edges."""
+        return self.number_of_edges() > 0 and all(
+            w is not None for _, _, w in self.edges(data="weight")
+        )
 
     @property
     def node_weights(self) -> dict:
         """Return the dictionary of node weights."""
-        return self._node_weights
+        return {n: w for n, w in self.nodes(data="weight")}
 
     @node_weights.setter
     def node_weights(self, weights: list | dict) -> None:
@@ -310,12 +267,12 @@ class BaseGraph(nx.Graph):
                     "Set of nodes in the given dictionary does not match the graph nodes."
                 )
             weights_dict = weights
-        self._node_weights = weights_dict
+        nx.set_node_attributes(self, weights_dict, "weight")
 
     @property
     def edge_weights(self) -> dict:
         """Return the dictionary of edge weights."""
-        return self._edge_weights
+        return {(u, v): w for u, v, w in self.edges(data="weight")}
 
     @edge_weights.setter
     def edge_weights(self, weights: list | dict) -> None:
@@ -335,12 +292,12 @@ class BaseGraph(nx.Graph):
                     "Set of edges in the given dictionary does not match the graph ordered edges."
                 )
             weights_dict = weights
-        self._edge_weights = weights_dict
+        nx.set_edge_attributes(self, weights_dict, "weight")
 
     @property
     def coords(self) -> dict:
-        """Return the dictionary of node coordinates."""
-        return self._coords
+        """Return a dictionary of node coordinates."""
+        return dict(self.nodes(data="pos"))
 
     @coords.setter
     def coords(self, coords: list | dict) -> None:
@@ -358,9 +315,7 @@ class BaseGraph(nx.Graph):
                     "Set of nodes in the given dictionary does not match the graph nodes."
                 )
             coords_dict = coords
-        self._coords = coords_dict
-
-    # methods
+        nx.set_node_attributes(self, coords_dict, "pos")
 
     def distances(self, edge_list: Iterable | None = None) -> dict:
         """Returns a dictionary of distances for a given set of edges.
@@ -495,9 +450,9 @@ class BaseGraph(nx.Graph):
             if (len(args) > 0) or (scaling is None and spacing is None):
                 raise TypeError(msg)
             if scaling is None and spacing is not None:
-                self._coords = space_coords(self._coords, spacing)
+                self.coords = space_coords(self.coords, spacing)
             elif spacing is None and scaling is not None:
-                self._coords = scale_coords(self._coords, scaling)
+                self.coords = scale_coords(self.coords, scaling)
             else:
                 raise TypeError(msg)
         else:

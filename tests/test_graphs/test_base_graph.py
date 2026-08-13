@@ -28,7 +28,6 @@ def test_basegraph_init(n_nodes: int) -> None:
     assert len(graph.sorted_edges) == n_edges
     assert len(graph.sorted_edges) <= max_n_edges
     assert graph.sorted_edges == set(edge_list)
-    assert graph.has_edges
     assert not graph.has_coords
 
     with pytest.raises(AttributeError):
@@ -76,6 +75,7 @@ def test_basegraph_interactions(n_nodes: int) -> None:
     rng = np.random.default_rng(0)
     coords_array = rng.uniform(-1, 1, size=(n_nodes, 2))
     graph = BaseGraph.from_coordinates([c for c in coords_array])
+    assert graph.has_coords
 
     expected_interactions = {
         (i, j): np.linalg.norm(coords_array[i] - coords_array[j]) ** (-6)
@@ -104,7 +104,6 @@ def test_basegraph_constructors(n_nodes: int) -> None:
     for graph in [graph1, graph2]:
         assert len(graph.edges) == 0
         assert len(graph.sorted_edges) == 0
-        assert not graph.has_edges
 
     assert not graph1.has_coords
     assert graph2.has_coords
@@ -210,9 +209,6 @@ def test_from_matrix(n_nodes: int) -> None:
 def test_to_matrix_unweighted(n_nodes: int) -> None:
     graph = BaseGraph.from_nodes(range(n_nodes))
     graph.add_edges_from(random_edge_list(range(n_nodes), k=2 * n_nodes))
-    # FIXME: _edge_weights is a snapshot that goes stale after add_edges_from;
-    # see issue #431 (edge_weights does not reflect edges added after construction).
-    graph._reset_dicts()
     assert not graph.has_node_weights
     assert not graph.has_edge_weights
 
@@ -319,9 +315,9 @@ def test_from_nx() -> None:
     assert set(g.edges) == set([(0, 1), (0, 2), (1, 2), (1, 3), (2, 3)])
 
     # Check whether the coords exist and are all None
-    assert all(v is None for v in g._coords.values())
-    assert all(v is None for v in g._node_weights.values())
-    assert all(v is None for v in g._edge_weights.values())
+    assert all(v is None for v in g.coords.values())
+    assert all(v is None for v in g.node_weights.values())
+    assert all(v is None for v in g.edge_weights.values())
 
 
 def test_from_nx_with_weights_and_pos() -> None:
@@ -341,10 +337,10 @@ def test_from_nx_with_weights_and_pos() -> None:
     assert set(g.nodes) == {0, 1, 2}
     assert set(g.edges) == {(0, 1), (1, 2), (0, 2)}
 
-    assert g._node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
-    assert g._edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
+    assert g.node_weights == {0: 1.0, 1: 2.0, 2: 3.0}
+    assert g.edge_weights == {(0, 1): 0.1, (1, 2): 0.2, (0, 2): 0.3}
 
-    assert g._coords == {
+    assert g.coords == {
         0: (0.0, 0.0),
         1: (1.0, 0.0),
         2: (0.5, 1.0),
