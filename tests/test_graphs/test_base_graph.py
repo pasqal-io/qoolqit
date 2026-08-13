@@ -259,6 +259,17 @@ def test_to_matrix_roundtrip(n_nodes: int, seed: int) -> None:
     np.testing.assert_allclose(graph.to_matrix(), matrix, atol=1e-8)
 
 
+def test_edge_weights_accepts_either_orientation() -> None:
+    # Regression test for #447: setting edge_weights should not depend on
+    # knowing which of (u, v) / (v, u) the graph happens to report internally.
+    graph = BaseGraph()
+    graph.add_edges_from([(0, 1), (1, 2), (2, 0)])
+
+    graph.edge_weights = {(0, 1): 0.3, (1, 2): 0.4, (2, 0): 0.5}
+
+    assert graph.edge_weights == {(0, 1): 0.3, (0, 2): 0.5, (1, 2): 0.4}
+
+
 def test_to_matrix_custom_node_labels_and_none_weights() -> None:
     # Ensure `to_matrix()` respects `self.nodes` ordering and handles None weights.
     # Also ensures it works with non-0..N-1 node labels.

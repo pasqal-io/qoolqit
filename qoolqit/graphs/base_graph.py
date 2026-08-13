@@ -275,24 +275,13 @@ class BaseGraph(nx.Graph):
         return {(u, v): w for u, v, w in self.edges(data="weight")}
 
     @edge_weights.setter
-    def edge_weights(self, weights: list | dict) -> None:
-        """Set the dictionary of edge weights.
+    def edge_weights(self, weights: dict) -> None:
+        """Sets edge weights from a given dictionary of values.
 
         Arguments:
-            weights: list or dictionary of weights.
+            weights: a dictionary of edge weights.
         """
-        if isinstance(weights, list):
-            if len(weights) != self.number_of_edges():
-                raise ValueError("Size of the weights list does not match the number of nodes.")
-            weights_dict = {i: w for i, w in zip(self.sorted_edges, weights)}
-        elif isinstance(weights, dict):
-            edges = set(weights.keys())
-            if set(self.sorted_edges) != edges:
-                raise ValueError(
-                    "Set of edges in the given dictionary does not match the graph ordered edges."
-                )
-            weights_dict = weights
-        nx.set_edge_attributes(self, weights_dict, "weight")
+        nx.set_edge_attributes(self, weights, "weight")
 
     @property
     def coords(self) -> dict:
