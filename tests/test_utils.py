@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import pytest
 
-from qoolqit.utils import plot_histogram    
+from qoolqit.utils import plot_histogram
+
 
 def test_plot_histogram_errors() -> None:
     with pytest.raises(ValueError, match="counts cannot be empty"):
