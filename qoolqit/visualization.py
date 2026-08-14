@@ -124,7 +124,7 @@ def plot_bitstrings(
                 zorder=0,
             )
 
-    # Place one tick per bitstring, since the bars now sit at numeric positions
+    # Place one tick per bitstring
     ax.set_xticks(list(positions))
     ax.set_xticklabels(bitstrings)
 
