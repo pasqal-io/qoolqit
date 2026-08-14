@@ -16,7 +16,7 @@ def plot_histogram(
     normalize: bool = False,
     ax: Axes | None = None,
     title: str | None = None,
-    color: str | list[str] | None = None,
+    colors: str | list[str] | None = None,
     highlight: dict[str, str] | None = None,
     labels: list[str] | None = None,
     xlabel: str | None = None,
@@ -39,7 +39,7 @@ def plot_histogram(
         If provided, the plot will be drawn on this axes.
     title: str, optional
         Plot title.
-    color: str or list of str, optional
+    colors: str or list of str, optional
         Default bar color, or one color per mapping. Defaults to matplotlib's
         color cycle.
     highlight: dict, optional
@@ -86,12 +86,12 @@ def plot_histogram(
         bitstrings = bitstrings[:top]
 
     # One base color per set of counts
-    if color is None:
+    if colors is None:
         colors = [f"C{index}" for index in range(n)]
-    elif isinstance(color, str):
-        colors = [color] * n
+    elif isinstance(colors, str):
+        colors = [colors] * n
     else:
-        colors = list(color)
+        colors = list(colors)
 
     # If no highlight mapping is provided, use an empty dict to avoid KeyErrors
     highlight = highlight or {}
