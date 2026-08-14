@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
-from matplotlib.patches import Patch
 
 
 def plot_bitstrings(
@@ -27,8 +26,10 @@ def plot_bitstrings(
             mapping is normalized independently. Defaults to False.
         color: Default bar color, or one color per mapping. Defaults to
             matplotlib's color cycle.
-        highlight: Mapping of labels to colors, for example
-            ``{"001": "tab:green", "110": "tab:red"}``.
+        highlight: Mapping of bitstrings to colors, for example
+            ``{"001": "tab:green", "110": "tab:red"}``. The outcome is marked
+            with a faint background band and a colored tick label, so that the
+            bar colors keep identifying the counts they belong to.
             If highlighted bitstring is not in top N counts, it will not be shown.
         labels: Legend label for each mapping.
         ax: Axes to draw on. Uses a new axes if omitted.
@@ -92,10 +93,7 @@ def plot_bitstrings(
     # Plot one group of bars per set of counts, side by side on each bitstring
     positions = range(len(bitstrings))
 
-    # Bars are slightly narrower than their slot, so that neighbours sharing a
-    # highlight color do not merge into a single wide bar
     slot = 0.6 / n
-    width = slot if n == 1 else slot * 0.85
     for index, count in enumerate(counts_list):
         # Compute the values to plot, normalizing if requested.
         # If a bitstring is not present in the counts, we use 0 as its value.
@@ -104,23 +102,37 @@ def plot_bitstrings(
             for bitstring in bitstrings
         ]
 
-        # Determine bar colors, using the highlight mapping if provided
-        # If a bitstring is not in the highlight mapping, use this series' color.
-        bar_colors = [highlight.get(bitstring, color[index]) for bitstring in bitstrings]
-
         # Shift each group so that the bars are centered on the tick
         offset = (index - (n - 1) / 2) * slot
         ax.bar(
             [position + offset for position in positions],
             values,
-            width=width,
-            color=bar_colors,
+            width=slot,
+            color=color[index],
             label=labels[index] if labels else None,
         )
+
+    # Mark highlighted outcomes with a faint band behind their group. zorder=0
+    # keeps the band below the bars.
+    for position, bitstring in enumerate(bitstrings):
+        if bitstring in highlight:
+            ax.axvspan(
+                position - 0.45,
+                position + 0.45,
+                color=highlight[bitstring],
+                alpha=0.15,
+                zorder=0,
+            )
 
     # Place one tick per bitstring, since the bars now sit at numeric positions
     ax.set_xticks(list(positions))
     ax.set_xticklabels(bitstrings)
+
+    # Highlighted outcomes are also marked on their tick label
+    for tick_label in ax.get_xticklabels():
+        if tick_label.get_text() in highlight:
+            tick_label.set_color(highlight[tick_label.get_text()])
+            tick_label.set_fontweight("bold")
 
     # Rotate x-axis labels for better readability
     ax.tick_params(axis="x", labelrotation=90)
@@ -131,11 +143,6 @@ def plot_bitstrings(
     ax.set_ylabel("Probability" if normalize else "Counts")
     ax.set_xlabel("Bitstrings")
 
-    # Only show a legend when the series have been named. The handles are built
-    # explicitly from the base colors, since matplotlib would otherwise take the
-    # color of the first bar of each series, which may be a highlighted one.
-
+    # Only show a legend when the series have been named
     if labels is not None:
-        ax.legend(
-            handles=[Patch(color=color[index], label=label) for index, label in enumerate(labels)]
-        )
+        ax.legend()
