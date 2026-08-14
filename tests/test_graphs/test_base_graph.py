@@ -84,27 +84,20 @@ def test_empty_graph() -> None:
     assert graph.edge_weights == {}
 
 
-def test_coords_update_requires_matching_nodes() -> None:
-    graph = BaseGraph()
-
-    with pytest.raises(
-        ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
-    ):
-        graph.coords = {0: (0.5, 0.5)}
-
-    graph.add_nodes_from([0, 1, 2])
-
-    # missing a node
+def test_coords_update_missing_node() -> None:
+    graph = BaseGraph.from_nodes([0, 1, 2])
     with pytest.raises(
         ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
     ):
         graph.coords = {0: (0.3, 0.4), 1: (0.5, 0.6)}
 
-    # extra node not in the graph
+
+def test_coords_update_extra_node() -> None:
+    graph = BaseGraph.from_nodes(["a", "b", "c"])
     with pytest.raises(
         ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
     ):
-        graph.coords = {0: (0.3, 0.4), 1: (0.5, 0.6), 2: (0.7, 0.8), 3: (0.9, 1.0)}
+        graph.coords = {"a": (0.3, 0.4), "b": (0.5, 0.6), "c": (0.7, 0.8), "d": (0.9, 1.0)}
 
 
 def test_node_coords_update() -> None:
@@ -124,34 +117,24 @@ def test_node_coords_update() -> None:
     assert graph.coords == {0: (0.9, 1.0), 1: (0.5, 0.6), 2: (0.7, 0.8)}
 
 
-def test_node_weights_update_requires_matching_nodes() -> None:
-    graph = BaseGraph()
-
-    with pytest.raises(
-        ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
-    ):
-        graph.node_weights = {0: 0.5}
-
-    graph.add_nodes_from([0, 1, 2])
-
-    # missing a node
+def test_node_weights_update_missing_node() -> None:
+    graph = BaseGraph.from_nodes([0, 1, 2])
     with pytest.raises(
         ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
     ):
         graph.node_weights = {0: 0.3, 1: 0.4}
 
-    # extra node not in the graph
+
+def test_node_weights_update_extra_node() -> None:
+    graph = BaseGraph.from_nodes(["a", "b", "c"])
     with pytest.raises(
         ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
     ):
-        graph.node_weights = {0: 0.3, 1: 0.4, 2: 0.5, 3: 0.6}
+        graph.node_weights = {"a": 0.3, "b": 0.4, "c": 0.5, "d": 0.6}
 
 
 def test_node_weights_update() -> None:
-    graph = BaseGraph()
-
-    # add nodes without weights
-    graph.add_nodes_from([0, 1, 2])
+    graph = BaseGraph.from_nodes([0, 1, 2])
     assert graph.has_node_weights is False
 
     # set new weights
@@ -164,37 +147,31 @@ def test_node_weights_update() -> None:
     assert graph.node_weights == {0: 0.9, 1: 0.4, 2: 0.5}
 
 
-def test_edge_weights_update_requires_matching_edges() -> None:
-    graph = BaseGraph()
-
-    with pytest.raises(
-        ValueError,
-        match="Set of edges in the given dictionary does not match the graph ordered edges.",
-    ):
-        graph.edge_weights = {(0, 1): 0.5}
-
-    graph.add_edges_from([(0, 1), (1, 2), (2, 0)])
-
-    # missing an edge
+def test_edge_weights_update_missing_edge() -> None:
+    graph = BaseGraph([(0, 1), (1, 2), (2, 0)])
     with pytest.raises(
         ValueError,
         match="Set of edges in the given dictionary does not match the graph ordered edges.",
     ):
         graph.edge_weights = {(0, 1): 0.3, (1, 2): 0.4}
 
-    # extra edge not in the graph
+
+def test_edge_weights_update_extra_edge() -> None:
+    graph = BaseGraph([("a", "b"), ("b", "c"), ("c", "a")])
     with pytest.raises(
         ValueError,
         match="Set of edges in the given dictionary does not match the graph ordered edges.",
     ):
-        graph.edge_weights = {(0, 1): 0.3, (1, 2): 0.4, (0, 2): 0.5, (1, 3): 0.6}
+        graph.edge_weights = {
+            ("a", "b"): 0.3,
+            ("b", "c"): 0.4,
+            ("c", "a"): 0.5,
+            ("b", "d"): 0.6,
+        }
 
 
 def test_edge_weights_update() -> None:
-    graph = BaseGraph()
-
-    # add edges without weights
-    graph.add_edges_from([(0, 1), (1, 2), (2, 0)])
+    graph = BaseGraph([(0, 1), (1, 2), (2, 0)])
     assert graph.has_edge_weights is False
 
     # set new weights
