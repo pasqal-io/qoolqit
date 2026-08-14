@@ -21,9 +21,12 @@ from .utils import (
 
 
 class BaseGraph(nx.Graph):
-    """Base graph class, directly inheriting from the NetworkX Graph.
+    """Base graph class, directly inheriting from `networkx.Graph`.
 
-    On top of the standard networkx.Graph functionalities, adds alternative
+    Represents a simple graph (undirected and without self-loops),
+    with optional node coordinates and node/edge weights.
+
+    On top of the standard networkx.Graph functionality, adds alternative
     constructors, node coordinates and weights as first-class attributes,
     distance and Rydberg-interaction calculations, unit-disk graph analysis,
     and plotting.
@@ -40,7 +43,7 @@ class BaseGraph(nx.Graph):
         `max_distance`, `rescale_coords`.
         Unit-disk analysis: `is_ud_graph`, `ud_radius_range`, `ud_edges`,
         `set_ud_edges`.
-        Rydberg-analog interactions: `interactions`, `interaction_matrix`.
+        Rydberg analog model utils: `interactions`, `interaction_matrix`.
         Plotting: `draw`.
     """
 
