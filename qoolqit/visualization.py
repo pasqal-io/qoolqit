@@ -132,8 +132,11 @@ def plot_bitstrings(
     # Only show a legend when the series have been named. The handles are built
     # explicitly from the base colors, since matplotlib would otherwise take the
     # color of the first bar of each series, which may be a highlighted one.
-    if labels is None:
-        labels = [f"Histogram {index + 1}" for index in range(n)]
-    ax.legend(
-        handles=[Patch(color=color[index], label=label) for index, label in enumerate(labels)]
-    )
+    if n > 1 and labels is None:
+        # If no labels are provided, we generate default labels for each series.
+        labels = [f"Series {index + 1}" for index in range(n)]
+
+    if labels is not None:
+        ax.legend(
+            handles=[Patch(color=color[index], label=label) for index, label in enumerate(labels)]
+        )
