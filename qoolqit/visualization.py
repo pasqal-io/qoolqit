@@ -6,17 +6,16 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.patches import Patch
 
-__all__ = ["plot_bitstrings"]
 
 
 def plot_bitstrings(
     counts: dict[str, int] | list[dict[str, int]],
     top: int | None = None,
     normalize: bool = False,
-    ax: Axes | None = None,
     color: str | list[str] | None = None,
     highlight: dict[str, str] | None = None,
     labels: list[str] | None = None,
+    ax: Axes | None = None,
 ) -> None:
     """Plot measurement counts, optionally highlighting selected outcomes.
 
@@ -27,12 +26,12 @@ def plot_bitstrings(
             counts, outcomes are ranked by their total count.
         normalize: If True, counts will be normalized to probabilities. Each
             mapping is normalized independently. Defaults to False.
-        ax: If provided, the plot will be drawn on this axes.
         color: Default bar color, or one color per mapping. Defaults to
             matplotlib's color cycle.
         highlight: Mapping of labels to colors, for example
-            ``{"001": "tab:green", "110": "tab:red"}``.
+            ``{"001": "tab:green", "110": "tab:red"}``. If highlighted bitstring is not in top...
         labels: Legend label for each mapping.
+        ax: Axes to draw on. Uses a new axes if omitted.
     """
 
     # Accept a single dict or a list of dicts, and work with a list from here on
