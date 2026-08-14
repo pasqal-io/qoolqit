@@ -134,7 +134,7 @@ def plot_bitstrings(
     ax.tick_params(axis="x", labelrotation=90)
     ax.grid(axis="y", linestyle="--", alpha=0.4)
 
-    # We set some default labels, the user can override 
+    # We set some default labels, the user can override
     # them by calling ax.set_xlabel and ax.set_ylabel after this function.
     ax.set_ylabel("Probability" if normalize else "Counts")
     ax.set_xlabel("Bitstrings")
