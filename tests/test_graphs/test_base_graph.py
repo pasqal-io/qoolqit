@@ -69,6 +69,118 @@ def test_basegraph_init(n_nodes: int) -> None:
     assert len(graph.ud_edges(radius=10.0 * scale)) == max_n_edges
 
 
+def test_empty_graph() -> None:
+    graph = BaseGraph()
+    assert len(graph.edges) == 0
+    assert len(graph.sorted_edges) == 0
+
+    assert graph.has_coords is False
+    assert graph.coords == {}
+
+    assert graph.has_node_weights is False
+    assert graph.node_weights == {}
+
+    assert graph.has_edge_weights is False
+    assert graph.edge_weights == {}
+
+
+def test_coords_update_missing_node() -> None:
+    graph = BaseGraph.from_nodes([0, 1, 2])
+    with pytest.raises(
+        ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
+    ):
+        graph.coords = {0: (0.3, 0.4), 1: (0.5, 0.6)}
+
+
+def test_coords_update_extra_node() -> None:
+    graph = BaseGraph.from_nodes(["a", "b", "c"])
+    with pytest.raises(
+        ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
+    ):
+        graph.coords = {"a": (0.3, 0.4), "b": (0.5, 0.6), "c": (0.7, 0.8), "d": (0.9, 1.0)}
+
+
+def test_node_coords_update() -> None:
+    graph = BaseGraph.from_nodes([0, 1, 2])
+    assert graph.has_coords is False
+
+    # set new coordinates
+    new_coords = {0: (0.3, 0.4), 1: (0.5, 0.6), 2: (0.7, 0.8)}
+    graph.coords = new_coords
+    assert graph.coords == new_coords
+
+    # update coordinates for existing nodes
+    graph.nodes[0]["pos"] = (0.9, 1.0)
+    assert graph.coords == {0: (0.9, 1.0), 1: (0.5, 0.6), 2: (0.7, 0.8)}
+
+
+def test_node_weights_update_missing_node() -> None:
+    graph = BaseGraph.from_nodes([0, 1, 2])
+    with pytest.raises(
+        ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
+    ):
+        graph.node_weights = {0: 0.3, 1: 0.4}
+
+
+def test_node_weights_update_extra_node() -> None:
+    graph = BaseGraph.from_nodes(["a", "b", "c"])
+    with pytest.raises(
+        ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
+    ):
+        graph.node_weights = {"a": 0.3, "b": 0.4, "c": 0.5, "d": 0.6}
+
+
+def test_node_weights_update() -> None:
+    graph = BaseGraph.from_nodes([0, 1, 2])
+    assert graph.has_node_weights is False
+
+    # set new weights
+    new_weights = {0: 0.3, 1: 0.4, 2: 0.5}
+    graph.node_weights = new_weights
+    assert graph.node_weights == new_weights
+
+    # update weights for existing nodes
+    graph.nodes[0]["weight"] = 0.9
+    assert graph.node_weights == {0: 0.9, 1: 0.4, 2: 0.5}
+
+
+def test_edge_weights_update_missing_edge() -> None:
+    graph = BaseGraph([(0, 1), (1, 2), (2, 0)])
+    with pytest.raises(
+        ValueError,
+        match="Set of edges in the given dictionary does not match the graph ordered edges.",
+    ):
+        graph.edge_weights = {(0, 1): 0.3, (1, 2): 0.4}
+
+
+def test_edge_weights_update_extra_edge() -> None:
+    graph = BaseGraph([("a", "b"), ("b", "c"), ("c", "a")])
+    with pytest.raises(
+        ValueError,
+        match="Set of edges in the given dictionary does not match the graph ordered edges.",
+    ):
+        graph.edge_weights = {
+            ("a", "b"): 0.3,
+            ("b", "c"): 0.4,
+            ("c", "a"): 0.5,
+            ("b", "d"): 0.6,
+        }
+
+
+def test_edge_weights_update() -> None:
+    graph = BaseGraph([(0, 1), (1, 2), (2, 0)])
+    assert graph.has_edge_weights is False
+
+    # set new weights
+    new_weights = {(0, 1): 0.3, (1, 2): 0.4, (0, 2): 0.5}
+    graph.edge_weights = new_weights
+    assert graph.edge_weights == new_weights
+
+    # update weights for existing edges
+    graph.edges[0, 1]["weight"] = 0.9
+    assert graph.edge_weights == {(0, 1): 0.9, (1, 2): 0.4, (0, 2): 0.5}
+
+
 @pytest.mark.parametrize("n_nodes", [3, 8, 13])
 def test_basegraph_interactions(n_nodes: int) -> None:
 
