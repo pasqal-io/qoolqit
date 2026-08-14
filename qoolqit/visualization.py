@@ -15,7 +15,7 @@ def plot_bitstrings(
     labels: list[str] | None = None,
     ax: Axes | None = None,
 ) -> None:
-    """Plot measurement counts, optionally highlighting selected outcomes.
+    """Plot bitstrings counts, optionally highlighting selected ones.
 
     Arguments:
         counts: dictionary of bitstrings to counts, or a list of dictionaries.
