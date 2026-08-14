@@ -9,33 +9,42 @@ if TYPE_CHECKING:
 
 
 def _plot_counts(
-    counts: dict[str, int],
+    counts: dict[str, int] | list[dict[str, int]],
     top: int | None = None,
     distribution: bool = False,
     ax: Axes | None = None,
     title: str | None = None,
-    color: str = "tab:blue",
+    color: str | list[str] | None = None,
     highlight: dict[str, str] | None = None,
+    labels: list[str] | None = None,
 ) -> Axes:
     """Plot counts, optionally highlighting selected outcomes.
 
     Parameters
     ----------
-    counts: dict
-        Mapping of bitstrings to counts.
+    counts: dict or list of dict
+        Mapping of bitstrings to counts, or a list of such mappings. Several
+        mappings are drawn as grouped bars on the same axes.
     top: int, optional
-        If provided, only the top N counts will be plotted.
+        If provided, only the top N counts will be plotted. With several
+        mappings, outcomes are ranked by their total count.
     distribution: bool, default False
-        If True, counts will be normalized to probabilities.
+        If True, counts will be normalized to probabilities. Each mapping is
+        normalized independently.
     ax: matplotlib.axes.Axes, optional
         If provided, the plot will be drawn on this axes.
     title: str, optional
         Plot title.
-    color: str, default "tab:blue"
-        Default bar color.
+    color: str or list of str, optional
+        Default bar color, or one color per mapping. Defaults to matplotlib's
+        color cycle.
     highlight: dict, optional
         Mapping of labels to colors, for example:
-        {"001": "tab:green", "110": "tab:red"}.
+        {"001": "tab:green", "110": "tab:red"}. Meant for a single mapping of
+        counts: with several mappings a highlighted outcome takes the same
+        color in every group, so the run it belongs to becomes ambiguous.
+    labels: list of str, optional
+        Legend label for each mapping.
 
     Returns
     -------
@@ -44,39 +53,81 @@ def _plot_counts(
     """
     import matplotlib.pyplot as plt
 
-    if not counts:
+    # Accept a single dict or a list of dicts, and work with a list from here on
+    counts_list = [counts] if isinstance(counts, dict) else list(counts)
+    n = len(counts_list)
+
+    if not counts_list or any(not count for count in counts_list):
         raise ValueError("counts cannot be empty")
 
-    total = sum(counts.values())
-    if distribution and total == 0:
+    # We check for zero total counts here, since the normalization would otherwise
+    # produce NaN values that matplotlib cannot plot. We do not check for zero
+    # counts when plotting a histogram, since matplotlib can handle that case.
+    totals = [sum(count.values()) for count in counts_list]
+    if distribution and any(total == 0 for total in totals):
         raise ValueError("cannot plot a distribution with zero total counts")
 
-    # Sort counts in descending order
-    items = sorted(
-        counts.items(),
-        key=lambda item: item[1],
+    # Sort the union of all bitstrings by their total count, in descending order
+    # We use set for unique bitstrings, and sorted across the union of all
+    # counts to ensure that we have a consistent order for the x-axis.
+    # When top is specified, we will select only the first N bitstrings after sorting
+    bitstrings = sorted(
+        set().union(*counts_list),
+        key=lambda bitstring: sum(count.get(bitstring, 0) for count in counts_list),
         reverse=True,
     )
 
     # Select only the top N counts if requested
     if top is not None:
-        items = items[:top]
+        bitstrings = bitstrings[:top]
 
-    # Extract labels and values from items for plotting
-    labels = [label for label, _ in items]
-    values = [value / total if distribution else value for _, value in items]
+    # One base color per set of counts
+    if color is None:
+        colors = [f"C{index}" for index in range(n)]
+    elif isinstance(color, str):
+        colors = [color] * n
+    else:
+        colors = list(color)
 
-    # Determine bar colors, using the highlight mapping if provided
-    # If a label is not in the highlight mapping, use the default color.
+    # If no highlight mapping is provided, use an empty dict to avoid KeyErrors
     highlight = highlight or {}
-    colors = [highlight.get(label, color) for label in labels]
 
     # Create the plot if no axes are provided
     if ax is None:
         _, ax = plt.subplots(figsize=(12, 5))
 
-    # Plot the bar chart
-    ax.bar(labels, values, width=0.6, color=colors)
+    # Plot one group of bars per set of counts, side by side on each bitstring
+    positions = range(len(bitstrings))
+
+    # Bars are slightly narrower than their slot, so that neighbours sharing a
+    # highlight color do not merge into a single wide bar
+    slot = 0.6 / n
+    width = slot if n == 1 else slot * 0.85
+    for index, count in enumerate(counts_list):
+        # Compute the values to plot, normalizing if requested.
+        # If a bitstring is not present in the counts, we use 0 as its value.
+        values = [
+            count.get(bitstring, 0) / totals[index] if distribution else count.get(bitstring, 0)
+            for bitstring in bitstrings
+        ]
+
+        # Determine bar colors, using the highlight mapping if provided
+        # If a bitstring is not in the highlight mapping, use this series' color.
+        bar_colors = [highlight.get(bitstring, colors[index]) for bitstring in bitstrings]
+
+        # Shift each group so that the bars are centered on the tick
+        offset = (index - (n - 1) / 2) * slot
+        ax.bar(
+            [position + offset for position in positions],
+            values,
+            width=width,
+            color=bar_colors,
+            label=labels[index] if labels else None,
+        )
+
+    # Place one tick per bitstring, since the bars now sit at numeric positions
+    ax.set_xticks(list(positions))
+    ax.set_xticklabels(bitstrings)
     ax.set_xlabel("Bitstring")
     ax.set_ylabel("Probability" if distribution else "Count")
 
@@ -87,34 +138,50 @@ def _plot_counts(
     ax.tick_params(axis="x", labelrotation=90)
     ax.grid(axis="y", linestyle="--", alpha=0.4)
 
+    # Only show a legend when the series have been named. The handles are built
+    # explicitly from the base colors, since matplotlib would otherwise take the
+    # color of the first bar of each series, which may be a highlighted one.
+    if labels:
+        from matplotlib.patches import Patch
+
+        ax.legend(
+            handles=[Patch(color=colors[index], label=label) for index, label in enumerate(labels)]
+        )
+
     return ax
 
 
 def plot_histogram(
-    counts: dict[str, int],
+    counts: dict[str, int] | list[dict[str, int]],
     top: int | None = None,
     ax: Axes | None = None,
     title: str | None = None,
-    color: str = "tab:blue",
+    color: str | list[str] | None = None,
     highlight: dict[str, str] | None = None,
+    labels: list[str] | None = None,
 ) -> Axes:
     """Plot raw measurement counts as a histogram.
 
     Parameters
     ----------
-    counts: dict
-        Mapping of bitstrings to counts.
+    counts: dict or list of dict
+        Mapping of bitstrings to counts, or a list of such mappings. Several
+        mappings are drawn as grouped bars on the same axes.
     top: int, optional
         If provided, only the top N counts will be plotted.
     ax: matplotlib.axes.Axes, optional
         If provided, the plot will be drawn on this axes.
     title: str, optional
         Plot title.
-    color: str, default "tab:blue"
-        Default bar color.
+    color: str or list of str, optional
+        Default bar color, or one color per mapping.
     highlight: dict, optional
         Mapping of labels to colors, for example:
-        {"001": "tab:green", "110": "tab:red"}.
+        {"001": "tab:green", "110": "tab:red"}. Meant for a single mapping of
+        counts: with several mappings a highlighted outcome takes the same
+        color in every group, so the run it belongs to becomes ambiguous.
+    labels: list of str, optional
+        Legend label for each mapping.
 
     Returns
     -------
@@ -129,34 +196,41 @@ def plot_histogram(
         distribution=False,
         ax=ax,
         title=title,
+        labels=labels,
     )
 
 
 def plot_distribution(
-    counts: dict[str, int],
+    counts: dict[str, int] | list[dict[str, int]],
     top: int | None = None,
     ax: Axes | None = None,
     title: str | None = None,
-    color: str = "tab:blue",
+    color: str | list[str] | None = None,
     highlight: dict[str, str] | None = None,
+    labels: list[str] | None = None,
 ) -> Axes:
     """Plot normalized measurement counts as a probability distribution.
 
     Parameters
     ----------
-    counts: dict
-        Mapping of bitstrings to counts.
+    counts: dict or list of dict
+        Mapping of bitstrings to counts, or a list of such mappings. Each
+        mapping is normalized independently.
     top: int, optional
         If provided, only the top N counts will be plotted.
     ax: matplotlib.axes.Axes, optional
         If provided, the plot will be drawn on this axes.
     title: str, optional
         Plot title.
-    color: str, default "tab:blue"
-        Default bar color.
+    color: str or list of str, optional
+        Default bar color, or one color per mapping.
     highlight: dict, optional
         Mapping of labels to colors, for example:
-        {"001": "tab:green", "110": "tab:red"}.
+        {"001": "tab:green", "110": "tab:red"}. Meant for a single mapping of
+        counts: with several mappings a highlighted outcome takes the same
+        color in every group, so the run it belongs to becomes ambiguous.
+    labels: list of str, optional
+        Legend label for each mapping.
 
     Returns
     -------
@@ -171,6 +245,7 @@ def plot_distribution(
         color=color,
         ax=ax,
         title=title,
+        labels=labels,
     )
 
 
