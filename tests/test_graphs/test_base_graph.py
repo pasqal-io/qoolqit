@@ -101,10 +101,7 @@ def test_coords_update_extra_node() -> None:
 
 
 def test_node_coords_update() -> None:
-    graph = BaseGraph()
-
-    # add nodes without coordinates
-    graph.add_nodes_from([0, 1, 2])
+    graph = BaseGraph.from_nodes([0, 1, 2])
     assert graph.has_coords is False
 
     # set new coordinates
