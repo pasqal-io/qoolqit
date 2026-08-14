@@ -28,7 +28,8 @@ def plot_bitstrings(
         color: Default bar color, or one color per mapping. Defaults to
             matplotlib's color cycle.
         highlight: Mapping of labels to colors, for example
-            ``{"001": "tab:green", "110": "tab:red"}``. If highlighted bitstring is not in top...
+            ``{"001": "tab:green", "110": "tab:red"}``.
+            If highlighted bitstring is not in top N counts, it will not be shown.
         labels: Legend label for each mapping.
         ax: Axes to draw on. Uses a new axes if omitted.
     """
