@@ -134,7 +134,7 @@ def plot_bitstrings(
     # color of the first bar of each series, which may be a highlighted one.
     if n > 1 and labels is None:
         # If no labels are provided, we generate default labels for each series.
-        labels = [f"Series {index + 1}" for index in range(n)]
+        labels = [f"Counts {index + 1}" for index in range(n)]
 
     if labels is not None:
         ax.legend(
