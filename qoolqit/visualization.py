@@ -20,29 +20,19 @@ def plot_bitstrings(
 ) -> None:
     """Plot measurement counts, optionally highlighting selected outcomes.
 
-    Parameters
-    ----------
-    counts: dict or list of dict
-        Mapping of bitstrings to counts, or a list of such mappings. Several
-        mappings are drawn as grouped bars on the same axes.
-    top: int, optional
-        If provided, only the top N counts will be plotted. With several
-        mappings, outcomes are ranked by their total count.
-    normalize: bool, default False
-        If True, counts will be normalized to probabilities. Each mapping is
-        normalized independently.
-    ax: matplotlib.axes.Axes, optional
-        If provided, the plot will be drawn on this axes.
-    color: str or list of str, optional
-        Default bar color, or one color per mapping. Defaults to matplotlib's
-        color cycle.
-    highlight: dict, optional
-        Mapping of labels to colors, for example:
-        {"001": "tab:green", "110": "tab:red"}. Meant for a single mapping of
-        counts: with several mappings a highlighted outcome takes the same
-        color in every group, so the run it belongs to becomes ambiguous.
-    labels: str or list of str, optional
-        Legend label for each mapping.
+    Arguments:
+        counts: dictionary of bitstrings to counts, or a list of dictionaries.
+            the element of the list are drawn as grouped bars on the same axes.
+        top: If provided, only the top N counts will be plotted. With several
+            counts, outcomes are ranked by their total count.
+        normalize: If True, counts will be normalized to probabilities. Each
+            mapping is normalized independently. Defaults to False.
+        ax: If provided, the plot will be drawn on this axes.
+        color: Default bar color, or one color per mapping. Defaults to
+            matplotlib's color cycle.
+        highlight: Mapping of labels to colors, for example
+            ``{"001": "tab:green", "110": "tab:red"}``.
+        labels: Legend label for each mapping.
     """
 
     # Accept a single dict or a list of dicts, and work with a list from here on
