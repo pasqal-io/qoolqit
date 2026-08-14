@@ -50,7 +50,6 @@ Arguments:
     # Sort the union of all bitstrings by their total count, in descending order
     # We use set for unique bitstrings, and sorted across the union of all
     # counts to ensure that we have a consistent order for the x-axis.
-    # When top is specified, we will select only the first N bitstrings after sorting
     bitstrings = sorted(
         set().union(*counts_list),
         key=lambda bitstring: sum(count.get(bitstring, 0) for count in counts_list),
