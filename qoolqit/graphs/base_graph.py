@@ -280,8 +280,12 @@ class BaseGraph(nx.Graph):
 
         Arguments:
             weights: a dictionary of edge weights.
+
+        Raises:
+            KeyError: if an edge in the given weights dictionary is not found in the graph.
         """
-        nx.set_edge_attributes(self, weights, "weight")
+        for (u, v), w in weights.items():
+            self.edges[u, v]["weight"] = w
 
     @property
     def coords(self) -> dict:
