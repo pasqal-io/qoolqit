@@ -281,9 +281,9 @@ class BaseGraph(nx.Graph):
     def edge_weights(self, weights: dict) -> None:
         """Set the dictionary of edge weights.
 
-        Checks that the set of edges in the given dictionary matches the graph's edges.
         Each edge may be keyed as (u, v) or (v, u) since the graph is undirected.
 
+        Weights must be specified for all edges, otherwise a ValueError is raised.
         To partially update edge weights, use the attribute-like access pattern:
         ```python
         graph.edges[0,1]["weight"] = 0.5  # Update weight of edge (0,1)
