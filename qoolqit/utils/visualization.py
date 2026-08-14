@@ -16,7 +16,7 @@ def plot_histogram(
     normalize: bool = False,
     ax: Axes | None = None,
     title: str | None = None,
-    colors: str | list[str] | None = None,
+    color: str | list[str] | None = None,
     highlight: dict[str, str] | None = None,
     labels: list[str] | None = None,
     xlabel: str | None = None,
@@ -39,7 +39,7 @@ def plot_histogram(
         If provided, the plot will be drawn on this axes.
     title: str, optional
         Plot title.
-    colors: str or list of str, optional
+    color: str or list of str, optional
         Default bar color, or one color per mapping. Defaults to matplotlib's
         color cycle.
     highlight: dict, optional
@@ -49,6 +49,11 @@ def plot_histogram(
         color in every group, so the run it belongs to becomes ambiguous.
     labels: list of str, optional
         Legend label for each mapping.
+    xlabel: str, optional
+        Label for the x-axis. Defaults to "Bitstring".
+    ylabel: str, optional
+        Label for the y-axis. Defaults to "Counts", or "Probability" when
+        `normalize` is True.
 
     Returns
     -------
@@ -71,6 +76,9 @@ def plot_histogram(
     if normalize and any(total == 0 for total in totals):
         raise ValueError("cannot plot normalized counts with zero total counts")
 
+    if top is not None and top <= 0:
+        raise ValueError("top must be a positive integer")
+
     # Sort the union of all bitstrings by their total count, in descending order
     # We use set for unique bitstrings, and sorted across the union of all
     # counts to ensure that we have a consistent order for the x-axis.
@@ -86,12 +94,17 @@ def plot_histogram(
         bitstrings = bitstrings[:top]
 
     # One base color per set of counts
-    if colors is None:
-        colors = [f"C{index}" for index in range(n)]
-    elif isinstance(colors, str):
-        colors = [colors] * n
+    if color is None:
+        color = [f"C{index}" for index in range(n)]
+    elif isinstance(color, str):
+        color = [color] * n
     else:
-        colors = list(colors)
+        color = list(color)
+    if len(color) != n:
+        raise ValueError("color must have one entry per counts mapping")
+
+    if labels is not None and len(labels) != n:
+        raise ValueError("labels must have one entry per counts mapping")
 
     # If no highlight mapping is provided, use an empty dict to avoid KeyErrors
     highlight = highlight or {}
@@ -117,7 +130,7 @@ def plot_histogram(
 
         # Determine bar colors, using the highlight mapping if provided
         # If a bitstring is not in the highlight mapping, use this series' color.
-        bar_colors = [highlight.get(bitstring, colors[index]) for bitstring in bitstrings]
+        bar_colors = [highlight.get(bitstring, color[index]) for bitstring in bitstrings]
 
         # Shift each group so that the bars are centered on the tick
         offset = (index - (n - 1) / 2) * slot
@@ -133,7 +146,7 @@ def plot_histogram(
     ax.set_xticks(list(positions))
     ax.set_xticklabels(bitstrings)
     ax.set_xlabel("Bitstring" if xlabel is None else xlabel)
-    ax.set_ylabel(ylabel or ("Probability" if normalize else "Counts"))
+    ax.set_ylabel(("Probability" if normalize else "Counts") if ylabel is None else ylabel)
 
     # Set the title of the plot, using a default title if none is provided
     ax.set_title(title or ("Measurement distribution" if normalize else "Measurement histogram"))
@@ -149,7 +162,7 @@ def plot_histogram(
         from matplotlib.patches import Patch
 
         ax.legend(
-            handles=[Patch(color=colors[index], label=label) for index, label in enumerate(labels)]
+            handles=[Patch(color=color[index], label=label) for index, label in enumerate(labels)]
         )
 
     return ax
