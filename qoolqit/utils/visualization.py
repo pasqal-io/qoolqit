@@ -19,6 +19,8 @@ def plot_histogram(
     color: str | list[str] | None = None,
     highlight: dict[str, str] | None = None,
     labels: list[str] | None = None,
+    xlabel: str | None = None,
+    ylabel: str | None = None,
 ) -> Axes:
     """Plot measurement counts, optionally highlighting selected outcomes.
 
@@ -130,8 +132,8 @@ def plot_histogram(
     # Place one tick per bitstring, since the bars now sit at numeric positions
     ax.set_xticks(list(positions))
     ax.set_xticklabels(bitstrings)
-    ax.set_xlabel("Bitstring")
-    ax.set_ylabel("Probability" if normalize else "Count")
+    ax.set_xlabel("Bitstring" if xlabel is None else xlabel)
+    ax.set_ylabel(ylabel or ("Probability" if normalize else "Counts"))
 
     # Set the title of the plot, using a default title if none is provided
     ax.set_title(title or ("Measurement distribution" if normalize else "Measurement histogram"))
