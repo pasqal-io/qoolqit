@@ -148,7 +148,7 @@ def test_edge_weights_update_missing_edge() -> None:
     graph = BaseGraph([(0, 1), (1, 2), (2, 0)])
     with pytest.raises(
         ValueError,
-        match="Set of edges in the given dictionary does not match the graph ordered edges.",
+        match="Set of edges in the given dictionary does not match the graph's edges.",
     ):
         graph.edge_weights = {(0, 1): 0.3, (1, 2): 0.4}
 
@@ -157,7 +157,7 @@ def test_edge_weights_update_extra_edge() -> None:
     graph = BaseGraph([("a", "b"), ("b", "c"), ("c", "a")])
     with pytest.raises(
         ValueError,
-        match="Set of edges in the given dictionary does not match the graph ordered edges.",
+        match="Set of edges in the given dictionary does not match the graph's edges.",
     ):
         graph.edge_weights = {
             ("a", "b"): 0.3,
@@ -369,6 +369,17 @@ def test_to_matrix_roundtrip(n_nodes: int, seed: int) -> None:
 
     graph = BaseGraph.from_matrix(matrix)
     np.testing.assert_allclose(graph.to_matrix(), matrix, atol=1e-8)
+
+
+def test_edge_weights_accepts_either_orientation() -> None:
+    # Regression test for #447: setting edge_weights should not depend on
+    # knowing which of (u, v) / (v, u) the graph happens to report internally.
+    graph = BaseGraph()
+    graph.add_edges_from([(0, 1), (1, 2), (2, 0)])
+
+    graph.edge_weights = {(0, 1): 0.3, (1, 2): 0.4, (2, 0): 0.5}
+
+    assert graph.edge_weights == {(0, 1): 0.3, (0, 2): 0.5, (1, 2): 0.4}
 
 
 def test_to_matrix_custom_node_labels_and_none_weights() -> None:

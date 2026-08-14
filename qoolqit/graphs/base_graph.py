@@ -21,9 +21,12 @@ from .utils import (
 
 
 class BaseGraph(nx.Graph):
-    """Base graph class, directly inheriting from the NetworkX Graph.
+    """Base graph class, directly inheriting from `networkx.Graph`.
 
-    On top of the standard networkx.Graph functionalities, adds alternative
+    Represents a simple graph (undirected and without self-loops),
+    with optional node coordinates and node/edge weights.
+
+    On top of the standard networkx.Graph functionality, adds alternative
     constructors, node coordinates and weights as first-class attributes,
     distance and Rydberg-interaction calculations, unit-disk graph analysis,
     and plotting.
@@ -40,7 +43,7 @@ class BaseGraph(nx.Graph):
         `max_distance`, `rescale_coords`.
         Unit-disk analysis: `is_ud_graph`, `ud_radius_range`, `ud_edges`,
         `set_ud_edges`.
-        Rydberg-analog interactions: `interactions`, `interaction_matrix`.
+        Rydberg analog model utils: `interactions`, `interaction_matrix`.
         Plotting: `draw`.
     """
 
@@ -275,24 +278,40 @@ class BaseGraph(nx.Graph):
         return {(u, v): w for u, v, w in self.edges(data="weight")}
 
     @edge_weights.setter
-    def edge_weights(self, weights: list | dict) -> None:
+    def edge_weights(self, weights: dict) -> None:
         """Set the dictionary of edge weights.
 
+        Each edge may be keyed as (u, v) or (v, u) since the graph is undirected.
+
+        Weights must be specified for all edges, otherwise a ValueError is raised.
+        To partially update edge weights, use the attribute-like access pattern:
+        ```python
+        graph.edges[0,1]["weight"] = 0.5  # Update weight of edge (0,1)
+        ```
+
         Arguments:
-            weights: list or dictionary of weights.
+            weights: a dictionary of edge weights.
+
+        Raises:
+            ValueError: if the set of edges in the given dictionary does not match
+                the graph's edges.
+
+        Example:
+            >>> graph = BaseGraph([(0, 1), (1, 2), (2, 0)])
+            >>> graph.edge_weights = {(0, 1): 0.3, (1, 2): 0.4, (2, 0): 0.5}
+            >>> graph.edge_weights
+            {(0, 1): 0.3, (0, 2): 0.5, (1, 2): 0.4}
         """
-        if isinstance(weights, list):
-            if len(weights) != self.number_of_edges():
-                raise ValueError("Size of the weights list does not match the number of nodes.")
-            weights_dict = {i: w for i, w in zip(self.sorted_edges, weights)}
-        elif isinstance(weights, dict):
-            edges = set(weights.keys())
-            if set(self.sorted_edges) != edges:
-                raise ValueError(
-                    "Set of edges in the given dictionary does not match the graph ordered edges."
-                )
-            weights_dict = weights
-        nx.set_edge_attributes(self, weights_dict, "weight")
+        # frozenset canonicalizes each edge regardless of orientation, e.g.
+        # frozenset((u, v)) == frozenset((v, u)).
+        given = {frozenset(e) for e in weights}
+        expected = {frozenset(e) for e in self.edges}
+        if given != expected:
+            raise ValueError(
+                "Set of edges in the given dictionary does not match the graph's edges."
+            )
+        for (u, v), w in weights.items():
+            self.edges[u, v]["weight"] = w
 
     @property
     def coords(self) -> dict:
