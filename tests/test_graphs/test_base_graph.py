@@ -148,7 +148,7 @@ def test_edge_weights_update_missing_edge() -> None:
     graph = BaseGraph([(0, 1), (1, 2), (2, 0)])
     with pytest.raises(
         ValueError,
-        match="Set of edges in the given dictionary does not match the graph ordered edges.",
+        match="Set of edges in the given dictionary does not match the graph's edges.",
     ):
         graph.edge_weights = {(0, 1): 0.3, (1, 2): 0.4}
 
@@ -157,7 +157,7 @@ def test_edge_weights_update_extra_edge() -> None:
     graph = BaseGraph([("a", "b"), ("b", "c"), ("c", "a")])
     with pytest.raises(
         ValueError,
-        match="Set of edges in the given dictionary does not match the graph ordered edges.",
+        match="Set of edges in the given dictionary does not match the graph's edges.",
     ):
         graph.edge_weights = {
             ("a", "b"): 0.3,

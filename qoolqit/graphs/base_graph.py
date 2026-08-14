@@ -276,14 +276,37 @@ class BaseGraph(nx.Graph):
 
     @edge_weights.setter
     def edge_weights(self, weights: dict) -> None:
-        """Sets edge weights from a given dictionary of values.
+        """Set the dictionary of edge weights.
+
+        Checks that the set of edges in the given dictionary matches the graph's edges.
+        Each edge may be keyed as (u, v) or (v, u) since the graph is undirected.
+
+        To partially update edge weights, use the attribute-like access pattern:
+        ```python
+        graph.edges[0,1]["weight"] = 0.5  # Update weight of edge (0,1)
+        ```
 
         Arguments:
             weights: a dictionary of edge weights.
 
         Raises:
-            KeyError: if an edge in the given weights dictionary is not found in the graph.
+            ValueError: if the set of edges in the given dictionary does not match
+                the graph's edges.
+
+        Example:
+            >>> graph = BaseGraph([(0, 1), (1, 2), (2, 0)])
+            >>> graph.edge_weights = {(0, 1): 0.3, (1, 2): 0.4, (2, 0): 0.5}
+            >>> graph.edge_weights
+            {(0, 1): 0.3, (0, 2): 0.5, (1, 2): 0.4}
         """
+        # frozenset canonicalizes each edge regardless of orientation, e.g.
+        # frozenset((u, v)) == frozenset((v, u)).
+        given = {frozenset(e) for e in weights}
+        expected = {frozenset(e) for e in self.edges}
+        if given != expected:
+            raise ValueError(
+                "Set of edges in the given dictionary does not match the graph's edges."
+            )
         for (u, v), w in weights.items():
             self.edges[u, v]["weight"] = w
 
