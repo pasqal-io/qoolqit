@@ -47,7 +47,7 @@ def plot_histogram(
         {"001": "tab:green", "110": "tab:red"}. Meant for a single mapping of
         counts: with several mappings a highlighted outcome takes the same
         color in every group, so the run it belongs to becomes ambiguous.
-    labels: list of str, optional
+    labels: str or list of str, optional
         Legend label for each mapping.
     xlabel: str, optional
         Label for the x-axis. Defaults to "Bitstring".
@@ -64,6 +64,7 @@ def plot_histogram(
 
     # Accept a single dict or a list of dicts, and work with a list from here on
     counts_list = [counts] if isinstance(counts, dict) else list(counts)
+    labels = [labels] if isinstance(labels, str) else labels
     n = len(counts_list)
 
     if not counts_list or any(not count for count in counts_list):
