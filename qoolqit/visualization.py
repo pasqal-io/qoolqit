@@ -2,26 +2,22 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.patches import Patch
 
-if TYPE_CHECKING:
-    from matplotlib.axes import Axes
-
-__all__ = ["plot_histogram"]
+__all__ = ["plot_bitstrings"]
 
 
-def plot_histogram(
+def plot_bitstrings(
     counts: dict[str, int] | list[dict[str, int]],
     top: int | None = None,
     normalize: bool = False,
     ax: Axes | None = None,
-    title: str | None = None,
     color: str | list[str] | None = None,
     highlight: dict[str, str] | None = None,
     labels: list[str] | None = None,
-    xlabel: str | None = None,
-    ylabel: str | None = None,
-) -> Axes:
+) -> None:
     """Plot measurement counts, optionally highlighting selected outcomes.
 
     Parameters
@@ -37,8 +33,6 @@ def plot_histogram(
         normalized independently.
     ax: matplotlib.axes.Axes, optional
         If provided, the plot will be drawn on this axes.
-    title: str, optional
-        Plot title.
     color: str or list of str, optional
         Default bar color, or one color per mapping. Defaults to matplotlib's
         color cycle.
@@ -49,18 +43,7 @@ def plot_histogram(
         color in every group, so the run it belongs to becomes ambiguous.
     labels: str or list of str, optional
         Legend label for each mapping.
-    xlabel: str, optional
-        Label for the x-axis. Defaults to "Bitstring".
-    ylabel: str, optional
-        Label for the y-axis. Defaults to "Counts", or "Probability" when
-        `normalize` is True.
-
-    Returns
-    -------
-    matplotlib.axes.Axes
-        The axes object containing the plot.
     """
-    import matplotlib.pyplot as plt
 
     # Accept a single dict or a list of dicts, and work with a list from here on
     counts_list = [counts] if isinstance(counts, dict) else list(counts)
@@ -146,24 +129,20 @@ def plot_histogram(
     # Place one tick per bitstring, since the bars now sit at numeric positions
     ax.set_xticks(list(positions))
     ax.set_xticklabels(bitstrings)
-    ax.set_xlabel("Bitstring" if xlabel is None else xlabel)
-    ax.set_ylabel(("Probability" if normalize else "Counts") if ylabel is None else ylabel)
-
-    # Set the title of the plot, using a default title if none is provided
-    ax.set_title(title or ("Measurement distribution" if normalize else "Measurement histogram"))
 
     # Rotate x-axis labels for better readability
     ax.tick_params(axis="x", labelrotation=90)
     ax.grid(axis="y", linestyle="--", alpha=0.4)
 
+    # We set some default labels, the user can override 
+    # them by calling ax.set_xlabel and ax.set_ylabel after this function.
+    ax.set_ylabel("Probability" if normalize else "Counts")
+    ax.set_xlabel("Bitstrings")
+
     # Only show a legend when the series have been named. The handles are built
     # explicitly from the base colors, since matplotlib would otherwise take the
     # color of the first bar of each series, which may be a highlighted one.
     if labels:
-        from matplotlib.patches import Patch
-
         ax.legend(
             handles=[Patch(color=color[index], label=label) for index, label in enumerate(labels)]
         )
-
-    return ax
