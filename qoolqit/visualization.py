@@ -7,7 +7,6 @@ from matplotlib.axes import Axes
 from matplotlib.patches import Patch
 
 
-
 def plot_bitstrings(
     counts: dict[str, int] | list[dict[str, int]],
     top: int | None = None,
@@ -78,6 +77,9 @@ def plot_bitstrings(
 
     if labels is not None and len(labels) != n:
         raise ValueError("labels must have one entry per counts mapping")
+    if n > 1 and labels is None:
+        # If no labels are provided, we generate default labels for each series.
+        labels = [f"Counts {index + 1}" for index in range(n)]
 
     # If no highlight mapping is provided, use an empty dict to avoid KeyErrors
     highlight = highlight or {}
@@ -131,9 +133,6 @@ def plot_bitstrings(
     # Only show a legend when the series have been named. The handles are built
     # explicitly from the base colors, since matplotlib would otherwise take the
     # color of the first bar of each series, which may be a highlighted one.
-    if n > 1 and labels is None:
-        # If no labels are provided, we generate default labels for each series.
-        labels = [f"Counts {index + 1}" for index in range(n)]
 
     if labels is not None:
         ax.legend(
