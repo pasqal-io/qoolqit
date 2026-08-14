@@ -17,22 +17,16 @@ def plot_bitstrings(
 ) -> None:
     """Plot bitstrings counts, optionally highlighting selected ones.
 
-    Arguments:
-        counts: dictionary of bitstrings to counts, or a list of dictionaries.
-            the element of the list are drawn as grouped bars on the same axes.
-        top: If provided, only the top N counts will be plotted. With several
-            counts, outcomes are ranked by their total count.
-        normalize: If True, counts will be normalized to probabilities. Each
-            mapping is normalized independently. Defaults to False.
-        color: Default bar color, or one color per mapping. Defaults to
-            matplotlib's color cycle.
-        highlight: Mapping of bitstrings to colors, for example
-            ``{"001": "tab:green", "110": "tab:red"}``. The outcome is marked
-            with a faint background band and a colored tick label, so that the
-            bar colors keep identifying the counts they belong to.
-            If highlighted bitstring is not in top N counts, it will not be shown.
-        labels: Legend label for each mapping.
-        ax: Axes to draw on. Uses a new axes if omitted.
+Arguments:
+    counts: Mapping(s) of bitstrings to counts. Multiple mappings are grouped
+        as bars on the same axes.
+    top: Plot only the top N counts. With multiple mappings, rank by total count.
+    normalize: Normalize each mapping to probabilities. Defaults to False.
+    color: Bar color, or one color per mapping. Defaults to the matplotlib cycle.
+    highlight: Mapping of bitstrings to highlight colors. Highlighted outcomes
+        get a background band and colored tick label.
+    labels: Legend label for each mapping.
+    ax: Axes to draw on. Creates new axes if omitted.
     """
 
     # Accept a single dict or a list of dicts, and work with a list from here on
