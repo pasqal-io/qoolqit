@@ -1,15 +1,22 @@
 """Visualization helpers for QoolQit results."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+
 
 def _plot_counts(
-    counts,
-    top=None,
-    distribution=False,
-    ax=None,
-    title=None,
-    color="tab:blue",
-    highlight=None,
-):
+    counts: dict[str, int],
+    top: int | None = None,
+    distribution: bool = False,
+    ax: Axes | None = None,
+    title: str | None = None,
+    color: str = "tab:blue",
+    highlight: dict[str, str] | None = None,
+) -> Axes:
     """Plot counts, optionally highlighting selected outcomes.
 
     Parameters
@@ -42,9 +49,7 @@ def _plot_counts(
 
     total = sum(counts.values())
     if distribution and total == 0:
-        raise ValueError(
-            "cannot plot a distribution with zero total counts"
-        )
+        raise ValueError("cannot plot a distribution with zero total counts")
 
     # Sort counts in descending order
     items = sorted(
@@ -59,10 +64,7 @@ def _plot_counts(
 
     # Extract labels and values from items for plotting
     labels = [label for label, _ in items]
-    values = [
-        value / total if distribution else value
-        for _, value in items
-    ]
+    values = [value / total if distribution else value for _, value in items]
 
     # Determine bar colors, using the highlight mapping if provided
     # If a label is not in the highlight mapping, use the default color.
@@ -79,14 +81,7 @@ def _plot_counts(
     ax.set_ylabel("Probability" if distribution else "Count")
 
     # Set the title of the plot, using a default title if none is provided
-    ax.set_title(
-        title
-        or (
-            "Measurement distribution"
-            if distribution
-            else "Measurement histogram"
-        )
-    )
+    ax.set_title(title or ("Measurement distribution" if distribution else "Measurement histogram"))
 
     # Rotate x-axis labels for better readability
     ax.tick_params(axis="x", labelrotation=90)
@@ -95,7 +90,14 @@ def _plot_counts(
     return ax
 
 
-def plot_histogram(counts, highlight=None, top=None, ax=None, title=None):
+def plot_histogram(
+    counts: dict[str, int],
+    top: int | None = None,
+    ax: Axes | None = None,
+    title: str | None = None,
+    color: str = "tab:blue",
+    highlight: dict[str, str] | None = None,
+) -> Axes:
     """Plot raw measurement counts as a histogram.
 
     Parameters
@@ -123,13 +125,21 @@ def plot_histogram(counts, highlight=None, top=None, ax=None, title=None):
         counts,
         highlight=highlight,
         top=top,
+        color=color,
         distribution=False,
         ax=ax,
         title=title,
     )
 
 
-def plot_distribution(counts, highlight=None, top=None, ax=None, title=None):
+def plot_distribution(
+    counts: dict[str, int],
+    top: int | None = None,
+    ax: Axes | None = None,
+    title: str | None = None,
+    color: str = "tab:blue",
+    highlight: dict[str, str] | None = None,
+) -> Axes:
     """Plot normalized measurement counts as a probability distribution.
 
     Parameters
@@ -152,12 +162,13 @@ def plot_distribution(counts, highlight=None, top=None, ax=None, title=None):
     -------
     matplotlib.axes.Axes
         The axes object containing the plot.
-    """    
+    """
     return _plot_counts(
         counts,
         highlight=highlight,
         top=top,
         distribution=True,
+        color=color,
         ax=ax,
         title=title,
     )
