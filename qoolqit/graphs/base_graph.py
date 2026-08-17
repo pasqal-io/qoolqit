@@ -14,7 +14,6 @@ from matplotlib.axes import Axes
 from .utils import (
     all_node_pairs,
     distances,
-    less_or_equal,
     scale_coords,
     space_coords,
 )
@@ -439,16 +438,22 @@ class BaseGraph(nx.Graph):
         except ValueError:
             return False
 
-    def ud_edges(self, radius: float) -> set:
-        """Returns the set of edges given by the intersection of circles of a given radius.
+    def ud_edges(self, radius: float, tol: float = 1e-7) -> set:
+        """Returns the set of edges whose distance is at most the given radius.
 
         Arguments:
-            radius: the value
+            radius: the unit-disk radius; a pair of nodes is included if their distance is at
+                most this value.
+            tol: numerical tolerance added to the radius to account for floating point error.
         """
-        if self.has_coords:
-            return set(e for e, d in self.distances().items() if less_or_equal(d, radius))
-        else:
-            raise AttributeError("Getting unit disk edges is not valid without coordinates.")
+        if radius < 0:
+            raise ValueError("`radius` must be a non-negative value.")
+        if not self.has_coords:
+            raise AttributeError(
+                "Trying to compute unit-disk edges for a graph without coordinates."
+            )
+
+        return set(e for e, d in self.distances().items() if d <= radius + tol)
 
     def rescale_coords(
         self,
