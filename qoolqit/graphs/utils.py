@@ -2,12 +2,10 @@ from __future__ import annotations
 
 import random
 from itertools import product
-from math import dist, hypot, isclose
+from math import dist, hypot
 from typing import Iterable
 
 import numpy as np
-
-ATOL_32 = 1e-7
 
 
 def all_node_pairs(nodes: Iterable) -> set:
@@ -78,8 +76,3 @@ def random_edge_list(nodes: Iterable, k: int) -> list:
     """Generates a random set of k edges linkings items from a set of nodes."""
     all_edges = all_node_pairs(nodes)
     return random.sample(tuple(all_edges), k=k)
-
-
-def less_or_equal(a: float, b: float, rel_tol: float = 0.0, abs_tol: float = ATOL_32) -> bool:
-    """Less or approximately equal."""
-    return a < b or isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol)
