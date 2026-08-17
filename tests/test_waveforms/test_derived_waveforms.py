@@ -310,15 +310,19 @@ def test_interpolated_to_pulser() -> None:
 @pytest.mark.parametrize(
     "values", [[0.1, 0.3, -0.5, 1.0, 5.7], np.sin(np.linspace(0, 2 * np.pi, 10))]
 )
-@pytest.mark.parametrize("energy_factor", [0.5, 1.0, np.pi])
-def test_interpolated_to_pulser_energy_factor(values: ArrayLike, energy_factor: float) -> None:
+def test_interpolated_to_pulser_samples(values: ArrayLike) -> None:
+    # regression test for bugs in pulser and qoolqit
+    # Interpolated converted differently because of round off issue:
+    # see https://github.com/pasqal-io/qoolqit/issues/288
+    # see https://github.com/pasqal-io/Pulser/issues/1051
+
     interpolated = InterpolatedWaveform(20.46, values=values)
 
-    pulser_interpolated = interpolated._to_pulser(duration=20, energy_factor=energy_factor)
+    pulser_interpolated = interpolated._to_pulser(duration=20)
     assert isinstance(pulser_interpolated, pulser.InterpolatedWaveform)
 
-    # check that pulser values are scaled correctly, within the expected tolerance
-    expected_pulser_values = np.array(values) * energy_factor
+    # check that pulser values are stored correctly
+    expected_pulser_values = np.array(values)
     np.testing.assert_allclose(pulser_interpolated._values, expected_pulser_values, atol=1e-8)
 
     # check that pulser samples are within the expected range
