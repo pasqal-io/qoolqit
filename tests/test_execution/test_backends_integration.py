@@ -7,7 +7,6 @@ from pulser.backend import Backend, Occupation
 from qoolqit import AnalogDevice, Drive, MockDevice, QuantumProgram, Register
 from qoolqit.devices import Device
 from qoolqit.execution import BackendType, EmulationConfig, JobStatus, LocalEmulator
-from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.waveforms import ConstantWaveform
 
 
@@ -25,7 +24,7 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
     # atoms far away, no interaction
     register = Register.from_coordinates([(-10, -10), (10, 10)])
     program = QuantumProgram(register, drive)
-    program.compile_to(device=MockDevice(), profile=CompilerProfile.MAX_ENERGY)
+    program.compile_to(device=MockDevice())
     emulation_config = EmulationConfig(observables=(Occupation(),))
     emulator = LocalEmulator(backend_type=backend_type, emulation_config=emulation_config)
     job = emulator.run(program)
