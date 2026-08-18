@@ -19,10 +19,17 @@ from qoolqit.waveforms import ConstantWaveform
 
 @pytest.mark.parametrize(
     "profile",
-    [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT, "max_energy", "working_point"],
+    [
+        CompilerProfile.MAX_ENERGY,
+        CompilerProfile.DEFAULT,
+        CompilerProfile.WORKING_POINT,
+        "max_energy",
+        "default",
+        "working_point",
+    ],
 )
 def test_compilation_single_qubit(
-    profile: Literal["max_energy", "working_point"] | CompilerProfile,
+    profile: Literal["max_energy", "default", "working_point"] | CompilerProfile,
 ) -> None:
     """Test compilation of a single-qubit program."""
     register = Register(qubits={"q0": (0.0, 0.0)})
@@ -31,6 +38,13 @@ def test_compilation_single_qubit(
 
     program.compile_to(device=AnalogDevice(), profile=profile)
     assert program.is_compiled
+
+
+def test_compiler_profile_deprecated_working_point_alias() -> None:
+    """Test that WORKING_POINT and "working_point" are aliases of DEFAULT."""
+    assert CompilerProfile.WORKING_POINT is CompilerProfile.DEFAULT
+    assert CompilerProfile("working_point") is CompilerProfile.DEFAULT
+    assert CompilerProfile("default") is CompilerProfile.DEFAULT
 
 
 def test_compile_to_invalid_profile_string() -> None:
