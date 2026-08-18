@@ -9,6 +9,7 @@ from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
 from qoolqit.drive import DetuningMapModulator, Drive
 from qoolqit.exceptions import CompilationError
+from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.graphs import DataGraph
 from qoolqit.program import QuantumProgram
 from qoolqit.register import Register
@@ -48,12 +49,12 @@ def test_compiler_dmm(
 ) -> None:
     program = dmm_program()
     if device._device.dmm_channels:
-        program.compile_to(device)
+        program.compile_to(device, profile=CompilerProfile.MAX_ENERGY)
         assert program.is_compiled
         assert isinstance(program.compiled_sequence, PulserSequence)
     else:
         with pytest.raises(CompilationError):
-            program.compile_to(device)
+            program.compile_to(device, profile=CompilerProfile.MAX_ENERGY)
 
 
 def test_compiled_sequence_with_small_delays() -> None:
@@ -66,9 +67,9 @@ def test_compiled_sequence_with_small_delays() -> None:
     )
 
     program = QuantumProgram(register=register, drive=drive)
-    program.compile_to(device=AnalogDevice())
+    program.compile_to(device=AnalogDevice(), profile=CompilerProfile.MAX_ENERGY)
     program_small_delay = QuantumProgram(register=register, drive=drive_small_delay)
-    program_small_delay.compile_to(device=AnalogDevice())
+    program_small_delay.compile_to(device=AnalogDevice(), profile=CompilerProfile.MAX_ENERGY)
 
     # check that the delay is not added to the pulser sequence if small
     pulser_duration = program.compiled_sequence.get_duration()
@@ -91,7 +92,9 @@ def test_compile_to_max_duration_ratio(ratio: float) -> None:
 
     expected_max_duration = round(ratio * device._max_duration)
 
-    program.compile_to(device=device, device_max_duration_ratio=ratio)
+    program.compile_to(
+        device=device, profile=CompilerProfile.MAX_ENERGY, device_max_duration_ratio=ratio
+    )
     assert program.is_compiled
     assert program.compiled_sequence.get_duration() == expected_max_duration
 
@@ -103,7 +106,9 @@ def test_compile_to_max_duration(duration: float) -> None:
     amp = ConstantWaveform(duration=duration, value=1.0)
     drive = Drive(amplitude=amp)
     program = QuantumProgram(reg, drive)
-    program.compile_to(AnalogDevice(), device_max_duration_ratio=1.0)
+    program.compile_to(
+        AnalogDevice(), profile=CompilerProfile.MAX_ENERGY, device_max_duration_ratio=1.0
+    )
 
     assert program.is_compiled
     assert program.compiled_sequence.get_duration() == 6000
