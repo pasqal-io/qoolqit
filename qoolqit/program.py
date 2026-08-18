@@ -86,9 +86,7 @@ class QuantumProgram:
     def compile_to(
         self,
         device: Device,
-        profile: (
-            Literal["default", "max_energy", "working_point"] | CompilerProfile
-        ) = CompilerProfile.DEFAULT,
+        profile: Literal["default", "max_energy"] | CompilerProfile = CompilerProfile.DEFAULT,
         device_max_duration_ratio: float | None = None,
     ) -> None:
         """Compiles the quantum program for execution on a specific device.
@@ -104,8 +102,8 @@ class QuantumProgram:
 
         - "default": Compile the program as it is. The drive and the register positions
             must respect the hardware constraints of the device which can be inspected
-            using `device.specs()`. The string "working_point" and `CompilerProfile.WORKING_POINT`
-            are deprecated aliases for this profile.
+            using `device.specs()`. The `CompilerProfile.WORKING_POINT` is deprecated
+            aliases for this profile.
         - "max_energy": Scale the program to utilize the device's
             maximum capabilities. The drive amplitude and the register positions are rescaled
             to achieve respectively the maximum amplitude and the minimum pairwise distance
