@@ -16,8 +16,11 @@ from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.waveforms import ConstantWaveform
 
 
-@pytest.mark.parametrize("profile", [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT])
-def test_compilation_single_qubit(profile: CompilerProfile) -> None:
+@pytest.mark.parametrize(
+    "profile",
+    [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT, "max_energy", "working_point"],
+)
+def test_compilation_single_qubit(profile: CompilerProfile | str) -> None:
     """Test compilation of a single-qubit program."""
     register = Register(qubits={"q0": (0.0, 0.0)})
     drive = Drive(amplitude=ConstantWaveform(2.0, 0.2))
@@ -26,6 +29,15 @@ def test_compilation_single_qubit(profile: CompilerProfile) -> None:
     # Test compilation on the default profile
     program.compile_to(device=AnalogDevice(), profile=profile)
     assert program.is_compiled
+
+
+def test_compile_to_invalid_profile_string() -> None:
+    """Test compilation with an invalid profile string alias."""
+    register = Register(qubits={"q0": (0.0, 0.0)})
+    drive = Drive(amplitude=ConstantWaveform(2.0, 0.2))
+    program = QuantumProgram(register=register, drive=drive)
+    with pytest.raises(ValueError, match="'bogus' is not a valid CompilerProfile"):
+        program.compile_to(device=AnalogDevice(), profile="bogus")
 
 
 def test_dmm_not_supported() -> None:

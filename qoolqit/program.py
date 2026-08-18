@@ -84,39 +84,48 @@ class QuantumProgram:
     def compile_to(
         self,
         device: Device,
-        profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
+        profile: str | CompilerProfile = CompilerProfile.MAX_ENERGY,
         device_max_duration_ratio: float | None = None,
     ) -> None:
         """Compiles the quantum program for execution on a specific device.
 
-        The compilation process adapts the program to the device's constraints while
-        preserving the relative ratios of the original program parameters. Different
-        compilation profiles optimize for specific objectives:
+        The compilation process translates a program to make it runnable on a specific device:
 
-        - CompilerProfile.MAX_ENERGY (default): Scales the program to utilize the device's
+        - Dimensionalization: Rescale the drive amplitude and the register positions to
+            physical units compatible with the device.
+        - Translation: Translate the program to a lower-level representation (Pulser) that
+            can be executed on the device.
+
+        There are two compilation profiles:
+
+        - "max_energy" (default): Scale the program to utilize the device's
             maximum capabilities. The drive amplitude and the register positions are rescaled
             to achieve respectively the maximum amplitude and the minimum pairwise distance
             compatible with the input program and the device's constraints.
-        - CompilerProfile.WORKING_POINT: .
+        - "working_point": Compile the program as it is. The drive and the register positions
+            must respect the hardware constraints of the device which can be inspected
+            using `device.specs()`.
 
-        Further options DO NOT preserve the input program, but rather adapts the program to
-        the device's constraint. Programs compiled this way are not guaranteed to be portable
-        across devices.
+        The following option does NOT preserve the input program, but rather adapts the program
+        to the device's constraints. Programs compiled this way are not portable across devices.
 
         - device_max_duration_ratio: Rescale the drive duration to a fraction of the
-            device's maximum allowed duration.
-            This option is useful in adiabatic protocols where one simply seek to
-            minimize the time derivative of the drive's amplitude.
+            device's maximum allowed duration. Useful in adiabatic protocols where one simply
+            seeks to minimize the time derivative of the drive's amplitude.
 
         Args:
             device: The target device for compilation. Must be a QoolQit Device.
-            profile: The compilation strategy to optimize the program.
-                Defaults to CompilerProfile.MAX_ENERGY.
-            device_max_duration_ratio: Whether to set the program duration to a fraction of
-                the device's maximum allowed duration. Must be a number in the range (0, 1].
-                Can only be set if the device has a maximum allowed duration.
+            profile: The compilation profile used to translate the program.
+                Defaults to "max_energy".
+            device_max_duration_ratio: The fraction of the device's maximum allowed duration
+                to set the program duration to, or None to leave it unset. Must be a number
+                in the range (0, 1]. Can only be set if the device has a maximum allowed
+                duration.
 
         Raises:
+            TypeError: If `device` is not a QoolQit Device.
+            ValueError: If `device_max_duration_ratio` is set but the device has no maximum
+                allowed duration, or if it is not in the range (0, 1].
             CompilationError: If the compilation fails due to device constraints.
         """
         if not isinstance(device, Device):
@@ -140,6 +149,8 @@ class QuantumProgram:
                 raise CompilationError(
                     "The device does not support DMM. Please use a device that supports DMM."
                 )
+
+        profile = CompilerProfile(profile)
 
         compiler = SequenceCompiler(
             self.register, self.drive, device, profile, device_max_duration_ratio
