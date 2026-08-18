@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Literal
 from unittest.mock import MagicMock
 
 import numpy as np
@@ -20,13 +21,14 @@ from qoolqit.waveforms import ConstantWaveform
     "profile",
     [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT, "max_energy", "working_point"],
 )
-def test_compilation_single_qubit(profile: CompilerProfile | str) -> None:
+def test_compilation_single_qubit(
+    profile: Literal["max_energy", "working_point"] | CompilerProfile,
+) -> None:
     """Test compilation of a single-qubit program."""
     register = Register(qubits={"q0": (0.0, 0.0)})
     drive = Drive(amplitude=ConstantWaveform(2.0, 0.2))
     program = QuantumProgram(register=register, drive=drive)
 
-    # Test compilation on the default profile
     program.compile_to(device=AnalogDevice(), profile=profile)
     assert program.is_compiled
 
@@ -37,7 +39,7 @@ def test_compile_to_invalid_profile_string() -> None:
     drive = Drive(amplitude=ConstantWaveform(2.0, 0.2))
     program = QuantumProgram(register=register, drive=drive)
     with pytest.raises(ValueError, match="'bogus' is not a valid CompilerProfile"):
-        program.compile_to(device=AnalogDevice(), profile="bogus")
+        program.compile_to(device=AnalogDevice(), profile="bogus")  # type: ignore [arg-type]
 
 
 def test_dmm_not_supported() -> None:

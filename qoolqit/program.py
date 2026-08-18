@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Literal
+
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from pulser.sequence.sequence import Sequence as PulserSequence
@@ -84,7 +86,9 @@ class QuantumProgram:
     def compile_to(
         self,
         device: Device,
-        profile: str | CompilerProfile = CompilerProfile.MAX_ENERGY,
+        profile: (
+            Literal["max_energy", "working_point"] | CompilerProfile
+        ) = CompilerProfile.MAX_ENERGY,
         device_max_duration_ratio: float | None = None,
     ) -> None:
         """Compiles the quantum program for execution on a specific device.
@@ -98,7 +102,7 @@ class QuantumProgram:
 
         There are two compilation profiles:
 
-        - "max_energy" (default): Scale the program to utilize the device's
+        - "max_energy": Scale the program to utilize the device's
             maximum capabilities. The drive amplitude and the register positions are rescaled
             to achieve respectively the maximum amplitude and the minimum pairwise distance
             compatible with the input program and the device's constraints.
@@ -116,7 +120,7 @@ class QuantumProgram:
         Args:
             device: The target device for compilation. Must be a QoolQit Device.
             profile: The compilation profile used to translate the program.
-                Defaults to "max_energy".
+                Defaults to CompilerProfile.MAX_ENERGY.
             device_max_duration_ratio: The fraction of the device's maximum allowed duration
                 to set the program duration to, or None to leave it unset. Must be a number
                 in the range (0, 1]. Can only be set if the device has a maximum allowed
