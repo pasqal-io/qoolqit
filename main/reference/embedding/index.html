@@ -3252,7 +3252,7 @@ inheriting from EmbedderConfig.</p>
 <span class="normal"><a href="#__codelineno-0-66">66</a></span>
 <span class="normal"><a href="#__codelineno-0-67">67</a></span>
 <span class="normal"><a href="#__codelineno-0-68">68</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Default initializer for all embedders, taking an algorithm and a config.</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">    </span><span class="sd">"""Default initializer for all embedders, taking an algorithm and a config.</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">    An algorithm should be a standalone function that takes a piece of data of an</span>
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    InDataType and maps it to an OutDataType. Any extra configuration parameters</span>
@@ -3262,24 +3262,24 @@ inheriting from EmbedderConfig.</p>
 <a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">    Arguments:</span>
 <a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        algorithm: a callable to the algorithm function.</span>
 <a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">        config: a config dataclass holding parameter values for the algorithm.</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    """</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">EmbedderConfig</span><span class="p">):</span>
 <a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a>            <span class="s2">&quot;The config must be an instance of a dataclass inheriting from EmbedderConfig.&quot;</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>            <span class="s2">"The config must be an instance of a dataclass inheriting from EmbedderConfig."</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="p">)</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="n">algo_signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">algorithm</span><span class="p">)</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="n">config_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">algo_signature_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">algo_signature</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">config_keys</span> <span class="o">&lt;=</span> <span class="n">algo_signature_keys</span><span class="p">:</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="n">config_keys_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config_keys</span><span class="p">)</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="n">algo_keys_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">algo_signature_keys</span><span class="p">)</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="n">config_keys_str</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config_keys</span><span class="p">)</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="n">algo_keys_str</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">algo_signature_keys</span><span class="p">)</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="sa">f</span><span class="s2">&quot;Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not compatible with the &quot;</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;algorithm </span><span class="si">{</span><span class="n">algorithm</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, as not all configuration fields &quot;</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>            <span class="o">+</span> <span class="s2">&quot;correspond to keyword arguments in the algorithm function.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> keys:</span><span class="se">\n</span><span class="si">{</span><span class="n">config_keys_str</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;Algorithm signature parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">algo_keys_str</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="sa">f</span><span class="s2">"Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not compatible with the "</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"algorithm </span><span class="si">{</span><span class="n">algorithm</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, as not all configuration fields "</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>            <span class="o">+</span> <span class="s2">"correspond to keyword arguments in the algorithm function.</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> keys:</span><span class="se">\n</span><span class="si">{</span><span class="n">config_keys_str</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"Algorithm signature parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">algo_keys_str</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="p">)</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_algorithm</span> <span class="o">=</span> <span class="n">algorithm</span>
@@ -3417,11 +3417,11 @@ inheriting from EmbedderConfig.</p>
 <span class="normal"><a href="#__codelineno-0-131">131</a></span>
 <span class="normal"><a href="#__codelineno-0-132">132</a></span>
 <span class="normal"><a href="#__codelineno-0-133">133</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">InDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OutDataType</span><span class="p">:</span>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates the input, runs the embedding algorithm, and validates the output.</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">"""Validates the input, runs the embedding algorithm, and validates the output.</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">    Arguments:</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">        data: the data to embed.</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    """</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="n">result</span><span class="p">:</span> <span class="n">OutDataType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_output</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
@@ -3507,7 +3507,7 @@ for that embedder, an error should be raised.</p>
 <span class="normal"><a href="#__codelineno-0-104">104</a></span>
 <span class="normal"><a href="#__codelineno-0-105">105</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="nd">@abstractmethod</span>
 <a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">InDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if the given data is compatible with the embedder.</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="w">    </span><span class="sd">"""Checks if the given data is compatible with the embedder.</span>
 <a id="__codelineno-0-93" name="__codelineno-0-93"></a>
 <a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="sd">    Each embedder should write its own data validator. If the data</span>
 <a id="__codelineno-0-95" name="__codelineno-0-95"></a><span class="sd">    is not of the supported type or in the specific supported format</span>
@@ -3519,7 +3519,7 @@ for that embedder, an error should be raised.</p>
 <a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="sd">        TypeError: if the data is not of the supported type.</span>
 <a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="sd">        SomeError: some other error if other constraints are not met.</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">    """</span>
 <a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="o">...</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3602,7 +3602,7 @@ for that embedder, an error should be raised.</p>
 <span class="normal"><a href="#__codelineno-0-121">121</a></span>
 <span class="normal"><a href="#__codelineno-0-122">122</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-107" name="__codelineno-0-107"></a><span class="nd">@abstractmethod</span>
 <a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">OutDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if the resulting output is expected by the embedder.</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="w">    </span><span class="sd">"""Checks if the resulting output is expected by the embedder.</span>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a>
 <a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">    Each embedder should write its own output validator. If the result</span>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="sd">    is not of the supported type or in the specific supported format</span>
@@ -3614,7 +3614,7 @@ for that embedder, an error should be raised.</p>
 <a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="sd">        TypeError: if the output is not of the supported type.</span>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">        SomeError: some other error if other constraints are not met.</span>
-<a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="sd">    """</span>
 <a id="__codelineno-0-122" name="__codelineno-0-122"></a>    <span class="o">...</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3762,11 +3762,11 @@ for that embedder, an error should be raised.</p>
 <span class="normal"><a href="#__codelineno-0-55">55</a></span>
 <span class="normal"><a href="#__codelineno-0-56">56</a></span>
 <span class="normal"><a href="#__codelineno-0-57">57</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">BladeConfig</span> <span class="o">=</span> <span class="n">BladeConfig</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Inits Blade.</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="w">    </span><span class="sd">"""Inits Blade.</span>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        config (BladeConfig): configuration object for the BLaDE algorithm.</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">    """</span>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_blade</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
@@ -3904,13 +3904,13 @@ for that embedder, an error should be raised.</p>
 <span class="normal"><a href="#__codelineno-0-68">68</a></span>
 <span class="normal"><a href="#__codelineno-0-69">69</a></span>
 <span class="normal"><a href="#__codelineno-0-70">70</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataGraph</span><span class="p">:</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a DataGraph with coordinates that embeds the input matrix.</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="w">    </span><span class="sd">"""Return a DataGraph with coordinates that embeds the input matrix.</span>
 <a id="__codelineno-0-61" name="__codelineno-0-61"></a>
 <a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">    Validates the input, runs the embedding algorithm, and validates the output.</span>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">        data (np.ndarray): the matrix to embed into a DataGraph with coordinates.</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    """</span>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
 <a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="n">graph</span> <span class="o">=</span> <span class="n">DataGraph</span><span class="o">.</span><span class="n">from_coordinates</span><span class="p">(</span><span class="n">positions</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
@@ -4098,7 +4098,7 @@ radial distance and the minimum pairwise distance between atoms.</p>
 <span class="normal"><a href="#__codelineno-0-668">668</a></span>
 <span class="normal"><a href="#__codelineno-0-669">669</a></span>
 <span class="normal"><a href="#__codelineno-0-670">670</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-652" name="__codelineno-0-652"></a><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-653" name="__codelineno-0-653"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Post initialization of the `BladeConfig` dataclass.</span>
+<a id="__codelineno-0-653" name="__codelineno-0-653"></a><span class="w">    </span><span class="sd">"""Post initialization of the `BladeConfig` dataclass.</span>
 <a id="__codelineno-0-654" name="__codelineno-0-654"></a>
 <a id="__codelineno-0-655" name="__codelineno-0-655"></a><span class="sd">    Set the `max_min_dist_ratio` argument of the `blade_embedding` algorithm</span>
 <a id="__codelineno-0-656" name="__codelineno-0-656"></a><span class="sd">    based on the specification of the selected device.</span>
@@ -4106,11 +4106,11 @@ radial distance and the minimum pairwise distance between atoms.</p>
 <a id="__codelineno-0-658" name="__codelineno-0-658"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-659" name="__codelineno-0-659"></a><span class="sd">        device (Device): the QoolQit device to use to set the maximum ratio between the maximum</span>
 <a id="__codelineno-0-660" name="__codelineno-0-660"></a><span class="sd">            radial distance and the minimum pairwise distance between atoms.</span>
-<a id="__codelineno-0-661" name="__codelineno-0-661"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-661" name="__codelineno-0-661"></a><span class="sd">    """</span>
 <a id="__codelineno-0-662" name="__codelineno-0-662"></a>    <span class="k">if</span> <span class="n">device</span><span class="p">:</span>
 <a id="__codelineno-0-663" name="__codelineno-0-663"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span><span class="p">:</span>
 <a id="__codelineno-0-664" name="__codelineno-0-664"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-<a id="__codelineno-0-665" name="__codelineno-0-665"></a>                <span class="s2">&quot;`max_min_dist_ratio` and `device` attributes should not be set simultaneously.&quot;</span>
+<a id="__codelineno-0-665" name="__codelineno-0-665"></a>                <span class="s2">"`max_min_dist_ratio` and `device` attributes should not be set simultaneously."</span>
 <a id="__codelineno-0-666" name="__codelineno-0-666"></a>            <span class="p">)</span>
 <a id="__codelineno-0-667" name="__codelineno-0-667"></a>        <span class="n">min_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_min_distance</span>
 <a id="__codelineno-0-668" name="__codelineno-0-668"></a>        <span class="n">max_radial_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_max_radial_distance</span>
@@ -4210,7 +4210,7 @@ radial distance and the minimum pairwise distance between atoms.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-18">18</a></span>
 <span class="normal"><a href="#__codelineno-0-19">19</a></span>
 <span class="normal"><a href="#__codelineno-0-20">20</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">def</span><span class="w"> </span><span class="nf">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the dataclass as a dictionary.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">"""Returns the dataclass as a dictionary."""</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4378,7 +4378,7 @@ embedding function it configures.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-18">18</a></span>
 <span class="normal"><a href="#__codelineno-0-19">19</a></span>
 <span class="normal"><a href="#__codelineno-0-20">20</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">def</span><span class="w"> </span><span class="nf">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the dataclass as a dictionary.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">"""Returns the dataclass as a dictionary."""</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4548,7 +4548,7 @@ inheriting from EmbedderConfig.</p>
 <span class="normal"><a href="#__codelineno-0-66">66</a></span>
 <span class="normal"><a href="#__codelineno-0-67">67</a></span>
 <span class="normal"><a href="#__codelineno-0-68">68</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Default initializer for all embedders, taking an algorithm and a config.</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">    </span><span class="sd">"""Default initializer for all embedders, taking an algorithm and a config.</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">    An algorithm should be a standalone function that takes a piece of data of an</span>
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    InDataType and maps it to an OutDataType. Any extra configuration parameters</span>
@@ -4558,24 +4558,24 @@ inheriting from EmbedderConfig.</p>
 <a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">    Arguments:</span>
 <a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        algorithm: a callable to the algorithm function.</span>
 <a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">        config: a config dataclass holding parameter values for the algorithm.</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    """</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">EmbedderConfig</span><span class="p">):</span>
 <a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a>            <span class="s2">&quot;The config must be an instance of a dataclass inheriting from EmbedderConfig.&quot;</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>            <span class="s2">"The config must be an instance of a dataclass inheriting from EmbedderConfig."</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="p">)</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="n">algo_signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">algorithm</span><span class="p">)</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="n">config_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">algo_signature_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">algo_signature</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">config_keys</span> <span class="o">&lt;=</span> <span class="n">algo_signature_keys</span><span class="p">:</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="n">config_keys_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config_keys</span><span class="p">)</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="n">algo_keys_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">algo_signature_keys</span><span class="p">)</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="n">config_keys_str</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config_keys</span><span class="p">)</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="n">algo_keys_str</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">algo_signature_keys</span><span class="p">)</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="sa">f</span><span class="s2">&quot;Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not compatible with the &quot;</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;algorithm </span><span class="si">{</span><span class="n">algorithm</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, as not all configuration fields &quot;</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>            <span class="o">+</span> <span class="s2">&quot;correspond to keyword arguments in the algorithm function.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> keys:</span><span class="se">\n</span><span class="si">{</span><span class="n">config_keys_str</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;Algorithm signature parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">algo_keys_str</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="sa">f</span><span class="s2">"Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not compatible with the "</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"algorithm </span><span class="si">{</span><span class="n">algorithm</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, as not all configuration fields "</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>            <span class="o">+</span> <span class="s2">"correspond to keyword arguments in the algorithm function.</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> keys:</span><span class="se">\n</span><span class="si">{</span><span class="n">config_keys_str</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"Algorithm signature parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">algo_keys_str</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="p">)</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_algorithm</span> <span class="o">=</span> <span class="n">algorithm</span>
@@ -4713,11 +4713,11 @@ inheriting from EmbedderConfig.</p>
 <span class="normal"><a href="#__codelineno-0-131">131</a></span>
 <span class="normal"><a href="#__codelineno-0-132">132</a></span>
 <span class="normal"><a href="#__codelineno-0-133">133</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">InDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OutDataType</span><span class="p">:</span>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates the input, runs the embedding algorithm, and validates the output.</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">"""Validates the input, runs the embedding algorithm, and validates the output.</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">    Arguments:</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">        data: the data to embed.</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    """</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="n">result</span><span class="p">:</span> <span class="n">OutDataType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_output</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
@@ -4961,11 +4961,11 @@ inheriting from EmbedderConfig.</p>
 <span class="normal"><a href="#__codelineno-0-131">131</a></span>
 <span class="normal"><a href="#__codelineno-0-132">132</a></span>
 <span class="normal"><a href="#__codelineno-0-133">133</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">InDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OutDataType</span><span class="p">:</span>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates the input, runs the embedding algorithm, and validates the output.</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">"""Validates the input, runs the embedding algorithm, and validates the output.</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">    Arguments:</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">        data: the data to embed.</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    """</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="n">result</span><span class="p">:</span> <span class="n">OutDataType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_output</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
@@ -4998,7 +4998,7 @@ inheriting from EmbedderConfig.</p>
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">InteractionEmbedderConfig</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">method</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;Nelder-Mead&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">method</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">"Nelder-Mead"</span><span class="p">,</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">maxiter</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">200000</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">tol</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">1e-08</span><span class="p">,</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">x0</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -5138,7 +5138,7 @@ inheriting from EmbedderConfig.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-18">18</a></span>
 <span class="normal"><a href="#__codelineno-0-19">19</a></span>
 <span class="normal"><a href="#__codelineno-0-20">20</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">def</span><span class="w"> </span><span class="nf">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the dataclass as a dictionary.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">"""Returns the dataclass as a dictionary."""</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -5305,7 +5305,7 @@ inheriting from EmbedderConfig.</p>
 <span class="normal"><a href="#__codelineno-0-66">66</a></span>
 <span class="normal"><a href="#__codelineno-0-67">67</a></span>
 <span class="normal"><a href="#__codelineno-0-68">68</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Default initializer for all embedders, taking an algorithm and a config.</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">    </span><span class="sd">"""Default initializer for all embedders, taking an algorithm and a config.</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">    An algorithm should be a standalone function that takes a piece of data of an</span>
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    InDataType and maps it to an OutDataType. Any extra configuration parameters</span>
@@ -5315,24 +5315,24 @@ inheriting from EmbedderConfig.</p>
 <a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">    Arguments:</span>
 <a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        algorithm: a callable to the algorithm function.</span>
 <a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">        config: a config dataclass holding parameter values for the algorithm.</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    """</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">EmbedderConfig</span><span class="p">):</span>
 <a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a>            <span class="s2">&quot;The config must be an instance of a dataclass inheriting from EmbedderConfig.&quot;</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>            <span class="s2">"The config must be an instance of a dataclass inheriting from EmbedderConfig."</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="p">)</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="n">algo_signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">algorithm</span><span class="p">)</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="n">config_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">algo_signature_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">algo_signature</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">config_keys</span> <span class="o">&lt;=</span> <span class="n">algo_signature_keys</span><span class="p">:</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="n">config_keys_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config_keys</span><span class="p">)</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="n">algo_keys_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">algo_signature_keys</span><span class="p">)</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="n">config_keys_str</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config_keys</span><span class="p">)</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="n">algo_keys_str</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\t</span><span class="s2">- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">algo_signature_keys</span><span class="p">)</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="sa">f</span><span class="s2">&quot;Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not compatible with the &quot;</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;algorithm </span><span class="si">{</span><span class="n">algorithm</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, as not all configuration fields &quot;</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>            <span class="o">+</span> <span class="s2">&quot;correspond to keyword arguments in the algorithm function.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> keys:</span><span class="se">\n</span><span class="si">{</span><span class="n">config_keys_str</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;Algorithm signature parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">algo_keys_str</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="sa">f</span><span class="s2">"Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is not compatible with the "</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"algorithm </span><span class="si">{</span><span class="n">algorithm</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, as not all configuration fields "</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>            <span class="o">+</span> <span class="s2">"correspond to keyword arguments in the algorithm function.</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"Config </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> keys:</span><span class="se">\n</span><span class="si">{</span><span class="n">config_keys_str</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"Algorithm signature parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">algo_keys_str</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="p">)</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_algorithm</span> <span class="o">=</span> <span class="n">algorithm</span>
@@ -5470,11 +5470,11 @@ inheriting from EmbedderConfig.</p>
 <span class="normal"><a href="#__codelineno-0-131">131</a></span>
 <span class="normal"><a href="#__codelineno-0-132">132</a></span>
 <span class="normal"><a href="#__codelineno-0-133">133</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">InDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OutDataType</span><span class="p">:</span>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates the input, runs the embedding algorithm, and validates the output.</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">"""Validates the input, runs the embedding algorithm, and validates the output.</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">    Arguments:</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">        data: the data to embed.</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    """</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="n">result</span><span class="p">:</span> <span class="n">OutDataType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_output</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
@@ -5673,7 +5673,7 @@ inheriting from EmbedderConfig.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-18">18</a></span>
 <span class="normal"><a href="#__codelineno-0-19">19</a></span>
 <span class="normal"><a href="#__codelineno-0-20">20</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">def</span><span class="w"> </span><span class="nf">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the dataclass as a dictionary.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">"""Returns the dataclass as a dictionary."""</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -5793,7 +5793,7 @@ inheriting from EmbedderConfig.</p>
                     <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-37">37</a></span>
 <span class="normal"><a href="#__codelineno-0-38">38</a></span>
 <span class="normal"><a href="#__codelineno-0-39">39</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">SpringLayoutConfig</span> <span class="o">=</span> <span class="n">SpringLayoutConfig</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Inits SpringLayoutEmbedder.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="w">    </span><span class="sd">"""Inits SpringLayoutEmbedder."""</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">spring_layout_embedding</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
@@ -5928,11 +5928,11 @@ inheriting from EmbedderConfig.</p>
 <span class="normal"><a href="#__codelineno-0-131">131</a></span>
 <span class="normal"><a href="#__codelineno-0-132">132</a></span>
 <span class="normal"><a href="#__codelineno-0-133">133</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">InDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OutDataType</span><span class="p">:</span>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates the input, runs the embedding algorithm, and validates the output.</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">"""Validates the input, runs the embedding algorithm, and validates the output.</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">    Arguments:</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">        data: the data to embed.</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    """</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="n">result</span><span class="p">:</span> <span class="n">OutDataType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_output</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>

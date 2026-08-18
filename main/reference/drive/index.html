@@ -2730,7 +2730,7 @@ drive = Drive(amplitude=amp, detuning=det, phase=0.5)</p>
 <a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="n">dmm</span><span class="p">:</span> <span class="n">DetuningMapModulator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="n">phase</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize a Drive.</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="w">    </span><span class="sd">"""Initialize a Drive.</span>
 <a id="__codelineno-0-50" name="__codelineno-0-50"></a>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="sd">    The Drive specifies the control parameters for the time-dependent drive Hamiltonian</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    in the Rydberg model</span>
@@ -2778,14 +2778,14 @@ drive = Drive(amplitude=amp, detuning=det, phase=0.5)</p>
 <a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="sd">        &gt;&gt;&gt; amp = RampWaveform(5.0, 0.0, 2.0)</span>
 <a id="__codelineno-0-95" name="__codelineno-0-95"></a><span class="sd">        &gt;&gt;&gt; det = ConstantWaveform(5.0, -1.0)</span>
 <a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="sd">        &gt;&gt;&gt; drive = Drive(amplitude=amp, detuning=det, phase=0.5)</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="sd">    """</span>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>
 <a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="p">[</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">detuning</span><span class="p">]:</span>
 <a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;amplitude&#39; and &#39;detuning&#39; must be of type Waveform.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"'amplitude' and 'detuning' must be of type Waveform."</span><span class="p">)</span>
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a>
 <a id="__codelineno-0-103" name="__codelineno-0-103"></a>    <span class="k">if</span> <span class="n">amplitude</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;amplitude&#39; must be positive.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"'amplitude' must be positive."</span><span class="p">)</span>
 <a id="__codelineno-0-105" name="__codelineno-0-105"></a>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span> <span class="o">=</span> <span class="n">amplitude</span>
 <a id="__codelineno-0-107" name="__codelineno-0-107"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span> <span class="o">=</span> <span class="n">detuning</span> <span class="k">if</span> <span class="n">detuning</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">DelayWaveform</span><span class="p">(</span><span class="n">amplitude</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
@@ -2803,7 +2803,7 @@ drive = Drive(amplitude=amp, detuning=det, phase=0.5)</p>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a>    <span class="k">if</span> <span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dmm</span><span class="p">,</span> <span class="n">DetuningMapModulator</span><span class="p">):</span>
-<a id="__codelineno-0-122" name="__codelineno-0-122"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;dmm&#39; must be of type DetuningMapModulator.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-122" name="__codelineno-0-122"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"'dmm' must be of type DetuningMapModulator."</span><span class="p">)</span>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_dmm</span> <span class="o">=</span> <span class="n">dmm</span>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="n">phase</span>
 </code></pre></div></td></tr></table></div>
