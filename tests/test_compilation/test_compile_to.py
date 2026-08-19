@@ -19,10 +19,15 @@ from qoolqit.waveforms import ConstantWaveform
 
 @pytest.mark.parametrize(
     "profile",
-    [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT, "max_energy", "working_point"],
+    [
+        CompilerProfile.MAX_ENERGY,
+        CompilerProfile.DEFAULT,
+        "max_energy",
+        "default",
+    ],
 )
 def test_compilation_single_qubit(
-    profile: Literal["max_energy", "working_point"] | CompilerProfile,
+    profile: Literal["max_energy", "default"] | CompilerProfile,
 ) -> None:
     """Test compilation of a single-qubit program."""
     register = Register(qubits={"q0": (0.0, 0.0)})
@@ -31,6 +36,12 @@ def test_compilation_single_qubit(
 
     program.compile_to(device=AnalogDevice(), profile=profile)
     assert program.is_compiled
+
+
+def test_compiler_profile_deprecated_working_point_alias() -> None:
+    """Test that WORKING_POINT is aliases of DEFAULT."""
+    assert CompilerProfile.WORKING_POINT is CompilerProfile.DEFAULT
+    assert CompilerProfile("default") is CompilerProfile.DEFAULT
 
 
 def test_compile_to_invalid_profile_string() -> None:
@@ -53,7 +64,7 @@ def test_dmm_not_supported() -> None:
         program.compile_to(device=AnalogDevice())
 
 
-@pytest.mark.parametrize("profile", [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT])
+@pytest.mark.parametrize("profile", [CompilerProfile.MAX_ENERGY, CompilerProfile.DEFAULT])
 def test_compilation_with_dmm(profile: CompilerProfile) -> None:
     """Test compilation of a program with a DMM."""
     register = Register(qubits={"q0": (0.0, 0.7), "q1": (-0.5, -0.5), "q2": (0.5, -0.5)})

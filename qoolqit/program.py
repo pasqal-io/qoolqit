@@ -86,9 +86,7 @@ class QuantumProgram:
     def compile_to(
         self,
         device: Device,
-        profile: (
-            Literal["max_energy", "working_point"] | CompilerProfile
-        ) = CompilerProfile.MAX_ENERGY,
+        profile: Literal["default", "max_energy"] | CompilerProfile = CompilerProfile.DEFAULT,
         device_max_duration_ratio: float | None = None,
     ) -> None:
         """Compiles the quantum program for execution on a specific device.
@@ -102,13 +100,14 @@ class QuantumProgram:
 
         There are two compilation profiles:
 
+        - "default": Compile the program as it is. The drive and the register positions
+            must respect the hardware constraints of the device which can be inspected
+            using `device.specs()`. The `CompilerProfile.WORKING_POINT` is deprecated
+            aliases for this profile.
         - "max_energy": Scale the program to utilize the device's
             maximum capabilities. The drive amplitude and the register positions are rescaled
             to achieve respectively the maximum amplitude and the minimum pairwise distance
             compatible with the input program and the device's constraints.
-        - "working_point": Compile the program as it is. The drive and the register positions
-            must respect the hardware constraints of the device which can be inspected
-            using `device.specs()`.
 
         The following option does NOT preserve the input program, but rather adapts the program
         to the device's constraints. Programs compiled this way are not portable across devices.
@@ -120,7 +119,7 @@ class QuantumProgram:
         Args:
             device: The target device for compilation. Must be a QoolQit Device.
             profile: The compilation profile used to translate the program.
-                Defaults to CompilerProfile.MAX_ENERGY.
+                Defaults to CompilerProfile.DEFAULT.
             device_max_duration_ratio: The fraction of the device's maximum allowed duration
                 to set the program duration to, or None to leave it unset. Must be a number
                 in the range (0, 1]. Can only be set if the device has a maximum allowed
