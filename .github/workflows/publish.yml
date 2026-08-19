@@ -10,8 +10,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-    publish_pypi:
-        name: Publish package to PyPI
+    publish_qoolqit_core_pypi:
+        name: Publish qoolqit-core package to PyPI
         runs-on: ubuntu-latest
         permissions:
             # IMPORTANT: this permission is mandatory for trusted publishing
@@ -29,12 +29,49 @@ jobs:
           run: |
             pip install --upgrade pip
             pip install build
-        - name: Build package
+        - name: Build qoolqit-core package
+          run: |
+            python -m build qoolqit-core
+        - name: Publish qoolqit-core to PyPI
+          uses: pypa/gh-action-pypi-publish@release/v1
+          with:
+            package_dir: qoolqit-core/dist
+            verbose: true
+        - name: Confirm qoolqit-core deployment
+          timeout-minutes: 5
+          run: |
+            VERSION=${GITHUB_REF#refs/tags/v}
+            until pip download qoolqit-core==$VERSION
+            do
+                echo "Failed to download from PyPI, will wait for upload and retry."
+                sleep 1
+            done
+
+    publish_qoolqit_pypi:
+        name: Publish qoolqit package to PyPI
+        runs-on: ubuntu-latest
+        permissions:
+            # IMPORTANT: this permission is mandatory for trusted publishing
+            id-token: write
+        steps:
+        - name: Check out QoolQit
+          uses: actions/checkout@v4
+          with:
+            ref: ${{ github.ref }}
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.12'
+        - name: Install Python dependencies
+          run: |
+            pip install --upgrade pip
+            pip install build
+        - name: Build qoolqit package
           run: |
             python -m build
         - name: Publish to PyPI
           uses: pypa/gh-action-pypi-publish@release/v1
-        - name: Confirm deployment
+        - name: Confirm qoolqit deployment
           timeout-minutes: 5
           run: |
             VERSION=${GITHUB_REF#refs/tags/v}
