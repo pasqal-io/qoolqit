@@ -106,7 +106,9 @@ def test_compile_to_max_duration(duration: float) -> None:
     amp = ConstantWaveform(duration=duration, value=0.2)
     drive = Drive(amplitude=amp)
     program = QuantumProgram(reg, drive)
-    program.compile_to(AnalogDevice(), device_max_duration_ratio=1.0)
+    program.compile_to(
+        AnalogDevice(), profile=CompilerProfile.DEFAULT, device_max_duration_ratio=1.0
+    )
 
     assert program.is_compiled
     assert program.compiled_sequence.get_duration() == 6000
