@@ -49,7 +49,7 @@ def test_compiler_dmm(
 ) -> None:
     program = dmm_program()
     if device._device.dmm_channels:
-        program.compile_to(device)
+        program.compile_to(device, profile=CompilerProfile.MAX_ENERGY)
         assert program.is_compiled
         assert isinstance(program.compiled_sequence, PulserSequence)
     else:
@@ -103,7 +103,7 @@ def test_compile_to_max_duration_ratio(ratio: float) -> None:
 def test_compile_to_max_duration(duration: float) -> None:
     """Test that the compiled sequence's duration is set to the maximum allowed by the device."""
     reg = Register.from_graph(DataGraph.line(2))
-    amp = ConstantWaveform(duration=duration, value=1.0)
+    amp = ConstantWaveform(duration=duration, value=0.2)
     drive = Drive(amplitude=amp)
     program = QuantumProgram(reg, drive)
     program.compile_to(AnalogDevice(), device_max_duration_ratio=1.0)
