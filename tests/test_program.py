@@ -107,7 +107,7 @@ def test_compile_to_max_duration(duration: float) -> None:
     drive = Drive(amplitude=amp)
     program = QuantumProgram(reg, drive)
     program.compile_to(
-        AnalogDevice(), profile=CompilerProfile.WORKING_POINT, device_max_duration_ratio=1.0
+        AnalogDevice(), profile=CompilerProfile.DEFAULT, device_max_duration_ratio=1.0
     )
 
     assert program.is_compiled
