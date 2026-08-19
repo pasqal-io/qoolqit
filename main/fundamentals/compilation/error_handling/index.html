@@ -2932,7 +2932,7 @@ drive.draw()</div>
 <span class="p">)</span>
 
 <span class="n">device</span><span class="o">=</span><span class="n">AnalogDevice</span><span class="p">()</span>
-<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">"max_energy"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-3">from qoolqit import AnalogDevice, QuantumProgram
 
@@ -2942,7 +2942,7 @@ program = QuantumProgram(
 )
 
 device=AnalogDevice()
-program.compile_to(device)</div>
+program.compile_to(device, profile="max_energy")</div>
 </div>
 </div>
 </div>
@@ -3108,7 +3108,7 @@ def create_program(L,amp,det):
 <span class="n">det</span><span class="o">=</span><span class="mi">2</span>
 <span class="n">program</span><span class="o">=</span><span class="n">create_program</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">amp</span><span class="p">,</span><span class="n">det</span><span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">compiled_sequence</span> <span class="o">=</span> <span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">compiled_sequence</span> <span class="o">=</span> <span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">"max_energy"</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">CompilationError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
 </pre></div>
@@ -3119,7 +3119,7 @@ amp=100
 det=2
 program=create_program(L,amp,det)
 try:
-    compiled_sequence = program.compile_to(device)
+    compiled_sequence = program.compile_to(device, profile="max_energy")
 except CompilationError as err:
     print(err)</div>
 </div>
@@ -3188,7 +3188,7 @@ To compile this program on the selected device `AnalogDevice`, the maximum radia
 <span class="n">det</span><span class="o">=</span><span class="mi">20</span>
 <span class="n">program</span><span class="o">=</span><span class="n">create_program</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">amp</span><span class="p">,</span><span class="n">det</span><span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">compiled_sequence</span> <span class="o">=</span> <span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">compiled_sequence</span> <span class="o">=</span> <span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">"max_energy"</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">CompilationError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
 </pre></div>
@@ -3197,7 +3197,7 @@ amp=1
 det=20
 program=create_program(L,amp,det)
 try:
-    compiled_sequence = program.compile_to(device)
+    compiled_sequence = program.compile_to(device, profile="max_energy")
 except CompilationError as err:
     print(err)</div>
 </div>
@@ -3266,7 +3266,7 @@ To compile this program on the selected device `AnalogDevice`, set the maximum a
 <span class="n">det</span><span class="o">=</span><span class="mi">1</span>
 <span class="n">program</span><span class="o">=</span><span class="n">create_program</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">amp</span><span class="p">,</span><span class="n">det</span><span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">compiled_sequence</span> <span class="o">=</span> <span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">compiled_sequence</span> <span class="o">=</span> <span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">"max_energy"</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">CompilationError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
 </pre></div>
@@ -3275,7 +3275,7 @@ amp=10
 det=1
 program=create_program(L,amp,det)
 try:
-    compiled_sequence = program.compile_to(device)
+    compiled_sequence = program.compile_to(device, profile="max_energy")
 except CompilationError as err:
     print(err)</div>
 </div>

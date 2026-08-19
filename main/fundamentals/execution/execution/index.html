@@ -2875,7 +2875,7 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 <span class="n">program</span> <span class="o">=</span> <span class="n">QuantumProgram</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">drive</span><span class="p">)</span>
 
 <span class="c1"># Compiling the program to a device</span>
-<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">AnalogDevice</span><span class="p">())</span>
+<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">AnalogDevice</span><span class="p">(),</span> <span class="n">profile</span><span class="o">=</span><span class="s2">"max_energy"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1">from qoolqit import AnalogDevice, ConstantWaveform, Drive, QuantumProgram, RampWaveform, Register
 
@@ -2897,7 +2897,7 @@ drive = Drive(amplitude = wf_amp, detuning = wf_det)
 program = QuantumProgram(register, drive)
 
 # Compiling the program to a device
-program.compile_to(device=AnalogDevice())</div>
+program.compile_to(device=AnalogDevice(), profile="max_energy")</div>
 </div>
 </div>
 </div>
@@ -3121,13 +3121,14 @@ final_bitstrings</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>Counter({'111': 807,
-         '110': 59,
-         '101': 58,
-         '011': 56,
-         '100': 8,
-         '010': 7,
-         '001': 5})</pre>
+<pre>Counter({'111': 819,
+         '110': 65,
+         '101': 53,
+         '011': 52,
+         '100': 5,
+         '001': 4,
+         '000': 1,
+         '010': 1})</pre>
 </div>
 </div>
 </div>
@@ -3616,12 +3617,12 @@ It is good practice to always check the status of the job before retrieving resu
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.devices</span><span class="w"> </span><span class="kn">import</span> <span class="n">Device</span>
 
 <span class="n">device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="s2">"FRESNEL"</span><span class="p">)</span>
-<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">"max_energy"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-12">from qoolqit.devices import Device
 
 device = Device.from_connection(connection, "FRESNEL")
-program.compile_to(device=device)</div>
+program.compile_to(device=device, profile="max_energy")</div>
 </div>
 </div>
 </div>

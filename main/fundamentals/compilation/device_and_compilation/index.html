@@ -3055,7 +3055,7 @@ print(mod_analog_device)</div>
 <span class="n">device</span> <span class="o">=</span> <span class="n">AnalogDevice</span><span class="p">()</span>
 
 <span class="c1"># Compilation to AnalogDevice</span>
-<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">"max_energy"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-5">from qoolqit import AnalogDevice, Drive, PiecewiseLinearWaveform, QuantumProgram, Register
@@ -3074,7 +3074,7 @@ program = QuantumProgram(register, drive)
 device = AnalogDevice()
 
 # Compilation to AnalogDevice
-program.compile_to(device)
+program.compile_to(device, profile="max_energy")
 print(program)</div>
 </div>
 </div>
@@ -3224,11 +3224,11 @@ program.draw(compiled = True)</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Compilation to AnalogDevice max duration</span>
-<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">device_max_duration_ratio</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">"max_energy"</span><span class="p">,</span> <span class="n">device_max_duration_ratio</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">program</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">compiled</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-8"># Compilation to AnalogDevice max duration
-program.compile_to(device, device_max_duration_ratio=1.0)
+program.compile_to(device, profile="max_energy", device_max_duration_ratio=1.0)
 program.draw(compiled = True)</div>
 </div>
 </div>
