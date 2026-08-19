@@ -22,13 +22,6 @@ class CompilerProfile(Enum):
     MAX_ENERGY = "max_energy"
     WORKING_POINT = DEFAULT  # deprecated alias for DEFAULT
 
-    @classmethod
-    def _missing_(cls, value: object) -> CompilerProfile | None:
-        """Resolve the deprecated "working_point" string alias to DEFAULT."""
-        if value == "working_point":
-            return cls.DEFAULT
-        return None
-
 
 def _build_register(register: Register, device: Device, distance: float) -> PulserRegister:
     """Builds a Pulser Register from a QoolQit Register."""
