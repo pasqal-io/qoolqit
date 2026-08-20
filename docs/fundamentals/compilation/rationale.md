@@ -10,7 +10,7 @@ On this page, you will learn about:
 QoolQit programs are written in dimensionless units, allowing the same program to be compiled and executed on any compatible quantum hardware.
 As a reminder, the compilation process:
 
-- Converts all dimensionless program's parameters, times, energies, and distances into their physical equivalents.
+- Converts all of the program's dimensionless parameters, times, energies, and distances into their physical equivalents.
 - Generates a Pulser `Sequence` containing the low-level instructions for QPU execution.
 
 The conversion rules ensure that the dimensionless Hamiltonian $\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ produce identical unitary evolution.
@@ -37,7 +37,7 @@ For more details about Pulser's scope and capabilities, visit [Pulser documentat
 
 ## Compilation profiles
 
-Besides dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will produce in theory a physically equivalent program.
+In addition to dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will, in theory, produce a physically equivalent program.
 At the moment, QoolQit provides two compilation profiles: default and maximum energy.
 Usage and examples can be found in the [Devices and Compilation](./device_and_compilation.ipynb) page of this documentation.
 
@@ -55,7 +55,7 @@ A device imposes hardware constraints and limits the range of parameters in a pr
 The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the minimum atom spacing $r_{\min}^{d}$.
 
 The maximum energy profile always picks the **largest energy scale** that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
-Indeed, a larger reference scale realizes the same dimensionless program with a higher drive amplitude (higher signal-to-noise ratio), a shorter physical runtime (less noise), and shorter distances between atoms (more compact registers can host more atoms/qubits).
+Indeed, a larger reference scale realizes the same dimensionless program with a higher drive amplitude (higher signal-to-noise ratio), a shorter physical runtime (less noise), and shorter distances between atoms (more compact registers, hosting more atoms/qubits).
 
 The following figure illustrates two key scenarios:
 
@@ -68,7 +68,7 @@ The driving amplitude (more precisely, its maximum over time) is instead constra
 The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane.
 Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here $\max_{\tilde{t}}$ stands for the maximum over time).
 
-Simplifying, we define two programs by specifying the maximum amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the interaction between nearest neighbor atoms in the register $\tilde{J}$:
+For simplicity, we define two programs by specifying the maximum amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the interaction between nearest neighbor atoms in the register $\tilde{J}$:
 
 1. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4)$,
 2. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)$
@@ -92,7 +92,7 @@ Importantly, in both cases, these effects can be included by configuring emulato
 
 ### Hardware modulation
 
-**Hardware modulation** arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions) the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
+**Hardware modulation** arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions), the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
 The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in [Devices and Compilation](./device_and_compilation.ipynb). Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag `with_hardware_modulation=true`, as described in [Execution](../execution/execution.ipynb).
 
 ### Noise
