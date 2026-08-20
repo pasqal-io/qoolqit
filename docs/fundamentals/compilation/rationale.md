@@ -5,8 +5,8 @@ On this page, you will learn about:
 - Compilation profiles: default and maximum energy
 - Hardware modulation and noise emulation
 
-
 ## Compiling a quantum program
+
 QoolQit programs are written in dimensionless units, allowing the same program to be compiled and executed on any compatible quantum hardware.
 As a reminder, the compilation process:
 
@@ -36,16 +36,21 @@ Pulser is an open-source library that provides tools for designing and running p
 For more details about Pulser's scope and capabilities, visit [Pulser documentation](https://docs.pasqal.com/pulser/).
 
 ## Compilation profiles
+
 Besides dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will produce in theory a physically equivalent program.
 At the moment, QoolQit provides two compilation profiles: default and maximum energy.
 Usage and examples can be found in the [Devices and Compilation](./device_and_compilation.ipynb) page of this documentation.
 
 ### Default
+
 The default compilation converts dimensionless quantum program parameters to physical values using the conversion relationships described in the [Compiling a quantum program](#compiling-a-quantum-program) section.
 This profile is ideal for users who need direct control over the exact physical values of drive amplitude, detuning, atom distances, and execution time, while staying within hardware limits.
+For example, since the minimum distance in the dimensionless model is one, it will be converted to the minimum distance on the hardware device.
+
 To review your device's hardware constraints and capabilities, see [Devices and Compilation](./device_and_compilation.ipynb).
 
 ### Maximum energy
+
 A device imposes hardware constraints and limits the range of parameters in a program.
 The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the minimum atom spacing $r_{\min}^{d}$.
 
@@ -72,23 +77,26 @@ The lines correspond to the programs with fixed ratio $\tilde{\Omega}/\tilde{J}=
 At compilation, QoolQit checks the energy ratio against the device's valid region and rescales the program to maximize $\tilde{\Omega}$ within that region.
 
 1. The point $(1,0.4)$ is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 2/5$.
-    In this regime the compiled program runs at **maximum device amplitude**, and the physical atom spacings are larger than the device minimum.
+   In this regime the compiled program runs at **maximum device amplitude**, and the physical atom spacings are larger than the device minimum.
 
 2. The point $(0.7,0.1)$ is inside the valid region, but the drive amplitude can be larger. QoolQit rescales it to the maximum possible $\tilde{\Omega}$ while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7$.
-    In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below $\Omega_{\max}$.
+   In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below $\Omega_{\max}$.
 
 The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying physics encoded in the program is the same.
 
 ## Hardware effects
+
 Real quantum hardware introduces deviations between the ideal compiled program and its actual execution.
 These effects can be categorized into two main classes: hardware modulation and noise sources.
 Importantly, in both cases, these effects can be included by configuring emulators, as detailed in the [Execution](../execution/execution.ipynb) page of this documentation.
 
 ### Hardware modulation
+
 **Hardware modulation** arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions) the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
 The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in [Devices and Compilation](./device_and_compilation.ipynb). Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag `with_hardware_modulation=true`, as described in [Execution](../execution/execution.ipynb).
 
 ### Noise
+
 **Noise sources** encompass various forms of environmental and systematic errors that introduce unwanted fluctuations or systematic shifts in the quantum system parameters during execution.
 As before, to include noise sources in the emulation of a program, emulators must be configured with the flag `noise_model`, as described in [Execution](../execution/execution.ipynb).
 
