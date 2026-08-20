@@ -2100,7 +2100,8 @@ Usage and examples can be found in the <a href="../device_and_compilation/">Devi
 <h3 id="default">Default</h3>
 <p>The default compilation converts dimensionless quantum program parameters to physical values using the conversion relationships described in the <a href="#compiling-a-quantum-program">Compiling a quantum program</a> section.
 This profile is ideal for users who need direct control over the exact physical values of drive amplitude, detuning, atom distances, and execution time, while staying within hardware limits.
-To review your device's hardware constraints and capabilities, see <a href="../device_and_compilation/">Devices and Compilation</a>.</p>
+For example, since the minimum distance in the dimensionless model is one, it will be converted to the minimum distance on the hardware device.</p>
+<p>To review your device's hardware constraints and capabilities, see <a href="../device_and_compilation/">Devices and Compilation</a>.</p>
 <h3 id="maximum-energy">Maximum energy</h3>
 <p>A device imposes hardware constraints and limits the range of parameters in a program.
 The two most important ones for compilation are the maximum drive amplitude <span class="arithmatex">\(\Omega_{\max}^{d}\)</span> and the minimum atom spacing <span class="arithmatex">\(r_{\min}^{d}\)</span>.</p>
@@ -2123,11 +2124,11 @@ At compilation, QoolQit checks the energy ratio against the device's valid regio
 <ol>
 <li>
 <p>The point <span class="arithmatex">\((1,0.4)\)</span> is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 2/5\)</span>.
-    In this regime the compiled program runs at <strong>maximum device amplitude</strong>, and the physical atom spacings are larger than the device minimum.</p>
+   In this regime the compiled program runs at <strong>maximum device amplitude</strong>, and the physical atom spacings are larger than the device minimum.</p>
 </li>
 <li>
 <p>The point <span class="arithmatex">\((0.7,0.1)\)</span> is inside the valid region, but the drive amplitude can be larger. QoolQit rescales it to the maximum possible <span class="arithmatex">\(\tilde{\Omega}\)</span> while preserving the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7\)</span>.
-    In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below <span class="arithmatex">\(\Omega_{\max}\)</span>.</p>
+   In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below <span class="arithmatex">\(\Omega_{\max}\)</span>.</p>
 </li>
 </ol>
 <p>The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying physics encoded in the program is the same.</p>
