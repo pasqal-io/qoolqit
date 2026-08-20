@@ -50,7 +50,7 @@ To review your device's hardware constraints and capabilities, see [Devices and 
 A device imposes hardware constraints and limits the range of parameters in a program.
 The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the minimum atom spacing $r_{\min}^{d}$.
 
-The maximum energy strategy always picks the **largest energy scale** that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
+The maximum energy profile always picks the **largest energy scale** that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
 Indeed, a larger reference scale realizes the same dimensionless program with a higher drive amplitude (higher signal-to-noise ratio), a shorter physical runtime (less noise), and shorter distances between atoms (more compact registers can host more atoms/qubits).
 
 The following figure illustrates two key scenarios:
@@ -64,8 +64,7 @@ The driving amplitude (more precisely, its maximum over time) is instead constra
 The key idea is that the program is defined by **ratios**, not by absolute scales. For example, fixing the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J}$ defines a line in the $(\tilde{J},\tilde{\Omega})$ plane.
 Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here $\max_{\tilde{t}}$ stands for the maximum over time).
 
-We define two programs by specifying the maximum amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the interaction between nearest neighbor atoms in the register $\tilde{J}$.
-We define the following tuples:
+Simplifying, we define two programs by specifying the maximum amplitude in time $\max_{\tilde{t}}\tilde{\Omega}$ and the interaction between nearest neighbor atoms in the register $\tilde{J}$:
 
 1. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4)$,
 2. $(\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)$

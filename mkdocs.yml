@@ -12,10 +12,10 @@ nav:
     - Programming a neutral-atom QPU: get_started/qoolqit_model.md
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
-    - fundamentals/introduction.md
+    - Introduction: fundamentals/introduction.md
     - Graphs: fundamentals/graphs.ipynb
     - Embedding: fundamentals/embedding.ipynb
-    - Quantum Program: fundamentals/quantum_program.ipynb
+    - Writing a Quantum Program: fundamentals/quantum_program.ipynb
     - Compilation:
       - Compiling a Quantum Program: fundamentals/compilation/rationale.md
       - Devices and Compilation: fundamentals/compilation/device_and_compilation.ipynb
