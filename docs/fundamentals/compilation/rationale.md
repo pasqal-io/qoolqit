@@ -2,7 +2,7 @@ Before reading this page, we suggest starting with the [Get Started: Programming
 
 On this page, you will learn about:
 
-- Compilation profiles: default and working point
+- Compilation profiles: default and maximum energy
 - Hardware modulation and noise emulation
 
 
@@ -39,9 +39,14 @@ For more details about Pulser's scope and capabilities, visit [Pulser documentat
 
 ## Compilation profiles
 Besides dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will produce in theory a physically equivalent program.
-At the moment, QoolQit provides a simple compilation strategy that seeks to maximize the energy scale of the input program.
+At the moment, QoolQit provides two compilation profiles: default and maximum energy.
 
-### Maximum energy (default)
+### Default
+The default compilation converts dimensionless quantum program parameters to physical values using the conversion relationships described in the [Compiling a quantum program](#compiling-a-quantum-program) section.
+This profile is ideal for users who need direct control over the exact physical values of drive amplitude, detuning, atom distances, and execution time, while staying within hardware limits.
+To review your device's hardware constraints and capabilities, see [Devices and Compilation](./device_and_compilation.ipynb).
+
+### Maximum energy
 A device imposes hardware constraints and limits the range of parameters in a program.
 The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the minimum atom spacing $r_{\min}^{d}$.
 
@@ -74,15 +79,7 @@ At compilation, QoolQit checks the energy ratio against the device's valid regio
 2. The point $(0.7,0.1)$ is inside the valid region, but the drive amplitude can be larger. QoolQit rescales it to the maximum possible $\tilde{\Omega}$ while preserving the ratio $\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7$.
     In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below $\Omega_{\max}$.
 
-
 The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying physics encoded in the program is the same.
-
-### Working point
-The working point does not apply any rescaling on top of the dimensionalization of the quantum program.
-Unlike the default maximum energy profile, it preserves the user-chosen physical scales instead of maximizing the device energy scale.
-In terms of the figure above, this is equivalent to fixing a point in the $(\tilde{J}, \tilde{\Omega})$ plane: if that point lies inside the green region, or more generally satisfies the device specifications, the program will compile.
-It is designed for users who really want to control the precise physical values of drive amplitude, detuning, distances, and time, and opt out of the default compilation profile.
-Finally, the device specifications can be inspected, as shown in [Devices and Compilation](./device_and_compilation.ipynb).
 
 ## Hardware effects
 Real quantum hardware introduces deviations between the ideal compiled program and its actual execution.
