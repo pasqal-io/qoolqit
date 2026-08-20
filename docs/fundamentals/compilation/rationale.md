@@ -7,9 +7,7 @@ On this page, you will learn about:
 
 
 ## Compiling a quantum program
-
 QoolQit programs are written in dimensionless units, allowing the same program to be compiled and executed on any compatible quantum hardware.
-
 As a reminder, the compilation process:
 
 - Converts all dimensionless program's parameters, times, energies, and distances into their physical equivalents.
@@ -40,6 +38,7 @@ For more details about Pulser's scope and capabilities, visit [Pulser documentat
 ## Compilation profiles
 Besides dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will produce in theory a physically equivalent program.
 At the moment, QoolQit provides two compilation profiles: default and maximum energy.
+Usage and examples can be found in the [Devices and Compilation](./device_and_compilation.ipynb) page of this documentation.
 
 ### Default
 The default compilation converts dimensionless quantum program parameters to physical values using the conversion relationships described in the [Compiling a quantum program](#compiling-a-quantum-program) section.
