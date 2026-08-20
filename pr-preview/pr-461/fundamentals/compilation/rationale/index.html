@@ -276,17 +276,20 @@
     
   
   
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="../../introduction/" class="md-tabs__link">
-        
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../introduction/" class="md-tabs__link">
+          
   
   
     
   
   Fundamentals
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -618,6 +621,8 @@
       
         
       
+        
+      
     
     
     
@@ -637,9 +642,8 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../introduction/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
   
   
   <span class="md-ellipsis">
@@ -653,14 +657,8 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
@@ -672,6 +670,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -743,7 +769,7 @@
   <span class="md-ellipsis">
     
   
-    Quantum Program
+    Writing a Quantum Program
   
 
     
@@ -790,10 +816,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
             
   
   
@@ -811,8 +837,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2077,7 +2103,7 @@ To review your device's hardware constraints and capabilities, see <a href="../d
 <h3 id="maximum-energy">Maximum energy</h3>
 <p>A device imposes hardware constraints and limits the range of parameters in a program.
 The two most important ones for compilation are the maximum drive amplitude <span class="arithmatex">\(\Omega_{\max}^{d}\)</span> and the minimum atom spacing <span class="arithmatex">\(r_{\min}^{d}\)</span>.</p>
-<p>The maximum energy strategy always picks the <strong>largest energy scale</strong> that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
+<p>The maximum energy profile always picks the <strong>largest energy scale</strong> that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
 Indeed, a larger reference scale realizes the same dimensionless program with a higher drive amplitude (higher signal-to-noise ratio), a shorter physical runtime (less noise), and shorter distances between atoms (more compact registers can host more atoms/qubits).</p>
 <p>The following figure illustrates two key scenarios:</p>
 <p><img alt="Compilation diagram" src="../../../extras/assets/compilation.svg" /></p>
@@ -2086,8 +2112,7 @@ As described in the <a href="../../../get_started/qoolqit_model/">QoolQit model<
 The driving amplitude (more precisely, its maximum over time) is instead constrained to a device-dependent upper bound. In this example, we take <span class="arithmatex">\(\Omega_{\max}^{d}/J_{\max}^{d} = 0.2\)</span>, so that <span class="arithmatex">\(\tilde{\Omega} = \Omega/J_{\max}^{d} \lesssim 0.2\)</span>.</p>
 <p>The key idea is that the program is defined by <strong>ratios</strong>, not by absolute scales. For example, fixing the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J}\)</span> defines a line in the <span class="arithmatex">\((\tilde{J},\tilde{\Omega})\)</span> plane.
 Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here <span class="arithmatex">\(\max_{\tilde{t}}\)</span> stands for the maximum over time).</p>
-<p>We define two programs by specifying the maximum amplitude in time <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}\)</span> and the interaction between nearest neighbor atoms in the register <span class="arithmatex">\(\tilde{J}\)</span>.
-We define the following tuples:</p>
+<p>Simplifying, we define two programs by specifying the maximum amplitude in time <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}\)</span> and the interaction between nearest neighbor atoms in the register <span class="arithmatex">\(\tilde{J}\)</span>:</p>
 <ol>
 <li><span class="arithmatex">\((\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4)\)</span>,</li>
 <li><span class="arithmatex">\((\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)\)</span></li>
@@ -2151,7 +2176,7 @@ As before, to include noise sources in the emulation of a program, emulators mus
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../quantum_program/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Quantum Program">
+          <a href="../../quantum_program/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Writing a Quantum Program">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2161,7 +2186,7 @@ As before, to include noise sources in the emulation of a program, emulators mus
                 Previous
               </span>
               <div class="md-ellipsis">
-                Quantum Program
+                Writing a Quantum Program
               </div>
             </div>
           </a>
