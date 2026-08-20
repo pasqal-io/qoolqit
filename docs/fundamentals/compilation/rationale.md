@@ -43,8 +43,8 @@ Usage and examples can be found in the [Devices and Compilation](./device_and_co
 
 ### Default
 
-The default compilation converts dimensionless quantum program parameters to physical values using the conversion relationships described in the [Compiling a quantum program](#compiling-a-quantum-program) section.
-This profile is ideal for users who need direct control over the exact physical values of drive amplitude, detuning, atom distances, and execution time, while staying within hardware limits.
+The default compilation converts dimensionless quantum program parameters to physical values using the conversion relationships described above in the [Compiling a quantum program](#compiling-a-quantum-program) section.
+In this profile users have direct control over the exact physical values of drive amplitude, detuning, atom distances, and execution time, while staying within hardware limits.
 For example, since the minimum distance in the dimensionless model is one, it will be converted to the minimum distance on the hardware device.
 
 To review your device's hardware constraints and capabilities, see [Devices and Compilation](./device_and_compilation.ipynb).
