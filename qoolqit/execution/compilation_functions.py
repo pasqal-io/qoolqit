@@ -10,7 +10,7 @@ from pulser.sequence.sequence import Sequence as PulserSequence
 from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.devices import Device
-from qoolqit.drive import DetuningMapModulator, Drive, Waveform
+from qoolqit.drive import DetuningMapModulator, Drive, Waveform, _leaves
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
 
@@ -59,6 +59,18 @@ class WaveformConverter:
         """Convert a QoolQit waveform into a equivalent Pulser waveform."""
         pulser_duration = self._pulser_duration(waveform)
         return waveform._to_pulser(duration=pulser_duration) * self._energy
+
+
+def _phase_groups(drive: Drive) -> list[tuple[Waveform, Waveform, float]]:
+    """Splits a drive into contiguous (amplitude, detuning, phase) runs of constant phase."""
+    groups: list[tuple[Waveform, Waveform, float]] = []
+    for (amp, det), ph in zip(drive._parts, _leaves(drive._phase_wf)):
+        if groups and groups[-1][2] == ph.value:
+            prev_amp, prev_det, phase_value = groups.pop()
+            groups.append((prev_amp >> amp, prev_det >> det, phase_value))
+        else:
+            groups.append((amp, det, ph.value))
+    return groups
 
 
 def basic_compilation(
@@ -124,19 +136,19 @@ def basic_compilation(
     if device_max_duration_ratio and device._max_duration:
         TIME = device_max_duration_ratio * device._max_duration / drive.duration
 
-    # Build pulser pulse and register
+    # Build pulser register and sequence
     wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
-    pulser_amp_wf = wf_converter.convert(drive._amplitude)
-    pulser_det_wf = wf_converter.convert(drive._detuning)
-    pulser_pulse = PulserPulse(pulser_amp_wf, pulser_det_wf, drive.phase)
-
     pulser_register = _build_register(register, device, DISTANCE)
 
-    # Create sequence
     pulser_device = device._device
     pulser_sequence = PulserSequence(pulser_register, pulser_device)
     pulser_sequence.declare_channel("rydberg", "rydberg_global")
-    pulser_sequence.add(pulser_pulse, "rydberg")
+
+    # One PulserPulse per contiguous same-phase run in the drive.
+    for amp_wf, det_wf, phase in _phase_groups(drive):
+        pulser_amp_wf = wf_converter.convert(amp_wf)
+        pulser_det_wf = wf_converter.convert(det_wf)
+        pulser_sequence.add(PulserPulse(pulser_amp_wf, pulser_det_wf, phase), "rydberg")
 
     # Add dmm, if specified in the drive.
     if drive.dmm is not None:

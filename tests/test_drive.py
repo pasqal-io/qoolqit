@@ -67,10 +67,11 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
     drive = drive_rand_phase >> drive_rand_phase
     assert math.isclose(drive.phase, phase)
 
-    with pytest.raises(NotImplementedError):
-        drive1 = Drive(amplitude=amp_wf, detuning=det_wf, phase=1.0)
-        drive2 = Drive(amplitude=amp_wf, detuning=det_wf, phase=0.0)
-        drive = drive1 >> drive2
+    drive1 = Drive(amplitude=amp_wf, detuning=det_wf, phase=1.0)
+    drive2 = Drive(amplitude=amp_wf, detuning=det_wf, phase=0.0)
+    drive = drive1 >> drive2
+    with pytest.raises(ValueError, match="varying phase"):
+        drive.phase
 
 
 def test_error_amplitude_negative() -> None:
