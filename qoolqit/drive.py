@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -154,7 +154,7 @@ class Drive:
         Raises:
             ValueError: If the drive was composed from segments with different phases.
         """
-        values = {p.value for p in _leaves(self._phase_wf)}
+        values = {cast(ConstantWaveform, p).value for p in _leaves(self._phase_wf)}
         if len(values) > 1:
             raise ValueError("Drive has a varying phase; compile it rather than reading `.phase`.")
         return values.pop()

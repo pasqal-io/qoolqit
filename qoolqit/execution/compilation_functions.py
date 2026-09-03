@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
+from typing import cast
 
 from pulser.devices import Device as PulserDevice
 from pulser.parametrized import ParamObj
@@ -13,6 +14,7 @@ from qoolqit.devices import Device
 from qoolqit.drive import DetuningMapModulator, Drive, Waveform, _leaves
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
+from qoolqit.waveforms import ConstantWaveform
 
 
 class CompilerProfile(Enum):
@@ -65,11 +67,12 @@ def _phase_groups(drive: Drive) -> list[tuple[Waveform, Waveform, float]]:
     """Splits a drive into contiguous (amplitude, detuning, phase) runs of constant phase."""
     groups: list[tuple[Waveform, Waveform, float]] = []
     for (amp, det), ph in zip(drive._parts, _leaves(drive._phase_wf)):
-        if groups and groups[-1][2] == ph.value:
-            prev_amp, prev_det, phase_value = groups.pop()
-            groups.append((prev_amp >> amp, prev_det >> det, phase_value))
+        phase_value = cast(ConstantWaveform, ph).value
+        if groups and groups[-1][2] == phase_value:
+            prev_amp, prev_det, merged_phase = groups.pop()
+            groups.append((prev_amp >> amp, prev_det >> det, merged_phase))
         else:
-            groups.append((amp, det, ph.value))
+            groups.append((amp, det, phase_value))
     return groups
 
 
