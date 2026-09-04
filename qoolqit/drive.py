@@ -1,15 +1,20 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
 
-from qoolqit.waveforms import CompositeWaveform, DelayWaveform, Waveform
+from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform, Waveform
 
 __all__ = ["DetuningMapModulator", "Drive"]
+
+
+def _leaves(waveform: Waveform) -> list[Waveform]:
+    """Returns the non-composite waveforms making up `waveform`, in order."""
+    return waveform.waveforms if isinstance(waveform, CompositeWaveform) else [waveform]
 
 
 @dataclass(frozen=True)
@@ -121,7 +126,11 @@ class Drive:
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
             raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
-        self._phase = phase
+        self._phase_wf: Waveform = ConstantWaveform(duration=self._duration, value=phase)
+        # one (amplitude, detuning) pair per original Drive joined by `>>`, always in lockstep
+        # with `_leaves(self._phase_wf)` -- unlike the padded composites above, whose leaf counts
+        # can differ between amplitude and detuning.
+        self._parts: tuple[tuple[Waveform, Waveform], ...] = ((self._amplitude, self._detuning),)
 
     @property
     def amplitude(self) -> Waveform:
@@ -140,8 +149,15 @@ class Drive:
 
     @property
     def phase(self) -> float:
-        """The phase value in the drive."""
-        return self._phase
+        """The phase value in the drive.
+
+        Raises:
+            ValueError: If the drive was composed from segments with different phases.
+        """
+        values = {cast(ConstantWaveform, p).value for p in _leaves(self._phase_wf)}
+        if len(values) > 1:
+            raise ValueError("Drive has a varying phase; compile it rather than reading `.phase`.")
+        return values.pop()
 
     @property
     def duration(self) -> float:
@@ -152,13 +168,13 @@ class Drive:
 
     def __rrshift__(self, other: Drive) -> Drive:
         if isinstance(other, Drive):
-            if self.phase != other.phase:
-                raise NotImplementedError("Composing drives with different phase not supported.")
-            return Drive(
+            new = Drive(
                 amplitude=CompositeWaveform(self._amplitude, other._amplitude),
                 detuning=CompositeWaveform(self._detuning, other._detuning),
-                phase=self._phase,
             )
+            new._phase_wf = CompositeWaveform(self._phase_wf, other._phase_wf)
+            new._parts = self._parts + other._parts
+            return new
         else:
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
@@ -199,7 +215,7 @@ class Drive:
 
     def draw(self, return_fig: bool = False) -> Figure | None:
 
-        nrows = 3 if self.dmm is not None else 2
+        nrows = 4 if self.dmm is not None else 3
 
         fig = plt.gcf()
         axs = fig.subplots(nrows, 1, sharex=True)
@@ -208,6 +224,7 @@ class Drive:
         t_array = np.linspace(0.0, self.duration, 250)
         y_amp = self.amplitude(t_array)
         y_det = self.detuning(t_array)
+        y_phase = self._phase_wf(t_array)
 
         # draw amplitude
         axs[0].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
@@ -221,6 +238,12 @@ class Drive:
         axs[1].set_ylabel("Detuning")
         axs[1].plot(t_array, y_det, color="darkmagenta")
         axs[1].fill_between(t_array, y_det, color="darkmagenta", alpha=0.4)
+
+        # draw phase
+        axs[2].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+        axs[2].set_ylabel("Phase")
+        axs[2].plot(t_array, y_phase, color="darkorange")
+        axs[2].fill_between(t_array, y_phase, color="darkorange", alpha=0.4)
 
         axs[-1].set_xlabel("Time t")
 
