@@ -276,17 +276,20 @@
     
   
   
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="../../introduction/" class="md-tabs__link">
-        
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../introduction/" class="md-tabs__link">
+          
   
   
     
   
   Fundamentals
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -618,6 +621,8 @@
       
         
       
+        
+      
     
     
     
@@ -637,9 +642,8 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../introduction/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
   
   
   <span class="md-ellipsis">
@@ -653,14 +657,8 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
@@ -672,6 +670,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -743,7 +769,7 @@
   <span class="md-ellipsis">
     
   
-    Quantum Program
+    Writing a Quantum Program
   
 
     
@@ -790,10 +816,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
             
   
   
@@ -811,8 +837,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -908,10 +934,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#maximum-energy-default" class="md-nav__link">
+  <a href="#default" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Maximum energy (default)
+        Default
       
     </span>
   </a>
@@ -919,10 +945,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#working-point" class="md-nav__link">
+  <a href="#maximum-energy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Working point
+        Maximum energy
       
     </span>
   </a>
@@ -1950,10 +1976,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#maximum-energy-default" class="md-nav__link">
+  <a href="#default" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Maximum energy (default)
+        Default
       
     </span>
   </a>
@@ -1961,10 +1987,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#working-point" class="md-nav__link">
+  <a href="#maximum-energy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Working point
+        Maximum energy
       
     </span>
   </a>
@@ -2040,14 +2066,14 @@
 <p>Before reading this page, we suggest starting with the <a href="../../../get_started/qoolqit_model/">Get Started: Programming a Neutral Atom QPU</a> guide, which introduces the QoolQit dimensionless model and provides a first insight into compilation.</p>
 <p>On this page, you will learn about:</p>
 <ul>
-<li>Compilation profiles: default and working point</li>
+<li>Compilation profiles: default and maximum energy</li>
 <li>Hardware modulation and noise emulation</li>
 </ul>
 <h2 id="compiling-a-quantum-program">Compiling a quantum program</h2>
-<p>QoolQit programs are written in dimensionless units, allowing the same program to be compiled and executed on any compatible quantum hardware.</p>
-<p>As a reminder, the compilation process:</p>
+<p>QoolQit programs are written in dimensionless units, allowing the same program to be compiled and executed on any compatible quantum hardware.
+As a reminder, the compilation process:</p>
 <ul>
-<li>Converts all dimensionless program's parameters, times, energies, and distances into their physical equivalents.</li>
+<li>Converts all of the program's dimensionless parameters, times, energies, and distances into their physical equivalents.</li>
 <li>Generates a Pulser <code>Sequence</code> containing the low-level instructions for QPU execution.</li>
 </ul>
 <p>The conversion rules ensure that the dimensionless Hamiltonian <span class="arithmatex">\(\tilde{H}(\tilde{t})\)</span> and the physical Hamiltonian <span class="arithmatex">\(H(t)\)</span> produce identical unitary evolution.
@@ -2068,13 +2094,19 @@ It is important to note that this constant <strong>depends on the particular har
 Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
 For more details about Pulser's scope and capabilities, visit <a href="https://docs.pasqal.com/pulser/">Pulser documentation</a>.</p>
 <h2 id="compilation-profiles">Compilation profiles</h2>
-<p>Besides dimensionalization, every rescaling <span class="arithmatex">\(\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)\)</span> will produce in theory a physically equivalent program.
-At the moment, QoolQit provides a simple compilation strategy that seeks to maximize the energy scale of the input program.</p>
-<h3 id="maximum-energy-default">Maximum energy (default)</h3>
+<p>In addition to dimensionalization, every rescaling <span class="arithmatex">\(\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)\)</span> will, in theory, produce a physically equivalent program.
+At the moment, QoolQit provides two compilation profiles: default and maximum energy.
+Usage and examples can be found in the <a href="../device_and_compilation/">Devices and Compilation</a> page of this documentation.</p>
+<h3 id="default">Default</h3>
+<p>The default compilation converts dimensionless quantum program parameters to physical values using the conversion relationships described above in the <a href="#compiling-a-quantum-program">Compiling a quantum program</a> section.
+In this profile users have direct control over the exact physical values of drive amplitude, detuning, atom distances, and execution time, while staying within hardware limits.
+For example, since the minimum distance in the dimensionless model is one, it will be converted to the minimum distance on the hardware device.</p>
+<p>To review your device's hardware constraints and capabilities, see <a href="../device_and_compilation/">Devices and Compilation</a>.</p>
+<h3 id="maximum-energy">Maximum energy</h3>
 <p>A device imposes hardware constraints and limits the range of parameters in a program.
 The two most important ones for compilation are the maximum drive amplitude <span class="arithmatex">\(\Omega_{\max}^{d}\)</span> and the minimum atom spacing <span class="arithmatex">\(r_{\min}^{d}\)</span>.</p>
-<p>The maximum energy strategy always picks the <strong>largest energy scale</strong> that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
-Indeed, a larger reference scale realizes the same dimensionless program with a higher drive amplitude (higher signal-to-noise ratio), a shorter physical runtime (less noise), and shorter distances between atoms (more compact registers can host more atoms/qubits).</p>
+<p>The maximum energy profile always picks the <strong>largest energy scale</strong> that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
+Indeed, a larger reference scale realizes the same dimensionless program with a higher drive amplitude (higher signal-to-noise ratio), a shorter physical runtime (less noise), and shorter distances between atoms (more compact registers, hosting more atoms/qubits).</p>
 <p>The following figure illustrates two key scenarios:</p>
 <p><img alt="Compilation diagram" src="../../../extras/assets/compilation.svg" /></p>
 <p>The green box highlights the valid parameter region for the interaction energy <span class="arithmatex">\(\tilde{J}_{ij}\)</span> and the driving amplitude <span class="arithmatex">\(\tilde{\Omega}\)</span>.
@@ -2082,8 +2114,7 @@ As described in the <a href="../../../get_started/qoolqit_model/">QoolQit model<
 The driving amplitude (more precisely, its maximum over time) is instead constrained to a device-dependent upper bound. In this example, we take <span class="arithmatex">\(\Omega_{\max}^{d}/J_{\max}^{d} = 0.2\)</span>, so that <span class="arithmatex">\(\tilde{\Omega} = \Omega/J_{\max}^{d} \lesssim 0.2\)</span>.</p>
 <p>The key idea is that the program is defined by <strong>ratios</strong>, not by absolute scales. For example, fixing the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J}\)</span> defines a line in the <span class="arithmatex">\((\tilde{J},\tilde{\Omega})\)</span> plane.
 Moving along this line changes the overall scale of the program, but preserves its dimensionless structure (here <span class="arithmatex">\(\max_{\tilde{t}}\)</span> stands for the maximum over time).</p>
-<p>We define two programs by specifying the maximum amplitude in time <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}\)</span> and the interaction between nearest neighbor atoms in the register <span class="arithmatex">\(\tilde{J}\)</span>.
-We define the following tuples:</p>
+<p>For simplicity, we define two programs by specifying the maximum amplitude in time <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}\)</span> and the interaction between nearest neighbor atoms in the register <span class="arithmatex">\(\tilde{J}\)</span>:</p>
 <ol>
 <li><span class="arithmatex">\((\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (1,0.4)\)</span>,</li>
 <li><span class="arithmatex">\((\tilde{J},\max_{\tilde{t}}\tilde{\Omega}) = (0.7,0.1)\)</span></li>
@@ -2093,26 +2124,20 @@ At compilation, QoolQit checks the energy ratio against the device's valid regio
 <ol>
 <li>
 <p>The point <span class="arithmatex">\((1,0.4)\)</span> is outside the valid region, because the drive amplitude is too large. To compile the program, QoolQit rescales it while preserving the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 2/5\)</span>.
-    In this regime the compiled program runs at <strong>maximum device amplitude</strong>, and the physical atom spacings are larger than the device minimum.</p>
+   In this regime the compiled program runs at <strong>maximum device amplitude</strong>, and the physical atom spacings are larger than the device minimum.</p>
 </li>
 <li>
 <p>The point <span class="arithmatex">\((0.7,0.1)\)</span> is inside the valid region, but the drive amplitude can be larger. QoolQit rescales it to the maximum possible <span class="arithmatex">\(\tilde{\Omega}\)</span> while preserving the ratio <span class="arithmatex">\(\max_{\tilde{t}}\tilde{\Omega}/\tilde{J} = 1/7\)</span>.
-    In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below <span class="arithmatex">\(\Omega_{\max}\)</span>.</p>
+   In this regime the compiled register uses the smallest physical spacing the device allows, and the resulting amplitude is below <span class="arithmatex">\(\Omega_{\max}\)</span>.</p>
 </li>
 </ol>
 <p>The dimensionless content is unchanged: the ratio between drive and interaction is the same, and therefore the underlying physics encoded in the program is the same.</p>
-<h3 id="working-point">Working point</h3>
-<p>The working point does not apply any rescaling on top of the dimensionalization of the quantum program.
-Unlike the default maximum energy profile, it preserves the user-chosen physical scales instead of maximizing the device energy scale.
-In terms of the figure above, this is equivalent to fixing a point in the <span class="arithmatex">\((\tilde{J}, \tilde{\Omega})\)</span> plane: if that point lies inside the green region, or more generally satisfies the device specifications, the program will compile.
-It is designed for users who really want to control the precise physical values of drive amplitude, detuning, distances, and time, and opt out of the default compilation profile.
-Finally, the device specifications can be inspected, as shown in <a href="../device_and_compilation/">Devices and Compilation</a>.</p>
 <h2 id="hardware-effects">Hardware effects</h2>
 <p>Real quantum hardware introduces deviations between the ideal compiled program and its actual execution.
 These effects can be categorized into two main classes: hardware modulation and noise sources.
 Importantly, in both cases, these effects can be included by configuring emulators, as detailed in the <a href="../../execution/execution/">Execution</a> page of this documentation.</p>
 <h3 id="hardware-modulation">Hardware modulation</h3>
-<p><strong>Hardware modulation</strong> arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions) the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
+<p><strong>Hardware modulation</strong> arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions), the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
 The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in <a href="../device_and_compilation/">Devices and Compilation</a>. Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag <code>with_hardware_modulation=true</code>, as described in <a href="../../execution/execution/">Execution</a>.</p>
 <h3 id="noise">Noise</h3>
 <p><strong>Noise sources</strong> encompass various forms of environmental and systematic errors that introduce unwanted fluctuations or systematic shifts in the quantum system parameters during execution.
@@ -2153,7 +2178,7 @@ As before, to include noise sources in the emulation of a program, emulators mus
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../quantum_program/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Quantum Program">
+          <a href="../../quantum_program/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Writing a Quantum Program">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2163,7 +2188,7 @@ As before, to include noise sources in the emulation of a program, emulators mus
                 Previous
               </span>
               <div class="md-ellipsis">
-                Quantum Program
+                Writing a Quantum Program
               </div>
             </div>
           </a>

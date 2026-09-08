@@ -274,17 +274,20 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../fundamentals/introduction/" class="md-tabs__link">
-        
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../fundamentals/introduction/" class="md-tabs__link">
+          
   
   
     
   
   Fundamentals
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -616,6 +619,8 @@
       
         
       
+        
+      
     
     
     
@@ -632,9 +637,8 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <div class="md-nav__link md-nav__container">
-            <a href="../../fundamentals/introduction/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -648,14 +652,8 @@
   
   
 
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
@@ -667,6 +665,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -738,7 +764,7 @@
   <span class="md-ellipsis">
     
   
-    Quantum Program
+    Writing a Quantum Program
   
 
     
@@ -780,10 +806,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
         
           
-          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
             
   
   
@@ -801,8 +827,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3447,11 +3473,11 @@ demo.draw()</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">demo</span> <span class="o">=</span> <span class="n">build_program</span><span class="p">(</span><span class="mf">80.0</span><span class="p">)</span>
-<span class="n">demo</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">demo</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">"max_energy"</span><span class="p">)</span>
 <span class="n">demo</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">compiled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-7">demo = build_program(80.0)
-demo.compile_to(device)
+demo.compile_to(device, profile="max_energy")
 demo.draw(compiled=True)</div>
 </div>
 </div>
@@ -4101,7 +4127,7 @@ target_state = StateVector(torch.asarray(psi_gs))
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">t_sweep</span><span class="p">):</span>
     <span class="c1"># Build the program at dimensionless duration t and compile it to the device.</span>
     <span class="n">prog</span> <span class="o">=</span> <span class="n">build_program</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-    <span class="n">prog</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">prog</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">"max_energy"</span><span class="p">)</span>
 
     <span class="c1"># Run the adiabatic evolution</span>
     <span class="n">emulator</span> <span class="o">=</span> <span class="n">LocalEmulator</span><span class="p">(</span><span class="n">backend_type</span><span class="o">=</span><span class="n">SVBackend</span><span class="p">,</span> <span class="n">emulation_config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
@@ -4134,7 +4160,7 @@ fid_vs_t = np.zeros(len(t_sweep))
 for i, t in enumerate(t_sweep):
     # Build the program at dimensionless duration t and compile it to the device.
     prog = build_program(t)
-    prog.compile_to(device)
+    prog.compile_to(device, profile="max_energy")
 
     # Run the adiabatic evolution
     emulator = LocalEmulator(backend_type=SVBackend, emulation_config=config)
