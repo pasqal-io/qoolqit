@@ -110,7 +110,7 @@ As anticipated, the choice of device sets the reference interaction energy.
 Consequently, the conversion to physical units, such as distances and laser amplitudes, is determined during the compilation step for the target device.
 The next section introduces the dimensionless model used in QoolQit, provides a brief derivation, and explains how the corresponding conversion factors to physical units are obtained.
 
-### Derivation
+### Derivation: the maximum interaction energy reference
 
 This section describes how QoolQit's dimensionless formulation connects to real physical quantities, precisely defining the reference interaction energy.
 In physical units, the Rydberg Hamiltonian reads:

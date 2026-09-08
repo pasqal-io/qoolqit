@@ -13,14 +13,14 @@ from qoolqit.devices import Device
 from qoolqit.drive import DetuningMapModulator, Drive, Waveform
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
-from qoolqit.waveforms import InterpolatedWaveform
 
 
 class CompilerProfile(Enum):
     """Enum for the different compilation profiles."""
 
-    WORKING_POINT = "working_point"
+    DEFAULT = "default"
     MAX_ENERGY = "max_energy"
+    WORKING_POINT = DEFAULT  # deprecated alias for DEFAULT
 
 
 def _build_register(register: Register, device: Device, distance: float) -> PulserRegister:
@@ -58,14 +58,6 @@ class WaveformConverter:
     def convert(self, waveform: Waveform) -> ParamObj | PulserWaveform:
         """Convert a QoolQit waveform into a equivalent Pulser waveform."""
         pulser_duration = self._pulser_duration(waveform)
-
-        # Interpolated to be converted differently because of round off issue:
-        # see https://github.com/pasqal-io/qoolqit/issues/288
-        # see https://github.com/pasqal-io/Pulser/issues/1051
-        if isinstance(waveform, InterpolatedWaveform):
-            wf = waveform._to_pulser(duration=pulser_duration, energy_factor=self._energy)
-            return wf
-
         return waveform._to_pulser(duration=pulser_duration) * self._energy
 
 
@@ -103,7 +95,7 @@ def basic_compilation(
             maximum allowed amplitude.
         - If the device requires a layout, it is automatically generated.
     """
-    if profile == CompilerProfile.WORKING_POINT:
+    if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
         _validate_program_default_profile(register, drive, device, device_max_duration_ratio)
     elif profile == CompilerProfile.MAX_ENERGY:

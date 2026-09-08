@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Literal
 from unittest.mock import MagicMock
 
 import numpy as np
@@ -16,16 +17,40 @@ from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.waveforms import ConstantWaveform
 
 
-@pytest.mark.parametrize("profile", [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT])
-def test_compilation_single_qubit(profile: CompilerProfile) -> None:
+@pytest.mark.parametrize(
+    "profile",
+    [
+        CompilerProfile.MAX_ENERGY,
+        CompilerProfile.DEFAULT,
+        "max_energy",
+        "default",
+    ],
+)
+def test_compilation_single_qubit(
+    profile: Literal["max_energy", "default"] | CompilerProfile,
+) -> None:
     """Test compilation of a single-qubit program."""
     register = Register(qubits={"q0": (0.0, 0.0)})
     drive = Drive(amplitude=ConstantWaveform(2.0, 0.2))
     program = QuantumProgram(register=register, drive=drive)
 
-    # Test compilation on the default profile
     program.compile_to(device=AnalogDevice(), profile=profile)
     assert program.is_compiled
+
+
+def test_compiler_profile_deprecated_working_point_alias() -> None:
+    """Test that WORKING_POINT is aliases of DEFAULT."""
+    assert CompilerProfile.WORKING_POINT is CompilerProfile.DEFAULT
+    assert CompilerProfile("default") is CompilerProfile.DEFAULT
+
+
+def test_compile_to_invalid_profile_string() -> None:
+    """Test compilation with an invalid profile string alias."""
+    register = Register(qubits={"q0": (0.0, 0.0)})
+    drive = Drive(amplitude=ConstantWaveform(2.0, 0.2))
+    program = QuantumProgram(register=register, drive=drive)
+    with pytest.raises(ValueError, match="'bogus' is not a valid CompilerProfile"):
+        program.compile_to(device=AnalogDevice(), profile="bogus")  # type: ignore [arg-type]
 
 
 def test_dmm_not_supported() -> None:
@@ -39,7 +64,7 @@ def test_dmm_not_supported() -> None:
         program.compile_to(device=AnalogDevice())
 
 
-@pytest.mark.parametrize("profile", [CompilerProfile.MAX_ENERGY, CompilerProfile.WORKING_POINT])
+@pytest.mark.parametrize("profile", [CompilerProfile.MAX_ENERGY, CompilerProfile.DEFAULT])
 def test_compilation_with_dmm(profile: CompilerProfile) -> None:
     """Test compilation of a program with a DMM."""
     register = Register(qubits={"q0": (0.0, 0.7), "q1": (-0.5, -0.5), "q2": (0.5, -0.5)})

@@ -50,7 +50,7 @@ __all__ = [
 ]
 
 
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 
 store_package_version_metadata("qoolqit", __version__)
 

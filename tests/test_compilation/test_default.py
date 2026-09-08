@@ -1,4 +1,4 @@
-"""Test the WORKING_POINT compilation profile."""
+"""Test the DEFAULT compilation profile."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ from qoolqit.waveforms import ConstantWaveform
 
 
 class TestWorkingPointCompilerProfile:
-    profile = CompilerProfile.WORKING_POINT
+    profile = CompilerProfile.DEFAULT
 
     @pytest.fixture(autouse=True)
     def program_factory(

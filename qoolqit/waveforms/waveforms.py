@@ -281,12 +281,10 @@ class InterpolatedWaveform(Waveform):
     def _to_pulser(
         self,
         duration: int,
-        energy_factor: float = 1.0,
     ) -> ParamObj | pulser.InterpolatedWaveform:
-        truncated_values = self._values * energy_factor
         return pulser.InterpolatedWaveform(
             duration,
-            values=truncated_values,
+            values=self._values,
             times=self._times,
             interpolator="PchipInterpolator",
         )
