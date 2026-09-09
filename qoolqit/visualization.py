@@ -57,8 +57,7 @@ def plot_bitstrings(
     ]
     ax.bar(positions, values, width=0.65, color=color, label=label)
 
-    # Redraw highlighted bars on top in their own color, so the legend swatch
-    # for `label` (taken from the first patch) still reflects `color`.
+    # Redraw highlighted bars on top in their own color
     for position, bitstring, value in zip(positions, bitstrings, values):
         if bitstring in highlight:
             ax.bar(position, value, width=0.65, color=highlight[bitstring])
