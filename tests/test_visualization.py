@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import matplotlib.pyplot as plt
 import pytest
+from matplotlib.colors import to_rgba
 
-from qoolqit.visualization import plot_bitstrings
+from qoolqit.visualization import DEFAULT_BAR_COLOR, plot_bitstrings
 
 
 def test_plot_bitstrings_errors() -> None:
@@ -12,7 +14,19 @@ def test_plot_bitstrings_errors() -> None:
         plot_bitstrings(counts={"000": 0}, normalize=True)
     with pytest.raises(ValueError, match="top must be a positive integer"):
         plot_bitstrings(counts={"000": 1, "001": 2}, top=0)
-    with pytest.raises(ValueError, match="color must have one entry per counts mapping"):
-        plot_bitstrings(counts=[{"000": 1}, {"001": 2}], color=["tab:blue"])
-    with pytest.raises(ValueError, match="labels must have one entry per counts mapping"):
-        plot_bitstrings(counts=[{"000": 1}, {"001": 2}], labels=["run 1"])
+
+
+def test_plot_bitstrings_default_bar_color() -> None:
+    _, ax = plt.subplots()
+    plot_bitstrings(counts={"000": 1, "001": 2}, ax=ax)
+
+    bars = ax.containers[0]
+    assert all(bar.get_facecolor() == to_rgba(DEFAULT_BAR_COLOR) for bar in bars)
+
+
+def test_plot_bitstrings_label_sets_bar_label() -> None:
+    _, ax = plt.subplots()
+    plot_bitstrings(counts={"000": 1, "001": 2}, label="run 1", ax=ax)
+
+    assert ax.get_legend() is None
+    assert ax.containers[0].get_label() == "run 1"
