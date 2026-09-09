@@ -30,3 +30,20 @@ def test_plot_bitstrings_label_sets_bar_label() -> None:
 
     assert ax.get_legend() is None
     assert ax.containers[0].get_label() == "run 1"
+
+
+def test_plot_bitstrings_highlight_colors_the_bar() -> None:
+    _, ax = plt.subplots()
+    plot_bitstrings(counts={"000": 1, "001": 2}, highlight={"001": "tab:red"}, ax=ax)
+
+    assert all(bar.get_facecolor() == to_rgba(DEFAULT_BAR_COLOR) for bar in ax.containers[0])
+    assert [bar.get_facecolor() for bar in ax.containers[1]] == [to_rgba("tab:red")]
+
+
+def test_plot_bitstrings_legend_uses_base_color_even_if_first_bar_highlighted() -> None:
+    _, ax = plt.subplots()
+    # "001" has the higher count so it plots first, and is also highlighted.
+    plot_bitstrings(counts={"000": 1, "001": 2}, highlight={"001": "tab:red"}, label="run 1", ax=ax)
+
+    legend = ax.legend()
+    assert legend.legend_handles[0].get_facecolor() == to_rgba(DEFAULT_BAR_COLOR)

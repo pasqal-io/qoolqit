@@ -25,7 +25,7 @@ def plot_bitstrings(
         normalize: Normalize counts to probabilities. Defaults to False.
         color: Bar color.
         highlight: Mapping of bitstrings to highlight colors. Highlighted
-            outcomes get a background band and colored tick label.
+            outcomes get their bar and tick label colored accordingly.
         label: Legend label for the bars. Call ax.legend() to show it.
         ax: Axes to draw on. Creates new axes if omitted.
     """
@@ -57,16 +57,11 @@ def plot_bitstrings(
     ]
     ax.bar(positions, values, width=0.65, color=color, label=label)
 
-    # zorder=0 keeps the highlight band behind the bars
-    for position, bitstring in enumerate(bitstrings):
+    # Redraw highlighted bars on top in their own color, so the legend swatch
+    # for `label` (taken from the first patch) still reflects `color`.
+    for position, bitstring, value in zip(positions, bitstrings, values):
         if bitstring in highlight:
-            ax.axvspan(
-                position - 0.45,
-                position + 0.45,
-                color=highlight[bitstring],
-                alpha=0.35,
-                zorder=0,
-            )
+            ax.bar(position, value, width=0.65, color=highlight[bitstring])
 
     ax.set_xticks(list(positions))
     ax.set_xticklabels(bitstrings)
