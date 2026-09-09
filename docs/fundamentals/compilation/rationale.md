@@ -37,7 +37,12 @@ For more details about Pulser's scope and capabilities, visit [Pulser documentat
 
 ## Compilation profiles
 
-In addition to dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will, in theory, produce a physically equivalent program.
+As anticipated, a program needs to be compiled to a particular device, whose hardware constraints and limits the range of parameters in a program.
+The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the maximum interaction energy $J_{\max}^{d}$, or similarly, the minimum atom spacing $r_{\min}^{d}$.
+
+
+However, not a
+
 At the moment, QoolQit provides two compilation profiles: default and maximum energy.
 Usage and examples can be found in the [Devices and Compilation](./device_and_compilation.ipynb) page of this documentation.
 
@@ -51,15 +56,18 @@ To review your device's hardware constraints and capabilities, see [Devices and 
 
 ### Maximum energy
 
-A device imposes hardware constraints and limits the range of parameters in a program.
-The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the minimum atom spacing $r_{\min}^{d}$.
+In addition to dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will, in theory, produce a physically equivalent program.
 
 The maximum energy profile always picks the **largest energy scale** that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
 Indeed, a larger reference scale realizes the same dimensionless program with a higher drive amplitude (higher signal-to-noise ratio), a shorter physical runtime (less noise), and shorter distances between atoms (more compact registers, hosting more atoms/qubits).
 
 The following figure illustrates two key scenarios:
 
-![Compilation diagram](../../extras/assets/compilation.svg)
+<div style="display: flex; gap: 1rem; justify-content: center;">
+  <img src="../../extras/assets/compilation_profile_default.svg" alt="Compilation diagram" style="width: 49%;">
+  <img src="../../extras/assets/compilation_profile_max_energy.svg" alt="Compilation diagram" style="width: 49%;">
+</div>
+
 
 The green box highlights the valid parameter region for the interaction energy $\tilde{J}_{ij}$ and the driving amplitude $\tilde{\Omega}$.
 As described in the [QoolQit model](../../get_started/qoolqit_model.md) page, the interaction energy is bounded by 1 by construction: QoolQit's adimensionalization enforces $\tilde{J}_{ij} = J_{ij}/J_{\max}^{d} \leq 1$ across all devices.
