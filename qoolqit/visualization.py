@@ -58,9 +58,8 @@ def plot_bitstrings(
     ax.bar(positions, values, width=0.65, color=color, label=label)
 
     # Redraw highlighted bars on top in their own color
-    for position, bitstring, value in zip(positions, bitstrings, values):
-        if bitstring in highlight:
-            ax.bar(position, value, width=0.65, color=highlight[bitstring])
+    colors = [highlight.get(b, color) for b in bitstrings]
+    ax.bar(positions, values, width=0.65, color=colors)
 
     ax.set_xticks(list(positions))
     ax.set_xticklabels(bitstrings)
