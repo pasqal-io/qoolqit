@@ -131,7 +131,7 @@ def test_max_duration_ratio_error() -> None:
         program.compile_to(device=MockDevice(), device_max_duration_ratio=0.5)
 
 
-def test_program_with_dmm() -> None:
+def test_program_with_dmm_init() -> None:
     register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.3, 0.0)})
 
     valid_weights = {"q0": 0.1, "q1": 0.2}
@@ -141,6 +141,12 @@ def test_program_with_dmm() -> None:
         amplitude=ConstantWaveform(5.0, 1.0), detuning=ConstantWaveform(5.0, 1.0), dmm=dmm
     )
     program = QuantumProgram(register=register, drive=drive)
+    assert program.register == register
+    assert program.drive == drive
+
+
+def test_program_with_dmm_invalid_qubit_id() -> None:
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.3, 0.0)})
 
     invalid_weights = {"q0": 0.1, "q1": 0.2, "wrong_qubit_id": 0.3}
 
