@@ -6233,12 +6233,8 @@ whenever the observable doesn't define its own. Defaults to 1000.</p>
 
       </li>
       <li class="doc doc-backlink">
-            <span class="doc doc-backlink-crumb">
-      <a href="#qoolqit.execution.LocalEmulator"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LocalEmulator</a>
-  </span>
-
             <span class="doc doc-backlink-crumb last">
-      <a href="#qoolqit.execution.LocalEmulator.validate_emulation_config"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;validate_emulation_config</a>
+      <a href="#qoolqit.execution.LocalEmulator"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LocalEmulator</a>
   </span>
 
       </li>
@@ -6253,12 +6249,8 @@ whenever the observable doesn't define its own. Defaults to 1000.</p>
 
       </li>
       <li class="doc doc-backlink">
-            <span class="doc doc-backlink-crumb">
-      <a href="#qoolqit.execution.RemoteEmulator"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;RemoteEmulator</a>
-  </span>
-
             <span class="doc doc-backlink-crumb last">
-      <a href="#qoolqit.execution.RemoteEmulator.validate_emulation_config"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;validate_emulation_config</a>
+      <a href="#qoolqit.execution.RemoteEmulator"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;RemoteEmulator</a>
   </span>
 
       </li>
@@ -7118,9 +7110,7 @@ in the abstract JSON format.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pulser/backend/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-448">448</a></span>
-<span class="normal"><a href="#__codelineno-0-449">449</a></span>
-<span class="normal"><a href="#__codelineno-0-450">450</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-450">450</a></span>
 <span class="normal"><a href="#__codelineno-0-451">451</a></span>
 <span class="normal"><a href="#__codelineno-0-452">452</a></span>
 <span class="normal"><a href="#__codelineno-0-453">453</a></span>
@@ -7140,29 +7130,31 @@ in the abstract JSON format.</p>
 <span class="normal"><a href="#__codelineno-0-467">467</a></span>
 <span class="normal"><a href="#__codelineno-0-468">468</a></span>
 <span class="normal"><a href="#__codelineno-0-469">469</a></span>
-<span class="normal"><a href="#__codelineno-0-470">470</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-448" name="__codelineno-0-448"></a><span class="nd">@classmethod</span>
-<a id="__codelineno-0-449" name="__codelineno-0-449"></a><span class="k">def</span><span class="w"> </span><span class="nf">from_abstract_repr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationConfig</span><span class="p">:</span>
-<a id="__codelineno-0-450" name="__codelineno-0-450"></a><span class="w">    </span><span class="sd">"""Deserialize an EmulationConfig from an abstract JSON object.</span>
-<a id="__codelineno-0-451" name="__codelineno-0-451"></a>
-<a id="__codelineno-0-452" name="__codelineno-0-452"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-453" name="__codelineno-0-453"></a><span class="sd">        obj_str (str): The JSON string representing the config encoded</span>
-<a id="__codelineno-0-454" name="__codelineno-0-454"></a><span class="sd">            in the abstract JSON format.</span>
-<a id="__codelineno-0-455" name="__codelineno-0-455"></a>
-<a id="__codelineno-0-456" name="__codelineno-0-456"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-457" name="__codelineno-0-457"></a><span class="sd">        EmulationConfig: The EmulationConfig instance.</span>
-<a id="__codelineno-0-458" name="__codelineno-0-458"></a><span class="sd">    """</span>
-<a id="__codelineno-0-459" name="__codelineno-0-459"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj_str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<a id="__codelineno-0-460" name="__codelineno-0-460"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="__codelineno-0-461" name="__codelineno-0-461"></a>            <span class="s2">"The serialized EmulationConfig must be given as a string. "</span>
-<a id="__codelineno-0-462" name="__codelineno-0-462"></a>            <span class="sa">f</span><span class="s2">"Instead, got object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj_str</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span>
-<a id="__codelineno-0-463" name="__codelineno-0-463"></a>        <span class="p">)</span>
-<a id="__codelineno-0-464" name="__codelineno-0-464"></a>    <span class="n">validate_abstract_repr</span><span class="p">(</span><span class="n">obj_str</span><span class="p">,</span> <span class="s2">"config"</span><span class="p">)</span>
-<a id="__codelineno-0-465" name="__codelineno-0-465"></a>    <span class="k">return</span> <span class="n">_deserialize_emulation_config</span><span class="p">(</span>
-<a id="__codelineno-0-466" name="__codelineno-0-466"></a>        <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">obj_str</span><span class="p">),</span>
-<a id="__codelineno-0-467" name="__codelineno-0-467"></a>        <span class="bp">cls</span><span class="p">,</span>
-<a id="__codelineno-0-468" name="__codelineno-0-468"></a>        <span class="bp">cls</span><span class="o">.</span><span class="n">state_type</span><span class="p">,</span>
-<a id="__codelineno-0-469" name="__codelineno-0-469"></a>        <span class="bp">cls</span><span class="o">.</span><span class="n">operator_type</span><span class="p">,</span>
-<a id="__codelineno-0-470" name="__codelineno-0-470"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-470">470</a></span>
+<span class="normal"><a href="#__codelineno-0-471">471</a></span>
+<span class="normal"><a href="#__codelineno-0-472">472</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-450" name="__codelineno-0-450"></a><span class="nd">@classmethod</span>
+<a id="__codelineno-0-451" name="__codelineno-0-451"></a><span class="k">def</span><span class="w"> </span><span class="nf">from_abstract_repr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationConfig</span><span class="p">:</span>
+<a id="__codelineno-0-452" name="__codelineno-0-452"></a><span class="w">    </span><span class="sd">"""Deserialize an EmulationConfig from an abstract JSON object.</span>
+<a id="__codelineno-0-453" name="__codelineno-0-453"></a>
+<a id="__codelineno-0-454" name="__codelineno-0-454"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-455" name="__codelineno-0-455"></a><span class="sd">        obj_str (str): The JSON string representing the config encoded</span>
+<a id="__codelineno-0-456" name="__codelineno-0-456"></a><span class="sd">            in the abstract JSON format.</span>
+<a id="__codelineno-0-457" name="__codelineno-0-457"></a>
+<a id="__codelineno-0-458" name="__codelineno-0-458"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-459" name="__codelineno-0-459"></a><span class="sd">        EmulationConfig: The EmulationConfig instance.</span>
+<a id="__codelineno-0-460" name="__codelineno-0-460"></a><span class="sd">    """</span>
+<a id="__codelineno-0-461" name="__codelineno-0-461"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj_str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+<a id="__codelineno-0-462" name="__codelineno-0-462"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+<a id="__codelineno-0-463" name="__codelineno-0-463"></a>            <span class="s2">"The serialized EmulationConfig must be given as a string. "</span>
+<a id="__codelineno-0-464" name="__codelineno-0-464"></a>            <span class="sa">f</span><span class="s2">"Instead, got object of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj_str</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span>
+<a id="__codelineno-0-465" name="__codelineno-0-465"></a>        <span class="p">)</span>
+<a id="__codelineno-0-466" name="__codelineno-0-466"></a>    <span class="n">validate_abstract_repr</span><span class="p">(</span><span class="n">obj_str</span><span class="p">,</span> <span class="s2">"config"</span><span class="p">)</span>
+<a id="__codelineno-0-467" name="__codelineno-0-467"></a>    <span class="k">return</span> <span class="n">_deserialize_emulation_config</span><span class="p">(</span>
+<a id="__codelineno-0-468" name="__codelineno-0-468"></a>        <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">obj_str</span><span class="p">),</span>
+<a id="__codelineno-0-469" name="__codelineno-0-469"></a>        <span class="bp">cls</span><span class="p">,</span>
+<a id="__codelineno-0-470" name="__codelineno-0-470"></a>        <span class="bp">cls</span><span class="o">.</span><span class="n">state_type</span><span class="p">,</span>
+<a id="__codelineno-0-471" name="__codelineno-0-471"></a>        <span class="bp">cls</span><span class="o">.</span><span class="n">operator_type</span><span class="p">,</span>
+<a id="__codelineno-0-472" name="__codelineno-0-472"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7196,15 +7188,19 @@ in the abstract JSON format.</p>
 <span class="normal"><a href="#__codelineno-0-424">424</a></span>
 <span class="normal"><a href="#__codelineno-0-425">425</a></span>
 <span class="normal"><a href="#__codelineno-0-426">426</a></span>
-<span class="normal"><a href="#__codelineno-0-427">427</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-419" name="__codelineno-0-419"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_evaluation_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-427">427</a></span>
+<span class="normal"><a href="#__codelineno-0-428">428</a></span>
+<span class="normal"><a href="#__codelineno-0-429">429</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-419" name="__codelineno-0-419"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_evaluation_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <a id="__codelineno-0-420" name="__codelineno-0-420"></a><span class="w">    </span><span class="sd">"""Assesses whether a relative time is an evaluation time."""</span>
 <a id="__codelineno-0-421" name="__codelineno-0-421"></a>    <span class="k">return</span> <span class="p">(</span>
-<a id="__codelineno-0-422" name="__codelineno-0-422"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">default_evaluation_times</span> <span class="o">==</span> <span class="s2">"Full"</span> <span class="ow">and</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.0</span>
-<a id="__codelineno-0-423" name="__codelineno-0-423"></a>    <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
-<a id="__codelineno-0-424" name="__codelineno-0-424"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_time_in_evaluation_times</span><span class="p">(</span>
-<a id="__codelineno-0-425" name="__codelineno-0-425"></a>            <span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_evaluation_times</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span>
-<a id="__codelineno-0-426" name="__codelineno-0-426"></a>        <span class="p">)</span>
-<a id="__codelineno-0-427" name="__codelineno-0-427"></a>    <span class="p">)</span>
+<a id="__codelineno-0-422" name="__codelineno-0-422"></a>        <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_evaluation_times</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+<a id="__codelineno-0-423" name="__codelineno-0-423"></a>        <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_evaluation_times</span> <span class="o">==</span> <span class="s2">"Full"</span>
+<a id="__codelineno-0-424" name="__codelineno-0-424"></a>        <span class="ow">and</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.0</span>
+<a id="__codelineno-0-425" name="__codelineno-0-425"></a>    <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+<a id="__codelineno-0-426" name="__codelineno-0-426"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_time_in_evaluation_times</span><span class="p">(</span>
+<a id="__codelineno-0-427" name="__codelineno-0-427"></a>            <span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_evaluation_times</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span>
+<a id="__codelineno-0-428" name="__codelineno-0-428"></a>        <span class="p">)</span>
+<a id="__codelineno-0-429" name="__codelineno-0-429"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7238,21 +7234,21 @@ in the abstract JSON format.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pulser/backend/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-429">429</a></span>
-<span class="normal"><a href="#__codelineno-0-430">430</a></span>
-<span class="normal"><a href="#__codelineno-0-431">431</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-431">431</a></span>
 <span class="normal"><a href="#__codelineno-0-432">432</a></span>
 <span class="normal"><a href="#__codelineno-0-433">433</a></span>
 <span class="normal"><a href="#__codelineno-0-434">434</a></span>
 <span class="normal"><a href="#__codelineno-0-435">435</a></span>
-<span class="normal"><a href="#__codelineno-0-436">436</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-429" name="__codelineno-0-429"></a><span class="nd">@staticmethod</span>
-<a id="__codelineno-0-430" name="__codelineno-0-430"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_time_in_evaluation_times</span><span class="p">(</span>
-<a id="__codelineno-0-431" name="__codelineno-0-431"></a>    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">evaluation_times</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span>
-<a id="__codelineno-0-432" name="__codelineno-0-432"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-433" name="__codelineno-0-433"></a><span class="w">    </span><span class="sd">"""Checks if a time is within a collection of evaluation times."""</span>
-<a id="__codelineno-0-434" name="__codelineno-0-434"></a>    <span class="k">return</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span>
-<a id="__codelineno-0-435" name="__codelineno-0-435"></a>        <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">evaluation_times</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">tol</span><span class="p">)</span>
-<a id="__codelineno-0-436" name="__codelineno-0-436"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-436">436</a></span>
+<span class="normal"><a href="#__codelineno-0-437">437</a></span>
+<span class="normal"><a href="#__codelineno-0-438">438</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-431" name="__codelineno-0-431"></a><span class="nd">@staticmethod</span>
+<a id="__codelineno-0-432" name="__codelineno-0-432"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_time_in_evaluation_times</span><span class="p">(</span>
+<a id="__codelineno-0-433" name="__codelineno-0-433"></a>    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">evaluation_times</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<a id="__codelineno-0-434" name="__codelineno-0-434"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-0-435" name="__codelineno-0-435"></a><span class="w">    </span><span class="sd">"""Checks if a time is within a collection of evaluation times."""</span>
+<a id="__codelineno-0-436" name="__codelineno-0-436"></a>    <span class="k">return</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span>
+<a id="__codelineno-0-437" name="__codelineno-0-437"></a>        <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">evaluation_times</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">tol</span><span class="p">)</span>
+<a id="__codelineno-0-438" name="__codelineno-0-438"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7342,17 +7338,17 @@ in the abstract JSON format.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>pulser/backend/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-441">441</a></span>
-<span class="normal"><a href="#__codelineno-0-442">442</a></span>
-<span class="normal"><a href="#__codelineno-0-443">443</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-443">443</a></span>
 <span class="normal"><a href="#__codelineno-0-444">444</a></span>
 <span class="normal"><a href="#__codelineno-0-445">445</a></span>
-<span class="normal"><a href="#__codelineno-0-446">446</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-441" name="__codelineno-0-441"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_abstract_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_validation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-442" name="__codelineno-0-442"></a><span class="w">    </span><span class="sd">"""Serialize `EmulationConfig` to a JSON formatted str."""</span>
-<a id="__codelineno-0-443" name="__codelineno-0-443"></a>    <span class="n">obj_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">AbstractReprEncoder</span><span class="p">)</span>
-<a id="__codelineno-0-444" name="__codelineno-0-444"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">skip_validation</span><span class="p">:</span>
-<a id="__codelineno-0-445" name="__codelineno-0-445"></a>        <span class="n">validate_abstract_repr</span><span class="p">(</span><span class="n">obj_str</span><span class="p">,</span> <span class="s2">"config"</span><span class="p">)</span>
-<a id="__codelineno-0-446" name="__codelineno-0-446"></a>    <span class="k">return</span> <span class="n">obj_str</span>
+<span class="normal"><a href="#__codelineno-0-446">446</a></span>
+<span class="normal"><a href="#__codelineno-0-447">447</a></span>
+<span class="normal"><a href="#__codelineno-0-448">448</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-443" name="__codelineno-0-443"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_abstract_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_validation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-444" name="__codelineno-0-444"></a><span class="w">    </span><span class="sd">"""Serialize `EmulationConfig` to a JSON formatted str."""</span>
+<a id="__codelineno-0-445" name="__codelineno-0-445"></a>    <span class="n">obj_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">AbstractReprEncoder</span><span class="p">)</span>
+<a id="__codelineno-0-446" name="__codelineno-0-446"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">skip_validation</span><span class="p">:</span>
+<a id="__codelineno-0-447" name="__codelineno-0-447"></a>        <span class="n">validate_abstract_repr</span><span class="p">(</span><span class="n">obj_str</span><span class="p">,</span> <span class="s2">"config"</span><span class="p">)</span>
+<a id="__codelineno-0-448" name="__codelineno-0-448"></a>    <span class="k">return</span> <span class="n">obj_str</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
