@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections import Counter
+
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 
@@ -33,7 +35,6 @@ def plot_bitstrings(
     if not counts:
         raise ValueError("counts cannot be empty")
 
-    # Zero total would divide-by-zero into NaN when normalizing
     total = sum(counts.values())
     if normalize and total == 0:
         raise ValueError("cannot plot normalized counts with zero total counts")
@@ -41,9 +42,10 @@ def plot_bitstrings(
     if top is not None and top <= 0:
         raise ValueError("top must be a positive integer")
 
-    bitstrings = sorted(counts, key=lambda bitstring: counts[bitstring], reverse=True)
-    if top is not None:
-        bitstrings = bitstrings[:top]
+    # most_common(None) returns all entries, sorted by decreasing count
+    selected_counts = Counter(counts).most_common(top)
+    bitstrings = [bitstring for bitstring, _ in selected_counts]
+    values = [count / total if normalize else count for _, count in selected_counts]
 
     highlight = highlight or {}
 
@@ -52,14 +54,13 @@ def plot_bitstrings(
         _, ax = plt.subplots(figsize=(12, 5))
 
     positions = range(len(bitstrings))
-    values = [
-        counts[bitstring] / total if normalize else counts[bitstring] for bitstring in bitstrings
-    ]
-    ax.bar(positions, values, width=0.65, color=color, label=label)
+    bar_colors = [highlight.get(bitstring, color) for bitstring in bitstrings]
+    ax.bar(positions, values, width=0.65, color=bar_colors)
 
-    # Redraw highlighted bars on top in their own color
-    colors = [highlight.get(b, color) for b in bitstrings]
-    ax.bar(positions, values, width=0.65, color=colors)
+    if label is not None:
+        # A zero-height bar draws nothing but gives the legend a swatch in
+        # `color`, regardless of which bitstrings are highlighted.
+        ax.bar(0, 0, color=color, label=label)
 
     ax.set_xticks(list(positions))
     ax.set_xticklabels(bitstrings)
