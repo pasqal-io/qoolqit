@@ -2090,7 +2090,7 @@ t = \tilde{t}/J_{\max}^{d}.
 \]</div>
 <p>Compiling a QoolQit program to a particular device will set the conversion factor, <span class="arithmatex">\(J_{\max}^{d}=C_6/(r_{\min}^{d})^6\)</span>, which sets the scales for amplitude, detuning, runtime, and atom spacing all at once.
 It is important to note that this constant <strong>depends on the particular hardware</strong> of choice, since <span class="arithmatex">\(C_6\)</span> is an interaction coefficient that depends on the specific Rydberg level of a specific atomic species used in the QPU, while <span class="arithmatex">\(r_{\min}^{d}\)</span> is the minimum pairwise distance that can be realized.</p>
-<p>Finally, when a program is compiled, the compilation output is stored internally as a Pulser <code>Sequence</code>[^1], which contains the instructions for QPU execution.</p>
+<p>Finally, when a program is compiled, the compilation output is stored internally as a Pulser <code>Sequence</code><sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>, which contains the instructions for QPU execution.</p>
 <h2 id="compilation-profiles">Compilation profiles</h2>
 <p>At the moment, QoolQit provides two compilation profiles: default and maximum energy.
 Usage and examples can be found in the <a href="../device_and_compilation/">Devices and Compilation</a> page of this documentation.</p>
@@ -2145,8 +2145,15 @@ The net effect on the drive is always visible when inspecting the compiled seque
 <p><strong>Noise sources</strong> encompass various forms of environmental and systematic errors that introduce unwanted fluctuations or systematic shifts in the quantum system parameters during execution.
 As before, to include noise sources in the emulation of a program, emulators must be configured with the flag <code>noise_model</code>, as described in <a href="../../execution/execution/">Execution</a>.</p>
 <p>Finally, for more detailed information on <a href="https://docs.pasqal.com/pulser/tutorials/output_mod_eom/">hardware modulation</a> and <a href="https://docs.pasqal.com/pulser/noise_model/">noise sources</a>, consult the comprehensive discussions available in the Pulser documentation.</p>
-<p>[^1]: Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
-For more details about Pulser's scope and capabilities, visit <a href="https://docs.pasqal.com/pulser/">Pulser documentation</a>.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
+For more details about Pulser's scope and capabilities, visit <a href="https://docs.pasqal.com/pulser/">Pulser documentation</a>.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
