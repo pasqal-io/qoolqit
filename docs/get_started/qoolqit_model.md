@@ -47,7 +47,7 @@ The following table summarizes the dimensionless parameters defining the Hamilto
 
 ### Interaction reference
 
-In QoolQit, the dimensionless Hamiltonian is obtained from the physical Hamiltonian (see [Derivation](#derivation)) by rescaling the interaction and the drive terms such that, equivalently:
+In QoolQit, the dimensionless Hamiltonian is obtained from the physical Hamiltonian (see [Derivation](#derivation-the-maximum-interaction-energy-reference)) by rescaling the interaction and the drive terms such that, equivalently:
 
 - The minimum pairwise distance between atoms is $1$:
 
