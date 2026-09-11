@@ -45,7 +45,7 @@ Thus, simplifying, we will represent a program as a point in the $(\tilde J, \ti
 
 In addition to the upper bound $\tilde J_{ij} \leq 1$ inherent to the adimensionalization, the device imposes a maximum drive amplitude $\tilde\Omega_{\text{max}} = \Omega_{\max}/J_{\text{max}}$. Together these define a **device allowed region** represented as a shaded green rectangle in the figure below:
 
-![Compilation diagram](../extras/assets/compilation.svg)
+![Compilation diagram](../extras/assets/compilation_profile_max_energy.svg)
 
 If the user's point lies outside this region, the program cannot be implemented as specified. If it lies strictly inside, the program is feasible but does not exploit the full capability of the device. Compilation resolves both situations by rescaling the program (sliding the point along the line) until it sits exactly on the boundary of the feasible region, maximizing either $\tilde\Omega$ or $\tilde J$, depending on your program.
 

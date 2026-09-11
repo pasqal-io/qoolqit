@@ -14,7 +14,7 @@ As a reminder, the compilation process:
 - Generates a Pulser `Sequence` containing the low-level instructions for QPU execution.
 
 The conversion rules ensure that the dimensionless Hamiltonian $\tilde{H}(\tilde{t})$ and the physical Hamiltonian $H(t)$ produce identical unitary evolution.
-For a complete mathematical derivation, see the [Get Started: Programming a Neutral Atom QPU](../../get_started/qoolqit_model.md#derivation) page.
+For a complete mathematical derivation, see the [Get Started: Programming a Neutral Atom QPU](../../get_started/qoolqit_model.md#derivation-the-maximum-interaction-energy-reference) page.
 
 The essential conversion relationships are:
 
@@ -31,37 +31,42 @@ $$
 Compiling a QoolQit program to a particular device will set the conversion factor, $J_{\max}^{d}=C_6/(r_{\min}^{d})^6$, which sets the scales for amplitude, detuning, runtime, and atom spacing all at once.
 It is important to note that this constant **depends on the particular hardware** of choice, since $C_6$ is an interaction coefficient that depends on the specific Rydberg level of a specific atomic species used in the QPU, while $r_{\min}^{d}$ is the minimum pairwise distance that can be realized.
 
-Finally, when a program is compiled, the compilation output is stored internally as a Pulser `Sequence`, which contains the instructions for QPU execution.
-Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
-For more details about Pulser's scope and capabilities, visit [Pulser documentation](https://docs.pasqal.com/pulser/).
+Finally, when a program is compiled, the compilation output is stored internally as a Pulser `Sequence`[^1], which contains the instructions for QPU execution.
 
 ## Compilation profiles
 
-In addition to dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will, in theory, produce a physically equivalent program.
 At the moment, QoolQit provides two compilation profiles: default and maximum energy.
 Usage and examples can be found in the [Devices and Compilation](./device_and_compilation.ipynb) page of this documentation.
+
+As anticipated, a program needs to be compiled to a particular device, whose hardware constraints and limits the range of parameters in a program.
+The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the maximum interaction energy $J_{\max}^{d}$, or equivalently, the minimum atom spacing $r_{\min}^{d}$.
+In the following, for simplicity, we will represent an input program and its hardware constraints in the $(\tilde{\Omega}, \tilde{J})$ plane.
 
 ### Default
 
 The default compilation converts dimensionless quantum program parameters to physical values using the conversion relationships described above in the [Compiling a quantum program](#compiling-a-quantum-program) section.
 In this profile users have direct control over the exact physical values of drive amplitude, detuning, atom distances, and execution time, while staying within hardware limits.
+
+![Default Compilation Profile](../../extras/assets/compilation_profile_default.svg)
+
+As shown in the image above, an input program can be represented as a point in the $(\tilde{\Omega}, \tilde{J})$ plane, while the green box highlights the valid parameter region for the interaction energy $\tilde{J}_{ij}$ and the driving amplitude $\tilde{\Omega}$.
 For example, since the minimum distance in the dimensionless model is one, it will be converted to the minimum distance on the hardware device.
+In other words, an input program that satisfies the hardware constraints (green point in the green region of the plot) will be successfully compiled, while compiling an input program whose parameters lie outside of the device specs (red point) will raise a detailed error.
 
 To review your device's hardware constraints and capabilities, see [Devices and Compilation](./device_and_compilation.ipynb).
 
 ### Maximum energy
 
-A device imposes hardware constraints and limits the range of parameters in a program.
-The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the minimum atom spacing $r_{\min}^{d}$.
+In addition to dimensionalization, every rescaling $\left(t, H\right) \rightarrow \left(t/\alpha, \alpha H\right)$ will, in theory, produce a physically equivalent program.
 
 The maximum energy profile always picks the **largest energy scale** that satisfies these hardware constraints, which guarantees the most efficient use of the hardware.
 Indeed, a larger reference scale realizes the same dimensionless program with a higher drive amplitude (higher signal-to-noise ratio), a shorter physical runtime (less noise), and shorter distances between atoms (more compact registers, hosting more atoms/qubits).
 
 The following figure illustrates two key scenarios:
 
-![Compilation diagram](../../extras/assets/compilation.svg)
+![Max Energy Compilation Profile](../../extras/assets/compilation_profile_max_energy.svg)
 
-The green box highlights the valid parameter region for the interaction energy $\tilde{J}_{ij}$ and the driving amplitude $\tilde{\Omega}$.
+As before, the green box highlights the valid parameter region for the interaction energy $\tilde{J}_{ij}$ and the driving amplitude $\tilde{\Omega}$.
 As described in the [QoolQit model](../../get_started/qoolqit_model.md) page, the interaction energy is bounded by 1 by construction: QoolQit's adimensionalization enforces $\tilde{J}_{ij} = J_{ij}/J_{\max}^{d} \leq 1$ across all devices.
 The driving amplitude (more precisely, its maximum over time) is instead constrained to a device-dependent upper bound. In this example, we take $\Omega_{\max}^{d}/J_{\max}^{d} = 0.2$, so that $\tilde{\Omega} = \Omega/J_{\max}^{d} \lesssim 0.2$.
 
@@ -101,3 +106,7 @@ The net effect on the drive is always visible when inspecting the compiled seque
 As before, to include noise sources in the emulation of a program, emulators must be configured with the flag `noise_model`, as described in [Execution](../execution/execution.ipynb).
 
 Finally, for more detailed information on [hardware modulation](https://docs.pasqal.com/pulser/tutorials/output_mod_eom/) and [noise sources](https://docs.pasqal.com/pulser/noise_model/), consult the comprehensive discussions available in the Pulser documentation.
+
+
+[^1]: Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
+For more details about Pulser's scope and capabilities, visit [Pulser documentation](https://docs.pasqal.com/pulser/).

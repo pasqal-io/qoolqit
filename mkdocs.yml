@@ -79,6 +79,8 @@ theme:
 
 markdown_extensions:
 - admonition
+- footnotes
+- md_in_html
 - pymdownx.arithmatex:
     generic: true
 - pymdownx.highlight:
@@ -89,7 +91,6 @@ markdown_extensions:
 - pymdownx.snippets
 - pymdownx.magiclink
 - pymdownx.superfences
-- md_in_html
 
 plugins:
 - search
