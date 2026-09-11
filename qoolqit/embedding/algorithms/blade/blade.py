@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from dataclasses import InitVar, dataclass
-from typing import Callable, Final
+from typing import Final
 
 import networkx as nx
 import numpy as np

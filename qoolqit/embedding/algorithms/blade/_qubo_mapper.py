@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import Mapping, Sequence, Union
+from collections.abc import Mapping, Sequence
 
 import networkx as nx
 import numpy as np
 
-NodeId = Union[str, int]
+NodeId = str | int
 
 
 class Qubo:

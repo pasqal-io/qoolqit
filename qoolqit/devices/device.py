@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import math
+from collections.abc import Callable
 from dataclasses import replace
-from typing import Callable, Optional
 
 import pulser
 from pulser.backend.remote import RemoteConnection
@@ -62,7 +62,7 @@ class Device:
     def __init__(
         self,
         pulser_device: BaseDevice,
-        default_converter: Optional[UnitConverter] = None,
+        default_converter: UnitConverter | None = None,
     ) -> None:
 
         if not isinstance(pulser_device, BaseDevice):

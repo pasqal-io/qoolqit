@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import inspect
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
-from typing import Callable, Generic, TypeVar
+from typing import Generic, TypeVar
 
 
 @dataclass
