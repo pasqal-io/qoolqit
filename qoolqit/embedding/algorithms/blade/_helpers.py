@@ -9,7 +9,7 @@ FormatType = Literal["full", "triu", "sym"]
 
 
 def _format_return(input: Value, ret: np.ndarray, *, format: FormatType) -> Value:
-    if isinstance(input, float) or isinstance(input, int):
+    if isinstance(input, (float, int)):
         return float(ret)
 
     if input.ndim == 1:

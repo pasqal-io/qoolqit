@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Callable, Generator
 from random import uniform
-from typing import Callable, Generator
 
 import matplotlib
 
