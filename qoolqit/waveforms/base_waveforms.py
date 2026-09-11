@@ -26,6 +26,7 @@ class Waveform(ABC):
         - `max()`: the maximum value of the waveform.
         - `min()`: the minimum value of the waveform.
         - `__mul__(scalar)`: rescale this waveform by a scalar factor.
+        - `__add__(Waveform | float)`: add the waveform or scalar.
         - `_to_pulser(duration)`: conversion to a Pulser-compatible waveform.
 
     Any additional parameters (e.g. amplitude, frequency) should be passed as keyword
@@ -113,6 +114,22 @@ class Waveform(ABC):
         if isinstance(t, list):
             return [self._single_call(ti) for ti in t]
         return self._single_call(t)
+
+    def __add__(self, other: Waveform | float) -> Waveform:
+        """Returns the pointwise sum of this waveform and another (or a scalar)."""
+        if isinstance(other, (int, float)):
+            # local import to avoid a circular import with waveforms.waveforms
+            from qoolqit.waveforms.waveforms import ConstantWaveform
+
+            other = ConstantWaveform(self.duration, float(other))
+        if not isinstance(other, Waveform):
+            raise NotImplementedError(f"Adding an object of type {type(other)} is not supported.")
+        return SumWaveform(self, other)
+
+    __radd__ = __add__
+
+    def __sub__(self, other: Waveform | float) -> Waveform:
+        return self.__add__(-1.0 * other)
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         """Returns a new CompositeWaveform composed of this waveform and another."""
@@ -278,3 +295,82 @@ class CompositeWaveform(Waveform):
         if len(pulser_waveforms) == 1:
             return pulser_waveforms[0]
         return pulser.CompositeWaveform(*pulser_waveforms)
+
+
+class SumWaveform(Waveform):
+    """A pointwise sum of waveforms played simultaneously.
+
+    All waveforms must share the same duration; the sum evaluates to
+    `sum(wf(t) for wf in waveforms)` on [0, duration] and zero outside.
+
+    Attributes:
+        waveforms: a list of waveforms in the sum.
+    """
+
+    def __init__(self, *waveforms: Waveform) -> None:
+        if not waveforms:
+            raise ValueError("At least one Waveform must be provided.")
+        if not all(isinstance(wf, Waveform) for wf in waveforms):
+            raise TypeError("All arguments must be instances of Waveform.")
+
+        self._waveforms: list[Waveform] = []
+        for wf in waveforms:
+            if isinstance(wf, SumWaveform):
+                self._waveforms += wf.waveforms  # flatten
+            else:
+                self._waveforms.append(wf)
+
+        durations = [wf.duration for wf in self._waveforms]
+        if not np.allclose(durations, durations[0]):
+            raise ValueError(
+                "All waveforms in a sum must have the same duration, got "
+                f"{durations}. Pad explicitly with `>> DelayWaveform(...)` "
+                "if you want a shorter waveform to be zero-extended."
+            )
+        super().__init__(float(durations[0]))
+
+    @property
+    def waveforms(self) -> list[Waveform]:
+        """Returns a list of the individual waveforms."""
+        return list(self._waveforms)
+
+    @property
+    def n_waveforms(self) -> int:
+        return len(self._waveforms)
+
+    def function(self, t: float) -> float:
+        return float(sum(wf(t) for wf in self._waveforms))
+
+    def _extrema(self, n_points: int = 1001) -> tuple[float, float]:
+        y = self(np.linspace(0.0, self.duration, n_points))
+        return float(np.min(y)), float(np.max(y))
+
+    def max(self) -> float:
+        """Get the maximum value of the waveform (numerically estimated)."""
+        return self._extrema()[1]
+
+    def min(self) -> float:
+        """Get the minimum value of the waveform (numerically estimated)."""
+        return self._extrema()[0]
+
+    def __mul__(self, other: float) -> SumWaveform:
+        return SumWaveform(*[wf * other for wf in self._waveforms])
+
+    def __repr_header__(self) -> str:
+        return "Sum waveform:\n"
+
+    def __repr_content__(self) -> str:
+        header = f"| 0.00 ≤ t ≤ {float(self.duration):.2f}: "
+        return header + " + ".join(wf.__repr_content__() for wf in self._waveforms)
+
+    def __repr__(self) -> str:
+        return self.__repr_header__() + self.__repr_content__()
+
+    def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
+        """Converts a SumWaveform to a Pulser waveform.
+
+        Pulser has no additive composition, so the sum is sampled on the
+        Pulser integer-ns grid and wrapped in a CustomWaveform.
+        """
+        samples = self(np.linspace(0.0, self.duration, duration))
+        return pulser.CustomWaveform(samples)
