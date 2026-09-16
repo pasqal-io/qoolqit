@@ -99,6 +99,7 @@ jobs:
               run: |
                 mkdir -p portal-dist
                 docker run --rm \
+                  --user 0:0 \
                   --volume "$PWD/portal-dist:/out" \
                   --env BUILD_CONFIG='{"qoolqit":"https://pasqal-io.github.io/qoolqit/pr-preview/pr-${{ github.event.pull_request.number }}/"}' \
                   --env ASTRO_BASE="/qoolqit/${PORTAL_PREVIEW_PATH}/" \
