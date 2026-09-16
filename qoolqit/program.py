@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Literal
 
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
 from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
@@ -12,6 +10,8 @@ from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.register import Register
+
+__all__ = ["QuantumProgram"]
 
 
 class QuantumProgram:
@@ -164,10 +164,9 @@ class QuantumProgram:
     def draw(
         self,
         compiled: bool = False,
-        return_fig: bool = False,
-    ) -> Figure | None:
+    ) -> None:
         if not compiled:
-            return self.drive.draw(return_fig=return_fig)
+            self.drive.draw()
         else:
             if not self.is_compiled:
                 raise ValueError(
@@ -187,12 +186,3 @@ class QuantumProgram:
                     draw_qubit_det=False,
                     phase_modulated=False,
                 )
-
-                if return_fig:
-                    plt.close()
-                    return fig
-                else:
-                    return None
-
-
-__all__ = ["QuantumProgram"]
