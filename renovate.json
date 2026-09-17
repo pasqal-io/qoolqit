@@ -4,7 +4,6 @@
     "config:recommended",
     "helpers:pinGitHubActionDigests"
   ],
-
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
