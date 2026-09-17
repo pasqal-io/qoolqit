@@ -3725,7 +3725,7 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">Device</span><span class="p">(</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">pulser_device</span><span class="p">:</span> <span class="n"><span title="pulser.devices._device_datacls.BaseDevice">BaseDevice</span></span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">default_converter</span><span class="p">:</span> <span class="n"><span title="typing.Optional">Optional</span></span><span class="p">[</span><span class="n"><span title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</span></span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">default_converter</span><span class="p">:</span> <span class="n"><span title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">)</span>
 </code></pre></div>
 
@@ -3748,7 +3748,7 @@ the <code>connection.fetch_available_devices()</code> method.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>default_converter</code></b>
-              (<code><span title="typing.Optional">Optional</span>[<span title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</span>]</code>, default:
+              (<code><span title="Optional">Optional</span>[<span title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</span>]</code>, default:
                   <code>None</code>
 )
           –
@@ -4134,7 +4134,7 @@ unit conversion.</p>
 <span class="normal"><a href="#__codelineno-0-104">104</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="bp">self</span><span class="p">,</span>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="n">pulser_device</span><span class="p">:</span> <span class="n">BaseDevice</span><span class="p">,</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="n">default_converter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UnitConverter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="n">default_converter</span><span class="p">:</span> <span class="n">UnitConverter</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>
 <a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pulser_device</span><span class="p">,</span> <span class="n">BaseDevice</span><span class="p">):</span>

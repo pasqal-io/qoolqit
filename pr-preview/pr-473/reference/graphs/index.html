@@ -4633,7 +4633,7 @@ weight: represents the node weight. Must be a real number.</p>
 <a id="__codelineno-0-96" name="__codelineno-0-96"></a>    <span class="n">num_edges</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="c1"># validate node attributes</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="k">for</span> <span class="n">_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
 <a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="n">unexpected_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="s2">"weight"</span><span class="p">,</span> <span class="s2">"pos"</span><span class="p">}</span>
 <a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="k">if</span> <span class="n">unexpected_keys</span><span class="p">:</span>
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">unexpected_keys</span><span class="si">}</span><span class="s2"> not allowed in node attributes."</span><span class="p">)</span>
@@ -4663,7 +4663,7 @@ weight: represents the node weight. Must be a real number.</p>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>                <span class="p">)</span>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a>    <span class="c1"># validate edge attributes</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">for</span> <span class="n">_u</span><span class="p">,</span> <span class="n">_v</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>        <span class="n">unexpected_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="s2">"weight"</span><span class="p">}</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>        <span class="k">if</span> <span class="n">unexpected_keys</span><span class="p">:</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">unexpected_keys</span><span class="si">}</span><span class="s2"> not allowed in edge attributes."</span><span class="p">)</span>
@@ -6776,7 +6776,7 @@ weight: represents the node weight. Must be a real number.</p>
 <a id="__codelineno-0-96" name="__codelineno-0-96"></a>    <span class="n">num_edges</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="c1"># validate node attributes</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="k">for</span> <span class="n">_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
 <a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="n">unexpected_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="s2">"weight"</span><span class="p">,</span> <span class="s2">"pos"</span><span class="p">}</span>
 <a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="k">if</span> <span class="n">unexpected_keys</span><span class="p">:</span>
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">unexpected_keys</span><span class="si">}</span><span class="s2"> not allowed in node attributes."</span><span class="p">)</span>
@@ -6806,7 +6806,7 @@ weight: represents the node weight. Must be a real number.</p>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>                <span class="p">)</span>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a>    <span class="c1"># validate edge attributes</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="k">for</span> <span class="n">_u</span><span class="p">,</span> <span class="n">_v</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">data</span><span class="p">():</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>        <span class="n">unexpected_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="p">{</span><span class="s2">"weight"</span><span class="p">}</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>        <span class="k">if</span> <span class="n">unexpected_keys</span><span class="p">:</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">unexpected_keys</span><span class="si">}</span><span class="s2"> not allowed in edge attributes."</span><span class="p">)</span>
@@ -9031,7 +9031,7 @@ for any value R in that interval, the following condition is true:</p>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">all_node_pairs</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="set">set</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">all_node_pairs</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n"><span title="collections.abc.Iterable">Iterable</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="set">set</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -9043,7 +9043,7 @@ for any value R in that interval, the following condition is true:</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>nodes</code></b>
-              (<code><span title="typing.Iterable">Iterable</span></code>)
+              (<code><span title="collections.abc.Iterable">Iterable</span></code>)
           –
           <div class="doc-md-description">
             <p>set of node indices.</p>
@@ -9082,7 +9082,7 @@ for any value R in that interval, the following condition is true:</p>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">distances</span><span class="p">(</span><span class="n">coords</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">,</span> <span class="n">edge_list</span><span class="p">:</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">distances</span><span class="p">(</span><span class="n">coords</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">,</span> <span class="n">edge_list</span><span class="p">:</span> <span class="n"><span title="collections.abc.Iterable">Iterable</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -9102,7 +9102,7 @@ for any value R in that interval, the following condition is true:</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>edge_list</code></b>
-              (<code><span title="typing.Iterable">Iterable</span></code>)
+              (<code><span title="collections.abc.Iterable">Iterable</span></code>)
           –
           <div class="doc-md-description">
             <p>edge list to compute the distances for.</p>
@@ -9210,7 +9210,7 @@ for any value R in that interval, the following condition is true:</p>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">random_edge_list</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">random_edge_list</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n"><span title="collections.abc.Iterable">Iterable</span></span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
