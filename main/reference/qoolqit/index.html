@@ -6307,7 +6307,7 @@ the <code>connection.fetch_available_devices()</code> method.</p>
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">Device</span><span class="p">(</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">pulser_device</span><span class="p">:</span> <span class="n"><span title="pulser.devices._device_datacls.BaseDevice">BaseDevice</span></span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">default_converter</span><span class="p">:</span> <span class="n"><span title="typing.Optional">Optional</span></span><span class="p">[</span><span class="n"><span title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</span></span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">default_converter</span><span class="p">:</span> <span class="n"><span title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">)</span>
 </code></pre></div>
 
@@ -6330,7 +6330,7 @@ the <code>connection.fetch_available_devices()</code> method.</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>default_converter</code></b>
-              (<code><span title="typing.Optional">Optional</span>[<span title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</span>]</code>, default:
+              (<code><span title="Optional">Optional</span>[<span title="qoolqit.devices.unit_converter.UnitConverter">UnitConverter</span>]</code>, default:
                   <code>None</code>
 )
           –
@@ -6564,8 +6564,12 @@ unit conversion.</p>
       <a href="../embedding/#qoolqit.embedding"><code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;embedding</a>
   </span>
 
-            <span class="doc doc-backlink-crumb last">
+            <span class="doc doc-backlink-crumb">
       <a href="../embedding/#qoolqit.embedding.BladeConfig"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BladeConfig</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb last">
+      <a href="../embedding/#qoolqit.embedding.BladeConfig.__post_init__"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__post_init__</a>
   </span>
 
       </li>
@@ -6716,7 +6720,7 @@ unit conversion.</p>
 <span class="normal"><a href="#__codelineno-0-104">104</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="bp">self</span><span class="p">,</span>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="n">pulser_device</span><span class="p">:</span> <span class="n">BaseDevice</span><span class="p">,</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="n">default_converter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UnitConverter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="n">default_converter</span><span class="p">:</span> <span class="n">UnitConverter</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>
 <a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pulser_device</span><span class="p">,</span> <span class="n">BaseDevice</span><span class="p">):</span>
@@ -9566,7 +9570,7 @@ through the given N+1 values.</p>
 <a id="__codelineno-0-36" name="__codelineno-0-36"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"`drive` must be of type Drive."</span><span class="p">)</span>
 <a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="k">if</span> <span class="n">drive</span><span class="o">.</span><span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a>        <span class="n">dmm_weights</span> <span class="o">=</span> <span class="n">drive</span><span class="o">.</span><span class="n">dmm</span><span class="o">.</span><span class="n">weights</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a>        <span class="k">for</span> <span class="n">qid</span> <span class="ow">in</span> <span class="n">dmm_weights</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a>        <span class="k">for</span> <span class="n">qid</span> <span class="ow">in</span> <span class="n">dmm_weights</span><span class="p">:</span>
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a>            <span class="k">if</span> <span class="n">qid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">register</span><span class="o">.</span><span class="n">qubits</span><span class="p">:</span>
 <a id="__codelineno-0-41" name="__codelineno-0-41"></a>                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a>                    <span class="s2">"In this QuantumProgram, the drive's detuning modulator map (DMM) "</span>
