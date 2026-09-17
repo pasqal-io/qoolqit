@@ -5,5 +5,10 @@
     "helpers:pinGitHubActionDigests"
   ],
 
-  "minimumReleaseAge": "15 days"
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "minimumReleaseAge": "15 days"
+    }
+  ]
 }
