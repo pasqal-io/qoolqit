@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 def eformat(f: Any) -> str:
     if 1 <= abs(f) < 1000:
         return f"{np.round(f, decimals=1)}"
-    elif 0.01 <= abs(f):
+    elif abs(f) >= 0.01:
         return f"{np.round(f, decimals=2)}"
     if f == 0:
         return "0"

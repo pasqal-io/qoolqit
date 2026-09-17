@@ -36,7 +36,7 @@ class QuantumProgram:
             raise TypeError("`drive` must be of type Drive.")
         if drive.dmm is not None:
             dmm_weights = drive.dmm.weights
-            for qid in dmm_weights.keys():
+            for qid in dmm_weights:
                 if qid not in register.qubits:
                     raise ValueError(
                         "In this QuantumProgram, the drive's detuning modulator map (DMM) "

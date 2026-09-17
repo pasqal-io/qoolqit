@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import random
+from collections.abc import Iterable
 from itertools import product
 from math import dist, hypot
-from typing import Iterable
 
 import numpy as np
 
