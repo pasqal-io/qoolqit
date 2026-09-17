@@ -24,6 +24,7 @@ COLORS: Mapping[str, str] = {
 
 DEFAULT_BAR_COLOR = COLORS["metalblue"]
 
+
 def plot_bitstrings(
     counts: dict[str, int],
     top: int | None = None,
