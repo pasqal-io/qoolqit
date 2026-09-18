@@ -118,7 +118,6 @@ select = [
 ]
 ignore = [
     "B905", # `zip()` without an explicit `strict=` parameter
-    "B018", # Found useless expression
     "B024", # abstract base class with no abstract methods or properties
     "B904", # raise exceptions with `raise ... from err` or `raise ... from None`
     "SIM102", # Use a single `if` statement instead of nested `if` statements
@@ -130,7 +129,7 @@ isort.required-imports = ["from __future__ import annotations"]
 "__init__.py" = ["F401", "F403"]
 "*.ipynb" = ["E402", "I002"]
 "setup.py" = ["I002"]
-"tests/**" = ["B008"]
+"tests/**" = ["B008","B018"]
 
 [tool.black]
 line-length = 100
