@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from typing import Literal
 from unittest.mock import MagicMock
 
@@ -11,6 +12,7 @@ from pulser import AnalogDevice as PulserAnalogDevice
 from pulser.sampler import sample
 
 from qoolqit import AnalogDevice, Drive, MockDevice, QuantumProgram, Register
+from qoolqit.devices import Device
 from qoolqit.drive import DetuningMapModulator
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
@@ -105,3 +107,73 @@ def test_compile_to_wrong_device_type() -> None:
         program.compile_to(device="I'm not a device")  # type: ignore [arg-type]
     with pytest.raises(TypeError, match="`device` must be of type `qoolqit.devices.Device`."):
         program.compile_to(device=PulserAnalogDevice)  # type: ignore [arg-type]
+
+
+def test_compilation_composite_drive_produces_multiple_pulses_in_order() -> None:
+    # a drive composed of segments with different phases compiles to one pulse per segment
+    register = Register(qubits={"q0": (0.0, 0.0)})
+    amp = ConstantWaveform(2.0, 0.2)
+    det = ConstantWaveform(2.0, 0.0)
+
+    drive_1 = Drive(amplitude=amp, detuning=det, phase=np.pi)
+    drive_2 = Drive(amplitude=amp, detuning=det, phase=0.0)
+    drive = drive_1 >> drive_2
+
+    program = QuantumProgram(register=register, drive=drive)
+    program.compile_to(device=MockDevice())
+
+    compiled_sequence = program.compiled_sequence
+    compiled_sequence_repr = json.loads(compiled_sequence.to_abstract_repr())
+    pulses_repr = [
+        pulse for pulse in compiled_sequence_repr["operations"] if pulse["op"] == "pulse"
+    ]
+
+    phases = [pulse["phase"] for pulse in pulses_repr]
+    np.testing.assert_allclose(phases, [np.pi, 0.0])
+
+
+def test_compilation_same_phase_composition_has_no_extra_delay() -> None:
+    # composing two same-phase drives adds no delay, even on a device with phase_jump_time > 0
+    register = Register(qubits={"q0": (0.0, 0.0)})
+    amp = ConstantWaveform(2.0, 0.2)
+    det = ConstantWaveform(2.0, 0.0)
+    drive = Drive(amplitude=amp, detuning=det, phase=np.pi)
+    composite = drive >> drive
+
+    single_program = QuantumProgram(register=register, drive=drive)
+    single_program.compile_to(device=AnalogDevice())
+
+    composite_program = QuantumProgram(register=register, drive=composite)
+    composite_program.compile_to(device=AnalogDevice())
+
+    assert composite_program.compiled_sequence.get_duration() == (
+        2 * single_program.compiled_sequence.get_duration()
+    )
+
+
+@pytest.mark.parametrize("device", [AnalogDevice(), MockDevice()])
+def test_compilation_different_phase_composition_has_extra_delay(
+    device: Device,
+) -> None:
+    # on a device with phase_jump_time > 0, a phase change legitimately adds delay: this
+    # models a real hardware constraint (the time it takes to change the phase between
+    # consecutive pulses), so exceeding the idealized sum of segment durations is expected
+    register = Register(qubits={"q0": (0.0, 0.0)})
+    amp = ConstantWaveform(2.0, 0.2)
+    det = ConstantWaveform(2.0, 0.0)
+    drive_1 = Drive(amplitude=amp, detuning=det, phase=np.pi)
+    drive_2 = Drive(amplitude=amp, detuning=det, phase=0.0)
+    composite = drive_1 >> drive_2
+
+    single_program = QuantumProgram(register=register, drive=drive_1)
+    single_program.compile_to(device=device)
+    single_duration = single_program.compiled_sequence.get_duration()
+
+    composite_program = QuantumProgram(register=register, drive=composite)
+    composite_program.compile_to(device=device)
+    composite_duration = composite_program.compiled_sequence.get_duration()
+
+    # MockDevice has phase_jump_time == 0, so the same assertion covers both
+    # the "no delay" and "legitimate hardware delay" cases.
+    phase_jump_time = device._device.channels["rydberg_global"].phase_jump_time
+    assert composite_duration == 2 * single_duration + 2 * phase_jump_time
