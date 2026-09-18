@@ -399,7 +399,7 @@ def draw_discrepancy_lines_and_colorbar(
     pos2d: np.ndarray,
     target_interactions: np.ndarray,
     current_interactions: np.ndarray,
-    spec: ColorbarSpec = ColorbarSpec(),
+    spec: ColorbarSpec = ColorbarSpec(),  # noqa: B008 (frozen dataclass, safe to share)
 ) -> None:
     discrepancies = np.triu(target_interactions - current_interactions, k=1)
 
