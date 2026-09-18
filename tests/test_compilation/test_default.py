@@ -33,7 +33,7 @@ class TestWorkingPointCompilerProfile:
     ) -> Callable[[Device, int | np.random.Generator], QuantumProgram]:
         def _generate_program(
             device: Device,
-            seed: int | np.random.Generator = np.random.default_rng(),
+            seed: int | np.random.Generator | None = None,
         ) -> QuantumProgram:
             rng = np.random.default_rng(seed)
             specs = device.specs
