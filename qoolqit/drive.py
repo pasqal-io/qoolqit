@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
 
-from qoolqit.waveforms import CompositeWaveform, DelayWaveform, Waveform
+from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform, Waveform
 
 __all__ = ["DetuningMapModulator", "Drive"]
 
@@ -121,7 +121,10 @@ class Drive:
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
             raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
-        self._phase = phase
+        self._phase: Waveform = ConstantWaveform(self.duration, phase)
+        self._phase_groups = [
+            (self._amplitude, self._detuning, phase),
+        ]
 
     @property
     def amplitude(self) -> Waveform:
@@ -139,26 +142,22 @@ class Drive:
         return self._dmm
 
     @property
-    def phase(self) -> float:
-        """The phase value in the drive."""
-        return self._phase
-
-    @property
     def duration(self) -> float:
         return self._duration
 
     def __rshift__(self, other: Drive) -> Drive:
-        return self.__rrshift__(other)
-
-    def __rrshift__(self, other: Drive) -> Drive:
         if isinstance(other, Drive):
-            if self.phase != other.phase:
-                raise NotImplementedError("Composing drives with different phase not supported.")
-            return Drive(
+            if self.dmm is not None or other.dmm is not None:
+                raise NotImplementedError("Composing drives with a dmm is not supported.")
+
+            composite_drive = Drive(
                 amplitude=CompositeWaveform(self._amplitude, other._amplitude),
                 detuning=CompositeWaveform(self._detuning, other._detuning),
-                phase=self._phase,
             )
+            composite_drive._phase = CompositeWaveform(self._phase, other._phase)
+            composite_drive._phase_groups = self._phase_groups + other._phase_groups
+
+            return composite_drive
         else:
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
@@ -197,39 +196,53 @@ class Drive:
 
         return repr
 
-    def draw(self, return_fig: bool = False) -> Figure | None:
+    def draw(self, fig: Figure | None = None) -> None:
+        """Draw the Drive in a figure."""
+        if fig is None:
+            fig = plt.gcf()
 
-        nrows = 3 if self.dmm is not None else 2
+        # setup subplots
+        has_phase = any(ph != 0 for _, _, ph in self._phase_groups)
+        nrows = 2
+        if self.dmm is not None:
+            nrows += 1
+        if has_phase:
+            nrows += 1
 
-        fig = plt.gcf()
         axs = fig.subplots(nrows, 1, sharex=True)
 
         # samples
-        t_array = np.linspace(0.0, self.duration, 250)
-        y_amp = self.amplitude(t_array)
-        y_det = self.detuning(t_array)
+        times = np.linspace(0.0, self.duration, 250)
+        amplitude = self.amplitude(times)
+        detuning = self.detuning(times)
+        phase = self._phase(times)
 
         # draw amplitude
-        axs[0].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
         axs[0].set_ylabel("Amplitude")
-        axs[0].plot(t_array, y_amp, color="darkgreen")
-        axs[0].fill_between(t_array, y_amp, color="darkgreen", alpha=0.4)
+        axs[0].plot(times, amplitude, color="darkgreen")
+        axs[0].fill_between(times, amplitude, color="darkgreen", alpha=0.4)
 
         # draw detuning
-        axs[1].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
         axs[1].set_axisbelow(True)
         axs[1].set_ylabel("Detuning")
-        axs[1].plot(t_array, y_det, color="darkmagenta")
-        axs[1].fill_between(t_array, y_det, color="darkmagenta", alpha=0.4)
+        axs[1].plot(times, detuning, color="darkmagenta")
+        axs[1].fill_between(times, detuning, color="darkmagenta", alpha=0.4)
 
-        axs[-1].set_xlabel("Time t")
+        # draw phase if present
+        if has_phase:
+            axs[2].set_ylabel("Phase")
+            axs[2].plot(times, phase, color="darkorange")
+            axs[2].fill_between(times, phase, color="darkorange", alpha=0.4)
 
         # draw DMM if present
         if self.dmm is not None:
-            y_dmm = self.dmm.waveform(t_array)
-            axs[-1].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+            y_dmm = self.dmm.waveform(times)
             axs[-1].set_ylabel("DMM")
-            axs[-1].plot(t_array, y_dmm, color="darkblue")
-            axs[-1].fill_between(t_array, y_dmm, color="darkblue", alpha=0.4)
+            axs[-1].plot(times, y_dmm, color="darkblue")
+            axs[-1].fill_between(times, y_dmm, color="darkblue", alpha=0.4)
 
-        return fig if return_fig else None
+        axs[-1].set_xlabel("Time t")
+
+        # add grids
+        for ax in axs:
+            ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
