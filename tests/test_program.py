@@ -58,7 +58,6 @@ def test_compiler_dmm(
 
 
 def test_compiled_sequence_with_small_delays() -> None:
-    """Test that the added delay is not compiled into the pulser sequence if smaller that 1 ns."""
     register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
 
     drive = Drive(amplitude=ConstantWaveform(1.0, 1.0), detuning=ConstantWaveform(1.0, 1.0))
@@ -79,11 +78,6 @@ def test_compiled_sequence_with_small_delays() -> None:
 
 @pytest.mark.parametrize("ratio", [0.33, 0.5, 1.0])
 def test_compile_to_max_duration_ratio(ratio: float) -> None:
-    """Test `device_max_duration_ratio` compilation flag.
-
-    Check that that the compiled sequence's duration is set to the ratio
-    of the maximum duration allowed by the device.
-    """
     register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
     drive = Drive(amplitude=ConstantWaveform(2.0, 1.0))
     program = QuantumProgram(register=register, drive=drive)
@@ -101,7 +95,6 @@ def test_compile_to_max_duration_ratio(ratio: float) -> None:
 
 @pytest.mark.parametrize("duration", [2.0, 33.33, 1000.0])
 def test_compile_to_max_duration(duration: float) -> None:
-    """Test that the compiled sequence's duration is set to the maximum allowed by the device."""
     reg = Register.from_graph(DataGraph.line(2))
     amp = ConstantWaveform(duration=duration, value=0.2)
     drive = Drive(amplitude=amp)
@@ -115,7 +108,6 @@ def test_compile_to_max_duration(duration: float) -> None:
 
 
 def test_max_duration_ratio_error() -> None:
-    """Test that a ValueError is raised when the device_max_duration_ratio is not in (0,1]."""
     register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
     drive = Drive(amplitude=ConstantWaveform(2.0, 1.0))
     program = QuantumProgram(register=register, drive=drive)
