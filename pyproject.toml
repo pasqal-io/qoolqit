@@ -107,10 +107,25 @@ exclude_also = [
 line-length = 100
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "Q"]
+select = [
+    "E", # pycodestyle
+    "F", # Pyflakes
+    "Q", # flake8-quotes
+    "UP", # pyupgrade
+    "B", # flake8-bugbear
+    "SIM", # flake8-simplify
+    "I", # isort
+]
+ignore = [
+    "B905", # `zip()` without an explicit `strict=` parameter
+    "B008", # `np.random.default_rng` in argument defaults
+    "B018", # Found useless expression
+    "B024", # abstract base class with no abstract methods or properties
+    "B904", # raise exceptions with `raise ... from err` or `raise ... from None`
+    "SIM102", # Use a single `if` statement instead of nested `if` statements
+    "SIM211", # Use `not ...` instead of `False if ... else True`
+]
 isort.required-imports = ["from __future__ import annotations"]
-mccabe.max-complexity = 15
-flake8-quotes.docstring-quotes = "double"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]

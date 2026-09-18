@@ -92,7 +92,7 @@ class Force:
     def regulated(
         self,
         regulation_cursor: float = 0,
-    ) -> "Force":
+    ) -> Force:
         min_temperature = np.min(self.maximum_temperatures)
 
         if min_temperature != np.inf:

@@ -96,7 +96,7 @@ class BaseGraph(nx.Graph):
         num_edges = len(g.edges)
 
         # validate node attributes
-        for name, data in g.nodes.data():
+        for _name, data in g.nodes.data():
             unexpected_keys = set(data) - {"weight", "pos"}
             if unexpected_keys:
                 raise ValueError(f"{unexpected_keys} not allowed in node attributes.")
@@ -126,7 +126,7 @@ class BaseGraph(nx.Graph):
                     )
 
         # validate edge attributes
-        for u, v, data in g.edges.data():
+        for _u, _v, data in g.edges.data():
             unexpected_keys = set(data) - {"weight"}
             if unexpected_keys:
                 raise ValueError(f"{unexpected_keys} not allowed in edge attributes.")
