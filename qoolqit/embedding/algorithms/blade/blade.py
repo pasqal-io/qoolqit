@@ -635,20 +635,74 @@ class BladeConfig(EmbedderConfig):
     """Configuration parameters to embed with BLaDE."""
 
     max_min_dist_ratio: float | None = None
+    """If present, set the maximum ratio between
+    the maximum radial distance and the minimum pairwise distances."""
+
     dimensions: tuple[int, ...] = default_dimensions
+    """List of numbers of dimensions to explore one
+    after the other. A list with one value is equivalent to a list containing
+    twice the same value. For a 2D embedding, the last value should be 2.
+    Increasing the number of intermediate dimensions can help to escape
+    from local minima."""
+
     starting_positions: np.ndarray | None = None
+    """If provided, initial positions to start from. Otherwise,
+    random positions will be generated. The number of dimensions of the
+    starting positions must be lower than or equal to the first dimension
+    to explore. If it is lower, it is added dimensions filled with
+    random values."""
+
     pca: bool = default_pca
+    """Whether to apply Principal Component Analysis to prioritize dimensions
+    to keep when transitioning from a space to a space with fewer dimensions.
+    It is disabled by default because it can raise an error when there are
+    too many dimensions compared to the number of nodes."""
+
     steps_per_round: int = default_steps_per_round
+    """Number of elementary steps to perform for each dimension
+    transition, where at each step move vectors are computed and applied
+    on the nodes."""
+
     compute_weight_relative_threshold: Callable[[float], float] = (
         default_compute_weight_relative_threshold
     )
+    """Function that is called at each step.
+    It takes a float number between 0 and 1 that represents the progress
+    on the steps. It must return a float number between 0 and 1 that gives
+    a threshold determining which weights are significant (see
+    `update_positions` to learn more)."""
+
     compute_max_distance_to_walk: Callable[[float, float], float | tuple[float, float, float]] = (
         default_compute_max_distance_to_walk
     )
+    """Function that is called at each step.
+    It takes a float number between 0 and 1 that represents the progress
+    on the steps, and takes another argument that is set to the current
+    largest pairwise distance when `max_min_dist_ratio` is not enabled,
+    otherwise, it is set to the maximum radial distance for the current
+    step. It must return a float number that limits the distances
+    nodes can move at one step (see `update_positions` to learn more)."""
+
     compute_regulation_cursor: Callable[[float], float] = default_compute_regulation_cursor
+    """Function that is called at each step.
+    It takes a float number between 0 and 1 that represents the progress
+    on the steps. It must return a float number between 0 (no regulation)
+    and 1 (full regulation) that uniformizes the ability for the forces
+    to achieve their objectives at each step by changing priorities."""
+
     compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors
+    """Function that is called at the boundaries of
+    the rounds. It defines the target ratio the enforce during the
+    evolution. It acts as a multiplying factor on the target ratio."""
+
     ratio_rerun: int = default_ratio_rerun
+    """When the distance ratio constraint is not met, it defines
+    the maximum number of times the algorithm applies additional
+    computation steps putting the priority on the constraint."""
+
     device: InitVar[Device | None] = None
+    """The QoolQit device to use to set the maximum ratio between the maximum
+    radial distance and the minimum pairwise distance between atoms."""
 
     def __post_init__(self, device: Device | None) -> None:
         """Post initialization of the `BladeConfig` dataclass.
