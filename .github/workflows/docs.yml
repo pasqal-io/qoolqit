@@ -46,6 +46,7 @@ jobs:
             contents: write
             pull-requests: write
             issues: write
+            deployments: read # wait-for-pages-deployment polls the Deployments API
         steps:
             - name: Checkout QoolQit
               uses: actions/checkout@v7
@@ -63,6 +64,7 @@ jobs:
                   source-dir: ./site/
                   preview-branch: gh-pages
                   qr-code: false
+                  wait-for-pages-deployment: true
 
     portal-preview:
         name: Deploy doc-portal preview
