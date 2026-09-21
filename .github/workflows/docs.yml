@@ -15,9 +15,13 @@ jobs:
         name: Build docs
         if: github.event.action != 'closed' # No need to build docs when PR is closed
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
         steps:
             - name: Checkout QoolQit
               uses: actions/checkout@v7
+              with:
+                  persist-credentials: false
 
             - name: Set up Python
               uses: actions/setup-python@v7
@@ -41,15 +45,17 @@ jobs:
         needs: build-docs
         if: |
           always() &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
           (github.event.action == 'closed' || needs.build-docs.result == 'success')
         permissions:
             contents: write
             pull-requests: write
-            issues: write
-            deployments: read # wait-for-pages-deployment polls the Deployments API
+            deployments: read
         steps:
-            - name: Checkout QoolQit
+            - name: Checkout the base commit, never the PR head
               uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.pull_request.base.sha }}
 
             - name: Download site artifact
               if: github.event.action != 'closed'
@@ -77,7 +83,6 @@ jobs:
         permissions:
             contents: write
             pull-requests: write
-            issues: write
         env:
             PORTAL_PREVIEW_PATH: portal-preview/pr-${{ github.event.pull_request.number }}
             DOC_PORTAL_IMAGE: europe-west9-docker.pkg.dev/pasqal-artifact/frontend/doc-portal:source-runtime
