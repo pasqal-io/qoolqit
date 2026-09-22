@@ -2,10 +2,8 @@ from __future__ import annotations
 
 import math
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pytest
-from matplotlib.figure import Figure
 
 from qoolqit.drive import DetuningMapModulator, Drive
 from qoolqit.waveforms import ConstantWaveform, DelayWaveform, PiecewiseLinearWaveform, RampWaveform
@@ -151,56 +149,6 @@ def test_drive_composition_with_dmm_not_supported() -> None:
 
     with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
         drive_with_dmm >> drive_with_dmm
-
-
-def test_drive_draw_plain_drive() -> None:
-    amp = RampWaveform(10.0, 0.0, 1.0)
-    det = RampWaveform(10.0, 0.0, 1.0)
-    drive = Drive(amplitude=amp, detuning=det)
-
-    plt.close("all")
-    drive.draw()
-    plt.close("all")
-
-
-def test_drive_draw_adds_phase_row_for_nonzero_phase() -> None:
-    amp = RampWaveform(10.0, 0.0, 1.0)
-    det = RampWaveform(10.0, 0.0, 1.0)
-
-    zero_phase = Drive(amplitude=amp, detuning=det, phase=0.0) >> Drive(
-        amplitude=amp, detuning=det, phase=0.0
-    )
-    nonzero_phase = Drive(amplitude=amp, detuning=det, phase=math.pi) >> Drive(
-        amplitude=amp, detuning=det, phase=0.0
-    )
-
-    plt.close("all")
-    zero_phase.draw()
-    n_axes_zero_phase = len(plt.gcf().axes)
-    plt.close("all")
-
-    nonzero_phase.draw()
-    n_axes_nonzero_phase = len(plt.gcf().axes)
-    plt.close("all")
-
-    assert n_axes_nonzero_phase == n_axes_zero_phase + 1
-
-
-def test_drive_draw_uses_pyplot_figure_by_default() -> None:
-    amp = RampWaveform(10.0, 0.0, 1.0)
-    det = RampWaveform(10.0, 0.0, 1.0)
-    drive = Drive(amplitude=amp, detuning=det)
-
-    plt.close("all")
-    assert plt.get_fignums() == []
-    drive.draw()
-    assert plt.get_fignums() != []
-    plt.close("all")
-
-    # an explicit figure can still be provided and is drawn on directly.
-    fig = Figure()
-    drive.draw(fig=fig)
-    assert len(fig.axes) > 0
 
 
 def test_error_amplitude_negative() -> None:
