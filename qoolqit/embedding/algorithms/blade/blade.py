@@ -635,43 +635,41 @@ class BladeConfig(EmbedderConfig):
     """Configuration parameters to embed with BLaDE."""
 
     max_min_dist_ratio: float | None = None
-    """If present, set the maximum ratio between.
+    """If present, sets the maximum radial-to-pairwise distance ratio.
 
-    the maximum radial distance and the minimum pairwise distances.
+    Bounds the ratio between the maximum radial distance and the minimum
+    pairwise distances.
     """
 
     dimensions: tuple[int, ...] = default_dimensions
-    """List of numbers of dimensions to explore one.
+    """List of numbers of dimensions to explore one after the other.
 
-    after the other. A list with one value is equivalent to a list containing
-    twice the same value. For a 2D embedding, the last value should be 2.
-    Increasing the number of intermediate dimensions can help to escape
-    from local minima.
+    A list with one value is equivalent to a list containing twice the same
+    value. For a 2D embedding, the last value should be 2. Increasing the
+    number of intermediate dimensions can help to escape from local minima.
     """
 
     starting_positions: np.ndarray | None = None
     """If provided, initial positions to start from.
 
-    Otherwise,
-    random positions will be generated. The number of dimensions of the
-    starting positions must be lower than or equal to the first dimension
-    to explore. If it is lower, it is added dimensions filled with
+    Otherwise, random positions will be generated. The number of dimensions
+    of the starting positions must be lower than or equal to the first
+    dimension to explore. If it is lower, it is added dimensions filled with
     random values.
     """
 
     pca: bool = default_pca
-    """Whether to apply Principal Component Analysis to prioritize dimensions.
+    """Whether to apply Principal Component Analysis to prioritize dimensions to keep.
 
-    to keep when transitioning from a space to a space with fewer dimensions.
+    Applies when transitioning from a space to a space with fewer dimensions.
     It is disabled by default because it can raise an error when there are
     too many dimensions compared to the number of nodes.
     """
 
     steps_per_round: int = default_steps_per_round
-    """Number of elementary steps to perform for each dimension.
+    """Number of elementary steps to perform for each dimension transition.
 
-    transition, where at each step move vectors are computed and applied
-    on the nodes.
+    At each step, move vectors are computed and applied on the nodes.
     """
 
     compute_weight_relative_threshold: Callable[[float], float] = (
@@ -708,23 +706,24 @@ class BladeConfig(EmbedderConfig):
     """
 
     compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors
-    """Function that is called at the boundaries of.
+    """Function that is called at the boundaries of the rounds.
 
-    the rounds. It defines the target ratio the enforce during the
-    evolution. It acts as a multiplying factor on the target ratio.
+    It defines the target ratio to enforce during the evolution. It acts
+    as a multiplying factor on the target ratio.
     """
 
     ratio_rerun: int = default_ratio_rerun
-    """When the distance ratio constraint is not met, it defines.
+    """Maximum number of retries when the distance ratio constraint is not met.
 
-    the maximum number of times the algorithm applies additional
-    computation steps putting the priority on the constraint.
+    Defines how many additional computation steps the algorithm performs,
+    putting priority on satisfying the constraint.
     """
 
     device: InitVar[Device | None] = None
-    """The QoolQit device to use to set the maximum ratio between the maximum.
+    """The QoolQit device used to compute the maximum distance ratio.
 
-    radial distance and the minimum pairwise distance between atoms.
+    Determines the maximum ratio between the maximum radial distance and
+    the minimum pairwise distance between atoms.
     """
 
     def __post_init__(self, device: Device | None) -> None:
