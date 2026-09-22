@@ -8,7 +8,7 @@ on:
             - synchronize
             - closed
 
-concurrency: preview-${{ github.ref }}
+concurrency: gh-pages-${{ github.repository }}
 
 jobs:
     build-docs:
@@ -143,3 +143,31 @@ jobs:
               with:
                   header: doc-portal-preview
                   delete: true
+
+    publish-dev-docs:
+        name: Publish development docs
+        needs: [portal-preview]
+        if: |
+          always() &&
+          github.event.pull_request.merged == true
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout QoolQit
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+            - name: Set up Python
+              uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+              with:
+                  python-version: '3.14'
+
+            - name: Install QoolQit with development dependencies
+              run: pip install -e .[dev]
+
+            - name: Deploy docs
+              run: |
+                git config user.name "GitHub Actions"
+                git config user.email "actions@github.com"
+                git fetch origin gh-pages
+                mike deploy --push --update-aliases main development
