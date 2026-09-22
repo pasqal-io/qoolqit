@@ -87,12 +87,12 @@ def test_drive_different_phase_composition() -> None:
     assert math.isclose(group_2_amp.duration, drive_2.duration)
 
     t_1 = np.linspace(0.0, drive_1.duration, 20)
-    assert np.allclose(group_1_amp(t_1), drive_1.amplitude(t_1))
-    assert np.allclose(group_1_det(t_1), drive_1.detuning(t_1))
+    np.testing.assert_allclose(group_1_amp(t_1), drive_1.amplitude(t_1))
+    np.testing.assert_allclose(group_1_det(t_1), drive_1.detuning(t_1))
 
     t_2 = np.linspace(0.0, drive_2.duration, 20)
-    assert np.allclose(group_2_amp(t_2), drive_2.amplitude(t_2))
-    assert np.allclose(group_2_det(t_2), drive_2.detuning(t_2))
+    np.testing.assert_allclose(group_2_amp(t_2), drive_2.amplitude(t_2))
+    np.testing.assert_allclose(group_2_det(t_2), drive_2.detuning(t_2))
 
 
 def test_drive_chained_phase_composition() -> None:
