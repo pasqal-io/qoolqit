@@ -26,19 +26,19 @@ from qoolqit.waveforms.base_waveforms import Waveform
 def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
 
     with pytest.raises(TypeError, match="missing 1 required keyword-only argument: 'amplitude'"):
-        _ = Drive()  # type: ignore [call-arg]
+        Drive()  # type: ignore [call-arg]
 
     with pytest.raises(TypeError, match="missing 1 required keyword-only argument: 'amplitude'"):
-        _ = Drive(detuning=ConstantWaveform(duration=10, value=1.0))  # type: ignore [call-arg]
+        Drive(detuning=ConstantWaveform(duration=10, value=1.0))  # type: ignore [call-arg]
 
     with pytest.raises(TypeError, match="'amplitude' and 'detuning' must be of type Waveform."):
-        _ = Drive(amplitude=1.0, detuning=det_wf)  # type: ignore [arg-type]
+        drive = Drive(amplitude=1.0, detuning=det_wf)  # type: ignore [arg-type]
 
     with pytest.raises(TypeError, match="'amplitude' and 'detuning' must be of type Waveform."):
-        _ = Drive(amplitude=amp_wf, detuning=1.0)  # type: ignore [arg-type]
+        drive = Drive(amplitude=amp_wf, detuning=1.0)  # type: ignore [arg-type]
 
     with pytest.raises(ValueError, match="'amplitude' must be positive."):
-        _ = Drive(amplitude=det_wf)
+        drive = Drive(amplitude=det_wf)
 
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
 
@@ -154,7 +154,7 @@ def test_drive_composition_with_dmm_not_supported() -> None:
 def test_error_amplitude_negative() -> None:
     with pytest.raises(ValueError, match="'amplitude' must be positive."):
         neg_ramp = RampWaveform(10.0, -1.0, 2.0)
-        _ = Drive(amplitude=neg_ramp, detuning=neg_ramp)
+        Drive(amplitude=neg_ramp, detuning=neg_ramp)
 
 
 @pytest.mark.parametrize("amp_duration, det_duration", [(1.0, 1.005), (20.0, 10.0)])
@@ -173,10 +173,10 @@ def test_dmm_init() -> None:
     invalid_weights = {0: 1.1, 1: 0.3}
 
     with pytest.raises(ValueError, match="`weights` must be a dictionary of values in \\[0, 1\\]."):
-        _ = DetuningMapModulator(negative_wf, weights=invalid_weights)
+        DetuningMapModulator(negative_wf, weights=invalid_weights)
 
     with pytest.raises(ValueError, match="`waveform` must be negative for all times."):
-        _ = DetuningMapModulator(positive_wf, weights=valid_weights)
+        DetuningMapModulator(positive_wf, weights=valid_weights)
 
     dmm = DetuningMapModulator(negative_wf, weights=valid_weights)
     assert isinstance(dmm.waveform, RampWaveform)
