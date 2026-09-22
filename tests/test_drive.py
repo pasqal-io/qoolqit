@@ -66,71 +66,104 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
 def test_drive_different_phase_composition() -> None:
     amp_1 = RampWaveform(10.0, 0.0, 1.0)
     det_1 = RampWaveform(10.0, 0.0, 1.0)
+    phase_1 = math.pi / 2
     amp_2 = RampWaveform(5.0, 1.0, 0.0)
     det_2 = RampWaveform(5.0, 1.0, 0.0)
+    phase_2 = 0.0
 
-    drive_1 = Drive(amplitude=amp_1, detuning=det_1, phase=math.pi)
-    drive_2 = Drive(amplitude=amp_2, detuning=det_2, phase=0.0)
+    drive_1 = Drive(amplitude=amp_1, detuning=det_1, phase=phase_1)
+    drive_2 = Drive(amplitude=amp_2, detuning=det_2, phase=phase_2)
 
-    composite = drive_1 >> drive_2
+    composite_drive = drive_1 >> drive_2
 
-    assert math.isclose(composite.duration, drive_1.duration + drive_2.duration)
+    expected_duration = drive_1.duration + drive_2.duration
+    np.testing.assert_allclose(composite_drive.duration, expected_duration)
 
-    assert len(composite._phase_groups) == 2
-    group_1_amp, group_1_det, group_1_phase = composite._phase_groups[0]
-    group_2_amp, group_2_det, group_2_phase = composite._phase_groups[1]
-
-    assert math.isclose(group_1_phase, math.pi)
-    assert math.isclose(group_2_phase, 0.0)
-
-    assert math.isclose(group_1_amp.duration, drive_1.duration)
-    assert math.isclose(group_2_amp.duration, drive_2.duration)
-
-    t_1 = np.linspace(0.0, drive_1.duration, 20)
-    np.testing.assert_allclose(group_1_amp(t_1), drive_1.amplitude(t_1))
-    np.testing.assert_allclose(group_1_det(t_1), drive_1.detuning(t_1))
-
-    t_2 = np.linspace(0.0, drive_2.duration, 20)
-    np.testing.assert_allclose(group_2_amp(t_2), drive_2.amplitude(t_2))
-    np.testing.assert_allclose(group_2_det(t_2), drive_2.detuning(t_2))
+    assert composite_drive._phase_groups == [
+        (drive_1._amplitude, drive_1._detuning, phase_1),
+        (drive_2._amplitude, drive_2._detuning, phase_2),
+    ]
 
 
 def test_drive_chained_phase_composition() -> None:
     amp_1 = RampWaveform(10.0, 0.0, 1.0)
     det_1 = RampWaveform(10.0, 0.0, 1.0)
+    phase_1 = math.pi
     amp_2 = RampWaveform(5.0, 1.0, 0.0)
     det_2 = RampWaveform(5.0, 1.0, 0.0)
+    phase_2 = 0.0
     amp_3 = RampWaveform(8.0, 0.0, 0.5)
     det_3 = RampWaveform(8.0, 0.0, 0.5)
+    phase_3 = 0.343
 
-    drive_1 = Drive(amplitude=amp_1, detuning=det_1, phase=math.pi)
+    drive_1 = Drive(amplitude=amp_1, detuning=det_1, phase=phase_1)
+    drive_2 = Drive(amplitude=amp_2, detuning=det_2, phase=phase_2)
+    drive_3 = Drive(amplitude=amp_3, detuning=det_3, phase=phase_3)
+
+    composite_drive = drive_1 >> drive_2 >> drive_3
+
+    expected_duration = drive_1.duration + drive_2.duration + drive_3.duration
+    np.testing.assert_allclose(composite_drive.duration, expected_duration)
+
+    assert composite_drive._phase_groups == [
+        (drive_1._amplitude, drive_1._detuning, phase_1),
+        (drive_2._amplitude, drive_2._detuning, phase_2),
+        (drive_3._amplitude, drive_3._detuning, phase_3),
+    ]
+
+
+def test_drive_phase_composition_with_padded_waveforms() -> None:
+    # when amplitude and detuning have different durations, Drive pads the shorter one to
+    # get equal duration. The phase groups must carry the padded waveforms.
+    amp_1 = RampWaveform(10.0, 0.0, 1.0)
+    det_1 = RampWaveform(5.0, 0.0, 1.0)
+    amp_2 = RampWaveform(4.0, 1.0, 0.0)
+    det_2 = RampWaveform(4.0, -1.0, 0.0)
+
+    drive_1 = Drive(amplitude=amp_1, detuning=det_1, phase=math.pi / 2)
     drive_2 = Drive(amplitude=amp_2, detuning=det_2, phase=0.0)
-    drive_3 = Drive(amplitude=amp_3, detuning=det_3, phase=math.pi / 2)
 
-    composite = drive_1 >> drive_2 >> drive_3
+    composite_drive = drive_1 >> drive_2
 
-    assert math.isclose(composite.duration, drive_1.duration + drive_2.duration + drive_3.duration)
+    group_1_amp, group_1_det, _ = composite_drive._phase_groups[0]
+    group_2_amp, group_2_det, _ = composite_drive._phase_groups[1]
 
-    assert len(composite._phase_groups) == 3
-    phases = [phase for _, _, phase in composite._phase_groups]
-    assert phases == [math.pi, 0.0, math.pi / 2]
+    # both waveforms of a group span the whole segment
+    np.testing.assert_allclose(group_1_amp.duration, drive_1.duration)
+    np.testing.assert_allclose(group_1_det.duration, drive_1.duration)
+    np.testing.assert_allclose(group_2_amp.duration, drive_2.duration)
+    np.testing.assert_allclose(group_2_det.duration, drive_2.duration)
 
-    durations = [amp.duration for amp, _, _ in composite._phase_groups]
-    assert durations == [drive_1.duration, drive_2.duration, drive_3.duration]
+    # the longer amplitude is carried over untouched
+    times = np.linspace(0.0, drive_1.duration, 20)
+    np.testing.assert_allclose(group_1_amp(times), drive_1.amplitude(times))
+
+    # the shorter detuning keeps its own values, then the padding holds it at zero
+    times_det = np.linspace(0.0, det_1.duration, 10, endpoint=False)
+    np.testing.assert_allclose(group_1_det(times_det), drive_1.detuning(times_det))
+
+    times_padding = np.linspace(det_1.duration, drive_1.duration, 10)
+    np.testing.assert_allclose(group_1_det(times_padding), 0.0)
+
+    # the second group needs no padding, so it holds the original waveforms
+    times_2 = np.linspace(0.0, drive_2.duration, 20)
+    np.testing.assert_allclose(group_2_amp(times_2), drive_2.amplitude(times_2))
+    np.testing.assert_allclose(group_2_det(times_2), drive_2.detuning(times_2))
 
 
-def test_drive_same_phase_composition() -> None:
+@pytest.mark.parametrize("phase", [math.pi, 0.0, np.pi / 2])
+def test_drive_same_phase_composition(phase: float) -> None:
     amp = RampWaveform(10.0, 0.0, 1.0)
     det = RampWaveform(10.0, 0.0, 1.0)
 
-    drive_1 = Drive(amplitude=amp, detuning=det, phase=math.pi)
-    drive_2 = Drive(amplitude=amp, detuning=det, phase=math.pi)
+    drive_1 = Drive(amplitude=amp, detuning=det, phase=phase)
+    drive_2 = Drive(amplitude=amp, detuning=det, phase=phase)
 
-    composite = drive_1 >> drive_2
+    composite_drive = drive_1 >> drive_2
 
-    assert math.isclose(composite.duration, drive_1.duration + drive_2.duration)
-    phases = [phase for _, _, phase in composite._phase_groups]
-    assert phases == [math.pi, math.pi]
+    np.testing.assert_allclose(composite_drive.duration, drive_1.duration + drive_2.duration)
+    phases = [phase for _, _, phase in composite_drive._phase_groups]
+    assert phases == [phase, phase]
 
 
 def test_drive_composition_with_dmm_not_supported() -> None:
