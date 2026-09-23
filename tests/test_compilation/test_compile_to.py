@@ -151,6 +151,37 @@ def test_compilation_same_phase_composition_has_no_extra_delay() -> None:
     )
 
 
+def test_compilation_same_phase_composition_fits_device_max_duration() -> None:
+    # same-phase segments compile to a single pulse, so the clock period rounding
+    # is applied once and the sequence exactly matches the device max duration
+    register = Register(qubits={"q0": (0.0, 0.0)})
+    drive_1 = Drive(amplitude=ConstantWaveform(1.3, 0.2))
+    drive_2 = Drive(amplitude=ConstantWaveform(2.7, 0.2))
+    device = AnalogDevice()
+
+    program = QuantumProgram(register=register, drive=drive_1 >> drive_2)
+    program.compile_to(device=device, device_max_duration_ratio=1.0)
+
+    compiled_sequence = program.compiled_sequence
+    compiled_sequence_repr = json.loads(compiled_sequence.to_abstract_repr())
+    pulses_repr = [
+        pulse for pulse in compiled_sequence_repr["operations"] if pulse["op"] == "pulse"
+    ]
+    assert len(pulses_repr) == 1
+    assert compiled_sequence.get_duration() == device._max_duration
+
+
+def test_compilation_same_phase_composition_with_short_segment() -> None:
+    # a segment shorter than the channel min duration is fine when it is
+    # part of a larger same-phase pulse
+    register = Register(qubits={"q0": (0.0, 0.0)})
+    short = Drive(amplitude=ConstantWaveform(0.01, 0.2))
+    long = Drive(amplitude=ConstantWaveform(2.7, 0.2))
+
+    program = QuantumProgram(register=register, drive=short >> long)
+    program.compile_to(device=AnalogDevice())
+
+
 @pytest.mark.parametrize("device", [AnalogDevice(), MockDevice()])
 def test_compilation_different_phase_composition_has_extra_delay(
     device: Device,

@@ -162,8 +162,30 @@ def test_drive_same_phase_composition(phase: float) -> None:
     composite_drive = drive_1 >> drive_2
 
     np.testing.assert_allclose(composite_drive.duration, drive_1.duration + drive_2.duration)
-    phases = [phase for _, _, phase in composite_drive._phase_groups]
-    assert phases == [phase, phase]
+
+    # same-phase drives are merged into a single group
+    assert len(composite_drive._phase_groups) == 1
+    group_amp, group_det, group_phase = composite_drive._phase_groups[0]
+    assert group_phase == phase
+
+    times = np.linspace(0.0, composite_drive.duration, 50)
+    np.testing.assert_allclose(group_amp(times), composite_drive.amplitude(times))
+    np.testing.assert_allclose(group_det(times), composite_drive.detuning(times))
+
+
+def test_drive_chained_composition_merges_adjacent_same_phase() -> None:
+    amp = RampWaveform(4.0, 0.0, 1.0)
+    det = RampWaveform(4.0, 0.0, 1.0)
+    phases = [0.0, 0.0, math.pi, math.pi, 0.0]
+    drives = [Drive(amplitude=amp, detuning=det, phase=p) for p in phases]
+
+    composite_drive = drives[0] >> drives[1] >> drives[2] >> drives[3] >> drives[4]
+
+    # only adjacent same-phase drives are merged, non-adjacent ones stay separate
+    group_phases = [phase for _, _, phase in composite_drive._phase_groups]
+    assert group_phases == [0.0, math.pi, 0.0]
+    group_durations = [amp.duration for amp, _, _ in composite_drive._phase_groups]
+    np.testing.assert_allclose(group_durations, [8.0, 8.0, 4.0])
 
 
 def test_drive_composition_with_dmm_not_supported() -> None:

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
 
-from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform, Waveform
+from qoolqit.waveforms import CompositeWaveform, DelayWaveform, Waveform
 
 __all__ = ["DetuningMapModulator", "Drive"]
 
@@ -121,7 +121,6 @@ class Drive:
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
             raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
-        self._phase: Waveform = ConstantWaveform(self.duration, phase)
         self._phase_groups = [
             (self._amplitude, self._detuning, phase),
         ]
@@ -154,8 +153,23 @@ class Drive:
                 amplitude=CompositeWaveform(self._amplitude, other._amplitude),
                 detuning=CompositeWaveform(self._detuning, other._detuning),
             )
-            composite_drive._phase = CompositeWaveform(self._phase, other._phase)
-            composite_drive._phase_groups = self._phase_groups + other._phase_groups
+            # merge the boundary groups if they share the same phase, so that
+            # consecutive same-phase segments compile to a single pulse
+            last_amp, last_det, last_phase = self._phase_groups[-1]
+            first_amp, first_det, first_phase = other._phase_groups[0]
+            if last_phase == first_phase:
+                merged = (
+                    CompositeWaveform(last_amp, first_amp),
+                    CompositeWaveform(last_det, first_det),
+                    last_phase,
+                )
+                composite_drive._phase_groups = [
+                    *self._phase_groups[:-1],
+                    merged,
+                    *other._phase_groups[1:],
+                ]
+            else:
+                composite_drive._phase_groups = self._phase_groups + other._phase_groups
 
             return composite_drive
         else:
