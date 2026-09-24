@@ -62,11 +62,6 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
     drive = drive_rand_phase >> drive_rand_phase
     assert math.isclose(drive.phase, phase)
 
-    with pytest.raises(NotImplementedError):
-        drive1 = Drive(amplitude=amp_wf, detuning=det_wf, phase=1.0)
-        drive2 = Drive(amplitude=amp_wf, detuning=det_wf, phase=0.0)
-        drive = drive1 >> drive2
-
 
 def test_drive_composition_with_non_drive() -> None:
     drive = Drive(amplitude=RampWaveform(10.0, 0.0, 1.0))
@@ -75,6 +70,17 @@ def test_drive_composition_with_non_drive() -> None:
         TypeError, match="unsupported operand type\\(s\\) for >>: 'Drive' and 'float'"
     ):
         drive >> 1.0  # type: ignore [operator]
+
+
+def test_drive_different_phase_composition_not_supported() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    drive_1 = Drive(amplitude=amp, phase=1.0)
+    drive_2 = Drive(amplitude=amp, phase=0.0)
+
+    with pytest.raises(
+        NotImplementedError, match="Composing drives with different phase not supported."
+    ):
+        drive_1 >> drive_2
 
 
 def test_drive_composition_with_dmm_not_supported() -> None:
