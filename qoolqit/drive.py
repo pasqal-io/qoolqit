@@ -12,6 +12,11 @@ from qoolqit.waveforms import CompositeWaveform, DelayWaveform, Waveform
 __all__ = ["DetuningMapModulator", "Drive"]
 
 
+def _join(waveforms: list[Waveform]) -> Waveform:
+    """Join consecutive waveforms into a single waveform."""
+    return waveforms[0] if len(waveforms) == 1 else CompositeWaveform(*waveforms)
+
+
 @dataclass(frozen=True)
 class DetuningMapModulator:
     """A weighted detuning for the Detuning Map Modulator (DMM).
@@ -121,8 +126,12 @@ class Drive:
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
             raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
-        self._phase_groups = [
-            (self._amplitude, self._detuning, phase),
+        # segments of constant phase, stored as
+        # (number of amplitude components, number of detuning components, phase).
+        # E.g. [(2, 1, 0.0), (1, 1, pi)]: the first 2 amplitude components and the first
+        # detuning component play at phase 0, the next ones at phase pi.
+        self._phase_segments = [
+            (len(self._amplitude.waveforms), len(self._detuning.waveforms), phase),
         ]
 
     @property
@@ -144,6 +153,21 @@ class Drive:
     def duration(self) -> float:
         return self._duration
 
+    @property
+    def _phase_groups(self) -> list[tuple[Waveform, Waveform, float]]:
+        """The (amplitude, detuning, phase) groups of constant phase, in order."""
+        amplitudes = self._amplitude.waveforms
+        detunings = self._detuning.waveforms
+        groups = []
+        i_amp = i_det = 0
+        for n_amp, n_det, phase in self._phase_segments:
+            amp = _join(amplitudes[i_amp : i_amp + n_amp])
+            det = _join(detunings[i_det : i_det + n_det])
+            groups.append((amp, det, phase))
+            i_amp += n_amp
+            i_det += n_det
+        return groups
+
     def __rshift__(self, other: Drive) -> Drive:
         if isinstance(other, Drive):
             if self.dmm is not None or other.dmm is not None:
@@ -153,23 +177,19 @@ class Drive:
                 amplitude=CompositeWaveform(self._amplitude, other._amplitude),
                 detuning=CompositeWaveform(self._detuning, other._detuning),
             )
-            # merge the boundary groups if they share the same phase, so that
+            # merge the boundary segments if they share the same phase, so that
             # consecutive same-phase segments compile to a single pulse
-            last_amp, last_det, last_phase = self._phase_groups[-1]
-            first_amp, first_det, first_phase = other._phase_groups[0]
+            last_n_amp, last_n_det, last_phase = self._phase_segments[-1]
+            first_n_amp, first_n_det, first_phase = other._phase_segments[0]
             if last_phase == first_phase:
-                merged = (
-                    CompositeWaveform(last_amp, first_amp),
-                    CompositeWaveform(last_det, first_det),
-                    last_phase,
-                )
-                composite_drive._phase_groups = [
-                    *self._phase_groups[:-1],
+                merged = (last_n_amp + first_n_amp, last_n_det + first_n_det, last_phase)
+                composite_drive._phase_segments = [
+                    *self._phase_segments[:-1],
                     merged,
-                    *other._phase_groups[1:],
+                    *other._phase_segments[1:],
                 ]
             else:
-                composite_drive._phase_groups = self._phase_groups + other._phase_groups
+                composite_drive._phase_segments = self._phase_segments + other._phase_segments
 
             return composite_drive
         else:

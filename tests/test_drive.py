@@ -188,6 +188,20 @@ def test_drive_chained_composition_merges_adjacent_same_phase() -> None:
     np.testing.assert_allclose(group_durations, [8.0, 8.0, 4.0])
 
 
+def test_drive_phase_split_with_equal_constant_amplitudes() -> None:
+    # equal constant amplitudes on both sides of a phase change must not be merged,
+    # otherwise one amplitude component would span both phase groups
+    amp = ConstantWaveform(3.0, 0.5)
+    drive_1 = Drive(amplitude=amp, phase=0.0)
+    drive_2 = Drive(amplitude=amp, phase=math.pi)
+
+    groups = (drive_1 >> drive_2)._phase_groups
+
+    assert [phase for _, _, phase in groups] == [0.0, math.pi]
+    np.testing.assert_allclose([a.duration for a, _, _ in groups], [3.0, 3.0])
+    np.testing.assert_allclose([d.duration for _, d, _ in groups], [3.0, 3.0])
+
+
 def test_drive_composition_with_dmm_not_supported() -> None:
     amp = RampWaveform(10.0, 0.0, 1.0)
     det = RampWaveform(10.0, 0.0, 1.0)

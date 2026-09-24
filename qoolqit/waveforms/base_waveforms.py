@@ -98,6 +98,11 @@ class Waveform(ABC):
         """Dictionary of parameters used by the waveform."""
         return self._params_dict
 
+    @property
+    def waveforms(self) -> list[Waveform]:
+        """Returns a list of the individual waveforms, which is just this waveform."""
+        return [self]
+
     def _single_call(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else float(self.function(t))
 
