@@ -7,9 +7,42 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
 
-from qoolqit.waveforms import CompositeWaveform, DelayWaveform, Waveform
+from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform, Waveform
 
 __all__ = ["DetuningMapModulator", "Drive"]
+
+
+def _compose_phase(first: Waveform, second: Waveform) -> Waveform:
+    """Compose two phase waveforms, merging the boundary segments if they share the same phase.
+
+    Adjacent phase segments therefore always differ, and each one maps to a single pulse.
+    Only phase waveforms are merged: merging amplitude or detuning components could create
+    a component that spans a phase change, and prevent splitting the drive in phase groups.
+    """
+    *head, last = first.waveforms
+    start, *tail = second.waveforms
+    if last.max() == start.max():
+        head.append(ConstantWaveform(last.duration + start.duration, last.max()))
+    else:
+        head += [last, start]
+    segments = head + tail
+    return segments[0] if len(segments) == 1 else CompositeWaveform(*segments)
+
+
+def _split_at(waveform: Waveform, ends: list[float]) -> list[Waveform]:
+    """Split a waveform into consecutive chunks ending at the given times.
+
+    The times must fall on boundaries between the waveform's components. Each component
+    is assigned to the chunk containing its midpoint, so that the float rounding of the
+    boundaries does not matter.
+    """
+    chunks: list[list[Waveform]] = [[] for _ in ends]
+    t = 0.0
+    for wf in waveform.waveforms:
+        idx = min(int(np.searchsorted(ends, t + wf.duration / 2)), len(ends) - 1)
+        chunks[idx].append(wf)
+        t += wf.duration
+    return [chunk[0] if len(chunk) == 1 else CompositeWaveform(*chunk) for chunk in chunks]
 
 
 @dataclass(frozen=True)
@@ -121,7 +154,7 @@ class Drive:
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
             raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
-        self._phase = phase
+        self._phase: Waveform = ConstantWaveform(self._duration, phase)
 
     @property
     def amplitude(self) -> Waveform:
@@ -139,28 +172,36 @@ class Drive:
         return self._dmm
 
     @property
-    def phase(self) -> float:
-        """The phase value in the drive."""
-        return self._phase
-
-    @property
     def duration(self) -> float:
         return self._duration
 
     def __rshift__(self, other: Drive) -> Drive:
-        return self.__rrshift__(other)
-
-    def __rrshift__(self, other: Drive) -> Drive:
         if isinstance(other, Drive):
-            if self.phase != other.phase:
-                raise NotImplementedError("Composing drives with different phase not supported.")
-            return Drive(
+            if self.dmm is not None or other.dmm is not None:
+                raise NotImplementedError("Composing drives with a dmm is not supported.")
+
+            composite_drive = Drive(
                 amplitude=CompositeWaveform(self._amplitude, other._amplitude),
                 detuning=CompositeWaveform(self._detuning, other._detuning),
-                phase=self._phase,
             )
+            composite_drive._phase = _compose_phase(self._phase, other._phase)
+
+            return composite_drive
         else:
             raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
+
+    def _split_in_phase_groups(self) -> list[tuple[Waveform, Waveform, float]]:
+        """Split the drive into consecutive segments of constant phase.
+
+        Returns one (amplitude, detuning, phase) group per phase segment, each of which
+        can be compiled to a single pulse.
+        """
+        # each phase segment is a ConstantWaveform, and adjacent segments always differ
+        phases = self._phase.waveforms
+        ends: list[float] = np.cumsum([wf.duration for wf in phases]).tolist()
+        amplitudes = _split_at(self._amplitude, ends)
+        detunings = _split_at(self._detuning, ends)
+        return list(zip(amplitudes, detunings, [wf.max() for wf in phases]))
 
     def __amp_header__(self) -> str:
         return "amplitude: \n"
