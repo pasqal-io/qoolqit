@@ -72,21 +72,29 @@ jobs:
                   qr-code: false
                   wait-for-pages-deployment: true
 
-    build-doc-portal:
-        name: Build doc-portal preview
+    portal-preview:
+        name: Deploy doc-portal preview
         needs: [deploy-docs-preview]
         if: |
+          always() &&
           github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.action != 'closed' &&
-          needs['deploy-docs-preview'].result == 'success'
+          (github.event.action == 'closed' || needs['deploy-docs-preview'].result == 'success')
         runs-on: ubuntu-latest
         permissions:
-            contents: read
+            contents: write
+            pull-requests: write
         env:
             PORTAL_PREVIEW_PATH: portal-preview/pr-${{ github.event.pull_request.number }}
             DOC_PORTAL_IMAGE: europe-west9-docker.pkg.dev/pasqal-artifact/frontend/doc-portal:source-runtime
         steps:
+            - name: Checkout the base commit, never the PR head
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  ref: ${{ github.event.pull_request.base.sha }}
+                  persist-credentials: false
+
             - name: Login to Artifact Registry
+              if: github.event.action != 'closed'
               uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
               with:
                   registry: europe-west9-docker.pkg.dev
@@ -94,9 +102,11 @@ jobs:
                   password: ${{ secrets.GCP_ARTIFACT_REGISTRY_SA }}
 
             - name: Pull the doc portal image
+              if: github.event.action != 'closed'
               run: docker pull "$DOC_PORTAL_IMAGE"
 
             - name: Build the portal preview
+              if: github.event.action != 'closed'
               run: |
                 mkdir -p portal-dist
                 docker run --rm \
@@ -111,43 +121,11 @@ jobs:
             # Keep only the qoolqit pages and the shared assets they load; the other products are ~130 MB per preview.
             # Temporary until doc-portal can build qoolqit alone, see #488.
             - name: Trim the portal preview to qoolqit
+              if: github.event.action != 'closed'
               run: |
                 mkdir -p portal-trimmed
                 cd portal-dist
                 cp -r qoolqit _astro assets pagefind favicon.* ../portal-trimmed/
-
-            - name: Upload doc-portal artifact
-              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-              with:
-                  name: doc-portal
-                  path: ./portal-trimmed/
-
-    deploy-doc-portal:
-        name: Deploy doc-portal preview
-        needs: [build-doc-portal]
-        if: |
-          always() &&
-          github.event.pull_request.head.repo.full_name == github.repository &&
-          (github.event.action == 'closed' || needs['build-doc-portal'].result == 'success')
-        runs-on: ubuntu-latest
-        permissions:
-            contents: write
-            pull-requests: write
-        env:
-            PORTAL_PREVIEW_PATH: portal-preview/pr-${{ github.event.pull_request.number }}
-        steps:
-            - name: Checkout the base commit, never the PR head
-              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-              with:
-                  ref: ${{ github.event.pull_request.base.sha }}
-                  persist-credentials: false
-
-            - name: Download doc-portal artifact
-              if: github.event.action != 'closed'
-              uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-              with:
-                  name: doc-portal
-                  path: ./portal-trimmed/
 
             - name: Deploy portal preview
               uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
@@ -177,7 +155,7 @@ jobs:
 
     publish-dev-docs:
         name: Publish development docs
-        needs: [deploy-doc-portal]
+        needs: [portal-preview]
         if: |
           always() &&
           github.event.pull_request.merged == true
