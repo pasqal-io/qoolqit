@@ -71,6 +71,11 @@ def test_drive_composition_with_non_drive() -> None:
     ):
         drive >> 1.0  # type: ignore [operator]
 
+    with pytest.raises(
+        TypeError, match="unsupported operand type\\(s\\) for >>: 'float' and 'Drive'"
+    ):
+        1.0 >> drive  # type: ignore [operator]
+
 
 def test_drive_different_phase_composition_not_supported() -> None:
     amp = RampWaveform(10.0, 0.0, 1.0)
@@ -93,6 +98,9 @@ def test_drive_composition_with_dmm_not_supported() -> None:
 
     with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
         drive >> drive_with_dmm
+
+    with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
+        drive_with_dmm >> drive
 
 
 def test_error_amplitude_negative() -> None:
