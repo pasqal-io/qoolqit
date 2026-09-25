@@ -1,0 +1,1 @@
+var e=`/qoolqit/portal-preview/pr-487/_astro/emu.FLIS5BYM.svg`,t=`/qoolqit/portal-preview/pr-487/_astro/qpu.8BD3_-FU.svg`;export{e as n,t};

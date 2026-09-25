@@ -1,0 +1,13 @@
+:root {
+    --dark-green: #0F1E23;
+    --soft-green: #173035;
+    --bright-green: #E1F6E9;
+    --mint-green: #00C887;
+    --metal-blue: #397378;
+    --neon-blue: #92DCE5;
+    --purple: #867BFA;
+    --orange: #FF986E;
+
+    --md-primary-fg-color: var(--soft-green);
+    --md-accent-fg-color: var(--mint-green);
+}
