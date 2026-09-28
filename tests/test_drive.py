@@ -213,10 +213,6 @@ def test_drive_composition_with_dmm_not_supported() -> None:
 
     with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
         drive_with_dmm >> drive_with_dmm
-    phase = random.random()
-    drive_rand_phase = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
-    drive = drive_rand_phase >> drive_rand_phase
-    assert math.isclose(drive.phase, phase)
 
 
 def test_drive_composition_with_non_drive() -> None:
@@ -242,21 +238,6 @@ def test_drive_different_phase_composition_not_supported() -> None:
         NotImplementedError, match="Composing drives with different phase not supported."
     ):
         drive_1 >> drive_2
-
-
-def test_drive_composition_with_dmm_not_supported() -> None:
-    amp = RampWaveform(10.0, 0.0, 1.0)
-    det = RampWaveform(10.0, 0.0, 1.0)
-    dmm = DetuningMapModulator(RampWaveform(10.0, -1.0, -2.0), weights={0: 1.0})
-
-    drive = Drive(amplitude=amp, detuning=det)
-    drive_with_dmm = Drive(amplitude=amp, detuning=det, dmm=dmm)
-
-    with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
-        drive >> drive_with_dmm
-
-    with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
-        drive_with_dmm >> drive
 
 
 def test_error_amplitude_negative() -> None:

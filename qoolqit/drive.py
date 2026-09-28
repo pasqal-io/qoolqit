@@ -173,8 +173,6 @@ class Drive:
             return NotImplemented
         if self.dmm is not None or other.dmm is not None:
             raise NotImplementedError("Composing drives with a dmm is not supported.")
-        if self.phase != other.phase:
-            raise NotImplementedError("Composing drives with different phase not supported.")
 
         composite_drive = Drive(
             amplitude=CompositeWaveform(self._amplitude, other._amplitude),
