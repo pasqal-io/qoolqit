@@ -194,3 +194,44 @@ class TestWaveform:
         assert isinstance(wf_composed, CompositeWaveform)
         assert len(wf_composed.waveforms) == 3
         np.testing.assert_allclose(wf_composed.duration, 30.0, rtol=1e-9)
+
+    def test_waveforms_of_single_waveform(self) -> None:
+        wf = self.MockWaveform(5.0)
+        assert wf.waveforms == [wf]
+        assert wf.waveforms[0] is wf
+
+    def test_composite_init_flattens_nested(self) -> None:
+        wf1 = self.MockWaveform(1.0)
+        wf2 = self.MockWaveform(2.0)
+        wf3 = self.SinWaveform(3.0, amplitude=0.5)
+        wf4 = self.SinWaveform(4.0, amplitude=0.5)
+
+        wf_composed = CompositeWaveform(wf1, CompositeWaveform(wf2, CompositeWaveform(wf3)), wf4)
+        assert all(a is b for a, b in zip(wf_composed.waveforms, [wf1, wf2, wf3, wf4]))
+        assert len(wf_composed.waveforms) == 4
+
+    def test_composition_of_composites_flattens(self) -> None:
+        wf1 = self.MockWaveform(1.0)
+        wf2 = self.MockWaveform(2.0)
+        wf3 = self.SinWaveform(3.0, amplitude=0.5)
+        wf4 = self.SinWaveform(4.0, amplitude=0.5)
+
+        wf_composed = (wf1 >> wf2) >> (wf3 >> wf4)
+        assert isinstance(wf_composed, CompositeWaveform)
+        assert all(a is b for a, b in zip(wf_composed.waveforms, [wf1, wf2, wf3, wf4]))
+        assert len(wf_composed.waveforms) == 4
+        np.testing.assert_allclose(wf_composed.duration, 10.0, rtol=1e-9)
+
+    def test_composition_with_non_waveform(self) -> None:
+        wf = self.MockWaveform(1.0)
+        with pytest.raises(
+            TypeError, match="unsupported operand type\\(s\\) for >>: 'MockWaveform' and 'float'"
+        ):
+            wf >> 1.0  # type: ignore [operator]
+
+        wf_composed = wf >> self.MockWaveform(2.0)
+        with pytest.raises(
+            TypeError,
+            match="unsupported operand type\\(s\\) for >>: 'CompositeWaveform' and 'float'",
+        ):
+            wf_composed >> 1.0  # type: ignore [operator]

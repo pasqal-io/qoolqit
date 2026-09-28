@@ -55,7 +55,7 @@ jobs:
         python-version: '3.14'
     - name: Install QoolQit with development dependencies
       run: |
-        pip install -e .[dev]
+        pip install -e .[dev] nbmake
     - name: Run notebooks
       run: |
         pytest --no-cov --nbmake $(find docs -name "*.ipynb")

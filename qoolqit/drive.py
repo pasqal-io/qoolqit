@@ -169,31 +169,32 @@ class Drive:
         return groups
 
     def __rshift__(self, other: Drive) -> Drive:
-        if isinstance(other, Drive):
-            if self.dmm is not None or other.dmm is not None:
-                raise NotImplementedError("Composing drives with a dmm is not supported.")
+        if not isinstance(other, Drive):
+            return NotImplemented
+        if self.dmm is not None or other.dmm is not None:
+            raise NotImplementedError("Composing drives with a dmm is not supported.")
+        if self.phase != other.phase:
+            raise NotImplementedError("Composing drives with different phase not supported.")
 
-            composite_drive = Drive(
-                amplitude=CompositeWaveform(self._amplitude, other._amplitude),
-                detuning=CompositeWaveform(self._detuning, other._detuning),
-            )
-            # merge the boundary segments if they share the same phase, so that
-            # consecutive same-phase segments compile to a single pulse
-            last_n_amp, last_n_det, last_phase = self._phase_segments[-1]
-            first_n_amp, first_n_det, first_phase = other._phase_segments[0]
-            if last_phase == first_phase:
-                merged = (last_n_amp + first_n_amp, last_n_det + first_n_det, last_phase)
-                composite_drive._phase_segments = [
-                    *self._phase_segments[:-1],
-                    merged,
-                    *other._phase_segments[1:],
-                ]
-            else:
-                composite_drive._phase_segments = self._phase_segments + other._phase_segments
-
-            return composite_drive
+        composite_drive = Drive(
+            amplitude=CompositeWaveform(self._amplitude, other._amplitude),
+            detuning=CompositeWaveform(self._detuning, other._detuning),
+        )
+        # merge the boundary segments if they share the same phase, so that
+        # consecutive same-phase segments compile to a single pulse
+        last_n_amp, last_n_det, last_phase = self._phase_segments[-1]
+        first_n_amp, first_n_det, first_phase = other._phase_segments[0]
+        if last_phase == first_phase:
+            merged = (last_n_amp + first_n_amp, last_n_det + first_n_det, last_phase)
+            composite_drive._phase_segments = [
+                *self._phase_segments[:-1],
+                merged,
+                *other._phase_segments[1:],
+            ]
         else:
-            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
+            composite_drive._phase_segments = self._phase_segments + other._phase_segments
+
+        return composite_drive
 
     def __amp_header__(self) -> str:
         return "amplitude: \n"

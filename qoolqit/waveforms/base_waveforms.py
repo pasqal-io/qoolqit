@@ -121,12 +121,9 @@ class Waveform(ABC):
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         """Returns a new CompositeWaveform composed of this waveform and another."""
-        if isinstance(other, Waveform):
-            if isinstance(other, CompositeWaveform):
-                return CompositeWaveform(self, *other._waveforms)
-            return CompositeWaveform(self, other)
-        else:
-            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
+        if not isinstance(other, Waveform):
+            return NotImplemented
+        return CompositeWaveform(self, other)
 
     def __repr_header__(self) -> str:
         return f"0.00 ≤ t ≤ {float(self.duration):.2f}: "
@@ -185,12 +182,8 @@ class CompositeWaveform(Waveform):
         if not waveforms:
             raise ValueError("At least one Waveform must be provided.")
 
-        self._waveforms = []
-        for wf in waveforms:
-            if isinstance(wf, CompositeWaveform):
-                self._waveforms += wf.waveforms
-            else:
-                self._waveforms.append(wf)
+        # flatten nested composite waveforms
+        self._waveforms = [component for wf in waveforms for component in wf.waveforms]
 
         super().__init__(sum(self.durations))
 
@@ -234,14 +227,6 @@ class CompositeWaveform(Waveform):
 
     def __mul__(self, other: float) -> CompositeWaveform:
         return CompositeWaveform(*[wf * other for wf in self.waveforms])
-
-    def __rshift__(self, other: Waveform) -> CompositeWaveform:
-        if isinstance(other, Waveform):
-            if isinstance(other, CompositeWaveform):
-                return CompositeWaveform(*self.waveforms, *other.waveforms)
-            return CompositeWaveform(*self.waveforms, other)
-        else:
-            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
 
     def __repr_header__(self) -> str:
         return "Composite waveform:\n"

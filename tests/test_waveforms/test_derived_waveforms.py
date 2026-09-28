@@ -344,9 +344,6 @@ def test_waveform_composition(n_waveforms: int) -> None:
 
     wf = wf >> wf
 
-    with pytest.raises(NotImplementedError):
-        wf >> 1.0  # type: ignore [operator]
-
     assert isinstance(wf, CompositeWaveform)
     assert wf.n_waveforms == 2 * n_waveforms
     assert np.isclose(wf.duration, 2 * n_waveforms * duration)
@@ -375,10 +372,6 @@ def test_waveform_composition(n_waveforms: int) -> None:
 
     with pytest.raises(TypeError, match="All arguments must be instances of Waveform."):
         CompositeWaveform(wf, 1.0)  # type: ignore [arg-type]
-    with pytest.raises(
-        NotImplementedError, match="Composing with object of type <class 'float'> not supported."
-    ):
-        wf >> 1.0  # type: ignore [operator]
     with pytest.raises(ValueError, match="At least one Waveform must be provided."):
         CompositeWaveform()
 
