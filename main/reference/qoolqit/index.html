@@ -10138,8 +10138,7 @@ allowed duration, or if it is not in the range (0, 1].</p>
 <span class="normal"><a href="#__codelineno-0-158">158</a></span>
 <span class="normal"><a href="#__codelineno-0-159">159</a></span>
 <span class="normal"><a href="#__codelineno-0-160">160</a></span>
-<span class="normal"><a href="#__codelineno-0-161">161</a></span>
-<span class="normal"><a href="#__codelineno-0-162">162</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-86" name="__codelineno-0-86"></a><span class="k">def</span><span class="w"> </span><span class="nf">compile_to</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-161">161</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-86" name="__codelineno-0-86"></a><span class="k">def</span><span class="w"> </span><span class="nf">compile_to</span><span class="p">(</span>
 <a id="__codelineno-0-87" name="__codelineno-0-87"></a>    <span class="bp">self</span><span class="p">,</span>
 <a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="n">device</span><span class="p">:</span> <span class="n">Device</span><span class="p">,</span>
 <a id="__codelineno-0-89" name="__codelineno-0-89"></a>    <span class="n">profile</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"default"</span><span class="p">,</span> <span class="s2">"max_energy"</span><span class="p">]</span> <span class="o">|</span> <span class="n">CompilerProfile</span> <span class="o">=</span> <span class="n">CompilerProfile</span><span class="o">.</span><span class="n">DEFAULT</span><span class="p">,</span>
@@ -10203,19 +10202,18 @@ allowed duration, or if it is not in the range (0, 1].</p>
 <a id="__codelineno-0-147" name="__codelineno-0-147"></a>            <span class="p">)</span>
 <a id="__codelineno-0-148" name="__codelineno-0-148"></a>
 <a id="__codelineno-0-149" name="__codelineno-0-149"></a>    <span class="c1"># Check if device supports DMM and has a DMM channel</span>
-<a id="__codelineno-0-150" name="__codelineno-0-150"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drive</span><span class="o">.</span><span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-151" name="__codelineno-0-151"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">device</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">dmm_channels</span><span class="p">:</span>
-<a id="__codelineno-0-152" name="__codelineno-0-152"></a>            <span class="k">raise</span> <span class="n">CompilationError</span><span class="p">(</span>
-<a id="__codelineno-0-153" name="__codelineno-0-153"></a>                <span class="s2">"The device does not support DMM. Please use a device that supports DMM."</span>
-<a id="__codelineno-0-154" name="__codelineno-0-154"></a>            <span class="p">)</span>
-<a id="__codelineno-0-155" name="__codelineno-0-155"></a>
-<a id="__codelineno-0-156" name="__codelineno-0-156"></a>    <span class="n">profile</span> <span class="o">=</span> <span class="n">CompilerProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
-<a id="__codelineno-0-157" name="__codelineno-0-157"></a>
-<a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="n">compiler</span> <span class="o">=</span> <span class="n">SequenceCompiler</span><span class="p">(</span>
-<a id="__codelineno-0-159" name="__codelineno-0-159"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">device_max_duration_ratio</span>
-<a id="__codelineno-0-160" name="__codelineno-0-160"></a>    <span class="p">)</span>
-<a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="n">device</span>
-<a id="__codelineno-0-162" name="__codelineno-0-162"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_compiled_sequence</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile_sequence</span><span class="p">()</span>
+<a id="__codelineno-0-150" name="__codelineno-0-150"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drive</span><span class="o">.</span><span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">device</span><span class="o">.</span><span class="n">_device</span><span class="o">.</span><span class="n">dmm_channels</span><span class="p">:</span>
+<a id="__codelineno-0-151" name="__codelineno-0-151"></a>        <span class="k">raise</span> <span class="n">CompilationError</span><span class="p">(</span>
+<a id="__codelineno-0-152" name="__codelineno-0-152"></a>            <span class="s2">"The device does not support DMM. Please use a device that supports DMM."</span>
+<a id="__codelineno-0-153" name="__codelineno-0-153"></a>        <span class="p">)</span>
+<a id="__codelineno-0-154" name="__codelineno-0-154"></a>
+<a id="__codelineno-0-155" name="__codelineno-0-155"></a>    <span class="n">profile</span> <span class="o">=</span> <span class="n">CompilerProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+<a id="__codelineno-0-156" name="__codelineno-0-156"></a>
+<a id="__codelineno-0-157" name="__codelineno-0-157"></a>    <span class="n">compiler</span> <span class="o">=</span> <span class="n">SequenceCompiler</span><span class="p">(</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">drive</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">device_max_duration_ratio</span>
+<a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="p">)</span>
+<a id="__codelineno-0-160" name="__codelineno-0-160"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_device</span> <span class="o">=</span> <span class="n">device</span>
+<a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_compiled_sequence</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile_sequence</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
