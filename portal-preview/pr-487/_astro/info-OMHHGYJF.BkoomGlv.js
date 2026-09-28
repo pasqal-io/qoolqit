@@ -1,1 +1,0 @@
-import"./chunk-K5T4RW27.ByYAEnEn.js";import{h as e}from"./mermaid-parser.core.DDGUMJ13.js";export{e as createInfoServices};
