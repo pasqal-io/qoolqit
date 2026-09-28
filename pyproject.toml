@@ -120,8 +120,6 @@ ignore = [
     "B905", # `zip()` without an explicit `strict=` parameter
     "B024", # abstract base class with no abstract methods or properties
     "B904", # raise exceptions with `raise ... from err` or `raise ... from None`
-    "SIM102", # Use a single `if` statement instead of nested `if` statements
-    "SIM211", # Use `not ...` instead of `False if ... else True`
 ]
 isort.required-imports = ["from __future__ import annotations"]
 
