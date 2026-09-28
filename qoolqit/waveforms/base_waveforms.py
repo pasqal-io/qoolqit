@@ -121,10 +121,9 @@ class Waveform(ABC):
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         """Returns a new CompositeWaveform composed of this waveform and another."""
-        if isinstance(other, Waveform):
-            return CompositeWaveform(self, other)
-        else:
-            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
+        if not isinstance(other, Waveform):
+            return NotImplemented
+        return CompositeWaveform(self, other)
 
     def __repr_header__(self) -> str:
         return f"0.00 ≤ t ≤ {float(self.duration):.2f}: "

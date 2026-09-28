@@ -42,11 +42,6 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
 
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
 
-    with pytest.raises(
-        NotImplementedError, match="Composing with object of type <class 'float'> not supported."
-    ):
-        drive >> 1.0  # type: ignore [operator]
-
     duration_amp = amp_wf.duration
     duration_det = det_wf.duration
 
@@ -61,6 +56,20 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
     drive = Drive(amplitude=amp_wf)
     assert isinstance(drive.detuning, DelayWaveform)
     assert math.isclose(drive.duration, duration_amp)
+
+
+def test_drive_composition_with_non_drive() -> None:
+    drive = Drive(amplitude=RampWaveform(10.0, 0.0, 1.0))
+
+    with pytest.raises(
+        TypeError, match="unsupported operand type\\(s\\) for >>: 'Drive' and 'float'"
+    ):
+        drive >> 1.0  # type: ignore [operator]
+
+    with pytest.raises(
+        TypeError, match="unsupported operand type\\(s\\) for >>: 'float' and 'Drive'"
+    ):
+        1.0 >> drive  # type: ignore [operator]
 
 
 def test_drive_different_phase_composition() -> None:

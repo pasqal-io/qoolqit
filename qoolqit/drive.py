@@ -176,19 +176,18 @@ class Drive:
         return self._duration
 
     def __rshift__(self, other: Drive) -> Drive:
-        if isinstance(other, Drive):
-            if self.dmm is not None or other.dmm is not None:
-                raise NotImplementedError("Composing drives with a dmm is not supported.")
+        if not isinstance(other, Drive):
+            return NotImplemented
+        if self.dmm is not None or other.dmm is not None:
+            raise NotImplementedError("Composing drives with a dmm is not supported.")
 
-            composite_drive = Drive(
-                amplitude=CompositeWaveform(self._amplitude, other._amplitude),
-                detuning=CompositeWaveform(self._detuning, other._detuning),
-            )
-            composite_drive._phase = _compose_phase(self._phase, other._phase)
+        composite_drive = Drive(
+            amplitude=CompositeWaveform(self._amplitude, other._amplitude),
+            detuning=CompositeWaveform(self._detuning, other._detuning),
+        )
+        composite_drive._phase = _compose_phase(self._phase, other._phase)
 
-            return composite_drive
-        else:
-            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
+        return composite_drive
 
     def _split_in_phase_groups(self) -> list[tuple[Waveform, Waveform, float]]:
         """Split the drive into consecutive segments of constant phase.
