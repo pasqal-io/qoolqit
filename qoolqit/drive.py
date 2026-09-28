@@ -148,19 +148,17 @@ class Drive:
         return self._duration
 
     def __rshift__(self, other: Drive) -> Drive:
-        return self.__rrshift__(other)
-
-    def __rrshift__(self, other: Drive) -> Drive:
-        if isinstance(other, Drive):
-            if self.phase != other.phase:
-                raise NotImplementedError("Composing drives with different phase not supported.")
-            return Drive(
-                amplitude=CompositeWaveform(self._amplitude, other._amplitude),
-                detuning=CompositeWaveform(self._detuning, other._detuning),
-                phase=self._phase,
-            )
-        else:
-            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
+        if not isinstance(other, Drive):
+            return NotImplemented
+        if self.dmm is not None or other.dmm is not None:
+            raise NotImplementedError("Composing drives with a dmm is not supported.")
+        if self.phase != other.phase:
+            raise NotImplementedError("Composing drives with different phase not supported.")
+        return Drive(
+            amplitude=CompositeWaveform(self._amplitude, other._amplitude),
+            detuning=CompositeWaveform(self._detuning, other._detuning),
+            phase=self._phase,
+        )
 
     def __amp_header__(self) -> str:
         return "amplitude: \n"
