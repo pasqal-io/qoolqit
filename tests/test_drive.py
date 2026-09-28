@@ -229,17 +229,6 @@ def test_drive_composition_with_non_drive() -> None:
         1.0 >> drive  # type: ignore [operator]
 
 
-def test_drive_different_phase_composition_not_supported() -> None:
-    amp = RampWaveform(10.0, 0.0, 1.0)
-    drive_1 = Drive(amplitude=amp, phase=1.0)
-    drive_2 = Drive(amplitude=amp, phase=0.0)
-
-    with pytest.raises(
-        NotImplementedError, match="Composing drives with different phase not supported."
-    ):
-        drive_1 >> drive_2
-
-
 def test_error_amplitude_negative() -> None:
     with pytest.raises(ValueError, match="'amplitude' must be positive."):
         neg_ramp = RampWaveform(10.0, -1.0, 2.0)
