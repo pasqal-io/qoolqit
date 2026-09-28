@@ -58,7 +58,6 @@ dev = [
   "pytest-markdown-docs",
   "pre-commit",
   "ipykernel",
-  "nbmake",
   "mkdocs==1.6.1",
   "mkdocs-material",
   "mkdocstrings-python",
