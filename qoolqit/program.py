@@ -60,7 +60,7 @@ class QuantumProgram:
     @property
     def is_compiled(self) -> bool:
         """Check if the program has been compiled."""
-        return False if self._compiled_sequence is None else True
+        return self._compiled_sequence is not None
 
     @property
     def compiled_sequence(self) -> PulserSequence:
@@ -147,11 +147,10 @@ class QuantumProgram:
                 )
 
         # Check if device supports DMM and has a DMM channel
-        if self.drive.dmm is not None:
-            if not device._device.dmm_channels:
-                raise CompilationError(
-                    "The device does not support DMM. Please use a device that supports DMM."
-                )
+        if self.drive.dmm is not None and not device._device.dmm_channels:
+            raise CompilationError(
+                "The device does not support DMM. Please use a device that supports DMM."
+            )
 
         profile = CompilerProfile(profile)
 
