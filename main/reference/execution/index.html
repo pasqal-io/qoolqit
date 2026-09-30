@@ -14151,9 +14151,7 @@ by job ID alone.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/execution/job.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-387">387</a></span>
-<span class="normal"><a href="#__codelineno-0-388">388</a></span>
-<span class="normal"><a href="#__codelineno-0-389">389</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-389">389</a></span>
 <span class="normal"><a href="#__codelineno-0-390">390</a></span>
 <span class="normal"><a href="#__codelineno-0-391">391</a></span>
 <span class="normal"><a href="#__codelineno-0-392">392</a></span>
@@ -14168,24 +14166,26 @@ by job ID alone.</p>
 <span class="normal"><a href="#__codelineno-0-401">401</a></span>
 <span class="normal"><a href="#__codelineno-0-402">402</a></span>
 <span class="normal"><a href="#__codelineno-0-403">403</a></span>
-<span class="normal"><a href="#__codelineno-0-404">404</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-387" name="__codelineno-0-387"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_batch_id</span><span class="p">(</span><span class="n">job</span><span class="p">:</span> <span class="n">Job</span><span class="p">[</span><span class="n">Results</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-388" name="__codelineno-0-388"></a><span class="w">    </span><span class="sd">"""Return the batch ID associated with a remote job.</span>
-<a id="__codelineno-0-389" name="__codelineno-0-389"></a>
-<a id="__codelineno-0-390" name="__codelineno-0-390"></a><span class="sd">    Temporary utility for cases where *batch_id* must be persisted</span>
-<a id="__codelineno-0-391" name="__codelineno-0-391"></a><span class="sd">    and later passed to :func:`retrieve_remote_job`. Will be</span>
-<a id="__codelineno-0-392" name="__codelineno-0-392"></a><span class="sd">    deprecated once ``RemoteConnection`` supports direct job lookup</span>
-<a id="__codelineno-0-393" name="__codelineno-0-393"></a><span class="sd">    by job ID alone.</span>
-<a id="__codelineno-0-394" name="__codelineno-0-394"></a>
-<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-396" name="__codelineno-0-396"></a><span class="sd">        job (Job[Results]): Any :class:`Job` instance.</span>
-<a id="__codelineno-0-397" name="__codelineno-0-397"></a>
-<a id="__codelineno-0-398" name="__codelineno-0-398"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-399" name="__codelineno-0-399"></a><span class="sd">        str: The batch ID if *job* is a :class:`_RemoteJob`,</span>
-<a id="__codelineno-0-400" name="__codelineno-0-400"></a><span class="sd">        otherwise an empty string.</span>
-<a id="__codelineno-0-401" name="__codelineno-0-401"></a><span class="sd">    """</span>
-<a id="__codelineno-0-402" name="__codelineno-0-402"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">_RemoteJob</span><span class="p">):</span>
-<a id="__codelineno-0-403" name="__codelineno-0-403"></a>        <span class="k">return</span> <span class="n">job</span><span class="o">.</span><span class="n">_batch_id</span>
-<a id="__codelineno-0-404" name="__codelineno-0-404"></a>    <span class="k">return</span> <span class="s2">""</span>
+<span class="normal"><a href="#__codelineno-0-404">404</a></span>
+<span class="normal"><a href="#__codelineno-0-405">405</a></span>
+<span class="normal"><a href="#__codelineno-0-406">406</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-389" name="__codelineno-0-389"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_batch_id</span><span class="p">(</span><span class="n">job</span><span class="p">:</span> <span class="n">Job</span><span class="p">[</span><span class="n">Results</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-390" name="__codelineno-0-390"></a><span class="w">    </span><span class="sd">"""Return the batch ID associated with a remote job.</span>
+<a id="__codelineno-0-391" name="__codelineno-0-391"></a>
+<a id="__codelineno-0-392" name="__codelineno-0-392"></a><span class="sd">    Temporary utility for cases where *batch_id* must be persisted</span>
+<a id="__codelineno-0-393" name="__codelineno-0-393"></a><span class="sd">    and later passed to :func:`retrieve_remote_job`. Will be</span>
+<a id="__codelineno-0-394" name="__codelineno-0-394"></a><span class="sd">    deprecated once ``RemoteConnection`` supports direct job lookup</span>
+<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="sd">    by job ID alone.</span>
+<a id="__codelineno-0-396" name="__codelineno-0-396"></a>
+<a id="__codelineno-0-397" name="__codelineno-0-397"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-398" name="__codelineno-0-398"></a><span class="sd">        job (Job[Results]): Any :class:`Job` instance.</span>
+<a id="__codelineno-0-399" name="__codelineno-0-399"></a>
+<a id="__codelineno-0-400" name="__codelineno-0-400"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-401" name="__codelineno-0-401"></a><span class="sd">        str: The batch ID if *job* is a :class:`_RemoteJob`,</span>
+<a id="__codelineno-0-402" name="__codelineno-0-402"></a><span class="sd">        otherwise an empty string.</span>
+<a id="__codelineno-0-403" name="__codelineno-0-403"></a><span class="sd">    """</span>
+<a id="__codelineno-0-404" name="__codelineno-0-404"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">_RemoteJob</span><span class="p">):</span>
+<a id="__codelineno-0-405" name="__codelineno-0-405"></a>        <span class="k">return</span> <span class="n">job</span><span class="o">.</span><span class="n">_batch_id</span>
+<a id="__codelineno-0-406" name="__codelineno-0-406"></a>    <span class="k">return</span> <span class="s2">""</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -14297,9 +14297,7 @@ Defaults to an empty string.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/execution/job.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-351">351</a></span>
-<span class="normal"><a href="#__codelineno-0-352">352</a></span>
-<span class="normal"><a href="#__codelineno-0-353">353</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-353">353</a></span>
 <span class="normal"><a href="#__codelineno-0-354">354</a></span>
 <span class="normal"><a href="#__codelineno-0-355">355</a></span>
 <span class="normal"><a href="#__codelineno-0-356">356</a></span>
@@ -14330,40 +14328,42 @@ Defaults to an empty string.</p>
 <span class="normal"><a href="#__codelineno-0-381">381</a></span>
 <span class="normal"><a href="#__codelineno-0-382">382</a></span>
 <span class="normal"><a href="#__codelineno-0-383">383</a></span>
-<span class="normal"><a href="#__codelineno-0-384">384</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-351" name="__codelineno-0-351"></a><span class="k">def</span><span class="w"> </span><span class="nf">retrieve_remote_job</span><span class="p">(</span>
-<a id="__codelineno-0-352" name="__codelineno-0-352"></a>    <span class="n">connection</span><span class="p">:</span> <span class="n">remote</span><span class="o">.</span><span class="n">RemoteConnection</span><span class="p">,</span>
-<a id="__codelineno-0-353" name="__codelineno-0-353"></a>    <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-354" name="__codelineno-0-354"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-355" name="__codelineno-0-355"></a>    <span class="n">batch_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
-<a id="__codelineno-0-356" name="__codelineno-0-356"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Job</span><span class="p">[</span><span class="n">Results</span><span class="p">]:</span>
-<a id="__codelineno-0-357" name="__codelineno-0-357"></a><span class="w">    </span><span class="sd">"""Retrieve a previously submitted remote job by its identifiers.</span>
-<a id="__codelineno-0-358" name="__codelineno-0-358"></a>
-<a id="__codelineno-0-359" name="__codelineno-0-359"></a><span class="sd">    Use this to reconnect to a job in a new session, or to monitor a</span>
-<a id="__codelineno-0-360" name="__codelineno-0-360"></a><span class="sd">    job submitted outside the current context.</span>
-<a id="__codelineno-0-361" name="__codelineno-0-361"></a>
-<a id="__codelineno-0-362" name="__codelineno-0-362"></a><span class="sd">    Note:</span>
-<a id="__codelineno-0-363" name="__codelineno-0-363"></a><span class="sd">        The *batch_id* argument is required by some</span>
-<a id="__codelineno-0-364" name="__codelineno-0-364"></a><span class="sd">        ``RemoteConnection`` implementations (e.g.</span>
-<a id="__codelineno-0-365" name="__codelineno-0-365"></a><span class="sd">        ``PasqalCloudConnection``) to query job progress. Use</span>
-<a id="__codelineno-0-366" name="__codelineno-0-366"></a><span class="sd">        :func:`get_batch_id` to recover the batch ID from an existing</span>
-<a id="__codelineno-0-367" name="__codelineno-0-367"></a><span class="sd">        :class:`Job` if needed.</span>
-<a id="__codelineno-0-368" name="__codelineno-0-368"></a>
-<a id="__codelineno-0-369" name="__codelineno-0-369"></a><span class="sd">        This dependency on *batch_id* is temporary and will be removed</span>
-<a id="__codelineno-0-370" name="__codelineno-0-370"></a><span class="sd">        once ``RemoteConnection`` supports direct lookup by job ID</span>
-<a id="__codelineno-0-371" name="__codelineno-0-371"></a><span class="sd">        alone.</span>
-<a id="__codelineno-0-372" name="__codelineno-0-372"></a>
-<a id="__codelineno-0-373" name="__codelineno-0-373"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-374" name="__codelineno-0-374"></a><span class="sd">        connection (remote.RemoteConnection): The remote connection</span>
-<a id="__codelineno-0-375" name="__codelineno-0-375"></a><span class="sd">            through which to query the job.</span>
-<a id="__codelineno-0-376" name="__codelineno-0-376"></a><span class="sd">        job_id (str): The UUID of the job to retrieve.</span>
-<a id="__codelineno-0-377" name="__codelineno-0-377"></a><span class="sd">        batch_id (str): The batch identifier the job belongs to.</span>
-<a id="__codelineno-0-378" name="__codelineno-0-378"></a><span class="sd">            Defaults to an empty string.</span>
-<a id="__codelineno-0-379" name="__codelineno-0-379"></a>
-<a id="__codelineno-0-380" name="__codelineno-0-380"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-381" name="__codelineno-0-381"></a><span class="sd">        Job[Results]: A :class:`_RemoteJob` connected to the</span>
-<a id="__codelineno-0-382" name="__codelineno-0-382"></a><span class="sd">        specified job.</span>
-<a id="__codelineno-0-383" name="__codelineno-0-383"></a><span class="sd">    """</span>
-<a id="__codelineno-0-384" name="__codelineno-0-384"></a>    <span class="k">return</span> <span class="n">_RemoteJob</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">job_id</span><span class="p">,</span> <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-384">384</a></span>
+<span class="normal"><a href="#__codelineno-0-385">385</a></span>
+<span class="normal"><a href="#__codelineno-0-386">386</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-353" name="__codelineno-0-353"></a><span class="k">def</span><span class="w"> </span><span class="nf">retrieve_remote_job</span><span class="p">(</span>
+<a id="__codelineno-0-354" name="__codelineno-0-354"></a>    <span class="n">connection</span><span class="p">:</span> <span class="n">remote</span><span class="o">.</span><span class="n">RemoteConnection</span><span class="p">,</span>
+<a id="__codelineno-0-355" name="__codelineno-0-355"></a>    <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-356" name="__codelineno-0-356"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-357" name="__codelineno-0-357"></a>    <span class="n">batch_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+<a id="__codelineno-0-358" name="__codelineno-0-358"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Job</span><span class="p">[</span><span class="n">Results</span><span class="p">]:</span>
+<a id="__codelineno-0-359" name="__codelineno-0-359"></a><span class="w">    </span><span class="sd">"""Retrieve a previously submitted remote job by its identifiers.</span>
+<a id="__codelineno-0-360" name="__codelineno-0-360"></a>
+<a id="__codelineno-0-361" name="__codelineno-0-361"></a><span class="sd">    Use this to reconnect to a job in a new session, or to monitor a</span>
+<a id="__codelineno-0-362" name="__codelineno-0-362"></a><span class="sd">    job submitted outside the current context.</span>
+<a id="__codelineno-0-363" name="__codelineno-0-363"></a>
+<a id="__codelineno-0-364" name="__codelineno-0-364"></a><span class="sd">    Note:</span>
+<a id="__codelineno-0-365" name="__codelineno-0-365"></a><span class="sd">        The *batch_id* argument is required by some</span>
+<a id="__codelineno-0-366" name="__codelineno-0-366"></a><span class="sd">        ``RemoteConnection`` implementations (e.g.</span>
+<a id="__codelineno-0-367" name="__codelineno-0-367"></a><span class="sd">        ``PasqalCloudConnection``) to query job progress. Use</span>
+<a id="__codelineno-0-368" name="__codelineno-0-368"></a><span class="sd">        :func:`get_batch_id` to recover the batch ID from an existing</span>
+<a id="__codelineno-0-369" name="__codelineno-0-369"></a><span class="sd">        :class:`Job` if needed.</span>
+<a id="__codelineno-0-370" name="__codelineno-0-370"></a>
+<a id="__codelineno-0-371" name="__codelineno-0-371"></a><span class="sd">        This dependency on *batch_id* is temporary and will be removed</span>
+<a id="__codelineno-0-372" name="__codelineno-0-372"></a><span class="sd">        once ``RemoteConnection`` supports direct lookup by job ID</span>
+<a id="__codelineno-0-373" name="__codelineno-0-373"></a><span class="sd">        alone.</span>
+<a id="__codelineno-0-374" name="__codelineno-0-374"></a>
+<a id="__codelineno-0-375" name="__codelineno-0-375"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-376" name="__codelineno-0-376"></a><span class="sd">        connection (remote.RemoteConnection): The remote connection</span>
+<a id="__codelineno-0-377" name="__codelineno-0-377"></a><span class="sd">            through which to query the job.</span>
+<a id="__codelineno-0-378" name="__codelineno-0-378"></a><span class="sd">        job_id (str): The UUID of the job to retrieve.</span>
+<a id="__codelineno-0-379" name="__codelineno-0-379"></a><span class="sd">        batch_id (str): The batch identifier the job belongs to.</span>
+<a id="__codelineno-0-380" name="__codelineno-0-380"></a><span class="sd">            Defaults to an empty string.</span>
+<a id="__codelineno-0-381" name="__codelineno-0-381"></a>
+<a id="__codelineno-0-382" name="__codelineno-0-382"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-383" name="__codelineno-0-383"></a><span class="sd">        Job[Results]: A :class:`_RemoteJob` connected to the</span>
+<a id="__codelineno-0-384" name="__codelineno-0-384"></a><span class="sd">        specified job.</span>
+<a id="__codelineno-0-385" name="__codelineno-0-385"></a><span class="sd">    """</span>
+<a id="__codelineno-0-386" name="__codelineno-0-386"></a>    <span class="k">return</span> <span class="n">_RemoteJob</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">job_id</span><span class="p">,</span> <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
