@@ -60,7 +60,8 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
     phase = random.random()
     drive_rand_phase = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
     drive = drive_rand_phase >> drive_rand_phase
-    assert math.isclose(drive.phase, phase)
+    assert isinstance(drive.phase, ConstantWaveform)
+    assert math.isclose(drive.phase.value, phase)
 
 
 def test_drive_composition_with_non_drive() -> None:

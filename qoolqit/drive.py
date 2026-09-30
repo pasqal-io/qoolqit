@@ -6,10 +6,65 @@ from typing import Any
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
+from pulser.waveforms import Waveform as PulserWaveform
 
-from qoolqit.waveforms import CompositeWaveform, DelayWaveform, Waveform
+from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform, Waveform
 
 __all__ = ["DetuningMapModulator", "Drive"]
+
+
+class _PhaseChangeDelay(Waveform):
+    """Zero-duration placeholder for a phase change from initial_phase to final_phase.
+
+    Composing drives with different phases adds one to the amplitude and detuning at each
+    boundary where the phase changes, so it only appears between two segments. It does not
+    affect the waveform values, as it is never evaluated inside a CompositeWaveform, and it is
+    skipped when converting to Pulser. Its max and min are 0.0, so they count as a 0.0 value in
+    the max and min of a CompositeWaveform.
+    """
+
+    def __init__(self, initial_phase: float, final_phase: float) -> None:
+        # bypass Waveform.__init__, which rejects zero durations
+        self._duration = 0.0
+        self._params_dict = {
+            "initial_phase": float(initial_phase),
+            "final_phase": float(final_phase),
+        }
+        self.initial_phase = float(initial_phase)
+        self.final_phase = float(final_phase)
+
+    def function(self, t: float) -> float:
+        return 0.0
+
+    def max(self) -> float:
+        return 0.0
+
+    def min(self) -> float:
+        return 0.0
+
+    def __mul__(self, other: float) -> _PhaseChangeDelay:
+        return self  # scaling a waveform does not change its phase
+
+    def _to_pulser(self, duration: int) -> PulserWaveform:
+        raise NotImplementedError(
+            "Phase change delays have zero duration and are skipped during conversion to Pulser."
+        )
+
+
+def _join(waveforms: list[Waveform]) -> Waveform:
+    """Join consecutive waveforms into a single waveform."""
+    return waveforms[0] if len(waveforms) == 1 else CompositeWaveform(*waveforms)
+
+
+def _split_at_phase_changes(waveform: Waveform) -> list[Waveform]:
+    """Split a waveform at its phase change delays into consecutive segments."""
+    segments: list[list[Waveform]] = [[]]
+    for wf in waveform.waveforms:
+        if isinstance(wf, _PhaseChangeDelay):
+            segments.append([])
+        else:
+            segments[-1].append(wf)
+    return [_join(segment) for segment in segments]
 
 
 @dataclass(frozen=True)
@@ -121,7 +176,7 @@ class Drive:
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
             raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
-        self._phase = phase
+        self._phase: Waveform = ConstantWaveform(self._duration, phase)
 
     @property
     def amplitude(self) -> Waveform:
@@ -139,26 +194,46 @@ class Drive:
         return self._dmm
 
     @property
-    def phase(self) -> float:
-        """The phase value in the drive."""
+    def phase(self) -> Waveform:
+        """The phase waveform in the drive."""
         return self._phase
 
     @property
     def duration(self) -> float:
         return self._duration
 
+    @property
+    def _phase_groups(self) -> list[tuple[Waveform, Waveform, float]]:
+        """The (amplitude, detuning, phase) groups of constant phase, in order."""
+        phase_changes = [
+            wf for wf in self._amplitude.waveforms if isinstance(wf, _PhaseChangeDelay)
+        ]
+        phases = [self._phase.waveforms[0].max()] + [pc.final_phase for pc in phase_changes]
+        amplitudes = _split_at_phase_changes(self._amplitude)
+        detunings = _split_at_phase_changes(self._detuning)
+        return list(zip(amplitudes, detunings, phases))
+
     def __rshift__(self, other: Drive) -> Drive:
         if not isinstance(other, Drive):
             return NotImplemented
         if self.dmm is not None or other.dmm is not None:
             raise NotImplementedError("Composing drives with a dmm is not supported.")
-        if self.phase != other.phase:
-            raise NotImplementedError("Composing drives with different phase not supported.")
-        return Drive(
-            amplitude=CompositeWaveform(self._amplitude, other._amplitude),
-            detuning=CompositeWaveform(self._detuning, other._detuning),
-            phase=self._phase,
-        )
+
+        final_phase = self._phase.waveforms[-1].max()
+        initial_phase = other._phase.waveforms[0].max()
+        if final_phase != initial_phase:
+            # the phase changes at the boundary: mark it with a phase change delay
+            phase_change = _PhaseChangeDelay(final_phase, initial_phase)
+            amplitude = CompositeWaveform(self._amplitude, phase_change, other._amplitude)
+            detuning = CompositeWaveform(self._detuning, phase_change, other._detuning)
+        else:
+            amplitude = CompositeWaveform(self._amplitude, other._amplitude)
+            detuning = CompositeWaveform(self._detuning, other._detuning)
+
+        composite_drive = Drive(amplitude=amplitude, detuning=detuning)
+        composite_drive._phase = CompositeWaveform(self._phase, other._phase)
+
+        return composite_drive
 
     def __amp_header__(self) -> str:
         return "amplitude: \n"

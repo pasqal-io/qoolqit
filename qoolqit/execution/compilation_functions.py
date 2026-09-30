@@ -124,19 +124,24 @@ def basic_compilation(
     if device_max_duration_ratio and device._max_duration:
         TIME = device_max_duration_ratio * device._max_duration / drive.duration
 
-    # Build pulser pulse and register
-    wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
-    pulser_amp_wf = wf_converter.convert(drive._amplitude)
-    pulser_det_wf = wf_converter.convert(drive._detuning)
-    pulser_pulse = PulserPulse(pulser_amp_wf, pulser_det_wf, drive.phase)
-
+    # Build the Pulser Register
     pulser_register = _build_register(register, device, DISTANCE)
 
-    # Create sequence
+    # Create the Pulser Sequence
     pulser_device = device._device
     pulser_sequence = PulserSequence(pulser_register, pulser_device)
+
+    # Only support one global Rydberg channel for now
     pulser_sequence.declare_channel("rydberg", "rydberg_global")
-    pulser_sequence.add(pulser_pulse, "rydberg")
+
+    wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
+
+    # Add pulses to the sequence, grouped by constant phase
+    for amp, det, phase in drive._phase_groups:
+        pulser_amp_wf = wf_converter.convert(amp)
+        pulser_det_wf = wf_converter.convert(det)
+        pulser_pulse = PulserPulse(pulser_amp_wf, pulser_det_wf, phase)
+        pulser_sequence.add(pulser_pulse, "rydberg")
 
     # Add dmm, if specified in the drive.
     if drive.dmm is not None:
