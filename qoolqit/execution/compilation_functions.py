@@ -128,7 +128,7 @@ def basic_compilation(
     wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
     pulser_amp_wf = wf_converter.convert(drive._amplitude)
     pulser_det_wf = wf_converter.convert(drive._detuning)
-    pulser_pulse = PulserPulse(pulser_amp_wf, pulser_det_wf, drive.phase)
+    pulser_pulse = PulserPulse(pulser_amp_wf, pulser_det_wf, drive.phase.value)
 
     pulser_register = _build_register(register, device, DISTANCE)
 
