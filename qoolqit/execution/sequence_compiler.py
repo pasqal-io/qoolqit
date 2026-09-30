@@ -71,7 +71,7 @@ class SequenceCompiler:
                 self.profile,
                 self.device_max_duration_ratio,
             )
-        except CompilationError as error:
-            raise error
-        except Exception as error:
-            raise CompilationError(f"Failed to compile the sequence due to:\n\n{error}")
+        except CompilationError:
+            raise
+        except Exception as err:
+            raise CompilationError(f"Failed to compile the sequence due to:\n\n{err}") from err
