@@ -342,8 +342,10 @@ class _RemoteJob(Job[Results]):
         connection = remote_results._connection
         try:
             job_id = remote_results.job_ids[position]
-        except IndexError:
-            raise IndexError(f"No job found at index {position} in the provided remote results.")
+        except IndexError as err:
+            raise IndexError(
+                f"No job found at index {position} in the provided remote results."
+            ) from err
         batch_id = remote_results.batch_id
         return cls(connection, job_id, batch_id=batch_id)
 

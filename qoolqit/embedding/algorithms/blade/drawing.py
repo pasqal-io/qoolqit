@@ -125,12 +125,12 @@ def draw_graph_including_actual_weights(
         try:
             import pandas as pd
             from IPython.display import display
-        except ImportError:
+        except ImportError as err:
             raise ModuleNotFoundError(
                 "To use `draw_steps=True` together with "
                 "`print_interactions=True` in the BLaDE algorithm, "
                 "please install the `pandas` and `IPython` libraries."
-            )
+            ) from err
 
         new_weights_matrix = np.full(
             (len(target_interactions_graph), len(target_interactions_graph)),
@@ -159,11 +159,11 @@ def draw_graph_including_actual_weights(
 def plot_differences(differences: np.ndarray) -> None:
     try:
         import seaborn
-    except ImportError:
+    except ImportError as err:
         raise ModuleNotFoundError(
             "To use `draw_steps=True` in the BLaDE algorithm, "
             "please install the `seaborn` library."
-        )
+        ) from err
 
     ax = seaborn.violinplot({"differences": differences}, inner=None)
     seaborn.stripplot(
