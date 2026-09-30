@@ -8,7 +8,7 @@ on:
             - synchronize
             - closed
 
-concurrency: preview-${{ github.ref }}
+concurrency: gh-pages-${{ github.repository }}
 
 jobs:
     build-docs:
@@ -118,10 +118,19 @@ jobs:
                   "$DOC_PORTAL_IMAGE" \
                   -c 'cd /app && pnpm --filter @pasqal/doc-portal run build:selected && cp -r /app/packages/doc-portal/dist/. /out/'
 
+            # Keep only the qoolqit pages and the shared assets they load; the other products are ~130 MB per preview.
+            # Temporary until doc-portal can build qoolqit alone, see #488.
+            - name: Trim the portal preview to qoolqit
+              if: github.event.action != 'closed'
+              run: |
+                mkdir -p portal-trimmed
+                cd portal-dist
+                cp -r qoolqit _astro assets pagefind favicon.* ../portal-trimmed/
+
             - name: Deploy portal preview
               uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
               with:
-                  source-dir: ./portal-dist/
+                  source-dir: ./portal-trimmed/
                   preview-branch: gh-pages
                   umbrella-dir: portal-preview
                   qr-code: false
@@ -143,3 +152,31 @@ jobs:
               with:
                   header: doc-portal-preview
                   delete: true
+
+    publish-dev-docs:
+        name: Publish development docs
+        needs: [portal-preview]
+        if: |
+          always() &&
+          github.event.pull_request.merged == true
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout QoolQit
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+            - name: Set up Python
+              uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+              with:
+                  python-version: '3.14'
+
+            - name: Install QoolQit with development dependencies
+              run: pip install -e .[dev]
+
+            - name: Deploy docs
+              run: |
+                git config user.name "GitHub Actions"
+                git config user.email "actions@github.com"
+                git fetch origin gh-pages
+                mike deploy --push --update-aliases main development
