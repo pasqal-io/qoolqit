@@ -197,7 +197,13 @@ class Drive:
         return repr
 
     def draw(self, fig: Figure | None = None) -> None:
-        """Draw the Drive in a figure."""
+        """Draw the amplitude, detuning, phase and DMM of the Drive.
+
+        The phase is drawn only if it is non-zero, and the DMM only if one is set.
+
+        Args:
+            fig: The figure to draw into. If None, a new pyplot figure is created.
+        """
         if fig is None:
             fig = plt.figure()
 
