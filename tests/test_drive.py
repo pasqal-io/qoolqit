@@ -170,7 +170,7 @@ def test_drive_draw_with_phase() -> None:
     fig = Figure()
     drive.draw(fig=fig)
     assert len(fig.axes) == 3
-    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning", "Phase"]
+    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning", r"Phase $/ \ 2\pi$"]
 
 
 def test_drive_draw_with_dmm() -> None:
@@ -194,7 +194,12 @@ def test_drive_draw_with_phase_and_dmm() -> None:
     fig = Figure()
     drive.draw(fig=fig)
     assert len(fig.axes) == 4
-    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning", "Phase", "DMM"]
+    assert [ax.get_ylabel() for ax in fig.axes] == [
+        "Amplitude",
+        "Detuning",
+        r"Phase $/ \ 2\pi$",
+        "DMM",
+    ]
 
 
 def test_drive_draw_creates_new_figure_by_default() -> None:
