@@ -5,7 +5,7 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.figure import Figure
+from matplotlib.figure import FigureBase
 
 from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform, Waveform
 
@@ -196,13 +196,14 @@ class Drive:
 
         return repr
 
-    def draw(self, fig: Figure | None = None) -> None:
+    def draw(self, fig: FigureBase | None = None) -> None:
         """Draw the amplitude, detuning, phase and DMM of the Drive.
 
         The phase is drawn only if it is non-zero, and the DMM only if one is set.
 
         Args:
-            fig: The figure to draw into. If None, a new pyplot figure is created.
+            fig: The figure or subfigure to draw into. If None, a new pyplot figure is
+                created.
         """
         if fig is None:
             fig = plt.figure()
