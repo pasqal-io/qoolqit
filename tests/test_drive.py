@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import math
-import random
 
 import matplotlib.pyplot as plt
 import pytest
@@ -59,7 +58,7 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
     assert isinstance(drive.detuning, DelayWaveform)
     assert math.isclose(drive.duration, duration_amp)
 
-    phase = random.random()
+    phase = 0.7
     drive_rand_phase = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
     drive = drive_rand_phase >> drive_rand_phase
     assert isinstance(drive.phase, ConstantWaveform)
@@ -107,8 +106,8 @@ def test_drive_composition_with_dmm_not_supported() -> None:
 
 
 def test_error_amplitude_negative() -> None:
+    neg_ramp = RampWaveform(10.0, -1.0, 2.0)
     with pytest.raises(ValueError, match="'amplitude' must be positive."):
-        neg_ramp = RampWaveform(10.0, -1.0, 2.0)
         Drive(amplitude=neg_ramp, detuning=neg_ramp)
 
 
@@ -157,9 +156,45 @@ def test_drive_draw_plain_drive() -> None:
     det = RampWaveform(10.0, 0.0, 1.0)
     drive = Drive(amplitude=amp, detuning=det)
 
-    plt.close("all")
-    drive.draw()
-    plt.close("all")
+    fig = Figure()
+    drive.draw(fig=fig)
+    assert len(fig.axes) == 2
+    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning"]
+
+
+def test_drive_draw_with_phase() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    det = RampWaveform(10.0, 0.0, 1.0)
+    drive = Drive(amplitude=amp, detuning=det, phase=math.pi)
+
+    fig = Figure()
+    drive.draw(fig=fig)
+    assert len(fig.axes) == 3
+    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning", "Phase"]
+
+
+def test_drive_draw_with_dmm() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    det = RampWaveform(10.0, 0.0, 1.0)
+    dmm = DetuningMapModulator(RampWaveform(10.0, -1.0, -2.0), weights={0: 1.0})
+    drive = Drive(amplitude=amp, detuning=det, dmm=dmm)
+
+    fig = Figure()
+    drive.draw(fig=fig)
+    assert len(fig.axes) == 3
+    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning", "DMM"]
+
+
+def test_drive_draw_with_phase_and_dmm() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    det = RampWaveform(10.0, 0.0, 1.0)
+    dmm = DetuningMapModulator(RampWaveform(10.0, -1.0, -2.0), weights={0: 1.0})
+    drive = Drive(amplitude=amp, detuning=det, phase=math.pi, dmm=dmm)
+
+    fig = Figure()
+    drive.draw(fig=fig)
+    assert len(fig.axes) == 4
+    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning", "Phase", "DMM"]
 
 
 def test_drive_draw_uses_pyplot_figure_by_default() -> None:
@@ -168,12 +203,6 @@ def test_drive_draw_uses_pyplot_figure_by_default() -> None:
     drive = Drive(amplitude=amp, detuning=det)
 
     plt.close("all")
-    assert plt.get_fignums() == []
     drive.draw()
-    assert plt.get_fignums() != []
+    assert len(plt.gcf().axes) == 2
     plt.close("all")
-
-    # an explicit figure can still be provided and is drawn on directly.
-    fig = Figure()
-    drive.draw(fig=fig)
-    assert len(fig.axes) > 0
