@@ -60,7 +60,8 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
     phase = random.random()
     drive_rand_phase = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
     drive = drive_rand_phase >> drive_rand_phase
-    assert math.isclose(drive.phase, phase)
+    assert isinstance(drive.phase, ConstantWaveform)
+    assert math.isclose(drive.phase.value, phase)
 
 
 def test_drive_composition_with_non_drive() -> None:
@@ -115,6 +116,20 @@ def test_drive_duration_with_delays(amp_duration: float, det_duration: float) ->
     det_wf = RampWaveform(det_duration, -1.0, 0.0)
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
     assert drive.duration == max(amp_duration, det_duration)
+
+
+@pytest.mark.parametrize("amp_duration, det_duration", [(1.0, 1.005), (20.0, 10.0)])
+def test_drive_phase_waveform(amp_duration: float, det_duration: float) -> None:
+    amp_wf = RampWaveform(amp_duration, 1.0, 0.0)
+    det_wf = RampWaveform(det_duration, -1.0, 0.0)
+    drive = Drive(amplitude=amp_wf, detuning=det_wf, phase=0.5)
+    assert isinstance(drive.phase, ConstantWaveform)
+    assert math.isclose(drive.phase.value, 0.5)
+    assert math.isclose(drive.phase.duration, drive.duration)
+
+    composed = drive >> drive
+    assert math.isclose(composed.phase.value, 0.5)
+    assert math.isclose(composed.phase.duration, composed.duration)
 
 
 def test_dmm_init() -> None:

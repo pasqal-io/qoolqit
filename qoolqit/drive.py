@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
 
-from qoolqit.waveforms import CompositeWaveform, DelayWaveform, Waveform
+from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform, Waveform
 
 __all__ = ["DetuningMapModulator", "Drive"]
 
@@ -70,7 +70,8 @@ class Drive:
             dmm: DetuningMapModulator instance for additional negative detuning waveform Δ(t) ≤ 0
                 applied to individual qubits as specified by its `weights` attribute εᵢ.
             phase: Global phase φ applied to the amplitude term in the Hamiltonian.
-                Defaults to 0.0 (no phase).
+                Defaults to 0.0 (no phase). Stored as a ConstantWaveform spanning
+                the full duration of the drive.
 
         Raises:
             TypeError: If amplitude or detuning are not Waveform instances.
@@ -121,7 +122,7 @@ class Drive:
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
             raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
-        self._phase = phase
+        self._phase = ConstantWaveform(self.duration, phase)
 
     @property
     def amplitude(self) -> Waveform:
@@ -139,8 +140,8 @@ class Drive:
         return self._dmm
 
     @property
-    def phase(self) -> float:
-        """The phase value in the drive."""
+    def phase(self) -> ConstantWaveform:
+        """The phase waveform in the drive."""
         return self._phase
 
     @property
@@ -152,12 +153,12 @@ class Drive:
             return NotImplemented
         if self.dmm is not None or other.dmm is not None:
             raise NotImplementedError("Composing drives with a dmm is not supported.")
-        if self.phase != other.phase:
+        if self.phase.value != other.phase.value:
             raise NotImplementedError("Composing drives with different phase not supported.")
         return Drive(
             amplitude=CompositeWaveform(self._amplitude, other._amplitude),
             detuning=CompositeWaveform(self._detuning, other._detuning),
-            phase=self._phase,
+            phase=self.phase.value,
         )
 
     def __amp_header__(self) -> str:
