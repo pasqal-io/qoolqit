@@ -2727,7 +2727,7 @@ allowed duration, or if it is not in the range (0, 1].</p>
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">draw</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">compiled</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fig</span><span class="p">:</span> <span class="n"><span title="matplotlib.figure.Figure">Figure</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">compiled</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fig</span><span class="p">:</span> <span class="n"><span title="matplotlib.figure.FigureBase">FigureBase</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
@@ -2750,13 +2750,13 @@ allowed duration, or if it is not in the range (0, 1].</p>
         </li>
         <li class="doc-section-item field-body">
             <b><code>fig</code></b>
-              (<code><span title="matplotlib.figure.Figure">Figure</span> | None</code>, default:
+              (<code><span title="matplotlib.figure.FigureBase">FigureBase</span> | None</code>, default:
                   <code>None</code>
 )
           –
           <div class="doc-md-description">
-            <p>The figure to draw the drive into. If None, a new pyplot figure is
-created. Ignored when <code>compiled=True</code>.</p>
+            <p>The figure or subfigure to draw the drive into. If None, a new pyplot
+figure is created. Ignored when <code>compiled=True</code>.</p>
           </div>
         </li>
     </ul>
@@ -2800,14 +2800,14 @@ created. Ignored when <code>compiled=True</code>.</p>
 <span class="normal"><a href="#__codelineno-0-196">196</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a>    <span class="bp">self</span><span class="p">,</span>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a>    <span class="n">compiled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a>    <span class="n">fig</span><span class="p">:</span> <span class="n">Figure</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167"></a>    <span class="n">fig</span><span class="p">:</span> <span class="n">FigureBase</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="w">    </span><span class="sd">"""Draw the drive of the program, or its compiled sequence.</span>
 <a id="__codelineno-0-170" name="__codelineno-0-170"></a>
 <a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">        compiled: Whether to draw the compiled pulser sequence instead of the drive.</span>
-<a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">        fig: The figure to draw the drive into. If None, a new pyplot figure is</span>
-<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">            created. Ignored when `compiled=True`.</span>
+<a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">        fig: The figure or subfigure to draw the drive into. If None, a new pyplot</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">            figure is created. Ignored when `compiled=True`.</span>
 <a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">    """</span>
 <a id="__codelineno-0-176" name="__codelineno-0-176"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">compiled</span><span class="p">:</span>
 <a id="__codelineno-0-177" name="__codelineno-0-177"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">drive</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
