@@ -199,13 +199,13 @@ class Drive:
     def draw(self, fig: Figure | None = None) -> None:
         """Draw the Drive in a figure."""
         if fig is None:
-            fig = plt.gcf()
+            fig = plt.figure()
 
         # setup subplots
-        has_phase = any(ph != 0 for _, _, ph in self._phase_groups)
         nrows = 2
         if self.dmm is not None:
             nrows += 1
+        has_phase = self.phase.value != 0
         if has_phase:
             nrows += 1
 
@@ -215,7 +215,6 @@ class Drive:
         times = np.linspace(0.0, self.duration, 250)
         amplitude = self.amplitude(times)
         detuning = self.detuning(times)
-        phase = self._phase(times)
 
         # draw amplitude
         axs[0].set_ylabel("Amplitude")
@@ -230,6 +229,7 @@ class Drive:
 
         # draw phase if present
         if has_phase:
+            phase = self.phase(times)
             axs[2].set_ylabel("Phase")
             axs[2].plot(times, phase, color="darkorange")
             axs[2].fill_between(times, phase, color="darkorange", alpha=0.4)
