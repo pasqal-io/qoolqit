@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
+from matplotlib.figure import Figure
 from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
@@ -163,16 +164,24 @@ class QuantumProgram:
     def draw(
         self,
         compiled: bool = False,
+        fig: Figure | None = None,
     ) -> None:
+        """Draw the drive of the program, or its compiled sequence.
+
+        Args:
+            compiled: Whether to draw the compiled pulser sequence instead of the drive.
+            fig: The figure to draw the drive into. If None, a new pyplot figure is
+                created. Ignored when `compiled=True`.
+        """
         if not compiled:
-            self.drive.draw()
+            self.drive.draw(fig=fig)
         else:
             if not self.is_compiled:
                 raise ValueError(
                     "Program has not been compiled. Please call program.compile_to(device)."
                 )
             else:
-                _, fig, _, _ = self.compiled_sequence._plot(
+                self.compiled_sequence._plot(
                     draw_phase_area=False,
                     draw_interp_pts=True,
                     draw_phase_shifts=False,
