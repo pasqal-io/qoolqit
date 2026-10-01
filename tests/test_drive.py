@@ -197,12 +197,16 @@ def test_drive_draw_with_phase_and_dmm() -> None:
     assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning", "Phase", "DMM"]
 
 
-def test_drive_draw_uses_pyplot_figure_by_default() -> None:
+def test_drive_draw_creates_new_figure_by_default() -> None:
     amp = RampWaveform(10.0, 0.0, 1.0)
     det = RampWaveform(10.0, 0.0, 1.0)
     drive = Drive(amplitude=amp, detuning=det)
 
     plt.close("all")
+    existing = plt.figure()
+    # drive.draw() spawns a new figure
     drive.draw()
+    assert plt.gcf() is not existing
+    assert len(existing.axes) == 0
     assert len(plt.gcf().axes) == 2
     plt.close("all")
