@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, overload
+from typing import overload
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pulser
-from matplotlib.figure import Figure
+from matplotlib.axes import Axes
+from matplotlib.typing import ColorType
 from pulser.parametrized import ParamObj
 from pulser.waveforms import Waveform as PulserWaveform
 
@@ -139,20 +140,25 @@ class Waveform(ABC):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
-    def draw(self, n_points: int = 500, return_fig: bool = False, **kwargs: Any) -> Figure | None:
-        fig, ax = plt.subplots(1, 1, figsize=(8, 4), dpi=150)
-        ax.grid(True)
+    def draw(
+        self, ax: Axes | None = None, color: ColorType = "tab:blue", n_points: int = 250
+    ) -> None:
+        """Draw the waveform.
+
+        Args:
+            ax: The axes to draw into. If None, a new pyplot figure is created.
+            color: The color of the line and the filled area. Defaults to matplotlib's "tab:blue".
+            n_points: The number of time samples to draw. Defaults to 250.
+        """
+        if ax is None:
+            _, ax = plt.subplots()
+
         t_array = np.linspace(0.0, self.duration, n_points)
         y_array = self(t_array)
-        ax.plot(t_array, y_array)
-        ax.fill_between(t_array, y_array, color="skyblue", alpha=0.4)
+        ax.plot(t_array, y_array, color=color)
+        ax.fill_between(t_array, y_array, color=color, alpha=0.4)
+        ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
         ax.set_xlabel("Time t")
-        ax.set_ylabel("Waveform")
-        if return_fig:
-            plt.close()
-            return fig
-        else:
-            return None
 
 
 class CompositeWaveform(Waveform):
