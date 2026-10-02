@@ -11,6 +11,7 @@ nav:
     - Install: get_started/install.md
     - Programming a neutral-atom QPU: get_started/qoolqit_model.md
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
+    - Quick Run Guide: get_started/quick_run_guide.md
   - Fundamentals:
     - Introduction: fundamentals/introduction.md
     - Graphs: fundamentals/graphs.ipynb
