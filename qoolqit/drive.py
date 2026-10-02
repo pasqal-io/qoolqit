@@ -89,7 +89,8 @@ class Drive:
 
         Raises:
             TypeError: If amplitude or detuning are not Waveform instances.
-            ValueError: If the amplitude waveform has negative values.
+            ValueError: If the amplitude waveform has negative values, or if the phase
+                is not finite.
 
         Note:
             - All arguments must be passed as keyword arguments.
@@ -117,6 +118,9 @@ class Drive:
 
         if amplitude.min() < 0.0:
             raise ValueError("'amplitude' must be positive.")
+
+        if not math.isfinite(phase):
+            raise ValueError("'phase' must be finite.")
 
         self._amplitude = amplitude
         self._detuning = detuning if detuning is not None else DelayWaveform(amplitude.duration)

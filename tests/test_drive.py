@@ -149,6 +149,12 @@ def test_drive_with_phase(phase: float, expected: float) -> None:
     assert math.isclose(drive.phase.value, expected, abs_tol=1e-12)
 
 
+@pytest.mark.parametrize("phase", [math.inf, -math.inf, math.nan])
+def test_drive_error_phase_not_finite(phase: float) -> None:
+    with pytest.raises(ValueError, match="'phase' must be finite."):
+        Drive(amplitude=RampWaveform(10.0, 0.0, 1.0), phase=phase)
+
+
 @pytest.mark.parametrize(
     "x",
     [0.0, 0.7, math.pi, -math.pi / 2, 2 * math.pi, -2 * math.pi, 7 * math.pi / 2],
@@ -163,9 +169,10 @@ def test_mod_2pi_tiny_negative_wraps_to_zero(x: float) -> None:
     assert _mod_2pi(x) == 0.0
 
 
-def test_mod_2pi_float32_stays_below_2pi() -> None:
-    # float32 arithmetic would give a value above 2π
-    assert 0.0 <= _mod_2pi(np.float32(-1e-9)) < math.tau
+@pytest.mark.parametrize("x", [np.float32(-1e-9), np.float16(-1e-4)])
+def test_mod_2pi_low_precision_input(x: np.floating) -> None:
+    # reduced in float64, not in the precision of the input
+    assert _mod_2pi(x) == float(x) % math.tau
 
 
 def test_dmm_init() -> None:
