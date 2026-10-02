@@ -13,8 +13,8 @@ from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform
 __all__ = ["DetuningMapModulator", "Drive"]
 
 
-def mod_2pi(x: float) -> float:
-    """Reduce x modulo 2π to [0, 2π), with 2π excluded.
+def _mod_2pi(x: float) -> float:
+    """Reduce x modulo 2π to [0, 2π).
 
     Float rounding can make tiny negative values wrap to exactly 2π, so those are
     mapped to 0.
@@ -136,7 +136,7 @@ class Drive:
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
             raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
-        self._phase = ConstantWaveform(self.duration, mod_2pi(phase))
+        self._phase = ConstantWaveform(self.duration, _mod_2pi(phase))
 
     @property
     def amplitude(self) -> Waveform:
