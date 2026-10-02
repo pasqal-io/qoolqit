@@ -243,7 +243,10 @@ class TestWaveform:
 def test_waveform_draw_on_given_ax() -> None:
     wf = RampWaveform(10.0, 0.0, 1.0)
     ax = Figure().subplots()
+    plt.close("all")
     wf.draw(ax=ax)
+    # drawing on a given ax does not spawn a pyplot figure
+    assert plt.get_fignums() == []
     assert len(ax.lines) == 1
     assert ax.get_xlabel() == "Time t"
 
@@ -264,3 +267,9 @@ def test_waveform_draw_with_color() -> None:
     RampWaveform(10.0, 0.0, 1.0).draw(ax=ax, color="red")
     assert ax.lines[0].get_color() == "red"
     assert np.allclose(ax.collections[0].get_facecolor()[0], to_rgba("red", 0.4))
+
+
+def test_waveform_draw_n_points() -> None:
+    ax = Figure().subplots()
+    RampWaveform(10.0, 0.0, 1.0).draw(ax=ax, n_points=42)
+    assert len(ax.lines[0].get_xdata()) == 42

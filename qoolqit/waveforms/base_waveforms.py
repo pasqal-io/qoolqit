@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pulser
 from matplotlib.axes import Axes
+from matplotlib.typing import ColorType
 from pulser.parametrized import ParamObj
 from pulser.waveforms import Waveform as PulserWaveform
 
@@ -139,7 +140,9 @@ class Waveform(ABC):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
-    def draw(self, ax: Axes | None = None, color: str = "tab:blue", n_points: int = 250) -> None:
+    def draw(
+        self, ax: Axes | None = None, color: ColorType = "tab:blue", n_points: int = 250
+    ) -> None:
         """Draw the waveform.
 
         Args:
@@ -153,7 +156,7 @@ class Waveform(ABC):
         t_array = np.linspace(0.0, self.duration, n_points)
         y_array = self(t_array)
         ax.plot(t_array, y_array, color=color)
-        ax.fill_between(t_array, y_array, color=(color, 0.4))
+        ax.fill_between(t_array, y_array, color=color, alpha=0.4)
         ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
         ax.set_xlabel("Time t")
 
