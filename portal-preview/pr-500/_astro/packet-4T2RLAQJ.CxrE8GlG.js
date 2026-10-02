@@ -1,0 +1,1 @@
+import"./chunk-K5T4RW27.BMI_ugzd.js";import{p as e}from"./mermaid-parser.core.UR0UEOlp.js";export{e as createPacketServices};
