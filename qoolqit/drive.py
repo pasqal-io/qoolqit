@@ -167,6 +167,9 @@ class Drive:
     def __det_header__(self) -> str:
         return "detuning: \n"
 
+    def __phase_header__(self) -> str:
+        return "phase: \n"
+
     def __dmm_header__(self) -> str:
         return "dmm: \n"
 
@@ -189,6 +192,14 @@ class Drive:
             )
 
         repr = amp_repr + "\n" + det_repr
+
+        if self.phase.value != 0:
+            phase_repr = (
+                self.__phase_header__()
+                + self.phase.__repr_header__()
+                + self.phase.__repr_content__()
+            )
+            repr += "\n" + phase_repr
 
         if self.dmm is not None:
             dmm_repr = self.__dmm_header__() + self.dmm.__repr__()

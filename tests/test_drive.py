@@ -133,6 +133,23 @@ def test_drive_phase_waveform(amp_duration: float, det_duration: float) -> None:
     assert math.isclose(composed.phase.duration, composed.duration)
 
 
+def test_drive_repr_without_phase() -> None:
+    drive = Drive(amplitude=ConstantWaveform(10.0, 1.0))
+    assert repr(drive) == (
+        "amplitude: \n0.00 ≤ t ≤ 10.00: ConstantWaveform(t, 1.00)\n"
+        "detuning: \n0.00 ≤ t ≤ 10.00: DelayWaveform(t)"
+    )
+
+
+def test_drive_repr_with_phase() -> None:
+    drive = Drive(amplitude=ConstantWaveform(10.0, 1.0), phase=1.0)
+    assert repr(drive) == (
+        "amplitude: \n0.00 ≤ t ≤ 10.00: ConstantWaveform(t, 1.00)\n"
+        "detuning: \n0.00 ≤ t ≤ 10.00: DelayWaveform(t)\n"
+        "phase: \n0.00 ≤ t ≤ 10.00: ConstantWaveform(t, 1.00)"
+    )
+
+
 def test_dmm_init() -> None:
     positive_wf = RampWaveform(10.0, -10.0, 1.0)
     negative_wf = RampWaveform(10.0, -1.0, -2.0)
