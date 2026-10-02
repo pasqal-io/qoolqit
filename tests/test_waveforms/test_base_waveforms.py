@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import math
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pytest
+from matplotlib.colors import to_rgba
+from matplotlib.figure import Figure
 from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, RampWaveform, Waveform
@@ -235,3 +238,29 @@ class TestWaveform:
             match="unsupported operand type\\(s\\) for >>: 'CompositeWaveform' and 'float'",
         ):
             wf_composed >> 1.0  # type: ignore [operator]
+
+
+def test_waveform_draw_on_given_ax() -> None:
+    wf = RampWaveform(10.0, 0.0, 1.0)
+    ax = Figure().subplots()
+    wf.draw(ax=ax)
+    assert len(ax.lines) == 1
+    assert ax.get_xlabel() == "Time t"
+
+
+def test_waveform_draw_creates_new_figure_by_default() -> None:
+    wf = RampWaveform(10.0, 0.0, 1.0)
+    plt.close("all")
+    existing = plt.figure()
+    # wf.draw() spawns a new figure
+    wf.draw()
+    assert plt.gcf() is not existing
+    assert len(plt.gcf().axes) == 1
+    plt.close("all")
+
+
+def test_waveform_draw_with_color() -> None:
+    ax = Figure().subplots()
+    RampWaveform(10.0, 0.0, 1.0).draw(ax=ax, color="red")
+    assert ax.lines[0].get_color() == "red"
+    assert np.allclose(ax.collections[0].get_facecolor()[0], to_rgba("red", 0.4))
