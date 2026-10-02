@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from typing import Any
 
@@ -10,6 +11,19 @@ from matplotlib.figure import FigureBase
 from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform, Waveform
 
 __all__ = ["DetuningMapModulator", "Drive"]
+
+
+def _mod_2pi(x: float) -> float:
+    """Reduce x modulo 2π to [0, 2π).
+
+    Float rounding can make tiny negative values wrap to exactly 2π, so those are
+    mapped to 0.
+
+    Args:
+        x: The value to reduce.
+    """
+    x = float(x) % math.tau
+    return 0.0 if x >= math.tau else x
 
 
 @dataclass(frozen=True)
@@ -70,12 +84,13 @@ class Drive:
             dmm: DetuningMapModulator instance for additional negative detuning waveform Δ(t) ≤ 0
                 applied to individual qubits as specified by its `weights` attribute εᵢ.
             phase: Global phase φ applied to the amplitude term in the Hamiltonian.
-                Defaults to 0.0 (no phase). Stored as a ConstantWaveform spanning
-                the full duration of the drive.
+                Defaults to 0.0 (no phase). Normalized to [0, 2π) and stored as a
+                ConstantWaveform spanning the full duration of the drive.
 
         Raises:
             TypeError: If amplitude or detuning are not Waveform instances.
-            ValueError: If the amplitude waveform has negative values.
+            ValueError: If the amplitude waveform has negative values, or if the phase
+                is not finite.
 
         Note:
             - All arguments must be passed as keyword arguments.
@@ -104,6 +119,9 @@ class Drive:
         if amplitude.min() < 0.0:
             raise ValueError("'amplitude' must be positive.")
 
+        if not math.isfinite(phase):
+            raise ValueError("'phase' must be finite.")
+
         self._amplitude = amplitude
         self._detuning = detuning if detuning is not None else DelayWaveform(amplitude.duration)
 
@@ -122,7 +140,7 @@ class Drive:
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
             raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
-        self._phase = ConstantWaveform(self.duration, phase)
+        self._phase = ConstantWaveform(self.duration, _mod_2pi(phase))
 
     @property
     def amplitude(self) -> Waveform:
