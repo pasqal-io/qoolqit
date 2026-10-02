@@ -5,7 +5,7 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.figure import Figure
+from matplotlib.figure import FigureBase
 
 from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform, Waveform
 
@@ -196,39 +196,60 @@ class Drive:
 
         return repr
 
-    def draw(self, return_fig: bool = False) -> Figure | None:
+    def draw(self, fig: FigureBase | None = None) -> None:
+        """Draw the amplitude, detuning, phase and DMM of the Drive.
 
-        nrows = 3 if self.dmm is not None else 2
+        The phase is drawn only if it is non-zero, and the DMM only if one is set.
 
-        fig = plt.gcf()
+        Args:
+            fig: The figure or subfigure to draw into. If None, a new pyplot figure is
+                created.
+        """
+        if fig is None:
+            fig = plt.figure()
+
+        # setup subplots
+        nrows = 2
+        if self.dmm is not None:
+            nrows += 1
+        has_phase = self.phase.value != 0
+        if has_phase:
+            nrows += 1
+
         axs = fig.subplots(nrows, 1, sharex=True)
 
         # samples
-        t_array = np.linspace(0.0, self.duration, 250)
-        y_amp = self.amplitude(t_array)
-        y_det = self.detuning(t_array)
+        times = np.linspace(0.0, self.duration, 250)
+        amplitude = self.amplitude(times)
+        detuning = self.detuning(times)
 
         # draw amplitude
-        axs[0].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
         axs[0].set_ylabel("Amplitude")
-        axs[0].plot(t_array, y_amp, color="darkgreen")
-        axs[0].fill_between(t_array, y_amp, color="darkgreen", alpha=0.4)
+        axs[0].plot(times, amplitude, color="darkgreen")
+        axs[0].fill_between(times, amplitude, color="darkgreen", alpha=0.4)
 
         # draw detuning
-        axs[1].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
         axs[1].set_axisbelow(True)
         axs[1].set_ylabel("Detuning")
-        axs[1].plot(t_array, y_det, color="darkmagenta")
-        axs[1].fill_between(t_array, y_det, color="darkmagenta", alpha=0.4)
+        axs[1].plot(times, detuning, color="darkmagenta")
+        axs[1].fill_between(times, detuning, color="darkmagenta", alpha=0.4)
 
-        axs[-1].set_xlabel("Time t")
+        # draw phase if present
+        if has_phase:
+            phase = self.phase(times) / (2 * np.pi)
+            axs[2].set_ylabel(r"Phase $/ \ 2\pi$")
+            axs[2].plot(times, phase, color="darkorange")
+            axs[2].fill_between(times, phase, color="darkorange", alpha=0.4)
 
         # draw DMM if present
         if self.dmm is not None:
-            y_dmm = self.dmm.waveform(t_array)
-            axs[-1].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+            y_dmm = self.dmm.waveform(times)
             axs[-1].set_ylabel("DMM")
-            axs[-1].plot(t_array, y_dmm, color="darkblue")
-            axs[-1].fill_between(t_array, y_dmm, color="darkblue", alpha=0.4)
+            axs[-1].plot(times, y_dmm, color="darkblue")
+            axs[-1].fill_between(times, y_dmm, color="darkblue", alpha=0.4)
 
-        return fig if return_fig else None
+        axs[-1].set_xlabel("Time t")
+
+        # add grids
+        for ax in axs:
+            ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)

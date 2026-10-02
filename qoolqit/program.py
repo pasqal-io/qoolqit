@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
+from matplotlib.figure import FigureBase
 from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
@@ -12,6 +11,8 @@ from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
 from qoolqit.execution.sequence_compiler import SequenceCompiler
 from qoolqit.register import Register
+
+__all__ = ["QuantumProgram"]
 
 
 class QuantumProgram:
@@ -163,17 +164,24 @@ class QuantumProgram:
     def draw(
         self,
         compiled: bool = False,
-        return_fig: bool = False,
-    ) -> Figure | None:
+        fig: FigureBase | None = None,
+    ) -> None:
+        """Draw the drive of the program, or its compiled sequence.
+
+        Args:
+            compiled: Whether to draw the compiled pulser sequence instead of the drive.
+            fig: The figure or subfigure to draw the drive into. If None, a new pyplot
+                figure is created. Ignored when `compiled=True`.
+        """
         if not compiled:
-            return self.drive.draw(return_fig=return_fig)
+            self.drive.draw(fig=fig)
         else:
             if not self.is_compiled:
                 raise ValueError(
                     "Program has not been compiled. Please call program.compile_to(device)."
                 )
             else:
-                _, fig, _, _ = self.compiled_sequence._plot(
+                self.compiled_sequence._plot(
                     draw_phase_area=False,
                     draw_interp_pts=True,
                     draw_phase_shifts=False,
@@ -186,12 +194,3 @@ class QuantumProgram:
                     draw_qubit_det=False,
                     phase_modulated=False,
                 )
-
-                if return_fig:
-                    plt.close()
-                    return fig
-                else:
-                    return None
-
-
-__all__ = ["QuantumProgram"]
