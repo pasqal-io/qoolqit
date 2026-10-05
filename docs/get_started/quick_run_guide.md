@@ -1,19 +1,18 @@
 # Quick Run Guide
 
 !!! info "Onboarding"
+
     You are currently on the onboarding page for QoolQit. This page is designed to get you up and running as quickly as possible, covering installation, running a job locally, and submitting to remote backends. It is intentionally focused and does not replace the full QoolQit documentation. For an in-depth understanding of the library, we recommend following the complete documentation in order.
 
 ## Installation
 
-QoolQit requires Python 3.10 or later. Install it from PyPI in a virtual environment:
+QoolQit requires Python 3.10 or later. Install it from [PyPI](https://pypi.org/project/qoolqit/) in a virtual environment:
 
-```sh
+``` sh
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install qoolqit
 ```
-
-For more options, including installing from source, see the [Install](install.md) page.
 
 ## Local Execution
 
@@ -23,8 +22,15 @@ Run your first experiment on a local emulator. No account or credentials are nee
 
 Create a register and a drive, then compile the program to a device. `MockDevice` is a test device for local runs.
 
-```python
-from qoolqit import ConstantWaveform, Drive, MockDevice, QuantumProgram, RampWaveform, Register
+``` python
+from qoolqit import (
+    ConstantWaveform,
+    Drive,
+    MockDevice,
+    QuantumProgram,
+    RampWaveform,
+    Register,
+)
 
 # Create the register
 register = Register.from_coordinates([(0, 1), (0, -1), (2, 0)])
@@ -36,7 +42,10 @@ delta_f = -delta_i
 T = 25.0
 
 # Define the drive
-drive = Drive(amplitude=ConstantWaveform(T, omega), detuning=RampWaveform(T, delta_i, delta_f))
+drive = Drive(
+    amplitude=ConstantWaveform(T, omega),
+    detuning=RampWaveform(T, delta_i, delta_f),
+)
 
 # Create and compile the program
 program = QuantumProgram(register, drive)
@@ -47,7 +56,7 @@ program.compile_to(MockDevice())
 
 `LocalEmulator` runs the program on your machine. `run()` returns a `Job`, and `job.results()` gives you the results.
 
-```python
+``` python
 from qoolqit.execution import LocalEmulator
 
 emulator = LocalEmulator()
@@ -57,15 +66,15 @@ results = job.results()
 
 ### 3. Choose a backend
 
-`LocalEmulator` supports several Pasqal backends:
+`LocalEmulator` supports several [Pasqal emulators](https://docs.pasqal.com/qpu-emulators/emulators/):
 
-- `QutipBackendV2` (default): based on QuTiP, runs programs with up to ~12 qubits.
-- `SVBackend`: PyTorch-based state-vector emulator, runs programs with up to ~25 qubits. Requires the `emu-sv` package.
-- `MPSBackend`: PyTorch-based Matrix Product State emulator, runs programs with up to ~80 qubits. Requires the `emu-mps` package.
+- `QutipBackendV2` (default): based on QuTiP, best for up to 15 qubits.
+- `SVBackend`: PyTorch-based state-vector emulator, best for up to 25 qubits. Requires the [`emu-sv`](https://docs.pasqal.com/qpu-emulators/emusv/) package.
+- `MPSBackend`: PyTorch-based Matrix Product State emulator, best for more than 25 qubits. Requires the [`emu-mps`](https://docs.pasqal.com/qpu-emulators/emumps/) package.
 
 Install `emu-sv` and `emu-mps` with `pip install "qoolqit[extras]"`, then pick a backend with `backend_type`:
 
-```python
+``` python
 from qoolqit.execution import BackendType, LocalEmulator
 
 emulator = LocalEmulator(backend_type=BackendType.QutipBackendV2)
@@ -75,7 +84,7 @@ emulator = LocalEmulator(backend_type=BackendType.QutipBackendV2)
 
 `job.results()` returns a `Results` object. `get_result_tags()` lists what it contains, and `final_bitstrings` gives the sampled bitstrings:
 
-```python
+``` python
 results.get_result_tags()   # ['bitstrings']
 results.final_bitstrings    # Counter({'111': 807, '101': 68, '110': 60, ...})
 ```
@@ -85,6 +94,7 @@ results.final_bitstrings    # Counter({'111': 807, '101': 68, '110': 60, ...})
 ### Connection
 
 !!! note "Create a connection"
+
     Running on remote emulators or QPUs requires a connection, either through Pasqal Cloud or a third-party cloud provider. If you don't have one yet, see [Pasqal Cloud](https://www.pasqal.com/solutions/cloud/) before continuing.
 
 ### Remote Execution on Cloud Emulators
@@ -93,11 +103,11 @@ results.final_bitstrings    # Counter({'111': 807, '101': 68, '110': 60, ...})
 
 Create a `PasqalCloudConnection` with your username, password and project ID from the portal, or use your third-party connection.
 
-```python
+``` python
 from pasqal_cloud import PasqalCloudConnection
 
 connection = PasqalCloudConnection(
-    username=USERNAME,      # your email for the Pasqal Cloud Platform
+    username=USERNAME,      # your user/email for the Pasqal Cloud Platform
     password=PASSWORD,      # your Pasqal Cloud Platform password
     project_id=PROJECT_ID,  # the ID of the project associated with your account
 )
@@ -107,7 +117,7 @@ connection = PasqalCloudConnection(
 
 `RemoteEmulator` uses `RemoteEmuFreeBackend` by default, which is free for all Pasqal Cloud accounts and needs no credits. `run()` submits the program and returns a `Job` without waiting for the results.
 
-```python
+``` python
 from qoolqit.execution import BackendType, RemoteEmulator
 
 remote_emulator = RemoteEmulator(
@@ -128,7 +138,7 @@ job = remote_emulator.run(program)
 
 Remote jobs run asynchronously, so you can check their status and fetch the results once they are done. Save the job and batch IDs to retrieve the job later, for example from a new session.
 
-```python
+``` python
 from qoolqit.execution import get_batch_id, retrieve_remote_job
 
 # query status: PENDING, RUNNING, DONE, etc.
@@ -154,7 +164,7 @@ The same connection lets you run the program on a QPU.
 
 List the devices available through your connection, then compile the program to the target QPU. You must compile to the QPU device before submitting.
 
-```python
+``` python
 from qoolqit.devices import Device
 
 # list available devices
@@ -170,7 +180,7 @@ program.compile_to(device=device, profile="max_energy")
 
 Create a `QPU` backend with your connection and number of shots, then submit. Status checks and result retrieval work the same as for remote emulators.
 
-```python
+``` python
 from qoolqit.execution import QPU, get_batch_id
 
 qpu = QPU(connection=connection, num_shots=500)
