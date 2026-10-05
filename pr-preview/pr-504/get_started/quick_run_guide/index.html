@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../programming_with_qoolqit/">
+        <link rel="prev" href="../..">
       
       
-        <link rel="next" href="../../fundamentals/introduction/">
+        <link rel="next" href="../qoolqit_model/">
       
       
         
@@ -257,7 +257,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../install/" class="md-tabs__link">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -466,8 +466,6 @@
       
         
       
-        
-      
     
     
     
@@ -515,90 +513,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../install/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Install
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../qoolqit_model/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Programming a neutral-atom QPU
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../programming_with_qoolqit/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tutorial: Programming with QoolQit
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -859,6 +773,62 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qoolqit_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Programming a neutral-atom QPU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../programming_with_qoolqit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial: Programming with QoolQit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2268,33 +2238,42 @@
 <p>You are currently on the onboarding page for QoolQit. This page is designed to get you up and running as quickly as possible, covering installation, running a job locally, and submitting to remote backends. It is intentionally focused and does not replace the full QoolQit documentation. For an in-depth understanding of the library, we recommend following the complete documentation in order.</p>
 </div>
 <h2 id="installation">Installation</h2>
-<p>QoolQit requires Python 3.10 or later. Install it from PyPI in a virtual environment:</p>
+<p>QoolQit requires Python 3.10 or later. Install it from <a href="https://pypi.org/project/qoolqit/">PyPI</a> in a virtual environment:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate<span class="w">  </span><span class="c1"># Windows: .venv\Scripts\activate</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>pip<span class="w"> </span>install<span class="w"> </span>qoolqit
 </code></pre></div>
-<p>For more options, including installing from source, see the <a href="../install/">Install</a> page.</p>
 <h2 id="local-execution">Local Execution</h2>
 <p>Run your first experiment on a local emulator. No account or credentials are needed.</p>
 <h3 id="1-define-a-quantum-program">1. Define a quantum program</h3>
 <p>Create a register and a drive, then compile the program to a device. <code>MockDevice</code> is a test device for local runs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConstantWaveform</span><span class="p">,</span> <span class="n">Drive</span><span class="p">,</span> <span class="n">MockDevice</span><span class="p">,</span> <span class="n">QuantumProgram</span><span class="p">,</span> <span class="n">RampWaveform</span><span class="p">,</span> <span class="n">Register</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Create the register</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">register</span> <span class="o">=</span> <span class="n">Register</span><span class="o">.</span><span class="n">from_coordinates</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Define the drive parameters</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">omega</span> <span class="o">=</span> <span class="mf">0.8</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">delta_i</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">omega</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">delta_f</span> <span class="o">=</span> <span class="o">-</span><span class="n">delta_i</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">T</span> <span class="o">=</span> <span class="mf">25.0</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Define the drive</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">drive</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">ConstantWaveform</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">omega</span><span class="p">),</span> <span class="n">detuning</span><span class="o">=</span><span class="n">RampWaveform</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">delta_i</span><span class="p">,</span> <span class="n">delta_f</span><span class="p">))</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Create and compile the program</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">program</span> <span class="o">=</span> <span class="n">QuantumProgram</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">drive</span><span class="p">)</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">MockDevice</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">ConstantWaveform</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">Drive</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">MockDevice</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">QuantumProgram</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">RampWaveform</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">Register</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Create the register</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">register</span> <span class="o">=</span> <span class="n">Register</span><span class="o">.</span><span class="n">from_coordinates</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Define the drive parameters</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">omega</span> <span class="o">=</span> <span class="mf">0.8</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">delta_i</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">omega</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">delta_f</span> <span class="o">=</span> <span class="o">-</span><span class="n">delta_i</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="n">T</span> <span class="o">=</span> <span class="mf">25.0</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Define the drive</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">drive</span> <span class="o">=</span> <span class="n">Drive</span><span class="p">(</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    <span class="n">amplitude</span><span class="o">=</span><span class="n">ConstantWaveform</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">omega</span><span class="p">),</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="n">detuning</span><span class="o">=</span><span class="n">RampWaveform</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">delta_i</span><span class="p">,</span> <span class="n">delta_f</span><span class="p">),</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="p">)</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Create and compile the program</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="n">program</span> <span class="o">=</span> <span class="n">QuantumProgram</span><span class="p">(</span><span class="n">register</span><span class="p">,</span> <span class="n">drive</span><span class="p">)</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="n">program</span><span class="o">.</span><span class="n">compile_to</span><span class="p">(</span><span class="n">MockDevice</span><span class="p">())</span>
 </code></pre></div>
 <h3 id="2-run-on-the-local-emulator">2. Run on the local emulator</h3>
 <p><code>LocalEmulator</code> runs the program on your machine. <code>run()</code> returns a <code>Job</code>, and <code>job.results()</code> gives you the results.</p>
@@ -2305,11 +2284,11 @@
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">results</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="3-choose-a-backend">3. Choose a backend</h3>
-<p><code>LocalEmulator</code> supports several Pasqal backends:</p>
+<p><code>LocalEmulator</code> supports several <a href="https://docs.pasqal.com/qpu-emulators/emulators/">Pasqal emulators</a>:</p>
 <ul>
-<li><code>QutipBackendV2</code> (default): based on QuTiP, runs programs with up to ~12 qubits.</li>
-<li><code>SVBackend</code>: PyTorch-based state-vector emulator, runs programs with up to ~25 qubits. Requires the <code>emu-sv</code> package.</li>
-<li><code>MPSBackend</code>: PyTorch-based Matrix Product State emulator, runs programs with up to ~80 qubits. Requires the <code>emu-mps</code> package.</li>
+<li><code>QutipBackendV2</code> (default): based on QuTiP, best for up to 15 qubits.</li>
+<li><code>SVBackend</code>: PyTorch-based state-vector emulator, best for up to 25 qubits. Requires the <a href="https://docs.pasqal.com/qpu-emulators/emusv/"><code>emu-sv</code></a> package.</li>
+<li><code>MPSBackend</code>: PyTorch-based Matrix Product State emulator, best for more than 25 qubits. Requires the <a href="https://docs.pasqal.com/qpu-emulators/emumps/"><code>emu-mps</code></a> package.</li>
 </ul>
 <p>Install <code>emu-sv</code> and <code>emu-mps</code> with <code>pip install "qoolqit[extras]"</code>, then pick a backend with <code>backend_type</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackendType</span><span class="p">,</span> <span class="n">LocalEmulator</span>
@@ -2333,7 +2312,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pasqal_cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">PasqalCloudConnection</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">connection</span> <span class="o">=</span> <span class="n">PasqalCloudConnection</span><span class="p">(</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">username</span><span class="o">=</span><span class="n">USERNAME</span><span class="p">,</span>      <span class="c1"># your email for the Pasqal Cloud Platform</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">username</span><span class="o">=</span><span class="n">USERNAME</span><span class="p">,</span>      <span class="c1"># your user/email for the Pasqal Cloud Platform</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">password</span><span class="o">=</span><span class="n">PASSWORD</span><span class="p">,</span>      <span class="c1"># your Pasqal Cloud Platform password</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">project_id</span><span class="o">=</span><span class="n">PROJECT_ID</span><span class="p">,</span>  <span class="c1"># the ID of the project associated with your account</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">)</span>
@@ -2433,7 +2412,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../programming_with_qoolqit/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tutorial: Programming with QoolQit">
+          <a href="../.." class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2443,20 +2422,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Tutorial: Programming with QoolQit
+                Overview
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../fundamentals/introduction/" class="md-footer__link md-footer__link--next" aria-label="Next: Introduction">
+          <a href="../qoolqit_model/" class="md-footer__link md-footer__link--next" aria-label="Next: Programming a neutral-atom QPU">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Introduction
+                Programming a neutral-atom QPU
               </div>
             </div>
             <div class="md-footer__button md-icon">
