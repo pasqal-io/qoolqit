@@ -2286,9 +2286,9 @@
 <h3 id="3-choose-a-backend">3. Choose a backend</h3>
 <p><code>LocalEmulator</code> supports several <a href="https://docs.pasqal.com/qpu-emulators/emulators/">Pasqal emulators</a>:</p>
 <ul>
-<li><code>QutipBackendV2</code> (default): based on QuTiP, best for up to 15 qubits.</li>
-<li><code>SVBackend</code>: PyTorch-based state-vector emulator, best for up to 25 qubits. Requires the <a href="https://docs.pasqal.com/qpu-emulators/emusv/"><code>emu-sv</code></a> package.</li>
-<li><code>MPSBackend</code>: PyTorch-based Matrix Product State emulator, best for more than 25 qubits. Requires the <a href="https://docs.pasqal.com/qpu-emulators/emumps/"><code>emu-mps</code></a> package.</li>
+<li><code>QutipBackendV2</code> (default): based on QuTiP, best for up to ~15 qubits.</li>
+<li><code>SVBackend</code>: PyTorch-based state-vector emulator, best for up to ~25 qubits. Requires the <a href="https://docs.pasqal.com/qpu-emulators/emusv/"><code>emu-sv</code></a> package.</li>
+<li><code>MPSBackend</code>: PyTorch-based Matrix Product State emulator, best for 25 to ~80 qubits. Requires the <a href="https://docs.pasqal.com/qpu-emulators/emumps/"><code>emu-mps</code></a> package.</li>
 </ul>
 <p>Install <code>emu-sv</code> and <code>emu-mps</code> with <code>pip install "qoolqit[extras]"</code>, then pick a backend with <code>backend_type</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackendType</span><span class="p">,</span> <span class="n">LocalEmulator</span>
