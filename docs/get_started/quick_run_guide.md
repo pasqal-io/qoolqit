@@ -68,9 +68,9 @@ results = job.results()
 
 `LocalEmulator` supports several [Pasqal emulators](https://docs.pasqal.com/qpu-emulators/emulators/):
 
-- `QutipBackendV2` (default): based on QuTiP, best for up to 15 qubits.
-- `SVBackend`: PyTorch-based state-vector emulator, best for up to 25 qubits. Requires the [`emu-sv`](https://docs.pasqal.com/qpu-emulators/emusv/) package.
-- `MPSBackend`: PyTorch-based Matrix Product State emulator, best for more than 25 qubits. Requires the [`emu-mps`](https://docs.pasqal.com/qpu-emulators/emumps/) package.
+- `QutipBackendV2` (default): based on QuTiP, best for up to ~15 qubits.
+- `SVBackend`: PyTorch-based state-vector emulator, best for up to ~25 qubits. Requires the [`emu-sv`](https://docs.pasqal.com/qpu-emulators/emusv/) package.
+- `MPSBackend`: PyTorch-based Matrix Product State emulator, best for 25 to ~80 qubits. Requires the [`emu-mps`](https://docs.pasqal.com/qpu-emulators/emumps/) package.
 
 Install `emu-sv` and `emu-mps` with `pip install "qoolqit[extras]"`, then pick a backend with `backend_type`:
 
