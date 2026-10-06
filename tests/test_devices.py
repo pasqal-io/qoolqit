@@ -74,9 +74,9 @@ def test_device_init_and_units(device: Device) -> None:
 
     device.reset_converter()
     TIME_NEW, ENERGY_NEW, DISTANCE_NEW = device.converter.factors
-    assert TIME_ORIG == pytest.approx(TIME_NEW)
-    assert ENERGY_ORIG == pytest.approx(ENERGY_NEW)
-    assert DISTANCE_ORIG == pytest.approx(DISTANCE_NEW)
+    assert pytest.approx(TIME_NEW) == TIME_ORIG
+    assert pytest.approx(ENERGY_NEW) == ENERGY_ORIG
+    assert pytest.approx(DISTANCE_NEW) == DISTANCE_ORIG
 
 
 def test_default_device_specs() -> None:

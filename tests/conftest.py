@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Callable, Generator
 from random import uniform
-from typing import Callable, Generator
 
 import matplotlib
 
@@ -19,7 +19,7 @@ from qoolqit.waveforms import RampWaveform, Waveform
 @pytest.fixture
 def random_linear_register_factory() -> Callable[[float, int | np.random.Generator], Register]:
     def _generate_random_linear_register(
-        min_distance: float, seed: int | np.random.Generator = np.random.default_rng()
+        min_distance: float, seed: int | np.random.Generator | None = None
     ) -> Register:
         rng = np.random.default_rng(seed)
         n = rng.integers(low=2, high=5)
@@ -38,7 +38,7 @@ def random_waveform_factory() -> (
         min_value: float,
         max_value: float,
         max_duration: float,
-        seed: int | np.random.Generator = np.random.default_rng(),
+        seed: int | np.random.Generator | None = None,
     ) -> Waveform:
         rng = np.random.default_rng(seed)
         n = rng.integers(2, 5)

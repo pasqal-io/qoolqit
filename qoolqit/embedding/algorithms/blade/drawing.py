@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 def eformat(f: Any) -> str:
     if 1 <= abs(f) < 1000:
         return f"{np.round(f, decimals=1)}"
-    elif 0.01 <= abs(f):
+    elif abs(f) >= 0.01:
         return f"{np.round(f, decimals=2)}"
     if f == 0:
         return "0"
@@ -125,12 +125,12 @@ def draw_graph_including_actual_weights(
         try:
             import pandas as pd
             from IPython.display import display
-        except ImportError:
+        except ImportError as err:
             raise ModuleNotFoundError(
                 "To use `draw_steps=True` together with "
                 "`print_interactions=True` in the BLaDE algorithm, "
                 "please install the `pandas` and `IPython` libraries."
-            )
+            ) from err
 
         new_weights_matrix = np.full(
             (len(target_interactions_graph), len(target_interactions_graph)),
@@ -159,11 +159,11 @@ def draw_graph_including_actual_weights(
 def plot_differences(differences: np.ndarray) -> None:
     try:
         import seaborn
-    except ImportError:
+    except ImportError as err:
         raise ModuleNotFoundError(
             "To use `draw_steps=True` in the BLaDE algorithm, "
             "please install the `seaborn` library."
-        )
+        ) from err
 
     ax = seaborn.violinplot({"differences": differences}, inner=None)
     seaborn.stripplot(
@@ -258,7 +258,7 @@ def draw_force_arrows(
     nonzero = np.any(force2d != 0.0, axis=1)
     p = pos2d[nonzero]
     f = force2d[nonzero]
-    for pi, fi in zip(p, f):
+    for pi, fi in zip(p, f, strict=True):
         ax.arrow(
             float(pi[0]),
             float(pi[1]),
@@ -399,7 +399,7 @@ def draw_discrepancy_lines_and_colorbar(
     pos2d: np.ndarray,
     target_interactions: np.ndarray,
     current_interactions: np.ndarray,
-    spec: ColorbarSpec = ColorbarSpec(),
+    spec: ColorbarSpec = ColorbarSpec(),  # noqa: B008 (frozen dataclass, safe to share)
 ) -> None:
     discrepancies = np.triu(target_interactions - current_interactions, k=1)
 

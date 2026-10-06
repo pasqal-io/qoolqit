@@ -40,7 +40,7 @@ The following table summarizes the dimensionless parameters defining the Hamilto
 | $\tilde{J}_{ij}=1/\tilde{r}_{ij}^6$ | Distance-dependent coupling between atom sites $i$ and $j$. Sets how strongly excited atoms interact. | $[0,\,1]$ |
 | $\tilde{\Omega}(\tilde{t})$ | Global time-dependent drive's amplitude. Sets how strongly the atoms are driven. | $\geq 0$ |
 | $\tilde{\delta}(\tilde{t})$ | Global time-dependent drive's detuning | any real value |
-| $\phi$ | Global drive's phase | $[0,\,2\pi]$ |
+| $\phi$ | Global drive's phase | $[0,\,2\pi)$ |
 | $\tilde{\Delta}(\tilde{t})$ | Additional global time-dependent drive's detuning | $\leq 0$ |
 | $\epsilon_i$ | Local detuning weight for atom $i$ to locally modulate $\tilde{\Delta}$ | $[0,\,1]$ |
 | $\tilde{t}$ | Dimensionless time | $> 0$ |

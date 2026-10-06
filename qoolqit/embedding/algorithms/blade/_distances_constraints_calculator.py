@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
@@ -94,7 +94,7 @@ class DistancesConstraintsCalculator:
 
     def compute_scaling_min_max(
         self, positions: np.ndarray, step_cursor: float, draw_differences: bool = False
-    ) -> tuple[float, Optional[float], Optional[float]]:
+    ) -> tuple[float, float | None, float | None]:
         """Computes the scaling and the new minimum and maximum distances.
 
         Computes the best scaling factor on the positions and the new

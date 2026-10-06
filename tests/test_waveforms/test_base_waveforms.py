@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import math
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pytest
+from matplotlib.colors import to_rgba
+from matplotlib.figure import Figure
 from pulser.waveforms import Waveform as PulserWaveform
 
 from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, RampWaveform, Waveform
@@ -194,3 +197,77 @@ class TestWaveform:
         assert isinstance(wf_composed, CompositeWaveform)
         assert len(wf_composed.waveforms) == 3
         np.testing.assert_allclose(wf_composed.duration, 30.0, rtol=1e-9)
+
+    def test_waveforms_of_single_waveform(self) -> None:
+        wf = self.MockWaveform(5.0)
+        assert wf.waveforms == [wf]
+        assert wf.waveforms[0] is wf
+
+    def test_composite_init_flattens_nested(self) -> None:
+        wf1 = self.MockWaveform(1.0)
+        wf2 = self.MockWaveform(2.0)
+        wf3 = self.SinWaveform(3.0, amplitude=0.5)
+        wf4 = self.SinWaveform(4.0, amplitude=0.5)
+
+        wf_composed = CompositeWaveform(wf1, CompositeWaveform(wf2, CompositeWaveform(wf3)), wf4)
+        assert wf_composed.waveforms == [wf1, wf2, wf3, wf4]
+
+    def test_composition_of_composites_flattens(self) -> None:
+        wf1 = self.MockWaveform(1.0)
+        wf2 = self.MockWaveform(2.0)
+        wf3 = self.SinWaveform(3.0, amplitude=0.5)
+        wf4 = self.SinWaveform(4.0, amplitude=0.5)
+
+        wf_composed = (wf1 >> wf2) >> (wf3 >> wf4)
+        assert isinstance(wf_composed, CompositeWaveform)
+        assert wf_composed.waveforms == [wf1, wf2, wf3, wf4]
+        np.testing.assert_allclose(wf_composed.duration, 10.0, rtol=1e-9)
+
+    def test_composition_with_non_waveform(self) -> None:
+        wf = self.MockWaveform(1.0)
+        with pytest.raises(
+            TypeError, match="unsupported operand type\\(s\\) for >>: 'MockWaveform' and 'float'"
+        ):
+            wf >> 1.0  # type: ignore [operator]
+
+        wf_composed = wf >> self.MockWaveform(2.0)
+        with pytest.raises(
+            TypeError,
+            match="unsupported operand type\\(s\\) for >>: 'CompositeWaveform' and 'float'",
+        ):
+            wf_composed >> 1.0  # type: ignore [operator]
+
+
+def test_waveform_draw_on_given_ax() -> None:
+    wf = RampWaveform(10.0, 0.0, 1.0)
+    ax = Figure().subplots()
+    plt.close("all")
+    wf.draw(ax=ax)
+    # drawing on a given ax does not spawn a pyplot figure
+    assert plt.get_fignums() == []
+    assert len(ax.lines) == 1
+    assert ax.get_xlabel() == "Time t"
+
+
+def test_waveform_draw_creates_new_figure_by_default() -> None:
+    wf = RampWaveform(10.0, 0.0, 1.0)
+    plt.close("all")
+    existing = plt.figure()
+    # wf.draw() spawns a new figure
+    wf.draw()
+    assert plt.gcf() is not existing
+    assert len(plt.gcf().axes) == 1
+    plt.close("all")
+
+
+def test_waveform_draw_with_color() -> None:
+    ax = Figure().subplots()
+    RampWaveform(10.0, 0.0, 1.0).draw(ax=ax, color="red")
+    assert ax.lines[0].get_color() == "red"
+    assert np.allclose(ax.collections[0].get_facecolor()[0], to_rgba("red", 0.4))
+
+
+def test_waveform_draw_n_points() -> None:
+    ax = Figure().subplots()
+    RampWaveform(10.0, 0.0, 1.0).draw(ax=ax, n_points=42)
+    assert len(ax.lines[0].get_xdata()) == 42

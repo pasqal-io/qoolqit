@@ -60,7 +60,7 @@ def test_basegraph_init(n_nodes: int) -> None:
     scale = ((actual_n_nodes**0.5) ** 0.5) / 2
     coords = random_coords(actual_n_nodes, scale)
 
-    graph.coords = {i: pos for i, pos in zip(graph.nodes, coords)}
+    graph.coords = {i: pos for i, pos in zip(graph.nodes, coords, strict=True)}
 
     assert graph.has_coords
     assert graph.max_distance() <= 2 * scale
@@ -208,7 +208,7 @@ def test_basegraph_interactions(n_nodes: int) -> None:
 def test_basegraph_constructors(n_nodes: int) -> None:
     scale = ((n_nodes**0.5) ** 0.5) / 2
     node_set = set(np.random.randint(1, 1000, size=n_nodes).tolist())
-    coords = {i: pos for i, pos in zip(node_set, random_coords(n_nodes, scale))}
+    coords = {i: pos for i, pos in zip(node_set, random_coords(len(node_set), scale), strict=True)}
 
     graph1 = BaseGraph.from_nodes(node_set)
     graph2 = BaseGraph.from_coordinates(coords)
@@ -296,7 +296,7 @@ def test_from_matrix(n_nodes: int) -> None:
     data2 = data_copy.copy()
     np.fill_diagonal(data2, almost_zero)
     random_edges_removal = random_edge_list(range(n_nodes), k=4)
-    i_list, j_list = zip(*random_edges_removal)
+    i_list, j_list = zip(*random_edges_removal, strict=True)
     data2[i_list, j_list] = almost_zero
     data2[j_list, i_list] = almost_zero
 

@@ -81,7 +81,7 @@ class Force:
         cleaned = self.weighted_vectors.copy()
         cleaned[self.vector_weights == 0] = 0.0
         object.__setattr__(self, "weighted_vectors", cleaned)
-        self.maximum_temperatures
+        self.maximum_temperatures  # noqa: B018
 
     def get_nb_dims(self) -> int:
         return len(self.weighted_vectors.shape)
@@ -92,7 +92,7 @@ class Force:
     def regulated(
         self,
         regulation_cursor: float = 0,
-    ) -> "Force":
+    ) -> Force:
         min_temperature = np.min(self.maximum_temperatures)
 
         if min_temperature != np.inf:

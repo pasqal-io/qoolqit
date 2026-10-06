@@ -48,13 +48,13 @@ class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbedderConfig]):
 class Blade(MatrixToGraphEmbedder[BladeConfig]):
     """A matrix to graph embedder using the BLaDE algorithm."""
 
-    def __init__(self, config: BladeConfig = BladeConfig()) -> None:
+    def __init__(self, config: BladeConfig | None = None) -> None:
         """Inits Blade.
 
         Args:
             config (BladeConfig): configuration object for the BLaDE algorithm.
         """
-        super().__init__(_blade, config=config)
+        super().__init__(_blade, config=config or BladeConfig())
 
     def embed(self, data: np.ndarray) -> DataGraph:
         """Return a DataGraph with coordinates that embeds the input matrix.

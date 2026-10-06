@@ -3,11 +3,26 @@
 from __future__ import annotations
 
 from collections import Counter
+from collections.abc import Mapping
 
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 
-DEFAULT_BAR_COLOR = "#397378"
+__all__ = ["plot_bitstrings", "COLORS"]
+
+COLORS: Mapping[str, str] = {
+    "metalblue": "#397378",
+    "neonpurple": "#867BFA",
+    "mintgreen": "#00C887",
+    "softorange": "#FF986E",
+    "darkgreen": "#0F1E23",
+    "neonblue": "#92C8E5",
+    "softgreen": "#173035",
+    "brightgreen": "#E1F6E9",
+    "neutralgray": "#506166",
+}
+
+DEFAULT_BAR_COLOR = COLORS["metalblue"]
 
 
 def plot_bitstrings(

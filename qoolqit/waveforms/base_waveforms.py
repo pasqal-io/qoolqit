@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, overload
+from typing import overload
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pulser
-from matplotlib.figure import Figure
+from matplotlib.axes import Axes
+from matplotlib.typing import ColorType
 from pulser.parametrized import ParamObj
 from pulser.waveforms import Waveform as PulserWaveform
 
@@ -98,6 +99,11 @@ class Waveform(ABC):
         """Dictionary of parameters used by the waveform."""
         return self._params_dict
 
+    @property
+    def waveforms(self) -> list[Waveform]:
+        """Returns a list of the individual waveforms, which is just this waveform."""
+        return [self]
+
     def _single_call(self, t: float) -> float:
         return 0.0 if (t < 0.0 or t > self.duration) else float(self.function(t))
 
@@ -116,12 +122,9 @@ class Waveform(ABC):
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:
         """Returns a new CompositeWaveform composed of this waveform and another."""
-        if isinstance(other, Waveform):
-            if isinstance(other, CompositeWaveform):
-                return CompositeWaveform(self, *other._waveforms)
-            return CompositeWaveform(self, other)
-        else:
-            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
+        if not isinstance(other, Waveform):
+            return NotImplemented
+        return CompositeWaveform(self, other)
 
     def __repr_header__(self) -> str:
         return f"0.00 ≤ t ≤ {float(self.duration):.2f}: "
@@ -137,20 +140,25 @@ class Waveform(ABC):
     def __repr__(self) -> str:
         return self.__repr_header__() + self.__repr_content__()
 
-    def draw(self, n_points: int = 500, return_fig: bool = False, **kwargs: Any) -> Figure | None:
-        fig, ax = plt.subplots(1, 1, figsize=(8, 4), dpi=150)
-        ax.grid(True)
+    def draw(
+        self, ax: Axes | None = None, color: ColorType = "tab:blue", n_points: int = 250
+    ) -> None:
+        """Draw the waveform.
+
+        Args:
+            ax: The axes to draw into. If None, a new pyplot figure is created.
+            color: The color of the line and the filled area. Defaults to matplotlib's "tab:blue".
+            n_points: The number of time samples to draw. Defaults to 250.
+        """
+        if ax is None:
+            _, ax = plt.subplots()
+
         t_array = np.linspace(0.0, self.duration, n_points)
         y_array = self(t_array)
-        ax.plot(t_array, y_array)
-        ax.fill_between(t_array, y_array, color="skyblue", alpha=0.4)
+        ax.plot(t_array, y_array, color=color)
+        ax.fill_between(t_array, y_array, color=color, alpha=0.4)
+        ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)
         ax.set_xlabel("Time t")
-        ax.set_ylabel("Waveform")
-        if return_fig:
-            plt.close()
-            return fig
-        else:
-            return None
 
 
 class CompositeWaveform(Waveform):
@@ -180,12 +188,8 @@ class CompositeWaveform(Waveform):
         if not waveforms:
             raise ValueError("At least one Waveform must be provided.")
 
-        self._waveforms = []
-        for wf in waveforms:
-            if isinstance(wf, CompositeWaveform):
-                self._waveforms += wf.waveforms
-            else:
-                self._waveforms.append(wf)
+        # flatten nested composite waveforms
+        self._waveforms = [component for wf in waveforms for component in wf.waveforms]
 
         super().__init__(sum(self.durations))
 
@@ -230,14 +234,6 @@ class CompositeWaveform(Waveform):
     def __mul__(self, other: float) -> CompositeWaveform:
         return CompositeWaveform(*[wf * other for wf in self.waveforms])
 
-    def __rshift__(self, other: Waveform) -> CompositeWaveform:
-        if isinstance(other, Waveform):
-            if isinstance(other, CompositeWaveform):
-                return CompositeWaveform(*self.waveforms, *other.waveforms)
-            return CompositeWaveform(*self.waveforms, other)
-        else:
-            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
-
     def __repr_header__(self) -> str:
         return "Composite waveform:\n"
 
@@ -272,7 +268,7 @@ class CompositeWaveform(Waveform):
         new_durations = round_to_sum([ratio * wd for wd in self.durations])
         pulser_waveforms = [
             w._to_pulser(duration=duration)
-            for w, duration in zip(self.waveforms, new_durations)
+            for w, duration in zip(self.waveforms, new_durations, strict=True)
             if duration
         ]
         if len(pulser_waveforms) == 1:

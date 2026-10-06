@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import math
-import random
 
+import matplotlib.pyplot as plt
+import numpy as np
 import pytest
+from matplotlib.figure import Figure
 
-from qoolqit.drive import DetuningMapModulator, Drive
+from qoolqit.drive import DetuningMapModulator, Drive, _mod_2pi
 from qoolqit.waveforms import ConstantWaveform, DelayWaveform, PiecewiseLinearWaveform, RampWaveform
 from qoolqit.waveforms.base_waveforms import Waveform
 
@@ -42,11 +44,6 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
 
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
 
-    with pytest.raises(
-        NotImplementedError, match="Composing with object of type <class 'float'> not supported."
-    ):
-        drive >> 1.0  # type: ignore [operator]
-
     duration_amp = amp_wf.duration
     duration_det = det_wf.duration
 
@@ -62,20 +59,56 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
     assert isinstance(drive.detuning, DelayWaveform)
     assert math.isclose(drive.duration, duration_amp)
 
-    phase = random.random()
+    phase = 0.7
     drive_rand_phase = Drive(amplitude=amp_wf, detuning=det_wf, phase=phase)
     drive = drive_rand_phase >> drive_rand_phase
-    assert math.isclose(drive.phase, phase)
+    assert isinstance(drive.phase, ConstantWaveform)
+    assert math.isclose(drive.phase.value, phase)
 
-    with pytest.raises(NotImplementedError):
-        drive1 = Drive(amplitude=amp_wf, detuning=det_wf, phase=1.0)
-        drive2 = Drive(amplitude=amp_wf, detuning=det_wf, phase=0.0)
-        drive = drive1 >> drive2
+
+def test_drive_composition_with_non_drive() -> None:
+    drive = Drive(amplitude=RampWaveform(10.0, 0.0, 1.0))
+
+    with pytest.raises(
+        TypeError, match="unsupported operand type\\(s\\) for >>: 'Drive' and 'float'"
+    ):
+        drive >> 1.0  # type: ignore [operator]
+
+    with pytest.raises(
+        TypeError, match="unsupported operand type\\(s\\) for >>: 'float' and 'Drive'"
+    ):
+        1.0 >> drive  # type: ignore [operator]
+
+
+def test_drive_different_phase_composition_not_supported() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    drive_1 = Drive(amplitude=amp, phase=1.0)
+    drive_2 = Drive(amplitude=amp, phase=0.0)
+
+    with pytest.raises(
+        NotImplementedError, match="Composing drives with different phase not supported."
+    ):
+        drive_1 >> drive_2
+
+
+def test_drive_composition_with_dmm_not_supported() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    det = RampWaveform(10.0, 0.0, 1.0)
+    dmm = DetuningMapModulator(RampWaveform(10.0, -1.0, -2.0), weights={0: 1.0})
+
+    drive = Drive(amplitude=amp, detuning=det)
+    drive_with_dmm = Drive(amplitude=amp, detuning=det, dmm=dmm)
+
+    with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
+        drive >> drive_with_dmm
+
+    with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
+        drive_with_dmm >> drive
 
 
 def test_error_amplitude_negative() -> None:
+    neg_ramp = RampWaveform(10.0, -1.0, 2.0)
     with pytest.raises(ValueError, match="'amplitude' must be positive."):
-        neg_ramp = RampWaveform(10.0, -1.0, 2.0)
         Drive(amplitude=neg_ramp, detuning=neg_ramp)
 
 
@@ -85,6 +118,78 @@ def test_drive_duration_with_delays(amp_duration: float, det_duration: float) ->
     det_wf = RampWaveform(det_duration, -1.0, 0.0)
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
     assert drive.duration == max(amp_duration, det_duration)
+
+
+@pytest.mark.parametrize("amp_duration, det_duration", [(1.0, 1.005), (20.0, 10.0)])
+def test_drive_phase_waveform(amp_duration: float, det_duration: float) -> None:
+    amp_wf = RampWaveform(amp_duration, 1.0, 0.0)
+    det_wf = RampWaveform(det_duration, -1.0, 0.0)
+    drive = Drive(amplitude=amp_wf, detuning=det_wf, phase=0.5)
+    assert isinstance(drive.phase, ConstantWaveform)
+    assert math.isclose(drive.phase.value, 0.5)
+    assert math.isclose(drive.phase.duration, drive.duration)
+
+    composed = drive >> drive
+    assert math.isclose(composed.phase.value, 0.5)
+    assert math.isclose(composed.phase.duration, composed.duration)
+
+
+@pytest.mark.parametrize(
+    "phase, expected",
+    [
+        (0.7, 0.7),
+        (-math.pi / 2, 3 * math.pi / 2),
+        (2 * math.pi, 0.0),
+        (7 * math.pi / 2, 3 * math.pi / 2),
+        (-1e-17, 0.0),
+    ],
+)
+def test_drive_with_phase(phase: float, expected: float) -> None:
+    drive = Drive(amplitude=RampWaveform(10.0, 0.0, 1.0), phase=phase)
+    assert math.isclose(drive.phase.value, expected, abs_tol=1e-12)
+
+
+@pytest.mark.parametrize("phase", [math.inf, -math.inf, math.nan])
+def test_drive_error_phase_not_finite(phase: float) -> None:
+    with pytest.raises(ValueError, match="'phase' must be finite."):
+        Drive(amplitude=RampWaveform(10.0, 0.0, 1.0), phase=phase)
+
+
+@pytest.mark.parametrize(
+    "x",
+    [0.0, 0.7, math.pi, -math.pi / 2, 2 * math.pi, -2 * math.pi, 7 * math.pi / 2],
+)
+def test_mod_2pi(x: float) -> None:
+    assert _mod_2pi(x) == x % math.tau
+    assert 0.0 <= _mod_2pi(x) < math.tau
+
+
+@pytest.mark.parametrize("x", [-1e-17, -(0.1 + 0.2 - 0.3)])
+def test_mod_2pi_tiny_negative_wraps_to_zero(x: float) -> None:
+    assert _mod_2pi(x) == 0.0
+
+
+@pytest.mark.parametrize("x", [np.float32(-1e-9), np.float16(-1e-4)])
+def test_mod_2pi_low_precision_input(x: np.floating) -> None:
+    # reduced in float64, not in the precision of the input
+    assert _mod_2pi(x) == float(x) % math.tau
+
+
+def test_drive_repr_without_phase() -> None:
+    drive = Drive(amplitude=ConstantWaveform(10.0, 1.0))
+    assert repr(drive) == (
+        "amplitude: \n0.00 ≤ t ≤ 10.00: ConstantWaveform(t, 1.00)\n"
+        "detuning: \n0.00 ≤ t ≤ 10.00: DelayWaveform(t)"
+    )
+
+
+def test_drive_repr_with_phase() -> None:
+    drive = Drive(amplitude=ConstantWaveform(10.0, 1.0), phase=1.0)
+    assert repr(drive) == (
+        "amplitude: \n0.00 ≤ t ≤ 10.00: ConstantWaveform(t, 1.00)\n"
+        "detuning: \n0.00 ≤ t ≤ 10.00: DelayWaveform(t)\n"
+        "phase: \n0.00 ≤ t ≤ 10.00: ConstantWaveform(t, 1.00)"
+    )
 
 
 def test_dmm_init() -> None:
@@ -103,3 +208,69 @@ def test_dmm_init() -> None:
     dmm = DetuningMapModulator(negative_wf, weights=valid_weights)
     assert isinstance(dmm.waveform, RampWaveform)
     assert dmm.weights == valid_weights
+
+
+def test_drive_draw_plain_drive() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    det = RampWaveform(10.0, 0.0, 1.0)
+    drive = Drive(amplitude=amp, detuning=det)
+
+    fig = Figure()
+    drive.draw(fig=fig)
+    assert len(fig.axes) == 2
+    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning"]
+
+
+def test_drive_draw_with_phase() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    det = RampWaveform(10.0, 0.0, 1.0)
+    drive = Drive(amplitude=amp, detuning=det, phase=math.pi)
+
+    fig = Figure()
+    drive.draw(fig=fig)
+    assert len(fig.axes) == 3
+    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning", r"Phase $/ \ 2\pi$"]
+
+
+def test_drive_draw_with_dmm() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    det = RampWaveform(10.0, 0.0, 1.0)
+    dmm = DetuningMapModulator(RampWaveform(10.0, -1.0, -2.0), weights={0: 1.0})
+    drive = Drive(amplitude=amp, detuning=det, dmm=dmm)
+
+    fig = Figure()
+    drive.draw(fig=fig)
+    assert len(fig.axes) == 3
+    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning", "DMM"]
+
+
+def test_drive_draw_with_phase_and_dmm() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    det = RampWaveform(10.0, 0.0, 1.0)
+    dmm = DetuningMapModulator(RampWaveform(10.0, -1.0, -2.0), weights={0: 1.0})
+    drive = Drive(amplitude=amp, detuning=det, phase=math.pi, dmm=dmm)
+
+    fig = Figure()
+    drive.draw(fig=fig)
+    assert len(fig.axes) == 4
+    assert [ax.get_ylabel() for ax in fig.axes] == [
+        "Amplitude",
+        "Detuning",
+        r"Phase $/ \ 2\pi$",
+        "DMM",
+    ]
+
+
+def test_drive_draw_creates_new_figure_by_default() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    det = RampWaveform(10.0, 0.0, 1.0)
+    drive = Drive(amplitude=amp, detuning=det)
+
+    plt.close("all")
+    existing = plt.figure()
+    # drive.draw() spawns a new figure
+    drive.draw()
+    assert plt.gcf() is not existing
+    assert len(existing.axes) == 0
+    assert len(plt.gcf().axes) == 2
+    plt.close("all")

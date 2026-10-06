@@ -1,15 +1,29 @@
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.figure import Figure
+from matplotlib.figure import FigureBase
 
-from qoolqit.waveforms import CompositeWaveform, DelayWaveform, Waveform
+from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, DelayWaveform, Waveform
 
 __all__ = ["DetuningMapModulator", "Drive"]
+
+
+def _mod_2pi(x: float) -> float:
+    """Reduce x modulo 2π to [0, 2π).
+
+    Float rounding can make tiny negative values wrap to exactly 2π, so those are
+    mapped to 0.
+
+    Args:
+        x: The value to reduce.
+    """
+    x = float(x) % math.tau
+    return 0.0 if x >= math.tau else x
 
 
 @dataclass(frozen=True)
@@ -70,11 +84,13 @@ class Drive:
             dmm: DetuningMapModulator instance for additional negative detuning waveform Δ(t) ≤ 0
                 applied to individual qubits as specified by its `weights` attribute εᵢ.
             phase: Global phase φ applied to the amplitude term in the Hamiltonian.
-                Defaults to 0.0 (no phase).
+                Defaults to 0.0 (no phase). Normalized to [0, 2π) and stored as a
+                ConstantWaveform spanning the full duration of the drive.
 
         Raises:
             TypeError: If amplitude or detuning are not Waveform instances.
-            ValueError: If the amplitude waveform has negative values.
+            ValueError: If the amplitude waveform has negative values, or if the phase
+                is not finite.
 
         Note:
             - All arguments must be passed as keyword arguments.
@@ -103,6 +119,9 @@ class Drive:
         if amplitude.min() < 0.0:
             raise ValueError("'amplitude' must be positive.")
 
+        if not math.isfinite(phase):
+            raise ValueError("'phase' must be finite.")
+
         self._amplitude = amplitude
         self._detuning = detuning if detuning is not None else DelayWaveform(amplitude.duration)
 
@@ -121,7 +140,7 @@ class Drive:
         if dmm is not None and not isinstance(dmm, DetuningMapModulator):
             raise TypeError("'dmm' must be of type DetuningMapModulator.")
         self._dmm = dmm
-        self._phase = phase
+        self._phase = ConstantWaveform(self.duration, _mod_2pi(phase))
 
     @property
     def amplitude(self) -> Waveform:
@@ -139,8 +158,8 @@ class Drive:
         return self._dmm
 
     @property
-    def phase(self) -> float:
-        """The phase value in the drive."""
+    def phase(self) -> ConstantWaveform:
+        """The phase waveform in the drive."""
         return self._phase
 
     @property
@@ -148,25 +167,26 @@ class Drive:
         return self._duration
 
     def __rshift__(self, other: Drive) -> Drive:
-        return self.__rrshift__(other)
-
-    def __rrshift__(self, other: Drive) -> Drive:
-        if isinstance(other, Drive):
-            if self.phase != other.phase:
-                raise NotImplementedError("Composing drives with different phase not supported.")
-            return Drive(
-                amplitude=CompositeWaveform(self._amplitude, other._amplitude),
-                detuning=CompositeWaveform(self._detuning, other._detuning),
-                phase=self._phase,
-            )
-        else:
-            raise NotImplementedError(f"Composing with object of type {type(other)} not supported.")
+        if not isinstance(other, Drive):
+            return NotImplemented
+        if self.dmm is not None or other.dmm is not None:
+            raise NotImplementedError("Composing drives with a dmm is not supported.")
+        if self.phase.value != other.phase.value:
+            raise NotImplementedError("Composing drives with different phase not supported.")
+        return Drive(
+            amplitude=CompositeWaveform(self._amplitude, other._amplitude),
+            detuning=CompositeWaveform(self._detuning, other._detuning),
+            phase=self.phase.value,
+        )
 
     def __amp_header__(self) -> str:
         return "amplitude: \n"
 
     def __det_header__(self) -> str:
         return "detuning: \n"
+
+    def __phase_header__(self) -> str:
+        return "phase: \n"
 
     def __dmm_header__(self) -> str:
         return "dmm: \n"
@@ -191,45 +211,74 @@ class Drive:
 
         repr = amp_repr + "\n" + det_repr
 
+        if self.phase.value != 0:
+            phase_repr = (
+                self.__phase_header__()
+                + self.phase.__repr_header__()
+                + self.phase.__repr_content__()
+            )
+            repr += "\n" + phase_repr
+
         if self.dmm is not None:
             dmm_repr = self.__dmm_header__() + self.dmm.__repr__()
             repr += "\n" + dmm_repr
 
         return repr
 
-    def draw(self, return_fig: bool = False) -> Figure | None:
+    def draw(self, fig: FigureBase | None = None) -> None:
+        """Draw the amplitude, detuning, phase and DMM of the Drive.
 
-        nrows = 3 if self.dmm is not None else 2
+        The phase is drawn only if it is non-zero, and the DMM only if one is set.
 
-        fig = plt.gcf()
+        Args:
+            fig: The figure or subfigure to draw into. If None, a new pyplot figure is
+                created.
+        """
+        if fig is None:
+            fig = plt.figure()
+
+        # setup subplots
+        nrows = 2
+        if self.dmm is not None:
+            nrows += 1
+        has_phase = self.phase.value != 0
+        if has_phase:
+            nrows += 1
+
         axs = fig.subplots(nrows, 1, sharex=True)
 
         # samples
-        t_array = np.linspace(0.0, self.duration, 250)
-        y_amp = self.amplitude(t_array)
-        y_det = self.detuning(t_array)
+        times = np.linspace(0.0, self.duration, 250)
+        amplitude = self.amplitude(times)
+        detuning = self.detuning(times)
 
         # draw amplitude
-        axs[0].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
         axs[0].set_ylabel("Amplitude")
-        axs[0].plot(t_array, y_amp, color="darkgreen")
-        axs[0].fill_between(t_array, y_amp, color="darkgreen", alpha=0.4)
+        axs[0].plot(times, amplitude, color="darkgreen")
+        axs[0].fill_between(times, amplitude, color="darkgreen", alpha=0.4)
 
         # draw detuning
-        axs[1].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
         axs[1].set_axisbelow(True)
         axs[1].set_ylabel("Detuning")
-        axs[1].plot(t_array, y_det, color="darkmagenta")
-        axs[1].fill_between(t_array, y_det, color="darkmagenta", alpha=0.4)
+        axs[1].plot(times, detuning, color="darkmagenta")
+        axs[1].fill_between(times, detuning, color="darkmagenta", alpha=0.4)
 
-        axs[-1].set_xlabel("Time t")
+        # draw phase if present
+        if has_phase:
+            phase = self.phase(times) / (2 * np.pi)
+            axs[2].set_ylabel(r"Phase $/ \ 2\pi$")
+            axs[2].plot(times, phase, color="darkorange")
+            axs[2].fill_between(times, phase, color="darkorange", alpha=0.4)
 
         # draw DMM if present
         if self.dmm is not None:
-            y_dmm = self.dmm.waveform(t_array)
-            axs[-1].grid(True, color="lightgray", linestyle="--", linewidth=0.7)
+            y_dmm = self.dmm.waveform(times)
             axs[-1].set_ylabel("DMM")
-            axs[-1].plot(t_array, y_dmm, color="darkblue")
-            axs[-1].fill_between(t_array, y_dmm, color="darkblue", alpha=0.4)
+            axs[-1].plot(times, y_dmm, color="darkblue")
+            axs[-1].fill_between(times, y_dmm, color="darkblue", alpha=0.4)
 
-        return fig if return_fig else None
+        axs[-1].set_xlabel("Time t")
+
+        # add grids
+        for ax in axs:
+            ax.grid(True, color="lightgray", linestyle="--", linewidth=0.7)

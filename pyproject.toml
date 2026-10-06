@@ -58,7 +58,6 @@ dev = [
   "pytest-markdown-docs",
   "pre-commit",
   "ipykernel",
-  "nbmake",
   "mkdocs==1.6.1",
   "mkdocs-material",
   "mkdocstrings-python",
@@ -107,15 +106,22 @@ exclude_also = [
 line-length = 100
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "Q"]
+select = [
+    "E", # pycodestyle
+    "F", # Pyflakes
+    "Q", # flake8-quotes
+    "UP", # pyupgrade
+    "B", # flake8-bugbear
+    "SIM", # flake8-simplify
+    "I", # isort
+]
 isort.required-imports = ["from __future__ import annotations"]
-mccabe.max-complexity = 15
-flake8-quotes.docstring-quotes = "double"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
 "*.ipynb" = ["E402", "I002"]
 "setup.py" = ["I002"]
+"tests/**" = ["B018"]
 
 [tool.black]
 line-length = 100

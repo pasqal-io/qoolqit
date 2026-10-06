@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import inspect
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
-from typing import Callable, Generic, TypeVar
+from typing import Generic, TypeVar
 
 
 @dataclass
-class EmbedderConfig(ABC):
-    """Base abstract dataclass for all embedding algorithm configurations.
+class EmbedderConfig:
+    """Base dataclass for all embedding algorithm configurations.
 
     Subclasses define parameters specific to their algorithms. Each config
     should define fields that directly translate to arguments in the respective
