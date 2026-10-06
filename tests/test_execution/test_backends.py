@@ -99,7 +99,7 @@ class TestBackends:
 
         assert expected_config_repr == config_repr
         # uuid is expected to be different for each instance
-        for obs, expected_obs in zip(obs_repr, expected_obs_repr):
+        for obs, expected_obs in zip(obs_repr, expected_obs_repr, strict=True):
             expected_obs.pop("uuid")
             obs.pop("uuid")
             assert obs == expected_obs

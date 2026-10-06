@@ -137,7 +137,7 @@ def test_register_from_coordinates(n_qubits: int) -> None:
     assert r1.n_qubits == n_qubits
     assert r2.n_qubits == n_qubits
 
-    for (q1, pos1), (q2, pos2) in zip(r1.qubits.items(), r2.qubits.items()):
+    for (q1, pos1), (q2, pos2) in zip(r1.qubits.items(), r2.qubits.items(), strict=True):
         assert q1 == q2
         assert tuple(pos1) == tuple(pos2)
 
@@ -155,7 +155,7 @@ def test_register_from_graph(n_nodes: int) -> None:
 
     register = Register.from_graph(graph)
 
-    for (q, pos1), (v, pos2) in zip(register.qubits.items(), graph.coords.items()):
+    for (q, pos1), (v, pos2) in zip(register.qubits.items(), graph.coords.items(), strict=True):
         assert q == v
         assert tuple(pos1) == tuple(pos2)
 

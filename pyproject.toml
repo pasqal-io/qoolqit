@@ -115,9 +115,6 @@ select = [
     "SIM", # flake8-simplify
     "I", # isort
 ]
-ignore = [
-    "B905", # `zip()` without an explicit `strict=` parameter
-]
 isort.required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.lint.per-file-ignores]

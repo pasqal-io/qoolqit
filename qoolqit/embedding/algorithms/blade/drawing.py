@@ -258,7 +258,7 @@ def draw_force_arrows(
     nonzero = np.any(force2d != 0.0, axis=1)
     p = pos2d[nonzero]
     f = force2d[nonzero]
-    for pi, fi in zip(p, f):
+    for pi, fi in zip(p, f, strict=True):
         ax.arrow(
             float(pi[0]),
             float(pi[1]),

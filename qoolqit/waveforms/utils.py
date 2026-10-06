@@ -15,7 +15,7 @@ def round_to_sum(values: list[float]) -> list[int]:
         ```
     """
     rounded_values = [round(el) for el in values]
-    remainders = [el - rel for rel, el in zip(rounded_values, values)]
+    remainders = [el - rel for rel, el in zip(rounded_values, values, strict=True)]
     sum_remainders = round(sum(remainders))
     p = np.argsort(remainders)
 

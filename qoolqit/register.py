@@ -296,7 +296,9 @@ class Register:
     @property
     def qubits(self) -> dict:
         """Returns a dictionary of qubits and respective coordinates."""
-        return {qid: _copy(coord) for qid, coord in zip(self._qubits_ids, self._coords)}
+        return {
+            qid: _copy(coord) for qid, coord in zip(self._qubits_ids, self._coords, strict=True)
+        }
 
     @property
     def qubits_ids(self) -> tuple[str | int, ...]:
@@ -320,7 +322,7 @@ class Register:
 
     def radial_distances(self) -> dict:
         """Radial distance of each qubit from the origin."""
-        return {qid: _norm(coord) for qid, coord in zip(self.qubits_ids, self._coords)}
+        return {qid: _norm(coord) for qid, coord in zip(self.qubits_ids, self._coords, strict=True)}
 
     def max_radial_distance(self) -> float:
         """Maximum radial distance between all qubits."""
@@ -359,7 +361,7 @@ class Register:
         annotation_offset = 1.5 * marker_radius  # place label just outside the marker
 
         coords = self._coords.detach().cpu().numpy() if _is_torch(self._coords) else self._coords
-        for xi, yi, qid in zip(coords[:, 0], coords[:, 1], self.qubits_ids):
+        for xi, yi, qid in zip(coords[:, 0], coords[:, 1], self.qubits_ids, strict=True):
             ax.scatter(xi, yi, s=marker_size, color=node_color)
             ax.annotate(
                 str(qid),

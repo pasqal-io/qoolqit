@@ -210,8 +210,7 @@ class TestWaveform:
         wf4 = self.SinWaveform(4.0, amplitude=0.5)
 
         wf_composed = CompositeWaveform(wf1, CompositeWaveform(wf2, CompositeWaveform(wf3)), wf4)
-        assert all(a is b for a, b in zip(wf_composed.waveforms, [wf1, wf2, wf3, wf4]))
-        assert len(wf_composed.waveforms) == 4
+        assert wf_composed.waveforms == [wf1, wf2, wf3, wf4]
 
     def test_composition_of_composites_flattens(self) -> None:
         wf1 = self.MockWaveform(1.0)
@@ -221,8 +220,7 @@ class TestWaveform:
 
         wf_composed = (wf1 >> wf2) >> (wf3 >> wf4)
         assert isinstance(wf_composed, CompositeWaveform)
-        assert all(a is b for a, b in zip(wf_composed.waveforms, [wf1, wf2, wf3, wf4]))
-        assert len(wf_composed.waveforms) == 4
+        assert wf_composed.waveforms == [wf1, wf2, wf3, wf4]
         np.testing.assert_allclose(wf_composed.duration, 10.0, rtol=1e-9)
 
     def test_composition_with_non_waveform(self) -> None:
