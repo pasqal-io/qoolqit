@@ -582,7 +582,7 @@ def _blade(
         return compute_regulation_cursor(step_to_progress(step))
 
     for dim_idx, start_ratio, final_ratio in zip(
-        range(len(dimensions) - 1), steps_ratios[:-1], steps_ratios[1:]
+        range(len(dimensions) - 1), steps_ratios[:-1], steps_ratios[1:], strict=True
     ):
         positions, starting_min = evolve_with_dimension_transition(
             target_interactions=matrix,

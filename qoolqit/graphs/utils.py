@@ -69,7 +69,7 @@ def random_coords(n: int, L: float = 1.0) -> list:
     """
     x_coords = np.random.uniform(low=-L / 2, high=L / 2, size=(n,)).tolist()
     y_coords = np.random.uniform(low=-L / 2, high=L / 2, size=(n,)).tolist()
-    return [(x, y) for x, y in zip(x_coords, y_coords)]
+    return [(x, y) for x, y in zip(x_coords, y_coords, strict=True)]
 
 
 def random_edge_list(nodes: Iterable, k: int) -> list:

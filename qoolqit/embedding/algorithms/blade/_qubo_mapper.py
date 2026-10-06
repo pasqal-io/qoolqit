@@ -62,7 +62,7 @@ class Qubo:
         size = len(nodes)
         matrix = np.zeros((size, size))
 
-        for terms, value in zip(self.terms, self.coeffs):
+        for terms, value in zip(self.terms, self.coeffs, strict=True):
             positions = [nodes.index(term) for term in terms]
             matrix[min(positions)][max(positions)] += value
 
@@ -71,7 +71,7 @@ class Qubo:
     def as_graph(self) -> nx.Graph:
         graph = nx.Graph()
 
-        for (term0, term1), coeff in zip(self.terms, self.coeffs):
+        for (term0, term1), coeff in zip(self.terms, self.coeffs, strict=True):
             if term0 == term1:
                 graph.add_node(term0, weight=coeff)
             else:
@@ -108,7 +108,9 @@ class Qubo:
         """
 
         coeffs = {
-            term0: coeff for (term0, term1), coeff in zip(self.terms, self.coeffs) if term0 == term1
+            term0: coeff
+            for (term0, term1), coeff in zip(self.terms, self.coeffs, strict=True)
+            if term0 == term1
         }
 
         if include_absent:
@@ -129,7 +131,7 @@ class Qubo:
 
         values = dict(values)
         result = 0.0
-        for (term0, term1), coeff in zip(self.terms, self.coeffs):
+        for (term0, term1), coeff in zip(self.terms, self.coeffs, strict=True):
             result += coeff * values.get(term0, 0) * values.get(term1, 0)
         return result
 
@@ -218,7 +220,6 @@ class Qubo:
         _coeffs = []
         _terms = []
         for key, value in terms.items():
-
             if isinstance(key, (int, str)):
                 term = key, key
             elif isinstance(key, tuple) and len(key) == 1:

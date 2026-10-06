@@ -47,6 +47,7 @@ class DimensionShrinker:
         for dim, next_lengths in zip(
             range(nb_dimensions - self._dimensions_to_remove, nb_dimensions),
             self._next_lengths_steps,
+            strict=True,
         ):
             dims_lengths[dim] = next_lengths[self._step]
 

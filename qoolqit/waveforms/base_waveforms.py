@@ -268,7 +268,7 @@ class CompositeWaveform(Waveform):
         new_durations = round_to_sum([ratio * wd for wd in self.durations])
         pulser_waveforms = [
             w._to_pulser(duration=duration)
-            for w, duration in zip(self.waveforms, new_durations)
+            for w, duration in zip(self.waveforms, new_durations, strict=True)
             if duration
         ]
         if len(pulser_waveforms) == 1:

@@ -261,7 +261,7 @@ class BaseGraph(nx.Graph):
         if isinstance(weights, list):
             if len(weights) != self.number_of_nodes():
                 raise ValueError("Size of the weights list does not match the number of nodes.")
-            weights_dict = {i: w for i, w in zip(self.nodes, weights)}
+            weights_dict = {i: w for i, w in zip(self.nodes, weights, strict=True)}
         elif isinstance(weights, dict):
             nodes = set(weights.keys())
             if set(self.nodes) != nodes:
@@ -325,7 +325,7 @@ class BaseGraph(nx.Graph):
             coords: list or dictionary of coordinate pairs.
         """
         if isinstance(coords, list):
-            coords_dict = {i: pos for i, pos in zip(self.nodes, coords)}
+            coords_dict = {i: pos for i, pos in zip(self.nodes, coords, strict=True)}
         elif isinstance(coords, dict):
             nodes = set(coords.keys())
             if set(self.nodes) != nodes:
