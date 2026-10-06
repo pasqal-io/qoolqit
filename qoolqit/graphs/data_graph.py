@@ -64,7 +64,6 @@ class DataGraph(BaseGraph):
             spacing: distance between each node.
             center: point (x, y) to set as the center of the graph.
         """
-
         d_theta = (2.0 * np.pi) / n
         r = spacing / (2.0 * np.sin(np.pi / n))
         theta = np.linspace(0.0, 2.0 * np.pi - d_theta, n)
@@ -98,8 +97,7 @@ class DataGraph(BaseGraph):
         n: int,
         spacing: float = 1.0,
     ) -> DataGraph:
-        """
-        Constructs a triangular lattice graph, with respective coordinates.
+        """Constructs a triangular lattice graph, with respective coordinates.
 
         Arguments:
             m: Number of rows of triangles.
@@ -123,8 +121,7 @@ class DataGraph(BaseGraph):
         n: int,
         spacing: float = 1.0,
     ) -> DataGraph:
-        """
-        Constructs a hexagonal lattice graph, with respective coordinates.
+        """Constructs a hexagonal lattice graph, with respective coordinates.
 
         Arguments:
             m: Number of rows of hexagons.
@@ -148,8 +145,7 @@ class DataGraph(BaseGraph):
         n: int,
         spacing: float = 1.0,
     ) -> DataGraph:
-        """
-        Constructs a heavy-hexagonal lattice graph, with respective coordinates.
+        """Constructs a heavy-hexagonal lattice graph, with respective coordinates.
 
         Arguments:
             m: Number of rows of hexagons.
@@ -208,8 +204,7 @@ class DataGraph(BaseGraph):
         n: int,
         spacing: float = 1.0,
     ) -> DataGraph:
-        """
-        Constructs a square lattice graph, with respective coordinates.
+        """Constructs a square lattice graph, with respective coordinates.
 
         Arguments:
             m: Number of rows of square.

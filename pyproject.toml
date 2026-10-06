@@ -114,14 +114,30 @@ select = [
     "B", # flake8-bugbear
     "SIM", # flake8-simplify
     "I", # isort
+    "D", # pydocstyle
+]
+ignore = [
+    # TODO: fix existing pydocstyle violations, then remove these
+    "D100", # undocumented-public-module
+    "D101", # undocumented-public-class
+    "D102", # undocumented-public-method
+    "D103", # undocumented-public-function
+    "D104", # undocumented-public-package
+    "D105", # undocumented-magic-method
+    "D107", # undocumented-public-init
+    "D200", # unnecessary-multiline-docstring
+    "D205", # missing-blank-line-after-summary
+    "D415", # missing-terminal-punctuation
+    "D417", # undocumented-param
 ]
 isort.required-imports = ["from __future__ import annotations"]
+pydocstyle.convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
 "*.ipynb" = ["E402", "I002"]
 "setup.py" = ["I002"]
-"tests/**" = ["B018"]
+"tests/**" = ["B018", "D"]
 
 [tool.black]
 line-length = 100

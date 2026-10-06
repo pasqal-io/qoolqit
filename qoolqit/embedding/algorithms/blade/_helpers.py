@@ -35,7 +35,6 @@ def normalized_interaction(dist: Value, *, format: FormatType = "sym") -> Value:
         (all values), "triu" (upper triangle without diagonal), or "sym"
         (upper and lower triangles without diagonal).
     """
-
     interactions = np.divide(
         1, dist**6, out=np.full_like(dist, np.inf, dtype=float), where=(dist != 0)
     )
@@ -54,7 +53,6 @@ def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
         (all values), "triu" (upper triangle without diagonal), or "sym"
         (upper and lower triangles without diagonal).
     """
-
     dists = np.divide(
         1, weight ** (1 / 6), out=np.full_like(weight, np.inf, dtype=float), where=(weight != 0)
     )

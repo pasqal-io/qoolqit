@@ -55,8 +55,7 @@ def update_positions(
     step: int | None = None,
     draw_weighted_graph: bool = False,
 ) -> np.ndarray:
-    """
-    Compute vector moves to adjust node positions toward target interactions.
+    """Compute vector moves to adjust node positions toward target interactions.
 
     positions: Starting positions of the nodes.
     target_interactions: Desired interactions.
@@ -79,7 +78,6 @@ def update_positions(
     draw_step: Whether to draw the nodes and the forces.
     step: Step number.
     """
-
     if draw_step:
         print(f"{weight_relative_threshold=}")
         print(f"{regulation_cursor=}")
@@ -515,7 +513,6 @@ def _blade(
             reruns (as defined by `ratio_rerun`). The partial result is still
             accessible via the `positions` attribute of the exception.
     """
-
     if len(dimensions) == 1:
         dimensions = (dimensions[0], dimensions[0])
 

@@ -193,7 +193,6 @@ def _validate_program_default_profile(
     Raises:
         CompilationError: if the compiled program does not respect the device specifications.
     """
-
     specs = device.specs
 
     max_amplitude = drive.amplitude.max()
@@ -261,7 +260,6 @@ def _validate_program_max_energy_profile(
     Raises:
         CompilationError: if the compiled program does not respect the device specifications.
     """
-
     # Get profile factors in the adimensional basis, not conversion factors to pulser
     # these factors respect ΔE*ΔT=1 and ΔE*ΔR^6=1 invariants
     # this part can be removed when compilation return a QuantumProgram that can be directly checked

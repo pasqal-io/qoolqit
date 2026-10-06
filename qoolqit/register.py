@@ -163,7 +163,6 @@ class Register:
         Args:
             graph: a DataGraph instance.
         """
-
         if not graph.has_coords:
             raise ValueError("Initializing a register from a graph requires node coordinates.")
 
