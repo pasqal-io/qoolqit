@@ -70,7 +70,7 @@ def test_compiled_sequence_with_small_delays() -> None:
     program_small_delay = QuantumProgram(register=register, drive=drive_small_delay)
     program_small_delay.compile_to(device=AnalogDevice(), profile=CompilerProfile.MAX_ENERGY)
 
-    # check that the delay is not added to the pulser sequence if small
+    # delays < 1 ns are not added to the pulser sequence
     pulser_duration = program.compiled_sequence.get_duration()
     pulser_duration_small_delay = program_small_delay.compiled_sequence.get_duration()
     assert pulser_duration == pulser_duration_small_delay
