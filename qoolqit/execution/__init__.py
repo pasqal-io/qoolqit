@@ -19,11 +19,13 @@ from pulser.backend import (
 
 from qoolqit.execution.backends import QPU, LocalEmulator, RemoteEmulator
 from qoolqit.execution.job import Job, JobStatus, get_batch_id, retrieve_remote_job
+from qoolqit.execution.mock_connection import LocalEmulationMockConnection
 
 __all__ = [
     "LocalEmulator",
     "RemoteEmulator",
     "QPU",
+    "LocalEmulationMockConnection",
     "EmulationConfig",
     "BitStrings",
     "CorrelationMatrix",
