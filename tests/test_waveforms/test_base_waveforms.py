@@ -6,12 +6,19 @@ import math
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pulser
 import pytest
 from matplotlib.colors import to_rgba
 from matplotlib.figure import Figure
 from pulser.waveforms import Waveform as PulserWaveform
 
-from qoolqit.waveforms import CompositeWaveform, ConstantWaveform, RampWaveform, Waveform
+from qoolqit.waveforms import (
+    CompositeWaveform,
+    ConstantWaveform,
+    DelayWaveform,
+    RampWaveform,
+    Waveform,
+)
 
 
 class TestWaveform:
@@ -271,3 +278,53 @@ def test_waveform_draw_n_points() -> None:
     ax = Figure().subplots()
     RampWaveform(10.0, 0.0, 1.0).draw(ax=ax, n_points=42)
     assert len(ax.lines[0].get_xdata()) == 42
+
+
+def test_to_pulser_sub_ns_delay_single_wf() -> None:
+    qoolqit_duration = 2.83
+    qoolqit_delay_duration = 0.004
+    pulser_duration = 100
+
+    # check that the added delay will be translated into a < 1 ns pulser delay
+    pulser_delay_duration = (qoolqit_delay_duration / qoolqit_duration) * pulser_duration
+    assert pulser_delay_duration < 1
+
+    composite_waveform = CompositeWaveform(
+        ConstantWaveform(2.83, 0.5), DelayWaveform(qoolqit_delay_duration)
+    )
+    pulser_waveform = composite_waveform._to_pulser(duration=pulser_duration)
+
+    # assert that it is ignored when compiled to a pulser.Waveform without the delay
+    assert isinstance(pulser_waveform, pulser.ConstantWaveform)
+    assert pulser_waveform.duration == 100
+
+
+def test_to_pulser_sub_ns_delay_composite_wf() -> None:
+    qoolqit_duration = 10.0
+    qoolqit_delay_duration = 3.0e-4
+    pulser_duration = 1223
+
+    # check that the added delay will be translated into a < 1 ns pulser delay
+    pulser_delay_duration = (qoolqit_delay_duration / qoolqit_duration) * pulser_duration
+    assert pulser_delay_duration < 1
+
+    composite_waveform = CompositeWaveform(
+        ConstantWaveform(qoolqit_duration / 5, 0.5),
+        RampWaveform(4 * qoolqit_duration / 5, -1.0, 1.3),
+        DelayWaveform(qoolqit_delay_duration),
+    )
+    pulser_waveform = composite_waveform._to_pulser(duration=pulser_duration)
+
+    # assert that it is ignored when compiled to a pulser.CompositeWaveform without the delay
+    assert isinstance(pulser_waveform, pulser.CompositeWaveform)
+    assert len(pulser_waveform.waveforms) == 2
+    assert pulser_waveform.duration == 1223
+
+
+def test_rmul() -> None:
+    # right-hand multiplication delegates to __mul__
+    scaling_factor = 3.4
+    wf = ConstantWaveform(2.0, value=1.1)
+    wf_right_multiplied = 3.4 * wf
+    assert isinstance(wf_right_multiplied, ConstantWaveform)
+    assert wf_right_multiplied.value == scaling_factor * wf.value
