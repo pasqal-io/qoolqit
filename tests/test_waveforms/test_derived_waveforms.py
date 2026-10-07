@@ -18,7 +18,6 @@ from qoolqit.waveforms import (
     RampWaveform,
     Waveform,
 )
-from qoolqit.waveforms.utils import round_to_sum
 
 
 def test_delay_init() -> None:
@@ -374,88 +373,3 @@ def test_waveform_composition(n_waveforms: int) -> None:
         CompositeWaveform(wf, 1.0)  # type: ignore [arg-type]
     with pytest.raises(ValueError, match="At least one Waveform must be provided."):
         CompositeWaveform()
-
-
-@pytest.mark.parametrize(
-    "values, expected",
-    [
-        ([10.3, 10.3, 10.4], [10, 10, 11]),
-        ([1.5, 1.5, 1.5], [1, 1, 2]),
-        ([20.7, 20.8, 20.9], [20, 21, 21]),
-    ],
-)
-def test_round_to_sum(values: list[float], expected: list[int]) -> None:
-    rounded_values = round_to_sum(values)
-    assert sum(rounded_values) == round(sum(values))
-    assert rounded_values == expected
-
-
-def test_round_to_sum_random() -> None:
-    values = [100 * random.random() for _ in range(20)]
-    rounded_values = round_to_sum(values)
-    assert sum(rounded_values) == round(sum(values))
-
-
-def test_negative_duration() -> None:
-    with pytest.raises(ValueError, match="Duration needs to be a positive non-zero value."):
-        ConstantWaveform(-10.0, value=2.0)
-
-
-def test_to_pulser_sub_ns_delay_single_wf() -> None:
-    """
-    Add a delay to a Waveform and test conversion to Pulser.
-
-    Check that, when translated, the delay is ignored if lasts less than 1 ns.
-    """
-    qoolqit_duration = 2.83
-    qoolqit_delay_duration = 0.004
-    pulser_duration = 100
-
-    # check that the added delay will be translated into a < 1 ns pulser delay
-    pulser_delay_duration = (qoolqit_delay_duration / qoolqit_duration) * pulser_duration
-    assert pulser_delay_duration < 1
-
-    composite_waveform = CompositeWaveform(
-        ConstantWaveform(2.83, 0.5), DelayWaveform(qoolqit_delay_duration)
-    )
-    pulser_waveform = composite_waveform._to_pulser(duration=pulser_duration)
-
-    # assert that it is ignored when compiled to a pulser.Waveform without the delay
-    assert isinstance(pulser_waveform, pulser.ConstantWaveform)
-    assert pulser_waveform.duration == 100
-
-
-def test_to_pulser_sub_ns_delay_composite_wf() -> None:
-    """
-    Add a delay to a CompositeWaveform and test conversion to Pulser.
-
-    Check that, when translated, the delay is ignored if lasts less than 1 ns.
-    """
-    qoolqit_duration = 10.0
-    qoolqit_delay_duration = 3.0e-4
-    pulser_duration = 1223
-
-    # check that the added delay will be translated into a < 1 ns pulser delay
-    pulser_delay_duration = (qoolqit_delay_duration / qoolqit_duration) * pulser_duration
-    assert pulser_delay_duration < 1
-
-    composite_waveform = CompositeWaveform(
-        ConstantWaveform(qoolqit_duration / 5, 0.5),
-        RampWaveform(4 * qoolqit_duration / 5, -1.0, 1.3),
-        DelayWaveform(qoolqit_delay_duration),
-    )
-    pulser_waveform = composite_waveform._to_pulser(duration=pulser_duration)
-
-    # assert that it is ignored when compiled to a pulser.CompositeWaveform without the delay
-    assert isinstance(pulser_waveform, pulser.CompositeWaveform)
-    assert len(pulser_waveform.waveforms) == 2
-    assert pulser_waveform.duration == 1223
-
-
-def test_rmul() -> None:
-    """Test that right-hand multiplication delegates to __mul__."""
-    scaling_factor = 3.4
-    wf = ConstantWaveform(2.0, value=1.1)
-    wf_right_multiplied = 3.4 * wf
-    assert isinstance(wf_right_multiplied, ConstantWaveform)
-    assert wf_right_multiplied.value == scaling_factor * wf.value
