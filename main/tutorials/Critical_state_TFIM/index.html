@@ -3184,8 +3184,7 @@ J_nn = 1.0000   Omega = 0.5000   delta = 1.0229
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">tangent_sweep</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_points</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Time-warped sweep from `start` to `target` using a tangent map.</span>
+<span class="w">    </span><span class="sd">"""Time-warped sweep from `start` to `target` using a tangent map.</span>
 
 <span class="sd">    Instead of moving linearly in the normalized fraction s in [0, 1], we</span>
 <span class="sd">    reparametrize so the sweep slows down near s=1 (the target) — exactly</span>
@@ -3214,8 +3213,7 @@ J_nn = 1.0000   Omega = 0.5000   delta = 1.0229
     <span class="k">return</span> <span class="n">s</span><span class="p">,</span> <span class="n">profile</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">build_program</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">frac_ramp</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span> <span class="n">n_ctrl</span><span class="o">=</span><span class="mi">81</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Build the quasi-adiabatic pulse sequence.</span>
+<span class="w">    </span><span class="sd">"""Build the quasi-adiabatic pulse sequence.</span>
 
 <span class="sd">    Phase 1 (ramp-up, first `frac_ramp` of T): Omega turns on smoothly from</span>
 <span class="sd">    0 to OMEGA_R, while the detuning stays fixed at d0 = -5 * OMEGA_R.</span>
@@ -3269,8 +3267,7 @@ J_nn = 1.0000   Omega = 0.5000   delta = 1.0229
     <span class="p">))</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-5">def tangent_sweep(start, target, alpha, n_points):
-    """
-    Time-warped sweep from `start` to `target` using a tangent map.
+    """Time-warped sweep from `start` to `target` using a tangent map.
 
     Instead of moving linearly in the normalized fraction s in [0, 1], we
     reparametrize so the sweep slows down near s=1 (the target) — exactly
@@ -3299,8 +3296,7 @@ J_nn = 1.0000   Omega = 0.5000   delta = 1.0229
     return s, profile
 
 def build_program(T, frac_ramp=0.1, alpha=1.4, n_ctrl=81):
-    """
-    Build the quasi-adiabatic pulse sequence.
+    """Build the quasi-adiabatic pulse sequence.
 
     Phase 1 (ramp-up, first `frac_ramp` of T): Omega turns on smoothly from
     0 to OMEGA_R, while the detuning stays fixed at d0 = -5 * OMEGA_R.
@@ -3509,9 +3505,9 @@ $$</p>
 <span class="n">N_OP</span>    <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]))</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">local_operator</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Embed a single-site operator `op` acting on `site` into the full</span>
+<span class="w">    </span><span class="sd">"""Embed a single-site operator `op` acting on `site` into the full</span>
 <span class="sd">    2^N-dimensional Hilbert space.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        op (scipy.sparse matrix): 2x2 single-site operator.</span>
 <span class="sd">        site (int): Index of the site `op` acts on, in [0, N).</span>
@@ -3525,16 +3521,17 @@ $$</p>
     <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">kron</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"csr"</span><span class="p">),</span> <span class="n">ops</span><span class="p">)</span>  <span class="c1"># kron(I2, ..., op, ..., I2)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">build_target_hamiltonian</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Build the sparse 2^N x 2^N Rydberg Hamiltonian:</span>
+<span class="w">    </span><span class="sd">"""Build the sparse 2^N x 2^N Rydberg Hamiltonian:</span>
 <span class="sd">        H = sum_j [ (omega/2) sigma^x_j - delta n_j ] + sum_{i&lt;j} J_ij n_i n_j</span>
 <span class="sd">    using Kronecker products of local operators.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        N (int): Number of atoms/sites.</span>
 <span class="sd">        register: The register/graph object, providing `register.interactions()`</span>
 <span class="sd">            as a dict mapping (i, j) with i &lt; j to J_ij.</span>
 <span class="sd">        omega (float): Rabi frequency driving sigma^x on every site.</span>
 <span class="sd">        delta (float): Detuning driving -n_i on every site.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        scipy.sparse.csr_matrix: The (2**N, 2**N) Hamiltonian.</span>
 <span class="sd">    """</span>
@@ -3575,9 +3572,9 @@ SIGMA_Z = csr_matrix(np.array([[1., 0], [0, -1.]]))
 N_OP    = csr_matrix(np.diag([0.0, 1.0]))
 
 def local_operator(op, site, N):
-    """
-    Embed a single-site operator `op` acting on `site` into the full
+    """Embed a single-site operator `op` acting on `site` into the full
     2^N-dimensional Hilbert space.
+
     Args:
         op (scipy.sparse matrix): 2x2 single-site operator.
         site (int): Index of the site `op` acts on, in [0, N).
@@ -3591,16 +3588,17 @@ def local_operator(op, site, N):
     return reduce(lambda a, b: kron(a, b, format="csr"), ops)  # kron(I2, ..., op, ..., I2)
 
 def build_target_hamiltonian(N, register, omega, delta):
-    """
-    Build the sparse 2^N x 2^N Rydberg Hamiltonian:
+    """Build the sparse 2^N x 2^N Rydberg Hamiltonian:
         H = sum_j [ (omega/2) sigma^x_j - delta n_j ] + sum_{i&lt;j} J_ij n_i n_j
     using Kronecker products of local operators.
+
     Args:
         N (int): Number of atoms/sites.
         register: The register/graph object, providing `register.interactions()`
             as a dict mapping (i, j) with i &lt; j to J_ij.
         omega (float): Rabi frequency driving sigma^x on every site.
         delta (float): Detuning driving -n_i on every site.
+
     Returns:
         scipy.sparse.csr_matrix: The (2**N, 2**N) Hamiltonian.
     """
@@ -3842,8 +3840,7 @@ $$</p>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">build_TFIM_hamiltonian</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Build the sparse 2^N x 2^N periodic transverse-field Ising Hamiltonian:</span>
+<span class="w">    </span><span class="sd">"""Build the sparse 2^N x 2^N periodic transverse-field Ising Hamiltonian:</span>
 <span class="sd">        H = sum_{i=0}^{N-1} sigma^z_i sigma^z_{i+1} + h sum_{i=0}^{N-1} sigma^x_i</span>
 
 <span class="sd">    The z-z sum closes the ring (site N is identified with site 0), matching</span>
@@ -3878,8 +3875,7 @@ $$</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Overlap between ideal TFIM ground state and Rydberg target: </span><span class="si">{</span><span class="n">overlap_tfim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-10">def build_TFIM_hamiltonian(N, h):
-    """
-    Build the sparse 2^N x 2^N periodic transverse-field Ising Hamiltonian:
+    """Build the sparse 2^N x 2^N periodic transverse-field Ising Hamiltonian:
         H = sum_{i=0}^{N-1} sigma^z_i sigma^z_{i+1} + h sum_{i=0}^{N-1} sigma^x_i
 
     The z-z sum closes the ring (site N is identified with site 0), matching
@@ -3959,8 +3955,7 @@ print(f"Overlap between ideal TFIM ground state and Rydberg target: {overlap_tfi
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">occupation_and_corr_from_psi</span><span class="p">(</span><span class="n">psi</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Compute &lt;n_i&gt; and &lt;n_i n_j&gt; from a dense state vector. </span>
+<span class="w">    </span><span class="sd">"""Compute &lt;n_i&gt; and &lt;n_i n_j&gt; from a dense state vector.</span>
 <span class="sd">    """</span>
     <span class="n">n_ops</span> <span class="o">=</span> <span class="p">[</span><span class="n">local_operator</span><span class="p">(</span><span class="n">N_OP</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
     <span class="n">occ_per_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">op</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">n_ops</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (dim, N)</span>
@@ -3976,8 +3971,7 @@ print(f"Overlap between ideal TFIM ground state and Rydberg target: {overlap_tfi
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Target &lt;n&gt; = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">occ_t</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-11">def occupation_and_corr_from_psi(psi):
-    """
-    Compute &lt;n_i&gt; and &lt;n_i n_j&gt; from a dense state vector. 
+    """Compute &lt;n_i&gt; and &lt;n_i n_j&gt; from a dense state vector.
     """
     n_ops = [local_operator(N_OP, j, N) for j in range(N)]
     occ_per_state = np.stack([op.diagonal() for op in n_ops], axis=1)  # (dim, N)
