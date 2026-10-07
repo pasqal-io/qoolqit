@@ -33,7 +33,6 @@ class SequenceCompiler:
             device_max_duration_ratio: optionally set the program duration to a fraction
                 of the device's maximum allowed duration.
         """
-
         self._register = register
         self._drive = drive
         self._device = device

@@ -12,8 +12,7 @@ from .unit_converter import UnitConverter
 
 
 class Device:
-    """
-    QoolQit Device wrapper around a Pulser BaseDevice.
+    """QoolQit Device wrapper around a Pulser BaseDevice.
 
     Args:
         pulser_device (BaseDevice): a `BaseDevice` to build the QoolQit device from.

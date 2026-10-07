@@ -20,7 +20,6 @@ def compute_best_scaling_for_qubo(
     The best scaling factor minimizes the distance between the target and
     the embedded interactions.
     """
-
     embedded_interactions_triu = embedded_interactions[
         np.triu_indices_from(embedded_interactions, k=1)
     ]
@@ -65,7 +64,6 @@ def compute_best_scaling_for_pos(
     The best scaling factor minimizes the distance between the target
     interactions and the interactions defined by the input positions.
     """
-
     distance_matrix = distance_matrix_from_positions(positions)
     current_weights = normalized_interaction(distance_matrix)
 
@@ -102,7 +100,6 @@ class DistancesConstraintsCalculator:
         defined by `step_cursor`. Step_cursor is between 0 (start)
         and 1 (end).
         """
-
         assert 0 <= step_cursor <= 1
 
         if self.final_ratio is None:

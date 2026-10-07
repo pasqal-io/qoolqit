@@ -12,7 +12,6 @@ def compute_min_dist_constraint_forces(
     unitary_vectors: np.ndarray,
 ) -> Force:
     """Computes the forces to enforce the minimum distance constraint."""
-
     min_distances_to_walk = (
         np.maximum(0, min_dist - distance_matrix) / 2
         if min_dist is not None
@@ -33,7 +32,6 @@ def compute_max_dist_constraint_forces(
     max_radius: float | None,
 ) -> Force:
     """Computes the forces to enforce the maximum distance constraint."""
-
     distances_from_center = np.linalg.norm(positions, axis=1)
     max_distances_to_walk = (
         np.maximum(0, distances_from_center - max_radius)

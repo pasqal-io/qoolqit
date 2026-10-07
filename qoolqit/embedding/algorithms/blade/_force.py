@@ -15,7 +15,6 @@ def configured_increasing_func(
     x: ArrayLike, *, middle_value: float = 0.5, stiffness: float = 1.0
 ) -> np.ndarray:
     """Increasing function from [0, 1] to [0, 1]."""
-
     c = 1 / middle_value - 1
     x = np.asarray(x, dtype=float)
     return np.power(x, stiffness) / (np.power(x, stiffness) + c * np.power(1 - x, stiffness))
@@ -74,7 +73,6 @@ class Force:
         computed to zero (even a non-zero short vector may have a null
         computed norm due to numerical limits).
         """
-
         assert self.weighted_vectors.shape[:-1] == self.distances_to_walk.shape
         assert np.all(np.isfinite(self.distances_to_walk))
         assert np.all(np.isfinite(self.weighted_vectors))

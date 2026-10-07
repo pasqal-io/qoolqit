@@ -111,7 +111,6 @@ class Drive:
             >>> det = ConstantWaveform(5.0, -1.0)
             >>> drive = Drive(amplitude=amp, detuning=det, phase=0.5)
         """
-
         for arg in [amplitude, detuning]:
             if arg is not None and not isinstance(arg, Waveform):
                 raise TypeError("'amplitude' and 'detuning' must be of type Waveform.")

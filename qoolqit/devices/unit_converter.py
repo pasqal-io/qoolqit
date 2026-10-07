@@ -24,8 +24,7 @@ def _factors_from_distance(C6: float, distance: float) -> tuple[float, ...]:
 
 @dataclass
 class UnitConverter:
-    """
-    A dataclass representing a unit converter in the Rydberg-Analog model.
+    """A dataclass representing a unit converter in the Rydberg-Analog model.
 
     Includes three inter-dependent factors for TIME, ENERGY and DISTANCE conversion, also depending
     on the interaction coefficient C6. The converter checks the following invariants, based on the

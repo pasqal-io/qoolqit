@@ -75,8 +75,7 @@ class PulserRemoteBackend:
 
 
 class LocalEmulator(PulserEmulatorBackend):
-    """
-    Run QoolQit `QuantumProgram`s on a Pasqal local emulator backends.
+    """Run QoolQit `QuantumProgram`s on a Pasqal local emulator backends.
 
     This class serves as a primary interface between tools written using QoolQit (including solvers)
     and local emulator backends.
@@ -119,8 +118,7 @@ class LocalEmulator(PulserEmulatorBackend):
 
 
 class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
-    """
-    Run QoolQit `QuantumProgram`s on a Pasqal remote emulator backends.
+    """Run QoolQit `QuantumProgram`s on a Pasqal remote emulator backends.
 
     This class serves as a primary interface between tools written using QoolQit (including solvers)
     and remote emulator backends.

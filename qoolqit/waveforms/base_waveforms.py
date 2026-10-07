@@ -45,7 +45,6 @@ class Waveform(ABC):
             duration: the total duration of the waveform.
             **kwargs: optional keyword arguments for the waveform function.
         """
-
         if duration <= 0:
             raise ValueError("Duration needs to be a positive non-zero value.")
 

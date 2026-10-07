@@ -46,7 +46,6 @@ def plot_bitstrings(
         label: Legend label for the bars. Call ax.legend() to show it.
         ax: Axes to draw on. Creates new axes if omitted.
     """
-
     if not counts:
         raise ValueError("counts cannot be empty")
 

@@ -57,7 +57,6 @@ class Qubo:
             np.ndarray: the upper triangular matrix corresponding to
                 the Qubo problem
         """
-
         nodes = self.nodes()
         size = len(nodes)
         matrix = np.zeros((size, size))
@@ -80,12 +79,10 @@ class Qubo:
         return graph
 
     def nodes(self) -> list[NodeId]:
-        """
-        Return all the node names that are used in the Qubo formulation.
+        """Return all the node names that are used in the Qubo formulation.
 
         It is sorted by ascending order of integers, then alphabetically for strings.
         """
-
         result = set()
         for u, v in self.terms:
             result.add(u)
@@ -94,9 +91,9 @@ class Qubo:
         return sorted(list(result), key=lambda x: (not isinstance(x, int), x))
 
     def node_coeffs(self, include_absent: bool = False) -> dict[NodeId, float]:
-        """
-        Args:
+        """Return the linear coefficients of the nodes.
 
+        Args:
             include_absent: If `True`, include in the dictionary the nodes
                 that don't have any linear coefficients. In that case, the
                 coefficient 0 will apply.
@@ -106,7 +103,6 @@ class Qubo:
                 values their linear coefficients. Note that it excludes
                 quadratic terms.
         """
-
         coeffs = {
             term0: coeff
             for (term0, term1), coeff in zip(self.terms, self.coeffs, strict=True)
@@ -120,15 +116,14 @@ class Qubo:
         return coeffs
 
     def evaluate(self, values: Mapping[NodeId, float]) -> float:
-        """
-        Args:
+        """Evaluate the Qubo formula for the given node values.
 
+        Args:
             values: Values to attribute to the node.
 
         Returns:
             Result of the Qubo formula given the provided values to the nodes.
         """
-
         values = dict(values)
         result = 0.0
         for (term0, term1), coeff in zip(self.terms, self.coeffs, strict=True):
@@ -239,7 +234,6 @@ class Qubo:
         The graph's "weight" attributes on its nodes and edges are used to set the terms.
         A node's weight is defaulted to 0 if absent.
         """
-
         terms = dict()
 
         for node, data in graph.nodes.data():
