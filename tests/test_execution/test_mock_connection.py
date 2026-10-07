@@ -123,7 +123,9 @@ def test_job_params_are_ignored() -> None:
     ],
     ids=["get_job_ids", "fetch_result", "query_job_progress", "remote_results"],
 )
-def test_unknown_batch_is_rejected(lookup: Callable[[LocalEmulationMockConnection], object]) -> None:
+def test_unknown_batch_is_rejected(
+    lookup: Callable[[LocalEmulationMockConnection], object],
+) -> None:
     with pytest.raises(RemoteResultsError, match="Unknown batch 'unknown'"):
         lookup(LocalEmulationMockConnection())
 
@@ -157,7 +159,9 @@ def test_open_batch_is_not_supported() -> None:
 
 def test_too_many_qubits_is_not_supported() -> None:
     with pytest.raises(NotImplementedError, match=f"limit is {_QUBIT_LIMIT}"):
-        LocalEmulationMockConnection().submit(_sequence(n_qubits=_QUBIT_LIMIT), backend_configuration=_config())
+        LocalEmulationMockConnection().submit(
+            _sequence(n_qubits=_QUBIT_LIMIT), backend_configuration=_config()
+        )
 
 
 @pytest.mark.parametrize("num_shots", [1, 20])
