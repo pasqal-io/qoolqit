@@ -534,7 +534,7 @@ def test_from_nx_edge_weight_type(wrong_edge_weight: Any) -> None:
 
 
 @pytest.mark.parametrize(
-    "wrong_node_pos", ["hello", ("hello", "world"), (1.0, 2.0, 3.0), (1.0, 2.0j)]
+    "wrong_node_pos", ["hello", ("hello", "world"), (1.0, 2.0, 3.0, 4.0), (1.0, 2.0j)]
 )
 def test_from_nx_wrong_pos_attr(wrong_node_pos: Any) -> None:
     """Test that non-tuple/list positions raise TypeError."""
@@ -545,6 +545,6 @@ def test_from_nx_wrong_pos_attr(wrong_node_pos: Any) -> None:
 
     with pytest.raises(
         TypeError,
-        match="In node 0 the `pos` attribute must be a 2D tuple/list of real numbers",
+        match="In node 0 the `pos` attribute must be a 2D or 3D tuple/list of real numbers",
     ):
         BaseGraph.from_nx(G)

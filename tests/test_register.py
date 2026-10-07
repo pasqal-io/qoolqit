@@ -73,14 +73,14 @@ def test_init_wrong_qubits_type() -> None:
 @pytest.mark.parametrize(
     "qubits",
     [
-        {0: (1, 2, 3)},
+        {0: (1, 2, 3, 4)},
         {"q0": np.array([1.0, -2.0]), "q1": np.array([[-1.0, -1.0], [-1.0, -1.0]])},
         {7: 32},
         {"q_inf": np.array([np.inf, 0.1]), "q_nan": np.array([[0.1, np.nan]])},
     ],
 )
 def test_init_invalid_coordinate_shape(qubits: dict) -> None:
-    with pytest.raises(ValueError, match="must be a 2D point, got"):
+    with pytest.raises(ValueError, match="must be a 2D or 3D point, got"):
         Register(qubits)
 
 

@@ -37,13 +37,13 @@ def radial_distances(coords: dict) -> dict:
 
 
 def scale_coords(coords: dict, scaling: float) -> dict:
-    """Scale the coordinates by a given value.
+    """Scale the coordinates (2D or 3D) by a given value.
 
     Arguments:
         coords: dictionary of node coordinates.
         scaling: value to scale by.
     """
-    scaled_coords = {i: (c[0] * scaling, c[1] * scaling) for i, c in coords.items()}
+    scaled_coords = {i: tuple(x * scaling for x in c) for i, c in coords.items()}
     return scaled_coords
 
 

@@ -31,7 +31,7 @@ class BaseGraph(nx.Graph):
     and plotting.
 
     Attributes:
-        coords: Dict mapping each node to its 2D coordinate, or None if unset.
+        coords: Dict mapping each node to its 2D or 3D coordinate, or None if unset.
         node_weights: Dict mapping each node to its weight, or None if unset.
         edge_weights: Dict mapping each edge to its weight, or None if unset.
 
@@ -78,7 +78,8 @@ class BaseGraph(nx.Graph):
         The input `networkx.Graph` graph must be defined only with the following allowed
 
         Node attributes:
-            pos (tuple): represents the node 2D position. Must be a list/tuple of real numbers.
+            pos (tuple): represents the node 2D or 3D position. Must be a list/tuple of real
+                numbers, of the same length for all the nodes.
             weight: represents the node weight. Must be a real number.
         Edge attributes:
             weight: represents the edge weight. Must be a real number.
@@ -86,7 +87,7 @@ class BaseGraph(nx.Graph):
         Returns an instance of the class with following attributes:
             - node_weights : dict[node, float or None]
             - edge_weights : dict[(u,v), float or None]
-            - coords       : dict[node, (float,float) or None]
+            - coords       : dict[node, (float,float) or (float,float,float) or None]
         """
         if not isinstance(g, nx.Graph):
             raise TypeError("Input must be a networkx.Graph instance.")
@@ -106,13 +107,15 @@ class BaseGraph(nx.Graph):
             if len(node_pos) != num_nodes:
                 raise ValueError("Node attribute `pos` must be defined for all nodes")
             for name, pos in node_pos.items():
-                is_2D = isinstance(pos, (tuple, list)) & (len(pos) == 2)
+                is_2D_or_3D = isinstance(pos, (tuple, list)) and (len(pos) in (2, 3))
                 is_real = all(isinstance(p, (float, int)) for p in pos)
-                if not (is_2D & is_real):
+                if not (is_2D_or_3D and is_real):
                     raise TypeError(
-                        f"In node {name} the `pos` attribute must be a 2D tuple/list"
+                        f"In node {name} the `pos` attribute must be a 2D or 3D tuple/list"
                         f" of real numbers, got {pos} instead."
                     )
+            if len({len(pos) for pos in node_pos.values()}) != 1:
+                raise ValueError("Node attribute `pos` must have the same dimension for all nodes.")
         node_weights = nx.get_node_attributes(g, "weight")
         if node_weights:
             if len(node_weights) != num_nodes:
@@ -491,15 +494,37 @@ class BaseGraph(nx.Graph):
         self.remove_edges_from(list(self.edges))
         self.add_edges_from(self.ud_edges(radius))
 
+    @property
+    def dimension(self) -> int | None:
+        """The dimension (2 or 3) of the node coordinates, or None if unset."""
+        if not self.has_coords:
+            return None
+        return len(next(iter(self.coords.values())))
+
     def draw(self, ax: Axes | None = None, **kwargs: Any) -> None:
         """Draw the graph.
 
-        Uses the draw_networkx function from NetworkX.
+        Uses the draw_networkx function from NetworkX; a graph with 3D coordinates
+        is drawn on 3D axes (nodes and straight edges, no labels).
 
         Args:
-            ax: Axes object to draw on. If None, uses the current Axes.
-            **kwargs: keyword-arguments to pass to draw_networkx.
+            ax: Axes object to draw on. If None, uses the current Axes (a new 3D
+                Axes for 3D coordinates).
+            **kwargs: keyword-arguments to pass to draw_networkx (2D only).
         """
+        if self.has_coords and self.dimension == 3:
+            if ax is None:
+                ax = plt.figure().add_subplot(projection="3d")
+            xyz = np.array([self.coords[v] for v in self.nodes], dtype=float)
+            index = {v: k for k, v in enumerate(self.nodes)}
+            for u, v in self.edges:
+                seg = xyz[[index[u], index[v]]]
+                ax.plot(seg[:, 0], seg[:, 1], seg[:, 2], color="gray", linewidth=0.8)
+            ax.scatter(xyz[:, 0], xyz[:, 1], xyz[:, 2], s=60, color="tab:blue", depthshade=True)
+            ax.set_xlabel("x")
+            ax.set_ylabel("y")
+            ax.set_zlabel("z")
+            return
         if self.has_coords:
             if "hide_ticks" not in kwargs:
                 kwargs["hide_ticks"] = False

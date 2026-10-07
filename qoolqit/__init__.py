@@ -8,6 +8,7 @@ from pulser.sequence import store_package_version_metadata
 
 from qoolqit.devices import (
     AnalogDevice,
+    AnalogDevice3DWithDMM,
     AnalogDeviceWithDMM,
     Device,
     DigitalAnalogDevice,
@@ -41,6 +42,7 @@ __all__ = [
     "available_default_devices",
     "AnalogDevice",
     "AnalogDeviceWithDMM",
+    "AnalogDevice3DWithDMM",
     "DigitalAnalogDevice",
     "MockDevice",
     "Device",

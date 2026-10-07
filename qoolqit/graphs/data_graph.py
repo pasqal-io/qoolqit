@@ -26,7 +26,7 @@ class DataGraph(BaseGraph):
     constructors and conversion to/from PyTorch Geometric data objects.
 
     Attributes:
-        coords: Dict mapping each node to its 2D coordinate, or None if unset.
+        coords: Dict mapping each node to its 2D or 3D coordinate, or None if unset.
         node_weights: Dict mapping each node to its weight, or None if unset.
         edge_weights: Dict mapping each edge to its weight, or None if unset.
 

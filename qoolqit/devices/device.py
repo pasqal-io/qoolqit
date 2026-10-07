@@ -3,6 +3,7 @@ from __future__ import annotations
 import math
 from collections.abc import Callable
 from dataclasses import replace
+from typing import Any
 
 import pulser
 from pulser.backend.remote import RemoteConnection
@@ -88,6 +89,9 @@ class Device:
 
         # layouts
         self._requires_layout = self._pulser_device.requires_layout
+
+        # spatial dimensions of the registers accepted by the device (2 or 3)
+        self._dimensions: int = int(self._pulser_device.dimensions)
 
         if default_converter is not None:
             # Snapshot the caller-provided factors so reset() reproduces them exactly.
@@ -176,6 +180,20 @@ class Device:
     def name(self) -> str:
         return self._name
 
+    @property
+    def dimensions(self) -> int:
+        """The largest dimension (2 or 3) of the registers the device accepts.
+
+        A `Register` of dimension `d` compiles to this device only if
+        `d <= device.dimensions`.
+        """
+        return self._dimensions
+
+    @property
+    def supports_3d(self) -> bool:
+        """Whether the device accepts 3D registers."""
+        return self._dimensions >= 3
+
     def __repr__(self) -> str:
         return self._name
 
@@ -233,23 +251,62 @@ class AnalogDevice(Device):
         super().__init__(pulser_device=pulser.AnalogDevice)
 
 
+def _analog_dmm_channel(max_duration: int = 6000) -> pulser.channels.dmm.DMM:
+    """The detuning map modulator (DMM) channel of the analog devices with DMM.
+
+    Args:
+        max_duration: the longest DMM pulse, in ns.
+    """
+    return pulser.channels.dmm.DMM(
+        clock_period=4,
+        min_duration=16,
+        max_duration=max_duration,
+        mod_bandwidth=8,
+        bottom_detuning=-2 * math.pi * 20,
+        total_bottom_detuning=-2 * math.pi * 20,
+    )
+
+
 class AnalogDeviceWithDMM(Device):
     """A realistic device with DMM for analog sequence execution."""
 
     def __init__(self) -> None:
-        dmm_channel = pulser.channels.dmm.DMM(
-            clock_period=4,
-            min_duration=16,
-            max_duration=6000,
-            mod_bandwidth=8,
-            bottom_detuning=-2 * math.pi * 20,
-            total_bottom_detuning=-2 * math.pi * 20,
-        )
         # Create a virtual device that can be modified to add a DMM channel.
         pulser_virtual_device = pulser.AnalogDevice.to_virtual()
         pulser_device = replace(
-            pulser_virtual_device, dmm_objects=(dmm_channel,), name="AnalogDeviceWithDMM"
+            pulser_virtual_device, dmm_objects=(_analog_dmm_channel(),), name="AnalogDeviceWithDMM"
         )
+        super().__init__(pulser_device=pulser_device)
+
+
+class AnalogDevice3DWithDMM(Device):
+    """A virtual analog device with DMM accepting 3D registers.
+
+    It has the channels, the DMM and the limits of `AnalogDeviceWithDMM`
+    (amplitude, detuning, minimal distance, maximal radial distance, duration),
+    with `dimensions = 3` and no layout requirement: the volumetric counterpart
+    of the analog device, for emulation of 3D registers (no current QPU traps
+    atoms in 3D). Any field of `pulser.devices.VirtualDevice` can be overridden,
+    e.g. `AnalogDevice3DWithDMM(max_sequence_duration=20000)` for long adiabatic
+    protocols (the DMM channel then accepts pulses of the same duration), or
+    `max_radial_distance=None` to lift the radial limit.
+
+    Args:
+        **overrides: fields of `pulser.devices.VirtualDevice` to override.
+    """
+
+    def __init__(self, **overrides: Any) -> None:
+        max_duration = overrides.get("max_sequence_duration") or 6000
+        fields: dict[str, Any] = dict(
+            dimensions=3,
+            requires_layout=False,
+            dmm_objects=(_analog_dmm_channel(max_duration=int(max_duration)),),
+            name="AnalogDevice3DWithDMM",
+        )
+        fields.update(overrides)
+        if fields["dimensions"] != 3:
+            raise ValueError("AnalogDevice3DWithDMM must have dimensions = 3.")
+        pulser_device = replace(pulser.AnalogDevice.to_virtual(), **fields)
         super().__init__(pulser_device=pulser_device)
 
 
@@ -262,5 +319,5 @@ class DigitalAnalogDevice(Device):
 
 def available_default_devices() -> None:
     """Show the default available devices in QooQit."""
-    for dev in (AnalogDevice(), AnalogDeviceWithDMM(), MockDevice()):
+    for dev in (AnalogDevice(), AnalogDeviceWithDMM(), AnalogDevice3DWithDMM(), MockDevice()):
         dev.info()

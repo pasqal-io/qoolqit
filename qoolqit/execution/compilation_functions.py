@@ -5,7 +5,9 @@ from enum import Enum
 from pulser.devices import Device as PulserDevice
 from pulser.parametrized import ParamObj
 from pulser.pulse import Pulse as PulserPulse
+from pulser.register.base_register import BaseRegister as PulserBaseRegister
 from pulser.register.register import Register as PulserRegister
+from pulser.register.register3d import Register3D as PulserRegister3D
 from pulser.sequence.sequence import Sequence as PulserSequence
 from pulser.waveforms import Waveform as PulserWaveform
 
@@ -23,12 +25,48 @@ class CompilerProfile(Enum):
     WORKING_POINT = DEFAULT  # deprecated alias for DEFAULT
 
 
-def _build_register(register: Register, device: Device, distance: float) -> PulserRegister:
-    """Builds a Pulser Register from a QoolQit Register."""
-    coords_qoolqit = register.qubits
-    coords_pulser = {str(q): (distance * c[0], distance * c[1]) for q, c in coords_qoolqit.items()}
-    pulser_register = PulserRegister(coords_pulser)
+def _validate_register_dimension(register: Register, device: Device) -> None:
+    """Check that the device accepts registers of the dimension of `register`.
 
+    Args:
+        register: the QoolQit Register.
+        device: the QoolQit Device.
+
+    Raises:
+        CompilationError: if the register is 3D and the device accepts only 2D registers,
+            or if the register is 3D and the device requires a layout (Pulser builds
+            automatic layouts only for 2D registers).
+    """
+    if register.dimension > device.dimensions:
+        raise CompilationError(
+            f"The register is {register.dimension}D, but the device `{device.name}` accepts "
+            f"only {device.dimensions}D registers. Compile it to a device with "
+            "`dimensions == 3`, e.g. `AnalogDevice3DWithDMM()` or `MockDevice()`."
+        )
+    if register.is_3d and device._requires_layout:
+        raise CompilationError(
+            f"The device `{device.name}` requires a register layout, which is supported "
+            "only for 2D registers."
+        )
+
+
+def _build_register(register: Register, device: Device, distance: float) -> PulserBaseRegister:
+    """Builds a Pulser Register (2D) or Register3D (3D) from a QoolQit Register.
+
+    Args:
+        register: the QoolQit Register, in dimensionless units.
+        device: the QoolQit Device.
+        distance: the unit of distance, in micrometers.
+
+    Raises:
+        CompilationError: if the dimension of the register is not supported by the device.
+    """
+    _validate_register_dimension(register, device)
+    coords_pulser = {str(q): tuple(distance * x for x in c) for q, c in register.qubits.items()}
+    if register.is_3d:
+        return PulserRegister3D(coords_pulser)
+
+    pulser_register = PulserRegister(coords_pulser)
     # use automatic layout if the device is real and requires it
     if isinstance(device._device, PulserDevice) and device._requires_layout:
         pulser_register = pulser_register.with_automatic_layout(device=device._device)
@@ -95,6 +133,7 @@ def basic_compilation(
             maximum allowed amplitude.
         - If the device requires a layout, it is automatically generated.
     """
+    _validate_register_dimension(register, device)
     if profile == CompilerProfile.DEFAULT:
         TIME, ENERGY, DISTANCE = device.converter.factors
         _validate_program_default_profile(register, drive, device, device_max_duration_ratio)
@@ -154,7 +193,7 @@ class _DMMAdder:
     def __init__(
         self,
         wf_converter: WaveformConverter,
-        pulser_register: PulserRegister,
+        pulser_register: PulserBaseRegister,
         pulser_sequence: PulserSequence,
     ):
         """Initialize the DMM adder.
