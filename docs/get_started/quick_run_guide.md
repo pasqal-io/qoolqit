@@ -93,9 +93,14 @@ results.final_bitstrings    # Counter({'111': 807, '101': 68, '110': 60, ...})
 
 ### Connection
 
-!!! note "Create a connection"
+!!! note "Create a Connection"
 
-    Running on remote emulators or QPUs requires a connection, either through Pasqal Cloud or a third-party cloud provider. If you don't have one yet, see [Pasqal Cloud](https://www.pasqal.com/solutions/cloud/) before continuing.
+    Remote execution, whether it's on Emulators or QPUs, requires a connection to submit a job. You can connect either through Pasqal Cloud or through one of our Third-Party Cloud providers. If you haven't set up a connection yet, do so before continuing.
+
+    <div style="text-align: center">
+      <a href="https://docs.pasqal.com/cloud/set-up" class="md-button md-button--primary">Pasqal Cloud</a>
+      <a class="md-button" title="Coming soon">Third-Party Providers (coming soon)</a>
+    </div>
 
 ### Remote Execution on Cloud Emulators
 
