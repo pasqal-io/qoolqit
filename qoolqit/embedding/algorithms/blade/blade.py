@@ -338,6 +338,23 @@ def augment_dimensions_with_random_values(
     return np.concatenate((positions, positions_noise), axis=1)
 
 
+def principal_components(positions: np.ndarray) -> np.ndarray:
+    """Express the centered positions in the basis of their principal axes.
+
+    The axes are sorted by decreasing variance and oriented so that their largest
+    coordinate in absolute value is positive.
+    """
+    if min(*positions.shape) < 1:
+        raise ValueError(f"PCA impossible: positions.shape={positions.shape}")
+
+    centered_positions = positions - np.mean(positions, axis=0)
+    _, _, axes = np.linalg.svd(centered_positions, full_matrices=False)
+    largest_coordinates = axes[range(len(axes)), np.argmax(np.abs(axes), axis=1)]
+    axes *= np.sign(largest_coordinates)[:, np.newaxis]
+
+    return centered_positions @ axes.T
+
+
 def evolve_with_dimension_transition(
     *,
     dimensions: tuple[int, ...],
@@ -364,20 +381,7 @@ def evolve_with_dimension_transition(
     final_dimensions = dimensions[dim_idx + 1]
 
     if final_dimensions < starting_dimensions and pca:
-        try:
-            from sklearn.decomposition import PCA
-        except ImportError as e:
-            raise ModuleNotFoundError(
-                "To use `pca=True` in the BLaDE algorithm, please install `scikit-learn`."
-            ) from e
-
-        n_components = min(*positions.shape)
-
-        if n_components < 1:
-            raise ValueError(f"PCA impossible: positions.shape={positions.shape}")
-
-        pca_inst = PCA(n_components=n_components)
-        positions = pca_inst.fit_transform(positions)
+        positions = principal_components(positions)
 
         if positions.shape[1] < starting_dimensions:
             pad = starting_dimensions - positions.shape[1]
