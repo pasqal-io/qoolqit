@@ -345,9 +345,11 @@ class Register:
         if row_spacing <= 0 or col_spacing <= 0 or layer_spacing <= 0:
             raise ValueError("Spacing must be positive.")
 
+        # Define total offsets in x, y, and z directions
         x_offset = (rows - 1) * row_spacing / 2.0
         y_offset = (cols - 1) * col_spacing / 2.0
         z_offset = (layers - 1) * layer_spacing / 2.0
+        # Define coordinates of a grid of quibits, centered at (0, 0, 0)
         coords = [
             (i * row_spacing - x_offset, j * col_spacing - y_offset, k * layer_spacing - z_offset)
             for i in range(rows)
@@ -364,7 +366,9 @@ class Register:
             n: number of qubits along each edge of the cube.
             spacing: distance between adjacent qubits. Defaults to 1.0.
         """
-        return cls.cuboid(n, n, n, row_spacing=spacing, col_spacing=spacing, layer_spacing=spacing)
+        return cls.cuboid(
+            rows=n, cols=n, layers=n,
+            row_spacing=spacing, col_spacing=spacing, layer_spacing=spacing)
 
     @property
     def qubits(self) -> dict:

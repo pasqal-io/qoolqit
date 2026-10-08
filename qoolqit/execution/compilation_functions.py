@@ -64,7 +64,7 @@ def _build_register(register: Register, device: Device, distance: float) -> Puls
     _validate_register_dimension(register, device)
     coords_pulser = {str(q): tuple(distance * x for x in c) for q, c in register.qubits.items()}
     if register.is_3d:
-        return PulserRegister3D(coords_pulser)
+        return PulserRegister3D(qubits=coords_pulser)
 
     pulser_register = PulserRegister(coords_pulser)
     # use automatic layout if the device is real and requires it
