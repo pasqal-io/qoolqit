@@ -1,9 +1,4 @@
-"""A remote connection that runs sequences locally, for tutorials and tests.
-
-It exposes the same interface as a real cloud connection (batches, jobs,
-statuses, lazily fetched results) while emulating everything locally, so no
-credentials are needed.
-"""
+"""Example remote connection that runs sequences locally, without credentials, for tutorials."""
 
 from __future__ import annotations
 
@@ -11,6 +6,7 @@ from collections.abc import Mapping, Sequence
 from typing import Any
 from uuid import uuid4
 
+from pulser.backend.config import EmulationConfig
 from pulser.backend.remote import (
     BatchStatus,
     JobStatus,
@@ -26,7 +22,7 @@ from pulser_simulation import QutipBackendV2
 _QUBIT_LIMIT = 15
 
 
-class LocalEmulationMockConnection(RemoteConnection):
+class ExampleConnection(RemoteConnection):
     """A RemoteConnection that emulates sequences with QuTiP.
 
     Sequences are executed synchronously during `submit`, as a single job per
@@ -52,8 +48,9 @@ class LocalEmulationMockConnection(RemoteConnection):
 
     Example:
         ```python
-        from qoolqit.execution import LocalEmulationMockConnection, RemoteEmulator
-        emulator = RemoteEmulator(connection=LocalEmulationMockConnection(), num_shots=1000)
+        from qoolqit.execution import RemoteEmulator
+        from qoolqit.execution.example_connection import ExampleConnection
+        emulator = RemoteEmulator(connection=ExampleConnection(), num_shots=1000)
         ```
     """
 
@@ -67,13 +64,14 @@ class LocalEmulationMockConnection(RemoteConnection):
         wait: bool = False,
         open: bool = False,
         batch_id: str | None = None,
+        backend_configuration: EmulationConfig | None = None,
         **kwargs: Any,  # noqa: ANN401 (accepted for interface compatibility, unused)
     ) -> RemoteResults:
         """Emulate a sequence and store its results as a one-job batch.
 
-        `wait` and `batch_id` are ignored, as is every keyword argument other
-        than `backend_configuration`, the emulation config carrying the
-        observables to compute.
+        `wait`, `batch_id` and any other keyword argument are ignored.
+        `backend_configuration` is the emulation config carrying the observables
+        to compute.
         """
         if open:
             raise NotImplementedError(
@@ -91,9 +89,7 @@ class LocalEmulationMockConnection(RemoteConnection):
             )
 
         batch_id = str(uuid4())
-        self._batches[batch_id] = QutipBackendV2(
-            sequence, config=kwargs.get("backend_configuration")
-        ).run()
+        self._batches[batch_id] = QutipBackendV2(sequence, config=backend_configuration).run()
         return RemoteResults(batch_id, self)
 
     def supports_open_batch(self) -> bool:

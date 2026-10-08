@@ -13,12 +13,11 @@ from pulser.backend.results import Results
 from qoolqit import AnalogDevice, ConstantWaveform, Drive, QuantumProgram, Register
 from qoolqit.execution import (
     JobStatus,
-    LocalEmulationMockConnection,
     RemoteEmulator,
     get_batch_id,
     retrieve_remote_job,
 )
-from qoolqit.execution.mock_connection import _QUBIT_LIMIT
+from qoolqit.execution.example_connection import _QUBIT_LIMIT, ExampleConnection
 
 NUM_SHOTS = 50
 
@@ -42,7 +41,7 @@ def _config() -> EmulationConfig:
 
 
 def test_submit_returns_completed_bitstring_results() -> None:
-    remote_results = LocalEmulationMockConnection().submit(
+    remote_results = ExampleConnection().submit(
         _sequence(n_qubits=3), backend_configuration=_config()
     )
 
@@ -59,7 +58,7 @@ def test_submit_returns_completed_bitstring_results() -> None:
 
 
 def test_batch_holds_a_single_job() -> None:
-    connection = LocalEmulationMockConnection()
+    connection = ExampleConnection()
     remote_results = connection.submit(_sequence(n_qubits=3), backend_configuration=_config())
     batch_id = remote_results.batch_id
 
@@ -68,7 +67,7 @@ def test_batch_holds_a_single_job() -> None:
 
 
 def test_query_job_progress_reports_done_with_results() -> None:
-    connection = LocalEmulationMockConnection()
+    connection = ExampleConnection()
     remote_results = connection.submit(_sequence(n_qubits=3), backend_configuration=_config())
     progress = connection._query_job_progress(remote_results.batch_id)
 
@@ -80,7 +79,7 @@ def test_query_job_progress_reports_done_with_results() -> None:
 
 
 def test_each_submission_creates_its_own_batch() -> None:
-    connection = LocalEmulationMockConnection()
+    connection = ExampleConnection()
     sequence, config = _sequence(n_qubits=3), _config()
 
     first = connection.submit(sequence, backend_configuration=config)
@@ -94,14 +93,14 @@ def test_each_submission_creates_its_own_batch() -> None:
 
 def test_unknown_batch_reports_error_status() -> None:
     # A status query answers with a status rather than raising.
-    assert LocalEmulationMockConnection()._get_batch_status("unknown") == BatchStatus.ERROR
+    assert ExampleConnection()._get_batch_status("unknown") == BatchStatus.ERROR
 
 
 def test_job_params_are_ignored() -> None:
     # A real connection runs one job per `job_params` entry, each sampled `runs` times.
     # Here the shot count comes from the emulation config only, and a batch always
     # holds a single job.
-    remote_results = LocalEmulationMockConnection().submit(
+    remote_results = ExampleConnection().submit(
         _sequence(n_qubits=3),
         job_params=[{"runs": 7}, {"runs": 7}],
         backend_configuration=_config(),
@@ -124,14 +123,14 @@ def test_job_params_are_ignored() -> None:
     ids=["get_job_ids", "fetch_result", "query_job_progress", "remote_results"],
 )
 def test_unknown_batch_is_rejected(
-    lookup: Callable[[LocalEmulationMockConnection], object],
+    lookup: Callable[[ExampleConnection], object],
 ) -> None:
     with pytest.raises(RemoteResultsError, match="Unknown batch 'unknown'"):
-        lookup(LocalEmulationMockConnection())
+        lookup(ExampleConnection())
 
 
 def test_fetch_result_accepts_the_batch_own_job() -> None:
-    connection = LocalEmulationMockConnection()
+    connection = ExampleConnection()
     remote_results = connection.submit(_sequence(n_qubits=3), backend_configuration=_config())
     batch_id = remote_results.batch_id
 
@@ -142,7 +141,7 @@ def test_fetch_result_accepts_the_batch_own_job() -> None:
 
 @pytest.mark.parametrize("job_ids", [["unknown"], []])
 def test_fetch_result_rejects_foreign_jobs(job_ids: list[str]) -> None:
-    connection = LocalEmulationMockConnection()
+    connection = ExampleConnection()
     remote_results = connection.submit(_sequence(n_qubits=3), backend_configuration=_config())
 
     with pytest.raises(RemoteResultsError, match="does not contain jobs"):
@@ -150,7 +149,7 @@ def test_fetch_result_rejects_foreign_jobs(job_ids: list[str]) -> None:
 
 
 def test_open_batch_is_not_supported() -> None:
-    connection = LocalEmulationMockConnection()
+    connection = ExampleConnection()
     assert not connection.supports_open_batch()
 
     with pytest.raises(NotImplementedError, match="open batches"):
@@ -159,14 +158,14 @@ def test_open_batch_is_not_supported() -> None:
 
 def test_too_many_qubits_is_not_supported() -> None:
     with pytest.raises(NotImplementedError, match=f"limit is {_QUBIT_LIMIT}"):
-        LocalEmulationMockConnection().submit(
+        ExampleConnection().submit(
             _sequence(n_qubits=_QUBIT_LIMIT), backend_configuration=_config()
         )
 
 
 @pytest.mark.parametrize("num_shots", [1, 20])
 def test_runs_through_remote_emulator(num_shots: int) -> None:
-    emulator = RemoteEmulator(connection=LocalEmulationMockConnection(), num_shots=num_shots)
+    emulator = RemoteEmulator(connection=ExampleConnection(), num_shots=num_shots)
     results = emulator.run(_program(n_qubits=3)).results()
 
     counts = results.get_result(results.get_result_tags()[0], 1.0)
@@ -174,7 +173,7 @@ def test_runs_through_remote_emulator(num_shots: int) -> None:
 
 
 def test_retrieve_remote_job() -> None:
-    connection = LocalEmulationMockConnection()
+    connection = ExampleConnection()
     job = RemoteEmulator(connection=connection).run(_program(n_qubits=3))
     assert job.get_status() == JobStatus.DONE
 
