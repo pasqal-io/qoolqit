@@ -103,7 +103,7 @@ def update_positions(
     with np.errstate(divide="ignore", invalid="ignore"):
         unitary_vectors = position_differences / distance_matrix[:, :, np.newaxis]
     unitary_vectors[range(n), range(n)] = np.zeros(space_dimension)
-    logger.debug(f"{unitary_vectors=}")
+    logger.debug("unitary_vectors=%r", unitary_vectors)
 
     modulated_target_interactions, interaction_force = compute_interaction_forces(
         distance_matrix=distance_matrix,
@@ -158,7 +158,7 @@ def update_positions(
         + limited_min_constr_resulting_forces
         + limited_max_constr_resulting_forces
     )
-    logger.debug(f"{resulting_forces_vectors=}")
+    logger.debug("resulting_forces_vectors=%r", resulting_forces_vectors)
 
     assert np.all(np.isfinite(interaction_resulting_forces))
 
@@ -185,7 +185,7 @@ def update_positions(
     assert np.all(np.isfinite(positions))
 
     if draw_step:
-        logger.debug(f"Resulting positions = {dict(enumerate(positions))}")
+        logger.debug("Resulting positions = %s", dict(enumerate(positions)))
         print(f"Current number of dimensions is {positions.shape[-1]}")
         distances = distance_matrix[np.triu_indices_from(distance_matrix, k=1)]
         print(

@@ -142,7 +142,7 @@ class Force:
 
     def get_temperature(self) -> Any | int:
         maximum_temperatures = self.maximum_temperatures
-        logger.debug(f"{maximum_temperatures=}")
+        logger.debug("maximum_temperatures=%r", maximum_temperatures)
 
         min_temperature = np.min(maximum_temperatures)
 

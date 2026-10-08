@@ -115,6 +115,7 @@ select = [
     "SIM", # flake8-simplify
     "I", # isort
     "D", # pydocstyle
+    "G004", # logging-f-string (formats arguments even when the log level is disabled)
 ]
 ignore = [
     # TODO: fix existing pydocstyle violations, then remove these

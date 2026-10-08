@@ -61,7 +61,7 @@ def compute_target_weights_distances_by_weight_diff_limit(
     )
 
     n = len(weight_differences)
-    logger.debug(f"{weight_differences=}")
+    logger.debug("weight_differences=%r", weight_differences)
 
     reduced_weight_differences = weight_differences * (1 - weight_relative_threshold)
     step_target_weights = current_weights + reduced_weight_differences
@@ -73,7 +73,7 @@ def compute_target_weights_distances_by_weight_diff_limit(
         distance_matrix - step_target_distances
     ) / 2  # division by 2 because both forces will be applied on both atoms of each pair
     distances_to_walk[range(n), range(n)] = 0
-    logger.debug(f"{distances_to_walk=}")
+    logger.debug("distances_to_walk=%r", distances_to_walk)
     assert np.all(np.isfinite(distances_to_walk))
 
     chosen_weights_l1 = reduced_weight_differences[:, :, np.newaxis]
@@ -82,7 +82,7 @@ def compute_target_weights_distances_by_weight_diff_limit(
     weighted_vectors = chosen_weights_l2 * unitary_vectors
     weighted_vectors[distances_to_walk == 0] = 0.0
 
-    logger.debug(f"{weighted_vectors=}")
+    logger.debug("weighted_vectors=%r", weighted_vectors)
     assert np.all(np.isfinite(weighted_vectors))
 
     return weighted_vectors, distances_to_walk
@@ -98,8 +98,8 @@ def compute_interaction_forces(
 ) -> tuple[Any, Force]:
     current_weights = normalized_interaction(distance_matrix)
 
-    logger.debug(f"{current_weights=}")
-    logger.debug(f"{target_weights=}")
+    logger.debug("current_weights=%r", current_weights)
+    logger.debug("target_weights=%r", target_weights)
 
     modulated_target_weights = compute_target_weights_by_dist_limit(
         distance_matrix=distance_matrix,
