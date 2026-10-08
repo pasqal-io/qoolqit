@@ -154,26 +154,30 @@ def update_positions(
         )
         print(f"temperature ratio after regulation: {temp_ratio_after}")
 
-    min_constr_force = compute_min_dist_constraint_forces(
-        min_dist=min_dist,
-        positions=positions,
-        distance_matrix=distance_matrix,
-    )
-    max_constr_force = compute_max_dist_constraint_forces(
-        positions=positions,
-        max_radius=max_radius,
-    )
-
     interaction_resulting_forces = regulated_interaction_force.get_resulting_forces(
         regulated_interaction_force.get_temperature()
     )
 
-    limited_min_constr_resulting_forces = _compute_limited_constraint_forces(
-        force=min_constr_force, max_distance_to_walk=min_constr_max_distance_to_walk
-    )
-    limited_max_constr_resulting_forces = _compute_limited_constraint_forces(
-        force=max_constr_force, max_distance_to_walk=max_constr_max_distance_to_walk
-    )
+    limited_min_constr_resulting_forces = np.zeros_like(positions)
+    if min_dist is not None:
+        min_constr_force = compute_min_dist_constraint_forces(
+            min_dist=min_dist,
+            positions=positions,
+            distance_matrix=distance_matrix,
+        )
+        limited_min_constr_resulting_forces = _compute_limited_constraint_forces(
+            force=min_constr_force, max_distance_to_walk=min_constr_max_distance_to_walk
+        )
+
+    limited_max_constr_resulting_forces = np.zeros_like(positions)
+    if max_radius is not None:
+        max_constr_force = compute_max_dist_constraint_forces(
+            positions=positions,
+            max_radius=max_radius,
+        )
+        limited_max_constr_resulting_forces = _compute_limited_constraint_forces(
+            force=max_constr_force, max_distance_to_walk=max_constr_max_distance_to_walk
+        )
 
     resulting_forces_vectors = (
         interaction_resulting_forces
