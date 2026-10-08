@@ -4462,6 +4462,13 @@
           </div>
         </li>
         <li class="doc-section-item field-body">
+          <b><code><span title="qoolqit.execution.example_connection">example_connection</span></code></b>
+          –
+          <div class="doc-md-description">
+            <p>Example remote connection that runs sequences locally, without credentials, for tutorials.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
           <b><code><span title="qoolqit.execution.job">job</span></code></b>
           –
           <div class="doc-md-description">
@@ -6203,8 +6210,12 @@ whenever the observable doesn't define its own. Defaults to 1000.</p>
 
       </li>
       <li class="doc doc-backlink">
-            <span class="doc doc-backlink-crumb last">
+            <span class="doc doc-backlink-crumb">
       <a href="#qoolqit.execution.LocalEmulator"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LocalEmulator</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb last">
+      <a href="#qoolqit.execution.LocalEmulator.validate_emulation_config"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;validate_emulation_config</a>
   </span>
 
       </li>
@@ -10599,7 +10610,8 @@ and local emulator backends.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>qoolqit/execution/backends.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
+<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
 <span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
 <span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
 <span class="normal"><a href="#__codelineno-0-100">100</a></span>
@@ -10612,22 +10624,21 @@ and local emulator backends.</p>
 <span class="normal"><a href="#__codelineno-0-107">107</a></span>
 <span class="normal"><a href="#__codelineno-0-108">108</a></span>
 <span class="normal"><a href="#__codelineno-0-109">109</a></span>
-<span class="normal"><a href="#__codelineno-0-110">110</a></span>
-<span class="normal"><a href="#__codelineno-0-111">111</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="n">backend_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">EmulatorBackend</span><span class="p">]</span> <span class="o">=</span> <span class="n">QutipBackendV2</span><span class="p">,</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a>    <span class="n">emulation_config</span><span class="p">:</span> <span class="n">EmulationConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a>    <span class="n">num_shots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="w">    </span><span class="sd">"""Instantiates a LocalEmulator."""</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">num_shots</span><span class="o">=</span><span class="n">num_shots</span><span class="p">)</span>
-<a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">backend_type</span><span class="p">,</span> <span class="n">EmulatorBackend</span><span class="p">):</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="__codelineno-0-108" name="__codelineno-0-108"></a>            <span class="s2">"Error in `LocalEmulator`: `backend_type` must be a EmulatorBackend type."</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a>        <span class="p">)</span>
-<a id="__codelineno-0-110" name="__codelineno-0-110"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span> <span class="o">=</span> <span class="n">backend_type</span>
-<a id="__codelineno-0-111" name="__codelineno-0-111"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_emulation_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_emulation_config</span><span class="p">(</span><span class="n">emulation_config</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-110">110</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="n">backend_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">EmulatorBackend</span><span class="p">]</span> <span class="o">=</span> <span class="n">QutipBackendV2</span><span class="p">,</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="n">emulation_config</span><span class="p">:</span> <span class="n">EmulationConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>    <span class="n">num_shots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="w">    </span><span class="sd">"""Instantiates a LocalEmulator."""</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">num_shots</span><span class="o">=</span><span class="n">num_shots</span><span class="p">)</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">backend_type</span><span class="p">,</span> <span class="n">EmulatorBackend</span><span class="p">):</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>            <span class="s2">"Error in `LocalEmulator`: `backend_type` must be a EmulatorBackend type."</span>
+<a id="__codelineno-0-108" name="__codelineno-0-108"></a>        <span class="p">)</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span> <span class="o">=</span> <span class="n">backend_type</span>
+<a id="__codelineno-0-110" name="__codelineno-0-110"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_emulation_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_emulation_config</span><span class="p">(</span><span class="n">emulation_config</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -10705,17 +10716,17 @@ and local emulator backends.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/execution/backends.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-113">113</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-112">112</a></span>
+<span class="normal"><a href="#__codelineno-0-113">113</a></span>
 <span class="normal"><a href="#__codelineno-0-114">114</a></span>
 <span class="normal"><a href="#__codelineno-0-115">115</a></span>
 <span class="normal"><a href="#__codelineno-0-116">116</a></span>
-<span class="normal"><a href="#__codelineno-0-117">117</a></span>
-<span class="normal"><a href="#__codelineno-0-118">118</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-113" name="__codelineno-0-113"></a><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program</span><span class="p">:</span> <span class="n">QuantumProgram</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">job</span><span class="o">.</span><span class="n">Job</span><span class="p">[</span><span class="n">Results</span><span class="p">]:</span>
-<a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="w">    </span><span class="sd">"""Run a compiled QuantumProgram and return the results."""</span>
-<a id="__codelineno-0-115" name="__codelineno-0-115"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span><span class="p">(</span><span class="n">program</span><span class="o">.</span><span class="n">compiled_sequence</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_emulation_config</span><span class="p">)</span>
-<a id="__codelineno-0-116" name="__codelineno-0-116"></a>    <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<a id="__codelineno-0-117" name="__codelineno-0-117"></a>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">Results</span><span class="p">)</span>
-<a id="__codelineno-0-118" name="__codelineno-0-118"></a>    <span class="k">return</span> <span class="n">job</span><span class="o">.</span><span class="n">_LocalJob</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-117">117</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program</span><span class="p">:</span> <span class="n">QuantumProgram</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">job</span><span class="o">.</span><span class="n">Job</span><span class="p">[</span><span class="n">Results</span><span class="p">]:</span>
+<a id="__codelineno-0-113" name="__codelineno-0-113"></a><span class="w">    </span><span class="sd">"""Run a compiled QuantumProgram and return the results."""</span>
+<a id="__codelineno-0-114" name="__codelineno-0-114"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span><span class="p">(</span><span class="n">program</span><span class="o">.</span><span class="n">compiled_sequence</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_emulation_config</span><span class="p">)</span>
+<a id="__codelineno-0-115" name="__codelineno-0-115"></a>    <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<a id="__codelineno-0-116" name="__codelineno-0-116"></a>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">Results</span><span class="p">)</span>
+<a id="__codelineno-0-117" name="__codelineno-0-117"></a>    <span class="k">return</span> <span class="n">job</span><span class="o">.</span><span class="n">_LocalJob</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -11453,7 +11464,9 @@ to submit and execute programs on remote quantum processors.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>qoolqit/execution/backends.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-237">237</a></span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-235">235</a></span>
+<span class="normal"><a href="#__codelineno-0-236">236</a></span>
+<span class="normal"><a href="#__codelineno-0-237">237</a></span>
 <span class="normal"><a href="#__codelineno-0-238">238</a></span>
 <span class="normal"><a href="#__codelineno-0-239">239</a></span>
 <span class="normal"><a href="#__codelineno-0-240">240</a></span>
@@ -11466,24 +11479,22 @@ to submit and execute programs on remote quantum processors.</p>
 <span class="normal"><a href="#__codelineno-0-247">247</a></span>
 <span class="normal"><a href="#__codelineno-0-248">248</a></span>
 <span class="normal"><a href="#__codelineno-0-249">249</a></span>
-<span class="normal"><a href="#__codelineno-0-250">250</a></span>
-<span class="normal"><a href="#__codelineno-0-251">251</a></span>
-<span class="normal"><a href="#__codelineno-0-252">252</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-238" name="__codelineno-0-238"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-239" name="__codelineno-0-239"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-240" name="__codelineno-0-240"></a>    <span class="n">connection</span><span class="p">:</span> <span class="n">RemoteConnection</span><span class="p">,</span>
-<a id="__codelineno-0-241" name="__codelineno-0-241"></a>    <span class="n">num_shots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-242" name="__codelineno-0-242"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="w">    </span><span class="sd">"""Instantiates a QPU backend."""</span>
-<a id="__codelineno-0-244" name="__codelineno-0-244"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span> <span class="o">=</span> <span class="n">QPUBackend</span>
-<a id="__codelineno-0-245" name="__codelineno-0-245"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_connection</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-<a id="__codelineno-0-246" name="__codelineno-0-246"></a>    <span class="k">if</span> <span class="n">num_shots</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-247" name="__codelineno-0-247"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="w">            </span><span class="sd">"""Number of shots must be provided to use the QPU backend.</span>
-<a id="__codelineno-0-249" name="__codelineno-0-249"></a><span class="sd">            Please specify `num_shots` when creating the QPU instance.</span>
-<a id="__codelineno-0-250" name="__codelineno-0-250"></a><span class="sd">            For example: QPU(connection=..., num_shots=100)"""</span><span class="p">,</span>
-<a id="__codelineno-0-251" name="__codelineno-0-251"></a>        <span class="p">)</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">BackendConfig</span><span class="p">(</span><span class="n">default_num_shots</span><span class="o">=</span><span class="n">num_shots</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-250">250</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-236" name="__codelineno-0-236"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-237" name="__codelineno-0-237"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-238" name="__codelineno-0-238"></a>    <span class="n">connection</span><span class="p">:</span> <span class="n">RemoteConnection</span><span class="p">,</span>
+<a id="__codelineno-0-239" name="__codelineno-0-239"></a>    <span class="n">num_shots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="w">    </span><span class="sd">"""Instantiates a QPU backend."""</span>
+<a id="__codelineno-0-242" name="__codelineno-0-242"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span> <span class="o">=</span> <span class="n">QPUBackend</span>
+<a id="__codelineno-0-243" name="__codelineno-0-243"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_connection</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a>    <span class="k">if</span> <span class="n">num_shots</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="w">            </span><span class="sd">"""Number of shots must be provided to use the QPU backend.</span>
+<a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">            Please specify `num_shots` when creating the QPU instance.</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">            For example: QPU(connection=..., num_shots=100)"""</span><span class="p">,</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a>        <span class="p">)</span>
+<a id="__codelineno-0-250" name="__codelineno-0-250"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">BackendConfig</span><span class="p">(</span><span class="n">default_num_shots</span><span class="o">=</span><span class="n">num_shots</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -11538,7 +11549,9 @@ to submit and execute programs on remote quantum processors.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/execution/backends.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-254">254</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-252">252</a></span>
+<span class="normal"><a href="#__codelineno-0-253">253</a></span>
+<span class="normal"><a href="#__codelineno-0-254">254</a></span>
 <span class="normal"><a href="#__codelineno-0-255">255</a></span>
 <span class="normal"><a href="#__codelineno-0-256">256</a></span>
 <span class="normal"><a href="#__codelineno-0-257">257</a></span>
@@ -11549,22 +11562,20 @@ to submit and execute programs on remote quantum processors.</p>
 <span class="normal"><a href="#__codelineno-0-262">262</a></span>
 <span class="normal"><a href="#__codelineno-0-263">263</a></span>
 <span class="normal"><a href="#__codelineno-0-264">264</a></span>
-<span class="normal"><a href="#__codelineno-0-265">265</a></span>
-<span class="normal"><a href="#__codelineno-0-266">266</a></span>
-<span class="normal"><a href="#__codelineno-0-267">267</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-254" name="__codelineno-0-254"></a><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program</span><span class="p">:</span> <span class="n">QuantumProgram</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">job</span><span class="o">.</span><span class="n">Job</span><span class="p">[</span><span class="n">Results</span><span class="p">]:</span>
-<a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="w">    </span><span class="sd">"""Run a compiled QuantumProgram and return a job handler.</span>
+<span class="normal"><a href="#__codelineno-0-265">265</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program</span><span class="p">:</span> <span class="n">QuantumProgram</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">job</span><span class="o">.</span><span class="n">Job</span><span class="p">[</span><span class="n">Results</span><span class="p">]:</span>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a><span class="w">    </span><span class="sd">"""Run a compiled QuantumProgram and return a job handler.</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="sd">    The returned handler `Job` can be used to retrieve results with `job.results()`</span>
 <a id="__codelineno-0-256" name="__codelineno-0-256"></a>
-<a id="__codelineno-0-257" name="__codelineno-0-257"></a><span class="sd">    The returned handler `Job` can be used to retrieve results with `job.results()`</span>
-<a id="__codelineno-0-258" name="__codelineno-0-258"></a>
-<a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-260" name="__codelineno-0-260"></a><span class="sd">        program (QuantumProgram): the compiled quantum program to run.</span>
-<a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">    """</span>
-<a id="__codelineno-0-262" name="__codelineno-0-262"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span><span class="p">(</span>
-<a id="__codelineno-0-263" name="__codelineno-0-263"></a>        <span class="n">program</span><span class="o">.</span><span class="n">compiled_sequence</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
-<a id="__codelineno-0-264" name="__codelineno-0-264"></a>    <span class="p">)</span>
-<a id="__codelineno-0-265" name="__codelineno-0-265"></a>    <span class="n">remote_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<a id="__codelineno-0-266" name="__codelineno-0-266"></a>    <span class="c1"># If in open-batch mode, the job should be the last one in the batch ?</span>
-<a id="__codelineno-0-267" name="__codelineno-0-267"></a>    <span class="k">return</span> <span class="n">job</span><span class="o">.</span><span class="n">_RemoteJob</span><span class="o">.</span><span class="n">_from_remote_results</span><span class="p">(</span><span class="n">remote_results</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-0-257" name="__codelineno-0-257"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-258" name="__codelineno-0-258"></a><span class="sd">        program (QuantumProgram): the compiled quantum program to run.</span>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">    """</span>
+<a id="__codelineno-0-260" name="__codelineno-0-260"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span><span class="p">(</span>
+<a id="__codelineno-0-261" name="__codelineno-0-261"></a>        <span class="n">program</span><span class="o">.</span><span class="n">compiled_sequence</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
+<a id="__codelineno-0-262" name="__codelineno-0-262"></a>    <span class="p">)</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a>    <span class="n">remote_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a>    <span class="c1"># If in open-batch mode, the job should be the last one in the batch ?</span>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a>    <span class="k">return</span> <span class="n">job</span><span class="o">.</span><span class="n">_RemoteJob</span><span class="o">.</span><span class="n">_from_remote_results</span><span class="p">(</span><span class="n">remote_results</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -11781,7 +11792,9 @@ or
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>qoolqit/execution/backends.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-158">158</a></span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-156">156</a></span>
+<span class="normal"><a href="#__codelineno-0-157">157</a></span>
+<span class="normal"><a href="#__codelineno-0-158">158</a></span>
 <span class="normal"><a href="#__codelineno-0-159">159</a></span>
 <span class="normal"><a href="#__codelineno-0-160">160</a></span>
 <span class="normal"><a href="#__codelineno-0-161">161</a></span>
@@ -11795,25 +11808,23 @@ or
 <span class="normal"><a href="#__codelineno-0-169">169</a></span>
 <span class="normal"><a href="#__codelineno-0-170">170</a></span>
 <span class="normal"><a href="#__codelineno-0-171">171</a></span>
-<span class="normal"><a href="#__codelineno-0-172">172</a></span>
-<span class="normal"><a href="#__codelineno-0-173">173</a></span>
-<span class="normal"><a href="#__codelineno-0-174">174</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-160" name="__codelineno-0-160"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="n">backend_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">RemoteEmulatorBackend</span><span class="p">]</span> <span class="o">=</span> <span class="n">RemoteEmuFreeBackend</span><span class="p">,</span>
-<a id="__codelineno-0-162" name="__codelineno-0-162"></a>    <span class="n">connection</span><span class="p">:</span> <span class="n">RemoteConnection</span><span class="p">,</span>
-<a id="__codelineno-0-163" name="__codelineno-0-163"></a>    <span class="n">emulation_config</span><span class="p">:</span> <span class="n">EmulationConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a>    <span class="n">num_shots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="w">    </span><span class="sd">"""Instantiates a RemoteEmulator."""</span>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">num_shots</span><span class="o">=</span><span class="n">num_shots</span><span class="p">)</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">backend_type</span><span class="p">,</span> <span class="n">RemoteEmulatorBackend</span><span class="p">):</span>
-<a id="__codelineno-0-169" name="__codelineno-0-169"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a>            <span class="s2">"Error in `RemoteEmulator`: `backend_type` must be a RemoteEmulatorBackend type."</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a>        <span class="p">)</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span> <span class="o">=</span> <span class="n">backend_type</span>
-<a id="__codelineno-0-173" name="__codelineno-0-173"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_connection</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-<a id="__codelineno-0-174" name="__codelineno-0-174"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_emulation_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_emulation_config</span><span class="p">(</span><span class="n">emulation_config</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-172">172</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-156" name="__codelineno-0-156"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-157" name="__codelineno-0-157"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="n">backend_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">RemoteEmulatorBackend</span><span class="p">]</span> <span class="o">=</span> <span class="n">RemoteEmuFreeBackend</span><span class="p">,</span>
+<a id="__codelineno-0-160" name="__codelineno-0-160"></a>    <span class="n">connection</span><span class="p">:</span> <span class="n">RemoteConnection</span><span class="p">,</span>
+<a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="n">emulation_config</span><span class="p">:</span> <span class="n">EmulationConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-162" name="__codelineno-0-162"></a>    <span class="n">num_shots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">    </span><span class="sd">"""Instantiates a RemoteEmulator."""</span>
+<a id="__codelineno-0-165" name="__codelineno-0-165"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">num_shots</span><span class="o">=</span><span class="n">num_shots</span><span class="p">)</span>
+<a id="__codelineno-0-166" name="__codelineno-0-166"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">backend_type</span><span class="p">,</span> <span class="n">RemoteEmulatorBackend</span><span class="p">):</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a>            <span class="s2">"Error in `RemoteEmulator`: `backend_type` must be a RemoteEmulatorBackend type."</span>
+<a id="__codelineno-0-169" name="__codelineno-0-169"></a>        <span class="p">)</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span> <span class="o">=</span> <span class="n">backend_type</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_connection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_connection</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_emulation_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_emulation_config</span><span class="p">(</span><span class="n">emulation_config</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -11905,7 +11916,9 @@ or
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/execution/backends.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-176">176</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-174">174</a></span>
+<span class="normal"><a href="#__codelineno-0-175">175</a></span>
+<span class="normal"><a href="#__codelineno-0-176">176</a></span>
 <span class="normal"><a href="#__codelineno-0-177">177</a></span>
 <span class="normal"><a href="#__codelineno-0-178">178</a></span>
 <span class="normal"><a href="#__codelineno-0-179">179</a></span>
@@ -11919,25 +11932,23 @@ or
 <span class="normal"><a href="#__codelineno-0-187">187</a></span>
 <span class="normal"><a href="#__codelineno-0-188">188</a></span>
 <span class="normal"><a href="#__codelineno-0-189">189</a></span>
-<span class="normal"><a href="#__codelineno-0-190">190</a></span>
-<span class="normal"><a href="#__codelineno-0-191">191</a></span>
-<span class="normal"><a href="#__codelineno-0-192">192</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program</span><span class="p">:</span> <span class="n">QuantumProgram</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">job</span><span class="o">.</span><span class="n">Job</span><span class="p">[</span><span class="n">Results</span><span class="p">]:</span>
-<a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="w">    </span><span class="sd">"""Run a compiled QuantumProgram and return a job handler.</span>
+<span class="normal"><a href="#__codelineno-0-190">190</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program</span><span class="p">:</span> <span class="n">QuantumProgram</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">job</span><span class="o">.</span><span class="n">Job</span><span class="p">[</span><span class="n">Results</span><span class="p">]:</span>
+<a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="w">    </span><span class="sd">"""Run a compiled QuantumProgram and return a job handler.</span>
+<a id="__codelineno-0-176" name="__codelineno-0-176"></a>
+<a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    The returned handler `Job` can be used to retrieve results with `job.results()`</span>
 <a id="__codelineno-0-178" name="__codelineno-0-178"></a>
-<a id="__codelineno-0-179" name="__codelineno-0-179"></a><span class="sd">    The returned handler `Job` can be used to retrieve results with `job.results()`</span>
-<a id="__codelineno-0-180" name="__codelineno-0-180"></a>
-<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">        program (QuantumProgram): the compiled quantum program to run.</span>
-<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">    """</span>
-<a id="__codelineno-0-184" name="__codelineno-0-184"></a>    <span class="c1"># Instantiate backend</span>
-<a id="__codelineno-0-185" name="__codelineno-0-185"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span><span class="p">(</span>
-<a id="__codelineno-0-186" name="__codelineno-0-186"></a>        <span class="n">program</span><span class="o">.</span><span class="n">compiled_sequence</span><span class="p">,</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a>        <span class="n">connection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="p">,</span>
-<a id="__codelineno-0-188" name="__codelineno-0-188"></a>        <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_emulation_config</span><span class="p">,</span>
-<a id="__codelineno-0-189" name="__codelineno-0-189"></a>    <span class="p">)</span>
-<a id="__codelineno-0-190" name="__codelineno-0-190"></a>    <span class="n">remote_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<a id="__codelineno-0-191" name="__codelineno-0-191"></a>    <span class="c1"># If in open-batch mode, the job should be the last one in the batch ?</span>
-<a id="__codelineno-0-192" name="__codelineno-0-192"></a>    <span class="k">return</span> <span class="n">job</span><span class="o">.</span><span class="n">_RemoteJob</span><span class="o">.</span><span class="n">_from_remote_results</span><span class="p">(</span><span class="n">remote_results</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-0-179" name="__codelineno-0-179"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">        program (QuantumProgram): the compiled quantum program to run.</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">    """</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a>    <span class="c1"># Instantiate backend</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend_type</span><span class="p">(</span>
+<a id="__codelineno-0-184" name="__codelineno-0-184"></a>        <span class="n">program</span><span class="o">.</span><span class="n">compiled_sequence</span><span class="p">,</span>
+<a id="__codelineno-0-185" name="__codelineno-0-185"></a>        <span class="n">connection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection</span><span class="p">,</span>
+<a id="__codelineno-0-186" name="__codelineno-0-186"></a>        <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_emulation_config</span><span class="p">,</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a>    <span class="p">)</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188"></a>    <span class="n">remote_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a>    <span class="c1"># If in open-batch mode, the job should be the last one in the batch ?</span>
+<a id="__codelineno-0-190" name="__codelineno-0-190"></a>    <span class="k">return</span> <span class="n">job</span><span class="o">.</span><span class="n">_RemoteJob</span><span class="o">.</span><span class="n">_from_remote_results</span><span class="p">(</span><span class="n">remote_results</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
