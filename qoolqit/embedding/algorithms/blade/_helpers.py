@@ -21,7 +21,8 @@ def _format_return(input: Value, ret: np.ndarray, *, format: FormatType) -> Valu
         case "triu":
             return np.triu(ret, k=1)
         case "sym":
-            return np.triu(ret, k=1) + np.tril(ret, k=-1)
+            np.fill_diagonal(ret, 0)
+            return ret
         case _:
             raise ValueError(f"Invalid format: {format}")
 
@@ -35,8 +36,12 @@ def normalized_interaction(dist: Value, *, format: FormatType = "sym") -> Value:
         (all values), "triu" (upper triangle without diagonal), or "sym"
         (upper and lower triangles without diagonal).
     """
+    squared_dist = dist * dist
     interactions = np.divide(
-        1, dist**6, out=np.full_like(dist, np.inf, dtype=float), where=(dist != 0)
+        1,
+        squared_dist * squared_dist * squared_dist,
+        out=np.full_like(dist, np.inf, dtype=float),
+        where=(dist != 0),
     )
 
     # following type ignore is required probably due to a bug of mypy
@@ -54,7 +59,10 @@ def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
         (upper and lower triangles without diagonal).
     """
     dists = np.divide(
-        1, weight ** (1 / 6), out=np.full_like(weight, np.inf, dtype=float), where=(weight != 0)
+        1,
+        np.cbrt(np.sqrt(weight)),
+        out=np.full_like(weight, np.inf, dtype=float),
+        where=(weight != 0),
     )
 
     # following type ignore is required probably due to a bug of mypy
@@ -63,8 +71,12 @@ def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
 
 
 def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
-    position_differences = positions[np.newaxis, :] - positions[:, np.newaxis]
-    return np.linalg.norm(position_differences, axis=2)
+    # loop over the few dimensions to avoid allocating a (N, N, d) array
+    squared_distances = np.zeros((len(positions), len(positions)))
+    for coordinates in np.transpose(positions):
+        differences = coordinates[np.newaxis, :] - coordinates[:, np.newaxis]
+        squared_distances += differences * differences
+    return np.sqrt(squared_distances)
 
 
 def interaction_matrix_from_positions(positions: np.ndarray) -> np.ndarray:

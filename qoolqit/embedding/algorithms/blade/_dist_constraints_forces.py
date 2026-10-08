@@ -8,8 +8,8 @@ from ._force import Force
 def compute_min_dist_constraint_forces(
     *,
     min_dist: float | None,
+    positions: np.ndarray,
     distance_matrix: np.ndarray,
-    unitary_vectors: np.ndarray,
 ) -> Force:
     """Computes the forces to enforce the minimum distance constraint."""
     min_distances_to_walk = (
@@ -17,10 +17,11 @@ def compute_min_dist_constraint_forces(
         if min_dist is not None
         else np.full_like(distance_matrix, 0)
     )
-    min_weights = min_distances_to_walk
-    min_weighted_vectors = -min_weights[:, :, np.newaxis] * unitary_vectors
     min_force = Force(
-        weighted_vectors=min_weighted_vectors, distances_to_walk=min_distances_to_walk
+        weights=-min_distances_to_walk,
+        distances_to_walk=min_distances_to_walk,
+        positions=positions,
+        distances=distance_matrix,
     )
 
     return min_force
@@ -38,14 +39,11 @@ def compute_max_dist_constraint_forces(
         if max_radius is not None
         else np.full_like(distances_from_center, 0)
     )
-    max_weights = max_distances_to_walk
-    max_unitary_vectors = positions / np.where(
-        positions == 0, 1, np.linalg.norm(positions, axis=1)[:, np.newaxis]
-    )
-    max_weighted_vectors = -max_weights[:, np.newaxis] * max_unitary_vectors
-    assert np.all(np.isfinite(max_weighted_vectors))
     max_force = Force(
-        weighted_vectors=max_weighted_vectors, distances_to_walk=max_distances_to_walk
+        weights=-max_distances_to_walk,
+        distances_to_walk=max_distances_to_walk,
+        positions=positions,
+        distances=distances_from_center,
     )
 
     return max_force

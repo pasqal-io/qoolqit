@@ -123,17 +123,12 @@ def update_positions(
 
     assert nb_positions == n
 
-    position_differences = positions[np.newaxis, :] - positions[:, np.newaxis]
     if distance_matrix is None:
-        distance_matrix = np.linalg.norm(position_differences, axis=2)
-    with np.errstate(divide="ignore", invalid="ignore"):
-        unitary_vectors = position_differences / distance_matrix[:, :, np.newaxis]
-    unitary_vectors[range(n), range(n)] = np.zeros(space_dimension)
-    logger.debug("unitary_vectors=%r", unitary_vectors)
+        distance_matrix = distance_matrix_from_positions(positions)
 
     modulated_target_interactions, interaction_force = compute_interaction_forces(
         distance_matrix=distance_matrix,
-        unitary_vectors=unitary_vectors,
+        positions=positions,
         target_weights=target_interactions,
         weight_relative_threshold=weight_relative_threshold,
         max_distance_to_walk=max_distance_to_walk,
@@ -160,8 +155,8 @@ def update_positions(
 
     min_constr_force = compute_min_dist_constraint_forces(
         min_dist=min_dist,
+        positions=positions,
         distance_matrix=distance_matrix,
-        unitary_vectors=unitary_vectors,
     )
     max_constr_force = compute_max_dist_constraint_forces(
         positions=positions,

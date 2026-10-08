@@ -17,7 +17,9 @@ def configured_increasing_func(
     """Increasing function from [0, 1] to [0, 1]."""
     c = 1 / middle_value - 1
     x = np.asarray(x, dtype=float)
-    return np.power(x, stiffness) / (np.power(x, stiffness) + c * np.power(1 - x, stiffness))
+    # `**` is much faster than `np.power` for usual exponents (e.g. 1)
+    powered_x = x**stiffness
+    return powered_x / (powered_x + c * (1 - x) ** stiffness)
 
 
 def modulate_cursor(
@@ -63,29 +65,29 @@ def clip_modulate_cursor(
 
 @dataclasses.dataclass(frozen=True)
 class Force:
-    weighted_vectors: np.ndarray
+    """Forces along the directions defined by node positions.
+
+    Each force is a signed weight along a unit vector, so that only scalar arrays are stored:
+    - pairwise forces are (N, N) arrays: the force of the pair (i, j) applied on the node i
+      is `weights[i, j] * (positions[j] - positions[i]) / distances[i, j]`;
+    - node forces are (N,) arrays: the force applied on the node i is
+      `weights[i] * positions[i] / distances[i]`, `distances` being the norms of the positions.
+    Forces whose distance is zero (e.g. the pair (i, i)) have no direction and are set to zero.
+    """
+
+    weights: np.ndarray
     distances_to_walk: np.ndarray
+    positions: np.ndarray
+    distances: np.ndarray
 
     def __post_init__(self) -> None:
-        """Check values, shapes and cleaning and caching.
-
-        Set to null vectors the weighted_vectors whose norm is numerically
-        computed to zero (even a non-zero short vector may have a null
-        computed norm due to numerical limits).
-        """
-        assert self.weighted_vectors.shape[:-1] == self.distances_to_walk.shape
+        """Check values, shapes and cleaning and caching."""
+        assert self.weights.shape == self.distances_to_walk.shape == self.distances.shape
         assert np.all(np.isfinite(self.distances_to_walk))
-        assert np.all(np.isfinite(self.weighted_vectors))
-        cleaned = self.weighted_vectors.copy()
-        cleaned[self.vector_weights == 0] = 0.0
-        object.__setattr__(self, "weighted_vectors", cleaned)
+        assert np.all(np.isfinite(self.weights))
+        cleaned = np.where(self.distances == 0, 0.0, self.weights)
+        object.__setattr__(self, "weights", cleaned)
         self.maximum_temperatures  # noqa: B018
-
-    def get_nb_dims(self) -> int:
-        return len(self.weighted_vectors.shape)
-
-    def _fit_to_dims(self, a: np.ndarray) -> np.ndarray:
-        return a.reshape((*a.shape, *((1,) * (self.get_nb_dims() - len(a.shape)))))
 
     def regulated(
         self,
@@ -101,27 +103,20 @@ class Force:
             )
             regulated_temperature_ratios = temperature_ratios ** (1 - used_cursors)
 
-            regulated_weighted_vectors = (
-                self.weighted_vectors
-                * np.where(
-                    self.weighted_vectors == 0,
-                    np.zeros_like(self.weighted_vectors),
-                    self._fit_to_dims(temperature_ratios),
-                )
-                / self._fit_to_dims(regulated_temperature_ratios)
+            regulated_weights = (
+                self.weights
+                * np.where(self.weights == 0, 0, temperature_ratios)
+                / regulated_temperature_ratios
             )
 
         else:
-            regulated_weighted_vectors = np.zeros_like(self.weighted_vectors)
+            regulated_weights = np.zeros_like(self.weights)
 
-        return Force(
-            weighted_vectors=regulated_weighted_vectors,
-            distances_to_walk=self.distances_to_walk,
-        )
+        return dataclasses.replace(self, weights=regulated_weights)
 
     @cached_property
     def vector_weights(self) -> np.ndarray:
-        return np.linalg.norm(self.weighted_vectors, axis=self.get_nb_dims() - 1)
+        return np.abs(self.weights)
 
     @cached_property
     def maximum_temperatures(self) -> np.ndarray:
@@ -130,14 +125,7 @@ class Force:
             maximum_temperatures = self.distances_to_walk / vector_weights
         maximum_temperatures[vector_weights == 0] = np.inf
 
-        assert np.all(
-            (
-                maximum_temperatures[np.triu_indices_from(maximum_temperatures, k=1)]
-                if maximum_temperatures.ndim == 2
-                else maximum_temperatures
-            )
-            > 0
-        )
+        assert np.all(maximum_temperatures > 0)
         return maximum_temperatures
 
     def get_temperature(self) -> Any | int:
@@ -146,21 +134,24 @@ class Force:
 
         min_temperature = np.min(maximum_temperatures)
 
-        # the next condition fixes the case where at some index, weighted_vectors is almost zero,
-        # and squared in vector_weights it becomes 0
-        # (but distances_to_walk is not zero so the force will be infinite)
+        # the next condition fixes the case where all the weights are zero
+        # (no force to apply, the temperature is not limited)
         return min_temperature if min_temperature != np.inf else 0
 
-    def get_forces(self, temperature: float) -> np.ndarray:
-        with np.errstate(divide="ignore", invalid="ignore"):
-            forces = temperature * self.weighted_vectors
-        forces[self.weighted_vectors == 0] = 0
-        return forces
-
     def get_resulting_forces(self, temperature: float) -> np.ndarray:
-        forces = self.get_forces(temperature)
+        """Return the (N, d) resulting force vectors applied on the nodes."""
+        coefficients = np.divide(
+            temperature * self.weights,
+            self.distances,
+            out=np.zeros_like(self.weights),
+            where=(self.distances != 0),
+        )
 
-        if self.get_nb_dims() == 3:
-            return np.sum(forces, axis=1)
+        if coefficients.ndim == 2:
+            # sum over j of coefficients[i, j] * (positions[j] - positions[i])
+            return (
+                coefficients @ self.positions
+                - np.sum(coefficients, axis=1)[:, np.newaxis] * self.positions
+            )
         else:
-            return forces
+            return coefficients[:, np.newaxis] * self.positions

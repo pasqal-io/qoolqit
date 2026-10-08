@@ -48,7 +48,6 @@ def compute_target_weights_by_dist_limit(
 def compute_target_weights_distances_by_weight_diff_limit(
     *,
     distance_matrix: np.ndarray,
-    unitary_vectors: np.ndarray,
     current_weights: np.ndarray,
     target_weights: np.ndarray,
     weight_relative_threshold: float,
@@ -76,22 +75,20 @@ def compute_target_weights_distances_by_weight_diff_limit(
     logger.debug("distances_to_walk=%r", distances_to_walk)
     assert np.all(np.isfinite(distances_to_walk))
 
-    chosen_weights_l1 = reduced_weight_differences[:, :, np.newaxis]
+    chosen_weights_l1 = reduced_weight_differences
     chosen_weights_l2 = chosen_weights_l1**2 * np.sign(chosen_weights_l1)
+    chosen_weights_l2[distances_to_walk == 0] = 0.0
 
-    weighted_vectors = chosen_weights_l2 * unitary_vectors
-    weighted_vectors[distances_to_walk == 0] = 0.0
+    logger.debug("chosen_weights_l2=%r", chosen_weights_l2)
+    assert np.all(np.isfinite(chosen_weights_l2))
 
-    logger.debug("weighted_vectors=%r", weighted_vectors)
-    assert np.all(np.isfinite(weighted_vectors))
-
-    return weighted_vectors, distances_to_walk
+    return chosen_weights_l2, distances_to_walk
 
 
 def compute_interaction_forces(
     *,
     distance_matrix: np.ndarray,
-    unitary_vectors: np.ndarray,
+    positions: np.ndarray,
     target_weights: np.ndarray,
     weight_relative_threshold: float,
     max_distance_to_walk: float,
@@ -107,14 +104,16 @@ def compute_interaction_forces(
         max_distance_to_walk=max_distance_to_walk,
     )
 
-    weighted_vectors, distances_to_walk = compute_target_weights_distances_by_weight_diff_limit(
+    weights, distances_to_walk = compute_target_weights_distances_by_weight_diff_limit(
         distance_matrix=distance_matrix,
-        unitary_vectors=unitary_vectors,
         current_weights=current_weights,
         target_weights=modulated_target_weights,
         weight_relative_threshold=weight_relative_threshold,
     )
 
     return modulated_target_weights, Force(
-        weighted_vectors=weighted_vectors, distances_to_walk=np.abs(distances_to_walk)
+        weights=weights,
+        distances_to_walk=np.abs(distances_to_walk),
+        positions=positions,
+        distances=distance_matrix,
     )
