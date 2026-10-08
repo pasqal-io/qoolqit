@@ -16,10 +16,12 @@ def compute_target_weights_by_dist_limit(
     distance_matrix: np.ndarray,
     target_weights: np.ndarray,
     max_distance_to_walk: float,
+    target_distances: np.ndarray | None = None,
 ) -> Any:
-    target_distances = normalized_best_dist(target_weights)
+    if target_distances is None:
+        target_distances = normalized_best_dist(target_weights)
+        np.fill_diagonal(target_distances, 0)
 
-    np.fill_diagonal(target_distances, 0)
     distances_to_walk = (distance_matrix - target_distances) / 2
     np.fill_diagonal(distances_to_walk, 0)
 
@@ -92,6 +94,7 @@ def compute_interaction_forces(
     target_weights: np.ndarray,
     weight_relative_threshold: float,
     max_distance_to_walk: float,
+    target_distances: np.ndarray | None = None,
 ) -> tuple[Any, Force]:
     current_weights = normalized_interaction(distance_matrix)
 
@@ -102,6 +105,7 @@ def compute_interaction_forces(
         distance_matrix=distance_matrix,
         target_weights=target_weights,
         max_distance_to_walk=max_distance_to_walk,
+        target_distances=target_distances,
     )
 
     weights, distances_to_walk = compute_target_weights_distances_by_weight_diff_limit(

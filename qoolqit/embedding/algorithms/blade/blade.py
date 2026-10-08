@@ -25,7 +25,11 @@ from ._dist_constraints_forces import (
     compute_min_dist_constraint_forces,
 )
 from ._distances_constraints_calculator import DistancesConstraintsCalculator
-from ._helpers import distance_matrix_from_positions, normalized_interaction
+from ._helpers import (
+    distance_matrix_from_positions,
+    normalized_best_dist,
+    normalized_interaction,
+)
 from ._interactions_forces import compute_interaction_forces
 from .drawing import draw_graph_including_actual_weights, draw_update_positions_step
 
@@ -78,6 +82,7 @@ def update_positions(
     step: int | None = None,
     draw_weighted_graph: bool = False,
     distance_matrix: np.ndarray | None = None,
+    target_distances: np.ndarray | None = None,
 ) -> np.ndarray:
     """Compute vector moves to adjust node positions toward target interactions.
 
@@ -103,6 +108,8 @@ def update_positions(
     step: Step number.
     distance_matrix: If set, the pairwise distances of `positions` (as computed by
         `distance_matrix_from_positions`), to avoid computing them again.
+    target_distances: If set, the distances matching `target_interactions` (as
+        computed by `normalized_best_dist`), to avoid computing them again.
     """
     if draw_step:
         print(f"{weight_relative_threshold=}")
@@ -133,6 +140,7 @@ def update_positions(
         target_weights=target_interactions,
         weight_relative_threshold=weight_relative_threshold,
         max_distance_to_walk=max_distance_to_walk,
+        target_distances=target_distances,
     )
 
     regulated_interaction_force = interaction_force.regulated(regulation_cursor=regulation_cursor)
@@ -261,6 +269,8 @@ def evolve_with_forces_through_dim_change(
         starting_ratio=start_ratio,
         final_ratio=final_ratio,
     )
+    # constant during the round
+    target_distances = normalized_best_dist(target_interactions)
 
     for step in range(start_step, stop_step):
         draw_step = draw_steps is True or (isinstance(draw_steps, list) and step in draw_steps)
@@ -304,6 +314,7 @@ def evolve_with_forces_through_dim_change(
             step=step,
             draw_weighted_graph=draw_step and draw_weighted_graph,
             distance_matrix=distance_matrix,
+            target_distances=target_distances,
         )
         assert np.all(np.isfinite(positions))
 
