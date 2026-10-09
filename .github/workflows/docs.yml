@@ -6,6 +6,7 @@ on:
             - opened
             - reopened
             - synchronize
+            - labeled
             - closed
 
 concurrency: gh-pages-${{ github.repository }}
@@ -13,7 +14,10 @@ concurrency: gh-pages-${{ github.repository }}
 jobs:
     build-docs:
         name: Build docs
-        if: github.event.action != 'closed' # No need to build docs when PR is closed
+        # No need to build docs when PR is closed, or when a label other than `preview` is added
+        if: |
+          github.event.action != 'closed' &&
+          (github.event.action != 'labeled' || github.event.label.name == 'preview')
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -46,7 +50,8 @@ jobs:
         if: |
           always() &&
           github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.action == 'closed'
+          contains(github.event.pull_request.labels.*.name, 'preview') &&
+          (github.event.action == 'closed' || needs.build-docs.result == 'success')
         permissions:
             contents: write
             pull-requests: write
@@ -78,6 +83,7 @@ jobs:
         if: |
           always() &&
           github.event.pull_request.head.repo.full_name == github.repository &&
+          contains(github.event.pull_request.labels.*.name, 'preview') &&
           (github.event.action == 'closed' || needs['deploy-docs-preview'].result == 'success')
         runs-on: ubuntu-latest
         permissions:
