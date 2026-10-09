@@ -1,16 +1,11 @@
-/* Indentation. */
+/* Indentation, as recommended by mkdocstrings-python for Material:
+   https://mkdocstrings.github.io/python/usage/customization/ */
 div.doc-contents:not(.first) {
-    padding-left: 25px;
-    border-left: 4px solid rgba(230, 230, 230);
-    margin-bottom: 80px;
-  }
-
-/* Justified text */
-.md-content p {
-  text-align: justify;
+   padding-left: 25px;
+   border-left: .05rem solid var(--md-typeset-table-color);
 }
 
 /* Avoid breaking parameters name, etc. in table cells. */
-td code {
-    word-break: normal !important;
+.md-typeset td code {
+    word-break: normal;
 }
