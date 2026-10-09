@@ -2,7 +2,7 @@
 
 !!! info "Onboarding"
 
-    You are currently on the onboarding page for QoolQit. This page is designed to get you up and running as quickly as possible, covering installation, running a job locally, and submitting to remote backends. It is intentionally focused and does not replace the full QoolQit documentation. For an in-depth understanding of the library, we recommend following the complete documentation in order.
+    This onboarding page gets you up and running with QoolQit as quickly as possible: installation, running a job locally, and submitting to remote backends. It is intentionally focused and does not replace the full documentation. For an in-depth understanding, follow the full documentation in order.
 
 ## Installation
 
@@ -95,18 +95,22 @@ results.final_bitstrings    # Counter({'111': 807, '101': 68, '110': 60, ...})
 
 !!! note "Create a Connection"
 
-    Remote execution, whether it's on Emulators or QPUs, requires a connection to submit a job. You can connect either through Pasqal Cloud or through one of our Third-Party Cloud providers. If you haven't set up a connection yet, do so before continuing.
+    Remote execution, whether it's on emulators or QPUs, requires a connection to submit a job. You can connect either through Pasqal Cloud or through one of our third-party cloud providers. If you haven't set up a connection yet, do so before continuing.
 
     <div style="text-align: center">
       <a href="https://docs.pasqal.com/cloud/set-up" class="md-button md-button--primary">Pasqal Cloud</a>
-      <a class="md-button" title="Coming soon">Third-Party Providers (coming soon)</a>
+      <a href="https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection" class="md-button">Third-Party Providers</a>
     </div>
 
 ### Remote Execution on Cloud Emulators
 
 #### 1. Create a connection
 
-Create a `PasqalCloudConnection` with your username, password and project ID from the portal, or use your third-party connection.
+This example uses Pasqal Cloud: create a `PasqalCloudConnection` with your username, password and project ID from the portal.
+
+!!! tip "Using a third-party provider?"
+
+    If you chose a third-party cloud provider, create your connection by following that provider's instructions instead (for example, [Scaleway](https://docs.pasqal.com/third-party-cloud-providers/scaleway/#step-4-create-your-connection)), then continue from step 2, using it as `connection`.
 
 ``` python
 from pasqal_cloud import PasqalCloudConnection
@@ -117,6 +121,8 @@ connection = PasqalCloudConnection(
     project_id=PROJECT_ID,  # the ID of the project associated with your account
 )
 ```
+
+Replace `USERNAME`, `PASSWORD` and `PROJECT_ID` with your own values. Avoid hardcoding your password in code you share.
 
 #### 2. Initialize a remote emulator and submit
 
