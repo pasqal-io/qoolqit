@@ -13,17 +13,17 @@ on:
 concurrency: gh-pages-${{ github.repository }}
 
 env:
-    # Previews exist while the PR has the `preview` label: removing it or closing the PR removes them
+    # Previews exist while the PR has the `docs-preview` label: removing it or closing the PR removes them
     REMOVE_PREVIEW: ${{ github.event.action == 'closed' || github.event.action == 'unlabeled' }}
 
 jobs:
     build-docs:
         name: Build docs
-        # No need to build docs when PR is closed, a label is removed, or a label other than `preview` is added
+        # No need to build docs when PR is closed, a label is removed, or a label other than `docs-preview` is added
         if: |
           github.event.action != 'closed' &&
           github.event.action != 'unlabeled' &&
-          (github.event.action != 'labeled' || github.event.label.name == 'preview')
+          (github.event.action != 'labeled' || github.event.label.name == 'docs-preview')
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -57,9 +57,9 @@ jobs:
           always() &&
           github.event.pull_request.head.repo.full_name == github.repository &&
           (
-            (contains(github.event.pull_request.labels.*.name, 'preview') &&
+            (contains(github.event.pull_request.labels.*.name, 'docs-preview') &&
               (github.event.action == 'closed' || needs.build-docs.result == 'success')) ||
-            (github.event.action == 'unlabeled' && github.event.label.name == 'preview')
+            (github.event.action == 'unlabeled' && github.event.label.name == 'docs-preview')
           )
         permissions:
             contents: write
@@ -94,8 +94,8 @@ jobs:
         if: |
           always() &&
           github.event.pull_request.head.repo.full_name == github.repository &&
-          (contains(github.event.pull_request.labels.*.name, 'preview') ||
-            (github.event.action == 'unlabeled' && github.event.label.name == 'preview')) &&
+          (contains(github.event.pull_request.labels.*.name, 'docs-preview') ||
+            (github.event.action == 'unlabeled' && github.event.label.name == 'docs-preview')) &&
           (github.event.action == 'closed' || needs['deploy-docs-preview'].result == 'success')
         runs-on: ubuntu-latest
         permissions:
