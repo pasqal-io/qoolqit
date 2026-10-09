@@ -6,14 +6,24 @@ on:
             - opened
             - reopened
             - synchronize
+            - labeled
+            - unlabeled
             - closed
 
 concurrency: gh-pages-${{ github.repository }}
 
+env:
+    # Previews exist while the PR has the `docs-preview` label: removing it or closing the PR removes them
+    REMOVE_PREVIEW: ${{ github.event.action == 'closed' || github.event.action == 'unlabeled' }}
+
 jobs:
     build-docs:
         name: Build docs
-        if: github.event.action != 'closed' # No need to build docs when PR is closed
+        # No need to build docs when PR is closed, a label is removed, or a label other than `docs-preview` is added
+        if: |
+          github.event.action != 'closed' &&
+          github.event.action != 'unlabeled' &&
+          (github.event.action != 'labeled' || github.event.label.name == 'docs-preview')
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -46,7 +56,11 @@ jobs:
         if: |
           always() &&
           github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.action == 'closed'
+          (
+            (contains(github.event.pull_request.labels.*.name, 'docs-preview') &&
+              (github.event.action == 'closed' || needs.build-docs.result == 'success')) ||
+            (github.event.action == 'unlabeled' && github.event.label.name == 'docs-preview')
+          )
         permissions:
             contents: write
             pull-requests: write
@@ -58,7 +72,7 @@ jobs:
                   ref: ${{ github.event.pull_request.base.sha }}
 
             - name: Download site artifact
-              if: github.event.action != 'closed'
+              if: env.REMOVE_PREVIEW != 'true'
               uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
               with:
                   name: site
@@ -67,6 +81,8 @@ jobs:
             - name: Deploy preview
               uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1
               with:
+                  # `auto` ignores `labeled` and `reopened` events, so pick the action explicitly
+                  action: ${{ env.REMOVE_PREVIEW == 'true' && 'remove' || 'deploy' }}
                   source-dir: ./site/
                   preview-branch: gh-pages
                   qr-code: false
@@ -78,6 +94,8 @@ jobs:
         if: |
           always() &&
           github.event.pull_request.head.repo.full_name == github.repository &&
+          (contains(github.event.pull_request.labels.*.name, 'docs-preview') ||
+            (github.event.action == 'unlabeled' && github.event.label.name == 'docs-preview')) &&
           (github.event.action == 'closed' || needs['deploy-docs-preview'].result == 'success')
         runs-on: ubuntu-latest
         permissions:
@@ -94,7 +112,7 @@ jobs:
                   persist-credentials: false
 
             - name: Login to Artifact Registry
-              if: github.event.action != 'closed'
+              if: env.REMOVE_PREVIEW != 'true'
               uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
               with:
                   registry: europe-west9-docker.pkg.dev
@@ -102,42 +120,36 @@ jobs:
                   password: ${{ secrets.GCP_ARTIFACT_REGISTRY_SA }}
 
             - name: Pull the doc portal image
-              if: github.event.action != 'closed'
+              if: env.REMOVE_PREVIEW != 'true'
               run: docker pull "$DOC_PORTAL_IMAGE"
 
             - name: Build the portal preview
-              if: github.event.action != 'closed'
+              if: env.REMOVE_PREVIEW != 'true'
               run: |
                 mkdir -p portal-dist
                 docker run --rm \
                   --user 0:0 \
                   --volume "$PWD/portal-dist:/out" \
                   --env BUILD_CONFIG='{"qoolqit":"https://pasqal-io.github.io/qoolqit/pr-preview/pr-${{ github.event.pull_request.number }}/"}' \
+                  --env CONTENT_SOURCES=qoolqit \
+                  --env SKIP_DOC_VERSIONS=true \
                   --env ASTRO_BASE="/qoolqit/${PORTAL_PREVIEW_PATH}/" \
                   --entrypoint sh \
                   "$DOC_PORTAL_IMAGE" \
                   -c 'cd /app && pnpm --filter @pasqal/doc-portal run build:selected && cp -r /app/packages/doc-portal/dist/. /out/'
 
-            # Keep only the qoolqit pages and the shared assets they load; the other products are ~130 MB per preview.
-            # Temporary until doc-portal can build qoolqit alone, see #488.
-            - name: Trim the portal preview to qoolqit
-              if: github.event.action != 'closed'
-              run: |
-                mkdir -p portal-trimmed
-                cd portal-dist
-                cp -r qoolqit _astro assets pagefind favicon.* ../portal-trimmed/
-
             - name: Deploy portal preview
               uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
               with:
-                  source-dir: ./portal-trimmed/
+                  action: ${{ env.REMOVE_PREVIEW == 'true' && 'remove' || 'deploy' }}
+                  source-dir: ./portal-dist/
                   preview-branch: gh-pages
                   umbrella-dir: portal-preview
                   qr-code: false
                   comment: false
 
             - name: Comment the preview link on the PR
-              if: github.event.action != 'closed'
+              if: env.REMOVE_PREVIEW != 'true'
               uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
               with:
                   header: doc-portal-preview
@@ -147,7 +159,7 @@ jobs:
                     Built from ${{ github.event.pull_request.head.sha }}.
 
             - name: Remove the preview comment
-              if: github.event.action == 'closed'
+              if: env.REMOVE_PREVIEW == 'true'
               uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
               with:
                   header: doc-portal-preview
