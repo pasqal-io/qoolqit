@@ -72,6 +72,8 @@ jobs:
             - name: Deploy preview
               uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1
               with:
+                  # `auto` ignores `labeled` and `reopened` events, so pick the action explicitly
+                  action: ${{ github.event.action == 'closed' && 'remove' || 'deploy' }}
                   source-dir: ./site/
                   preview-branch: gh-pages
                   qr-code: false
@@ -128,6 +130,7 @@ jobs:
             - name: Deploy portal preview
               uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
               with:
+                  action: ${{ github.event.action == 'closed' && 'remove' || 'deploy' }}
                   source-dir: ./portal-dist/
                   preview-branch: gh-pages
                   umbrella-dir: portal-preview
