@@ -132,6 +132,7 @@ jobs:
                   --volume "$PWD/portal-dist:/out" \
                   --env BUILD_CONFIG='{"qoolqit":"https://pasqal-io.github.io/qoolqit/pr-preview/pr-${{ github.event.pull_request.number }}/"}' \
                   --env CONTENT_SOURCES=qoolqit \
+                  --env SKIP_DOC_VERSIONS=true \
                   --env ASTRO_BASE="/qoolqit/${PORTAL_PREVIEW_PATH}/" \
                   --entrypoint sh \
                   "$DOC_PORTAL_IMAGE" \
