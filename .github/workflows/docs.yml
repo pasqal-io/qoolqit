@@ -10,8 +10,6 @@ on:
             - unlabeled
             - closed
 
-concurrency: gh-pages-${{ github.repository }}
-
 env:
     # Previews exist while the PR has the `docs-preview` label: removing it or closing the PR removes them
     REMOVE_PREVIEW: >-
@@ -26,7 +24,7 @@ jobs:
           github.event.action == 'opened' ||
           github.event.action == 'reopened' ||
           github.event.action == 'synchronize' ||
-          (github.event.action == 'labeled' && github.event.label.name == 'docs-preview')
+          (github.event.action == 'labeled' && github.event.label.name == 'docs-preview' && github.event.pull_request.state == 'open')
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -56,6 +54,9 @@ jobs:
         name: Deploy docs preview
         runs-on: ubuntu-latest
         needs: build-docs
+        concurrency:
+            group: gh-pages-${{ github.repository }}
+            queue: max  # wait in line, never cancel: every write to gh-pages must happen
         if: |
           always() &&
           github.event.pull_request.head.repo.full_name == github.repository &&
@@ -82,7 +83,7 @@ jobs:
                   path: ./site/
 
             - name: Deploy preview
-              uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1
+              uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
               with:
                   # `auto` ignores `labeled` and `reopened` events, so pick the action explicitly
                   action: ${{ env.REMOVE_PREVIEW == 'true' && 'remove' || 'deploy' }}
@@ -94,6 +95,9 @@ jobs:
     portal-preview:
         name: Deploy doc-portal preview
         needs: [deploy-docs-preview]
+        concurrency:
+            group: gh-pages-${{ github.repository }}
+            queue: max  # wait in line, never cancel: every write to gh-pages must happen
         if: |
           always() &&
           github.event.pull_request.head.repo.full_name == github.repository &&
@@ -171,6 +175,9 @@ jobs:
     publish-dev-docs:
         name: Publish development docs
         needs: [portal-preview]
+        concurrency:
+            group: gh-pages-${{ github.repository }}
+            queue: max  # wait in line, never cancel: every write to gh-pages must happen
         if: |
           always() &&
           github.event.pull_request.merged == true
