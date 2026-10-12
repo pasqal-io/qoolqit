@@ -14,16 +14,19 @@ concurrency: gh-pages-${{ github.repository }}
 
 env:
     # Previews exist while the PR has the `docs-preview` label: removing it or closing the PR removes them
-    REMOVE_PREVIEW: ${{ github.event.action == 'closed' || github.event.action == 'unlabeled' }}
+    REMOVE_PREVIEW: >-
+        ${{ github.event.action == 'closed' ||
+            (github.event.action == 'unlabeled' && github.event.label.name == 'docs-preview') }}
 
 jobs:
     build-docs:
         name: Build docs
-        # No need to build docs when PR is closed, a label is removed, or a label other than `docs-preview` is added
+        # Build on new commits, and when the `docs-preview` label is added
         if: |
-          github.event.action != 'closed' &&
-          github.event.action != 'unlabeled' &&
-          (github.event.action != 'labeled' || github.event.label.name == 'docs-preview')
+          github.event.action == 'opened' ||
+          github.event.action == 'reopened' ||
+          github.event.action == 'synchronize' ||
+          (github.event.action == 'labeled' && github.event.label.name == 'docs-preview')
         runs-on: ubuntu-latest
         permissions:
             contents: read
