@@ -8,7 +8,7 @@ copyright: © 2026, Pasqal
 nav:
   - Overview: index.md
   - Get started:
-    - Install: get_started/install.md
+    - Quick Run Guide: get_started/quick_run_guide.md
     - Programming a neutral-atom QPU: get_started/qoolqit_model.md
     - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
   - Fundamentals:
