@@ -1,3 +1,5 @@
+"""Neutral-atom devices and their physical constraints."""
+
 from __future__ import annotations
 
 from .device import (
