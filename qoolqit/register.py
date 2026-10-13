@@ -1,3 +1,5 @@
+"""Register mapping qubit IDs to 2D coordinates."""
+
 from __future__ import annotations
 
 import math

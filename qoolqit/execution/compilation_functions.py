@@ -1,3 +1,5 @@
+"""Compilation of QoolQit programs into Pulser sequences, per compiler profile."""
+
 from __future__ import annotations
 
 from enum import Enum

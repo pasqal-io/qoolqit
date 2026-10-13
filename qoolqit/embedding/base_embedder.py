@@ -1,3 +1,5 @@
+"""Base classes for embedders and their configs."""
+
 from __future__ import annotations
 
 import inspect

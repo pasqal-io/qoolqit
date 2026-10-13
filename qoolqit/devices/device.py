@@ -1,3 +1,5 @@
+"""QoolQit devices: hardware specs with adimensional unit conversion, plus built-in devices."""
+
 from __future__ import annotations
 
 import math

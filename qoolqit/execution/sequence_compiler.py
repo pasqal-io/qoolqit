@@ -1,3 +1,5 @@
+"""SequenceCompiler: turn a register and drive into a Pulser sequence for a device."""
+
 from __future__ import annotations
 
 from collections.abc import Callable

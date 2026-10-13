@@ -1,3 +1,5 @@
+"""Spring layout embedding: place graph nodes with NetworkX's force-directed layout."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
