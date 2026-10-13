@@ -10,7 +10,7 @@ nav:
   - Get started:
     - Quick Run Guide: get_started/quick_run_guide.md
     - Programming a neutral-atom QPU: get_started/qoolqit_model.md
-    - Programming with QoolQit: get_started/programming_with_qoolqit.ipynb
+    - Programming with QoolQit: get_started/programming_with_qoolqit.md
   - Fundamentals:
     - Introduction: fundamentals/introduction.md
     - Graphs: fundamentals/graphs.ipynb
@@ -95,6 +95,7 @@ plugins:
 - search
 - section-index
 - autorefs
+- markdown-exec
 - mkdocs-jupyter:
     include: ["*.ipynb"]
     execute: true
