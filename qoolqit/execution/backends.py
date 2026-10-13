@@ -24,6 +24,7 @@ class PulserEmulatorBackend:
     """
 
     def __init__(self, num_shots: int | None = None) -> None:
+        """Initialize the backend with the number of shots."""
         self._num_shots = num_shots
 
     def validate_emulation_config(

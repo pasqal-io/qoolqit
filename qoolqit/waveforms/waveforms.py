@@ -50,6 +50,7 @@ class RampWaveform(Waveform):
         initial_value: float,
         final_value: float,
     ) -> None:
+        """Initialize the ramp waveform."""
         super().__init__(
             duration, initial_value=float(initial_value), final_value=float(final_value)
         )
@@ -90,6 +91,7 @@ class ConstantWaveform(Waveform):
         duration: float,
         value: float,
     ) -> None:
+        """Initialize the constant waveform."""
         super().__init__(duration, value=float(value))
 
     def function(self, t: float) -> float:
@@ -132,7 +134,7 @@ class BlackmanWaveform(Waveform):
     area: float
 
     def __init__(self, duration: float, area: float) -> None:
-        """Initializes a new BlackmanWaveform."""
+        """Initialize a BlackmanWaveform."""
         super().__init__(duration, area=float(area))
 
     def function(self, t: float) -> float:
@@ -170,7 +172,7 @@ class PiecewiseLinearWaveform(CompositeWaveform):
         durations: list[float] | tuple[float, ...] | np.ndarray,
         values: list[float] | tuple[float, ...] | np.ndarray,
     ) -> None:
-
+        """Initialize the piecewise linear waveform."""
         if len(durations) + 1 != len(values) or len(durations) == 1:
             raise ValueError(
                 "A PiecewiseLinearWaveform requires N durations and N + 1 values, for N >= 2."

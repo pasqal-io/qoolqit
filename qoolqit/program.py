@@ -30,7 +30,7 @@ class QuantumProgram:
         register: Register,
         drive: Drive,
     ) -> None:
-
+        """Initialize the program from a register and a drive."""
         if not isinstance(register, Register):
             raise TypeError("`register` must be of type Register.")
         self._register = register
