@@ -103,6 +103,8 @@ def fig_to_html() -> str:
     """
     fig = plt.gcf()
     buf = io.StringIO()
-    fig.savefig(buf, format="svg")
+    fig.savefig(buf, format="svg", bbox_inches="tight")
     plt.close(fig)
-    return buf.getvalue()
+    svg = buf.getvalue()
+    # drop the XML prolog and DOCTYPE, which are invalid inside an HTML body
+    return svg[svg.index("<svg") :]

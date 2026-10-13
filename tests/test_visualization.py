@@ -65,9 +65,11 @@ def test_fig_to_html_renders_and_closes_only_current_figure() -> None:
     other = plt.figure()
     current = plt.figure()
 
-    html = fig_to_html()
+    try:
+        html = fig_to_html()
 
-    assert html.lstrip().startswith("<?xml") and "<svg" in html
-    assert not plt.fignum_exists(current.number)
-    assert plt.fignum_exists(other.number)
-    plt.close(other)
+        assert html.startswith("<svg")
+        assert not plt.fignum_exists(current.number)
+        assert plt.fignum_exists(other.number)
+    finally:
+        plt.close("all")
