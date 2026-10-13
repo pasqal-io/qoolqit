@@ -44,6 +44,7 @@ class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbedderConfig]):
     """A matrix to graph embedder using the interaction embedding algorithm."""
 
     def __init__(self) -> None:
+        """Initialize the embedder with its default configuration."""
         super().__init__(interaction_embedding, InteractionEmbedderConfig())
 
 

@@ -65,7 +65,7 @@ class Device:
         pulser_device: BaseDevice,
         default_converter: UnitConverter | None = None,
     ) -> None:
-
+        """Initialize the device by wrapping a Pulser device."""
         if not isinstance(pulser_device, BaseDevice):
             raise TypeError("`pulser_device` must be an instance of Pulser BaseDevice class.")
 
@@ -225,6 +225,7 @@ class MockDevice(Device):
     """A virtual device for unconstrained prototyping."""
 
     def __init__(self) -> None:
+        """Initialize the device from the Pulser MockDevice."""
         super().__init__(pulser_device=pulser.MockDevice)
 
 
@@ -232,6 +233,7 @@ class AnalogDevice(Device):
     """A realistic device for analog sequence execution."""
 
     def __init__(self) -> None:
+        """Initialize the device from the Pulser AnalogDevice."""
         super().__init__(pulser_device=pulser.AnalogDevice)
 
 
@@ -239,6 +241,7 @@ class AnalogDeviceWithDMM(Device):
     """A realistic device with DMM for analog sequence execution."""
 
     def __init__(self) -> None:
+        """Initialize the device from the Pulser AnalogDevice with an added DMM channel."""
         dmm_channel = pulser.channels.dmm.DMM(
             clock_period=4,
             min_duration=16,
@@ -259,6 +262,7 @@ class DigitalAnalogDevice(Device):
     """A device with digital and analog capabilities."""
 
     def __init__(self) -> None:
+        """Initialize the device from the Pulser DigitalAnalogDevice."""
         super().__init__(pulser_device=pulser.DigitalAnalogDevice)
 
 

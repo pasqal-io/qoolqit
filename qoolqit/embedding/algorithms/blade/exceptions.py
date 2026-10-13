@@ -22,6 +22,7 @@ class DistanceRatioException(BladeException):
     def __init__(
         self, *, required_ratio: float, output_ratio: float, positions: np.ndarray
     ) -> None:
+        """Initialize the exception with the distance ratios and the computed positions."""
         super().__init__(
             f"The output distance ratio {output_ratio} of BLaDE is higher than the "
             f"required {required_ratio}. "
