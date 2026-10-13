@@ -22,11 +22,7 @@ A **register** defines the **positions** of qubits in your program. In neutral-a
 from qoolqit import Register
 
 # Create a register from coordinates (dimensionless units)
-register = Register.from_coordinates([
-    (0, 0),
-    (1, 0),
-    (0.5, 0.866)
-])
+register = Register.from_coordinates([(0, 0), (1, 0), (0.5, 0.866)])
 
 # Or use built-in graph patterns
 from qoolqit.graphs import DataGraph
@@ -82,10 +78,7 @@ delta_wf = ConstantWaveform(duration=10, value=-2)
 delta_wf = RampWaveform(duration=10, initial_value=-2, final_value=2)
 
 # Combine into a Drive
-drive = Drive(
-    amplitude=omega_wf,
-    detuning=delta_wf
-)
+drive = Drive(amplitude=omega_wf, detuning=delta_wf)
 
 drive.draw()
 from qoolqit.visualization import fig_to_html; print(fig_to_html())  # markdown-exec: hide
@@ -104,10 +97,7 @@ A `QuantumProgram` pairs a **register** (layout and interactions) with a **drive
 ```python exec="on" source="block" session="programming"
 from qoolqit import QuantumProgram
 
-program = QuantumProgram(
-    register=register,
-    drive=drive
-)
+program = QuantumProgram(register=register, drive=drive)
 ```
 
 !!! info "Go further"
