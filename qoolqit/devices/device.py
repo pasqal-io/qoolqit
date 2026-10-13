@@ -1,4 +1,4 @@
-"""Devices wrapping Pulser devices, plus the default device presets."""
+"""QoolQit devices: hardware specs with adimensional unit conversion, plus built-in devices."""
 
 from __future__ import annotations
 
