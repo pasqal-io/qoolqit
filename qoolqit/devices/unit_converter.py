@@ -1,3 +1,5 @@
+"""Conversion factors between QoolQit's adimensional units and Pulser's physical units."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

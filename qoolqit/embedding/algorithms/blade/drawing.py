@@ -1,3 +1,5 @@
+"""Plotting helpers for BLaDE steps: positions, forces and interaction discrepancies."""
+
 from __future__ import annotations
 
 import logging

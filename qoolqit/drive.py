@@ -1,3 +1,5 @@
+"""Drive Hamiltonian (amplitude, detuning, phase) and its Detuning Map Modulator (DMM)."""
+
 from __future__ import annotations
 
 import math

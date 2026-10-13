@@ -1,3 +1,5 @@
+"""Interaction embedding: fit node coordinates to an interaction matrix with scipy.optimize."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

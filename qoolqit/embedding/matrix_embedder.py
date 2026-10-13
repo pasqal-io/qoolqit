@@ -1,3 +1,5 @@
+"""Embedders mapping a matrix to a graph with coordinates."""
+
 from __future__ import annotations
 
 import numpy as np

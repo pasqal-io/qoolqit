@@ -1,3 +1,5 @@
+"""Utility functions for graph coordinates and edges."""
+
 from __future__ import annotations
 
 import random
