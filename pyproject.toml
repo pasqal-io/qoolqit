@@ -121,12 +121,8 @@ ignore = [
     "D101", # undocumented-public-class
     "D102", # undocumented-public-method
     "D103", # undocumented-public-function
-    "D104", # undocumented-public-package
     "D105", # undocumented-magic-method
     "D107", # undocumented-public-init
-    "D200", # unnecessary-multiline-docstring
-    "D205", # missing-blank-line-after-summary
-    "D415", # missing-terminal-punctuation
     "D417", # undocumented-param
 ]
 isort.required-imports = ["from __future__ import annotations"]

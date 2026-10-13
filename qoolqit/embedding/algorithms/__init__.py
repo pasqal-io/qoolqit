@@ -1,3 +1,5 @@
+"""Embedding algorithms and their configurations."""
+
 from __future__ import annotations
 
 from .blade import BladeConfig, _blade
