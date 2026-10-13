@@ -1,3 +1,5 @@
+"""BLaDE: embed a target interaction matrix via force-based evolution across dimensions."""
+
 from __future__ import annotations
 
 import logging

@@ -1,3 +1,5 @@
+"""Devices wrapping Pulser devices, plus the default device presets."""
+
 from __future__ import annotations
 
 import math

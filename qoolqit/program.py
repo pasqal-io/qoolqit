@@ -1,3 +1,5 @@
+"""QuantumProgram: a register and a drive, compilable to a Pulser sequence."""
+
 from __future__ import annotations
 
 from typing import Literal

@@ -1,3 +1,5 @@
+"""Embedders mapping a graph to a graph with coordinates."""
+
 from __future__ import annotations
 
 from qoolqit.graphs import DataGraph
