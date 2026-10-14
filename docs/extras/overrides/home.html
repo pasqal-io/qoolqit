@@ -4,17 +4,11 @@
 {% block tabs %}
 {{ super() }}
 
-<link rel="css" type="text/css" href="./extras/css/home.css" />
-
 <!-- Main site Entry button descriptions -->
 <section class="hero-container">
     <div class="md-grid md-typeset">
         <div class="hero-section">
-            <div class="logo-container">
-                <div class="logo-image">
-                    <img src="extras/assets/logo/qoolqit_logo_white.svg" draggable="false">
-                </div>
-            </div>
+            <img src="extras/assets/logo/qoolqit_logo_white.svg" draggable="false">
             <div class="button-container">
                 <a href="{{ page.next_page.url | url }}" class="md-button md-button--primary">
                     Get started
