@@ -6,7 +6,7 @@ import numpy as np
 
 
 class BladeException(Exception):
-    pass
+    """Base class for exceptions raised by the BLaDE algorithm."""
 
 
 class DistanceRatioException(BladeException):

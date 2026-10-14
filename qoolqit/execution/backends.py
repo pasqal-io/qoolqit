@@ -1,4 +1,9 @@
-"""Backends to run quantum programs on local/remote emulators and QPUs."""
+"""Backends to run quantum programs on local/remote emulators and QPUs.
+
+Pulser backends require a compiled sequence at initialization. QoolQit backends
+lift this limitation: they instantiate the underlying Pulser backend in `run`,
+from the `QuantumProgram` being executed, so the same backend can run many programs.
+"""
 
 from __future__ import annotations
 
@@ -15,7 +20,9 @@ from qoolqit.program import QuantumProgram
 
 
 class PulserEmulatorBackend:
-    """Base Emulator class.
+    """Base class for QoolQit emulator backends (local and remote).
+
+    Provides the shared emulation config handling, ensuring bitstrings are always sampled.
 
     Args:
         num_shots: run the program `num_shots` times to collect bitstrings statistics.
@@ -60,6 +67,10 @@ class PulserEmulatorBackend:
 
 
 class PulserRemoteBackend:
+    """Base class for QoolQit remote backends (remote emulators and QPUs).
+
+    Provides validation of the `RemoteConnection` used to submit jobs.
+    """
 
     @staticmethod
     def validate_connection(connection: RemoteConnection) -> RemoteConnection:

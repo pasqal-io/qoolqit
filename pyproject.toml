@@ -118,7 +118,6 @@ select = [
 ]
 ignore = [
     # TODO: fix existing pydocstyle violations, then remove these
-    "D101", # undocumented-public-class
     "D102", # undocumented-public-method
     "D103", # undocumented-public-function
     "D105", # undocumented-magic-method
