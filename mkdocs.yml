@@ -2,7 +2,7 @@ site_name: QoolQit Documentation
 site_author: Pasqal
 repo_name: pasqal-io/qoolqit
 repo_url: https://github.com/pasqal-io/qoolqit
-copyright: © 2026, Pasqal
+copyright: © 2025-2026 Pasqal. All rights reserved. Made with ❤️ by the QoolQit team.
 
 
 nav:
@@ -50,6 +50,7 @@ theme:
   name: material
   custom_dir: docs/extras/overrides/
   logo: extras/assets/logo/qoolqit_symbol_white.svg
+  favicon: extras/assets/logo/qoolqit_favicon.svg
   features:
     - content.code.copy
     - content.tooltips
