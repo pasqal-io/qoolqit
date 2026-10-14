@@ -3,7 +3,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./docs/extras/assets/logo/qoolqit_logo_white.svg" width="60%">
     <source media="(prefers-color-scheme: light)" srcset="./docs/extras/assets/logo/qoolqit_logo_darkgreen.svg" width="60%">
-    <img alt="Qoolqit logo" src="./docs/assets/logo/qoolqit_logo_darkgreen.svg" width="60%">
+    <img alt="Qoolqit logo" src="./docs/extras/assets/logo/qoolqit_logo_darkgreen.svg" width="60%">
   </picture>
 </p>
 
