@@ -180,6 +180,8 @@ def plot_differences(differences: np.ndarray) -> None:
 
 @dataclass(frozen=True, slots=True)
 class ColorbarSpec:
+    """Styling and layout parameters for the interaction-difference colorbar."""
+
     label: str = "target − current interaction"
     label_fontsize: int = 7
     tick_fontsize: int = 6
