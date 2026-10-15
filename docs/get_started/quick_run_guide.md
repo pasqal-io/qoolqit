@@ -142,7 +142,7 @@ job = remote_emulator.run(program)
 `RemoteEmulator` accepts the following arguments:
 
 - `backend_type`: `RemoteEmuFreeBackend` (default), `RemoteSVBackend` or `RemoteMPSBackend`. Availability depends on your provider.
-- `emulation_config`: same as for local emulators. See [Emulation configuration](../fundamentals/execution/execution.ipynb#emulation-configuration).
+- `emulation_config`: same as for local emulators. See [Emulation configuration](../fundamentals/execution/execution.md#emulation-configuration).
 - `num_shots`: number of bitstring samples to collect.
 
 #### 3. Check status and retrieve results

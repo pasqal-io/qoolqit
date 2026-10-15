@@ -49,9 +49,9 @@ from qoolqit.visualization import fig_to_html; print(fig_to_html())  # markdown-
 
 !!! info "Go further"
 
-    See [Registers](../fundamentals/quantum_program.ipynb#registers) for all available register creation methods and options.
+    See [Registers](../fundamentals/quantum_program.md#registers) for all available register creation methods and options.
 
-    See [Problem Embedding](../fundamentals/embedding.ipynb) for embedding data and problems into the Rydberg analog model.
+    See [Problem Embedding](../fundamentals/embedding.md) for embedding data and problems into the Rydberg analog model.
 
 ## 2. Waveforms and Drives
 
@@ -86,9 +86,9 @@ from qoolqit.visualization import fig_to_html; print(fig_to_html())  # markdown-
 
 !!! info "Go further"
 
-    See [Waveforms](../fundamentals/quantum_program.ipynb#waveforms) for all waveform types and options.
+    See [Waveforms](../fundamentals/quantum_program.md#waveforms) for all waveform types and options.
 
-    See [Drive Hamiltonian](../fundamentals/quantum_program.ipynb#drives) for details on combining waveforms into drives.
+    See [Drive Hamiltonian](../fundamentals/quantum_program.md#drives) for details on combining waveforms into drives.
 
 ## 3. QuantumProgram
 
@@ -102,7 +102,7 @@ program = QuantumProgram(register=register, drive=drive)
 
 !!! info "Go further"
 
-    See [Quantum Programs](../fundamentals/quantum_program.ipynb#defining-a-quantum-program) for more details.
+    See [Quantum Programs](../fundamentals/quantum_program.md#defining-a-quantum-program) for more details.
 
 ## 4. Compilation
 
@@ -119,7 +119,7 @@ program.compile_to(device, profile="max_energy")
 
     See [Compiling a Quantum Program](../fundamentals/compilation/rationale.md) for how compilation works.
 
-    See [Devices](../fundamentals/compilation/device_and_compilation.ipynb) for available devices and their specifications.
+    See [Devices](../fundamentals/compilation/device_and_compilation.md) for available devices and their specifications.
 
 ## 5. Execution
 
@@ -139,11 +139,11 @@ results = job.results()
 
 !!! info "Go further"
 
-    See [Execution](../fundamentals/execution/execution.ipynb) for running programs and handling job results:
+    See [Execution](../fundamentals/execution/execution.md) for running programs and handling job results:
 
-    - [Local emulation](../fundamentals/execution/execution.ipynb#local-emulator)
-    - [Remote emulation](../fundamentals/execution/execution.ipynb#remote-emulator)
-    - [QPU execution](../fundamentals/execution/execution.ipynb#executing-remotely-on-a-qpu)
+    - [Local emulation](../fundamentals/execution/execution.md#local-emulator)
+    - [Remote emulation](../fundamentals/execution/execution.md#remote-emulator)
+    - [QPU execution](../fundamentals/execution/execution.md#executing-remotely-on-a-qpu)
 
 ## Example: Rydberg Blockade Demonstration
 
@@ -235,4 +235,4 @@ from qoolqit.visualization import fig_to_html; print(fig_to_html())  # markdown-
 
 !!! info "Go further"
 
-    See [Solving a Basic QUBO Problem](../tutorials/solving_a_qubo.ipynb) for another application example.
+    See [Solving a Basic QUBO Problem](../tutorials/solving_a_qubo.md) for another application example.
