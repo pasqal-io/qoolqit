@@ -15,35 +15,15 @@
     padding: 1rem 0;
 }
 
-.button-container {
-    font-size: 11px;
-    max-width: 30rem;
-    margin-bottom: 1rem;
-}
-
-@media screen and (min-width: 60em) {
-    .button-container {
-        font-size: 16px;
-        margin-top: 1rem;
-    }
-}
-
-.hero-section .md-button {
-    margin: 5px;
-    color: var(--md-primary-bg-color);
-}
-
-.hero-section .md-button--primary {
-    background-color: var(--md-primary-bg-color);
+/* Primary buttons are green like the hero, so invert their colors there */
+.hero-section .md-button--primary,
+.hero-section .md-button--primary:is(:focus, :hover) {
     color: var(--md-primary-fg-color);
-    border-color: var(--md-primary-bg-color);
+    background-color: var(--md-primary-bg-color);
 }
 
-.hero-section .md-button:focus,
-.hero-section .md-button:hover {
-    background-color: var(--md-accent-fg-color);
-    color: light-dark(var(--md-default-bg-color), white);
-    border-color: var(--md-accent-fg-color);
+.hero-section .button-container {
+    margin-bottom: 1.5rem;
 }
 
 /* All pages */

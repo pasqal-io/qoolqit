@@ -58,12 +58,8 @@ dev = [
   "pytest-markdown-docs",
   "pre-commit",
   "ipykernel",
-  "mkdocs==1.6.1",
-  "mkdocs-material",
+  "zensical",
   "mkdocstrings-python",
-  "mkdocs-section-index",
-  "mkdocs-jupyter",
-  "mike",
   "ruff>=0.15.21",
 ]
 

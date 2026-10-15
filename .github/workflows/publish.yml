@@ -55,8 +55,10 @@ jobs:
           with:
             python-version: '3.14'
         - name: Install QoolQit with development dependencies
+          # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
+          # See https://zensical.org/docs/compatibility/mkdocs/mike/
           run: |
-            pip install -e .[dev]
+            pip install -e .[dev] git+https://github.com/squidfunk/mike.git
         - name: Deploy docs
           run: |
             git config user.name "GitHub Actions"

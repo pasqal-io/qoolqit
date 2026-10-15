@@ -99,7 +99,7 @@ results.final_bitstrings    # Counter({'111': 807, '101': 68, '110': 60, ...})
 
     <div style="text-align: center">
       <a href="https://docs.pasqal.com/cloud/set-up" class="md-button md-button--primary">Pasqal Cloud</a>
-      <a href="https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection" class="md-button">Third-Party Providers</a>
+      <a href="https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection" class="md-button md-button--primary">Third-Party Providers</a>
     </div>
 
 ### Remote Execution on Cloud Emulators
