@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pytest
 from matplotlib.colors import to_rgba
 
-from qoolqit.visualization import DEFAULT_BAR_COLOR, plot_bitstrings
+from qoolqit.visualization import DEFAULT_BAR_COLOR, fig_to_html, plot_bitstrings
 
 
 def test_plot_bitstrings_errors() -> None:
@@ -59,3 +59,17 @@ def test_plot_bitstrings_two_calls_on_same_axes_keep_their_own_highlights() -> N
 
     first_call_bars = dict(zip(["001", "000"], ax.containers[0], strict=True))
     assert first_call_bars["001"].get_facecolor() == to_rgba("tab:red")
+
+
+def test_fig_to_html_renders_and_closes_only_current_figure() -> None:
+    other = plt.figure()
+    current = plt.figure()
+
+    try:
+        html = fig_to_html()
+
+        assert html.startswith("<svg")
+        assert not plt.fignum_exists(current.number)
+        assert plt.fignum_exists(other.number)
+    finally:
+        plt.close("all")

@@ -63,6 +63,7 @@ dev = [
   "mkdocstrings-python",
   "mkdocs-section-index",
   "mkdocs-jupyter",
+  "markdown-exec==1.12.3",
   "mike",
   "ruff>=0.15.21",
 ]
