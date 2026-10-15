@@ -119,6 +119,8 @@ pymdownx.superfences = {}
 module_name = "docs_macros"
 on_error_fail = true
 
+[project.plugins.markdown-exec]
+
 [project.plugins.mkdocstrings.handlers.python]
 paths = ["qoolqit"]
 

@@ -33,7 +33,7 @@ QoolQit is designed for both **algorithm exploration** and **hardware-aware prog
 
 - [Quick Run Guide](./get_started/quick_run_guide.md) — install QoolQit and run your first job, locally or remotely.
 - [The QoolQit Model](./get_started/qoolqit_model.md) — the dimensionless Hamiltonian and compilation logic.
-- [Programming with QoolQit](./get_started/programming_with_qoolqit.ipynb) — writing a quantum program.
+- [Programming with QoolQit](./get_started/programming_with_qoolqit.md) — writing a quantum program.
 
 ## Explore further
 
