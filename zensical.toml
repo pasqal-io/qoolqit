@@ -114,9 +114,9 @@ pymdownx.snippets = {}
 pymdownx.magiclink = {}
 pymdownx.superfences = {}
 
-# Placeholder pages next to each notebook call the `notebook` macro (docs_macros.py)
+# Placeholder pages next to each notebook call the `notebook` macro (scripts/docs_macros.py)
 [project.plugins.macros]
-module_name = "docs_macros"
+module_name = "scripts/docs_macros"
 on_error_fail = true
 
 [project.plugins.markdown-exec]
