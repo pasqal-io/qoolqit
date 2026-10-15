@@ -60,7 +60,7 @@ dev = [
   "ipykernel",
   "zensical",
   "mkdocstrings-python",
-  "markdown-exec==1.12.3",
+  "markdown-exec",
   "ruff>=0.15.21",
 ]
 

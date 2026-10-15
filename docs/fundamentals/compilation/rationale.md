@@ -47,7 +47,7 @@ In the following, for simplicity, we will represent an input program and its har
 The default compilation converts dimensionless quantum program parameters to physical values using the conversion relationships described above in the [Compiling a quantum program](#compiling-a-quantum-program) section.
 In this profile users have direct control over the exact physical values of drive amplitude, detuning, atom distances, and execution time, while staying within hardware limits.
 
-![Default Compilation Profile](../../../site/extras/assets/compilation_profile_default.svg)
+![Default Compilation Profile](../../extras/assets/compilation_profile_default.svg)
 
 As shown in the image above, an input program can be represented as a point in the $(\tilde{\Omega}, \tilde{J})$ plane, while the green box highlights the valid parameter region for the interaction energy $\tilde{J}_{ij}$ and the driving amplitude $\tilde{\Omega}$.
 For example, since the minimum distance in the dimensionless model is one, it will be converted to the minimum distance on the hardware device.
@@ -64,7 +64,7 @@ Indeed, a larger reference scale realizes the same dimensionless program with a 
 
 The following figure illustrates two key scenarios:
 
-![Max Energy Compilation Profile](../../../site/extras/assets/compilation_profile_max_energy.svg)
+![Max Energy Compilation Profile](../../extras/assets/compilation_profile_max_energy.svg)
 
 As before, the green box highlights the valid parameter region for the interaction energy $\tilde{J}_{ij}$ and the driving amplitude $\tilde{\Omega}$.
 As described in the [QoolQit model](../../get_started/qoolqit_model.md) page, the interaction energy is bounded by 1 by construction: QoolQit's adimensionalization enforces $\tilde{J}_{ij} = J_{ij}/J_{\max}^{d} \leq 1$ across all devices.
