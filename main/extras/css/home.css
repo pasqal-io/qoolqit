@@ -1,0 +1,60 @@
+/* Homepage hero, see docs/extras/overrides/home.html */
+.hero-container {
+    background: var(--md-primary-fg-color);
+}
+
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-section img {
+    width: 40%;
+    min-width: 20rem;
+    padding: 1rem 0;
+}
+
+.button-container {
+    font-size: 11px;
+    max-width: 30rem;
+    margin-bottom: 1rem;
+}
+
+@media screen and (min-width: 60em) {
+    .button-container {
+        font-size: 16px;
+        margin-top: 1rem;
+    }
+}
+
+.hero-section .md-button {
+    margin: 5px;
+    color: var(--md-primary-bg-color);
+}
+
+.hero-section .md-button--primary {
+    background-color: var(--md-primary-bg-color);
+    color: var(--md-primary-fg-color);
+    border-color: var(--md-primary-bg-color);
+}
+
+.hero-section .md-button:focus,
+.hero-section .md-button:hover {
+    background-color: var(--md-accent-fg-color);
+    color: light-dark(var(--md-default-bg-color), white);
+    border-color: var(--md-accent-fg-color);
+}
+
+/* All pages */
+.md-typeset .admonition,
+.md-typeset details {
+    font-size: 1em;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: #888888;
+    margin: 1em 0;
+}
