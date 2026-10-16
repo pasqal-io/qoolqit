@@ -26,7 +26,8 @@ class PulserEmulatorBackend:
 
     Args:
         num_shots: number of bitstrings sampled from the final quantum state.
-            If None, the `default_num_shots` of the emulation config is used (1000 by default).
+            If None, `default_num_shots` of the
+            [`EmulationConfig`][qoolqit.execution.EmulationConfig] is used.
     """
 
     def __init__(self, num_shots: int | None = None) -> None:
@@ -104,10 +105,12 @@ class LocalEmulator(PulserEmulatorBackend):
 
     Args:
         backend_type: backend type. Must be a subtype of `pulser.backend.EmulatorBackend`.
-        emulation_config: optional emulation config.
-            If None, `default_emulation_config` is used.
+        emulation_config: optional emulation config. If None,
+            [`default_emulation_config`][qoolqit.execution.LocalEmulator.default_emulation_config]
+            is used.
         num_shots: number of bitstrings sampled from the final quantum state.
-            If None, the `default_num_shots` of the emulation config is used (1000 by default).
+            If None, `default_num_shots` of the
+            [`EmulationConfig`][qoolqit.execution.EmulationConfig] is used.
 
     Examples:
         ```python
@@ -142,6 +145,11 @@ class LocalEmulator(PulserEmulatorBackend):
 
         Returns:
             A `Job` handler, to retrieve the results with `job.results()`.
+
+        Note:
+            `LocalEmulator` runs synchronously: `run` waits for the job to be done before
+            returning, so `job.results()` can be called directly, without checking the status.
+            This may become asynchronous in a future version.
         """
         self._backend = self._backend_type(program.compiled_sequence, config=self._emulation_config)
         results = self._backend.run()
@@ -152,18 +160,21 @@ class LocalEmulator(PulserEmulatorBackend):
 class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
     """Run QoolQit `QuantumProgram`s on Pasqal remote emulator backends.
 
-    Works like `LocalEmulator`, but requires an authenticated `connection`.
-    See the [Pasqal Cloud documentation](https://docs.pasqal.com/cloud/set-up/)
-    to get credentials and create one.
+    Works like [`LocalEmulator`][qoolqit.execution.LocalEmulator], but requires a `connection`
+    to submit jobs, either through [Pasqal Cloud](https://docs.pasqal.com/cloud/set-up/) or
+    through one of the
+    [third-party cloud providers](https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection).
 
     Args:
         backend_type: backend type. Must be a subtype of
             `pasqal_cloud.backends.RemoteEmulatorBackend`.
         connection: connection to execute the program on remote backends.
-        emulation_config: optional emulation config.
-            If None, `default_emulation_config` is used.
+        emulation_config: optional emulation config. If None,
+            [`default_emulation_config`][qoolqit.execution.RemoteEmulator.default_emulation_config]
+            is used.
         num_shots: number of bitstrings sampled from the final quantum state.
-            If None, the `default_num_shots` of the emulation config is used (1000 by default).
+            If None, `default_num_shots` of the
+            [`EmulationConfig`][qoolqit.execution.EmulationConfig] is used.
 
     Examples:
         ```python
@@ -175,7 +186,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         )
         job = backend.run(program)
         ```
-        See `run` to retrieve the results.
+        See [`run`][qoolqit.execution.RemoteEmulator.run] to retrieve the results.
     """
 
     def __init__(
@@ -273,12 +284,13 @@ class QPU(PulserRemoteBackend):
         backend = QPU(connection=connection, num_shots=100)
         job = backend.run(program)
         ```
-        See `run` to retrieve the results.
+        See [`run`][qoolqit.execution.QPU.run] to retrieve the results.
 
     Note:
         Contact your quantum computing provider for credentials and connection setup:
-        - [Pasqal Cloud Documentation](https://docs.pasqal.com/cloud/set-up/)
-        - [Atos MyQML Framework](https://github.com/pasqal-io/Pulser-myQLM)
+        - [Pasqal Cloud](https://docs.pasqal.com/cloud/set-up/)
+        - [Third-party cloud providers](https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection)
+        - [Atos MyQLM Framework](https://github.com/pasqal-io/Pulser-myQLM)
     """
 
     def __init__(
