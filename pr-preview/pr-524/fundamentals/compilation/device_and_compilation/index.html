@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../../../extras/assets/logo/qoolqit_favicon.svg">
-      <meta name="generator" content="zensical-0.0.70">
+      <meta name="generator" content="zensical-0.0.71">
     
     
       
@@ -2131,7 +2131,12 @@ The list of available ones can be fetched through the specific connection handle
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">fresnel_device</span> <span class="o">=</span> <span class="n">Device</span><span class="o">.</span><span class="n">from_connection</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"FRESNEL"</span><span class="p">)</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">fresnel_device</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s1">'FRESNEL_CAN1'</span><span class="p">:</span> <span class="n">FRESNEL_CAN1</span><span class="p">,</span> <span class="s1">'FRESNEL'</span><span class="p">:</span> <span class="n">FRESNEL</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span> <span class="ne">DeprecationWarning</span><span class="p">:</span> <span class="n">Defining</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">emulation</span> <span class="n">trajectories</span> <span class="n">via</span> <span class="s1">'NoiseModel.runs'</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="n">since</span> <span class="n">pulser</span> <span class="n">v1</span><span class="mf">.7</span><span class="o">.</span> <span class="n">Please</span> <span class="n">favour</span> <span class="n">using</span> <span class="s1">'EmulationConfig.n_trajectories'</span> <span class="n">instead</span><span class="o">.</span>
+
+
+<span class="p">{</span><span class="s1">'FRESNEL_CAN1'</span><span class="p">:</span> <span class="n">FRESNEL_CAN1</span><span class="p">,</span> <span class="s1">'FRESNEL'</span><span class="p">:</span> <span class="n">FRESNEL</span><span class="p">}</span>
+
+
 <span class="n">FRESNEL</span><span class="p">:</span> 
  <span class="err">└──</span> <span class="n">max_duration</span><span class="p">:</span> <span class="mf">332.43763968</span>
  <span class="err">└──</span> <span class="n">max_amplitude</span><span class="p">:</span> <span class="mf">0.20412370086269147</span>
@@ -2141,7 +2146,6 @@ The list of available ones can be fetched through the specific connection handle
 
 
 
-<span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span> <span class="ne">DeprecationWarning</span><span class="p">:</span> <span class="n">Defining</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">emulation</span> <span class="n">trajectories</span> <span class="n">via</span> <span class="s1">'NoiseModel.runs'</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="n">since</span> <span class="n">pulser</span> <span class="n">v1</span><span class="mf">.7</span><span class="o">.</span> <span class="n">Please</span> <span class="n">favour</span> <span class="n">using</span> <span class="s1">'EmulationConfig.n_trajectories'</span> <span class="n">instead</span><span class="o">.</span>
 <span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span> <span class="ne">DeprecationWarning</span><span class="p">:</span> <span class="n">Defining</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">emulation</span> <span class="n">trajectories</span> <span class="n">via</span> <span class="s1">'NoiseModel.runs'</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="n">since</span> <span class="n">pulser</span> <span class="n">v1</span><span class="mf">.7</span><span class="o">.</span> <span class="n">Please</span> <span class="n">favour</span> <span class="n">using</span> <span class="s1">'EmulationConfig.n_trajectories'</span> <span class="n">instead</span><span class="o">.</span>
 </code></pre></div>
 <p>On a QRMI-enabled cluster, you can pass <code>PulserQRMIConnection()</code> as the connection and submit the same script with <code>sbatch --qpu=&lt;backend&gt; ...</code> (for example <code>FRESNEL</code> or <code>EMU_FREE</code>).</p>
