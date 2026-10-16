@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 from unittest.mock import MagicMock
 
 import numpy as np
@@ -14,7 +14,7 @@ from qoolqit import AnalogDevice, Drive, MockDevice, QuantumProgram, Register
 from qoolqit.drive import DetuningMapModulator
 from qoolqit.exceptions import CompilationError
 from qoolqit.execution.compilation_functions import CompilerProfile
-from qoolqit.waveforms import ConstantWaveform
+from qoolqit.waveforms import BlackmanWaveform, ConstantWaveform
 
 
 @pytest.mark.parametrize(
@@ -105,3 +105,19 @@ def test_compile_to_wrong_device_type() -> None:
         program.compile_to(device="I'm not a device")  # type: ignore [arg-type]
     with pytest.raises(TypeError, match="`device` must be of type `qoolqit.devices.Device`."):
         program.compile_to(device=PulserAnalogDevice)  # type: ignore [arg-type]
+
+
+@pytest.mark.parametrize("device", [AnalogDevice(), MockDevice()])
+@pytest.mark.parametrize("profile", [CompilerProfile.DEFAULT, CompilerProfile.MAX_ENERGY])
+@pytest.mark.parametrize("make", [BlackmanWaveform, lambda d, a: ConstantWaveform(d, a / d)])
+def test_amplitude_area_is_kept_by_compilation(
+    device: AnalogDevice | MockDevice, profile: CompilerProfile, make: Any
+) -> None:
+    """The pulse area Ω·t is unit-free: compiling keeps it, whatever the waveform type."""
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
+    waveform = make(50.0, 0.3)
+    program = QuantumProgram(register=register, drive=Drive(amplitude=waveform))
+    program.compile_to(device=device, profile=profile)
+
+    amp = sample(program.compiled_sequence).channel_samples["rydberg"].amp  # rad/µs, 1 ns steps
+    assert np.sum(amp) / 1000 == pytest.approx(0.3, rel=2e-2)

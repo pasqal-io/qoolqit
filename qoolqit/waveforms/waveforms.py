@@ -153,7 +153,10 @@ class BlackmanWaveform(Waveform):
         return BlackmanWaveform(self.duration, area=self.area * other)
 
     def _to_pulser(self, duration: int) -> ParamObj | pulser.BlackmanWaveform:
-        return pulser.BlackmanWaveform(duration, self.area)
+        # The compiler multiplies every converted waveform by the energy unit, which turns an
+        # amplitude into rad/µs. Pulser takes an area instead, so give it the one that keeps
+        # the natural peak self.max() over `duration` ns.
+        return pulser.BlackmanWaveform(duration, self.area * duration / (1000 * self.duration))
 
 
 class PiecewiseLinearWaveform(CompositeWaveform):

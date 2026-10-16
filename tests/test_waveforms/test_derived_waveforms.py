@@ -184,7 +184,9 @@ def test_blackman_to_pulser() -> None:
     pulser_blackman = blackman._to_pulser(duration=200)
     assert isinstance(pulser_blackman, pulser.BlackmanWaveform)
     assert pulser_blackman.duration == 200
-    assert pulser_blackman._area == area
+    # Like every other waveform, the pulser form keeps the natural values (here the peak);
+    # the compiler then multiplies them by the energy unit.
+    assert np.max(pulser_blackman.samples.as_array()) == pytest.approx(blackman.max(), rel=1e-2)
 
 
 @pytest.mark.parametrize("n_pieces", [3, 4, 5])
