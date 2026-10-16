@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -59,7 +60,7 @@ class Drive:
         *,
         amplitude: Waveform,
         detuning: Waveform | None = None,
-        dmm: DetuningMapModulator | None = None,
+        dmm: DetuningMapModulator | Sequence[DetuningMapModulator] | None = None,
         phase: float = 0.0,
     ) -> None:
         """Initialize a Drive.
@@ -68,12 +69,12 @@ class Drive:
         in the Rydberg model
         (see https://docs.pasqal.com/qoolqit/get_started/qoolqit_model/ for details),
 
-        H_drive(t) = Σᵢ [Ω(t)/2 (cos φ(t) σˣᵢ - sin φ(t) σʸᵢ)] - Σᵢ [δ(t) + εᵢ Δ(t)] nᵢ
+        H_drive(t) = Σᵢ [Ω(t)/2 (cos φ(t) σˣᵢ - sin φ(t) σʸᵢ)] - Σᵢ [δ(t) + Σₖ εᵢₖ Δₖ(t)] nᵢ
 
         representing:
         - Amplitude Ω(t): Controls the Rabi frequency that drives qubits.
         - Detuning δ(t): Controls the energy offset of the Rydberg state.
-        - dmm εᵢ, Δ(t): Detuning Map Modulator (DMM) for additional qubit-specific detunings.
+        - dmm εᵢₖ, Δₖ(t): Detuning Map Modulators (DMM) for additional qubit-specific detunings.
         - Phase φ: Global phase applied to the amplitude term.
 
         Args:
@@ -85,12 +86,17 @@ class Drive:
                 detuning (Delay waveform) for the duration of the amplitude.
             dmm: DetuningMapModulator instance for additional negative detuning waveform Δ(t) ≤ 0
                 applied to individual qubits as specified by its `weights` attribute εᵢ.
+                Also accepts a sequence of them, each one a detuning map εᵢₖ, Δₖ(t): a single
+                map scales one time profile per qubit, several maps let qubits follow time
+                profiles that are not proportional. Compiling several maps requires a device
+                that can reuse its DMM channel, such as `MockDevice`.
             phase: Global phase φ applied to the amplitude term in the Hamiltonian.
                 Defaults to 0.0 (no phase). Normalized to [0, 2π) and stored as a
                 ConstantWaveform spanning the full duration of the drive.
 
         Raises:
-            TypeError: If amplitude or detuning are not Waveform instances.
+            TypeError: If amplitude or detuning are not Waveform instances, or if dmm is not
+                a DetuningMapModulator or a sequence of them.
             ValueError: If the amplitude waveform has negative values, or if the phase
                 is not finite.
 
@@ -138,9 +144,12 @@ class Drive:
             self._amplitude = CompositeWaveform(self._amplitude, DelayWaveform(extra_duration))
 
         self._duration = self._amplitude.duration
-        if dmm is not None and not isinstance(dmm, DetuningMapModulator):
-            raise TypeError("'dmm' must be of type DetuningMapModulator.")
-        self._dmm = dmm
+        # a single DMM is kept as given, a sequence as a tuple, an empty one as None
+        self._dmm = (tuple(dmm) or None) if isinstance(dmm, Sequence) else dmm
+        if not all(isinstance(d, DetuningMapModulator) for d in self._dmms):
+            raise TypeError(
+                "'dmm' must be of type DetuningMapModulator or a sequence of DetuningMapModulator."
+            )
         self._phase = ConstantWaveform(self.duration, _mod_2pi(phase))
 
     @property
@@ -154,9 +163,19 @@ class Drive:
         return self._detuning_orig
 
     @property
-    def dmm(self) -> DetuningMapModulator | None:
-        """Detuning Map Modulator (DMM) applied to individual qubits."""
+    def dmm(self) -> DetuningMapModulator | tuple[DetuningMapModulator, ...] | None:
+        """Detuning Map Modulator (DMM) applied to individual qubits.
+
+        A tuple when the drive was given a sequence of them.
+        """
         return self._dmm
+
+    @property
+    def _dmms(self) -> tuple[DetuningMapModulator, ...]:
+        """The DMMs of the drive as a tuple, empty if there is none."""
+        if self._dmm is None:
+            return ()
+        return self._dmm if isinstance(self._dmm, tuple) else (self._dmm,)
 
     @property
     def phase(self) -> ConstantWaveform:
@@ -221,7 +240,7 @@ class Drive:
             repr += "\n" + phase_repr
 
         if self.dmm is not None:
-            dmm_repr = self.__dmm_header__() + self.dmm.__repr__()
+            dmm_repr = self.__dmm_header__() + "\n".join(dmm.__repr__() for dmm in self._dmms)
             repr += "\n" + dmm_repr
 
         return repr
@@ -273,8 +292,9 @@ class Drive:
 
         # draw DMM if present
         if self.dmm is not None:
-            y_dmm = self.dmm.waveform(times)
             axs[-1].set_ylabel("DMM")
+        for dmm in self._dmms:
+            y_dmm = dmm.waveform(times)
             axs[-1].plot(times, y_dmm, color="darkblue")
             axs[-1].fill_between(times, y_dmm, color="darkblue", alpha=0.4)
 

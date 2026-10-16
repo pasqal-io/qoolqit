@@ -151,3 +151,16 @@ def test_program_with_dmm_invalid_qubit_id() -> None:
         match="qubit wrong_qubit_id appears in the DMM but is not defined in the register.",
     ):
         QuantumProgram(register=register, drive=drive)
+
+
+def test_program_with_several_dmms_invalid_qubit_id() -> None:
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.3, 0.0)})
+
+    dmm_1 = DetuningMapModulator(waveform=ConstantWaveform(4.0, -1.0), weights={"q0": 0.1})
+    dmm_2 = DetuningMapModulator(waveform=ConstantWaveform(4.0, -1.0), weights={"q2": 0.3})
+    drive = Drive(amplitude=ConstantWaveform(5.0, 1.0), dmm=[dmm_1, dmm_2])
+    with pytest.raises(
+        ValueError,
+        match="qubit q2 appears in the DMM but is not defined in the register.",
+    ):
+        QuantumProgram(register=register, drive=drive)

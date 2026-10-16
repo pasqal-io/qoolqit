@@ -37,9 +37,8 @@ class QuantumProgram:
 
         if not isinstance(drive, Drive):
             raise TypeError("`drive` must be of type Drive.")
-        if drive.dmm is not None:
-            dmm_weights = drive.dmm.weights
-            for qid in dmm_weights:
+        for dmm in drive._dmms:
+            for qid in dmm.weights:
                 if qid not in register.qubits:
                     raise ValueError(
                         "In this QuantumProgram, the drive's detuning modulator map (DMM) "
@@ -153,6 +152,11 @@ class QuantumProgram:
         if self.drive.dmm is not None and not device._device.dmm_channels:
             raise CompilationError(
                 "The device does not support DMM. Please use a device that supports DMM."
+            )
+        if len(self.drive._dmms) > 1 and not device._device.reusable_channels:
+            raise CompilationError(
+                "The drive has several DMMs, but the device does not allow reusing its DMM "
+                "channel. Please use a device with reusable channels, such as MockDevice."
             )
 
         profile = CompilerProfile(profile)

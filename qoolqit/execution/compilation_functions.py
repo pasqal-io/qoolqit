@@ -141,12 +141,13 @@ def basic_compilation(
     pulser_sequence.declare_channel("rydberg", "rydberg_global")
     pulser_sequence.add(pulser_pulse, "rydberg")
 
-    # Add dmm, if specified in the drive.
+    # Add the dmms, if specified in the drive, all on the first DMM channel of the device:
+    # pulser declares each reuse of the channel under a new name (dmm_0, dmm_0_1, ...).
     if drive.dmm is not None:
         dmm_adder = _DMMAdder(wf_converter, pulser_register, pulser_sequence)
-        # support only for a single DMM channel
         dmm_id = list(device._device.dmm_channels.keys())[0]
-        dmm_adder.add_dmm(dmm_id, drive.dmm)
+        for dmm in drive._dmms:
+            dmm_adder.add_dmm(dmm_id, dmm)
 
     return pulser_sequence
 
@@ -176,8 +177,10 @@ class _DMMAdder:
         converted_weights = {k if isinstance(k, str) else str(k): v for k, v in dmm.weights.items()}
         detuning_map = self._pulser_register.define_detuning_map(detuning_weights=converted_weights)
         self._pulser_sequence.config_detuning_map(detuning_map, dmm_id=dmm_id)
+        # the name pulser gave to the channel just declared
+        dmm_name = list(self._pulser_sequence.declared_channels)[-1]
         waveform = self._wf_converter.convert(dmm.waveform)
-        self._pulser_sequence.add_dmm_detuning(waveform, dmm_id)
+        self._pulser_sequence.add_dmm_detuning(waveform, dmm_name)
 
 
 def _validate_program_default_profile(
