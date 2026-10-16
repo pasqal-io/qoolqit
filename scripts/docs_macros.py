@@ -12,9 +12,14 @@ import hashlib
 import mimetypes
 from pathlib import Path
 
+import matplotlib
 import nbformat
 from nbclient import NotebookClient
 from nbconvert import MarkdownExporter
+
+# markdown-exec runs page code inside the docs build: keep Matplotlib off interactive GUI
+# backends (TkAgg locally), as on headless CI
+matplotlib.use("agg")
 
 
 def define_env(env):

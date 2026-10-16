@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import base64
 import io
 from collections import Counter
 from collections.abc import Mapping
@@ -96,16 +95,16 @@ def plot_bitstrings(
 
 
 def fig_to_html() -> str:
-    """Return the current figure as an inline SVG image and close it.
+    """Return the current figure as inline SVG and close it.
 
     Meant to be called right after a `draw()` in executable docs (markdown-exec),
     mimicking Jupyter's inline backend. Only the current figure is rendered: if
     several are open, the others are left untouched.
     """
     fig = plt.gcf()
-    buf = io.BytesIO()
+    buf = io.StringIO()
     fig.savefig(buf, format="svg", bbox_inches="tight")
     plt.close(fig)
-    # TODO: return the raw <svg> markup instead (about 25% lighter, and what markdown-exec
-    # recommends) once the doc portal renders inline <svg>: today it turns it into text.
-    return f'<img src="data:image/svg+xml;base64,{base64.b64encode(buf.getvalue()).decode()}">'
+    svg = buf.getvalue()
+    # drop the XML prolog and DOCTYPE, which are invalid inside an HTML body
+    return svg[svg.index("<svg") :]

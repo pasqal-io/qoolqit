@@ -18,7 +18,7 @@ A **register** defines the **positions** of qubits in your program. In neutral-a
 
     The closest pair of qubits should be at distance **1**. This convention normalises interaction strengths and keeps drive parameters interpretable across different layouts.
 
-```python exec="on" source="block" html="1" session="programming"
+```python exec="on" source="above" html="true" session="programming"
 from qoolqit import Register
 
 # Create a register from coordinates (dimensionless units)
