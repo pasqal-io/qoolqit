@@ -16,7 +16,7 @@ A **register** defines the **positions** of qubits in your program. In neutral-a
 
 !!! tip "Use unit spacing"
 
-    The closest pair of qubits should be at distance **1**. This convention normalises interaction strengths and keeps drive parameters interpretable across different layouts.
+    The closest pair of qubits should be at distance **1**. This convention normalizes interaction strengths and keeps drive parameters interpretable across different layouts.
 
 ```python exec="on" source="block" html="1" session="programming"
 from qoolqit import Register

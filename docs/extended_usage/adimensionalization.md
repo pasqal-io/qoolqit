@@ -7,9 +7,9 @@ In this section, you will learn how to:
 - see why time must be rescaled together with the Hamiltonian
 
 
-This section describes how QoolQit's compilation maps an abstract programs onto actual hardware.
+This section describes how QoolQit's compilation maps an abstract program onto actual hardware.
 
-This page assumes the knowledge of the [QoolQit Model](../get_started/qoolqit_model.md) page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.
+This page assumes knowledge of the [QoolQit Model](../get_started/qoolqit_model.md) page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.
 
 ## Compilation
 
@@ -38,7 +38,7 @@ In the following step, QoolQit adjusts the **dimensionless program** so that the
 We will now discuss the compilation strategy that QoolQit uses to rescale the compiled program so that it can both run on a physical QPU and fully exploit its capabilities.
 
 As discussed, the user specifies a dimensionless program by providing a register (which determines the values $\tilde J_{ij}$) and a time-dependent drive (amplitude, detuning and phase, which determines $\tilde \Omega(t)$, $\tilde\delta(t)$, $\tilde\Delta(t)$ and $\phi$).
-Over all these parameters, two in particular are arguably more important since they set the energy scales of the interactions and of the drive, and thus their ratio.
+Of all these parameters, two in particular are arguably more important since they set the energy scales of the interactions and of the drive, and thus their ratio.
 Respectively, they are the maximum interaction $\max_{i>j}\tilde J_{ij}$ and the maximum driving amplitude $\max_{\tilde t}\tilde\Omega$ in the defined program.
 
 Thus, simplifying, we will represent a program as a point in the $(\tilde J, \tilde\Omega)$ plane. Interestingly, every program also defines a line through the origin in that plane, with slope $\tilde{\Omega}_{\text{max}}/\tilde{J}_{\text{max}}$. All points lying on the same line are ideally physically identical programs, differing only by a global energy scale factor while preserving the fundamental ratio between driving and interaction strengths.
@@ -50,7 +50,7 @@ In addition to the upper bound $\tilde J_{ij} \leq 1$ inherent to the adimension
 If the user's point lies outside this region, the program cannot be implemented as specified. If it lies strictly inside, the program is feasible but does not exploit the full capability of the device. Compilation resolves both situations by rescaling the program (sliding the point along the line) until it sits exactly on the boundary of the feasible region, maximizing either $\tilde\Omega$ or $\tilde J$, depending on your program.
 
 !!! note "Why maximize the energy scale?"
-    Higher amplitude guarantees better signal/noise ratio and thus better results, while higher interactions, thus lower distances between atoms help making the register more compact, allowing to put more qubits in your program.
+    Higher amplitude guarantees better signal/noise ratio and thus better results, while higher interactions, thus lower distances between atoms help make the register more compact, allowing you to put more qubits in your program.
 
 Concretely, compilation rescales all dimensionless parameters by a common factor $\alpha$:
 
@@ -117,7 +117,7 @@ $$
 \tilde H(\tilde t)\;\longrightarrow\;\alpha\,\tilde H(\tilde t).
 $$
 
-For two programs along the same line to represent the **same physics**,i.e. to generate the same unitary evolution, the dimensionless time variable must be rescaled by the inverse factor:
+For two programs along the same line to represent the **same physics**, i.e. to generate the same unitary evolution, the dimensionless time variable must be rescaled by the inverse factor:
 
 $$
 \tilde t\;\longrightarrow\;\tilde t/\alpha.
