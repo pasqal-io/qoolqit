@@ -184,9 +184,16 @@ def test_blackman_to_pulser() -> None:
     pulser_blackman = blackman._to_pulser(duration=200)
     assert isinstance(pulser_blackman, pulser.BlackmanWaveform)
     assert pulser_blackman.duration == 200
-    # Like every other waveform, the pulser form keeps the natural values (here the peak);
-    # the compiler then multiplies them by the energy unit.
-    assert np.max(pulser_blackman.samples.as_array()) == pytest.approx(blackman.max(), rel=1e-2)
+    # Like every other waveform, the pulser form keeps the natural values; the compiler then
+    # multiplies them by the energy unit. Spread over 200 ns = 0.2 µs instead of `duration`,
+    # the area (the quantity the compiler used to get wrong) scales by 0.2 / duration.
+    # Budget: pulser normalizes its samples to the area it is given, so only float64 sums of
+    # 200 samples remain, ~1e-14 (measured: 0).
+    assert pulser_blackman.integral == pytest.approx(area * 0.2 / duration, rel=1e-12, abs=0)
+    # Budget: pulser's 200 Blackman samples sum to 0.42 * 199, so the sampled peak exceeds
+    # the continuous one by about 1/199 = 5.0e-3 (measured: 4.9e-3).
+    peak = np.max(pulser_blackman.samples.as_array())
+    assert peak == pytest.approx(blackman.max(), rel=7.5e-3, abs=0)
 
 
 @pytest.mark.parametrize("n_pieces", [3, 4, 5])
