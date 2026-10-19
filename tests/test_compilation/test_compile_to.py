@@ -118,7 +118,7 @@ def test_compile_to_wrong_device_type() -> None:
 @pytest.mark.parametrize("device", [AnalogDevice(), MockDevice()])
 @pytest.mark.parametrize("profile", [CompilerProfile.DEFAULT, CompilerProfile.MAX_ENERGY])
 @pytest.mark.parametrize(
-    "waveform", [BlackmanWaveform(50.0, area=0.3), ConstantWaveform(50.0, 0.006)]
+    "waveform", [BlackmanWaveform(100.0, area=0.3), ConstantWaveform(100.0, 0.003)]
 )
 def test_amplitude_area_is_kept_by_compilation(
     device: Device, profile: CompilerProfile, waveform: Waveform
@@ -128,7 +128,9 @@ def test_amplitude_area_is_kept_by_compilation(
     This also checks that each profile pairs its time and energy units so that
     time × energy = 1000.
     """
-    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.0, 0.0)})
+    # At a minimum distance of 1, MAX_ENERGY would pick the same units as DEFAULT; at 1.1 it
+    # maps the register to the device's minimum distance with units of its own.
+    register = Register(qubits={"q0": (0.0, 0.0), "q1": (1.1, 0.0)})
     program = QuantumProgram(register=register, drive=Drive(amplitude=waveform))
     program.compile_to(device=device, profile=profile)
 
@@ -138,11 +140,10 @@ def test_amplitude_area_is_kept_by_compilation(
     pulser_area = np.sum(amp) / 1000
 
     # Budget: these samples are exact (a constant, or pulser's Blackman normalized to its
-    # area), so the only error is the duration rounding. Both profiles map this register to
-    # the minimum distance, where 50 time units last 902.4 ns on AnalogDevice (4 ns clock)
-    # and 144.1 ns on MockDevice (1 ns clock): rounding to the clock changes the area by at
-    # most 3.5 / 902.4 = 3.9e-3 and 0.5 / 144.1 = 3.5e-3 (measured: 1.7e-3 and 9.6e-4).
-    # A Blackman 1% too strong or too weak fails.
+    # area), so the only error is the duration rounding: up to 3.5 ns on AnalogDevice (4 ns
+    # clock) and 0.5 ns on MockDevice (1 ns clock). The shortest pulses here last 1018.8 and
+    # 162.7 ns (MAX_ENERGY), so the area changes by at most 3.4e-3 and 3.1e-3 (measured over
+    # all cases: 1.7e-3 at most). A Blackman 1% too strong or too weak fails.
     expected_area, _ = quad(waveform, 0, waveform.duration)
     assert pulser_area == pytest.approx(expected_area, rel=5e-3, abs=0)
 
