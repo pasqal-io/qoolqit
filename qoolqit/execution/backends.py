@@ -25,9 +25,9 @@ class PulserEmulatorBackend:
     Provides the shared emulation config handling, ensuring bitstrings are always sampled.
 
     Args:
-        num_shots: run the program `num_shots` times to collect bitstrings statistics.
-            On QPU this represents the actual number of runs of the program.
-            On emulators, the bitstring are sampled from the quantum state `num_shots` times.
+        num_shots: number of bitstrings sampled from the final quantum state.
+            If None, `default_num_shots` of the
+            [`EmulationConfig`][qoolqit.execution.EmulationConfig] is used.
     """
 
     def __init__(self, num_shots: int | None = None) -> None:
@@ -37,11 +37,16 @@ class PulserEmulatorBackend:
     def validate_emulation_config(
         self, emulation_config: EmulationConfig | None
     ) -> EmulationConfig:
-        """Returns a valid config for emulator backends, if needed.
+        """Return a valid emulation config, ensuring bitstrings are sampled.
 
         Args:
-            emulation_config: optional base configuration class for all emulators backends.
-                If no config is provided to an emulator backend, the backend default will used.
+            emulation_config: optional emulation config.
+                If None, `default_emulation_config` is used.
+
+        Returns:
+            The default config if `emulation_config` is None. Otherwise `emulation_config`,
+            with a `BitStrings` observable added if missing. In both cases, `default_num_shots`
+            is set to `num_shots` when provided.
         """
         if emulation_config is None:
             emulation_config = self.default_emulation_config()
@@ -59,9 +64,9 @@ class PulserEmulatorBackend:
         return emulation_config
 
     def default_emulation_config(self) -> EmulationConfig:
-        """Return a unique emulation config for all emulators.
+        """Return the default emulation config, shared by all emulators.
 
-        Defaults to a configuration that asks for the final bitstring, sampled `num_shots` times.
+        It only asks for the final bitstrings, sampled `num_shots` times.
         """
         return EmulationConfig(observables=(BitStrings(num_shots=self._num_shots),))
 
@@ -74,11 +79,20 @@ class PulserRemoteBackend:
 
     @staticmethod
     def validate_connection(connection: RemoteConnection) -> RemoteConnection:
-        """Validate the required connection to instantiate a RemoteBackend.
+        """Validate the connection required by remote emulators and QPUs.
 
-        Remote emulators and QPUs require a `pulser.backend.remote.RemoteConnection` or derived
-        to send jobs. Validation also happens inside the backend. Early validation just makes the
-        error easier to understand.
+        Remote emulators and QPUs require a `pulser.backend.remote.RemoteConnection`, or a
+        subclass, to send jobs. Validation also happens inside the backend. Early validation
+        just makes the error easier to understand.
+
+        Args:
+            connection: the connection to validate.
+
+        Returns:
+            The same `connection`, if valid.
+
+        Raises:
+            TypeError: if `connection` is not a `RemoteConnection`.
         """
         if not isinstance(connection, RemoteConnection):
             raise TypeError(f"""Error in `PulserRemoteBackend`:
@@ -87,21 +101,23 @@ class PulserRemoteBackend:
 
 
 class LocalEmulator(PulserEmulatorBackend):
-    """Run QoolQit `QuantumProgram`s on a Pasqal local emulator backends.
-
-    This class serves as a primary interface between tools written using QoolQit (including solvers)
-    and local emulator backends.
+    """Run QoolQit `QuantumProgram`s on Pasqal local emulator backends.
 
     Args:
-        backend_type (type): backend type. Must be a subtype of `pulser.backend.EmulatorBackend`.
-        emulation_config (EmulationConfig): optional configuration object emulators.
-        num_shots (int): number of bitstring samples to collect from the final quantum state.
+        backend_type: backend type. Must be a subtype of `pulser.backend.EmulatorBackend`.
+        emulation_config: optional emulation config. If None,
+            [`default_emulation_config`][qoolqit.execution.LocalEmulator.default_emulation_config]
+            is used.
+        num_shots: number of bitstrings sampled from the final quantum state.
+            If None, `default_num_shots` of the
+            [`EmulationConfig`][qoolqit.execution.EmulationConfig] is used.
 
     Examples:
         ```python
         from qoolqit.execution import LocalEmulator, BackendType
         backend = LocalEmulator(backend_type=BackendType.QutipBackendV2)
-        result = backend.run(program)
+        job = backend.run(program)
+        results = job.results()
         ```
     """
 
@@ -112,7 +128,7 @@ class LocalEmulator(PulserEmulatorBackend):
         emulation_config: EmulationConfig | None = None,
         num_shots: int | None = None,
     ) -> None:
-        """Instantiates a LocalEmulator."""
+        """Instantiate a LocalEmulator."""
         super().__init__(num_shots=num_shots)
         if not issubclass(backend_type, EmulatorBackend):
             raise TypeError(
@@ -122,7 +138,19 @@ class LocalEmulator(PulserEmulatorBackend):
         self._emulation_config = self.validate_emulation_config(emulation_config)
 
     def run(self, program: QuantumProgram) -> job.Job[Results]:
-        """Run a compiled QuantumProgram and return the results."""
+        """Run a compiled QuantumProgram and return a job handler.
+
+        Args:
+            program: the compiled quantum program to run.
+
+        Returns:
+            A `Job` handler, to retrieve the results with `job.results()`.
+
+        Note:
+            `LocalEmulator` runs synchronously: `run` waits for the job to be done before
+            returning, so `job.results()` can be called directly, without checking the status.
+            This may become asynchronous in a future version.
+        """
         self._backend = self._backend_type(program.compiled_sequence, config=self._emulation_config)
         results = self._backend.run()
         assert isinstance(results, Results)
@@ -130,21 +158,23 @@ class LocalEmulator(PulserEmulatorBackend):
 
 
 class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
-    """Run QoolQit `QuantumProgram`s on a Pasqal remote emulator backends.
+    """Run QoolQit `QuantumProgram`s on Pasqal remote emulator backends.
 
-    This class serves as a primary interface between tools written using QoolQit (including solvers)
-    and remote emulator backends.
-    The behavior is similar to `LocalEmulator`, but here, requires credentials through
-    a `connection` to submit/run a program.
-    To get your credentials and to create a connection object, please refer to the [Pasqal Cloud
-    interface documentation](https://docs.pasqal.com/cloud).
+    Works like [`LocalEmulator`][qoolqit.execution.LocalEmulator], but requires a `connection`
+    to submit jobs, either through [Pasqal Cloud](https://docs.pasqal.com/cloud/set-up/) or
+    through one of the
+    [third-party cloud providers](https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection).
 
     Args:
-        backend_type (type): backend type. Must be a subtype of
+        backend_type: backend type. Must be a subtype of
             `pasqal_cloud.backends.RemoteEmulatorBackend`.
-        connection (RemoteConnection): connection to execute the program on remote backends.
-        emulation_config (EmulationConfig): optional configuration object emulators.
-        num_shots (int): number of bitstring samples to collect from the final quantum state.
+        connection: connection to execute the program on remote backends.
+        emulation_config: optional emulation config. If None,
+            [`default_emulation_config`][qoolqit.execution.RemoteEmulator.default_emulation_config]
+            is used.
+        num_shots: number of bitstrings sampled from the final quantum state.
+            If None, `default_num_shots` of the
+            [`EmulationConfig`][qoolqit.execution.EmulationConfig] is used.
 
     Examples:
         ```python
@@ -154,15 +184,9 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         backend = RemoteEmulator(
             backend_type=BackendType.RemoteEmuFreeBackend, connection=connection
         )
+        job = backend.run(program)
         ```
-        then
-        ```python
-        remote_results = backend.submit(program)
-        ```
-        or
-        ```python
-        results = backend.run(program)
-        ```
+        See [`run`][qoolqit.execution.RemoteEmulator.run] to retrieve the results.
     """
 
     def __init__(
@@ -173,7 +197,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         emulation_config: EmulationConfig | None = None,
         num_shots: int | None = None,
     ) -> None:
-        """Instantiates a RemoteEmulator."""
+        """Instantiate a RemoteEmulator."""
         super().__init__(num_shots=num_shots)
         if not issubclass(backend_type, RemoteEmulatorBackend):
             raise TypeError(
@@ -184,64 +208,90 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         self._emulation_config = self.validate_emulation_config(emulation_config)
 
     def run(self, program: QuantumProgram) -> job.Job[Results]:
-        """Run a compiled QuantumProgram and return a job handler.
+        """Submit a compiled QuantumProgram and return a job handler.
 
-        The returned handler `Job` can be used to retrieve results with `job.results()`
+        `run` returns as soon as the job is submitted, the job runs remotely.
 
         Args:
-            program (QuantumProgram): the compiled quantum program to run.
+            program: the compiled quantum program to run.
+
+        Returns:
+            A `Job` handler, to check the status and retrieve the results.
+
+        Examples:
+            Wait for the results, with a timeout. On timeout the job keeps running,
+            and `job.results()` can be called again later:
+            ```python
+            job = backend.run(program)
+            try:
+                results = job.results(timeout=600)
+            except TimeoutError:
+                print(f"Job {job.job_id()} still running")
+            ```
+
+            Check the status without blocking:
+            ```python
+            job = backend.run(program)
+            job.get_status()  # e.g. JobStatus.PENDING
+            job.has_ended()  # True once DONE, ERROR or CANCELED
+            results = job.results()  # blocks until the job has ended
+            ```
+
+            Reconnect later, for long jobs (e.g. QPU queues), possibly from a new session:
+            ```python
+            from qoolqit.execution import get_batch_id, retrieve_remote_job
+            job = backend.run(program)
+            job_id, batch_id = job.job_id(), get_batch_id(job)  # store these
+            # later
+            job = retrieve_remote_job(connection, job_id, batch_id=batch_id)
+            results = job.results()
+            ```
         """
-        # Instantiate backend
         self._backend = self._backend_type(
             program.compiled_sequence,
             connection=self._connection,
             config=self._emulation_config,
         )
         remote_results = self._backend.run(wait=False)
-        # If in open-batch mode, the job should be the last one in the batch ?
-        return job._RemoteJob._from_remote_results(remote_results, -1)
+        # Each run submits a single job, in a new batch.
+        return job._RemoteJob._from_remote_results(remote_results)
 
 
 class QPU(PulserRemoteBackend):
     """Execute QoolQit QuantumPrograms on Pasqal quantum processing units.
 
-    This class provides the primary interface for running quantum programs on actual
-    QPU hardware. It requires authenticated credentials through a connection object
-    to submit and execute programs on remote quantum processors.
+    Runs on actual QPU hardware and requires an authenticated `connection`.
 
     Args:
         connection: Authenticated connection to the remote QPU backend.
-        num_shots: Number of bitstring samples to collect from the final quantum state.
+        num_shots: Number of runs of the program on the QPU. Required.
 
     Examples:
         Using Pasqal Cloud:
         ```python
         from pasqal_cloud import PasqalCloudConnection
         from qoolqit.execution import QPU
-
-        connection = PasqalCloudConnection(
-            username="your_username",
-            password="your_password",
-            project_id="your_project_id"
-        )
-        backend = QPU(connection=connection)
-        remote_results = backend.submit(program)
+        connection = PasqalCloudConnection(username=..., password=..., project_id=...)
+        backend = QPU(connection=connection, num_shots=100)
+        job = backend.run(program)
         ```
 
-        Using Atos MyQML:
+        Using Atos MyQLM:
         ```python
         from pulser_myqlm import PulserQLMConnection
         from qoolqit.execution import QPU
-
         connection = PulserQLMConnection()
-        backend = QPU(connection=connection)
-        results = backend.run(program)
+        backend = QPU(connection=connection, num_shots=100)
+        job = backend.run(program)
         ```
+        See [`run`][qoolqit.execution.QPU.run] to retrieve the results.
 
     Note:
         Contact your quantum computing provider for credentials and connection setup:
-        - [Pasqal Cloud Documentation](https://docs.pasqal.com/cloud)
-        - [Atos MyQML Framework](https://github.com/pasqal-io/Pulser-myQLM)
+
+        - [Pasqal Cloud](https://docs.pasqal.com/cloud/set-up/)
+        - [Third-party cloud providers](https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection)
+        - [Atos MyQLM Framework](https://github.com/pasqal-io/Pulser-myQLM)
     """
 
     def __init__(
@@ -250,7 +300,7 @@ class QPU(PulserRemoteBackend):
         connection: RemoteConnection,
         num_shots: int | None = None,
     ) -> None:
-        """Instantiates a QPU backend."""
+        """Instantiate a QPU backend."""
         self._backend_type = QPUBackend
         self._connection = self.validate_connection(connection)
         if num_shots is None:
@@ -262,16 +312,48 @@ class QPU(PulserRemoteBackend):
         self._config = BackendConfig(default_num_shots=num_shots)
 
     def run(self, program: QuantumProgram) -> job.Job[Results]:
-        """Run a compiled QuantumProgram and return a job handler.
+        """Submit a compiled QuantumProgram and return a job handler.
 
-        The returned handler `Job` can be used to retrieve results with `job.results()`
+        `run` returns as soon as the job is submitted, the job runs remotely.
 
         Args:
-            program (QuantumProgram): the compiled quantum program to run.
+            program: the compiled quantum program to run.
+
+        Returns:
+            A `Job` handler, to check the status and retrieve the results.
+
+        Examples:
+            Wait for the results, with a timeout. On timeout the job keeps running,
+            and `job.results()` can be called again later:
+            ```python
+            job = backend.run(program)
+            try:
+                results = job.results(timeout=600)
+            except TimeoutError:
+                print(f"Job {job.job_id()} still running")
+            ```
+
+            Check the status without blocking:
+            ```python
+            job = backend.run(program)
+            job.get_status()  # e.g. JobStatus.PENDING
+            job.has_ended()  # True once DONE, ERROR or CANCELED
+            results = job.results()  # blocks until the job has ended
+            ```
+
+            Reconnect later, for long jobs (e.g. QPU queues), possibly from a new session:
+            ```python
+            from qoolqit.execution import get_batch_id, retrieve_remote_job
+            job = backend.run(program)
+            job_id, batch_id = job.job_id(), get_batch_id(job)  # store these
+            # later
+            job = retrieve_remote_job(connection, job_id, batch_id=batch_id)
+            results = job.results()
+            ```
         """
         self._backend = self._backend_type(
             program.compiled_sequence, connection=self._connection, config=self._config
         )
         remote_results = self._backend.run(wait=False)
-        # If in open-batch mode, the job should be the last one in the batch ?
-        return job._RemoteJob._from_remote_results(remote_results, -1)
+        # Each run submits a single job, in a new batch.
+        return job._RemoteJob._from_remote_results(remote_results)
