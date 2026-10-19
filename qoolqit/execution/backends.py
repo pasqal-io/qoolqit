@@ -288,6 +288,7 @@ class QPU(PulserRemoteBackend):
 
     Note:
         Contact your quantum computing provider for credentials and connection setup:
+
         - [Pasqal Cloud](https://docs.pasqal.com/cloud/set-up/)
         - [Third-party cloud providers](https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection)
         - [Atos MyQLM Framework](https://github.com/pasqal-io/Pulser-myQLM)
