@@ -177,7 +177,9 @@ def test_amplitude_area_is_kept_by_compilation(
         ConstantWaveform(20.0, 0.005) >> BlackmanWaveform(30.0, area=0.2),
     ],
 )
-def test_converter_keeps_area(device: Device, waveform: Waveform, energy: float, rel: float) -> None:
+def test_converter_keeps_area(
+    device: Device, waveform: Waveform, energy: float, rel: float
+) -> None:
     """Every waveform type keeps its area through `_WaveformConverter.convert`."""
     converter = _WaveformConverter(device, time=1000 / energy, energy=energy)
     # pulser's Waveform.integral sums the 1 ns samples (rad/µs) times 1e-3: the area in rad
