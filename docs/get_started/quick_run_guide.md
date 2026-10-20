@@ -99,7 +99,7 @@ results.final_bitstrings    # Counter({'111': 807, '101': 68, '110': 60, ...})
 
     <div style="text-align: center">
       <a href="https://docs.pasqal.com/cloud/set-up" class="md-button md-button--primary">Pasqal Cloud</a>
-      <a href="https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection" class="md-button">Third-Party Providers</a>
+      <a href="https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection" class="md-button md-button--primary">Third-Party Providers</a>
     </div>
 
 ### Remote Execution on Cloud Emulators
@@ -142,7 +142,7 @@ job = remote_emulator.run(program)
 `RemoteEmulator` accepts the following arguments:
 
 - `backend_type`: `RemoteEmuFreeBackend` (default), `RemoteSVBackend` or `RemoteMPSBackend`. Availability depends on your provider.
-- `emulation_config`: same as for local emulators. See [Emulation configuration](../fundamentals/execution/execution.ipynb#emulation-configuration).
+- `emulation_config`: same as for local emulators. See [Emulation configuration](../fundamentals/execution/execution.md#emulation-configuration).
 - `num_shots`: number of bitstring samples to collect.
 
 #### 3. Check status and retrieve results

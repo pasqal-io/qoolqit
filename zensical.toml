@@ -1,0 +1,148 @@
+[project]
+site_name = "QoolQit Documentation"
+site_author = "Pasqal"
+repo_name = "pasqal-io/qoolqit"
+repo_url = "https://github.com/pasqal-io/qoolqit"
+copyright = "© 2025-2026 Pasqal. All rights reserved. Made with ❤️ by the QoolQit team."
+
+nav = [
+  { "Overview" = "index.md" },
+  { "Get started" = [
+    { "Quick Run Guide" = "get_started/quick_run_guide.md" },
+    { "Programming a neutral-atom QPU" = "get_started/qoolqit_model.md" },
+    { "Programming with QoolQit" = "get_started/programming_with_qoolqit.md" },
+  ] },
+  { "Fundamentals" = [
+    { "Introduction" = "fundamentals/introduction.md" },
+    { "Graphs" = "fundamentals/graphs.md" },
+    { "Embedding" = "fundamentals/embedding.md" },
+    { "Writing a Quantum Program" = "fundamentals/quantum_program.md" },
+    { "Compilation" = [
+      { "Compiling a Quantum Program" = "fundamentals/compilation/rationale.md" },
+      { "Devices and Compilation" = "fundamentals/compilation/device_and_compilation.md" },
+      { "Error handling" = "fundamentals/compilation/error_handling.md" },
+    ] },
+    { "Execution" = [
+      "fundamentals/execution/execution.md",
+    ] },
+  ] },
+  { "Extended usage" = [
+    { "Adimensionalization" = "extended_usage/adimensionalization.md" },
+    { "Custom embedders" = "extended_usage/custom_embedders.md" },
+  ] },
+  { "Applications" = [
+    "tutorials/index.md",
+    { "Solving a QUBO" = "tutorials/solving_a_qubo.md" },
+    { "Solving a MWIS" = "tutorials/Solving_a_MWIS.md" },
+    { "Preparing the TFIM critical state" = "tutorials/Critical_state_TFIM.md" },
+  ] },
+  { "API reference" = [
+    { "qoolqit" = "reference/qoolqit.md" },
+    { "qoolqit.embedding" = "reference/embedding.md" },
+    { "qoolqit.graphs" = "reference/graphs.md" },
+    { "qoolqit.register" = "reference/register.md" },
+    { "qoolqit.waveforms" = "reference/waveforms.md" },
+    { "qoolqit.drive" = "reference/drive.md" },
+    { "qoolqit.program" = "reference/program.md" },
+    { "qoolqit.devices" = "reference/devices.md" },
+    { "qoolqit.execution" = "reference/execution.md" },
+    { "qoolqit.exceptions" = "reference/exceptions.md" },
+  ] },
+  { "Contribute" = [
+    { "How to contribute" = "CONTRIBUTING.md" },
+    { "Code of conduct" = "CODE_OF_CONDUCT.md" },
+    { "Contributor Agreement" = "CONTRIBUTOR_AGREEMENT.md" },
+  ] },
+]
+
+# For mathjax
+extra_javascript = [
+  "extras/javascripts/mathjax.js",
+  "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js",
+]
+
+# To get nice tabs
+extra_css = [
+  "extras/css/mkdocstrings.css",
+  "extras/css/home.css",
+  "extras/css/colors.css",
+]
+
+[project.extra.version]
+provider = "mike"
+
+[project.theme]
+name = "material"
+custom_dir = "docs/extras/overrides/"
+logo = "extras/assets/logo/qoolqit_symbol_white.svg"
+favicon = "extras/assets/logo/qoolqit_favicon.svg"
+features = [
+  "content.code.copy",
+  "content.tooltips",
+  "navigation.indexes",
+  "navigation.sections",
+  "navigation.tabs",
+  "navigation.top",
+  "navigation.tracking",
+  "navigation.footer",
+  "search.highlight",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "custom"
+toggle.icon = "material/weather-sunny"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "custom"
+toggle.icon = "material/weather-night"
+toggle.name = "Switch to light mode"
+
+[project.markdown_extensions]
+admonition = {}
+footnotes = {}
+md_in_html = {}
+pymdownx.arithmatex.generic = true
+pymdownx.highlight.default_lang = "python"
+pymdownx.highlight.anchor_linenums = true
+pymdownx.inlinehilite = {}
+pymdownx.snippets = {}
+pymdownx.magiclink = {}
+pymdownx.superfences = {}
+
+# Placeholder pages next to each notebook call the `notebook` macro (scripts/docs_macros.py)
+[project.plugins.macros]
+module_name = "scripts/docs_macros"
+on_error_fail = true
+
+[project.plugins.markdown-exec]
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["qoolqit"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+backlinks = "tree"
+docstring_options.ignore_init_summary = true
+docstring_options.warnings = false
+docstring_section_style = "list"
+filters = "public"
+inherited_members = true
+merge_init_into_class = true
+preload_modules = ["qoolqit", "pulser"]
+relative_crossrefs = true
+scoped_crossrefs = true
+separate_signature = true  # uses black/ruff if available to format signatures
+show_bases = false
+show_root_heading = true
+show_root_full_path = false
+show_signature_annotations = true
+show_signature_type_parameters = true
+show_symbol_type_heading = true
+show_symbol_type_toc = true
+signature_crossrefs = true
+summary = true
+unwrap_annotated = true

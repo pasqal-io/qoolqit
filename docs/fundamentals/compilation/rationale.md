@@ -36,7 +36,7 @@ Finally, when a program is compiled, the compilation output is stored internally
 ## Compilation profiles
 
 At the moment, QoolQit provides two compilation profiles: default and maximum energy.
-Usage and examples can be found in the [Devices and Compilation](./device_and_compilation.ipynb) page of this documentation.
+Usage and examples can be found in the [Devices and Compilation](./device_and_compilation.md) page of this documentation.
 
 As anticipated, a program needs to be compiled to a particular device, whose hardware constraints and limits the range of parameters in a program.
 The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the maximum interaction energy $J_{\max}^{d}$, or equivalently, the minimum atom spacing $r_{\min}^{d}$.
@@ -53,7 +53,7 @@ As shown in the image above, an input program can be represented as a point in t
 For example, since the minimum distance in the dimensionless model is one, it will be converted to the minimum distance on the hardware device.
 In other words, an input program that satisfies the hardware constraints (green point in the green region of the plot) will be successfully compiled, while compiling an input program whose parameters lie outside of the device specs (red point) will raise a detailed error.
 
-To review your device's hardware constraints and capabilities, see [Devices and Compilation](./device_and_compilation.ipynb).
+To review your device's hardware constraints and capabilities, see [Devices and Compilation](./device_and_compilation.md).
 
 ### Maximum energy
 
@@ -93,17 +93,17 @@ The dimensionless content is unchanged: the ratio between drive and interaction 
 
 Real quantum hardware introduces deviations between the ideal compiled program and its actual execution.
 These effects can be categorized into two main classes: hardware modulation and noise sources.
-Importantly, in both cases, these effects can be included by configuring emulators, as detailed in the [Execution](../execution/execution.ipynb) page of this documentation.
+Importantly, in both cases, these effects can be included by configuring emulators, as detailed in the [Execution](../execution/execution.md) page of this documentation.
 
 ### Hardware modulation
 
 **Hardware modulation** arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions), the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
-The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in [Devices and Compilation](./device_and_compilation.ipynb). Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag `with_hardware_modulation=true`, as described in [Execution](../execution/execution.ipynb).
+The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in [Devices and Compilation](./device_and_compilation.md). Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag `with_hardware_modulation=true`, as described in [Execution](../execution/execution.md).
 
 ### Noise
 
 **Noise sources** encompass various forms of environmental and systematic errors that introduce unwanted fluctuations or systematic shifts in the quantum system parameters during execution.
-As before, to include noise sources in the emulation of a program, emulators must be configured with the flag `noise_model`, as described in [Execution](../execution/execution.ipynb).
+As before, to include noise sources in the emulation of a program, emulators must be configured with the flag `noise_model`, as described in [Execution](../execution/execution.md).
 
 Finally, for more detailed information on [hardware modulation](https://docs.pasqal.com/pulser/tutorials/output_mod_eom/) and [noise sources](https://docs.pasqal.com/pulser/noise_model/), consult the comprehensive discussions available in the Pulser documentation.
 
