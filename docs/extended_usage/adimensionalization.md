@@ -50,7 +50,7 @@ In addition to the upper bound $\tilde J_{ij} \leq 1$ inherent to the adimension
 If the user's point lies outside this region, the program cannot be implemented as specified. If it lies strictly inside, the program is feasible but does not exploit the full capability of the device. Compilation resolves both situations by rescaling the program (sliding the point along the line) until it sits exactly on the boundary of the feasible region, maximizing either $\tilde\Omega$ or $\tilde J$, depending on your program.
 
 !!! note "Why maximize the energy scale?"
-    Higher amplitude guarantees better signal/noise ratio and thus better results, while higher interactions, thus lower distances between atoms help make the register more compact, allowing you to put more qubits in your program.
+    Higher amplitude guarantees better signal/noise ratio and thus better results, while higher interactions, and thus shorter distances between atoms, help make the register more compact, allowing you to put more qubits in your program.
 
 Concretely, compilation rescales all dimensionless parameters by a common factor $\alpha$:
 
