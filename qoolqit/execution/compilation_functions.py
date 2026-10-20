@@ -68,7 +68,7 @@ def basic_compilation(
     register: Register,
     drive: Drive,
     device: Device,
-    profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
+    profile: CompilerProfile,
     device_max_duration_ratio: float | None = None,
 ) -> PulserSequence:
     """Compiles a QoolQit program to a PulserSequence.
