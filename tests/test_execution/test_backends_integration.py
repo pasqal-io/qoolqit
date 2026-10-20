@@ -6,9 +6,10 @@ from pulser.backend import Backend, Occupation
 
 from qoolqit import AnalogDevice, Drive, MockDevice, QuantumProgram, Register
 from qoolqit.devices import Device
+from qoolqit.drive import DetuningMapModulator
 from qoolqit.execution import BackendType, EmulationConfig, JobStatus, LocalEmulator
 from qoolqit.execution.compilation_functions import CompilerProfile
-from qoolqit.waveforms import ConstantWaveform
+from qoolqit.waveforms import ConstantWaveform, RampWaveform
 
 
 @pytest.mark.parametrize("rotation_angle", [0.3 * np.pi])
@@ -92,3 +93,23 @@ def test_results(backend_type: Backend, device: Device) -> None:
     other_eval_times = other_res.get_result_times("occupation")
     np.testing.assert_allclose(other_eval_times, evaluation_times, atol=0.01)
     np.testing.assert_allclose(qutip_occupation, other_occupation, atol=0.01)
+
+
+def test_several_dmms_with_proportional_profiles() -> None:
+    # two maps with the same profile act as one map with the summed weights
+    register = Register.from_coordinates([(0.0, 0.0), (1.2, 0.0)])
+    amplitude = ConstantWaveform(5.0, 1.0)
+    profile = RampWaveform(5.0, 0.0, -2.0)
+    two_maps = [
+        DetuningMapModulator(profile, weights={0: 0.2, 1: 0.5}),
+        DetuningMapModulator(profile, weights={0: 0.3, 1: 0.1}),
+    ]
+    one_map = DetuningMapModulator(profile, weights={0: 0.5, 1: 0.6})
+
+    occupations = []
+    for dmm in (two_maps, one_map):
+        program = QuantumProgram(register, Drive(amplitude=amplitude, dmm=dmm))
+        program.compile_to(device=MockDevice())
+        emulator = LocalEmulator(emulation_config=EmulationConfig(observables=(Occupation(),)))
+        occupations.append(emulator.run(program).results().occupation)
+    np.testing.assert_allclose(occupations[0], occupations[1], atol=1e-6)

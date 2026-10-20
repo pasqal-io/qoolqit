@@ -106,6 +106,16 @@ def test_drive_composition_with_dmm_not_supported() -> None:
         drive_with_dmm >> drive
 
 
+def test_drive_composition_with_several_dmms_not_supported() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    dmm = DetuningMapModulator(RampWaveform(10.0, -1.0, -2.0), weights={0: 1.0})
+    drive = Drive(amplitude=amp)
+    drive_with_dmms = Drive(amplitude=amp, dmm=[dmm, dmm])
+
+    with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
+        drive >> drive_with_dmms
+
+
 def test_error_amplitude_negative() -> None:
     neg_ramp = RampWaveform(10.0, -1.0, 2.0)
     with pytest.raises(ValueError, match="'amplitude' must be positive."):
@@ -210,6 +220,28 @@ def test_dmm_init() -> None:
     assert dmm.weights == valid_weights
 
 
+def test_drive_with_several_dmms() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    dmm_1 = DetuningMapModulator(RampWaveform(10.0, -1.0, -2.0), weights={0: 1.0})
+    dmm_2 = DetuningMapModulator(ConstantWaveform(10.0, -0.5), weights={1: 0.3})
+
+    assert Drive(amplitude=amp, dmm=dmm_1).dmm is dmm_1
+    assert Drive(amplitude=amp, dmm=[dmm_1, dmm_2]).dmm == (dmm_1, dmm_2)
+    assert Drive(amplitude=amp, dmm=[]).dmm is None
+
+    with pytest.raises(TypeError, match="'dmm' must be of type DetuningMapModulator"):
+        Drive(amplitude=amp, dmm=[dmm_1, "not a dmm"])  # type: ignore [list-item]
+
+
+def test_drive_repr_with_several_dmms() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    dmm_1 = DetuningMapModulator(RampWaveform(10.0, -1.0, -2.0), weights={0: 1.0})
+    dmm_2 = DetuningMapModulator(ConstantWaveform(10.0, -0.5), weights={1: 0.3})
+    drive = Drive(amplitude=amp, dmm=[dmm_1, dmm_2])
+
+    assert repr(drive).endswith(f"dmm: \n{dmm_1!r}\n{dmm_2!r}")
+
+
 def test_drive_draw_plain_drive() -> None:
     amp = RampWaveform(10.0, 0.0, 1.0)
     det = RampWaveform(10.0, 0.0, 1.0)
@@ -274,3 +306,15 @@ def test_drive_draw_creates_new_figure_by_default() -> None:
     assert len(existing.axes) == 0
     assert len(plt.gcf().axes) == 2
     plt.close("all")
+
+
+def test_drive_draw_with_several_dmms() -> None:
+    amp = RampWaveform(10.0, 0.0, 1.0)
+    dmm_1 = DetuningMapModulator(RampWaveform(10.0, -1.0, -2.0), weights={0: 1.0})
+    dmm_2 = DetuningMapModulator(ConstantWaveform(10.0, -0.5), weights={1: 0.3})
+    drive = Drive(amplitude=amp, dmm=[dmm_1, dmm_2])
+
+    fig = Figure()
+    drive.draw(fig=fig)
+    assert [ax.get_ylabel() for ax in fig.axes] == ["Amplitude", "Detuning", "DMM"]
+    assert len(fig.axes[-1].get_lines()) == 2
