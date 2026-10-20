@@ -22,6 +22,7 @@ from qoolqit.embedding.algorithms.blade._helpers import (
 from qoolqit.embedding.algorithms.blade._qubo_mapper import Qubo
 from qoolqit.embedding.algorithms.blade.blade import (
     _blade,
+    _symmetric_interaction_matrix,
     update_positions,
 )
 from qoolqit.embedding.algorithms.blade.exceptions import (
@@ -676,3 +677,45 @@ def test_duplicate_positions_are_detected_at_next_step(
         _blade(matrix + matrix.T, max_min_dist_ratio=max_min_dist_ratio)
 
     assert exc_info.value.step == faulty_step + 1
+
+
+UPPER_TRIANGLE = np.array([[1.0, 2.0, 0.0], [0.0, -1.0, 3.0], [0.0, 0.0, 5.0]])
+SYMMETRIC_TARGET = np.array([[0.0, 2.0, 0.0], [2.0, 0.0, 3.0], [0.0, 3.0, 0.0]])
+# below the tolerance relative to the largest off-diagonal term (3)
+TINY_LOWER = np.array([[0.0, 0.0, 0.0], [1e-7, 0.0, 0.0], [-1e-7, 2e-7, 0.0]])
+NOT_SYMMETRIC = np.array([[0.0, 1.0], [2.0, 0.0]])
+
+
+@pytest.mark.parametrize(
+    "matrix",
+    [
+        UPPER_TRIANGLE,
+        UPPER_TRIANGLE.T,
+        UPPER_TRIANGLE + np.triu(UPPER_TRIANGLE, k=1).T,
+        UPPER_TRIANGLE + TINY_LOWER,
+        UPPER_TRIANGLE.T + TINY_LOWER.T,
+        UPPER_TRIANGLE + np.triu(UPPER_TRIANGLE, k=1).T + TINY_LOWER,
+    ],
+    ids=["upper", "lower", "symmetric", "nearly-upper", "nearly-lower", "nearly-symmetric"],
+)
+def test_symmetric_interaction_matrix(matrix: np.ndarray) -> None:
+    Blade().validate_input(matrix)
+    np.testing.assert_array_equal(_symmetric_interaction_matrix(matrix), SYMMETRIC_TARGET)
+
+
+@pytest.mark.parametrize(
+    "matrix",
+    [
+        NOT_SYMMETRIC,
+        1e-12 * NOT_SYMMETRIC,
+        NOT_SYMMETRIC + np.diag([1e9, 0.0]),
+        np.ones(3),
+        np.ones((2, 3)),
+    ],
+    ids=["not-symmetric-nor-triangular", "small-scale", "large-diagonal", "1d", "not-square"],
+)
+def test_symmetric_interaction_matrix_rejects_invalid_matrices(matrix: np.ndarray) -> None:
+    with pytest.raises(ValueError, match="either symmetric or triangular"):
+        Blade().validate_input(matrix)
+    with pytest.raises(ValueError, match="either symmetric or triangular"):
+        _symmetric_interaction_matrix(matrix)

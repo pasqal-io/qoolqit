@@ -10,6 +10,8 @@ from .algorithms import (
     _blade,
     interaction_embedding,
 )
+from .algorithms._matrices import nearly_equal
+from .algorithms.blade.blade import _symmetric_interaction_matrix
 from .base_embedder import BaseEmbedder, ConfigType
 
 
@@ -27,7 +29,7 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
             )
         if data.ndim != 2:
             raise ValueError("Data must be a 2D matrix.")
-        if not np.allclose(data, data.T, rtol=0.0, atol=1e-7):
+        if not nearly_equal(data, data.T):
             raise ValueError("Data must be a symmetric matrix.")
 
     def validate_output(self, result: DataGraph) -> None:
@@ -55,6 +57,14 @@ class Blade(MatrixToGraphEmbedder[BladeConfig]):
             config (BladeConfig): configuration object for the BLaDE algorithm.
         """
         super().__init__(_blade, config=config or BladeConfig())
+
+    def validate_input(self, data: np.ndarray) -> None:
+        if not isinstance(data, np.ndarray):
+            raise TypeError(
+                f"Data of type {type(data)} not supported. {self.__class__.__name__} "
+                + "requires data to be a symmetric or triangular matrix of type np.ndarray."
+            )
+        _symmetric_interaction_matrix(data)
 
     def embed(self, data: np.ndarray) -> DataGraph:
         """Return a DataGraph with coordinates that embeds the input matrix.

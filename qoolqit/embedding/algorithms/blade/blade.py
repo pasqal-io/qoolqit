@@ -17,6 +17,7 @@ from qoolqit.embedding.algorithms.blade.exceptions import (
 )
 from qoolqit.embedding.base_embedder import EmbedderConfig
 
+from .._matrices import nearly_equal
 from ._dimension_shrinker import DimensionShrinker
 from ._dist_constraints_forces import (
     compute_max_dist_constraint_forces,
@@ -413,9 +414,9 @@ def evolve_with_dimension_transition(
 def _symmetric_interaction_matrix(matrix: np.ndarray) -> np.ndarray:
     """Return the symmetric interaction matrix with a null diagonal.
 
-    It is the adjacency matrix of `Qubo.from_matrix(matrix).as_graph()`, computed
-    directly: the input must be either symmetric or triangular, the off-diagonal
-    terms are mirrored and the diagonal (linear QUBO terms) is dropped.
+    The input must be symmetric or triangular, up to `nearly_equal`. Only one triangle
+    is used, mirrored: the upper one for a symmetric or upper triangular input, the
+    lower one for a lower triangular input. The diagonal (linear QUBO terms) is dropped.
     """
     matrix = np.array(matrix, dtype=float)
     if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
@@ -423,14 +424,10 @@ def _symmetric_interaction_matrix(matrix: np.ndarray) -> np.ndarray:
             "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
         )
 
-    if np.allclose(matrix, np.tril(matrix)):
-        upper = np.triu(matrix + matrix.T, k=1)
-    elif np.allclose(matrix, matrix.T):
+    if nearly_equal(matrix, matrix.T) or nearly_equal(matrix, np.triu(matrix)):
         upper = np.triu(matrix, k=1)
-    elif np.allclose(matrix, np.triu(matrix)):
-        # as in the QUBO graph, a (tiny) non-zero lower term overrides its upper term
-        lower = np.tril(matrix, k=-1).T
-        upper = np.where(lower != 0, lower, np.triu(matrix, k=1))
+    elif nearly_equal(matrix, np.tril(matrix)):
+        upper = np.triu(matrix.T, k=1)
     else:
         raise ValueError(
             "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
