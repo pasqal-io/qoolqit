@@ -105,8 +105,8 @@ class QuantumProgram:
 
         - "default": Compile the program as it is. The drive and the register positions
             must respect the hardware constraints of the device which can be inspected
-            using `device.specs()`. The `CompilerProfile.WORKING_POINT` is deprecated
-            aliases for this profile.
+            using `device.specs()`. `CompilerProfile.WORKING_POINT` is a deprecated
+            alias for this profile.
         - "max_energy": Scale the program to utilize the device's
             maximum capabilities. The drive amplitude and the register positions are rescaled
             to achieve respectively the maximum amplitude and the minimum pairwise distance
@@ -122,7 +122,7 @@ class QuantumProgram:
         Args:
             device: The target device for compilation. Must be a QoolQit Device.
             profile: The compilation profile used to translate the program.
-                Defaults to CompilerProfile.DEFAULT.
+                Defaults to `"default"`.
             device_max_duration_ratio: The fraction of the device's maximum allowed duration
                 to set the program duration to, or None to leave it unset. Must be a number
                 in the range (0, 1]. Can only be set if the device has a maximum allowed
