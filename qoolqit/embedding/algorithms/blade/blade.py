@@ -344,6 +344,7 @@ def principal_components(positions: np.ndarray) -> np.ndarray:
 
     centered_positions = positions - np.mean(positions, axis=0)
     _, _, axes = np.linalg.svd(centered_positions, full_matrices=False)
+    # choose deterministic sign convention
     largest_coordinates = axes[range(len(axes)), np.argmax(np.abs(axes), axis=1)]
     axes *= np.sign(largest_coordinates)[:, np.newaxis]
 

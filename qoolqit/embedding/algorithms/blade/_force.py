@@ -17,7 +17,6 @@ def configured_increasing_func(
     """Increasing function from [0, 1] to [0, 1]."""
     c = 1 / middle_value - 1
     x = np.asarray(x, dtype=float)
-    # `**` is much faster than `np.power` for usual exponents (e.g. 1)
     powered_x = x**stiffness
     return powered_x / (powered_x + c * (1 - x) ** stiffness)
 
