@@ -19,7 +19,6 @@ from qoolqit.embedding.algorithms.blade._helpers import (
     normalized_best_dist,
     normalized_interaction,
 )
-from qoolqit.embedding.algorithms.blade._qubo_mapper import Qubo
 from qoolqit.embedding.algorithms.blade.blade import (
     _blade,
     _symmetric_interaction_matrix,
@@ -515,18 +514,6 @@ def test_simple_positions() -> None:
 def test_config_from_device(device: Device, expected_max_min_ratio: float | None) -> None:
     config = BladeConfig(device=device)
     assert config.max_min_dist_ratio == expected_max_min_ratio
-
-
-def test_qubo_nodes() -> None:
-    terms: list = [("n1", 2), (4, "I am a node label"), (0, 8)]
-    coeffs = [0.1, 1.2, 2.3]
-    qubo = Qubo(terms=terms, coeffs=coeffs)
-
-    # expected sorted by value or alphabetically
-    expected_nodes = [0, 2, 4, 8, "I am a node label", "n1"]
-    qubo_nodes = qubo.nodes()
-
-    assert qubo_nodes == expected_nodes
 
 
 @pytest.mark.parametrize(

@@ -5,6 +5,7 @@ from collections.abc import Callable
 from dataclasses import InitVar, dataclass
 from typing import Final
 
+import networkx as nx
 import numpy as np
 import scipy
 import torch
@@ -26,7 +27,6 @@ from ._dist_constraints_forces import (
 from ._distances_constraints_calculator import DistancesConstraintsCalculator
 from ._helpers import distance_matrix_from_positions, normalized_interaction
 from ._interactions_forces import compute_interaction_forces
-from ._qubo_mapper import Qubo
 from .drawing import draw_graph_including_actual_weights, draw_update_positions_step
 
 logger = logging.getLogger(__name__)
@@ -215,7 +215,7 @@ def update_positions(
             f"current min dist = {np.min(distances)}, "
             f"current max dist = {np.max(distances)}"
         )
-        target_interactions_graph = Qubo.from_matrix(target_interactions).as_graph()
+        target_interactions_graph = nx.from_numpy_array(target_interactions)
         draw_graph_including_actual_weights(
             target_interactions_graph=target_interactions_graph,
             positions=positions,
