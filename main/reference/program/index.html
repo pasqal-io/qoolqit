@@ -2574,8 +2574,8 @@
 <ul>
 <li>"default": Compile the program as it is. The drive and the register positions
     must respect the hardware constraints of the device which can be inspected
-    using <code>device.specs()</code>. The <code>CompilerProfile.WORKING_POINT</code> is deprecated
-    aliases for this profile.</li>
+    using <code>device.specs()</code>. <code>CompilerProfile.WORKING_POINT</code> is a deprecated
+    alias for this profile.</li>
 <li>"max_energy": Scale the program to utilize the device's
     maximum capabilities. The drive amplitude and the register positions are rescaled
     to achieve respectively the maximum amplitude and the minimum pairwise distance
@@ -2608,7 +2608,7 @@ to the device's constraints. Programs compiled this way are not portable across 
           –
           <div class="doc-md-description">
             <p>The compilation profile used to translate the program.
-Defaults to CompilerProfile.DEFAULT.</p>
+Defaults to <code>"default"</code>.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -2751,8 +2751,8 @@ allowed duration, or if it is not in the range (0, 1].</p>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-105" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-105"></a>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-106" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-106"></a><span class="sd">    - "default": Compile the program as it is. The drive and the register positions</span>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-107" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-107"></a><span class="sd">        must respect the hardware constraints of the device which can be inspected</span>
-<a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-108" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-108"></a><span class="sd">        using `device.specs()`. The `CompilerProfile.WORKING_POINT` is deprecated</span>
-<a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-109" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-109"></a><span class="sd">        aliases for this profile.</span>
+<a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-108" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-108"></a><span class="sd">        using `device.specs()`. `CompilerProfile.WORKING_POINT` is a deprecated</span>
+<a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-109" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-109"></a><span class="sd">        alias for this profile.</span>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-110" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-110"></a><span class="sd">    - "max_energy": Scale the program to utilize the device's</span>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-111" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-111"></a><span class="sd">        maximum capabilities. The drive amplitude and the register positions are rescaled</span>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-112" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-112"></a><span class="sd">        to achieve respectively the maximum amplitude and the minimum pairwise distance</span>
@@ -2768,7 +2768,7 @@ allowed duration, or if it is not in the range (0, 1].</p>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-122" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-122"></a><span class="sd">    Args:</span>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-123" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-123"></a><span class="sd">        device: The target device for compilation. Must be a QoolQit Device.</span>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-124" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-124"></a><span class="sd">        profile: The compilation profile used to translate the program.</span>
-<a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-125" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-125"></a><span class="sd">            Defaults to CompilerProfile.DEFAULT.</span>
+<a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-125" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-125"></a><span class="sd">            Defaults to `"default"`.</span>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-126" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-126"></a><span class="sd">        device_max_duration_ratio: The fraction of the device's maximum allowed duration</span>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-127" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-127"></a><span class="sd">            to set the program duration to, or None to leave it unset. Must be a number</span>
 <a id="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-128" name="qoolqit.program.QuantumProgram.compile_to--source--__codelineno-0-128"></a><span class="sd">            in the range (0, 1]. Can only be set if the device has a maximum allowed</span>
