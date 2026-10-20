@@ -465,7 +465,8 @@ class BaseGraph(nx.Graph):
 
         Accepts either a scaling or a spacing factor.
 
-        Arguments:
+        Args:
+            *args: not accepted; `scaling` and `spacing` must be passed as keywords.
             scaling: value to scale by.
             spacing: value to set as the minimum distance in the graph.
         """

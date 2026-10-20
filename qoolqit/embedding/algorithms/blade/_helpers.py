@@ -48,8 +48,8 @@ def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
     """Convert pairwise interactions into distances.
 
     Args:
-        dist: Pairwise distances between nodes.
-        format: Format of the output if `dist` is a numpy array. Can be "full"
+        weight: Pairwise interactions between nodes.
+        format: Format of the output if `weight` is a numpy array. Can be "full"
         (all values), "triu" (upper triangle without diagonal), or "sym"
         (upper and lower triangles without diagonal).
     """

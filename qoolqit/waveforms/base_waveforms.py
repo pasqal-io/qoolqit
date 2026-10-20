@@ -43,6 +43,7 @@ class Waveform(ABC):
 
         Args:
             duration: the total duration of the waveform.
+            *args: not accepted; extra parameters must be passed as keyword arguments.
             **kwargs: optional keyword arguments for the waveform function.
         """
         if duration <= 0:
