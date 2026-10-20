@@ -411,12 +411,16 @@ def evolve_with_dimension_transition(
     return positions, starting_min
 
 
-def _symmetric_interaction_matrix(matrix: np.ndarray) -> np.ndarray:
+def _symmetric_interaction_matrix(
+    matrix: np.ndarray, count_symmetric_terms_twice: bool = False
+) -> np.ndarray:
     """Return the symmetric interaction matrix with a null diagonal.
 
     The input must be symmetric or triangular, up to `nearly_equal`. Only one triangle
     is used, mirrored: the upper one for a symmetric or upper triangular input, the
     lower one for a lower triangular input. The diagonal (linear QUBO terms) is dropped.
+    If `count_symmetric_terms_twice` is set, the off-diagonal terms of a symmetric input
+    are doubled (QUBO convention x^T Q x).
     """
     matrix = np.array(matrix, dtype=float)
     if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
@@ -424,7 +428,9 @@ def _symmetric_interaction_matrix(matrix: np.ndarray) -> np.ndarray:
             "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
         )
 
-    if nearly_equal(matrix, matrix.T) or nearly_equal(matrix, np.triu(matrix)):
+    if nearly_equal(matrix, matrix.T):
+        upper = np.triu(matrix, k=1) * (2 if count_symmetric_terms_twice else 1)
+    elif nearly_equal(matrix, np.triu(matrix)):
         upper = np.triu(matrix, k=1)
     elif nearly_equal(matrix, np.tril(matrix)):
         upper = np.triu(matrix.T, k=1)
@@ -487,6 +493,7 @@ def _blade(
     compute_regulation_cursor: Callable[[float], float] = default_compute_regulation_cursor,
     compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors,
     ratio_rerun: int = default_ratio_rerun,
+    count_symmetric_terms_twice: bool = False,
     draw_steps: bool | list[int] = False,
     draw_weighted_graph: bool = False,
     draw_differences: bool = False,
@@ -550,6 +557,11 @@ def _blade(
         compute_ratio_step_factors: Function that is called at the boundaries of
             the rounds. It defines the target ratio the enforce during the
             evolution. It acts as a multiplying factor on the target ratio.
+        count_symmetric_terms_twice: Whether the off-diagonal terms of a symmetric
+            `matrix` are counted twice, i.e. the target interaction of the pair (i, j)
+            is `matrix[i, j] + matrix[j, i]` as in the QUBO convention x^T Q x. By
+            default, they are counted once: a symmetric `matrix` is the interaction
+            matrix itself. It has no effect on a triangular `matrix`.
         draw_steps: If it is a boolean, it defines whether to globally enable
             drawing and traces for nodes and forces (for all steps). If it is a
             list of integers, it defines a subset of steps to enable such drawing.
@@ -575,7 +587,9 @@ def _blade(
     else:
         assert not torch.all(matrix == 0)
 
-    matrix = _symmetric_interaction_matrix(matrix)
+    matrix = _symmetric_interaction_matrix(
+        matrix, count_symmetric_terms_twice=count_symmetric_terms_twice
+    )
 
     if starting_positions is None:
         positions = generate_random_positions(target_interactions=matrix, dimension=dimensions[0])
@@ -666,6 +680,8 @@ def _blade(
                         progress, xp=[0, 1 / 2, 1], fp=[0.8, 0.9, 0.98]
                     ),
                     ratio_rerun=ratio_rerun - 1,
+                    # `matrix` is already the symmetric interaction matrix
+                    count_symmetric_terms_twice=False,
                 )
 
             raise DistanceRatioException(
@@ -762,6 +778,15 @@ class BladeConfig(EmbedderConfig):
 
     Defines how many additional computation steps the algorithm performs,
     putting priority on satisfying the constraint.
+    """
+
+    count_symmetric_terms_twice: bool = False
+    """Whether the off-diagonal terms of a symmetric input matrix are counted twice.
+
+    If set, the target interaction of the pair (i, j) is `matrix[i, j] + matrix[j, i]`,
+    as in the QUBO convention x^T Q x. By default, they are counted once: a symmetric
+    input matrix is the interaction matrix itself. It has no effect on a triangular
+    input matrix.
     """
 
     device: InitVar[Device | None] = None

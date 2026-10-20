@@ -704,6 +704,74 @@ def test_symmetric_interaction_matrix(matrix: np.ndarray) -> None:
 
 
 @pytest.mark.parametrize(
+    "matrix, factor",
+    [
+        (UPPER_TRIANGLE, 1),
+        (UPPER_TRIANGLE.T, 1),
+        (SYMMETRIC_TARGET, 2),
+        (UPPER_TRIANGLE + TINY_LOWER, 1),
+        (SYMMETRIC_TARGET + TINY_LOWER, 2),
+    ],
+    ids=["upper", "lower", "symmetric", "nearly-upper", "nearly-symmetric"],
+)
+def test_symmetric_interaction_matrix_counting_symmetric_terms_twice(
+    matrix: np.ndarray, factor: int
+) -> None:
+    Blade(BladeConfig(count_symmetric_terms_twice=True)).validate_input(matrix)
+    np.testing.assert_array_equal(
+        _symmetric_interaction_matrix(matrix, count_symmetric_terms_twice=True),
+        factor * SYMMETRIC_TARGET,
+    )
+
+
+def _blade_positions(matrix: np.ndarray, **kwargs: Any) -> np.ndarray:
+    np.random.seed(0)
+    try:
+        return _blade(matrix, steps_per_round=50, **kwargs)
+    except DistanceRatioException as exception:
+        return exception.positions
+
+
+@pytest.mark.parametrize("max_min_dist_ratio", [None, 1.0])
+def test_symmetric_terms_counted_twice_as_the_equivalent_triangular_matrix(
+    max_min_dist_ratio: float | None,
+) -> None:
+    matrix = np.random.default_rng(0).uniform(size=(6, 6))
+    symmetric = matrix + matrix.T
+
+    np.testing.assert_array_equal(
+        _blade_positions(
+            symmetric, max_min_dist_ratio=max_min_dist_ratio, count_symmetric_terms_twice=True
+        ),
+        _blade_positions(2 * np.triu(symmetric), max_min_dist_ratio=max_min_dist_ratio),
+    )
+    np.testing.assert_array_equal(
+        _blade_positions(symmetric, max_min_dist_ratio=max_min_dist_ratio),
+        _blade_positions(np.triu(symmetric), max_min_dist_ratio=max_min_dist_ratio),
+    )
+
+
+def test_ratio_reruns_keep_the_target_counting_symmetric_terms_twice(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    targets = []
+
+    def recording_symmetric_interaction_matrix(*args: Any, **kwargs: Any) -> np.ndarray:
+        targets.append(_symmetric_interaction_matrix(*args, **kwargs))
+        return targets[-1]
+
+    monkeypatch.setattr(
+        blade_module, "_symmetric_interaction_matrix", recording_symmetric_interaction_matrix
+    )
+    matrix = np.random.default_rng(0).uniform(size=(6, 6))
+    _blade_positions(matrix + matrix.T, max_min_dist_ratio=1.0, count_symmetric_terms_twice=True)
+
+    assert len(targets) == 1 + blade_module.default_ratio_rerun
+    for target in targets:
+        np.testing.assert_array_equal(target, targets[0])
+
+
+@pytest.mark.parametrize(
     "matrix",
     [
         NOT_SYMMETRIC,
