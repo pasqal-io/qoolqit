@@ -77,10 +77,10 @@ class TestWaveform:
 
     def test_waveform_init_rejects_positional_args(self) -> None:
         with pytest.raises(
-            ValueError,
-            match="Extra arguments in MockWaveform need to be passed as keyword arguments",
+            TypeError,
+            match=r"Waveform\.__init__\(\) takes 2 positional arguments but 4 were given",
         ):
-            self.MockWaveform(200.0, 2.0, 3.1)
+            self.MockWaveform(200.0, 2.0, 3.1)  # type: ignore [call-arg]
 
     def test_positive_duration(self) -> None:
         with pytest.raises(ValueError, match="Duration needs to be a positive non-zero value."):

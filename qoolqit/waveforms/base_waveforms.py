@@ -36,23 +36,16 @@ class Waveform(ABC):
     def __init__(
         self,
         duration: float,
-        *args: float,
         **kwargs: float | np.ndarray,
     ) -> None:
         """Initializes the Waveform.
 
         Args:
             duration: the total duration of the waveform.
-            *args: not accepted; extra parameters must be passed as keyword arguments.
             **kwargs: optional keyword arguments for the waveform function.
         """
         if duration <= 0:
             raise ValueError("Duration needs to be a positive non-zero value.")
-
-        if len(args) > 0:
-            raise ValueError(
-                f"Extra arguments in {type(self).__name__} need to be passed as keyword arguments"
-            )
 
         self._duration = float(duration)
         self._params_dict = kwargs
