@@ -245,6 +245,7 @@ def update_positions(
 def evolve_with_forces_through_dim_change(
     *,
     target_interactions: np.ndarray,
+    target_distances: np.ndarray,
     draw_steps: bool | list[int] = False,
     starting_dimensions: int,
     final_dimensions: int,
@@ -274,8 +275,6 @@ def evolve_with_forces_through_dim_change(
         starting_ratio=start_ratio,
         final_ratio=final_ratio,
     )
-    # constant during the round
-    target_distances = normalized_best_dist(target_interactions)
 
     for step in range(start_step, stop_step):
         draw_step = draw_steps is True or (isinstance(draw_steps, list) and step in draw_steps)
@@ -385,6 +384,7 @@ def evolve_with_dimension_transition(
     ],
     compute_regulation_cursor_by_step: Callable[[int], float],
     target_interactions: np.ndarray,
+    target_distances: np.ndarray,
     positions: np.ndarray,
     final_ratio: float | None,
     dim_idx: int,
@@ -412,6 +412,7 @@ def evolve_with_dimension_transition(
 
     positions, starting_min = evolve_with_forces_through_dim_change(
         target_interactions=target_interactions,
+        target_distances=target_distances,
         draw_steps=draw_steps,
         starting_dimensions=starting_dimensions,
         final_dimensions=final_dimensions,
@@ -610,6 +611,7 @@ def _blade(
     matrix = _symmetric_interaction_matrix(
         matrix, count_symmetric_terms_twice=count_symmetric_terms_twice
     )
+    target_distances = normalized_best_dist(matrix)
 
     if starting_positions is None:
         positions = generate_random_positions(target_interactions=matrix, dimension=dimensions[0])
@@ -665,6 +667,7 @@ def _blade(
     ):
         positions, starting_min = evolve_with_dimension_transition(
             target_interactions=matrix,
+            target_distances=target_distances,
             dimensions=dimensions,
             starting_min=starting_min,
             pca=pca,
