@@ -60,6 +60,7 @@ def interaction_embedding(
     Returns:
         DataGraph: graph with node coordinates centered on their median.
     """
+    matrix = np.asarray(matrix, dtype=float)
 
     def cost_function(new_coords: np.ndarray, matrix: np.ndarray) -> np.floating[Any]:
         """Cost function."""

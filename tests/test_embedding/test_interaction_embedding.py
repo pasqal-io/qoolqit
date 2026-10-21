@@ -56,3 +56,10 @@ def test_interaction_embedder_docstring_example() -> None:
     graph_1 = embedder.embed(matrix)
     graph_2 = embedder.embed(matrix)
     assert graph_1.coords == graph_2.coords
+
+
+def test_interaction_embedding_int_matrix() -> None:
+    config = InteractionEmbedderConfig(seed=42)
+    embedder = InteractionEmbedder(config)
+    graph = embedder.embed(np.array([[0, 2, 1], [2, 0, 3], [1, 3, 0]]))
+    assert all(isinstance(x, float) for coord in graph.coords.values() for x in coord)
