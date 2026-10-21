@@ -118,7 +118,6 @@ ignore = [
     "D102", # undocumented-public-method
     "D103", # undocumented-public-function
     "D105", # undocumented-magic-method
-    "D417", # undocumented-param
 ]
 isort.required-imports = ["from __future__ import annotations"]
 pydocstyle.convention = "google"

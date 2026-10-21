@@ -87,6 +87,7 @@ def basic_compilation(
         register: QoolQit Register.
         drive: QoolQit Drive.
         device: QoolQit Device.
+        profile: the `CompilerProfile` that sets how the program is rescaled to the device.
         device_max_duration_ratio: optionally set the program duration to a fraction
             of the device's maximum allowed duration.
 
@@ -192,6 +193,8 @@ def _validate_program_default_profile(
         register: the register containing the qubits positions.
         drive: the drive acting on qubits, defining amplitude, detuning and phase.
         device: the selected device to compile to.
+        device_max_duration_ratio: if set, the duration is fixed to this fraction of the
+            device's maximum duration, so the drive duration is not checked.
 
     Raises:
         CompilationError: if the compiled program does not respect the device specifications.
@@ -259,6 +262,8 @@ def _validate_program_max_energy_profile(
         register: the register containing the qubits positions.
         drive: the drive acting on qubits, defining amplitude, detuning and phase.
         device: the selected device to compile to.
+        device_max_duration_ratio: if set, the duration is fixed to this fraction of the
+            device's maximum duration, so the drive duration is not checked.
 
     Raises:
         CompilationError: if the compiled program does not respect the device specifications.
