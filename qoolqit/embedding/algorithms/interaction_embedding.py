@@ -9,58 +9,56 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.spatial.distance import pdist, squareform
 
+from qoolqit.embedding.base_embedder import EmbedderConfig
 from qoolqit.graphs import DataGraph
-
-from ..base_embedder import EmbedderConfig
 
 
 @dataclass
 class InteractionEmbedderConfig(EmbedderConfig):
-    """Configuration parameters for the interaction embedding."""
+    """Configuration parameters for the interaction embedding.
+
+    Attributes:
+        method: optimization method passed to `scipy.optimize.minimize`.
+        maxiter: maximum number of optimizer iterations.
+        tol: tolerance for termination.
+        x0: initial node positions, of shape (N, 2) for an N x N matrix.
+            If None, positions are drawn uniformly in [0, 1) using `rng`.
+        rng: seed or generator for the random initial positions, ignored if `x0` is set.
+            Anything accepted by `np.random.default_rng`; if None, results differ
+            between runs.
+    """
 
     method: str = "Nelder-Mead"
     maxiter: int = 200000
     tol: float = 1e-8
     x0: np.ndarray | None = None
-    """If provided, initial positions to start from.
-
-    Must be of shape (N, 2) or flattened to (2N,), where N is the size of the matrix
-    to embed. Otherwise, random positions are drawn uniformly in [0, 1) from an
-    unseeded generator, so results may differ between runs. For reproducible
-    results, pass positions drawn from a seeded generator, e.g.
-    `np.random.default_rng(seed).random((N, 2))`.
-    """
+    rng: int | np.random.Generator | None = None
 
 
 def interaction_embedding(
-    matrix: np.ndarray, method: str, x0: np.ndarray | None, maxiter: int, tol: float
+    matrix: np.ndarray,
+    method: str,
+    x0: np.ndarray | None,
+    maxiter: int,
+    tol: float,
+    rng: int | np.random.Generator | None = None,
 ) -> DataGraph:
-    """Matrix embedding into the interaction term of the Rydberg Analog Model.
+    """Embed a matrix into the interaction term of the Rydberg analog model.
 
-    Uses scipy.minimize to find the optimal set of node coordinates such that the
-    matrix of values 1/(r_ij)^6 approximate the off-diagonal terms of the input matrix.
+    Finds node coordinates whose interactions 1/rᵢⱼ^6 best approximate the
+    off-diagonal entries of `matrix`, using `scipy.optimize.minimize`.
 
-    Check the documentation for scipy.minimize for more information about each parameter:
-    https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
-
-    If `x0` is None, the starting positions are drawn uniformly in [0, 1) from an
-    unseeded generator, so repeated calls may return different embeddings. For
-    reproducible results, generate `x0` with your own seeded generator and pass it
-    explicitly:
-
-    ```python
-    embedder = InteractionEmbedder()
-    rng = np.random.default_rng(seed=4851)
-    embedder.config.x0 = rng.random((len(matrix), 2))
-    ```
-
-    Arguments:
-        matrix: the matrix to embed.
-        method: the method used by scipy.minimize.
-        x0: starting positions, of shape (N, 2) or flattened to (2N,), where N is
-            the size of `matrix`. If None, an unseeded random initialization is used.
-        maxiter: maximum number of iterations.
+    Args:
+        matrix: symmetric N x N matrix to embed.
+        method: optimization method passed to `scipy.optimize.minimize`.
+        x0: initial node positions, of shape (N, 2).
+            If None, positions are drawn uniformly in [0, 1) using `rng`.
+        maxiter: maximum number of optimizer iterations.
         tol: tolerance for termination.
+        rng: seed or generator for the random initial positions, ignored if `x0` is set.
+
+    Returns:
+        DataGraph: graph with node coordinates centered on their median.
     """
 
     def cost_function(new_coords: np.ndarray, matrix: np.ndarray) -> np.floating[Any]:
@@ -71,9 +69,8 @@ def interaction_embedding(
         return np.linalg.norm(new_matrix - matrix)
 
     if x0 is None:
-        # random initial positions
-        rng = np.random.default_rng()
-        x0 = rng.random(len(matrix) * 2, dtype=matrix.dtype)
+        generator = np.random.default_rng(rng)
+        x0 = generator.random(len(matrix) * 2, dtype=matrix.dtype)
 
     # make sure positions are of same type as matrix and flatten
     x0 = np.asarray(x0, dtype=matrix.dtype).flatten()

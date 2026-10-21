@@ -3,51 +3,62 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from qoolqit.embedding import InteractionEmbedder
+from qoolqit.embedding import InteractionEmbedder, InteractionEmbedderConfig
 from qoolqit.graphs import DataGraph
 
 
 @pytest.mark.parametrize("n_qubits", [3, 4, 5])
 def test_interaction_embedding(n_qubits: int) -> None:
 
+    rng = np.random.default_rng(seed=n_qubits)
     embedder = InteractionEmbedder()
-    embedder.config.method = "Nelder-Mead"
-
-    matrix = np.random.rand(n_qubits)
+    embedder.config.rng = 42
 
     with pytest.raises(ValueError):
         # Fails when not a 2D matrix
-        embedded_graph = embedder.embed(matrix)
+        embedder.embed(rng.random(n_qubits))
 
-    matrix = np.random.rand(n_qubits, n_qubits)
+    matrix = rng.random((n_qubits, n_qubits))
 
     with pytest.raises(ValueError):
         # Fails when not symmetric
-        embedded_graph = embedder.embed(matrix)
+        embedder.embed(matrix)
+
+    with pytest.raises(TypeError):
+        embedder.embed(DataGraph.random_er(n=n_qubits, p=0.2))  # type: ignore
 
     matrix = matrix + matrix.T
     embedded_graph = embedder.embed(matrix)
-
     assert embedded_graph.has_coords
+    coords = np.array(list(embedded_graph.coords.values()))
 
-    embedder.config.method = "COBYLA"
-    embedded_graph_2 = embedder.embed(matrix)
-    coords_1 = np.array(list(embedded_graph.coords.values()))
-    coords_2 = np.array(list(embedded_graph_2.coords.values()))
+    # Same seed, same result
+    coords_same_seed = np.array(list(embedder.embed(matrix).coords.values()))
+    np.testing.assert_allclose(coords, coords_same_seed, atol=1e-6)
 
-    assert not np.array_equal(coords_1, coords_2)
+    # A Generator seeded the same way gives the same result
+    embedder.config.rng = np.random.default_rng(42)
+    coords_generator = np.array(list(embedder.embed(matrix).coords.values()))
+    np.testing.assert_allclose(coords, coords_generator, atol=1e-6)
+    embedder.config.rng = 42
 
-    with pytest.raises(TypeError):
-        graph = DataGraph.random_er(n=n_qubits, p=0.2)
-        embedder.embed(graph)  # type: ignore
+    # Config changes reach the optimizer
+    embedder.config.maxiter = 1
+    coords_maxiter = np.array(list(embedder.embed(matrix).coords.values()))
+    assert not np.allclose(coords, coords_maxiter)
 
-    x0 = np.random.rand(n_qubits * 2)
-    embedder.config.x0 = x0
-    embedded_graph_x0_1 = embedder.embed(matrix)
-    coords_x0_1 = np.array(list(embedded_graph_x0_1.coords.values()))
-
-    embedded_graph_x0_2 = embedder.embed(matrix)
-    coords_x0_2 = np.array(list(embedded_graph_x0_2.coords.values()))
-
-    # Results should be identical (up to numerical precision)
+    # Explicit x0 is reproducible and takes precedence over rng
+    embedder.config.maxiter = 200000
+    embedder.config.x0 = rng.random((n_qubits, 2))
+    coords_x0_1 = np.array(list(embedder.embed(matrix).coords.values()))
+    embedder.config.rng = 7
+    coords_x0_2 = np.array(list(embedder.embed(matrix).coords.values()))
     np.testing.assert_allclose(coords_x0_1, coords_x0_2, atol=1e-6)
+
+
+def test_interaction_embedder_docstring_example() -> None:
+    matrix = np.array([[0.0, 1.0, 0.5], [1.0, 0.0, 0.2], [0.5, 0.2, 0.0]])
+    embedder = InteractionEmbedder(InteractionEmbedderConfig(rng=42))
+    graph_1 = embedder.embed(matrix)
+    graph_2 = embedder.embed(matrix)
+    assert graph_1.coords == graph_2.coords
