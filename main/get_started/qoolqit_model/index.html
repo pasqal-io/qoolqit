@@ -2200,14 +2200,14 @@
 <p class="admonition-title">QoolQit Model</p>
 <p>QoolQit introduces a <strong>dimensionless model</strong> where all quantities are expressed relative to an <strong>interaction reference</strong>, such that <span class="arithmatex">\(\tilde{r}_{ij}\geq 1\)</span> and <span class="arithmatex">\(\tilde{J}_{ij}\leq 1\)</span>.</p>
 </div>
-<p>Such reference makes the program definition hardware independent and provides several advantages:</p>
+<p>Such a reference makes the program definition hardware independent and provides several advantages:</p>
 <ul>
 <li><strong>Removal of hardware-specific constants:</strong> By defining a new unit of energy, all device-dependent constants are factored out.</li>
 <li><strong>Dimensionless parameters:</strong> Expressing drive and interaction strengths as dimensionless quantities makes it easier to explore different physical regimes.</li>
 <li><strong>Portability:</strong> Programs can be transferred across different devices and hardware generations with minimal modifications, improving reproducibility and reducing platform-specific code.</li>
 <li><strong>Hardware-agnostic algorithm development:</strong> Developers can design algorithms that focus on the underlying physics and computational logic rather than hardware-specific implementation details.</li>
 </ul>
-<p>To help users understand how to define a program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength is what matters. Thus QoolQit's choice of dimensionless units is natural: interactions are always of order unity, providing an intuitive reference scale for all other quantities.</p>
+<p>To help users understand how to define a program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength are what matter. Thus QoolQit's choice of dimensionless units is natural: interactions are always of order unity, providing an intuitive reference scale for all other quantities.</p>
 <h3 id="drive-regimes">Drive regimes</h3>
 <p>Since the drive's amplitude <span class="arithmatex">\(\tilde{\Omega}\)</span> is expressed relative to the maximum interaction strength, strong and weak drive regimes are defined independently of the specific geometry:</p>
 <table>
@@ -2267,7 +2267,7 @@
 <p>Next we will discuss the compilation, the crucial step to translate a QoolQit dimensionless program to a sequence of operations that can be realized on a real neutral-atom-based QPU.</p>
 <h2 id="compilation">Compilation</h2>
 <p>A QoolQit program is expressed in dimensionless units, allowing users to define problems independently of any specific hardware platform.
-In contrast, hardware specifications are given in physical units and and can only realize a limited range of parameter values.
+In contrast, hardware specifications are given in physical units and can only realize a limited range of parameter values.
 Thus, before executing it on real hardware, a program must be compiled. This happens in two steps:</p>
 <ul>
 <li><strong>Dimensionalization</strong>: Converts dimensionless parameters into physical units of energy, distance, and time so that they are compatible with the capabilities of the target device, when possible.</li>
@@ -2308,7 +2308,7 @@ H(t) =
 </tr>
 <tr>
 <td><span class="arithmatex">\(r_{ij}\)</span></td>
-<td>Physical distance between atoms site <span class="arithmatex">\(i\)</span> and <span class="arithmatex">\(j\)</span>.</td>
+<td>Physical distance between atom sites <span class="arithmatex">\(i\)</span> and <span class="arithmatex">\(j\)</span>.</td>
 <td><span class="arithmatex">\(\mu\mathrm{m}\)</span></td>
 </tr>
 <tr>
@@ -2347,7 +2347,7 @@ J_{\text{max}}^{d} = \frac{C_6}{(r_{\text{min}}^{d})^{6}}.
 \]</div>
 <p>Most programs are built starting from the definition of a set of coordinates for the atoms (register), or equivalently an interaction matrix.
 For this reason renormalization provides a natural constraint for program feasibility.
-Since, <span class="arithmatex">\(J_{\text{max}}^{d}\)</span> is the largest interaction the device can produce, every physically realizable register satisfies <span class="arithmatex">\(\tilde r_{ij} \geq 1\)</span> or equivalently <span class="arithmatex">\(\tilde J_{ij} \leq 1\)</span>.</p>
+Since <span class="arithmatex">\(J_{\text{max}}^{d}\)</span> is the largest interaction the device can produce, every physically realizable register satisfies <span class="arithmatex">\(\tilde r_{ij} \geq 1\)</span> or equivalently <span class="arithmatex">\(\tilde J_{ij} \leq 1\)</span>.</p>
 
 
 

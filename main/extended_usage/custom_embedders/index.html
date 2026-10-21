@@ -1236,10 +1236,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#level-2-concretizing-the-algorithm-and-config" class="md-nav__link">
+  <a href="#level-3-concretizing-the-algorithm-and-config" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Level 2: Concretizing the algorithm and config
+        Level 3: Concretizing the algorithm and config
       </span>
     </span>
   </a>
@@ -1997,10 +1997,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#level-2-concretizing-the-algorithm-and-config" class="md-nav__link">
+  <a href="#level-3-concretizing-the-algorithm-and-config" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Level 2: Concretizing the algorithm and config
+        Level 3: Concretizing the algorithm and config
       </span>
     </span>
   </a>
@@ -2042,11 +2042,11 @@
 <p>In this notebook, you will learn how to:</p>
 <ul>
 <li>understand how the embedding module is structured,</li>
-<li>define a custom embedder from a function/algorithm and a config dataclass,</li>
+<li>define a custom embedder from a function/algorithm and a config dataclass.</li>
 </ul>
 <p>The <a href="../../fundamentals/embedding/">available embedders</a> page described some pre-defined embedders. The embedding module in QoolQit is designed to be flexible and extendable to various forms of embedding algorithms developed for the Rydberg analog model, with potentially different inputs and outputs, and different configuration parameters. It is structured in three levels:</p>
 <h2 id="level-1-concretizing-the-interface">Level 1: Concretizing the interface</h2>
-<p>The <code>BaseEmbedder</code> is the abstract base class for all embedders, but it is defined on generic input and output data types. It enforces the interface for all embedders by defining the <code>info</code> and <code>config</code> properties, as well as the <code>embed</code> method. It also defines abstract <code>validate_input</code> and <code>validate_output</code> methods that must be overwritten by subclasses.</p>
+<p>The <code>BaseEmbedder</code> is the abstract base class for all embedders, but it is defined on generic input and output data types. It enforces the interface for all embedders by defining the <code>info</code> and <code>config</code> properties, as well as the <code>embed</code> method. It also defines abstract <code>validate_input</code> and <code>validate_output</code> methods that must be overridden by subclasses.</p>
 <h2 id="level-2-concretizing-inputoutput-data">Level 2: Concretizing input/output data</h2>
 <p>The next level is to define the concrete data types involved in the mapping, thus defining a <em>family</em> of embedders. Currently, there are two families of embedders defined in QoolQit:</p>
 <ul>
@@ -2055,7 +2055,7 @@
 </ul>
 <p>In both cases, the <code>validate_input</code> and <code>validate_output</code> are overridden to check the input and output are of the correct type. In the case of the <code>MatrixToGraphEmbedder</code>, conditions on the input matrix are also checked such as if the array has the right dimensions and is symmetric. Still, at this level, no specific embedding algorithm is defined.</p>
 <p>In the future, more families of embedders can be defined that may require different input and output data types.</p>
-<h2 id="level-2-concretizing-the-algorithm-and-config">Level 2: Concretizing the algorithm and config</h2>
+<h2 id="level-3-concretizing-the-algorithm-and-config">Level 3: Concretizing the algorithm and config</h2>
 <p>The final level is defining concrete embedders, such as the ones we have used in the <a href="../../fundamentals/embedding/">available embedders page</a>. Here the requirement is to define a concrete function that maps the input to the output, along with any parameters required, and a config dataclass inheriting from <code>EmbedderConfig</code> holding all the configuration parameters.</p>
 <p>Let's exemplify the case of defining a custom embedder in the family of graph to graph embedders.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
@@ -2139,8 +2139,8 @@
     <span class="o">-</span> <span class="n">some_other_param</span>
 
 <span class="n">Algorithm</span> <span class="n">signature</span> <span class="n">parameters</span><span class="p">:</span>
-    <span class="o">-</span> <span class="n">graph</span>
     <span class="o">-</span> <span class="n">param1</span>
+    <span class="o">-</span> <span class="n">graph</span>
 </code></pre></div>
 <p>Furthermore, because we are defining an embedder in the <code>GraphToGraphEmbedder</code>, the input must be an instance of a <code>DataGraph</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">embedder</span> <span class="o">=</span> <span class="n">GraphToGraphEmbedder</span><span class="p">(</span><span class="n">my_embedding_function</span><span class="p">,</span> <span class="n">MyEmbedderConfig</span><span class="p">())</span>

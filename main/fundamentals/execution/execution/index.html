@@ -2186,8 +2186,8 @@
 - locally installed emulators
 - remote cloud emulators
 - QPUs</p>
-<p>Remote emulators and QPU <strong>require</strong> credentials to submit a job.
-More information on how to access a QPU through your favorite cloud provider, is available at <a href="https://www.pasqal.com/solutions/cloud/">Pasqal's website</a>.
+<p>Remote emulators and QPUs <strong>require</strong> credentials to submit a job.
+More information on how to access a QPU through your favorite cloud provider is available at <a href="https://www.pasqal.com/solutions/cloud/">Pasqal's website</a>.
 Later, we will briefly show how to authenticate and send a remote job.</p>
 <hr />
 <p>Let us revisit the quantum program definition described before in the <a href="../../quantum_program/#defining-a-quantum-program">Defining a quantum program</a> page.</p>
@@ -2217,7 +2217,7 @@ Later, we will briefly show how to authenticate and send a remote job.</p>
 <h2 id="local-emulator">Local Emulator</h2>
 <p>Local emulators run quantum simulations directly on your machine. They are ideal for development, testing, and small-scale quantum programs.
 QoolQit provides easy access to local emulation through the <code>LocalEmulator</code> class, which allows you to <code>run</code> quantum programs locally.</p>
-<p>For all emulators, a job handler is returned, to which you can query the results.
+<p>For all emulators, a job handler is returned, from which you can query the results.
 Emulating locally will only return completed jobs, as opposed to remote emulators, which we will discuss later.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEmulator</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
@@ -2230,11 +2230,11 @@ Emulating locally will only return completed jobs, as opposed to remote emulator
 - get the results.
 - configure emulation backends.</p>
 <h3 id="backend-types">Backend Types</h3>
-<p>The <code>LocalEmulator</code> allows to emulate the program run on different backends provided by Pasqal:</p>
+<p>The <code>LocalEmulator</code> allows you to emulate the program run on different backends provided by Pasqal:</p>
 <ul>
-<li><code>QutipBackendV2</code>: Based on Qutip, runs programs with up to ~12 qubits and return qutip objects in the results (default).</li>
-<li><code>SVBackend</code>: PyTorch based state vectors and sparse matrices emulator. Runs programs with up to ~25 qubits and return torch objects in the results. Requires installing the <code>emu-sv</code> package (see the <a href="https://docs.pasqal.com/emulationtools/emusv/">emu-sv documentation</a>)</li>
-<li><code>MPSBackend</code>: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~80 qubits and return torch objects in the results. Requires installing the <code>emu-mps</code> package (see the <a href="https://docs.pasqal.com/emulationtools/emumps/">emu-mps documentation</a>).</li>
+<li><code>QutipBackendV2</code>: Based on Qutip, runs programs with up to ~12 qubits and returns qutip objects in the results (default).</li>
+<li><code>SVBackend</code>: PyTorch based state vectors and sparse matrices emulator. Runs programs with up to ~25 qubits and returns torch objects in the results. Requires installing the <code>emu-sv</code> package (see the <a href="https://docs.pasqal.com/emulationtools/emusv/">emu-sv documentation</a>)</li>
+<li><code>MPSBackend</code>: PyTorch based emulator using Matrix Product States (MPS). Runs programs with up to ~80 qubits and returns torch objects in the results. Requires installing the <code>emu-mps</code> package (see the <a href="https://docs.pasqal.com/emulationtools/emumps/">emu-mps documentation</a>).</li>
 </ul>
 <p>To use a particular backend it is sufficient to specify it through the <code>backend_type</code> argument:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackendType</span><span class="p">,</span> <span class="n">LocalEmulator</span>
@@ -2244,7 +2244,7 @@ Emulating locally will only return completed jobs, as opposed to remote emulator
 <h3 id="handling-local-results">Handling local results</h3>
 <p>The call <code>emulator.run(program)</code> will return a <code>Job</code> object type. 
 All execution methods (<code>LocalEmulator.run()</code>, <code>RemoteEmulator.run()</code>, and <code>QPU.run()</code>) return a <code>Job</code> object that serves as a handler for managing the execution lifecycle and to fetch the results once the computation is completed. More about this in the remote emulator <a href="#handling-remote-results-job-and-status-management">section</a> of this page.</p>
-<p>As an example, lets inspect the results we got in the previous run:</p>
+<p>As an example, let us inspect the results we got in the previous run:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># single result in the sequence</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">results</span><span class="o">.</span><span class="n">get_result_tags</span><span class="p">()</span>
 </code></pre></div>
@@ -2255,12 +2255,12 @@ All execution methods (<code>LocalEmulator.run()</code>, <code>RemoteEmulator.ru
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">final_bitstrings</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">final_bitstrings</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">final_bitstrings</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">Counter</span><span class="p">({</span><span class="s1">'111'</span><span class="p">:</span> <span class="mi">813</span><span class="p">,</span>
-         <span class="s1">'011'</span><span class="p">:</span> <span class="mi">65</span><span class="p">,</span>
-         <span class="s1">'110'</span><span class="p">:</span> <span class="mi">61</span><span class="p">,</span>
-         <span class="s1">'101'</span><span class="p">:</span> <span class="mi">54</span><span class="p">,</span>
-         <span class="s1">'001'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-         <span class="s1">'100'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="n">Counter</span><span class="p">({</span><span class="s1">'111'</span><span class="p">:</span> <span class="mi">805</span><span class="p">,</span>
+         <span class="s1">'110'</span><span class="p">:</span> <span class="mi">68</span><span class="p">,</span>
+         <span class="s1">'101'</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+         <span class="s1">'011'</span><span class="p">:</span> <span class="mi">57</span><span class="p">,</span>
+         <span class="s1">'100'</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+         <span class="s1">'001'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
          <span class="s1">'010'</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 </code></pre></div>
 <h3 id="emulation-configuration">Emulation configuration</h3>
@@ -2282,7 +2282,7 @@ Once instantiated, the configuration can be then passed to the emulator at insta
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># run the program with the new config</span>
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">job</span> <span class="o">=</span> <span class="n">emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
 </code></pre></div>
-<p>As before, results can be inspected and queried specific observable result:</p>
+<p>As before, results can be inspected and queried for a specific observable result:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># get the results</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">results</span><span class="p">()</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
@@ -2336,7 +2336,7 @@ Once instantiated, the configuration can be then passed to the emulator at insta
 and imported from their respective packages, namely <code>pulser-simulation</code>, <code>emu-sv</code> and <code>emu-mps</code>.</p>
 <p>As we will see in the next section, <code>EmulationConfig</code> can also be used to configure the remote emulators.</p>
 <h2 id="remote-emulator">Remote Emulator</h2>
-<p>Remote emulators run on cloud infrastructure, potentially allowing to simulate larger quantum systems.
+<p>Remote emulators run on cloud infrastructure, potentially allowing you to simulate larger quantum systems.
 As anticipated, for remote workflows <strong>credentials to create a connection are required</strong>.
 Here we will show how to create the specific handler of Pasqal Cloud services.
 Again, for more information about Pasqal Cloud and other providers, please refer to the <a href="https://www.pasqal.com/solutions/cloud/">Pasqal Cloud website</a>.</p>
@@ -2356,7 +2356,7 @@ Again, for more information about Pasqal Cloud and other providers, please refer
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">remote_emulator</span> <span class="o">=</span> <span class="n">RemoteEmulator</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">)</span>
 </code></pre></div>
 <p>The <code>RemoteEmulator</code> supports the equivalent remote version of the above-mentioned backends, respectively <code>RemoteEmuFreeBackend</code> (default), <code>RemoteSVBackend</code> and <code>RemoteMPSBackend</code>.
-Depending on your provider, however, some emulator backend might not be available to use.</p>
+Depending on your provider, however, some emulator backends might not be available to use.</p>
 <p>As before, also <code>RemoteEmulator</code> can be instantiated with:
 - <code>backend_type</code>: remote counterpart of local backends, namely <code>RemoteEmuFreeBackend</code> (default), <code>RemoteSVBackend</code>, <code>RemoteMPSBackend</code>.
 - <code>emulation_config</code>: same as local emulators. See <a href="#emulation-configuration">Emulation configuration</a>.
@@ -2383,10 +2383,10 @@ Depending on your provider, however, some emulator backend might not be availabl
 <a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="p">)</span>
 </code></pre></div>
 <h3 id="handling-remote-results-job-and-status-management">Handling remote results: job and status management</h3>
-<p>Remote emulators and QPU both have a <code>run()</code> method that will return a job handler.</p>
+<p>Remote emulators and QPUs both have a <code>run()</code> method that will return a job handler.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">job</span> <span class="o">=</span> <span class="n">remote_emulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
 </code></pre></div>
-<p>If your program requires intensive resources to be run, or if QPU happens to be on maintenance, results might not be immediately available.
+<p>If your program requires intensive resources to be run, or if the QPU happens to be under maintenance, results might not be immediately available.
 For this reason, the job handler provides several key methods for monitoring and retrieving results:</p>
 <p><strong>Querying Job Status:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check the current status of the job</span>
@@ -2400,7 +2400,7 @@ For this reason, the job handler provides several key methods for monitoring and
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Get results with timeout (raises TimeoutError if exceeded)</span>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">results</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>  <span class="c1"># 5 minutes timeout</span>
 </code></pre></div></p>
-<p>Please note that depending on the provider connection lifecycle, <code>job.results()</code> may not allow to wait indefinitely.
+<p>Please note that depending on the provider connection lifecycle, <code>job.results()</code> may not allow waiting indefinitely.
 It is good practice to always check the status of the job before retrieving results.</p>
 <p><strong>Job Identification and Retrieval:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_batch_id</span>
@@ -2438,7 +2438,7 @@ It is good practice to always check the status of the job before retrieving resu
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span> <span class="ne">DeprecationWarning</span><span class="p">:</span> <span class="n">Defining</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">emulation</span> <span class="n">trajectories</span> <span class="n">via</span> <span class="s1">'NoiseModel.runs'</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="n">since</span> <span class="n">pulser</span> <span class="n">v1</span><span class="mf">.7</span><span class="o">.</span> <span class="n">Please</span> <span class="n">favour</span> <span class="n">using</span> <span class="s1">'EmulationConfig.n_trajectories'</span> <span class="n">instead</span><span class="o">.</span>
 </code></pre></div>
-<p>Finally, to set up a QPU backend, there is no configuration and, as per the properties of the quantum hardware, results will come as a bitstrings counter of length specified by the <code>num_shots</code> parameter.</p>
+<p>Finally, to set up a QPU backend, there is no configuration and, as per the properties of the quantum hardware, results will come as a bitstring counter whose counts sum to the <code>num_shots</code> parameter.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">qoolqit.execution</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPU</span>
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">qpu</span> <span class="o">=</span> <span class="n">QPU</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">connection</span><span class="p">,</span> <span class="n">num_shots</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
@@ -2447,7 +2447,7 @@ It is good practice to always check the status of the job before retrieving resu
 <h2 id="hardware-considerations">Hardware Considerations</h2>
 <p>When running on QPUs, consider:</p>
 <ul>
-<li><strong>Limited shots</strong>: QPU time is precious, so choose your number shots carefully</li>
+<li><strong>Limited shots</strong>: QPU time is precious, so choose your number of shots carefully</li>
 <li><strong>Hardware constraints</strong>: Your program must be compiled for the specific QPU device</li>
 <li><strong>Queue times</strong>: QPU jobs may wait in queue before execution</li>
 </ul>

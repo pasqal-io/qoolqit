@@ -2145,8 +2145,8 @@
 <li>distinguish drive-limited and interaction-limited compilation,</li>
 <li>see why time must be rescaled together with the Hamiltonian</li>
 </ul>
-<p>This section describes how QoolQit's compilation maps an abstract programs onto actual hardware.</p>
-<p>This page assumes the knowledge of the <a href="../../get_started/qoolqit_model/">QoolQit Model</a> page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.</p>
+<p>This section describes how QoolQit's compilation maps an abstract program onto actual hardware.</p>
+<p>This page assumes knowledge of the <a href="../../get_started/qoolqit_model/">QoolQit Model</a> page where we introduce the main idea of compilation at a high level: the compiler translates a program, defined in dimensionless units, to the physical scale used to realize it on hardware.</p>
 <h2 id="compilation_1">Compilation</h2>
 <h3 id="from-dimensionless-programs-to-physical-hardware">From dimensionless programs to physical hardware</h3>
 <p>A QoolQit program is specified in terms of dimensionless quantities (<span class="arithmatex">\(\tilde{J}_{ij}\)</span>, <span class="arithmatex">\(\tilde{\Omega}(t)\)</span>, <span class="arithmatex">\(\tilde{\delta}(t)\)</span>, <span class="arithmatex">\(\tilde t\)</span>). Once the device, and therefore <span class="arithmatex">\(J_{\text{max}}\)</span> and <span class="arithmatex">\(r_{\text{min}}\)</span> are fixed, the conversion to physical units is <strong>completely determined</strong>:</p>
@@ -2166,7 +2166,7 @@ t = \tilde t/J_{\text{max}}.
 <h3 id="energy-scale-maximization">Energy scale maximization</h3>
 <p>We will now discuss the compilation strategy that QoolQit uses to rescale the compiled program so that it can both run on a physical QPU and fully exploit its capabilities.</p>
 <p>As discussed, the user specifies a dimensionless program by providing a register (which determines the values <span class="arithmatex">\(\tilde J_{ij}\)</span>) and a time-dependent drive (amplitude, detuning and phase, which determines <span class="arithmatex">\(\tilde \Omega(t)\)</span>, <span class="arithmatex">\(\tilde\delta(t)\)</span>, <span class="arithmatex">\(\tilde\Delta(t)\)</span> and <span class="arithmatex">\(\phi\)</span>).
-Over all these parameters, two in particular are arguably more important since they set the energy scales of the interactions and of the drive, and thus their ratio.
+Of all these parameters, two in particular are arguably more important since they set the energy scales of the interactions and of the drive, and thus their ratio.
 Respectively, they are the maximum interaction <span class="arithmatex">\(\max_{i&gt;j}\tilde J_{ij}\)</span> and the maximum driving amplitude <span class="arithmatex">\(\max_{\tilde t}\tilde\Omega\)</span> in the defined program.</p>
 <p>Thus, simplifying, we will represent a program as a point in the <span class="arithmatex">\((\tilde J, \tilde\Omega)\)</span> plane. Interestingly, every program also defines a line through the origin in that plane, with slope <span class="arithmatex">\(\tilde{\Omega}_{\text{max}}/\tilde{J}_{\text{max}}\)</span>. All points lying on the same line are ideally physically identical programs, differing only by a global energy scale factor while preserving the fundamental ratio between driving and interaction strengths.</p>
 <p>In addition to the upper bound <span class="arithmatex">\(\tilde J_{ij} \leq 1\)</span> inherent to the adimensionalization, the device imposes a maximum drive amplitude <span class="arithmatex">\(\tilde\Omega_{\text{max}} = \Omega_{\max}/J_{\text{max}}\)</span>. Together these define a <strong>device allowed region</strong> represented as a shaded green rectangle in the figure below:</p>
@@ -2174,7 +2174,7 @@ Respectively, they are the maximum interaction <span class="arithmatex">\(\max_{
 <p>If the user's point lies outside this region, the program cannot be implemented as specified. If it lies strictly inside, the program is feasible but does not exploit the full capability of the device. Compilation resolves both situations by rescaling the program (sliding the point along the line) until it sits exactly on the boundary of the feasible region, maximizing either <span class="arithmatex">\(\tilde\Omega\)</span> or <span class="arithmatex">\(\tilde J\)</span>, depending on your program.</p>
 <div class="admonition note">
 <p class="admonition-title">Why maximize the energy scale?</p>
-<p>Higher amplitude guarantees better signal/noise ratio and thus better results, while higher interactions, thus lower distances between atoms help making the register more compact, allowing to put more qubits in your program.</p>
+<p>Higher amplitude guarantees better signal/noise ratio and thus better results, while higher interactions, and thus shorter distances between atoms, help make the register more compact, allowing you to put more qubits in your program.</p>
 </div>
 <p>Concretely, compilation rescales all dimensionless parameters by a common factor <span class="arithmatex">\(\alpha\)</span>:</p>
 <div class="arithmatex">\[
@@ -2221,7 +2221,7 @@ i\frac{d}{d\tilde t}|\psi(\tilde t) \rangle = \tilde H(\tilde t)|\psi(\tilde t) 
 <div class="arithmatex">\[
 \tilde H(\tilde t)\;\longrightarrow\;\alpha\,\tilde H(\tilde t).
 \]</div>
-<p>For two programs along the same line to represent the <strong>same physics</strong>,i.e. to generate the same unitary evolution, the dimensionless time variable must be rescaled by the inverse factor:</p>
+<p>For two programs along the same line to represent the <strong>same physics</strong>, i.e. to generate the same unitary evolution, the dimensionless time variable must be rescaled by the inverse factor:</p>
 <div class="arithmatex">\[
 \tilde t\;\longrightarrow\;\tilde t/\alpha.
 \]</div>
