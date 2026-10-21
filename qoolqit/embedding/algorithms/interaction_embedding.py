@@ -44,7 +44,7 @@ def interaction_embedding(
 ) -> DataGraph:
     """Embed a matrix into the interaction term of the Rydberg analog model.
 
-    Finds node coordinates whose interactions 1/rᵢⱼ^6 best approximate the
+    Finds node coordinates whose interactions 1/rᵢⱼ⁶ best approximate the
     off-diagonal entries of `matrix`, using `scipy.optimize.minimize`.
 
     Args:
@@ -65,7 +65,7 @@ def interaction_embedding(
     def cost_function(new_coords: np.ndarray, matrix: np.ndarray) -> np.floating[Any]:
         """Cost function."""
         new_coords = np.reshape(new_coords, (len(matrix), 2))
-        # Cost based on minimizing the distance between the matrix and the interaction 1/r^6
+        # Cost based on minimizing the distance between the matrix and the interaction 1/r⁶
         new_matrix = squareform(1.0 / (pdist(new_coords) ** 6))
         return np.linalg.norm(new_matrix - matrix)
 
