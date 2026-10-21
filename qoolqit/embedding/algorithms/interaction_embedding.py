@@ -69,7 +69,8 @@ def interaction_embedding(
         return np.linalg.norm(new_matrix - matrix)
 
     if x0 is None:
-        x0 = np.random.default_rng(seed).random(len(matrix) * 2, dtype=matrix.dtype)
+        rng = np.random.default_rng(seed)
+        x0 = rng.random(len(matrix) * 2, dtype=matrix.dtype)
 
     # make sure positions are of same type as matrix and flatten
     x0 = np.asarray(x0, dtype=matrix.dtype).flatten()
