@@ -38,7 +38,7 @@ Finally, when a program is compiled, the compilation output is stored internally
 At the moment, QoolQit provides two compilation profiles: default and maximum energy.
 Usage and examples can be found in the [Devices and Compilation](./device_and_compilation.md) page of this documentation.
 
-As anticipated, a program needs to be compiled to a particular device, whose hardware constraints and limits the range of parameters in a program.
+As anticipated, a program needs to be compiled to a particular device, whose hardware constraints limit the range of parameters in a program.
 The two most important ones for compilation are the maximum drive amplitude $\Omega_{\max}^{d}$ and the maximum interaction energy $J_{\max}^{d}$, or equivalently, the minimum atom spacing $r_{\min}^{d}$.
 In the following, for simplicity, we will represent an input program and its hardware constraints in the $(\tilde{\Omega}, \tilde{J})$ plane.
 
@@ -98,7 +98,7 @@ Importantly, in both cases, these effects can be included by configuring emulato
 ### Hardware modulation
 
 **Hardware modulation** arises from the finite bandwidth limitations of optical channels, such as the lasers that drive qubits in neutral atom QPUs. When waveforms contain sharp features (like steps or rapid transitions), the hardware's bandwidth constraints will smooth out these abrupt changes during actual laser pulse execution. This smoothing can alter the intended pulse shape and timing, potentially affecting the quantum operation's fidelity.
-The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in [Devices and Compilation](./device_and_compilation.md). Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag `with_hardware_modulation=true`, as described in [Execution](../execution/execution.md).
+The net effect on the drive is always visible when inspecting the compiled sequence in a program, as shown in [Devices and Compilation](./device_and_compilation.md). Moreover, to account for hardware modulation during the emulation of a program, emulators must be configured with the flag `with_modulation=True`, as described in [Execution](../execution/execution.md).
 
 ### Noise
 

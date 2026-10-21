@@ -16,7 +16,7 @@ A **register** defines the **positions** of qubits in your program. In neutral-a
 
 !!! tip "Use unit spacing"
 
-    The closest pair of qubits should be at distance **1**. This convention normalises interaction strengths and keeps drive parameters interpretable across different layouts.
+    The closest pair of qubits should be at distance **1**. This convention normalizes interaction strengths and keeps drive parameters interpretable across different layouts.
 
 ```python exec="on" source="above" html="true" session="programming"
 from qoolqit import Register
@@ -154,7 +154,7 @@ The **blockade regime** occurs when interactions prevent nearby atoms from being
 
 We will compare two programs:
 
-| Case | $\tilde{\Omega}$ | Regime | Expected behaviour |
+| Case | $\tilde{\Omega}$ | Regime | Expected behavior |
 |------|-----------------|--------|--------------------|
 | Blockade | $0.3$ | $\tilde{\Omega} \ll \tilde{J}$ | Double excitation $\vert 11\rangle$ suppressed |
 | Non-blockade | $2.0$ | $\tilde{\Omega} \gg \tilde{J}$ | Qubits behave more independently; $\vert 11\rangle$ accessible |
@@ -230,7 +230,7 @@ from qoolqit.visualization import fig_to_html; print(fig_to_html())  # markdown-
 
 ### What to expect
 
-- **Blockade case** ($\tilde{\Omega} = 0.3$): the strong interaction heavily penalises the $|11\rangle$ state. You should observe a suppressed probability of both qubits being excited simultaneously.
+- **Blockade case** ($\tilde{\Omega} = 0.3$): the strong interaction heavily penalizes the $|11\rangle$ state. You should observe a suppressed probability of both qubits being excited simultaneously.
 - **Non-blockade case** ($\tilde{\Omega} = 2.0$): the drive dominates and interactions are comparatively weak, so the two qubits behave more independently and $|11\rangle$ becomes much more accessible.
 
 !!! info "Go further"

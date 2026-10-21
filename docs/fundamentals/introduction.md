@@ -27,12 +27,12 @@ The first part focuses on **problem definition and embedding**.
 
 The second part covers program construction, compilation, and execution.
 
-The [quantum program](./quantum_program.md#defining-a-quantum-program) page details how create a quantum program from its basic components:
+The [quantum program](./quantum_program.md#defining-a-quantum-program) page details how to create a quantum program from its basic components:
 
 - a [`Register`](./quantum_program.md#registers) — qubit positions
 - a [`Drive`](./quantum_program.md#drives) — drive Hamiltonian, as composed of [`Waveforms`](./quantum_program.md#waveforms) to specify the time-dependent qubit controls
 
-Once defined, a quantum program **must** be compiled to a QoolQit `Device`, as described in the [`device amd compilation`](./compilation/device_and_compilation.md) page. This step will encoding hardware constraints and units and generate an executable program.
+Once defined, a quantum program **must** be compiled to a QoolQit `Device`, as described in the [`device and compilation`](./compilation/device_and_compilation.md) page. This step will encode hardware constraints and units and generate an executable program.
 
 Finally, see the [execution](./execution/execution.md) page to:
 

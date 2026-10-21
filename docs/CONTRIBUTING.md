@@ -22,7 +22,7 @@ Make a new branch via
 git branch <your initials>/<branch name>
 ```
 
-Next, checkout your new branch, and associate a branch to it on the GitHub server:
+Next, check out your new branch, and associate a branch to it on the GitHub server:
 
 ```shell
 git checkout <your initials>/<branch name>
@@ -37,7 +37,7 @@ git push --set-upstream origin <your initials>/<branch name>
   git clone https://github.com/pasqal-io/qoolqit.git
   ```
 
-2) Setup an environment for developing. From your `qoolqit` folder run:
+2) Set up an environment for developing. From your `qoolqit` folder run:
 
   ```sh
   python -m venv .venv
@@ -55,7 +55,7 @@ git push --set-upstream origin <your initials>/<branch name>
 
 ### Useful things for your workflow: Linting and Testing
 
-Use `pre-commit` hooks to make sure that the code is properly linted before pushing a new commit. Make sure that the unit tests and type checks are passing since the merge request will not be accepted if the automatic CI/CD pipeline do not pass.
+Use `pre-commit` hooks to make sure that the code is properly linted before pushing a new commit. Make sure that the unit tests and type checks are passing since the merge request will not be accepted if the automatic CI/CD pipeline does not pass.
 
 ```shell
 pip install pre-commit
