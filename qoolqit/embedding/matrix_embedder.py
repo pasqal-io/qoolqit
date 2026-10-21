@@ -44,14 +44,14 @@ class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbedderConfig]):
     """A matrix to graph embedder using the interaction embedding algorithm.
 
     Starting positions are random unless `x0` is set in the config. For reproducible
-    results, set `rng` to an integer seed or a `np.random.Generator`:
+    results, set `seed` to an integer:
 
     ```python
     import numpy as np
     from qoolqit.embedding import InteractionEmbedder, InteractionEmbedderConfig
 
     matrix = np.array([[0.0, 1.0, 0.5], [1.0, 0.0, 0.2], [0.5, 0.2, 0.0]])
-    embedder = InteractionEmbedder(InteractionEmbedderConfig(rng=42))
+    embedder = InteractionEmbedder(InteractionEmbedderConfig(seed=42))
     graph = embedder.embed(matrix)
     ```
     """

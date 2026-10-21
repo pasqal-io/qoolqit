@@ -22,17 +22,16 @@ class InteractionEmbedderConfig(EmbedderConfig):
         maxiter: maximum number of optimizer iterations.
         tol: tolerance for termination.
         x0: initial node positions, of shape (N, 2) for an N x N matrix.
-            If None, positions are drawn uniformly in [0, 1) using `rng`.
-        rng: seed or generator for the random initial positions, ignored if `x0` is set.
-            Anything accepted by `np.random.default_rng`; if None, results differ
-            between runs.
+            If None, positions are drawn uniformly in [0, 1), seeded by `seed`.
+        seed: seed for the random initial positions, ignored if `x0` is set.
+            If None, results differ between runs.
     """
 
     method: str = "Nelder-Mead"
     maxiter: int = 200000
     tol: float = 1e-8
     x0: np.ndarray | None = None
-    rng: int | np.random.Generator | None = None
+    seed: int | None = None
 
 
 def interaction_embedding(
@@ -41,7 +40,7 @@ def interaction_embedding(
     x0: np.ndarray | None,
     maxiter: int,
     tol: float,
-    rng: int | np.random.Generator | None = None,
+    seed: int | None = None,
 ) -> DataGraph:
     """Embed a matrix into the interaction term of the Rydberg analog model.
 
@@ -52,10 +51,11 @@ def interaction_embedding(
         matrix: symmetric N x N matrix to embed.
         method: optimization method passed to `scipy.optimize.minimize`.
         x0: initial node positions, of shape (N, 2).
-            If None, positions are drawn uniformly in [0, 1) using `rng`.
+            If None, positions are drawn uniformly in [0, 1), seeded by `seed`.
         maxiter: maximum number of optimizer iterations.
         tol: tolerance for termination.
-        rng: seed or generator for the random initial positions, ignored if `x0` is set.
+        seed: seed for the random initial positions, ignored if `x0` is set.
+            If None, results differ between runs.
 
     Returns:
         DataGraph: graph with node coordinates centered on their median.
@@ -69,8 +69,7 @@ def interaction_embedding(
         return np.linalg.norm(new_matrix - matrix)
 
     if x0 is None:
-        generator = np.random.default_rng(rng)
-        x0 = generator.random(len(matrix) * 2, dtype=matrix.dtype)
+        x0 = np.random.default_rng(seed).random(len(matrix) * 2, dtype=matrix.dtype)
 
     # make sure positions are of same type as matrix and flatten
     x0 = np.asarray(x0, dtype=matrix.dtype).flatten()
