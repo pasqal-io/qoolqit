@@ -11,7 +11,10 @@ import torch
 
 from qoolqit.devices.device import Device
 from qoolqit.embedding.algorithms.blade._force import Force
-from qoolqit.embedding.algorithms.blade.exceptions import DistanceRatioException
+from qoolqit.embedding.algorithms.blade.exceptions import (
+    DistanceRatioException,
+    DuplicatePositionsError,
+)
 from qoolqit.embedding.base_embedder import EmbedderConfig
 
 from ._dimension_shrinker import DimensionShrinker
@@ -41,6 +44,26 @@ def _compute_limited_constraint_forces(*, force: Force, max_distance_to_walk: fl
     return limited_resulting_forces
 
 
+def check_no_duplicate_positions(distance_matrix: np.ndarray, step: int) -> None:
+    """Raise `DuplicatePositionsError` if two positions coincide.
+
+    Equivalent to `np.unique(positions, axis=0).shape == positions.shape`, but
+    computed from the pairwise distances: two positions coincide if and only if
+    an off-diagonal distance is zero.
+    """
+    n = len(distance_matrix)
+    if n < 2:
+        return
+
+    # strided view of the off-diagonal terms (no copy): after the first diagonal term,
+    # the flattened matrix is made of n - 1 blocks of n off-diagonal terms each followed
+    # by a diagonal term
+    off_diagonal = distance_matrix.reshape(-1)[1:].reshape(n - 1, n + 1)[:, :n]
+    min_distance = np.min(off_diagonal)
+    if not min_distance > 0:
+        raise DuplicatePositionsError(step=step, min_distance=float(min_distance))
+
+
 def update_positions(
     *,
     positions: np.ndarray,
@@ -53,6 +76,7 @@ def update_positions(
     draw_step: bool = False,
     step: int | None = None,
     draw_weighted_graph: bool = False,
+    distance_matrix: np.ndarray | None = None,
 ) -> np.ndarray:
     """Compute vector moves to adjust node positions toward target interactions.
 
@@ -76,6 +100,8 @@ def update_positions(
         interaction targets.
     draw_step: Whether to draw the nodes and the forces.
     step: Step number.
+    distance_matrix: If set, the pairwise distances of `positions` (as computed by
+        `distance_matrix_from_positions`), to avoid computing them again.
     """
     if draw_step:
         print(f"{weight_relative_threshold=}")
@@ -98,7 +124,8 @@ def update_positions(
     assert nb_positions == n
 
     position_differences = positions[np.newaxis, :] - positions[:, np.newaxis]
-    distance_matrix = np.linalg.norm(position_differences, axis=2)
+    if distance_matrix is None:
+        distance_matrix = np.linalg.norm(position_differences, axis=2)
     with np.errstate(divide="ignore", invalid="ignore"):
         unitary_vectors = position_differences / distance_matrix[:, :, np.newaxis]
     unitary_vectors[range(n), range(n)] = np.zeros(space_dimension)
@@ -234,7 +261,6 @@ def evolve_with_forces_through_dim_change(
         starting_ratio=start_ratio,
         final_ratio=final_ratio,
     )
-    assert np.unique(positions, axis=0).shape == positions.shape
 
     for step in range(start_step, stop_step):
         draw_step = draw_steps is True or (isinstance(draw_steps, list) and step in draw_steps)
@@ -242,15 +268,20 @@ def evolve_with_forces_through_dim_change(
         if draw_step:
             print(f"{step=}")
 
+        distance_matrix = distance_matrix_from_positions(positions)
+        check_no_duplicate_positions(distance_matrix, step)
+
         scaling, min_dist, max_radius = dist_constr_calc.compute_scaling_min_max(
             positions=positions,
             step_cursor=(step - start_step) / (nb_steps - 1),
             draw_differences=draw_step and draw_differences,
+            distance_matrix=distance_matrix,
         )
-        assert np.unique(positions, axis=0).shape == positions.shape
         positions = scaling * positions
-        assert np.unique(positions, axis=0).shape == positions.shape
         assert np.all(np.isfinite(positions))
+        if max_radius is not None:
+            distance_matrix = distance_matrix_from_positions(positions)
+            check_no_duplicate_positions(distance_matrix, step)
 
         if draw_step:
             distances = scipy.spatial.distance.pdist(positions)
@@ -266,24 +297,20 @@ def evolve_with_forces_through_dim_change(
             min_dist=min_dist,
             max_radius=max_radius,
             max_distance_to_walk=compute_max_distance_to_walk_by_step(
-                step,
-                (
-                    max_radius
-                    if max_radius is not None
-                    else np.max(scipy.spatial.distance.pdist(positions))
-                ),
+                step, max_radius if max_radius is not None else np.max(distance_matrix)
             ),
             regulation_cursor=compute_regulation_cursor_by_step(step),
             draw_step=draw_step,
             step=step,
             draw_weighted_graph=draw_step and draw_weighted_graph,
+            distance_matrix=distance_matrix,
         )
-        assert np.unique(positions, axis=0).shape == positions.shape
         assert np.all(np.isfinite(positions))
 
         positions = dim_shrinker.applied_step(positions)
-        assert np.unique(positions, axis=0).shape == positions.shape
         assert np.all(np.isfinite(positions))
+
+    check_no_duplicate_positions(distance_matrix_from_positions(positions), stop_step)
 
     removed_position_dims = positions[:, final_dimensions:]
     assert np.all(

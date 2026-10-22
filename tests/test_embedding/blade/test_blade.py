@@ -12,6 +12,7 @@ from pulser.register.special_layouts import TriangularLatticeLayout
 from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
 from qoolqit.embedding import Blade, BladeConfig
+from qoolqit.embedding.algorithms.blade import blade as blade_module
 from qoolqit.embedding.algorithms.blade._helpers import (
     distance_matrix_from_positions,
     interaction_matrix_from_positions,
@@ -23,7 +24,10 @@ from qoolqit.embedding.algorithms.blade.blade import (
     _blade,
     update_positions,
 )
-from qoolqit.embedding.algorithms.blade.exceptions import DistanceRatioException
+from qoolqit.embedding.algorithms.blade.exceptions import (
+    DistanceRatioException,
+    DuplicatePositionsError,
+)
 
 
 @pytest.mark.parametrize(
@@ -640,3 +644,35 @@ def test_disconnected_nodes(max_min_dist_ratio: int | None, atol: float) -> None
     positions = _blade(matrix, max_min_dist_ratio=max_min_dist_ratio)
     interactions = interaction_matrix_from_positions(positions)
     assert np.allclose(interactions, matrix, atol=atol)
+
+
+def test_duplicate_starting_positions_are_detected_at_first_step() -> None:
+    starting_positions = np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 0.0]])
+    matrix = np.ones((3, 3)) - np.eye(3)
+
+    with pytest.raises(DuplicatePositionsError) as exc_info:
+        _blade(matrix, dimensions=(2,), starting_positions=starting_positions, pca=False)
+
+    assert exc_info.value.step == 0
+
+
+@pytest.mark.parametrize("max_min_dist_ratio", [None, 10])
+@pytest.mark.parametrize("faulty_step", [57, 199, 450])
+def test_duplicate_positions_are_detected_at_next_step(
+    monkeypatch: pytest.MonkeyPatch, max_min_dist_ratio: float | None, faulty_step: int
+) -> None:
+    original_update_positions = blade_module.update_positions
+
+    def faulty_update_positions(**kwargs: Any) -> np.ndarray:
+        positions = original_update_positions(**kwargs)
+        if kwargs["step"] == faulty_step:
+            positions[1] = positions[0]
+        return positions
+
+    monkeypatch.setattr(blade_module, "update_positions", faulty_update_positions)
+    matrix = np.random.default_rng(0).uniform(size=(6, 6))
+
+    with pytest.raises(DuplicatePositionsError) as exc_info:
+        _blade(matrix + matrix.T, max_min_dist_ratio=max_min_dist_ratio)
+
+    assert exc_info.value.step == faulty_step + 1

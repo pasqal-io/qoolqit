@@ -57,14 +57,19 @@ def compute_best_scaling_for_qubo(
 
 
 def compute_best_scaling_for_pos(
-    target_interactions: np.ndarray, positions: np.ndarray, draw_differences: bool = False
+    target_interactions: np.ndarray,
+    positions: np.ndarray,
+    draw_differences: bool = False,
+    distance_matrix: np.ndarray | None = None,
 ) -> Any:
     """Computes the best scaling factor on the positions.
 
     The best scaling factor minimizes the distance between the target
     interactions and the interactions defined by the input positions.
+    If set, `distance_matrix` contains the pairwise distances of `positions`.
     """
-    distance_matrix = distance_matrix_from_positions(positions)
+    if distance_matrix is None:
+        distance_matrix = distance_matrix_from_positions(positions)
     current_weights = normalized_interaction(distance_matrix)
 
     return compute_best_scaling_for_qubo(
@@ -91,14 +96,19 @@ class DistancesConstraintsCalculator:
             self.current_min = None
 
     def compute_scaling_min_max(
-        self, positions: np.ndarray, step_cursor: float, draw_differences: bool = False
+        self,
+        positions: np.ndarray,
+        step_cursor: float,
+        draw_differences: bool = False,
+        distance_matrix: np.ndarray | None = None,
     ) -> tuple[float, float | None, float | None]:
         """Computes the scaling and the new minimum and maximum distances.
 
         Computes the best scaling factor on the positions and the new
         minimum and maximum distances to enforce corresponding to the progress
         defined by `step_cursor`. Step_cursor is between 0 (start)
-        and 1 (end).
+        and 1 (end). If set, `distance_matrix` contains the pairwise distances
+        of `positions`.
         """
         assert 0 <= step_cursor <= 1
 
@@ -113,6 +123,7 @@ class DistancesConstraintsCalculator:
             target_interactions=self.target_interactions,
             positions=positions,
             draw_differences=draw_differences,
+            distance_matrix=distance_matrix,
         )
 
         scaled_min = self.current_min * scaling_factor
