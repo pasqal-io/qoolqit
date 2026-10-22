@@ -12,7 +12,7 @@ def test_interaction_embedding(n_qubits: int) -> None:
 
     rng = np.random.default_rng(seed=n_qubits)
     embedder = InteractionEmbedder()
-    embedder.config.seed = 42
+    embedder.config.seed = 1668045428
 
     with pytest.raises(ValueError):
         # Fails when not a 2D matrix
