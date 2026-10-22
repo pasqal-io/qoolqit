@@ -4,6 +4,13 @@
     "config:recommended",
     "helpers:pinGitHubActionDigestsToSemver"
   ],
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": null,
+    "schedule": [
+      "at any time"
+    ]
+  },
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
