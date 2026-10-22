@@ -51,7 +51,7 @@ class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbedderConfig]):
     from qoolqit.embedding import InteractionEmbedder, InteractionEmbedderConfig
 
     matrix = np.array([[0.0, 1.0, 0.5], [1.0, 0.0, 0.2], [0.5, 0.2, 0.0]])
-    embedder = InteractionEmbedder(InteractionEmbedderConfig(seed=42))
+    embedder = InteractionEmbedder(InteractionEmbedderConfig(seed=3083257284))
     graph = embedder.embed(matrix)
     ```
     """
