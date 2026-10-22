@@ -5,7 +5,6 @@ from collections.abc import Callable
 from dataclasses import InitVar, dataclass
 from typing import Final
 
-import networkx as nx
 import numpy as np
 import scipy
 import torch
@@ -384,6 +383,35 @@ def evolve_with_dimension_transition(
     return positions, starting_min
 
 
+def _symmetric_interaction_matrix(matrix: np.ndarray) -> np.ndarray:
+    """Return the symmetric interaction matrix with a null diagonal.
+
+    It is the adjacency matrix of `Qubo.from_matrix(matrix).as_graph()`, computed
+    directly: the input must be either symmetric or triangular, the off-diagonal
+    terms are mirrored and the diagonal (linear QUBO terms) is dropped.
+    """
+    matrix = np.array(matrix, dtype=float)
+    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+        raise ValueError(
+            "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
+        )
+
+    if np.allclose(matrix, np.tril(matrix)):
+        upper = np.triu(matrix + matrix.T, k=1)
+    elif np.allclose(matrix, matrix.T):
+        upper = np.triu(matrix, k=1)
+    elif np.allclose(matrix, np.triu(matrix)):
+        # as in the QUBO graph, a (tiny) non-zero lower term overrides its upper term
+        lower = np.tril(matrix, k=-1).T
+        upper = np.where(lower != 0, lower, np.triu(matrix, k=1))
+    else:
+        raise ValueError(
+            "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
+        )
+
+    return upper + upper.T
+
+
 def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
     distance_matrix = distance_matrix_from_positions(positions)
     upper_diagonal_mask = np.triu(np.ones(distance_matrix.shape), k=1).astype(bool)
@@ -523,11 +551,7 @@ def _blade(
     else:
         assert not torch.all(matrix == 0)
 
-    graph = Qubo.from_matrix(matrix).as_graph()
-    graph.add_nodes_from(range(matrix.shape[0]))
-    matrix = np.array(
-        nx.adjacency_matrix(graph, nodelist=list(range(len(matrix))), weight="weight").toarray()
-    )
+    matrix = _symmetric_interaction_matrix(matrix)
 
     if starting_positions is None:
         positions = generate_random_positions(target_interactions=matrix, dimension=dimensions[0])
