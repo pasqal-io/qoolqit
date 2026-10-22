@@ -41,11 +41,28 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
 
 
 class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbedderConfig]):
-    """A matrix to graph embedder using the interaction embedding algorithm."""
+    """A matrix to graph embedder using the interaction embedding algorithm.
 
-    def __init__(self) -> None:
-        """Initialize the embedder with its default configuration."""
-        super().__init__(interaction_embedding, InteractionEmbedderConfig())
+    Starting positions are random unless `x0` is set in the config. For reproducible
+    results, set `seed` to an integer:
+
+    ```python
+    import numpy as np
+    from qoolqit.embedding import InteractionEmbedder, InteractionEmbedderConfig
+
+    matrix = np.array([[0.0, 1.0, 0.5], [1.0, 0.0, 0.2], [0.5, 0.2, 0.0]])
+    embedder = InteractionEmbedder(InteractionEmbedderConfig(seed=3083257284))
+    graph = embedder.embed(matrix)
+    ```
+    """
+
+    def __init__(self, config: InteractionEmbedderConfig | None = None) -> None:
+        """Inits InteractionEmbedder.
+
+        Args:
+            config: configuration for the interaction embedding. Defaults are used if None.
+        """
+        super().__init__(interaction_embedding, config=config or InteractionEmbedderConfig())
 
 
 class Blade(MatrixToGraphEmbedder[BladeConfig]):
