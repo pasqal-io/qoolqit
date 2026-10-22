@@ -29,6 +29,7 @@ from ._helpers import (
     distance_matrix_from_positions,
     normalized_best_dist,
     normalized_interaction,
+    symmetric_matrix_from_pairs,
 )
 from ._interactions_forces import compute_interaction_forces
 from .drawing import draw_graph_including_actual_weights, draw_update_positions_step
@@ -150,14 +151,14 @@ def update_positions(
         temp_ratio_before = (
             None
             if min_temperature == np.inf
-            else np.max(np.triu(interaction_force.maximum_temperatures, k=1)) / min_temperature
+            else np.max(interaction_force.maximum_temperatures) / min_temperature
         )
         print(f"temperature ratio before regulation: {temp_ratio_before}")
         regulated_min_temperature = np.min(regulated_interaction_force.maximum_temperatures)
         temp_ratio_after = (
             None
             if regulated_min_temperature == np.inf
-            else np.max(np.triu(regulated_interaction_force.maximum_temperatures, k=1))
+            else np.max(regulated_interaction_force.maximum_temperatures)
             / regulated_min_temperature
         )
         print(f"temperature ratio after regulation: {temp_ratio_after}")
@@ -210,7 +211,11 @@ def update_positions(
             max_dist_to_walk=max_distance_to_walk,
             step=step,
             modulated_target_interactions=(
-                modulated_target_interactions if max_distance_to_walk != np.inf else None
+                symmetric_matrix_from_pairs(
+                    modulated_target_interactions, interaction_force.pairs, n
+                )
+                if max_distance_to_walk != np.inf
+                else None
             ),
         )
 

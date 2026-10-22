@@ -8,6 +8,8 @@ from typing import Any
 import numpy as np
 from numpy.typing import ArrayLike
 
+from ._helpers import symmetric_matrix_from_pairs
+
 logger = logging.getLogger(__name__)
 
 
@@ -67,17 +69,19 @@ class Force:
     """Forces along the directions defined by node positions.
 
     Each force is a signed weight along a unit vector, so that only scalar arrays are stored:
-    - pairwise forces are (N, N) arrays: the force of the pair (i, j) applied on the node i
-      is `weights[i, j] * (positions[j] - positions[i]) / distances[i, j]`;
-    - node forces are (N,) arrays: the force applied on the node i is
+    - pairwise forces are arrays over the pairs (i, j), i < j, whose flat indices in a (N, N)
+      matrix are `pairs`: the force of the pair p = (i, j) applied on the node i is
+      `weights[p] * (positions[j] - positions[i]) / distances[p]`, and the opposite on the node j;
+    - node forces are (N,) arrays, with `pairs` None: the force applied on the node i is
       `weights[i] * positions[i] / distances[i]`, `distances` being the norms of the positions.
-    Forces whose distance is zero (e.g. the pair (i, i)) have no direction and are set to zero.
+    Forces whose distance is zero have no direction and are set to zero.
     """
 
     weights: np.ndarray
     distances_to_walk: np.ndarray
     positions: np.ndarray
     distances: np.ndarray
+    pairs: np.ndarray | None = None
 
     def __post_init__(self) -> None:
         """Check values, shapes and cleaning and caching."""
@@ -146,7 +150,10 @@ class Force:
             where=(self.distances != 0),
         )
 
-        if coefficients.ndim == 2:
+        if self.pairs is not None:
+            coefficients = symmetric_matrix_from_pairs(
+                coefficients, self.pairs, len(self.positions)
+            )
             # sum over j of coefficients[i, j] * (positions[j] - positions[i])
             return (
                 coefficients @ self.positions

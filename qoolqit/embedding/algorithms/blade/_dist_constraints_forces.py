@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 
 from ._force import Force
+from ._helpers import upper_triangle_indices
 
 
 def compute_min_dist_constraint_forces(
@@ -12,16 +13,19 @@ def compute_min_dist_constraint_forces(
     distance_matrix: np.ndarray,
 ) -> Force:
     """Computes the forces to enforce the minimum distance constraint."""
+    pairs = upper_triangle_indices(len(positions))
+    distances = np.take(distance_matrix, pairs)
     min_distances_to_walk = (
-        np.maximum(0, min_dist - distance_matrix) / 2
+        np.maximum(0, min_dist - distances) / 2
         if min_dist is not None
-        else np.full_like(distance_matrix, 0)
+        else np.full_like(distances, 0)
     )
     min_force = Force(
         weights=-min_distances_to_walk,
         distances_to_walk=min_distances_to_walk,
         positions=positions,
-        distances=distance_matrix,
+        distances=distances,
+        pairs=pairs,
     )
 
     return min_force

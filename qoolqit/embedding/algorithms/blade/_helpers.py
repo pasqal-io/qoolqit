@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 from typing import Any, Literal, TypeVar
 
 import numpy as np
@@ -77,6 +78,19 @@ def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
         differences = coordinates[np.newaxis, :] - coordinates[:, np.newaxis]
         squared_distances += differences * differences
     return np.sqrt(squared_distances)
+
+
+@functools.cache
+def upper_triangle_indices(n: int) -> np.ndarray:
+    """Flat indices of the pairs (i, j), i < j, in a (n, n) matrix."""
+    return np.flatnonzero(np.triu(np.ones((n, n), dtype=bool), k=1))
+
+
+def symmetric_matrix_from_pairs(values: np.ndarray, pairs: np.ndarray, n: int) -> np.ndarray:
+    """(n, n) symmetric matrix with `values` at the flat indices `pairs` of the upper triangle."""
+    matrix = np.zeros((n, n))
+    np.put(matrix, pairs, values)
+    return matrix + matrix.T
 
 
 def interaction_matrix_from_positions(positions: np.ndarray) -> np.ndarray:

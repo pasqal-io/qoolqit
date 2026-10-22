@@ -9,6 +9,10 @@ from qoolqit.embedding.algorithms.blade._force import (
     configured_increasing_func,
     modulate_cursor,
 )
+from qoolqit.embedding.algorithms.blade._helpers import (
+    symmetric_matrix_from_pairs,
+    upper_triangle_indices,
+)
 
 
 def low_discrepancy_distrib(n: int, *, d: int = 1) -> np.ndarray:
@@ -249,16 +253,18 @@ def test_pairwise_resulting_forces_sum_weighted_unit_vectors() -> None:
     positions = rng.uniform(-1, 1, size=(6, 3))
     differences = positions[np.newaxis, :] - positions[:, np.newaxis]
     distances = np.linalg.norm(differences, axis=-1)
-    weights = rng.uniform(-1, 1, size=(6, 6))
+    pairs = upper_triangle_indices(6)
+    weights = rng.uniform(-1, 1, size=len(pairs))
     force = Force(
         weights=weights,
         distances_to_walk=np.abs(weights),
         positions=positions,
-        distances=distances,
+        distances=np.take(distances, pairs),
+        pairs=pairs,
     )
 
     unit_vectors = differences / np.where(distances == 0, 1, distances)[:, :, np.newaxis]
-    expected = 0.5 * np.sum(weights[:, :, np.newaxis] * unit_vectors, axis=1)
+    weight_matrix = symmetric_matrix_from_pairs(weights, pairs, 6)
+    expected = 0.5 * np.sum(weight_matrix[:, :, np.newaxis] * unit_vectors, axis=1)
 
     np.testing.assert_allclose(force.get_resulting_forces(0.5), expected, atol=1e-14)
-    np.testing.assert_array_equal(np.diag(force.weights), 0)
