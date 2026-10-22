@@ -17,6 +17,34 @@ from qoolqit.graphs import DataGraph
 class InteractionEmbedderConfig(EmbedderConfig):
     """Configuration parameters for the interaction embedding.
 
+    Explicit initial positions, one (x, y) row per node:
+
+    ```python
+    import numpy as np
+    from qoolqit.embedding import InteractionEmbedderConfig
+
+    x0 = np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]])
+    config = InteractionEmbedderConfig(x0=x0)
+    ```
+
+    Random initial positions with a fixed seed:
+
+    ```python
+    from qoolqit.embedding import InteractionEmbedderConfig
+
+    config = InteractionEmbedderConfig(seed=3083257284)
+    ```
+
+    Initial positions from an external seeded generator:
+
+    ```python
+    import numpy as np
+    from qoolqit.embedding import InteractionEmbedderConfig
+
+    rng = np.random.default_rng(seed=2754767221)
+    config = InteractionEmbedderConfig(x0=rng.random((5, 2)))
+    ```
+
     Attributes:
         method: optimization method passed to `scipy.optimize.minimize`.
         maxiter: maximum number of optimizer iterations.
