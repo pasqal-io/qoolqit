@@ -48,7 +48,6 @@ extras = [
   "torch_geometric",
   "pandas",
   "seaborn",
-  "scikit-learn",
 ]
 dev = [
   "qoolqit[extras]",
