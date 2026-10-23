@@ -296,6 +296,8 @@
       
         
       
+        
+      
     
     
     
@@ -1239,6 +1241,8 @@
       
         
       
+        
+      
     
     
     
@@ -1325,6 +1329,33 @@
     
   
   Custom embedders
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../extended_usage/device_noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Emulating device noise
 
     
   </span>
@@ -2255,13 +2286,14 @@ All execution methods (<code>LocalEmulator.run()</code>, <code>RemoteEmulator.ru
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">final_bitstrings</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">final_bitstrings</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">final_bitstrings</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">Counter</span><span class="p">({</span><span class="s1">'111'</span><span class="p">:</span> <span class="mi">818</span><span class="p">,</span>
-         <span class="s1">'011'</span><span class="p">:</span> <span class="mi">56</span><span class="p">,</span>
-         <span class="s1">'110'</span><span class="p">:</span> <span class="mi">54</span><span class="p">,</span>
-         <span class="s1">'101'</span><span class="p">:</span> <span class="mi">53</span><span class="p">,</span>
-         <span class="s1">'001'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-         <span class="s1">'100'</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-         <span class="s1">'010'</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><code><span class="n">Counter</span><span class="p">({</span><span class="s1">'111'</span><span class="p">:</span> <span class="mi">807</span><span class="p">,</span>
+         <span class="s1">'011'</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+         <span class="s1">'110'</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+         <span class="s1">'101'</span><span class="p">:</span> <span class="mi">57</span><span class="p">,</span>
+         <span class="s1">'100'</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+         <span class="s1">'001'</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+         <span class="s1">'010'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+         <span class="s1">'000'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </code></pre></div>
 <h3 id="emulation-configuration">Emulation configuration</h3>
 <p>Here we discuss how to fully configure emulator backends to exploit all their possibilities.
@@ -2298,7 +2330,7 @@ Once instantiated, the configuration can be then passed to the emulator at insta
 
 
 
-<span class="p">[</span><span class="mf">0.9475510886446437</span><span class="p">,</span> <span class="mf">0.9475510886446437</span><span class="p">,</span> <span class="mf">0.9473207271173786</span><span class="p">]</span>
+<span class="p">[</span><span class="mf">0.9475510886445652</span><span class="p">,</span> <span class="mf">0.9475510886445652</span><span class="p">,</span> <span class="mf">0.9473207271173</span><span class="p">]</span>
 </code></pre></div>
 <p>The key parameters of <code>EmulationConfig</code> are:</p>
 <table>
