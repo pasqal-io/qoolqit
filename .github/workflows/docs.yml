@@ -93,30 +93,39 @@ jobs:
                   wait-for-pages-deployment: true
 
     portal-preview:
-        name: Deploy doc-portal preview
+        name: Deploy doc portal preview
         needs: [deploy-docs-preview]
+        # One preview per PR, a newer push replaces the running deploy
         concurrency:
-            group: gh-pages-${{ github.repository }}
-            queue: max  # wait in line, never cancel: every write to gh-pages must happen
+            group: portal-preview-${{ github.repository }}-pr-${{ github.event.pull_request.number }}
+            cancel-in-progress: true
         if: |
           always() &&
           github.event.pull_request.head.repo.full_name == github.repository &&
-          (contains(github.event.pull_request.labels.*.name, 'docs-preview') ||
-            (github.event.action == 'unlabeled' && github.event.label.name == 'docs-preview')) &&
-          (github.event.action == 'closed' || needs['deploy-docs-preview'].result == 'success')
+          (
+            (contains(github.event.pull_request.labels.*.name, 'docs-preview') &&
+              (github.event.action == 'closed' || needs['deploy-docs-preview'].result == 'success')) ||
+            (github.event.action == 'unlabeled' && github.event.label.name == 'docs-preview')
+          )
         runs-on: ubuntu-latest
         permissions:
-            contents: write
+            contents: read
             pull-requests: write
         env:
-            PORTAL_PREVIEW_PATH: portal-preview/pr-${{ github.event.pull_request.number }}
-            DOC_PORTAL_IMAGE: europe-west9-docker.pkg.dev/pasqal-artifact/frontend/doc-portal:source-runtime
+            PREVIEW_PATH: qoolqit/pr-${{ github.event.pull_request.number }}
+            MKDOCS_PREVIEW_URL: https://pasqal-io.github.io/qoolqit/pr-preview/pr-${{ github.event.pull_request.number }}/
+            BUCKET: ${{ vars.DOC_PREVIEW_BUCKET }}
+            HOST: ${{ vars.DOC_PREVIEW_HOST }}
+            DOC_PORTAL_IMAGE: europe-west9-docker.pkg.dev/pasqal-artifact/frontend/doc-portal:builder
         steps:
-            - name: Checkout the base commit, never the PR head
-              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            - name: Authenticate to Google Cloud
+              uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
               with:
-                  ref: ${{ github.event.pull_request.base.sha }}
-                  persist-credentials: false
+                  # Service account dedicated to doc previews: pulls the image, writes to the bucket
+                  credentials_json: ${{ secrets.GCP_DOC_PREVIEW_SA }}
+
+            - name: Set up gcloud
+              uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
 
             - name: Login to Artifact Registry
               if: env.REMOVE_PREVIEW != 'true'
@@ -124,36 +133,29 @@ jobs:
               with:
                   registry: europe-west9-docker.pkg.dev
                   username: _json_key
-                  password: ${{ secrets.GCP_ARTIFACT_REGISTRY_SA }}
+                  password: ${{ secrets.GCP_DOC_PREVIEW_SA }}
 
-            - name: Pull the doc portal image
-              if: env.REMOVE_PREVIEW != 'true'
-              run: docker pull "$DOC_PORTAL_IMAGE"
-
-            - name: Build the portal preview
+            - name: Build the doc portal preview
               if: env.REMOVE_PREVIEW != 'true'
               run: |
                 mkdir -p portal-dist
                 docker run --rm \
-                  --user 0:0 \
                   --volume "$PWD/portal-dist:/out" \
-                  --env BUILD_CONFIG='{"qoolqit":"https://pasqal-io.github.io/qoolqit/pr-preview/pr-${{ github.event.pull_request.number }}/"}' \
                   --env CONTENT_SOURCES=qoolqit \
                   --env SKIP_DOC_VERSIONS=true \
-                  --env ASTRO_BASE="/qoolqit/${PORTAL_PREVIEW_PATH}/" \
-                  --entrypoint sh \
-                  "$DOC_PORTAL_IMAGE" \
-                  -c 'cd /app && pnpm --filter @pasqal/doc-portal run build:selected && cp -r /app/packages/doc-portal/dist/. /out/'
+                  --env ASTRO_BASE="/${PREVIEW_PATH}/" \
+                  --env BUILD_CONFIG="{\"qoolqit\":\"${MKDOCS_PREVIEW_URL}\"}" \
+                  "$DOC_PORTAL_IMAGE"
 
-            - name: Deploy portal preview
-              uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
-              with:
-                  action: ${{ env.REMOVE_PREVIEW == 'true' && 'remove' || 'deploy' }}
-                  source-dir: ./portal-dist/
-                  preview-branch: gh-pages
-                  umbrella-dir: portal-preview
-                  qr-code: false
-                  comment: false
+            - name: Upload the preview
+              if: env.REMOVE_PREVIEW != 'true'
+              run: |
+                gcloud storage rm --recursive "gs://${BUCKET}/${PREVIEW_PATH}/" --quiet || true
+                gcloud storage cp --recursive --cache-control=no-store 'portal-dist/*' "gs://${BUCKET}/${PREVIEW_PATH}/"
+
+            - name: Remove the preview
+              if: env.REMOVE_PREVIEW == 'true'
+              run: gcloud storage rm --recursive "gs://${BUCKET}/${PREVIEW_PATH}/" --quiet || true
 
             - name: Comment the preview link on the PR
               if: env.REMOVE_PREVIEW != 'true'
@@ -161,7 +163,7 @@ jobs:
               with:
                   header: doc-portal-preview
                   message: |
-                    Doc portal preview: https://pasqal-io.github.io/qoolqit/${{ env.PORTAL_PREVIEW_PATH }}/qoolqit/
+                    Doc portal preview: https://${{ env.HOST }}/${{ env.PREVIEW_PATH }}/qoolqit/
 
                     Built from ${{ github.event.pull_request.head.sha }}.
 
