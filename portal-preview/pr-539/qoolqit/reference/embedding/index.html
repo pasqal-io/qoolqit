@@ -339,16 +339,7 @@
       dataclass
   
 
-</span></a><ul class="isMobile astro-lvjznmze" style="--depth: 2;"><li style="--depth: 2;" class="astro-lvjznmze"><a href="#qoolqit.embedding.InteractionEmbedderConfig.x0" style="--depth: 2;" class="astro-lvjznmze"><span style="--depth: 2;" class="astro-lvjznmze">
-            x0
-
-
-  
-      class-attribute
-      instance-attribute
-  
-
-</span></a></li><li style="--depth: 2;" class="astro-lvjznmze"><a href="#qoolqit.embedding.InteractionEmbedderConfig.dict" style="--depth: 2;" class="astro-lvjznmze"><span style="--depth: 2;" class="astro-lvjznmze">
+</span></a><ul class="isMobile astro-lvjznmze" style="--depth: 2;"><li style="--depth: 2;" class="astro-lvjznmze"><a href="#qoolqit.embedding.InteractionEmbedderConfig.dict" style="--depth: 2;" class="astro-lvjznmze"><span style="--depth: 2;" class="astro-lvjznmze">
             dict
 
 
@@ -702,16 +693,7 @@
       dataclass
   
 
-</span></a><ul class="astro-lvjznmze" style="--depth: 2;"><li style="--depth: 2;" class="astro-lvjznmze"><a href="#qoolqit.embedding.InteractionEmbedderConfig.x0" style="--depth: 2;" class="astro-lvjznmze"><span style="--depth: 2;" class="astro-lvjznmze">
-            x0
-
-
-  
-      class-attribute
-      instance-attribute
-  
-
-</span></a></li><li style="--depth: 2;" class="astro-lvjznmze"><a href="#qoolqit.embedding.InteractionEmbedderConfig.dict" style="--depth: 2;" class="astro-lvjznmze"><span style="--depth: 2;" class="astro-lvjznmze">
+</span></a><ul class="astro-lvjznmze" style="--depth: 2;"><li style="--depth: 2;" class="astro-lvjznmze"><a href="#qoolqit.embedding.InteractionEmbedderConfig.dict" style="--depth: 2;" class="astro-lvjznmze"><span style="--depth: 2;" class="astro-lvjznmze">
             dict
 
 
@@ -2168,7 +2150,28 @@ inheriting from EmbedderConfig.</p><p class="has-math"><span class="doc-section-
             InteractionEmbedder
 
 
-”</span></a></div><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedder</span><span style="--0:#D6DEEB;--1:#403F53">()</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="InteractionEmbedder()"><div></div></button></div></figure></div><p class="has-math">A matrix to graph embedder using the interaction embedding algorithm.</p><p class="has-math"><span class="doc-section-title">Methods:</span></p><ul>
+”</span></a></div><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedder</span><span style="--0:#D6DEEB;--1:#403F53">(</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">    </span></span><span style="--0:#82AAFF;--1:#3B61B0">config:             InteractionEmbedderConfig</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">      </span></span><span style="--0:#82AAFF;--1:#3B61B0">dataclass</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">   </span></span><span style="--0:#82AAFF;--1:#3B61B0">(qoolqit.embedding.algorithms.InteractionEmbedderConfig)</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D"> href=</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#82AAFF;--1:#3B61B0">.</span><span style="--0:#C792EA;--1:#8844AE">/</span><span style="--0:#919F9F;--1:#5F636F">#qoolqit.embedding.InteractionEmbedderConfig">InteractionEmbedderConfig | None = None,</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="InteractionEmbedder(    config:             InteractionEmbedderConfig      dataclass   (qoolqit.embedding.algorithms.InteractionEmbedderConfig)&#x22; href=&#x22;./#qoolqit.embedding.InteractionEmbedderConfig&#x22;>InteractionEmbedderConfig | None = None,)"><div></div></button></div></figure></div><p class="has-math">A matrix to graph embedder using the interaction embedding algorithm.</p><p class="has-math">Starting positions are random unless <code>x0</code> is set in the config. For reproducible
+results, set <code>seed</code> to an integer:</p><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">import</span><span style="--0:#D6DEEB;--1:#403F53"> numpy </span><span style="--0:#C792EA;--1:#8844AE">as</span><span style="--0:#D6DEEB;--1:#403F53"> np</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">from</span><span style="--0:#D6DEEB;--1:#403F53"> qoolqit.embedding </span><span style="--0:#C792EA;--1:#8844AE">import</span><span style="--0:#D6DEEB;--1:#403F53"> InteractionEmbedder, InteractionEmbedderConfig</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">matrix </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#D6DEEB;--1:#403F53"> np.</span><span style="--0:#B2CCD6;--1:#096E72">array</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">[[</span><span style="--0:#F78C6C;--1:#AA0982">0.0</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#F78C6C;--1:#AA0982">1.0</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#F78C6C;--1:#AA0982">0.5</span><span style="--0:#D9F5DD;--1:#111111">]</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#D9F5DD;--1:#111111">[</span><span style="--0:#F78C6C;--1:#AA0982">1.0</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#F78C6C;--1:#AA0982">0.0</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#F78C6C;--1:#AA0982">0.2</span><span style="--0:#D9F5DD;--1:#111111">]</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#D9F5DD;--1:#111111">[</span><span style="--0:#F78C6C;--1:#AA0982">0.5</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#F78C6C;--1:#AA0982">0.2</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#F78C6C;--1:#AA0982">0.0</span><span style="--0:#D9F5DD;--1:#111111">]]</span><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">embedder </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedder</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedderConfig</span><span style="--1:#403F53"><span style="--0:#D6DEEB">(</span><span style="--0:#D7DBE0">seed</span></span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#F78C6C;--1:#AA0982">3083257284</span><span style="--0:#D6DEEB;--1:#403F53">))</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">graph </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#D6DEEB;--1:#403F53"> embedder.</span><span style="--0:#B2CCD6;--1:#096E72">embed</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#82AAFF;--1:#3B61B0">matrix</span><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="import numpy as npfrom qoolqit.embedding import InteractionEmbedder, InteractionEmbedderConfigmatrix = np.array([[0.0, 1.0, 0.5], [1.0, 0.0, 0.2], [0.5, 0.2, 0.0]])embedder = InteractionEmbedder(InteractionEmbedderConfig(seed=3083257284))graph = embedder.embed(matrix)"><div></div></button></div></figure></div><p class="has-math"><span class="doc-section-title">Parameters:</span></p><ul>
+        <li class="doc-section-item field-body">
+            <b><code>config</code></b>
+              (<code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;InteractionEmbedderConfig&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;qoolqit.embedding.algorithms.InteractionEmbedderConfig&lt;/code&gt;)" href="/qoolqit/portal-preview/pr-539/qoolqit/reference/embedding/#qoolqit.embedding.InteractionEmbedderConfig">InteractionEmbedderConfig</a> | None</code>, default:
+                  <code>None</code>
+)
+          –
+          <div class="doc-md-description">
+            <p class="has-math">configuration for the interaction embedding. Defaults are used if None.</p>
+          </div>
+        </li>
+    </ul><p class="has-math"><span class="doc-section-title">Methods:</span></p><ul>
           <li class="doc-section-item field-body">
             <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-method&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;embed&lt;/span&gt; (&lt;code&gt;qoolqit.embedding.InteractionEmbedder.embed&lt;/code&gt;)" href="/qoolqit/portal-preview/pr-539/qoolqit/reference/embedding/#qoolqit.embedding.InteractionEmbedder.embed">embed</a></code></b>
             –
@@ -2216,7 +2219,8 @@ inheriting from EmbedderConfig.</p><p class="has-math"><span class="doc-section-
             <p class="has-math">Prints info about the embedding algorithm.</p>
           </div>
         </li>
-    </ul><details class="details-block"><summary style="width:100%">Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">def</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">__init__</span><span style="--0:#D9F5DD;--1:#111111">(</span><span style="--0:#7FDBCA;--1:#096E72">self</span><span style="--0:#D9F5DD;--1:#111111">)</span><span style="--0:#D6DEEB;--1:#403F53"> -> </span><span style="--0:#FF6A83;--1:#A24848">None</span><span style="--0:#D6DEEB;--1:#403F53">:</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#D9F5DD;--1:#111111">"""</span><span style="--0:#ECC48D;--1:#984E4D">Initialize the embedder with its default configuration.</span><span style="--0:#D9F5DD;--1:#111111">"""</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#C5E478;--1:#3B61B0">super</span><span style="--0:#D6DEEB;--1:#403F53">().</span><span style="--0:#C5E478;--1:#3B61B0">__init__</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#82AAFF;--1:#3B61B0">interaction_embedding</span><span style="--0:#D9F5DD;--1:#111111">,</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedderConfig</span><span style="--0:#D6DEEB;--1:#403F53">())</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="def __init__(self) -> None:    &#x22;&#x22;&#x22;Initialize the embedder with its default configuration.&#x22;&#x22;&#x22;    super().__init__(interaction_embedding, InteractionEmbedderConfig())"><div></div></button></div></figure></div></details><div class="sl-heading-wrapper level-h4"><h4 id="qoolqit.embedding.InteractionEmbedder.algorithm">
+    </ul><details class="details-block"><summary style="width:100%">Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">def</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">__init__</span><span style="--0:#D9F5DD;--1:#111111">(</span><span style="--0:#7FDBCA;--1:#096E72">self</span><span style="--0:#D6DEEB;--1:#403F53">, </span><span style="--0:#7FDBCA;--1:#096E72">config</span><span style="--0:#D6DEEB;--1:#403F53">: InteractionEmbedderConfig </span><span style="--0:#C792EA;--1:#8844AE">|</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#FF6A83;--1:#A24848">None</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#FF6A83;--1:#A24848">None</span><span style="--0:#D9F5DD;--1:#111111">)</span><span style="--0:#D6DEEB;--1:#403F53"> -> </span><span style="--0:#FF6A83;--1:#A24848">None</span><span style="--0:#D6DEEB;--1:#403F53">:</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#D9F5DD;--1:#111111">"""</span><span style="--0:#ECC48D;--1:#984E4D">Inits InteractionEmbedder.</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#ECC48D;--1:#984E4D">    </span></span><span style="--0:#ECC48D;--1:#984E4D">Args:</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#ECC48D;--1:#984E4D">        </span></span><span style="--0:#ECC48D;--1:#984E4D">config: configuration for the interaction embedding. Defaults are used if None.</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#D9F5DD;--1:#111111">"""</span></div></div><div class="ec-line"><div class="code"><span class="indent">    </span><span style="--0:#C5E478;--1:#3B61B0">super</span><span style="--0:#D6DEEB;--1:#403F53">().</span><span style="--0:#C5E478;--1:#3B61B0">__init__</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#82AAFF;--1:#3B61B0">interaction_embedding</span><span style="--0:#D9F5DD;--1:#111111">,</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#D7DBE0;--1:#403F53">config</span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0">config </span><span style="--0:#C792EA;--1:#8844AE">or</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedderConfig</span><span style="--0:#D6DEEB;--1:#403F53">())</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="def __init__(self, config: InteractionEmbedderConfig | None = None) -> None:    &#x22;&#x22;&#x22;Inits InteractionEmbedder.    Args:        config: configuration for the interaction embedding. Defaults are used if None.    &#x22;&#x22;&#x22;    super().__init__(interaction_embedding, config=config or InteractionEmbedderConfig())"><div></div></button></div></figure></div></details><div class="sl-heading-wrapper level-h4"><h4 id="qoolqit.embedding.InteractionEmbedder.algorithm">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">algorithm</span>
 
 
@@ -2313,7 +2317,76 @@ inheriting from EmbedderConfig.</p><p class="has-math"><span class="doc-section-
       dataclass
   
 
-”</span></a></div><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedderConfig</span><span style="--0:#D6DEEB;--1:#403F53">(</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">    </span></span><span style="--0:#82AAFF;--1:#3B61B0">method: </span><span style="--0:#D7DBE0;--1:#403F53">str</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">Nelder-Mead</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D9F5DD;--1:#111111">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">    </span></span><span style="--0:#82AAFF;--1:#3B61B0">maxiter: </span><span style="--0:#D7DBE0;--1:#403F53">int</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#F78C6C;--1:#AA0982">200000</span><span style="--0:#D9F5DD;--1:#111111">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">    </span></span><span style="--0:#82AAFF;--1:#3B61B0">tol: </span><span style="--0:#D7DBE0;--1:#403F53">float</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#F78C6C;--1:#AA0982">1e-08</span><span style="--0:#D9F5DD;--1:#111111">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">    </span></span><span style="--0:#82AAFF;--1:#3B61B0">x0: ndarray </span><span style="--0:#C792EA;--1:#8844AE">|</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#D7DBE0;--1:#403F53">None</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#FF6A83;--1:#A24848">None</span><span style="--0:#D9F5DD;--1:#111111">,</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="InteractionEmbedderConfig(    method: str = &#x22;Nelder-Mead&#x22;,    maxiter: int = 200000,    tol: float = 1e-08,    x0: ndarray | None = None,)"><div></div></button></div></figure></div><p class="has-math">Configuration parameters for the interaction embedding.</p><p class="has-math"><span class="doc-section-title">Methods:</span></p><ul>
+”</span></a></div><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedderConfig</span><span style="--0:#D6DEEB;--1:#403F53">(</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">    </span></span><span style="--0:#82AAFF;--1:#3B61B0">method: </span><span style="--0:#D7DBE0;--1:#403F53">str</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">Nelder-Mead</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#D9F5DD;--1:#111111">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">    </span></span><span style="--0:#82AAFF;--1:#3B61B0">maxiter: </span><span style="--0:#D7DBE0;--1:#403F53">int</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#F78C6C;--1:#AA0982">200000</span><span style="--0:#D9F5DD;--1:#111111">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">    </span></span><span style="--0:#82AAFF;--1:#3B61B0">tol: </span><span style="--0:#D7DBE0;--1:#403F53">float</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#F78C6C;--1:#AA0982">1e-08</span><span style="--0:#D9F5DD;--1:#111111">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">    </span></span><span style="--0:#82AAFF;--1:#3B61B0">x0: ndarray </span><span style="--0:#C792EA;--1:#8844AE">|</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#D7DBE0;--1:#403F53">None</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#FF6A83;--1:#A24848">None</span><span style="--0:#D9F5DD;--1:#111111">,</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#82AAFF;--1:#3B61B0">    </span></span><span style="--0:#82AAFF;--1:#3B61B0">seed: </span><span style="--0:#C5E478;--1:#3B61B0">int</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#C792EA;--1:#8844AE">|</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#D7DBE0;--1:#403F53">None</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0"> </span><span style="--0:#FF6A83;--1:#A24848">None</span><span style="--0:#D9F5DD;--1:#111111">,</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="InteractionEmbedderConfig(    method: str = &#x22;Nelder-Mead&#x22;,    maxiter: int = 200000,    tol: float = 1e-08,    x0: ndarray | None = None,    seed: int | None = None,)"><div></div></button></div></figure></div><p class="has-math">Configuration parameters for the interaction embedding.</p><p class="has-math">Explicit initial positions, one (x, y) row per node:</p><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">import</span><span style="--0:#D6DEEB;--1:#403F53"> numpy </span><span style="--0:#C792EA;--1:#8844AE">as</span><span style="--0:#D6DEEB;--1:#403F53"> np</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">from</span><span style="--0:#D6DEEB;--1:#403F53"> qoolqit.embedding </span><span style="--0:#C792EA;--1:#8844AE">import</span><span style="--0:#D6DEEB;--1:#403F53"> InteractionEmbedderConfig</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">x0 </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#D6DEEB;--1:#403F53"> np.</span><span style="--0:#B2CCD6;--1:#096E72">array</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#D9F5DD;--1:#111111">[[</span><span style="--0:#F78C6C;--1:#AA0982">0.0</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#F78C6C;--1:#AA0982">0.0</span><span style="--0:#D9F5DD;--1:#111111">]</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#D9F5DD;--1:#111111">[</span><span style="--0:#F78C6C;--1:#AA0982">1.0</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#F78C6C;--1:#AA0982">0.0</span><span style="--0:#D9F5DD;--1:#111111">]</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#D9F5DD;--1:#111111">[</span><span style="--0:#F78C6C;--1:#AA0982">0.0</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#F78C6C;--1:#AA0982">1.0</span><span style="--0:#D9F5DD;--1:#111111">]]</span><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">config </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedderConfig</span><span style="--1:#403F53"><span style="--0:#D6DEEB">(</span><span style="--0:#D7DBE0">x0</span></span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0">x0</span><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="import numpy as npfrom qoolqit.embedding import InteractionEmbedderConfigx0 = np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]])config = InteractionEmbedderConfig(x0=x0)"><div></div></button></div></figure></div><p class="has-math">Random initial positions with a fixed seed:</p><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">from</span><span style="--0:#D6DEEB;--1:#403F53"> qoolqit.embedding </span><span style="--0:#C792EA;--1:#8844AE">import</span><span style="--0:#D6DEEB;--1:#403F53"> InteractionEmbedderConfig</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">config </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedderConfig</span><span style="--1:#403F53"><span style="--0:#D6DEEB">(</span><span style="--0:#D7DBE0">seed</span></span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#F78C6C;--1:#AA0982">3083257284</span><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="from qoolqit.embedding import InteractionEmbedderConfigconfig = InteractionEmbedderConfig(seed=3083257284)"><div></div></button></div></figure></div><p class="has-math">Initial positions from an external seeded generator:</p><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">import</span><span style="--0:#D6DEEB;--1:#403F53"> numpy </span><span style="--0:#C792EA;--1:#8844AE">as</span><span style="--0:#D6DEEB;--1:#403F53"> np</span></div></div><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">from</span><span style="--0:#D6DEEB;--1:#403F53"> qoolqit.embedding </span><span style="--0:#C792EA;--1:#8844AE">import</span><span style="--0:#D6DEEB;--1:#403F53"> InteractionEmbedderConfig</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">rng </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#D6DEEB;--1:#403F53"> np.random.</span><span style="--0:#B2CCD6;--1:#096E72">default_rng</span><span style="--1:#403F53"><span style="--0:#D6DEEB">(</span><span style="--0:#D7DBE0">seed</span></span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#F78C6C;--1:#AA0982">2754767221</span><span style="--0:#D6DEEB;--1:#403F53">)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">config </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#B2CCD6;--1:#096E72">InteractionEmbedderConfig</span><span style="--1:#403F53"><span style="--0:#D6DEEB">(</span><span style="--0:#D7DBE0">x0</span></span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#82AAFF;--1:#3B61B0">rng.</span><span style="--0:#B2CCD6;--1:#096E72">random</span><span style="--0:#D6DEEB;--1:#403F53">(</span><span style="--0:#82AAFF;--1:#3B61B0">(</span><span style="--0:#F78C6C;--1:#AA0982">5</span><span style="--0:#82AAFF;--1:#3B61B0">, </span><span style="--0:#F78C6C;--1:#AA0982">2</span><span style="--0:#82AAFF;--1:#3B61B0">)</span><span style="--0:#D6DEEB;--1:#403F53">))</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="import numpy as npfrom qoolqit.embedding import InteractionEmbedderConfigrng = np.random.default_rng(seed=2754767221)config = InteractionEmbedderConfig(x0=rng.random((5, 2)))"><div></div></button></div></figure></div><p class="has-math"><span class="doc-section-title">Attributes:</span></p><ul>
+        <li class="doc-section-item field-body">
+          <b><code><span title="qoolqit.embedding.InteractionEmbedderConfig.method">method</span></code></b>
+              (<code><span title="str">str</span></code>)
+          –
+          <div class="doc-md-description">
+            <p class="has-math">optimization method passed to <code>scipy.optimize.minimize</code>.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code><span title="qoolqit.embedding.InteractionEmbedderConfig.maxiter">maxiter</span></code></b>
+              (<code><span title="int">int</span></code>)
+          –
+          <div class="doc-md-description">
+            <p class="has-math">maximum number of optimizer iterations.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code><span title="qoolqit.embedding.InteractionEmbedderConfig.tol">tol</span></code></b>
+              (<code><span title="float">float</span></code>)
+          –
+          <div class="doc-md-description">
+            <p class="has-math">tolerance for termination.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code><span title="qoolqit.embedding.InteractionEmbedderConfig.x0">x0</span></code></b>
+              (<code><span title="numpy.ndarray">ndarray</span> | None</code>)
+          –
+          <div class="doc-md-description">
+            <p class="has-math">initial node positions, of shape (N, 2) for an N x N matrix.
+If None, positions are drawn uniformly in [0, 1), seeded by <code>seed</code>.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code><span title="qoolqit.embedding.InteractionEmbedderConfig.seed">seed</span></code></b>
+              (<code><span title="int">int</span> | None</code>)
+          –
+          <div class="doc-md-description">
+            <p class="has-math">seed for the random initial positions, ignored if <code>x0</code> is set.
+If None, results differ between runs.</p>
+          </div>
+        </li>
+    </ul><div class="doc doc-backlinks">
+        <b class="doc doc-backlink-type">Used by:</b>
+          <ul class="doc doc-backlink-list">
+      <li class="doc doc-backlink">
+            <span class="doc doc-backlink-crumb">
+      <span>API reference</span>
+  </span>
+
+            <span class="doc doc-backlink-crumb">
+      <a href="/qoolqit/portal-preview/pr-539/qoolqit/reference/embedding/">qoolqit.embedding</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb">
+      <a href="/qoolqit/portal-preview/pr-539/qoolqit/reference/embedding/#qoolqit.embedding"><code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;embedding</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb last">
+      <a href="/qoolqit/portal-preview/pr-539/qoolqit/reference/embedding/#qoolqit.embedding.InteractionEmbedder"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;InteractionEmbedder</a>
+  </span>
+
+      </li>
+  </ul>
+
+  </div><p class="has-math"><span class="doc-section-title">Methods:</span></p><ul>
           <li class="doc-section-item field-body">
             <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-method&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;dict&lt;/span&gt; (&lt;code&gt;qoolqit.embedding.InteractionEmbedderConfig.dict&lt;/code&gt;)" href="/qoolqit/portal-preview/pr-539/qoolqit/reference/embedding/#qoolqit.embedding.InteractionEmbedderConfig.dict">dict</a></code></b>
             –
@@ -2321,50 +2394,7 @@ inheriting from EmbedderConfig.</p><p class="has-math"><span class="doc-section-
               <p class="has-math">Returns the dataclass as a dictionary.</p>
             </div>
           </li>
-    </ul><p class="has-math"><span class="doc-section-title">Attributes:</span></p><ul>
-        <li class="doc-section-item field-body">
-          <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-attribute&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-attribute-name&quot;&gt;x0&lt;/span&gt;
-
-
-  &lt;span class=&quot;doc doc-labels&quot;&gt;
-      &lt;small class=&quot;doc doc-label doc-label-class-attribute&quot;&gt;&lt;code&gt;class-attribute&lt;/code&gt;&lt;/small&gt;
-      &lt;small class=&quot;doc doc-label doc-label-instance-attribute&quot;&gt;&lt;code&gt;instance-attribute&lt;/code&gt;&lt;/small&gt;
-  &lt;/span&gt; (&lt;code&gt;qoolqit.embedding.InteractionEmbedderConfig.x0&lt;/code&gt;)" href="/qoolqit/portal-preview/pr-539/qoolqit/reference/embedding/#qoolqit.embedding.InteractionEmbedderConfig.x0">x0</a></code></b>
-              (<code><span title="numpy.ndarray">ndarray</span> | None</code>)
-          –
-          <div class="doc-md-description">
-            <p class="has-math">If provided, initial positions to start from.</p>
-          </div>
-        </li>
-    </ul><div class="sl-heading-wrapper level-h4"><h4 id="qoolqit.embedding.InteractionEmbedderConfig.x0">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">x0</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-</h4><a class="sl-anchor-link" href="#qoolqit.embedding.InteractionEmbedderConfig.x0"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"/></svg></span><span class="sr-only" data-pagefind-ignore="">Section titled “
-            x0
-
-
-  
-      class-attribute
-      instance-attribute
-  
-
-”</span></a></div><div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="python"><code><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">x0: ndarray </span><span style="--0:#C792EA;--1:#8844AE">|</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#FF6A83;--1:#A24848">None</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C792EA;--1:#8844AE">=</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#FF6A83;--1:#A24848">None</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="x0: ndarray | None = None"><div></div></button></div></figure></div><div class="doc doc-contents ">
-
-        <p class="has-math">If provided, initial positions to start from.</p>
-<p class="has-math">Must be of shape (N, 2) or flattened to (2N,), where N is the size of the matrix
-to embed. Otherwise, random positions are drawn uniformly in [0, 1) from an
-unseeded generator, so results may differ between runs. For reproducible
-results, pass positions drawn from a seeded generator, e.g.
-<code>np.random.default_rng(seed).random((N, 2))</code>.</p>
-
-          
-    </div><div class="sl-heading-wrapper level-h4"><h4 id="qoolqit.embedding.InteractionEmbedderConfig.dict">
+    </ul><div class="sl-heading-wrapper level-h4"><h4 id="qoolqit.embedding.InteractionEmbedderConfig.dict">
 <code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">dict</span>
 
 
