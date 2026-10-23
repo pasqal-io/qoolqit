@@ -30,9 +30,11 @@ jobs:
       uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Set up uv
+      uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
     - name: Install QoolQit with development dependencies
       run: |
-        pip install -e .[dev]
+        uv pip install --system -e .[dev] --torch-backend=cpu
     - name: Run tests
       run: |
         pytest -vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs
@@ -53,9 +55,11 @@ jobs:
       uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
       with:
         python-version: '3.14'
+    - name: Set up uv
+      uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
     - name: Install QoolQit with development dependencies
       run: |
-        pip install -e .[dev] nbmake
+        uv pip install --system -e .[dev] nbmake --torch-backend=cpu
     - name: Run notebooks
       run: |
         pytest --no-cov --nbmake $(find docs -name "*.ipynb")
