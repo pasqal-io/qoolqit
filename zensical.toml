@@ -29,6 +29,7 @@ nav = [
   { "Extended usage" = [
     { "Adimensionalization" = "extended_usage/adimensionalization.md" },
     { "Custom embedders" = "extended_usage/custom_embedders.md" },
+    { "Emulating device noise" = "extended_usage/device_noise.md" },
   ] },
   { "Applications" = [
     "tutorials/index.md",
