@@ -39,9 +39,12 @@ jobs:
               with:
                   python-version: '3.14'
 
+            - name: Set up uv
+              uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+
             - name: Install QoolQit & build documentation
               run: |
-                pip install -e .[dev]
+                uv pip install --system -e .[dev] --torch-backend=cpu
                 zensical build --clean --strict
 
             - name: Upload site artifact
@@ -193,12 +196,14 @@ jobs:
               with:
                   python-version: '3.14'
 
+            - name: Set up uv
+              uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+
             - name: Install QoolQit with development dependencies
               # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
               # See https://zensical.org/docs/compatibility/mkdocs/mike/
               run: |
-                pip install git+https://github.com/squidfunk/mike.git
-                pip install -e .[dev]
+                uv pip install --system git+https://github.com/squidfunk/mike.git -e .[dev] --torch-backend=cpu
 
             - name: Deploy docs
               run: |
