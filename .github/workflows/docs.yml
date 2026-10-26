@@ -44,10 +44,11 @@ jobs:
               with:
                   version: "0.13.5"
                   enable-cache: false
+                  activate-environment: true
 
             - name: Install QoolQit & build documentation
               run: |
-                uv pip install --system -e .[dev] --torch-backend=cpu
+                uv pip install -e .[dev] --torch-backend=cpu
                 zensical build --clean --strict
 
             - name: Upload site artifact
@@ -204,12 +205,14 @@ jobs:
               with:
                   version: "0.13.5"
                   enable-cache: false
+                  activate-environment: true
 
             - name: Install QoolQit with development dependencies
-              # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
-              # See https://zensical.org/docs/compatibility/mkdocs/mike/
               run: |
-                uv pip install --system git+https://github.com/squidfunk/mike.git -e .[dev] --torch-backend=cpu
+                uv pip install -e .[dev] --torch-backend=cpu
+                # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
+                # See https://zensical.org/docs/compatibility/mkdocs/mike/
+                uv pip install git+https://github.com/squidfunk/mike.git
 
             - name: Deploy docs
               run: |

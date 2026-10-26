@@ -58,11 +58,13 @@ jobs:
           uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
           with:
             version: "0.13.5"
+            activate-environment: true
         - name: Install QoolQit with development dependencies
-          # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
-          # See https://zensical.org/docs/compatibility/mkdocs/mike/
           run: |
-            uv pip install --system git+https://github.com/squidfunk/mike.git -e .[dev] --torch-backend=cpu
+            uv pip install -e .[dev] --torch-backend=cpu
+            # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
+            # See https://zensical.org/docs/compatibility/mkdocs/mike/
+            uv pip install git+https://github.com/squidfunk/mike.git
         - name: Deploy docs
           run: |
             git config user.name "GitHub Actions"
