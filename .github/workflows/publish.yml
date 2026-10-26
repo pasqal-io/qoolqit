@@ -27,6 +27,8 @@ jobs:
             python-version: '3.14'
         - name: Set up uv
           uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+          with:
+            version: "0.13.5"
         - name: Build package
           run: |
             uv build
@@ -36,7 +38,7 @@ jobs:
           timeout-minutes: 5
           run: |
             VERSION=${GITHUB_REF#refs/tags/v}
-            until pip download qoolqit==$VERSION
+            until pip download --no-deps qoolqit==$VERSION
             do
                 echo "Failed to download from PyPI, will wait for upload and retry."
                 sleep 1
@@ -54,6 +56,8 @@ jobs:
             python-version: '3.14'
         - name: Set up uv
           uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+          with:
+            version: "0.13.5"
         - name: Install QoolQit with development dependencies
           # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
           # See https://zensical.org/docs/compatibility/mkdocs/mike/
