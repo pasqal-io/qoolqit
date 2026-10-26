@@ -13,10 +13,10 @@ repos:
     hooks:
       - id: black
 
--   repo: https://github.com/charliermarsh/ruff-pre-commit
+-   repo: https://github.com/astral-sh/ruff-pre-commit
     rev: "v0.17.1"
     hooks:
-      - id: ruff
+      - id: ruff-check
         args: [--fix]
 
 -   repo: https://github.com/pre-commit/mirrors-mypy
@@ -24,11 +24,6 @@ repos:
     hooks:
       - id: mypy
         exclude: examples|docs
-
--   repo: https://github.com/DanielNoord/pydocstringformatter
-    rev: v1.0.0
-    hooks:
-      - id: pydocstringformatter
 
 - repo: https://github.com/kynan/nbstripout
   rev: 0.9.1
