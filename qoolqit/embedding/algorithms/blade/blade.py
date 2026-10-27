@@ -23,10 +23,10 @@ from ._dist_constraints_forces import (
     compute_min_dist_constraint_forces,
 )
 from ._distances_constraints_calculator import DistancesConstraintsCalculator
+from ._drawing import draw_graph_including_actual_weights, draw_update_positions_step
 from ._helpers import distance_matrix_from_positions, normalized_interaction
 from ._interactions_forces import compute_interaction_forces
 from ._qubo_mapper import Qubo
-from .drawing import draw_graph_including_actual_weights, draw_update_positions_step
 
 logger = logging.getLogger(__name__)
 
@@ -225,6 +225,14 @@ def evolve_with_forces_through_dim_change(
     draw_weighted_graph: bool = False,
     draw_differences: bool = False,
 ) -> tuple[np.ndarray, float | None]:
+    """Run the force-based evolution from `start_step` to `stop_step`.
+
+    Dimensions beyond `final_dimensions` are shrunk to zero along the way.
+
+    Returns:
+        The positions in `final_dimensions` dimensions, and the minimum distance
+        enforced at the last step (None if `final_ratio` is None).
+    """
     nb_steps = stop_step - start_step
 
     dim_shrinker = DimensionShrinker(
@@ -297,12 +305,17 @@ def evolve_with_forces_through_dim_change(
 
 
 def generate_random_positions(target_interactions: np.ndarray, dimension: int) -> np.ndarray:
+    """Draw uniform random positions in [-1, 1], one row per node."""
     return np.random.uniform(-1, 1, size=(len(target_interactions), dimension))
 
 
 def augment_dimensions_with_random_values(
     positions: np.ndarray, *, new_dimensions: int
 ) -> np.ndarray:
+    """Append `new_dimensions` columns of uniform random noise to the positions.
+
+    The noise range is scaled to the typical spacing between points.
+    """
     quantiles = np.quantile(positions, q=0.75, axis=0) - np.quantile(positions, q=0.5, axis=0)
     volume_per_point = np.prod(quantiles) / positions.shape[0]
     edge = volume_per_point ** (1 / positions.shape[1])
@@ -335,7 +348,16 @@ def evolve_with_dimension_transition(
     draw_weighted_graph: bool = False,
     draw_differences: bool = False,
 ) -> tuple[np.ndarray, float | None]:
+    """Evolve the positions from `dimensions[dim_idx]` to `dimensions[dim_idx + 1]` dimensions.
 
+    Added dimensions are filled with small random values. Removed dimensions are
+    shrunk to zero during the evolution; if `pca` is set, positions are first
+    rotated onto their principal axes so the removed ones have the least variance.
+
+    Returns:
+        The new positions, and the minimum distance enforced at the last step
+        (None if `final_ratio` is None).
+    """
     starting_dimensions = dimensions[dim_idx]
     final_dimensions = dimensions[dim_idx + 1]
 
