@@ -4856,43 +4856,43 @@ radial distance and the minimum pairwise distance between atoms.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/algorithms/blade/blade.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-728">728</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-729">729</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-730">730</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-731">731</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-732">732</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-733">733</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-734">734</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-735">735</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-736">736</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-737">737</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-738">738</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-739">739</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-740">740</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-741">741</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-742">742</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-743">743</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-744">744</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-745">745</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-746">746</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-728" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-728"></a><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-729" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-729"></a><span class="w">    </span><span class="sd">"""Post initialization of the `BladeConfig` dataclass.</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-730" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-730"></a>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-731" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-731"></a><span class="sd">    Set the `max_min_dist_ratio` argument of the `blade_embedding` algorithm</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-732" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-732"></a><span class="sd">    based on the specification of the selected device.</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-733" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-733"></a>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-734" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-734"></a><span class="sd">    Args:</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-735" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-735"></a><span class="sd">        device (Device): the QoolQit device to use to set the maximum ratio between the maximum</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-736" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-736"></a><span class="sd">            radial distance and the minimum pairwise distance between atoms.</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-737" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-737"></a><span class="sd">    """</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-738" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-738"></a>    <span class="k">if</span> <span class="n">device</span><span class="p">:</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-739" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-739"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span><span class="p">:</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-740" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-740"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-741" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-741"></a>                <span class="s2">"`max_min_dist_ratio` and `device` attributes should not be set simultaneously."</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-742" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-742"></a>            <span class="p">)</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-743" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-743"></a>        <span class="n">min_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_min_distance</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-744" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-744"></a>        <span class="n">max_radial_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_max_radial_distance</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-745" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-745"></a>        <span class="k">if</span> <span class="n">max_radial_distance</span> <span class="ow">and</span> <span class="n">min_distance</span><span class="p">:</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-746" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-746"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span> <span class="o">=</span> <span class="n">max_radial_distance</span> <span class="o">/</span> <span class="n">min_distance</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-750">750</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-751">751</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-752">752</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-753">753</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-754">754</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-755">755</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-756">756</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-757">757</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-758">758</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-759">759</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-760">760</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-761">761</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-762">762</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-763">763</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-764">764</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-765">765</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-766">766</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-767">767</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-768">768</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-750" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-750"></a><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-751" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-751"></a><span class="w">    </span><span class="sd">"""Post initialization of the `BladeConfig` dataclass.</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-752" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-752"></a>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-753" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-753"></a><span class="sd">    Set the `max_min_dist_ratio` argument of the `blade_embedding` algorithm</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-754" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-754"></a><span class="sd">    based on the specification of the selected device.</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-755" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-755"></a>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-756" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-756"></a><span class="sd">    Args:</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-757" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-757"></a><span class="sd">        device (Device): the QoolQit device to use to set the maximum ratio between the maximum</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-758" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-758"></a><span class="sd">            radial distance and the minimum pairwise distance between atoms.</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-759" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-759"></a><span class="sd">    """</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-760" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-760"></a>    <span class="k">if</span> <span class="n">device</span><span class="p">:</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-761" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-761"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span><span class="p">:</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-762" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-762"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-763" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-763"></a>                <span class="s2">"`max_min_dist_ratio` and `device` attributes should not be set simultaneously."</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-764" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-764"></a>            <span class="p">)</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-765" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-765"></a>        <span class="n">min_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_min_distance</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-766" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-766"></a>        <span class="n">max_radial_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_max_radial_distance</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-767" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-767"></a>        <span class="k">if</span> <span class="n">max_radial_distance</span> <span class="ow">and</span> <span class="n">min_distance</span><span class="p">:</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-768" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-768"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span> <span class="o">=</span> <span class="n">max_radial_distance</span> <span class="o">/</span> <span class="n">min_distance</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

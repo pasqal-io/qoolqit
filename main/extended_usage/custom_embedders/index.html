@@ -2153,18 +2153,19 @@
 <h2 id="automatic-validation">Automatic validation</h2>
 <p>To define a custom embedder, the extra arguments in the embedding function (besides the data) must match the fields in the configuration dataclass, otherwise an error will be raised.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_embedding_function</span><span class="p">(</span><span class="n">graph</span><span class="p">:</span> <span class="n">DataGraph</span><span class="p">,</span> <span class="n">param1</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataGraph</span><span class="p">:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="k">return</span> <span class="n">graph</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nd">@dataclass</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyWrongConfig</span><span class="p">(</span><span class="n">EmbedderConfig</span><span class="p">):</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="sd">"""Configuration whose parameters don't match the embedding function's signature."""</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">some_other_param</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">wrong_embedder</span> <span class="o">=</span> <span class="n">GraphToGraphEmbedder</span><span class="p">(</span><span class="n">my_embedding_function</span><span class="p">,</span> <span class="n">MyWrongConfig</span><span class="p">())</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="sd">"""Example embedding algorithm: here we return the same graph for simplicity."""</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">return</span> <span class="n">graph</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyWrongConfig</span><span class="p">(</span><span class="n">EmbedderConfig</span><span class="p">):</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="sd">"""Configuration whose parameters don't match the embedding function's signature."""</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">some_other_param</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">wrong_embedder</span> <span class="o">=</span> <span class="n">GraphToGraphEmbedder</span><span class="p">(</span><span class="n">my_embedding_function</span><span class="p">,</span> <span class="n">MyWrongConfig</span><span class="p">())</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">Config</span> <span class="n">MyWrongConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">compatible</span> <span class="k">with</span> <span class="n">the</span> <span class="n">algorithm</span> <span class="n">my_embedding_function</span><span class="p">,</span> <span class="k">as</span> <span class="ow">not</span> <span class="nb">all</span> <span class="n">configuration</span> <span class="n">fields</span> <span class="n">correspond</span> <span class="n">to</span> <span class="n">keyword</span> <span class="n">arguments</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">algorithm</span> <span class="n">function</span><span class="o">.</span>
 
@@ -2188,15 +2189,16 @@
 </code></pre></div>
 <p>The output of the embedding function must also be a <code>DataGraph</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_wrong_embedding_function</span><span class="p">(</span><span class="n">graph</span><span class="p">:</span> <span class="n">DataGraph</span><span class="p">,</span> <span class="n">param1</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataGraph</span><span class="p">:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="k">return</span> <span class="n">param1</span> <span class="c1"># Not a DataGraph</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">embedder</span> <span class="o">=</span> <span class="n">GraphToGraphEmbedder</span><span class="p">(</span><span class="n">my_wrong_embedding_function</span><span class="p">,</span> <span class="n">MyEmbedderConfig</span><span class="p">())</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">graph</span> <span class="o">=</span> <span class="n">DataGraph</span><span class="o">.</span><span class="n">random_er</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">embedded_graph</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="sd">"""Invalid embedding function: returns a float instead of a DataGraph."""</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="k">return</span> <span class="n">param1</span> <span class="c1"># Not a DataGraph</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">embedder</span> <span class="o">=</span> <span class="n">GraphToGraphEmbedder</span><span class="p">(</span><span class="n">my_wrong_embedding_function</span><span class="p">,</span> <span class="n">MyEmbedderConfig</span><span class="p">())</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">graph</span> <span class="o">=</span> <span class="n">DataGraph</span><span class="o">.</span><span class="n">random_er</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">embedded_graph</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">Expected</span> <span class="n">embedding</span> <span class="n">result</span> <span class="n">to</span> <span class="n">be</span> <span class="n">of</span> <span class="nb">type</span> <span class="n">DataGraph</span><span class="p">,</span> <span class="n">algorithm</span> <span class="n">returned</span> <span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="err">'</span><span class="nc">float</span><span class="s1">'&gt; instead.</span>
 </code></pre></div>
