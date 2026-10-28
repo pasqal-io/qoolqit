@@ -179,9 +179,11 @@ class Device:
         return self._name
 
     def __repr__(self) -> str:
+        """Return the device name."""
         return self._name
 
     def __str__(self) -> str:
+        """Return the device name, description and specs."""
         output = f"{self.name}: {self._device.short_description}\n"
         for k, v in self.specs.items():
             output += f" └── {k}: {v}\n"

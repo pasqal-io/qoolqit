@@ -45,6 +45,7 @@ class DetuningMapModulator:
     weights: dict[Any, float]
 
     def __post_init__(self) -> None:
+        """Check that the waveform is non-positive and the weights are in [0, 1]."""
         if self.waveform.max() > 0:
             raise ValueError("`waveform` must be negative for all times.")
         if any(weight < 0 or weight > 1 for weight in self.weights.values()):
@@ -168,6 +169,10 @@ class Drive:
         return self._duration
 
     def __rshift__(self, other: Drive) -> Drive:
+        """Concatenate two drives in time: `self` followed by `other`.
+
+        Not supported for drives with a DMM or with different phases.
+        """
         if not isinstance(other, Drive):
             return NotImplemented
         if self.dmm is not None or other.dmm is not None:
@@ -180,48 +185,27 @@ class Drive:
             phase=self.phase.value,
         )
 
-    def __amp_header__(self) -> str:
-        return "amplitude: \n"
-
-    def __det_header__(self) -> str:
-        return "detuning: \n"
-
-    def __phase_header__(self) -> str:
-        return "phase: \n"
-
-    def __dmm_header__(self) -> str:
-        return "dmm: \n"
-
     def __repr__(self) -> str:
+        """Return a multi-line summary of the drive waveforms."""
         if isinstance(self.amplitude, CompositeWaveform):
-            amp_repr = self.__amp_header__() + self.amplitude.__repr_content__()
+            amp_repr = "amplitude: \n" + self.amplitude._repr_content()
         else:
             amp_repr = (
-                self.__amp_header__()
-                + self.amplitude.__repr_header__()
-                + self.amplitude.__repr_content__()
+                "amplitude: \n" + self.amplitude._repr_header() + self.amplitude._repr_content()
             )
         if isinstance(self.detuning, CompositeWaveform):
-            det_repr = self.__det_header__() + self.detuning.__repr_content__()
+            det_repr = "detuning: \n" + self.detuning._repr_content()
         else:
-            det_repr = (
-                self.__det_header__()
-                + self.detuning.__repr_header__()
-                + self.detuning.__repr_content__()
-            )
+            det_repr = "detuning: \n" + self.detuning._repr_header() + self.detuning._repr_content()
 
         repr = amp_repr + "\n" + det_repr
 
         if self.phase.value != 0:
-            phase_repr = (
-                self.__phase_header__()
-                + self.phase.__repr_header__()
-                + self.phase.__repr_content__()
-            )
+            phase_repr = "phase: \n" + self.phase._repr_header() + self.phase._repr_content()
             repr += "\n" + phase_repr
 
         if self.dmm is not None:
-            dmm_repr = self.__dmm_header__() + self.dmm.__repr__()
+            dmm_repr = "dmm: \n" + self.dmm.__repr__()
             repr += "\n" + dmm_repr
 
         return repr

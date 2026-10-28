@@ -198,7 +198,7 @@ class PiecewiseLinearWaveform(CompositeWaveform):
             self.durations, values=[value * other for value in self.values]
         )
 
-    def __repr_header__(self) -> str:
+    def _repr_header(self) -> str:
         return "Piecewise linear waveform:\n"
 
 
