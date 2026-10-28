@@ -166,6 +166,7 @@ class Drive:
 
     @property
     def duration(self) -> float:
+        """The total duration of the drive."""
         return self._duration
 
     def __rshift__(self, other: Drive) -> Drive:

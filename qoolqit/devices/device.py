@@ -116,6 +116,7 @@ class Device:
 
     @property
     def converter(self) -> UnitConverter:
+        """The unit converter currently used by the device."""
         return self._converter
 
     def reset_converter(self) -> None:
@@ -176,6 +177,7 @@ class Device:
 
     @property
     def name(self) -> str:
+        """The device name."""
         return self._name
 
     def __repr__(self) -> str:

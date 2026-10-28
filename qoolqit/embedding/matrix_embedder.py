@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import numpy as np
+from typing_extensions import override
 
 from qoolqit.graphs import DataGraph
 
@@ -21,7 +22,14 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
     A custom algorithm and configuration can be set at initialization.
     """
 
+    @override
     def validate_input(self, data: np.ndarray) -> None:
+        """Checks that the data is a symmetric 2D numpy array.
+
+        Raises:
+            TypeError: if `data` is not a numpy array.
+            ValueError: if `data` is not 2D or not symmetric.
+        """
         if not isinstance(data, np.ndarray):
             raise TypeError(
                 f"Data of type {type(data)} not supported. {self.__class__.__name__} "
@@ -32,6 +40,7 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
         if not np.allclose(data, data.T, rtol=0.0, atol=1e-7):
             raise ValueError("Data must be a symmetric matrix.")
 
+    @override
     def validate_output(self, result: DataGraph) -> None:
         if not isinstance(result, DataGraph):
             raise TypeError(
