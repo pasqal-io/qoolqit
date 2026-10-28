@@ -1667,6 +1667,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="DetuningMapModulator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.drive.DetuningMapModulator.__post_init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__post_init__
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1741,6 +1758,28 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;phase
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.drive.Drive.__repr__" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__repr__
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.drive.Drive.__rshift__" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__rshift__
       </span>
     </span>
   </a>
@@ -2098,6 +2137,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="DetuningMapModulator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.drive.DetuningMapModulator.__post_init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__post_init__
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2172,6 +2228,28 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;phase
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.drive.Drive.__repr__" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__repr__
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.drive.Drive.__rshift__" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__rshift__
       </span>
     </span>
   </a>
@@ -2439,6 +2517,18 @@ this qubit and 1 means that the waveform is fully applied to this qubit.</p>
 
 
 
+<p><span class="doc-section-title">Methods:</span></p>
+    <ul>
+          <li class="doc-section-item field-body">
+            <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-method&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;__post_init__&lt;/span&gt; (&lt;code&gt;qoolqit.drive.DetuningMapModulator.__post_init__&lt;/code&gt;)" href="./#qoolqit.drive.DetuningMapModulator.__post_init__">__post_init__</a></code></b>
+            –
+            <div class="doc-md-description">
+              <p>Check that the waveform is non-positive and the weights are in [0, 1].</p>
+            </div>
+          </li>
+    </ul>
+
+
 
 
 
@@ -2453,6 +2543,42 @@ this qubit and 1 means that the waveform is fully applied to this qubit.</p>
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="qoolqit.drive.DetuningMapModulator.__post_init__" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">__post_init__</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">__post_init__</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Check that the waveform is non-positive and the weights are in [0, 1].</p>
+
+          
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>qoolqit/drive.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-52">52</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-47" name="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-47"></a><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-48" name="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-48"></a><span class="w">    </span><span class="sd">"""Check that the waveform is non-positive and the weights are in [0, 1]."""</span>
+<a id="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-49" name="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-49"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveform</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<a id="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-50" name="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-50"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`waveform` must be negative for all times."</span><span class="p">)</span>
+<a id="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-51" name="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-51"></a>    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">weight</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">weight</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+<a id="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-52" name="qoolqit.drive.DetuningMapModulator.__post_init__--source--__codelineno-0-52"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`weights` must be a dictionary of values in [0, 1]."</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
@@ -2626,12 +2752,45 @@ drive = Drive(amplitude=amp, detuning=det, phase=0.5)</p>
       <a href="../qoolqit/#qoolqit"><code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;qoolqit</a>
   </span>
 
+            <ul class="doc doc-backlink-list">
+      <li class="doc doc-backlink">
+            <span class="doc doc-backlink-crumb">
+      <a href="../qoolqit/#qoolqit.Drive"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Drive</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb last">
+      <a href="../qoolqit/#qoolqit.Drive.__rshift__"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__rshift__</a>
+  </span>
+
+      </li>
+      <li class="doc doc-backlink">
             <span class="doc doc-backlink-crumb">
       <a href="../qoolqit/#qoolqit.QuantumProgram"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;QuantumProgram</a>
   </span>
 
             <span class="doc doc-backlink-crumb last">
       <a href="../qoolqit/#qoolqit.QuantumProgram.drive"><code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;drive</a>
+  </span>
+
+      </li>
+  </ul>
+
+      </li>
+      <li class="doc doc-backlink">
+            <span class="doc doc-backlink-crumb">
+      <a href="./">qoolqit.drive</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb">
+      <a href="./#qoolqit.drive"><code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;drive</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb">
+      <a href="./#qoolqit.drive.Drive"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Drive</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb last">
+      <a href="./#qoolqit.drive.Drive.__rshift__"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__rshift__</a>
   </span>
 
       </li>
@@ -2677,6 +2836,16 @@ drive = Drive(amplitude=amp, detuning=det, phase=0.5)</p>
 
             <ul class="doc doc-backlink-list">
       <li class="doc doc-backlink">
+            <span class="doc doc-backlink-crumb">
+      <a href="../qoolqit/#qoolqit.Drive"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Drive</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb last">
+      <a href="../qoolqit/#qoolqit.Drive.__rshift__"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__rshift__</a>
+  </span>
+
+      </li>
+      <li class="doc doc-backlink">
             <span class="doc doc-backlink-crumb last">
       <a href="../qoolqit/#qoolqit.QuantumProgram"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;QuantumProgram</a>
   </span>
@@ -2689,6 +2858,24 @@ drive = Drive(amplitude=amp, detuning=det, phase=0.5)</p>
 
       </li>
   </ul>
+
+      </li>
+      <li class="doc doc-backlink">
+            <span class="doc doc-backlink-crumb">
+      <a href="./">qoolqit.drive</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb">
+      <a href="./#qoolqit.drive"><code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;drive</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb">
+      <a href="./#qoolqit.drive.Drive"><code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Drive</a>
+  </span>
+
+            <span class="doc doc-backlink-crumb last">
+      <a href="./#qoolqit.drive.Drive.__rshift__"><code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;__rshift__</a>
+  </span>
 
       </li>
       <li class="doc doc-backlink">
@@ -2725,6 +2912,20 @@ drive = Drive(amplitude=amp, detuning=det, phase=0.5)</p>
 
 <p><span class="doc-section-title">Methods:</span></p>
     <ul>
+          <li class="doc-section-item field-body">
+            <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-method&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;__repr__&lt;/span&gt; (&lt;code&gt;qoolqit.drive.Drive.__repr__&lt;/code&gt;)" href="./#qoolqit.drive.Drive.__repr__">__repr__</a></code></b>
+            –
+            <div class="doc-md-description">
+              <p>Return a multi-line summary of the drive waveforms.</p>
+            </div>
+          </li>
+          <li class="doc-section-item field-body">
+            <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-method&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;__rshift__&lt;/span&gt; (&lt;code&gt;qoolqit.drive.Drive.__rshift__&lt;/code&gt;)" href="./#qoolqit.drive.Drive.__rshift__">__rshift__</a></code></b>
+            –
+            <div class="doc-md-description">
+              <p>Concatenate two drives in time: <code>self</code> followed by <code>other</code>.</p>
+            </div>
+          </li>
           <li class="doc-section-item field-body">
             <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-method&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;draw&lt;/span&gt; (&lt;code&gt;qoolqit.drive.Drive.draw&lt;/code&gt;)" href="./#qoolqit.drive.Drive.draw">draw</a></code></b>
             –
@@ -2800,8 +3001,7 @@ drive = Drive(amplitude=amp, detuning=det, phase=0.5)</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>qoolqit/drive.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-57"> 57</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-58"> 58</a></span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-58"> 58</a></span>
 <span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-59"> 59</a></span>
 <span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-60"> 60</a></span>
 <span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-61"> 61</a></span>
@@ -2887,94 +3087,95 @@ drive = Drive(amplitude=amp, detuning=det, phase=0.5)</p>
 <span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-141">141</a></span>
 <span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-142">142</a></span>
 <span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-143">143</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-144">144</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.drive.Drive--source--__codelineno-0-57" name="qoolqit.drive.Drive--source--__codelineno-0-57"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-58" name="qoolqit.drive.Drive--source--__codelineno-0-58"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-59" name="qoolqit.drive.Drive--source--__codelineno-0-59"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-60" name="qoolqit.drive.Drive--source--__codelineno-0-60"></a>    <span class="n">amplitude</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-61" name="qoolqit.drive.Drive--source--__codelineno-0-61"></a>    <span class="n">detuning</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-62" name="qoolqit.drive.Drive--source--__codelineno-0-62"></a>    <span class="n">dmm</span><span class="p">:</span> <span class="n">DetuningMapModulator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-63" name="qoolqit.drive.Drive--source--__codelineno-0-63"></a>    <span class="n">phase</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-64" name="qoolqit.drive.Drive--source--__codelineno-0-64"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-65" name="qoolqit.drive.Drive--source--__codelineno-0-65"></a><span class="w">    </span><span class="sd">"""Initialize a Drive.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-66" name="qoolqit.drive.Drive--source--__codelineno-0-66"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-67" name="qoolqit.drive.Drive--source--__codelineno-0-67"></a><span class="sd">    The Drive specifies the control parameters for the time-dependent drive Hamiltonian</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-68" name="qoolqit.drive.Drive--source--__codelineno-0-68"></a><span class="sd">    in the Rydberg model</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-69" name="qoolqit.drive.Drive--source--__codelineno-0-69"></a><span class="sd">    (see https://docs.pasqal.com/qoolqit/get_started/qoolqit_model/ for details),</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-70" name="qoolqit.drive.Drive--source--__codelineno-0-70"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-71" name="qoolqit.drive.Drive--source--__codelineno-0-71"></a><span class="sd">    H_drive(t) = Σᵢ [Ω(t)/2 (cos φ(t) σˣᵢ - sin φ(t) σʸᵢ)] - Σᵢ [δ(t) + εᵢ Δ(t)] nᵢ</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-72" name="qoolqit.drive.Drive--source--__codelineno-0-72"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-73" name="qoolqit.drive.Drive--source--__codelineno-0-73"></a><span class="sd">    representing:</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-74" name="qoolqit.drive.Drive--source--__codelineno-0-74"></a><span class="sd">    - Amplitude Ω(t): Controls the Rabi frequency that drives qubits.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-75" name="qoolqit.drive.Drive--source--__codelineno-0-75"></a><span class="sd">    - Detuning δ(t): Controls the energy offset of the Rydberg state.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-76" name="qoolqit.drive.Drive--source--__codelineno-0-76"></a><span class="sd">    - dmm εᵢ, Δ(t): Detuning Map Modulator (DMM) for additional qubit-specific detunings.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-77" name="qoolqit.drive.Drive--source--__codelineno-0-77"></a><span class="sd">    - Phase φ: Global phase applied to the amplitude term.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-78" name="qoolqit.drive.Drive--source--__codelineno-0-78"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-79" name="qoolqit.drive.Drive--source--__codelineno-0-79"></a><span class="sd">    Args:</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-80" name="qoolqit.drive.Drive--source--__codelineno-0-80"></a><span class="sd">        amplitude: Time-dependent amplitude waveform Ω(t) representing the Rabi frequency.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-81" name="qoolqit.drive.Drive--source--__codelineno-0-81"></a><span class="sd">            Controls the strength of the coupling between ground and Rydberg states.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-82" name="qoolqit.drive.Drive--source--__codelineno-0-82"></a><span class="sd">            Must be positive for all times.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-83" name="qoolqit.drive.Drive--source--__codelineno-0-83"></a><span class="sd">        detuning: Time-dependent detuning waveform δ(t) representing the energy offset</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-84" name="qoolqit.drive.Drive--source--__codelineno-0-84"></a><span class="sd">            of the Rydberg state relative to resonance. If None, defaults to zero</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-85" name="qoolqit.drive.Drive--source--__codelineno-0-85"></a><span class="sd">            detuning (Delay waveform) for the duration of the amplitude.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-86" name="qoolqit.drive.Drive--source--__codelineno-0-86"></a><span class="sd">        dmm: DetuningMapModulator instance for additional negative detuning waveform Δ(t) ≤ 0</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-87" name="qoolqit.drive.Drive--source--__codelineno-0-87"></a><span class="sd">            applied to individual qubits as specified by its `weights` attribute εᵢ.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-88" name="qoolqit.drive.Drive--source--__codelineno-0-88"></a><span class="sd">        phase: Global phase φ applied to the amplitude term in the Hamiltonian.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-89" name="qoolqit.drive.Drive--source--__codelineno-0-89"></a><span class="sd">            Defaults to 0.0 (no phase). Normalized to [0, 2π) and stored as a</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-90" name="qoolqit.drive.Drive--source--__codelineno-0-90"></a><span class="sd">            ConstantWaveform spanning the full duration of the drive.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-91" name="qoolqit.drive.Drive--source--__codelineno-0-91"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-92" name="qoolqit.drive.Drive--source--__codelineno-0-92"></a><span class="sd">    Raises:</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-93" name="qoolqit.drive.Drive--source--__codelineno-0-93"></a><span class="sd">        TypeError: If amplitude or detuning are not Waveform instances.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-94" name="qoolqit.drive.Drive--source--__codelineno-0-94"></a><span class="sd">        ValueError: If the amplitude waveform has negative values, or if the phase</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-95" name="qoolqit.drive.Drive--source--__codelineno-0-95"></a><span class="sd">            is not finite.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-96" name="qoolqit.drive.Drive--source--__codelineno-0-96"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-97" name="qoolqit.drive.Drive--source--__codelineno-0-97"></a><span class="sd">    Note:</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-98" name="qoolqit.drive.Drive--source--__codelineno-0-98"></a><span class="sd">        - All arguments must be passed as keyword arguments.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-99" name="qoolqit.drive.Drive--source--__codelineno-0-99"></a><span class="sd">        - If amplitude and detuning have different durations, the shorter one is</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-100" name="qoolqit.drive.Drive--source--__codelineno-0-100"></a><span class="sd">          automatically extended with a Delay to match the longer duration.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-101" name="qoolqit.drive.Drive--source--__codelineno-0-101"></a><span class="sd">        - DetuningMapModulator waveform must be negative for all times</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-102" name="qoolqit.drive.Drive--source--__codelineno-0-102"></a><span class="sd">            (≤ 0) as it represents energy shifts below the resonance.</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-103" name="qoolqit.drive.Drive--source--__codelineno-0-103"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-104" name="qoolqit.drive.Drive--source--__codelineno-0-104"></a><span class="sd">    Example:</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-105" name="qoolqit.drive.Drive--source--__codelineno-0-105"></a><span class="sd">        &gt;&gt;&gt; from qoolqit import Drive</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-106" name="qoolqit.drive.Drive--source--__codelineno-0-106"></a><span class="sd">        &gt;&gt;&gt; from qoolqit.waveforms import ConstantWaveform, RampWaveform</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-107" name="qoolqit.drive.Drive--source--__codelineno-0-107"></a><span class="sd">        &gt;&gt;&gt;</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-108" name="qoolqit.drive.Drive--source--__codelineno-0-108"></a><span class="sd">        &gt;&gt;&gt; # Simple constant drive</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-109" name="qoolqit.drive.Drive--source--__codelineno-0-109"></a><span class="sd">        &gt;&gt;&gt; drive = Drive(amplitude=ConstantWaveform(10.0, 1.5))</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-110" name="qoolqit.drive.Drive--source--__codelineno-0-110"></a><span class="sd">        &gt;&gt;&gt;</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-111" name="qoolqit.drive.Drive--source--__codelineno-0-111"></a><span class="sd">        &gt;&gt;&gt; # Drive with time-varying amplitude and detuning</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-112" name="qoolqit.drive.Drive--source--__codelineno-0-112"></a><span class="sd">        &gt;&gt;&gt; amp = RampWaveform(5.0, 0.0, 2.0)</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-113" name="qoolqit.drive.Drive--source--__codelineno-0-113"></a><span class="sd">        &gt;&gt;&gt; det = ConstantWaveform(5.0, -1.0)</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-114" name="qoolqit.drive.Drive--source--__codelineno-0-114"></a><span class="sd">        &gt;&gt;&gt; drive = Drive(amplitude=amp, detuning=det, phase=0.5)</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-115" name="qoolqit.drive.Drive--source--__codelineno-0-115"></a><span class="sd">    """</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-116" name="qoolqit.drive.Drive--source--__codelineno-0-116"></a>    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="p">[</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">detuning</span><span class="p">]:</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-117" name="qoolqit.drive.Drive--source--__codelineno-0-117"></a>        <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-118" name="qoolqit.drive.Drive--source--__codelineno-0-118"></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"'amplitude' and 'detuning' must be of type Waveform."</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-119" name="qoolqit.drive.Drive--source--__codelineno-0-119"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-120" name="qoolqit.drive.Drive--source--__codelineno-0-120"></a>    <span class="k">if</span> <span class="n">amplitude</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-121" name="qoolqit.drive.Drive--source--__codelineno-0-121"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"'amplitude' must be positive."</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-122" name="qoolqit.drive.Drive--source--__codelineno-0-122"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-123" name="qoolqit.drive.Drive--source--__codelineno-0-123"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">phase</span><span class="p">):</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-124" name="qoolqit.drive.Drive--source--__codelineno-0-124"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"'phase' must be finite."</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-125" name="qoolqit.drive.Drive--source--__codelineno-0-125"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-126" name="qoolqit.drive.Drive--source--__codelineno-0-126"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span> <span class="o">=</span> <span class="n">amplitude</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-127" name="qoolqit.drive.Drive--source--__codelineno-0-127"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span> <span class="o">=</span> <span class="n">detuning</span> <span class="k">if</span> <span class="n">detuning</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">DelayWaveform</span><span class="p">(</span><span class="n">amplitude</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-128" name="qoolqit.drive.Drive--source--__codelineno-0-128"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-129" name="qoolqit.drive.Drive--source--__codelineno-0-129"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude_orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-130" name="qoolqit.drive.Drive--source--__codelineno-0-130"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_detuning_orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-131" name="qoolqit.drive.Drive--source--__codelineno-0-131"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-132" name="qoolqit.drive.Drive--source--__codelineno-0-132"></a>    <span class="c1"># adjust amplitude and detuning waveforms to match the duration</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-133" name="qoolqit.drive.Drive--source--__codelineno-0-133"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="o">.</span><span class="n">duration</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-134" name="qoolqit.drive.Drive--source--__codelineno-0-134"></a>        <span class="n">extra_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="o">.</span><span class="n">duration</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-135" name="qoolqit.drive.Drive--source--__codelineno-0-135"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span> <span class="o">=</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="p">,</span> <span class="n">DelayWaveform</span><span class="p">(</span><span class="n">extra_duration</span><span class="p">))</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-136" name="qoolqit.drive.Drive--source--__codelineno-0-136"></a>    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="o">.</span><span class="n">duration</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-137" name="qoolqit.drive.Drive--source--__codelineno-0-137"></a>        <span class="n">extra_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-138" name="qoolqit.drive.Drive--source--__codelineno-0-138"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span> <span class="o">=</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="p">,</span> <span class="n">DelayWaveform</span><span class="p">(</span><span class="n">extra_duration</span><span class="p">))</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-139" name="qoolqit.drive.Drive--source--__codelineno-0-139"></a>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-140" name="qoolqit.drive.Drive--source--__codelineno-0-140"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-141" name="qoolqit.drive.Drive--source--__codelineno-0-141"></a>    <span class="k">if</span> <span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dmm</span><span class="p">,</span> <span class="n">DetuningMapModulator</span><span class="p">):</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-142" name="qoolqit.drive.Drive--source--__codelineno-0-142"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"'dmm' must be of type DetuningMapModulator."</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-143" name="qoolqit.drive.Drive--source--__codelineno-0-143"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_dmm</span> <span class="o">=</span> <span class="n">dmm</span>
-<a id="qoolqit.drive.Drive--source--__codelineno-0-144" name="qoolqit.drive.Drive--source--__codelineno-0-144"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="n">_mod_2pi</span><span class="p">(</span><span class="n">phase</span><span class="p">))</span>
+<span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-144">144</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive--source--__codelineno-0-145">145</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.drive.Drive--source--__codelineno-0-58" name="qoolqit.drive.Drive--source--__codelineno-0-58"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-59" name="qoolqit.drive.Drive--source--__codelineno-0-59"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-60" name="qoolqit.drive.Drive--source--__codelineno-0-60"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-61" name="qoolqit.drive.Drive--source--__codelineno-0-61"></a>    <span class="n">amplitude</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-62" name="qoolqit.drive.Drive--source--__codelineno-0-62"></a>    <span class="n">detuning</span><span class="p">:</span> <span class="n">Waveform</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-63" name="qoolqit.drive.Drive--source--__codelineno-0-63"></a>    <span class="n">dmm</span><span class="p">:</span> <span class="n">DetuningMapModulator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-64" name="qoolqit.drive.Drive--source--__codelineno-0-64"></a>    <span class="n">phase</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-65" name="qoolqit.drive.Drive--source--__codelineno-0-65"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-66" name="qoolqit.drive.Drive--source--__codelineno-0-66"></a><span class="w">    </span><span class="sd">"""Initialize a Drive.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-67" name="qoolqit.drive.Drive--source--__codelineno-0-67"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-68" name="qoolqit.drive.Drive--source--__codelineno-0-68"></a><span class="sd">    The Drive specifies the control parameters for the time-dependent drive Hamiltonian</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-69" name="qoolqit.drive.Drive--source--__codelineno-0-69"></a><span class="sd">    in the Rydberg model</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-70" name="qoolqit.drive.Drive--source--__codelineno-0-70"></a><span class="sd">    (see https://docs.pasqal.com/qoolqit/get_started/qoolqit_model/ for details),</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-71" name="qoolqit.drive.Drive--source--__codelineno-0-71"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-72" name="qoolqit.drive.Drive--source--__codelineno-0-72"></a><span class="sd">    H_drive(t) = Σᵢ [Ω(t)/2 (cos φ(t) σˣᵢ - sin φ(t) σʸᵢ)] - Σᵢ [δ(t) + εᵢ Δ(t)] nᵢ</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-73" name="qoolqit.drive.Drive--source--__codelineno-0-73"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-74" name="qoolqit.drive.Drive--source--__codelineno-0-74"></a><span class="sd">    representing:</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-75" name="qoolqit.drive.Drive--source--__codelineno-0-75"></a><span class="sd">    - Amplitude Ω(t): Controls the Rabi frequency that drives qubits.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-76" name="qoolqit.drive.Drive--source--__codelineno-0-76"></a><span class="sd">    - Detuning δ(t): Controls the energy offset of the Rydberg state.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-77" name="qoolqit.drive.Drive--source--__codelineno-0-77"></a><span class="sd">    - dmm εᵢ, Δ(t): Detuning Map Modulator (DMM) for additional qubit-specific detunings.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-78" name="qoolqit.drive.Drive--source--__codelineno-0-78"></a><span class="sd">    - Phase φ: Global phase applied to the amplitude term.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-79" name="qoolqit.drive.Drive--source--__codelineno-0-79"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-80" name="qoolqit.drive.Drive--source--__codelineno-0-80"></a><span class="sd">    Args:</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-81" name="qoolqit.drive.Drive--source--__codelineno-0-81"></a><span class="sd">        amplitude: Time-dependent amplitude waveform Ω(t) representing the Rabi frequency.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-82" name="qoolqit.drive.Drive--source--__codelineno-0-82"></a><span class="sd">            Controls the strength of the coupling between ground and Rydberg states.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-83" name="qoolqit.drive.Drive--source--__codelineno-0-83"></a><span class="sd">            Must be positive for all times.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-84" name="qoolqit.drive.Drive--source--__codelineno-0-84"></a><span class="sd">        detuning: Time-dependent detuning waveform δ(t) representing the energy offset</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-85" name="qoolqit.drive.Drive--source--__codelineno-0-85"></a><span class="sd">            of the Rydberg state relative to resonance. If None, defaults to zero</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-86" name="qoolqit.drive.Drive--source--__codelineno-0-86"></a><span class="sd">            detuning (Delay waveform) for the duration of the amplitude.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-87" name="qoolqit.drive.Drive--source--__codelineno-0-87"></a><span class="sd">        dmm: DetuningMapModulator instance for additional negative detuning waveform Δ(t) ≤ 0</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-88" name="qoolqit.drive.Drive--source--__codelineno-0-88"></a><span class="sd">            applied to individual qubits as specified by its `weights` attribute εᵢ.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-89" name="qoolqit.drive.Drive--source--__codelineno-0-89"></a><span class="sd">        phase: Global phase φ applied to the amplitude term in the Hamiltonian.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-90" name="qoolqit.drive.Drive--source--__codelineno-0-90"></a><span class="sd">            Defaults to 0.0 (no phase). Normalized to [0, 2π) and stored as a</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-91" name="qoolqit.drive.Drive--source--__codelineno-0-91"></a><span class="sd">            ConstantWaveform spanning the full duration of the drive.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-92" name="qoolqit.drive.Drive--source--__codelineno-0-92"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-93" name="qoolqit.drive.Drive--source--__codelineno-0-93"></a><span class="sd">    Raises:</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-94" name="qoolqit.drive.Drive--source--__codelineno-0-94"></a><span class="sd">        TypeError: If amplitude or detuning are not Waveform instances.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-95" name="qoolqit.drive.Drive--source--__codelineno-0-95"></a><span class="sd">        ValueError: If the amplitude waveform has negative values, or if the phase</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-96" name="qoolqit.drive.Drive--source--__codelineno-0-96"></a><span class="sd">            is not finite.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-97" name="qoolqit.drive.Drive--source--__codelineno-0-97"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-98" name="qoolqit.drive.Drive--source--__codelineno-0-98"></a><span class="sd">    Note:</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-99" name="qoolqit.drive.Drive--source--__codelineno-0-99"></a><span class="sd">        - All arguments must be passed as keyword arguments.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-100" name="qoolqit.drive.Drive--source--__codelineno-0-100"></a><span class="sd">        - If amplitude and detuning have different durations, the shorter one is</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-101" name="qoolqit.drive.Drive--source--__codelineno-0-101"></a><span class="sd">          automatically extended with a Delay to match the longer duration.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-102" name="qoolqit.drive.Drive--source--__codelineno-0-102"></a><span class="sd">        - DetuningMapModulator waveform must be negative for all times</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-103" name="qoolqit.drive.Drive--source--__codelineno-0-103"></a><span class="sd">            (≤ 0) as it represents energy shifts below the resonance.</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-104" name="qoolqit.drive.Drive--source--__codelineno-0-104"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-105" name="qoolqit.drive.Drive--source--__codelineno-0-105"></a><span class="sd">    Example:</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-106" name="qoolqit.drive.Drive--source--__codelineno-0-106"></a><span class="sd">        &gt;&gt;&gt; from qoolqit import Drive</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-107" name="qoolqit.drive.Drive--source--__codelineno-0-107"></a><span class="sd">        &gt;&gt;&gt; from qoolqit.waveforms import ConstantWaveform, RampWaveform</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-108" name="qoolqit.drive.Drive--source--__codelineno-0-108"></a><span class="sd">        &gt;&gt;&gt;</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-109" name="qoolqit.drive.Drive--source--__codelineno-0-109"></a><span class="sd">        &gt;&gt;&gt; # Simple constant drive</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-110" name="qoolqit.drive.Drive--source--__codelineno-0-110"></a><span class="sd">        &gt;&gt;&gt; drive = Drive(amplitude=ConstantWaveform(10.0, 1.5))</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-111" name="qoolqit.drive.Drive--source--__codelineno-0-111"></a><span class="sd">        &gt;&gt;&gt;</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-112" name="qoolqit.drive.Drive--source--__codelineno-0-112"></a><span class="sd">        &gt;&gt;&gt; # Drive with time-varying amplitude and detuning</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-113" name="qoolqit.drive.Drive--source--__codelineno-0-113"></a><span class="sd">        &gt;&gt;&gt; amp = RampWaveform(5.0, 0.0, 2.0)</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-114" name="qoolqit.drive.Drive--source--__codelineno-0-114"></a><span class="sd">        &gt;&gt;&gt; det = ConstantWaveform(5.0, -1.0)</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-115" name="qoolqit.drive.Drive--source--__codelineno-0-115"></a><span class="sd">        &gt;&gt;&gt; drive = Drive(amplitude=amp, detuning=det, phase=0.5)</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-116" name="qoolqit.drive.Drive--source--__codelineno-0-116"></a><span class="sd">    """</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-117" name="qoolqit.drive.Drive--source--__codelineno-0-117"></a>    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="p">[</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">detuning</span><span class="p">]:</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-118" name="qoolqit.drive.Drive--source--__codelineno-0-118"></a>        <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">Waveform</span><span class="p">):</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-119" name="qoolqit.drive.Drive--source--__codelineno-0-119"></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"'amplitude' and 'detuning' must be of type Waveform."</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-120" name="qoolqit.drive.Drive--source--__codelineno-0-120"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-121" name="qoolqit.drive.Drive--source--__codelineno-0-121"></a>    <span class="k">if</span> <span class="n">amplitude</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-122" name="qoolqit.drive.Drive--source--__codelineno-0-122"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"'amplitude' must be positive."</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-123" name="qoolqit.drive.Drive--source--__codelineno-0-123"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-124" name="qoolqit.drive.Drive--source--__codelineno-0-124"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">phase</span><span class="p">):</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-125" name="qoolqit.drive.Drive--source--__codelineno-0-125"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"'phase' must be finite."</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-126" name="qoolqit.drive.Drive--source--__codelineno-0-126"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-127" name="qoolqit.drive.Drive--source--__codelineno-0-127"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span> <span class="o">=</span> <span class="n">amplitude</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-128" name="qoolqit.drive.Drive--source--__codelineno-0-128"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span> <span class="o">=</span> <span class="n">detuning</span> <span class="k">if</span> <span class="n">detuning</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">DelayWaveform</span><span class="p">(</span><span class="n">amplitude</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-129" name="qoolqit.drive.Drive--source--__codelineno-0-129"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-130" name="qoolqit.drive.Drive--source--__codelineno-0-130"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude_orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-131" name="qoolqit.drive.Drive--source--__codelineno-0-131"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_detuning_orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-132" name="qoolqit.drive.Drive--source--__codelineno-0-132"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-133" name="qoolqit.drive.Drive--source--__codelineno-0-133"></a>    <span class="c1"># adjust amplitude and detuning waveforms to match the duration</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-134" name="qoolqit.drive.Drive--source--__codelineno-0-134"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="o">.</span><span class="n">duration</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-135" name="qoolqit.drive.Drive--source--__codelineno-0-135"></a>        <span class="n">extra_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="o">.</span><span class="n">duration</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-136" name="qoolqit.drive.Drive--source--__codelineno-0-136"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span> <span class="o">=</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="p">,</span> <span class="n">DelayWaveform</span><span class="p">(</span><span class="n">extra_duration</span><span class="p">))</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-137" name="qoolqit.drive.Drive--source--__codelineno-0-137"></a>    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="o">.</span><span class="n">duration</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-138" name="qoolqit.drive.Drive--source--__codelineno-0-138"></a>        <span class="n">extra_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-139" name="qoolqit.drive.Drive--source--__codelineno-0-139"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span> <span class="o">=</span> <span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="p">,</span> <span class="n">DelayWaveform</span><span class="p">(</span><span class="n">extra_duration</span><span class="p">))</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-140" name="qoolqit.drive.Drive--source--__codelineno-0-140"></a>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-141" name="qoolqit.drive.Drive--source--__codelineno-0-141"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="o">.</span><span class="n">duration</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-142" name="qoolqit.drive.Drive--source--__codelineno-0-142"></a>    <span class="k">if</span> <span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dmm</span><span class="p">,</span> <span class="n">DetuningMapModulator</span><span class="p">):</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-143" name="qoolqit.drive.Drive--source--__codelineno-0-143"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"'dmm' must be of type DetuningMapModulator."</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-144" name="qoolqit.drive.Drive--source--__codelineno-0-144"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_dmm</span> <span class="o">=</span> <span class="n">dmm</span>
+<a id="qoolqit.drive.Drive--source--__codelineno-0-145" name="qoolqit.drive.Drive--source--__codelineno-0-145"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="n">ConstantWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="n">_mod_2pi</span><span class="p">(</span><span class="n">phase</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -3099,6 +3300,135 @@ drive = Drive(amplitude=amp, detuning=det, phase=0.5)</p>
 <div class="doc doc-object doc-function">
 
 
+<h4 id="qoolqit.drive.Drive.__repr__" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">__repr__</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">__repr__</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return a multi-line summary of the drive waveforms.</p>
+
+          
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>qoolqit/drive.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-188">188</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-189">189</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-190">190</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-191">191</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-192">192</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-193">193</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-194">194</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-195">195</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-196">196</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-197">197</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-198">198</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-199">199</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-200">200</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-201">201</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-202">202</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-205">205</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-206">206</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__repr__--source--__codelineno-0-211">211</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-188" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-188"></a><span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-189" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-189"></a><span class="w">    </span><span class="sd">"""Return a multi-line summary of the drive waveforms."""</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-190" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-190"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-191" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-191"></a>        <span class="n">amp_repr</span> <span class="o">=</span> <span class="s2">"amplitude: </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="o">.</span><span class="n">_repr_content</span><span class="p">()</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-192" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-192"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-193" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-193"></a>        <span class="n">amp_repr</span> <span class="o">=</span> <span class="p">(</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-194" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-194"></a>            <span class="s2">"amplitude: </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="o">.</span><span class="n">_repr_header</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="o">.</span><span class="n">_repr_content</span><span class="p">()</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-195" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-195"></a>        <span class="p">)</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-196" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-196"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">detuning</span><span class="p">,</span> <span class="n">CompositeWaveform</span><span class="p">):</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-197" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-197"></a>        <span class="n">det_repr</span> <span class="o">=</span> <span class="s2">"detuning: </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">detuning</span><span class="o">.</span><span class="n">_repr_content</span><span class="p">()</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-198" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-198"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-199" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-199"></a>        <span class="n">det_repr</span> <span class="o">=</span> <span class="s2">"detuning: </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">detuning</span><span class="o">.</span><span class="n">_repr_header</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">detuning</span><span class="o">.</span><span class="n">_repr_content</span><span class="p">()</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-200" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-200"></a>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-201" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-201"></a>    <span class="nb">repr</span> <span class="o">=</span> <span class="n">amp_repr</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">det_repr</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-202" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-202"></a>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-203" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-203"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-204" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-204"></a>        <span class="n">phase_repr</span> <span class="o">=</span> <span class="s2">"phase: </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">_repr_header</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">_repr_content</span><span class="p">()</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-205" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-205"></a>        <span class="nb">repr</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">phase_repr</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-206" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-206"></a>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-207" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-207"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-208" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-208"></a>        <span class="n">dmm_repr</span> <span class="o">=</span> <span class="s2">"dmm: </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmm</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-209" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-209"></a>        <span class="nb">repr</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">dmm_repr</span>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-210" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-210"></a>
+<a id="qoolqit.drive.Drive.__repr__--source--__codelineno-0-211" name="qoolqit.drive.Drive.__repr__--source--__codelineno-0-211"></a>    <span class="k">return</span> <span class="nb">repr</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="qoolqit.drive.Drive.__rshift__" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">__rshift__</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">__rshift__</span><span class="p">(</span><span class="n">other</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Drive&lt;/span&gt; (&lt;code&gt;qoolqit.drive.Drive&lt;/code&gt;)" href="./#qoolqit.drive.Drive">Drive</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Drive&lt;/span&gt; (&lt;code&gt;qoolqit.drive.Drive&lt;/code&gt;)" href="./#qoolqit.drive.Drive">Drive</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Concatenate two drives in time: <code>self</code> followed by <code>other</code>.</p>
+<p>Not supported for drives with a DMM or with different phases.</p>
+
+          
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>qoolqit/drive.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-171">171</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-172">172</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-173">173</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-174">174</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-175">175</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-176">176</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-177">177</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-178">178</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-179">179</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-180">180</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-181">181</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-182">182</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-183">183</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-184">184</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-185">185</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.__rshift__--source--__codelineno-0-186">186</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-171" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-171"></a><span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Drive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Drive</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-172" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-172"></a><span class="w">    </span><span class="sd">"""Concatenate two drives in time: `self` followed by `other`.</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-173" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-173"></a>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-174" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-174"></a><span class="sd">    Not supported for drives with a DMM or with different phases.</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-175" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-175"></a><span class="sd">    """</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-176" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-176"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Drive</span><span class="p">):</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-177" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-177"></a>        <span class="k">return</span> <span class="bp">NotImplemented</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-178" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-178"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">other</span><span class="o">.</span><span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-179" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-179"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Composing drives with a dmm is not supported."</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-180" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-180"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-181" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-181"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Composing drives with different phase not supported."</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-182" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-182"></a>    <span class="k">return</span> <span class="n">Drive</span><span class="p">(</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-183" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-183"></a>        <span class="n">amplitude</span><span class="o">=</span><span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">_amplitude</span><span class="p">),</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-184" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-184"></a>        <span class="n">detuning</span><span class="o">=</span><span class="n">CompositeWaveform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detuning</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">_detuning</span><span class="p">),</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-185" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-185"></a>        <span class="n">phase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+<a id="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-186" name="qoolqit.drive.Drive.__rshift__--source--__codelineno-0-186"></a>    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h4 id="qoolqit.drive.Drive.draw" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">draw</span>
 
@@ -3132,7 +3462,23 @@ created.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/drive.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-229">229</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-229">229</a></span>
 <span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-230">230</a></span>
 <span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-231">231</a></span>
 <span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-232">232</a></span>
@@ -3172,79 +3518,63 @@ created.</p>
 <span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-266">266</a></span>
 <span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-267">267</a></span>
 <span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-268">268</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-269">269</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-270">270</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-271">271</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-272">272</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-273">273</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-274">274</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-275">275</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-276">276</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-277">277</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-278">278</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-279">279</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-280">280</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-281">281</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-282">282</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-283">283</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-284">284</a></span>
-<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-285">285</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.drive.Drive.draw--source--__codelineno-0-229" name="qoolqit.drive.Drive.draw--source--__codelineno-0-229"></a><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">:</span> <span class="n">FigureBase</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-230" name="qoolqit.drive.Drive.draw--source--__codelineno-0-230"></a><span class="w">    </span><span class="sd">"""Draw the amplitude, detuning, phase and DMM of the Drive.</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-231" name="qoolqit.drive.Drive.draw--source--__codelineno-0-231"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-232" name="qoolqit.drive.Drive.draw--source--__codelineno-0-232"></a><span class="sd">    The phase is drawn only if it is non-zero, and the DMM only if one is set.</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-233" name="qoolqit.drive.Drive.draw--source--__codelineno-0-233"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-234" name="qoolqit.drive.Drive.draw--source--__codelineno-0-234"></a><span class="sd">    Args:</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-235" name="qoolqit.drive.Drive.draw--source--__codelineno-0-235"></a><span class="sd">        fig: The figure or subfigure to draw into. If None, a new pyplot figure is</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-236" name="qoolqit.drive.Drive.draw--source--__codelineno-0-236"></a><span class="sd">            created.</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-237" name="qoolqit.drive.Drive.draw--source--__codelineno-0-237"></a><span class="sd">    """</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-238" name="qoolqit.drive.Drive.draw--source--__codelineno-0-238"></a>    <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-239" name="qoolqit.drive.Drive.draw--source--__codelineno-0-239"></a>        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-240" name="qoolqit.drive.Drive.draw--source--__codelineno-0-240"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-241" name="qoolqit.drive.Drive.draw--source--__codelineno-0-241"></a>    <span class="c1"># setup subplots</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-242" name="qoolqit.drive.Drive.draw--source--__codelineno-0-242"></a>    <span class="n">nrows</span> <span class="o">=</span> <span class="mi">2</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-243" name="qoolqit.drive.Drive.draw--source--__codelineno-0-243"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-244" name="qoolqit.drive.Drive.draw--source--__codelineno-0-244"></a>        <span class="n">nrows</span> <span class="o">+=</span> <span class="mi">1</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-245" name="qoolqit.drive.Drive.draw--source--__codelineno-0-245"></a>    <span class="n">has_phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-246" name="qoolqit.drive.Drive.draw--source--__codelineno-0-246"></a>    <span class="k">if</span> <span class="n">has_phase</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-247" name="qoolqit.drive.Drive.draw--source--__codelineno-0-247"></a>        <span class="n">nrows</span> <span class="o">+=</span> <span class="mi">1</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-248" name="qoolqit.drive.Drive.draw--source--__codelineno-0-248"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-249" name="qoolqit.drive.Drive.draw--source--__codelineno-0-249"></a>    <span class="n">axs</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="normal"><a href="#qoolqit.drive.Drive.draw--source--__codelineno-0-269">269</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.drive.Drive.draw--source--__codelineno-0-213" name="qoolqit.drive.Drive.draw--source--__codelineno-0-213"></a><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">:</span> <span class="n">FigureBase</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-214" name="qoolqit.drive.Drive.draw--source--__codelineno-0-214"></a><span class="w">    </span><span class="sd">"""Draw the amplitude, detuning, phase and DMM of the Drive.</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-215" name="qoolqit.drive.Drive.draw--source--__codelineno-0-215"></a>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-216" name="qoolqit.drive.Drive.draw--source--__codelineno-0-216"></a><span class="sd">    The phase is drawn only if it is non-zero, and the DMM only if one is set.</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-217" name="qoolqit.drive.Drive.draw--source--__codelineno-0-217"></a>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-218" name="qoolqit.drive.Drive.draw--source--__codelineno-0-218"></a><span class="sd">    Args:</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-219" name="qoolqit.drive.Drive.draw--source--__codelineno-0-219"></a><span class="sd">        fig: The figure or subfigure to draw into. If None, a new pyplot figure is</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-220" name="qoolqit.drive.Drive.draw--source--__codelineno-0-220"></a><span class="sd">            created.</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-221" name="qoolqit.drive.Drive.draw--source--__codelineno-0-221"></a><span class="sd">    """</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-222" name="qoolqit.drive.Drive.draw--source--__codelineno-0-222"></a>    <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-223" name="qoolqit.drive.Drive.draw--source--__codelineno-0-223"></a>        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-224" name="qoolqit.drive.Drive.draw--source--__codelineno-0-224"></a>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-225" name="qoolqit.drive.Drive.draw--source--__codelineno-0-225"></a>    <span class="c1"># setup subplots</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-226" name="qoolqit.drive.Drive.draw--source--__codelineno-0-226"></a>    <span class="n">nrows</span> <span class="o">=</span> <span class="mi">2</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-227" name="qoolqit.drive.Drive.draw--source--__codelineno-0-227"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-228" name="qoolqit.drive.Drive.draw--source--__codelineno-0-228"></a>        <span class="n">nrows</span> <span class="o">+=</span> <span class="mi">1</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-229" name="qoolqit.drive.Drive.draw--source--__codelineno-0-229"></a>    <span class="n">has_phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-230" name="qoolqit.drive.Drive.draw--source--__codelineno-0-230"></a>    <span class="k">if</span> <span class="n">has_phase</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-231" name="qoolqit.drive.Drive.draw--source--__codelineno-0-231"></a>        <span class="n">nrows</span> <span class="o">+=</span> <span class="mi">1</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-232" name="qoolqit.drive.Drive.draw--source--__codelineno-0-232"></a>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-233" name="qoolqit.drive.Drive.draw--source--__codelineno-0-233"></a>    <span class="n">axs</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-234" name="qoolqit.drive.Drive.draw--source--__codelineno-0-234"></a>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-235" name="qoolqit.drive.Drive.draw--source--__codelineno-0-235"></a>    <span class="c1"># samples</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-236" name="qoolqit.drive.Drive.draw--source--__codelineno-0-236"></a>    <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-237" name="qoolqit.drive.Drive.draw--source--__codelineno-0-237"></a>    <span class="n">amplitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-238" name="qoolqit.drive.Drive.draw--source--__codelineno-0-238"></a>    <span class="n">detuning</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">detuning</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-239" name="qoolqit.drive.Drive.draw--source--__codelineno-0-239"></a>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-240" name="qoolqit.drive.Drive.draw--source--__codelineno-0-240"></a>    <span class="c1"># draw amplitude</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-241" name="qoolqit.drive.Drive.draw--source--__codelineno-0-241"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Amplitude"</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-242" name="qoolqit.drive.Drive.draw--source--__codelineno-0-242"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkgreen"</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-243" name="qoolqit.drive.Drive.draw--source--__codelineno-0-243"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkgreen"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-244" name="qoolqit.drive.Drive.draw--source--__codelineno-0-244"></a>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-245" name="qoolqit.drive.Drive.draw--source--__codelineno-0-245"></a>    <span class="c1"># draw detuning</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-246" name="qoolqit.drive.Drive.draw--source--__codelineno-0-246"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-247" name="qoolqit.drive.Drive.draw--source--__codelineno-0-247"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Detuning"</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-248" name="qoolqit.drive.Drive.draw--source--__codelineno-0-248"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">detuning</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkmagenta"</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-249" name="qoolqit.drive.Drive.draw--source--__codelineno-0-249"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">detuning</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkmagenta"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
 <a id="qoolqit.drive.Drive.draw--source--__codelineno-0-250" name="qoolqit.drive.Drive.draw--source--__codelineno-0-250"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-251" name="qoolqit.drive.Drive.draw--source--__codelineno-0-251"></a>    <span class="c1"># samples</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-252" name="qoolqit.drive.Drive.draw--source--__codelineno-0-252"></a>    <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-253" name="qoolqit.drive.Drive.draw--source--__codelineno-0-253"></a>    <span class="n">amplitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-254" name="qoolqit.drive.Drive.draw--source--__codelineno-0-254"></a>    <span class="n">detuning</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">detuning</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-255" name="qoolqit.drive.Drive.draw--source--__codelineno-0-255"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-256" name="qoolqit.drive.Drive.draw--source--__codelineno-0-256"></a>    <span class="c1"># draw amplitude</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-257" name="qoolqit.drive.Drive.draw--source--__codelineno-0-257"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Amplitude"</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-258" name="qoolqit.drive.Drive.draw--source--__codelineno-0-258"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkgreen"</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-259" name="qoolqit.drive.Drive.draw--source--__codelineno-0-259"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkgreen"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-260" name="qoolqit.drive.Drive.draw--source--__codelineno-0-260"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-261" name="qoolqit.drive.Drive.draw--source--__codelineno-0-261"></a>    <span class="c1"># draw detuning</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-262" name="qoolqit.drive.Drive.draw--source--__codelineno-0-262"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-263" name="qoolqit.drive.Drive.draw--source--__codelineno-0-263"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Detuning"</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-264" name="qoolqit.drive.Drive.draw--source--__codelineno-0-264"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">detuning</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkmagenta"</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-265" name="qoolqit.drive.Drive.draw--source--__codelineno-0-265"></a>    <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">detuning</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkmagenta"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-251" name="qoolqit.drive.Drive.draw--source--__codelineno-0-251"></a>    <span class="c1"># draw phase if present</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-252" name="qoolqit.drive.Drive.draw--source--__codelineno-0-252"></a>    <span class="k">if</span> <span class="n">has_phase</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-253" name="qoolqit.drive.Drive.draw--source--__codelineno-0-253"></a>        <span class="n">phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-254" name="qoolqit.drive.Drive.draw--source--__codelineno-0-254"></a>        <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Phase $/ \ 2\pi$"</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-255" name="qoolqit.drive.Drive.draw--source--__codelineno-0-255"></a>        <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkorange"</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-256" name="qoolqit.drive.Drive.draw--source--__codelineno-0-256"></a>        <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkorange"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-257" name="qoolqit.drive.Drive.draw--source--__codelineno-0-257"></a>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-258" name="qoolqit.drive.Drive.draw--source--__codelineno-0-258"></a>    <span class="c1"># draw DMM if present</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-259" name="qoolqit.drive.Drive.draw--source--__codelineno-0-259"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-260" name="qoolqit.drive.Drive.draw--source--__codelineno-0-260"></a>        <span class="n">y_dmm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmm</span><span class="o">.</span><span class="n">waveform</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-261" name="qoolqit.drive.Drive.draw--source--__codelineno-0-261"></a>        <span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"DMM"</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-262" name="qoolqit.drive.Drive.draw--source--__codelineno-0-262"></a>        <span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">y_dmm</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkblue"</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-263" name="qoolqit.drive.Drive.draw--source--__codelineno-0-263"></a>        <span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">y_dmm</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkblue"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-264" name="qoolqit.drive.Drive.draw--source--__codelineno-0-264"></a>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-265" name="qoolqit.drive.Drive.draw--source--__codelineno-0-265"></a>    <span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time t"</span><span class="p">)</span>
 <a id="qoolqit.drive.Drive.draw--source--__codelineno-0-266" name="qoolqit.drive.Drive.draw--source--__codelineno-0-266"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-267" name="qoolqit.drive.Drive.draw--source--__codelineno-0-267"></a>    <span class="c1"># draw phase if present</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-268" name="qoolqit.drive.Drive.draw--source--__codelineno-0-268"></a>    <span class="k">if</span> <span class="n">has_phase</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-269" name="qoolqit.drive.Drive.draw--source--__codelineno-0-269"></a>        <span class="n">phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-270" name="qoolqit.drive.Drive.draw--source--__codelineno-0-270"></a>        <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Phase $/ \ 2\pi$"</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-271" name="qoolqit.drive.Drive.draw--source--__codelineno-0-271"></a>        <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkorange"</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-272" name="qoolqit.drive.Drive.draw--source--__codelineno-0-272"></a>        <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkorange"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-273" name="qoolqit.drive.Drive.draw--source--__codelineno-0-273"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-274" name="qoolqit.drive.Drive.draw--source--__codelineno-0-274"></a>    <span class="c1"># draw DMM if present</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-275" name="qoolqit.drive.Drive.draw--source--__codelineno-0-275"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-276" name="qoolqit.drive.Drive.draw--source--__codelineno-0-276"></a>        <span class="n">y_dmm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmm</span><span class="o">.</span><span class="n">waveform</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-277" name="qoolqit.drive.Drive.draw--source--__codelineno-0-277"></a>        <span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"DMM"</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-278" name="qoolqit.drive.Drive.draw--source--__codelineno-0-278"></a>        <span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">y_dmm</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkblue"</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-279" name="qoolqit.drive.Drive.draw--source--__codelineno-0-279"></a>        <span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">y_dmm</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"darkblue"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-280" name="qoolqit.drive.Drive.draw--source--__codelineno-0-280"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-281" name="qoolqit.drive.Drive.draw--source--__codelineno-0-281"></a>    <span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time t"</span><span class="p">)</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-282" name="qoolqit.drive.Drive.draw--source--__codelineno-0-282"></a>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-283" name="qoolqit.drive.Drive.draw--source--__codelineno-0-283"></a>    <span class="c1"># add grids</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-284" name="qoolqit.drive.Drive.draw--source--__codelineno-0-284"></a>    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">:</span>
-<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-285" name="qoolqit.drive.Drive.draw--source--__codelineno-0-285"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"lightgray"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-267" name="qoolqit.drive.Drive.draw--source--__codelineno-0-267"></a>    <span class="c1"># add grids</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-268" name="qoolqit.drive.Drive.draw--source--__codelineno-0-268"></a>    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">:</span>
+<a id="qoolqit.drive.Drive.draw--source--__codelineno-0-269" name="qoolqit.drive.Drive.draw--source--__codelineno-0-269"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"lightgray"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
