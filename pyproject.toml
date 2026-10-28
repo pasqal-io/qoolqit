@@ -61,6 +61,7 @@ dev = [
   "ipykernel",
   "zensical",
   "mkdocstrings-python",
+  "griffe-inherited-docstrings",
   "markdown-exec",
   "ruff>=0.15.21",
 ]
