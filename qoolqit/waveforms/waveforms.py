@@ -26,7 +26,6 @@ class DelayWaveform(Waveform):
         return 0.0
 
     def __mul__(self, other: float) -> Waveform:
-        """Return the same delay; scaling has no effect."""
         return DelayWaveform(self.duration)
 
     def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
@@ -67,7 +66,6 @@ class RampWaveform(Waveform):
         return min([self.initial_value, self.final_value])
 
     def __mul__(self, other: float) -> Waveform:
-        """Scale the initial and final values by `other`."""
         return RampWaveform(
             self.duration,
             initial_value=self.initial_value * other,
@@ -106,7 +104,6 @@ class ConstantWaveform(Waveform):
         return self.value
 
     def __mul__(self, other: float) -> Waveform:
-        """Scale the value by `other`."""
         return ConstantWaveform(self.duration, value=self.value * other)
 
     def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
@@ -153,7 +150,6 @@ class BlackmanWaveform(Waveform):
         return 0.0
 
     def __mul__(self, other: float) -> Waveform:
-        """Scale the area by `other`."""
         return BlackmanWaveform(self.duration, area=self.area * other)
 
     def _to_pulser(self, duration: int) -> ParamObj | pulser.BlackmanWaveform:
@@ -198,7 +194,6 @@ class PiecewiseLinearWaveform(CompositeWaveform):
         super().__init__(*wfs)
 
     def __mul__(self, other: float) -> CompositeWaveform:
-        """Scale all values by `other`."""
         return PiecewiseLinearWaveform(
             self.durations, values=[value * other for value in self.values]
         )
@@ -286,7 +281,6 @@ class InterpolatedWaveform(Waveform):
         return float(self._values.max())
 
     def __mul__(self, other: float) -> Waveform:
-        """Scale the interpolation values by `other`."""
         return InterpolatedWaveform(self.duration, self._values * other, self._times)
 
     def _to_pulser(

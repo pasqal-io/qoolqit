@@ -230,7 +230,6 @@ class CompositeWaveform(Waveform):
         return min([wf.min() for wf in self.waveforms])
 
     def __mul__(self, other: float) -> CompositeWaveform:
-        """Scale each sub-waveform by `other`."""
         return CompositeWaveform(*[wf * other for wf in self.waveforms])
 
     def _repr_header(self) -> str:
