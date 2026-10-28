@@ -135,13 +135,11 @@ class BaseEmbedder(ABC, Generic[InDataType, OutDataType, ConfigType]):
         self.validate_output(result)
         return result
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
+        """Return the embedder name, algorithm and config."""
         string = (
             f"{self.__class__.__name__}:\n"
             + f"| Algorithm: {self._algorithm.__name__}\n"
             + f"| Config: {self._config.__repr__()}"
         )
         return string
-
-    def __repr__(self) -> str:
-        return self.__str__()

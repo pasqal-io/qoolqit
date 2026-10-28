@@ -192,6 +192,25 @@ def test_drive_repr_with_phase() -> None:
     )
 
 
+def test_drive_repr_with_composite_waveforms_and_dmm() -> None:
+    drive = Drive(
+        amplitude=PiecewiseLinearWaveform([1.0, 1.0], [0.0, 1.0, 0.0]),
+        detuning=ConstantWaveform(1.0, -1.0) >> ConstantWaveform(1.0, 1.0),
+        dmm=DetuningMapModulator(ConstantWaveform(2.0, -1.0), {0: 0.5}),
+    )
+    assert repr(drive) == (
+        "amplitude: \n"
+        "| 0.00 ≤ t < 1.00: RampWaveform(t, 0.00, 1.00)\n"
+        "| 1.00 ≤ t ≤ 2.00: RampWaveform(t, 1.00, 0.00)\n"
+        "detuning: \n"
+        "| 0.00 ≤ t < 1.00: ConstantWaveform(t, -1.00)\n"
+        "| 1.00 ≤ t ≤ 2.00: ConstantWaveform(t, 1.00)\n"
+        "dmm: \n"
+        "DetuningMapModulator(waveform=0.00 ≤ t ≤ 2.00: ConstantWaveform(t, -1.00), "
+        "weights={0: 0.5})"
+    )
+
+
 def test_dmm_init() -> None:
     positive_wf = RampWaveform(10.0, -10.0, 1.0)
     negative_wf = RampWaveform(10.0, -1.0, -2.0)

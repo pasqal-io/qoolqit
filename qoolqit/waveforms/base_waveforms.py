@@ -107,6 +107,10 @@ class Waveform(ABC):
     def __call__(self, t: list[float] | np.ndarray) -> list | np.ndarray: ...
 
     def __call__(self, t: float | list[float] | np.ndarray) -> float | list[float] | np.ndarray:
+        """Evaluate the waveform at `t`, a float, a list or an array.
+
+        Returns a value of the same kind; times outside [0, duration] give 0.
+        """
         if isinstance(t, np.ndarray):
             return np.vectorize(self._single_call, otypes=[float])(t)
         if isinstance(t, list):
@@ -119,10 +123,10 @@ class Waveform(ABC):
             return NotImplemented
         return CompositeWaveform(self, other)
 
-    def __repr_header__(self) -> str:
+    def _repr_header(self) -> str:
         return f"0.00 ≤ t ≤ {float(self.duration):.2f}: "
 
-    def __repr_content__(self) -> str:
+    def _repr_content(self) -> str:
         if len(self.params) > 0:
             params_list = [f"{value:.2f}" for value in self.params.values()]
             string = ", ".join(params_list)
@@ -131,7 +135,8 @@ class Waveform(ABC):
             return self.__class__.__name__ + "(t)"
 
     def __repr__(self) -> str:
-        return self.__repr_header__() + self.__repr_content__()
+        """Return the time interval and the waveform with its parameters."""
+        return self._repr_header() + self._repr_content()
 
     def draw(
         self, ax: Axes | None = None, color: ColorType = "tab:blue", n_points: int = 250
@@ -225,23 +230,25 @@ class CompositeWaveform(Waveform):
         return min([wf.min() for wf in self.waveforms])
 
     def __mul__(self, other: float) -> CompositeWaveform:
+        """Scale each sub-waveform by `other`."""
         return CompositeWaveform(*[wf * other for wf in self.waveforms])
 
-    def __repr_header__(self) -> str:
+    def _repr_header(self) -> str:
         return "Composite waveform:\n"
 
-    def __repr_content__(self) -> str:
+    def _repr_content(self) -> str:
         wf_strings = []
         for i, wf in enumerate(self.waveforms):
             t_str = "≤ t <" if i < self.n_waveforms - 1 else "≤ t ≤"
             interval_str = (
                 f"| {float(self.times[i]):.2f} " + t_str + f" {float(self.times[i + 1]):.2f}: "
             )
-            wf_strings.append(interval_str + wf.__repr_content__())
+            wf_strings.append(interval_str + wf._repr_content())
         return "\n".join(wf_strings)
 
     def __repr__(self) -> str:
-        return self.__repr_header__() + self.__repr_content__()
+        """Return each sub-waveform with its time interval, one per line."""
+        return self._repr_header() + self._repr_content()
 
     def _to_pulser(
         self, duration: int

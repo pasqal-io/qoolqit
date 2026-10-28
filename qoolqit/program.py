@@ -75,6 +75,7 @@ class QuantumProgram:
         return self._compiled_sequence
 
     def __repr__(self) -> str:
+        """Return a summary of the register, drive and compilation status."""
         header = "Quantum Program:\n"
         register = f"| {self._register.__repr__()}\n"
         drive = f"| Drive(duration = {self._drive.duration:.3f})\n"

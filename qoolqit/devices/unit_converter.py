@@ -47,6 +47,7 @@ class UnitConverter:
     distance: float
 
     def __post_init__(self) -> None:
+        """Check that the conversion factors respect the unit invariants."""
         if not self.validate_factors(self.time, self.energy, self.distance):
             raise ValueError(
                 "Invalid set of factors, time-energy or energy-distance invariant violated."
@@ -110,6 +111,7 @@ class UnitConverter:
         return _factors_from_distance(self.C6, distance)
 
     def __repr__(self) -> str:
+        """Return the conversion factors, rounded to 3 decimals."""
         string = (
             f"UnitConverter(time = {self.time:.3f}, "
             + f"energy = {self.energy:.3f}, "
