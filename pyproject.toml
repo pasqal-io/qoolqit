@@ -116,7 +116,6 @@ select = [
 ignore = [
     # TODO: fix existing pydocstyle violations, then remove these
     "D102", # undocumented-public-method
-    "D103", # undocumented-public-function
 ]
 isort.required-imports = ["from __future__ import annotations"]
 pydocstyle.convention = "google"
