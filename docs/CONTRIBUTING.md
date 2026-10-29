@@ -42,7 +42,6 @@ git push --set-upstream origin <your initials>/<branch name>
   ```sh
   python -m venv .venv
   source .venv/bin/activate
-  python -m pip install -U pip  # --group needs pip 25.1+
   pip install -e ".[extras]" --group dev
   ```
 
