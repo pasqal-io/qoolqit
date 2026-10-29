@@ -42,7 +42,7 @@ git push --set-upstream origin <your initials>/<branch name>
   ```sh
   python -m venv .venv
   source .venv/bin/activate
-  pip install -e . --group dev
+  pip install -e . --group dev  # requires pip 25.1+
   ```
 
 ### Useful things for your workflow: Linting and Testing

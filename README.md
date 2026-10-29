@@ -47,7 +47,7 @@ If you wish to install directly from the source, for example, if you are develop
   ```sh
   python -m venv .venv
   source .venv/bin/activate
-  pip install -e . --group dev
+  pip install -e . --group dev  # requires pip 25.1+
   ```
 
 
