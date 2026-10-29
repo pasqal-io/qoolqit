@@ -12,6 +12,7 @@ from matplotlib.axes import Axes
 from matplotlib.typing import ColorType
 from pulser.parametrized import ParamObj
 from pulser.waveforms import Waveform as PulserWaveform
+from typing_extensions import override
 
 from qoolqit.waveforms.utils import round_to_sum
 
@@ -212,6 +213,7 @@ class CompositeWaveform(Waveform):
         """Returns the number of waveforms."""
         return len(self.waveforms)
 
+    @override
     def function(self, t: float) -> float:
         idx = np.searchsorted(self.times, t, side="right") - 1
         # clip to valid waveform index range
@@ -221,14 +223,15 @@ class CompositeWaveform(Waveform):
         value: float = self.waveforms[idx](local_t)
         return value
 
+    @override
     def max(self) -> float:
-        """Get the maximum value of the waveform."""
         return max([wf.max() for wf in self.waveforms])
 
+    @override
     def min(self) -> float:
-        """Get the minimum value of the waveform."""
         return min([wf.min() for wf in self.waveforms])
 
+    @override
     def __mul__(self, other: float) -> CompositeWaveform:
         return CompositeWaveform(*[wf * other for wf in self.waveforms])
 

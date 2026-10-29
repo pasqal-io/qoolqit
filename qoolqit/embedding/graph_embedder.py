@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing_extensions import override
+
 from qoolqit.graphs import DataGraph
 
 from .algorithms import SpringLayoutConfig, spring_layout_embedding
@@ -18,6 +20,7 @@ class GraphToGraphEmbedder(BaseEmbedder[DataGraph, DataGraph, ConfigType]):
     A custom algorithm and configuration can be set at initialization.
     """
 
+    @override
     def validate_input(self, data: DataGraph) -> None:
         if not isinstance(data, DataGraph):
             raise TypeError(
@@ -25,6 +28,7 @@ class GraphToGraphEmbedder(BaseEmbedder[DataGraph, DataGraph, ConfigType]):
                 + f"{self.__class__.__name__} requires data of type DataGraph."
             )
 
+    @override
     def validate_output(self, result: DataGraph) -> None:
         if not isinstance(result, DataGraph):
             raise TypeError(

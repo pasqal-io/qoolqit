@@ -39,6 +39,7 @@ dependencies = [
   "networkx>=3.4",
   "numpy>=2",
   "pulser[torch]>=1.9.0",
+  "typing-extensions>=4.4",
 ]
 
 [project.optional-dependencies]
@@ -60,6 +61,7 @@ dev = [
   "ipykernel",
   "zensical",
   "mkdocstrings-python",
+  "griffe-inherited-docstrings",
   "markdown-exec",
   "ruff>=0.15.21",
 ]
@@ -112,11 +114,6 @@ select = [
     "SIM", # flake8-simplify
     "I", # isort
     "D", # pydocstyle
-]
-ignore = [
-    # TODO: fix existing pydocstyle violations, then remove these
-    "D102", # undocumented-public-method
-    "D105", # undocumented-magic-method
 ]
 isort.required-imports = ["from __future__ import annotations"]
 pydocstyle.convention = "google"

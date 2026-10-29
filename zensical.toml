@@ -130,6 +130,7 @@ backlinks = "tree"
 docstring_options.ignore_init_summary = true
 docstring_options.warnings = false
 docstring_section_style = "list"
+extensions = ["griffe_inherited_docstrings"]  # @override methods show their parent's docstring
 filters = "public"
 inherited_members = true
 merge_init_into_class = true

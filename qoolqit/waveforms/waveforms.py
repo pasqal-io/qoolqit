@@ -9,6 +9,7 @@ import pulser
 from numpy.typing import ArrayLike
 from pulser.parametrized import ParamObj
 from scipy.interpolate import PchipInterpolator
+from typing_extensions import override
 
 from qoolqit.waveforms.base_waveforms import CompositeWaveform, Waveform
 
@@ -16,15 +17,19 @@ from qoolqit.waveforms.base_waveforms import CompositeWaveform, Waveform
 class DelayWaveform(Waveform):
     """An empty waveform."""
 
+    @override
     def function(self, t: float) -> float:
         return 0.0
 
+    @override
     def max(self) -> float:
         return 0.0
 
+    @override
     def min(self) -> float:
         return 0.0
 
+    @override
     def __mul__(self, other: float) -> Waveform:
         return DelayWaveform(self.duration)
 
@@ -55,16 +60,20 @@ class RampWaveform(Waveform):
             duration, initial_value=float(initial_value), final_value=float(final_value)
         )
 
+    @override
     def function(self, t: float) -> float:
         fraction = t / self._duration
         return self.initial_value + fraction * (self.final_value - self.initial_value)
 
+    @override
     def max(self) -> float:
         return max([self.initial_value, self.final_value])
 
+    @override
     def min(self) -> float:
         return min([self.initial_value, self.final_value])
 
+    @override
     def __mul__(self, other: float) -> Waveform:
         return RampWaveform(
             self.duration,
@@ -94,15 +103,19 @@ class ConstantWaveform(Waveform):
         """Initialize the constant waveform."""
         super().__init__(duration, value=float(value))
 
+    @override
     def function(self, t: float) -> float:
         return self.value
 
+    @override
     def max(self) -> float:
         return self.value
 
+    @override
     def min(self) -> float:
         return self.value
 
+    @override
     def __mul__(self, other: float) -> Waveform:
         return ConstantWaveform(self.duration, value=self.value * other)
 
@@ -137,18 +150,22 @@ class BlackmanWaveform(Waveform):
         """Initialize a BlackmanWaveform."""
         super().__init__(duration, area=float(area))
 
+    @override
     def function(self, t: float) -> float:
         alpha = 2 * math.pi / self.duration
         A = self.area / (0.42 * self.duration)
         value = A * (0.42 - 0.5 * math.cos(alpha * t) + 0.08 * math.cos(2 * alpha * t))
         return max(value, 0.0)
 
+    @override
     def max(self) -> float:
         return self.area / (0.42 * self.duration)
 
+    @override
     def min(self) -> float:
         return 0.0
 
+    @override
     def __mul__(self, other: float) -> Waveform:
         return BlackmanWaveform(self.duration, area=self.area * other)
 
@@ -193,6 +210,7 @@ class PiecewiseLinearWaveform(CompositeWaveform):
 
         super().__init__(*wfs)
 
+    @override
     def __mul__(self, other: float) -> CompositeWaveform:
         return PiecewiseLinearWaveform(
             self.durations, values=[value * other for value in self.values]
@@ -271,15 +289,19 @@ class InterpolatedWaveform(Waveform):
 
         self._interp_func = PchipInterpolator(duration * self._times, values)
 
+    @override
     def function(self, t: float) -> float:
         return float(self._interp_func(t))
 
+    @override
     def min(self) -> float:
         return float(self._values.min())
 
+    @override
     def max(self) -> float:
         return float(self._values.max())
 
+    @override
     def __mul__(self, other: float) -> Waveform:
         return InterpolatedWaveform(self.duration, self._values * other, self._times)
 
