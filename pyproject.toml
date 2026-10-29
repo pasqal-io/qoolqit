@@ -53,7 +53,8 @@ extras = [
 ]
 dev = [
   "qoolqit[extras]",
-  "jupyter",
+  "nbclient",
+  "nbconvert",
   "pytest",
   "pytest-cov",
   "pytest-markdown-docs",
