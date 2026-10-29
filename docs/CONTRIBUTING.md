@@ -42,7 +42,7 @@ git push --set-upstream origin <your initials>/<branch name>
   ```sh
   python -m venv .venv
   source .venv/bin/activate
-  pip install -e ".[extras]" --group dev
+  pip install -e . --group dev
   ```
 
 ### Useful things for your workflow: Linting and Testing

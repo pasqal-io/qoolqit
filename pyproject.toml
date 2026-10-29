@@ -52,13 +52,17 @@ extras = [
   "scikit-learn",
 ]
 
+# Install together with the local project, e.g. `pip install -e . --group dev`:
+# without `-e .`, the `qoolqit[extras]` entries would install qoolqit from PyPI.
 [dependency-groups]
 test = [
+  "qoolqit[extras]",
   "pytest",
   "pytest-cov",
   "pytest-markdown-docs",
 ]
 docs = [
+  "qoolqit[extras]",
   "ipykernel",
   "nbclient",
   "nbconvert",
