@@ -36,9 +36,9 @@ jobs:
         version: "0.13.5"
         enable-cache: false
         activate-environment: true
-    - name: Install QoolQit with development dependencies
+    - name: Install QoolQit with test dependencies
       run: |
-        uv pip install -e .[dev] --torch-backend=cpu
+        uv pip install -e .[extras] --group test --torch-backend=cpu
     - name: Run tests
       run: |
         pytest -vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs

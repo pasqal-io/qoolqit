@@ -51,18 +51,26 @@ extras = [
   "seaborn",
   "scikit-learn",
 ]
-dev = [
-  "qoolqit[extras]",
-  "jupyter",
+
+[dependency-groups]
+test = [
   "pytest",
   "pytest-cov",
   "pytest-markdown-docs",
-  "pre-commit",
+]
+docs = [
   "ipykernel",
+  "nbclient",
+  "nbconvert",
   "zensical",
   "mkdocstrings-python",
   "griffe-inherited-docstrings",
   "markdown-exec",
+]
+dev = [
+  { include-group = "test" },
+  { include-group = "docs" },
+  "pre-commit",
   "ruff>=0.15.21",
 ]
 
@@ -70,9 +78,6 @@ dev = [
 Documentation = "https://pasqal-io.github.io/qoolqit/latest"
 Issues = "https://github.com/pasqal-io/qoolqit/issues"
 Source = "https://github.com/pasqal-io/qoolqit"
-
-[tool.hatch.envs.default]
-features = ["dev"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -42,16 +42,9 @@ git push --set-upstream origin <your initials>/<branch name>
   ```sh
   python -m venv .venv
   source .venv/bin/activate
-  pip install -e .[dev]
+  python -m pip install -U pip  # --group needs pip 25.1+
+  pip install -e ".[extras]" --group dev
   ```
-
-  Alternatively, you can use [Hatch](https://hatch.pypa.io/latest/):
-
-  ```sh
-  hatch shell
-  ```
-
-  This will automatically take you into an environment with the necessary dependencies.
 
 ### Useful things for your workflow: Linting and Testing
 

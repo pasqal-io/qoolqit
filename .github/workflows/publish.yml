@@ -59,9 +59,9 @@ jobs:
           with:
             version: "0.13.5"
             activate-environment: true
-        - name: Install QoolQit with development dependencies
+        - name: Install QoolQit with docs dependencies
           run: |
-            uv pip install -e .[dev] --torch-backend=cpu
+            uv pip install -e .[extras] --group docs --torch-backend=cpu
             # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
             # See https://zensical.org/docs/compatibility/mkdocs/mike/
             uv pip install git+https://github.com/squidfunk/mike.git
