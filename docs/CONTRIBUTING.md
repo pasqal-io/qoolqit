@@ -42,23 +42,21 @@ git push --set-upstream origin <your initials>/<branch name>
   ```sh
   python -m venv .venv
   source .venv/bin/activate
-  pip install -e .[dev]
+  pip install -e . --group dev  # requires pip 25.1+
   ```
 
-  Alternatively, you can use [Hatch](https://hatch.pypa.io/latest/):
+  With [uv](https://docs.astral.sh/uv/), which installs the `dev` group by default:
 
   ```sh
-  hatch shell
+  uv sync -U
+  source .venv/bin/activate
   ```
-
-  This will automatically take you into an environment with the necessary dependencies.
 
 ### Useful things for your workflow: Linting and Testing
 
 Use `pre-commit` hooks to make sure that the code is properly linted before pushing a new commit. Make sure that the unit tests and type checks are passing since the merge request will not be accepted if the automatic CI/CD pipeline does not pass.
 
 ```shell
-pip install pre-commit
 pre-commit install
 pre-commit run --all-files
 pytest

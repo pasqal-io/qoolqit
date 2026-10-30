@@ -51,19 +51,33 @@ extras = [
   "seaborn",
   "scikit-learn",
 ]
-dev = [
+
+# Install together with the local project, e.g. `pip install -e . --group dev`:
+# without `-e .`, the `qoolqit[extras]` entries would install qoolqit from PyPI.
+[dependency-groups]
+test = [
   "qoolqit[extras]",
-  "nbclient",
-  "nbconvert",
   "pytest",
   "pytest-cov",
   "pytest-markdown-docs",
-  "pre-commit",
+]
+docs = [
+  "qoolqit[extras]",
   "ipykernel",
+  "nbclient",
+  "nbconvert",
   "zensical",
   "mkdocstrings-python",
   "griffe-inherited-docstrings",
   "markdown-exec",
+  # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
+  # See https://zensical.org/docs/compatibility/mkdocs/mike/
+  "mike @ git+https://github.com/squidfunk/mike.git@0f62791256ebeba60d20d2f1d8fe6ec3b7d1e2b3", # 2.2.0+zensical-0.1.0
+]
+dev = [
+  { include-group = "test" },
+  { include-group = "docs" },
+  "pre-commit",
   "ruff>=0.15.21",
 ]
 
@@ -72,8 +86,8 @@ Documentation = "https://pasqal-io.github.io/qoolqit/latest"
 Issues = "https://github.com/pasqal-io/qoolqit/issues"
 Source = "https://github.com/pasqal-io/qoolqit"
 
-[tool.hatch.envs.default]
-features = ["dev"]
+[tool.uv]
+default-groups = ["dev"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
