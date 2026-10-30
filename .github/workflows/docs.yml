@@ -210,9 +210,6 @@ jobs:
             - name: Install QoolQit with docs dependencies
               run: |
                 uv pip install -e . --group docs --torch-backend=cpu
-                # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
-                # See https://zensical.org/docs/compatibility/mkdocs/mike/
-                uv pip install git+https://github.com/squidfunk/mike.git
 
             - name: Deploy docs
               run: |
