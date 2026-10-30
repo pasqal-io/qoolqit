@@ -72,7 +72,7 @@ docs = [
   "markdown-exec",
   # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
   # See https://zensical.org/docs/compatibility/mkdocs/mike/
-  "mike @ git+https://github.com/squidfunk/mike.git",
+  "mike @ git+https://github.com/squidfunk/mike.git@2.2.0+zensical-0.1.0",
 ]
 dev = [
   { include-group = "test" },
