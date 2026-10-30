@@ -10,12 +10,14 @@ from __future__ import annotations
 import base64
 import hashlib
 import mimetypes
+import time
 from pathlib import Path
 
 import matplotlib
 import nbformat
 from nbclient import NotebookClient
 from nbconvert import MarkdownExporter
+from traitlets.config import Config
 
 # markdown-exec runs page code inside the docs build: keep Matplotlib off interactive GUI
 # backends (TkAgg locally), as on headless CI
@@ -37,14 +39,20 @@ def define_env(env):
         cached = cache_dir / f"{hashlib.sha256(nb_path.read_bytes()).hexdigest()}.md"
         if not cached.is_file():
             cached.parent.mkdir(parents=True, exist_ok=True)
+            start = time.perf_counter()
             cached.write_text(_render(nb_path))
+            print(f"✓ {path} ({time.perf_counter() - start:.1f}s)", flush=True)
         return cached.read_text()
 
 
 def _render(nb_path: Path) -> str:
     """Execute the notebook and convert it to Markdown, with its images inlined."""
     nb = nbformat.read(nb_path, as_version=4)
-    NotebookClient(nb, resources={"metadata": {"path": str(nb_path.parent)}}).execute()
+    # Encrypt kernel traffic with CurveZMQ, which also stops ipykernel's plain-TCP warning.
+    config = Config({"KernelManager": {"transport_encryption": "auto"}})
+    NotebookClient(
+        nb, config=config, resources={"metadata": {"path": str(nb_path.parent)}}
+    ).execute()
     markdown, resources = MarkdownExporter().from_notebook_node(nb)
     # The exporter extracts images to separate files: embed them so the page is self-contained.
     for name, data in resources.get("outputs", {}).items():
