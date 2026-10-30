@@ -86,6 +86,9 @@ Documentation = "https://pasqal-io.github.io/qoolqit/latest"
 Issues = "https://github.com/pasqal-io/qoolqit/issues"
 Source = "https://github.com/pasqal-io/qoolqit"
 
+[tool.uv]
+default-groups = ["dev"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs"
