@@ -45,6 +45,13 @@ git push --set-upstream origin <your initials>/<branch name>
   pip install -e . --group dev  # requires pip 25.1+
   ```
 
+  With [uv](https://docs.astral.sh/uv/), which installs the `dev` group by default:
+
+  ```sh
+  uv sync -U
+  source .venv/bin/activate
+  ```
+
 ### Useful things for your workflow: Linting and Testing
 
 Use `pre-commit` hooks to make sure that the code is properly linted before pushing a new commit. Make sure that the unit tests and type checks are passing since the merge request will not be accepted if the automatic CI/CD pipeline does not pass.

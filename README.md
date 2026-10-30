@@ -50,6 +50,13 @@ If you wish to install directly from the source, for example, if you are develop
   pip install -e . --group dev  # requires pip 25.1+
   ```
 
+  With [uv](https://docs.astral.sh/uv/), which installs the `dev` group by default:
+
+  ```sh
+  uv sync -U
+  source .venv/bin/activate
+  ```
+
 
 # Getting in touch
 
