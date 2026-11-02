@@ -111,6 +111,13 @@ def test_default_device_specs() -> None:
     assert digital_analog_device.specs == expected_digital_analog_specs
 
 
+def test_device_phase_jump_time() -> None:
+    # 170 ns on the scale of `specs`, where 6000 ns is max_duration 332.43763968
+    assert AnalogDevice().phase_jump_time == pytest.approx(170 * 332.43763968 / 6000)
+    assert MockDevice().phase_jump_time == 0.0
+    assert DigitalAnalogDevice().phase_jump_time == 0.0
+
+
 @pytest.mark.parametrize("device", [AnalogDeviceWithDMM(), DigitalAnalogDevice()])
 def test_devices_with_dmm(device: Device) -> None:
     pulser_device = device._device
