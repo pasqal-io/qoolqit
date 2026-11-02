@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import random
 import time
 from abc import ABC, abstractmethod
 from typing import Generic, TypeAlias, TypeVar
@@ -20,6 +21,12 @@ Terminal states (where :meth:`Job.has_ended` returns ``True``):
 - :attr:`~remote.JobStatus.ERROR`
 - :attr:`~remote.JobStatus.CANCELED`
 """
+
+_POLL_INITIAL_SECONDS = 2.0
+_POLL_MAX_SECONDS = 30.0
+# Not the global RNG: polling would consume a user's seeded random state, and
+# workers seeded alike would jitter alike.
+_JITTER_RNG = random.SystemRandom()
 
 
 class JobFailedError(Exception):
@@ -87,8 +94,7 @@ class Job(ABC, Generic[ResultType]):
         """Block until the job completes and return its result.
 
         Waits until the job reaches a terminal state, then returns
-        the result. Polling strategy (interval, backoff) is delegated
-        to the underlying connection.
+        the result.
 
         Args:
             timeout (float): Maximum seconds to wait.
@@ -283,8 +289,17 @@ class _RemoteJob(Job[Results]):
         """Block until the remote job completes and return its result.
 
         Repeatedly calls :meth:`_query_job_progress` until the job
-        reaches a terminal state or *timeout* expires. Polling
-        interval and backoff are delegated to the connection.
+        reaches a terminal state or *timeout* expires, waiting between
+        calls with exponential backoff: 2 s, doubling up to 30 s, each
+        wait shortened at random by up to 20% so that concurrent jobs
+        don't poll in sync.
+
+        Note:
+            The backoff is implemented here because Pulser's
+            ``RemoteConnection`` has no waiting strategy of its own, and
+            we can't rely on every connection throttling its status
+            queries. This is temporary, until the Job API moves to Pulser
+            or ``RemoteConnection`` provides its own way to wait.
 
         Args:
             timeout (float): Maximum seconds to wait.
@@ -300,6 +315,7 @@ class _RemoteJob(Job[Results]):
             JobCancelledError: If the job was CANCELED.
         """
         deadline = time.monotonic() + timeout
+        delay = _POLL_INITIAL_SECONDS
         while True:
             status, results = self._query_job_progress()
             if status == JobStatus.DONE:
@@ -309,10 +325,13 @@ class _RemoteJob(Job[Results]):
                 raise JobFailedError(f"Job {self.job_id()} failed.")
             if status == JobStatus.CANCELED:
                 raise JobCancelledError(f"Job {self.job_id()} was cancelled.")
-            if time.monotonic() >= deadline:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
                 raise TimeoutError(
                     f"Job {self.job_id()} did not complete within {timeout} seconds."
                 )
+            time.sleep(min(delay * _JITTER_RNG.uniform(0.8, 1), remaining))
+            delay = min(2 * delay, _POLL_MAX_SECONDS)
 
     @classmethod
     def _from_remote_results(
