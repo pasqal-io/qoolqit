@@ -341,7 +341,7 @@ class _RemoteJob(Job[Results]):
                     f"Job {self.job_id()} did not complete within {timeout} seconds."
                 )
             wait = min(delay * _JITTER_RNG.uniform(0.8, 1), remaining)
-            logger.info("Job %s is %s, checking again in %.0f s.", self.job_id(), status.name, wait)
+            logger.info("Job %s is %s, checking again in %.1f s.", self.job_id(), status.name, wait)
             time.sleep(wait)
             delay = min(2 * delay, _POLL_MAX_SECONDS)
 

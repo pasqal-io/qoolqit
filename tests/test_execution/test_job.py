@@ -216,9 +216,10 @@ class TestRemoteJob:
             [(remote.JobStatus.RUNNING, None)] * 6 + [(remote.JobStatus.DONE, result)]
         )
         assert job.results() is result
-        # Each wait is the backoff step, shortened at random by up to 20%.
+        # Each wait is the backoff step, shortened at random by up to 20%: strictly
+        # shorter, so a missing jitter fails the test.
         for seconds, step in zip(fake_time.sleeps, [2, 4, 8, 16, 30, 30], strict=True):
-            assert 0.8 * step <= seconds <= step
+            assert 0.8 * step <= seconds < step
 
     def test_results_never_sleeps_past_timeout(self, fake_time: FakeTime) -> None:
         job = make_remote_job([(remote.JobStatus.RUNNING, None)] * 10)
@@ -244,7 +245,7 @@ class TestRemoteJob:
             job.results()
         wait = fake_time.sleeps[0]
         assert caplog.messages == [
-            f"Job job-123 is PENDING, checking again in {wait:.0f} s.",
+            f"Job job-123 is PENDING, checking again in {wait:.1f} s.",
             "Job job-123 is DONE.",
         ]
 
