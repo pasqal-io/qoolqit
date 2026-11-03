@@ -64,7 +64,7 @@ def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
 
 def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
     position_differences = positions[np.newaxis, :] - positions[:, np.newaxis]
-    return np.linalg.norm(position_differences, axis=2)
+    return np.linalg.norm(position_differences, axis=2)  # type: ignore[no-any-return]
 
 
 def interaction_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
@@ -72,4 +72,4 @@ def interaction_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
 
 
 def normalized_distance(target: np.ndarray, actual: np.ndarray) -> np.floating[Any]:
-    return np.linalg.norm(target - actual) / np.linalg.norm(target)
+    return np.linalg.norm(target - actual) / np.linalg.norm(target)  # type: ignore[no-any-return]

@@ -55,6 +55,7 @@ git push --set-upstream origin <your initials>/<branch name>
 ### Useful things for your workflow: Linting and Testing
 
 Use `pre-commit` hooks to make sure that the code is properly linted before pushing a new commit. Make sure that the unit tests and type checks are passing since the merge request will not be accepted if the automatic CI/CD pipeline does not pass.
+The `mypy` hook runs in the active environment, so run `pre-commit` with the development environment activated.
 
 ```shell
 pre-commit install

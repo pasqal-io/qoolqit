@@ -26,8 +26,8 @@ def test_theoretical_state_vector(backend_type: Backend, rotation_angle: float) 
     register = Register.from_coordinates([(-10, -10), (10, 10)])
     program = QuantumProgram(register, drive)
     program.compile_to(device=MockDevice(), profile=CompilerProfile.MAX_ENERGY)
-    emulation_config = EmulationConfig(observables=(Occupation(),))
-    emulator = LocalEmulator(backend_type=backend_type, emulation_config=emulation_config)
+    emulation_config = EmulationConfig(observables=(Occupation(),))  # type: ignore[var-annotated]
+    emulator = LocalEmulator(backend_type=backend_type, emulation_config=emulation_config)  # type: ignore[arg-type]
     job = emulator.run(program)
     assert job.get_status() == JobStatus.DONE
     res = job.results()
@@ -48,7 +48,7 @@ def test_results(backend_type: Backend, device: Device) -> None:
     # Just run once and test multiple things for efficiency
 
     # Create a quantum program
-    register = Register.from_coordinates([(x, 0.0) for x in np.arange(4)])
+    register = Register.from_coordinates([(x, 0.0) for x in np.arange(4)])  # type: ignore[misc]
     drive = Drive(amplitude=ConstantWaveform(100, 0.2), phase=0)
     program = QuantumProgram(register, drive)
     program.compile_to(device)
@@ -57,7 +57,7 @@ def test_results(backend_type: Backend, device: Device) -> None:
     num_shots = 1001  # how many bitstrings to sample
     steps = 20
     evaluation_times = np.linspace(0, 1, steps).tolist()
-    config = EmulationConfig(observables=(Occupation(evaluation_times=evaluation_times),))
+    config = EmulationConfig(observables=(Occupation(evaluation_times=evaluation_times),))  # type: ignore[var-annotated]
     qutip_emulator = LocalEmulator(emulation_config=config, num_shots=num_shots)
     qutip_job = qutip_emulator.run(program)
     assert qutip_job.get_status() == JobStatus.DONE
@@ -69,7 +69,7 @@ def test_results(backend_type: Backend, device: Device) -> None:
 
     # Run with other backend
     other_emulator = LocalEmulator(
-        backend_type=backend_type, emulation_config=config, num_shots=num_shots
+        backend_type=backend_type, emulation_config=config, num_shots=num_shots  # type: ignore[arg-type]
     )
     other_job = other_emulator.run(program)
     assert other_job.get_status() == JobStatus.DONE

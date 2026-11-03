@@ -12,7 +12,7 @@ from qoolqit.embedding.algorithms.blade._force import (
 
 
 def low_discrepancy_distrib(n: int, *, d: int = 1) -> np.ndarray:
-    return qmc.Sobol(d=d, scramble=True).random(n).reshape(n, d)
+    return qmc.Sobol(d=d, scramble=True).random(n).reshape(n, d)  # type: ignore[no-any-return]
 
 
 @pytest.fixture(params=list(map(tuple, low_discrepancy_distrib(2**5, d=2))))

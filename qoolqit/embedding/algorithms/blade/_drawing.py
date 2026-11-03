@@ -350,7 +350,7 @@ def legend_line(
         [0],
         [0],
         color=color,
-        linestyle=linestyle,
+        linestyle=linestyle,  # type: ignore[arg-type]
         marker=marker,
         markersize=6,
         label=label,
@@ -458,7 +458,7 @@ def draw_discrepancy_lines_and_colorbar(
     )
     tick_vals = np.unique(np.concatenate([neg_ticks, pos_ticks]))
 
-    cbar.set_ticks(tick_vals)
+    cbar.set_ticks(tick_vals)  # type: ignore[arg-type]
     cbar.set_ticklabels([f"{v:.2g}" for v in tick_vals])
 
 
@@ -517,7 +517,7 @@ def draw_update_positions_step(
                 ax=ax,
                 pos2d=pos2d,
                 target_interactions=panel_target_interactions,
-                current_interactions=current_interactions,
+                current_interactions=current_interactions,  # type: ignore[arg-type]
             )
 
         ax.scatter(pos2d[:, 0], pos2d[:, 1], zorder=2)
