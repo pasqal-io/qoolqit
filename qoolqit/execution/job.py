@@ -91,14 +91,18 @@ class Job(ABC, Generic[ResultType]):
 
     @abstractmethod
     def results(self, timeout: float = math.inf) -> ResultType:
-        """Block until the job completes and return its result.
+        """Return the results of the run.
 
-        Waits until the job reaches a terminal state, then returns
-        the result.
+        For local runs, the results are returned immediately, since
+        local execution is synchronous. For remote runs, the call
+        blocks until the job ends, polling its status with exponential
+        backoff (from every 2 s up to every 30 s), so the results may
+        arrive up to 30 s after the job ends.
 
         Args:
-            timeout (float): Maximum seconds to wait.
-                Defaults to ``math.inf`` (wait indefinitely).
+            timeout (float): Maximum seconds to wait for a remote run,
+                ignored for local runs. Defaults to ``math.inf``
+                (wait indefinitely).
 
         Returns:
             ResultType: The result produced by the job.
