@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import math
 import random
 import time
@@ -9,6 +10,8 @@ from abc import ABC, abstractmethod
 from typing import Generic, TypeAlias, TypeVar
 
 from pulser.backend import Results, remote
+
+logger = logging.getLogger(__name__)
 
 ResultType = TypeVar("ResultType")
 
@@ -97,7 +100,9 @@ class Job(ABC, Generic[ResultType]):
         local execution is synchronous. For remote runs, the call
         blocks until the job ends, polling its status with exponential
         backoff (from every 2 s up to every 30 s), so the results may
-        arrive up to 30 s after the job ends.
+        arrive up to 30 s after the job ends. Each wait and the job's
+        completion are logged at INFO level on the
+        ``qoolqit.execution.job`` logger.
 
         Args:
             timeout (float): Maximum seconds to wait for a remote run,
@@ -324,6 +329,7 @@ class _RemoteJob(Job[Results]):
             status, results = self._query_job_progress()
             if status == JobStatus.DONE:
                 assert results is not None
+                logger.info("Job %s is DONE.", self.job_id())
                 return results
             if status == JobStatus.ERROR:
                 raise JobFailedError(f"Job {self.job_id()} failed.")
@@ -334,7 +340,9 @@ class _RemoteJob(Job[Results]):
                 raise TimeoutError(
                     f"Job {self.job_id()} did not complete within {timeout} seconds."
                 )
-            time.sleep(min(delay * _JITTER_RNG.uniform(0.8, 1), remaining))
+            wait = min(delay * _JITTER_RNG.uniform(0.8, 1), remaining)
+            logger.info("Job %s is %s, checking again in %.0f s.", self.job_id(), status.name, wait)
+            time.sleep(wait)
             delay = min(2 * delay, _POLL_MAX_SECONDS)
 
     @classmethod

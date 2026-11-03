@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from unittest.mock import MagicMock
 
 import pytest
@@ -232,6 +233,20 @@ class TestRemoteJob:
             [(remote.JobStatus.RUNNING, None)] * 3 + [(remote.JobStatus.DONE, result)]
         )
         assert job.results(timeout=10) is result
+
+    def test_results_logs_each_wait_and_completion(
+        self, fake_time: FakeTime, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        job = make_remote_job(
+            [(remote.JobStatus.PENDING, None), (remote.JobStatus.DONE, MagicMock())]
+        )
+        with caplog.at_level(logging.INFO, logger="qoolqit.execution.job"):
+            job.results()
+        wait = fake_time.sleeps[0]
+        assert caplog.messages == [
+            f"Job job-123 is PENDING, checking again in {wait:.0f} s.",
+            "Job job-123 is DONE.",
+        ]
 
     def test_query_raises_if_job_id_not_found(self) -> None:
         connection = MagicMock(spec=remote.RemoteConnection)
