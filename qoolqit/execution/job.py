@@ -74,6 +74,10 @@ class Job(ABC, Generic[ResultType]):
     def get_status(self) -> JobStatus:
         """Return the current lifecycle state of the job.
 
+        For remote jobs, each call queries the provider. To wait for a
+        job to end, use :meth:`results` instead of calling this method
+        in a loop.
+
         Returns:
             JobStatus: The current state of the job.
         """
@@ -142,6 +146,9 @@ class Job(ABC, Generic[ResultType]):
         A job has ended when its status is one of
         :attr:`~remote.JobStatus.DONE`, :attr:`~remote.JobStatus.ERROR`, or
         :attr:`~remote.JobStatus.CANCELED`.
+
+        Like :meth:`get_status`, each call queries the provider for
+        remote jobs, so use :meth:`results` to wait.
 
         Returns:
             bool: ``True`` if the job is in a terminal state,
