@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import math
 from unittest.mock import MagicMock
 
 import pytest
@@ -37,7 +38,7 @@ class FakeTime:
     """Fake ``time`` module whose clock only moves when ``sleep`` is called.
 
     The ``fake_time`` fixture puts it in place of ``time`` in ``qoolqit.execution.job``,
-    so that tests of the polling loop in ``_RemoteJob.results``:
+    so that tests of the polling loop in ``_RemoteJob._wait_for_job``:
 
     - never really wait: ``sleep`` returns immediately;
     - can check the backoff: every ``sleep`` duration is recorded in ``sleeps``;
@@ -210,44 +211,53 @@ class TestRemoteJob:
         with pytest.raises(TimeoutError, match="job-123"):
             job.results(timeout=0)
 
-    def test_results_backs_off_exponentially_up_to_30_seconds(self, fake_time: FakeTime) -> None:
+    def test_wait_for_job_backs_off_exponentially_up_to_30_seconds(
+        self, fake_time: FakeTime
+    ) -> None:
         result = MagicMock()
         job = make_remote_job(
             [(remote.JobStatus.RUNNING, None)] * 6 + [(remote.JobStatus.DONE, result)]
         )
-        assert job.results() is result
+        assert job._wait_for_job(timeout=math.inf) == (remote.JobStatus.DONE, result)
         # Each wait is the backoff step, shortened at random by up to 20%: strictly
         # shorter, so a missing jitter fails the test.
         for seconds, step in zip(fake_time.sleeps, [2, 4, 8, 16, 30, 30], strict=True):
             assert 0.8 * step <= seconds < step
 
-    def test_results_never_sleeps_past_timeout(self, fake_time: FakeTime) -> None:
+    def test_wait_for_job_never_sleeps_past_timeout(self, fake_time: FakeTime) -> None:
         job = make_remote_job([(remote.JobStatus.RUNNING, None)] * 10)
         with pytest.raises(TimeoutError, match="job-123"):
-            job.results(timeout=10)
+            job._wait_for_job(timeout=10)
         assert fake_time.now == pytest.approx(10)
 
     @pytest.mark.usefixtures("fake_time")
-    def test_results_returns_if_job_ends_at_the_deadline(self) -> None:
+    def test_wait_for_job_returns_if_job_ends_at_the_deadline(self) -> None:
         result = MagicMock()
         job = make_remote_job(
             [(remote.JobStatus.RUNNING, None)] * 3 + [(remote.JobStatus.DONE, result)]
         )
-        assert job.results(timeout=10) is result
+        assert job._wait_for_job(timeout=10) == (remote.JobStatus.DONE, result)
 
-    def test_results_logs_each_wait_and_completion(
+    def test_wait_for_job_logs_each_wait_and_completion(
         self, fake_time: FakeTime, caplog: pytest.LogCaptureFixture
     ) -> None:
         job = make_remote_job(
             [(remote.JobStatus.PENDING, None), (remote.JobStatus.DONE, MagicMock())]
         )
         with caplog.at_level(logging.INFO, logger="qoolqit.execution.job"):
-            job.results()
+            job._wait_for_job(timeout=math.inf)
         wait = fake_time.sleeps[0]
         assert caplog.messages == [
             f"Job job-123 is PENDING, checking again in {wait:.1f} s.",
             "Job job-123 is DONE.",
         ]
+
+    @pytest.mark.parametrize("status", [remote.JobStatus.ERROR, remote.JobStatus.CANCELED])
+    def test_wait_for_job_returns_error_and_canceled_without_raising(
+        self, status: remote.JobStatus
+    ) -> None:
+        job = make_remote_job([(status, None)])
+        assert job._wait_for_job(timeout=math.inf) == (status, None)
 
     def test_query_raises_if_job_id_not_found(self) -> None:
         connection = MagicMock(spec=remote.RemoteConnection)
