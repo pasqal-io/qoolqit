@@ -95,7 +95,7 @@ def interaction_embedding(
         new_coords = np.reshape(new_coords, (len(matrix), 2))
         # Cost based on minimizing the distance between the matrix and the interaction 1/r⁶
         new_matrix = squareform(1.0 / (pdist(new_coords) ** 6))
-        return np.linalg.norm(new_matrix - matrix)
+        return np.linalg.norm(new_matrix - matrix)  # type: ignore[no-any-return]
 
     if x0 is None:
         rng = np.random.default_rng(seed)

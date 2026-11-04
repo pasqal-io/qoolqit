@@ -59,7 +59,7 @@ def test_init(qubits: dict) -> None:
 
 def test_empty_register() -> None:
     with pytest.raises(ValueError, match=r"Register cannot be empty\."):
-        Register({})  # type: ignore [call-arg]
+        Register({})
 
 
 def test_init_wrong_qubits_type() -> None:

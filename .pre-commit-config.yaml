@@ -19,11 +19,15 @@ repos:
       - id: ruff-check
         args: [--fix]
 
--   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.4.0
+# Run mypy in the project environment, so it sees the types of qoolqit's dependencies.
+-   repo: local
     hooks:
       - id: mypy
-        exclude: examples|docs
+        name: mypy
+        entry: mypy
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
 
 - repo: https://github.com/kynan/nbstripout
   rev: 0.9.1

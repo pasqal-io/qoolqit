@@ -222,7 +222,7 @@ class _LocalJob(Job[Results]):
         if status == JobStatus.ERROR:
             raise JobFailedError("Job failed.")
         assert status == JobStatus.DONE
-        return self._result
+        return self._result  # type: ignore[return-value]
 
 
 class _RemoteJob(Job[Results]):
