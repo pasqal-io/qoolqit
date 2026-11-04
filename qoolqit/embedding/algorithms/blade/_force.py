@@ -17,7 +17,7 @@ def configured_increasing_func(
     """Increasing function from [0, 1] to [0, 1]."""
     c = 1 / middle_value - 1
     x = np.asarray(x, dtype=float)
-    return np.power(x, stiffness) / (np.power(x, stiffness) + c * np.power(1 - x, stiffness))
+    return np.power(x, stiffness) / (np.power(x, stiffness) + c * np.power(1 - x, stiffness))  # type: ignore[no-any-return]
 
 
 def modulate_cursor(
@@ -34,7 +34,7 @@ def modulate_cursor(
         weak_cursor, middle_value=1 / (1 / center_value - 1), stiffness=stiffness
     )
 
-    return (
+    return (  # type: ignore[no-any-return]
         strong_cursor
         * weak_coeff_multiplier
         / np.where(
@@ -58,7 +58,7 @@ def clip_modulate_cursor(
         center_value=center_value,
         stiffness=stiffness,
     )
-    return np.clip(value, 0, 1)
+    return np.clip(value, 0, 1)  # type: ignore[no-any-return]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -121,7 +121,7 @@ class Force:
 
     @cached_property
     def vector_weights(self) -> np.ndarray:
-        return np.linalg.norm(self.weighted_vectors, axis=self.get_nb_dims() - 1)
+        return np.linalg.norm(self.weighted_vectors, axis=self.get_nb_dims() - 1)  # type: ignore[no-any-return]
 
     @cached_property
     def maximum_temperatures(self) -> np.ndarray:
@@ -138,7 +138,7 @@ class Force:
             )
             > 0
         )
-        return maximum_temperatures
+        return maximum_temperatures  # type: ignore[no-any-return]
 
     def get_temperature(self) -> Any | int:
         maximum_temperatures = self.maximum_temperatures

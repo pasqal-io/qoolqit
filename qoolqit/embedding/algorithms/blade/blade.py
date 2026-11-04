@@ -41,7 +41,7 @@ def _compute_limited_constraint_forces(*, force: Force, max_distance_to_walk: fl
 
     assert np.all(np.isfinite(limited_resulting_forces))
 
-    return limited_resulting_forces
+    return limited_resulting_forces  # type: ignore[no-any-return]
 
 
 def update_positions(

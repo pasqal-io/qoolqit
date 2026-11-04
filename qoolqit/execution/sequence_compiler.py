@@ -75,7 +75,7 @@ class SequenceCompiler:
             CompilationError: if compilation fails.
         """
         try:
-            return self._compilation_function(
+            return self._compilation_function(  # type: ignore[no-any-return]
                 self.register,
                 self.drive,
                 self.device,

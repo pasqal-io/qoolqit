@@ -172,7 +172,7 @@ def test_mod_2pi_tiny_negative_wraps_to_zero(x: float) -> None:
 @pytest.mark.parametrize("x", [np.float32(-1e-9), np.float16(-1e-4)])
 def test_mod_2pi_low_precision_input(x: np.floating) -> None:
     # reduced in float64, not in the precision of the input
-    assert _mod_2pi(x) == float(x) % math.tau
+    assert _mod_2pi(x) == float(x) % math.tau  # type: ignore[arg-type]
 
 
 def test_drive_repr_without_phase() -> None:

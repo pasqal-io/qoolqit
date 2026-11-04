@@ -30,7 +30,7 @@ def eformat(f: Any) -> str:
     if f == 0:
         return "0"
 
-    return format_float_scientific(f, exp_digits=1, precision=0)  # type: ignore
+    return format_float_scientific(f, exp_digits=1, precision=0)
 
 
 def draw_weighted_graph(
@@ -350,7 +350,7 @@ def legend_line(
         [0],
         [0],
         color=color,
-        linestyle=linestyle,
+        linestyle=linestyle,  # type: ignore[arg-type]
         marker=marker,
         markersize=6,
         label=label,
@@ -458,7 +458,7 @@ def draw_discrepancy_lines_and_colorbar(
     )
     tick_vals = np.unique(np.concatenate([neg_ticks, pos_ticks]))
 
-    cbar.set_ticks(tick_vals)
+    cbar.set_ticks(tick_vals)  # type: ignore[arg-type]
     cbar.set_ticklabels([f"{v:.2g}" for v in tick_vals])
 
 
@@ -499,7 +499,7 @@ def draw_update_positions_step(
     use_two_panels = modulated_target_interactions is not None
     if use_two_panels:
         fig, axes = plt.subplots(
-            1, 2, figsize=plt.rcParams.get("figure.figsize", (6.4, 4.8))[:1] * np.array([2, 1])  # type: ignore
+            1, 2, figsize=plt.rcParams.get("figure.figsize", (6.4, 4.8))[:1] * np.array([2, 1])
         )
         ax_left, ax_right = axes[0], axes[1]
         panels: list[tuple[plt.Axes, np.ndarray | None, str]] = [
@@ -517,7 +517,7 @@ def draw_update_positions_step(
                 ax=ax,
                 pos2d=pos2d,
                 target_interactions=panel_target_interactions,
-                current_interactions=current_interactions,
+                current_interactions=current_interactions,  # type: ignore[arg-type]
             )
 
         ax.scatter(pos2d[:, 0], pos2d[:, 1], zorder=2)

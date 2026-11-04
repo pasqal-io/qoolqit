@@ -113,7 +113,7 @@ class Waveform(ABC):
         Returns a value of the same kind; times outside [0, duration] give 0.
         """
         if isinstance(t, np.ndarray):
-            return np.vectorize(self._single_call, otypes=[float])(t)
+            return np.vectorize(self._single_call, otypes=[float])(t)  # type: ignore[no-any-return]
         if isinstance(t, list):
             return [self._single_call(ti) for ti in t]
         return self._single_call(t)

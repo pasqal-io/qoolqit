@@ -26,7 +26,7 @@ def test_custom_embedders() -> None:
 
     # Config params don't match algo params
     @dataclass
-    class WrongParamConfig(EmbedderConfig):  # type: ignore
+    class WrongParamConfig(EmbedderConfig):
         param2: float = 1.0
 
     with pytest.raises(
