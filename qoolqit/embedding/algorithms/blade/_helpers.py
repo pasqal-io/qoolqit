@@ -39,9 +39,7 @@ def normalized_interaction(dist: Value, *, format: FormatType = "sym") -> Value:
         1, dist**6, out=np.full_like(dist, np.inf, dtype=float), where=(dist != 0)
     )
 
-    # following type ignore is required probably due to a bug of mypy
-    # (it works if the function's content is copied-pasted here)
-    return _format_return(input=dist, ret=interactions, format=format)  # type: ignore
+    return _format_return(input=dist, ret=interactions, format=format)
 
 
 def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
@@ -57,9 +55,7 @@ def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
         1, weight ** (1 / 6), out=np.full_like(weight, np.inf, dtype=float), where=(weight != 0)
     )
 
-    # following type ignore is required probably due to a bug of mypy
-    # (it works if the function's content is copied-pasted here)
-    return _format_return(input=weight, ret=dists, format=format)  # type: ignore
+    return _format_return(input=weight, ret=dists, format=format)
 
 
 def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:

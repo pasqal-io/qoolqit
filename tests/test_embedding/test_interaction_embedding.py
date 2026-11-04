@@ -25,7 +25,7 @@ def test_interaction_embedding(n_qubits: int) -> None:
         embedder.embed(matrix)
 
     with pytest.raises(TypeError):
-        embedder.embed(DataGraph.random_er(n=n_qubits, p=0.2))  # type: ignore
+        embedder.embed(DataGraph.random_er(n=n_qubits, p=0.2))
 
     matrix = matrix + matrix.T
     embedded_graph = embedder.embed(matrix)

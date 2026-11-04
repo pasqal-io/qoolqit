@@ -30,7 +30,7 @@ def eformat(f: Any) -> str:
     if f == 0:
         return "0"
 
-    return format_float_scientific(f, exp_digits=1, precision=0)  # type: ignore
+    return format_float_scientific(f, exp_digits=1, precision=0)
 
 
 def draw_weighted_graph(
@@ -499,7 +499,7 @@ def draw_update_positions_step(
     use_two_panels = modulated_target_interactions is not None
     if use_two_panels:
         fig, axes = plt.subplots(
-            1, 2, figsize=plt.rcParams.get("figure.figsize", (6.4, 4.8))[:1] * np.array([2, 1])  # type: ignore
+            1, 2, figsize=plt.rcParams.get("figure.figsize", (6.4, 4.8))[:1] * np.array([2, 1])
         )
         ax_left, ax_right = axes[0], axes[1]
         panels: list[tuple[plt.Axes, np.ndarray | None, str]] = [
