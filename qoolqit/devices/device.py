@@ -76,6 +76,7 @@ class Device:
         # Physical constants / channel & limit lookups (assumes 'rydberg_global' channel)
         self._C6 = self._pulser_device.interaction_coeff
         self._clock_period = self._pulser_device.channels["rydberg_global"].clock_period
+        self._phase_jump_time: int = self._pulser_device.channels["rydberg_global"].phase_jump_time
         # Relevant limits from the underlying device (float or None)
         self._max_duration = self._pulser_device.max_sequence_duration
         self._max_amp = self._pulser_device.channels["rydberg_global"].max_amp
@@ -150,6 +151,15 @@ class Device:
             "min_distance": min_distance,
             "max_radial_distance": max_radial_distance,
         }
+
+    @property
+    def phase_jump_time(self) -> float:
+        """Time to change the phase between two consecutive pulses, in adimensional units.
+
+        Read from the global Rydberg channel.
+        """
+        TIME, _, _ = self.converter.factors
+        return self._phase_jump_time / TIME
 
     @property
     def _target_amp(self) -> float:
