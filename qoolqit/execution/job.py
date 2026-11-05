@@ -102,12 +102,7 @@ class Job(ABC, Generic[ResultType]):
 
         For local runs, the results are returned immediately, since
         local execution is synchronous. For remote runs, the call
-        blocks until the job ends, polling its status with exponential
-        backoff (from every 2 s up to every 30 s), so the results may
-        arrive up to 30 s after the job ends. Each change of status, and
-        the job's successful end, are logged at INFO level on the
-        ``qoolqit.execution.job`` logger, and the other waits at DEBUG
-        level.
+        blocks until the job ends.
 
         Args:
             timeout (float): Maximum seconds to wait for a remote run,
