@@ -2169,7 +2169,7 @@ Each atom glows with its excitation probability as time runs.</p>
   <div class="panel">
     <div class="head"><span>Atoms and blockade disks</span></div>
     <svg id="bk-scene" viewBox="0 0 300 170" role="img" aria-label="Two atoms with their blockade disks; drag an atom to change the distance"><g id="bk-disks"></g><g id="bk-atoms"></g>
-      <line x1="226" x2="286" y1="20" y2="20" stroke="currentColor" stroke-opacity=".5" stroke-width="2"/><text x="256" y="14" text-anchor="middle" font-size="10" fill="currentColor" fill-opacity=".6" style="pointer-events:none">unit distance</text></svg>
+      <line x1="14" x2="74" y1="160" y2="160" stroke="currentColor" stroke-opacity=".5" stroke-width="2"/><text x="44" y="154" text-anchor="middle" font-size="10" fill="currentColor" fill-opacity=".6" style="pointer-events:none">unit distance</text></svg>
   </div>
   <div class="panel">
     <div class="head"><span>Populations, <span class="arithmatex">\(\tilde t\)</span> = <span id="bk-tlabel"></span></span><button id="bk-play" type="button">Pause</button></div>
@@ -2177,8 +2177,8 @@ Each atom glows with its excitation probability as time runs.</p>
   </div>
 </div>
 <div class="legend">
-  <span><i style="border-color:var(--one)"></i>exactly one atom excited</span>
-  <span><i style="border-color:var(--both)"></i>both atoms excited</span>
+  <span><i style="border-color:var(--one)"></i>one excitation (<span class="arithmatex">\(|01\rangle\)</span> or <span class="arithmatex">\(|10\rangle\)</span>)</span>
+  <span><i style="border-color:var(--both)"></i>two excitations (<span class="arithmatex">\(|11\rangle\)</span>)</span>
 </div>
 <div class="status"><span class="dot"></span><span id="bk-text"></span></div>
 
@@ -2190,7 +2190,7 @@ const root=document.querySelector(".blockade"), $=id=>root.querySelector("#bk-"+
 const style=document.createElement("style");style.textContent=".blockade{--one:#00C887;--both:#867BFA;--atom:var(--one);--ink:var(--md-default-fg-color,currentColor);--muted:var(--md-default-fg-color--light,color-mix(in srgb,currentColor 65%,transparent));\n  --line:var(--md-default-fg-color--lightest,color-mix(in srgb,currentColor 18%,transparent));--panel:var(--md-code-bg-color,color-mix(in srgb,currentColor 6%,transparent));max-width:640px;margin:16px auto}\n.blockade .controls>div,.blockade .readouts>div,.blockade .panels>div,.blockade .legend>span{margin:0} /* grids stay aligned whatever the host page adds */\n.blockade .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}\n.blockade svg{display:block;width:100%;height:auto;color:var(--ink)}\n.blockade #bk-scene{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}\n.blockade .panels{display:grid;grid-template-columns:1fr 1fr;gap:10px}\n@media (max-width:560px){.blockade .panels{grid-template-columns:1fr}}\n.blockade .head{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;font-weight:600;min-height:28px}\n.blockade .status{display:flex;align-items:center;gap:.6rem;margin:10px 2px 0;font-size:.85rem;font-weight:500}\n.blockade .dot{width:10px;height:10px;border-radius:50%;flex:none;background:var(--atom)}\n.blockade .controls{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:12px 0}\n.blockade .controls label{display:flex;justify-content:space-between;font-size:.85rem}\n.blockade .controls label>span:last-child{font-variant-numeric:tabular-nums;color:var(--muted)}\n.blockade input[type=range]{width:100%;accent-color:var(--atom)}\n.blockade .readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;font-size:.85rem}\n.blockade .readouts div{border-top:2px solid var(--line);padding-top:4px}\n.blockade .readouts b{display:block;font-size:1rem;font-variant-numeric:tabular-nums}\n.blockade button{font:inherit;font-size:.8rem;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:3px 12px;cursor:pointer}\n.blockade .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.8rem;color:var(--muted);margin-top:4px}\n.blockade .legend i{display:inline-block;width:18px;border-top:2.5px solid;vertical-align:middle;margin-right:6px}";
 root.prepend(style);
 const el=(tag,attrs,parent)=>{const e=document.createElementNS("http://www.w3.org/2000/svg",tag);for(const k in attrs)e.setAttribute(k,attrs[k]);parent.appendChild(e);return e;};
-const PERIODS=2, SAMPLES=300; // time window in single-atom Rabi periods, samples per period
+const PERIODS=4, SAMPLES=300; // time window in single-atom Rabi periods, samples per period
 let N=0, T=0, step=0; // samples per curve, time window, tick spacing: all set from om in compute()
 let r=1, om=0.1, data=null, tau=0, playing=!matchMedia("(prefers-reduced-motion: reduce)").matches, last=null, raf=0;
 
@@ -2207,8 +2207,8 @@ function eigSym(A){const a=A.map(x=>x.slice()), v=[[1,0,0],[0,1,0],[0,0,1]];
 // Populations of (|01>+|10>)/sqrt2 and |11> under H in the basis {|00>, (|01>+|10>)/sqrt2, |11>}, from |00>.
 function compute(){
   // Window of PERIODS Rabi periods, rounded to a clean tick value; the sample count follows so curves stay smooth at any om
-  const raw=PERIODS*2*Math.PI/om, mag=Math.pow(10,Math.floor(Math.log10(raw/4))), nm=raw/4/mag;
-  step=(nm<1.5?1:nm<3?2:nm<7?5:10)*mag;T=Math.max(step,Math.round(raw/step)*step);N=Math.round(SAMPLES*T*om/(2*Math.PI));tau=Math.min(tau,T);
+  const raw=PERIODS*2*Math.PI/om, mag=Math.pow(10,Math.floor(Math.log10(raw/5))), nm=raw/5/mag;
+  step=(nm<1.5?1:nm<3.5?2:nm<7.5?5:10)*mag;T=Math.max(step,Math.round(raw/step)*step);N=Math.round(SAMPLES*T*om/(2*Math.PI));tau=Math.min(tau,T);
   const J=Math.pow(r,-6), a=om/Math.SQRT2, {vals,vecs}=eigSym([[0,a,0],[a,0,a],[0,a,J]]);
   const one=new Float64Array(N+1), two=new Float64Array(N+1);
   for(let i=0;i<=N;i++){const t=T*i/N;
