@@ -219,10 +219,12 @@ class TestRemoteJob:
             [(remote.JobStatus.RUNNING, None)] * 6 + [(remote.JobStatus.DONE, result)]
         )
         assert job._wait_for_job(timeout=math.inf) == (remote.JobStatus.DONE, result)
-        # Each wait is the backoff step, shortened at random by up to 20%: strictly
-        # shorter, so a missing jitter fails the test.
-        for seconds, step in zip(fake_time.sleeps, [2, 4, 8, 16, 30, 30], strict=True):
-            assert 0.8 * step <= seconds < step
+        steps = [2, 4, 8, 16, 30, 30]
+        # Each wait is the backoff step, shortened at random by up to 20%.
+        for seconds, step in zip(fake_time.sleeps, steps, strict=True):
+            assert 0.8 * step <= seconds <= step
+        # Jitter is applied: uniform(0.8, 1) can return exactly 1, but not six times in a row.
+        assert fake_time.sleeps != steps
 
     def test_wait_for_job_never_sleeps_past_timeout(self, fake_time: FakeTime) -> None:
         job = make_remote_job([(remote.JobStatus.RUNNING, None)] * 10)
