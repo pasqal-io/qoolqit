@@ -2115,7 +2115,7 @@ Each atom is a qubit. Its electronic ground state <span class="arithmatex">\(|g\
 <div class="arithmatex">\[
 |0\rangle \equiv |g\rangle, \qquad |1\rangle \equiv |r\rangle.
 \]</div>
-<p>A laser couples the two levels. Its <strong>amplitude</strong> <span class="arithmatex">\(\tilde{\Omega}\)</span> sets how fast an atom is transferred between <span class="arithmatex">\(|0\rangle\)</span> and <span class="arithmatex">\(|1\rangle\)</span>, and its <strong>detuning</strong> <span class="arithmatex">\(\tilde{\delta}\)</span> is the mismatch between the laser frequency and the transition frequency; it acts as an energy shift of <span class="arithmatex">\(|1\rangle\)</span>, favouring excitation when positive.
+<p>A laser couples the two levels. Its <strong>amplitude</strong> <span class="arithmatex">\(\tilde{\Omega}\)</span> sets how fast an atom is transferred between <span class="arithmatex">\(|0\rangle\)</span> and <span class="arithmatex">\(|1\rangle\)</span>, and its <strong>detuning</strong> <span class="arithmatex">\(\tilde{\delta}\)</span> is the mismatch between the laser frequency and the transition frequency; it acts as an energy shift of <span class="arithmatex">\(|1\rangle\)</span>, favoring excitation when positive.
 An isolated atom under a resonant laser (<span class="arithmatex">\(\tilde{\delta} = 0\)</span>) oscillates between the two states, a <strong>Rabi oscillation</strong>, with probability of being in the Rydberg state at time <span class="arithmatex">\(\tilde{t}\)</span> given by</p>
 <div class="arithmatex">\[
 P_1(\tilde{t}) = \sin^2\!\left(\frac{\tilde{\Omega}\,\tilde{t}}{2}\right).
@@ -2128,11 +2128,11 @@ The interaction energy decays quickly with their distance <span class="arithmate
 <div class="arithmatex">\[
 \tilde{J} = \frac{1}{\tilde{r}^{\,6}}.
 \]</div>
-<p>The laser is tuned to the transition of an isolated atom, and it still drives it if the transition is off by up to about <span class="arithmatex">\(\tilde{\Omega}\)</span>.
+<p>The laser is tuned to the transition of an isolated atom, and it still drives that transition if it is off resonance by up to about <span class="arithmatex">\(\tilde{\Omega}\)</span>.
 Exciting one of the two atoms works exactly as for an isolated atom.
 Once that atom is in the Rydberg state, however, its interaction shifts the transition of the other atom by <span class="arithmatex">\(\tilde{J}\)</span>: the laser is now out of tune by <span class="arithmatex">\(\tilde{J}\)</span>.</p>
 <ul>
-<li>If <span class="arithmatex">\(\tilde{J} \gg \tilde{\Omega}\)</span>, the laser is too far out of tune to excite also the second atom in the Rydberg state, and the pair holds <strong>at most one excitation</strong>. Therefore, the laser drives it between <span class="arithmatex">\(|00\rangle\)</span> and the Bell state <span class="arithmatex">\(|\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}\)</span>, at the enhanced frequency <span class="arithmatex">\(\sqrt{2}\,\tilde{\Omega}\)</span>. This is the <strong>Rydberg blockade</strong>.</li>
+<li>If <span class="arithmatex">\(\tilde{J} \gg \tilde{\Omega}\)</span>, the laser is too far out of tune to excite the second atom to the Rydberg state as well, and the pair holds <strong>at most one excitation</strong>. Therefore, the laser drives it between <span class="arithmatex">\(|00\rangle\)</span> and the Bell state <span class="arithmatex">\(|\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}\)</span>, at the enhanced frequency <span class="arithmatex">\(\sqrt{2}\,\tilde{\Omega}\)</span>. This is the <strong>Rydberg blockade</strong>.</li>
 <li>If <span class="arithmatex">\(\tilde{J} \ll \tilde{\Omega}\)</span>, the shift is too small to matter: each atom oscillates on its own and <span class="arithmatex">\(|11\rangle\)</span> is reached.</li>
 </ul>
 <p>Setting <span class="arithmatex">\(\tilde{J} = \tilde{\Omega}\)</span> defines the distance that separates the two regimes.</p>
@@ -2278,11 +2278,11 @@ if(playing)raf=requestAnimationFrame(loop);else{tau=T/8;drawTime();}
 <p><strong>Inside the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \gg \tilde{\Omega}\)</span>, for instance <span class="arithmatex">\(\tilde{r} = 1\)</span> with <span class="arithmatex">\(\tilde{\Omega} = 0.1\)</span>), the probability of exciting both atoms stays close to zero.
 The pair behaves as a single two-level system, <span class="arithmatex">\(|00\rangle \leftrightarrow |\Psi^+\rangle\)</span>: the probability of exactly one excitation reaches one and oscillates faster than a single atom would, by the factor <span class="arithmatex">\(\sqrt{2}\)</span>.</p>
 <p><strong>Outside the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \ll \tilde{\Omega}\)</span>, for instance <span class="arithmatex">\(\tilde{r} = 2.5\)</span> with <span class="arithmatex">\(\tilde{\Omega} = 0.1\)</span>), the probability of exciting both atoms reaches one.
-The two atoms are independent qubits, their interaction is negligible, and each oscillating on its own.</p>
+The two atoms are independent qubits: their interaction is negligible and each oscillates on its own.</p>
 <p><strong>At the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \approx \tilde{\Omega}\)</span>) the pair moves continuously from one regime to the other.
 The double excitation is only partially suppressed, and the populations no longer follow a clean oscillation: the peaks change height from one cycle to the next.</p>
 <p>Note that the blockade radius can be crossed in two ways: moving the atoms or changing the laser amplitude.
-Nonetheless, only the ratio <span class="arithmatex">\(\tilde{J} / \tilde{\Omega}\)</span> matters, which is why QoolQit expresses both in the same unit.</p>
+Either way, only the ratio <span class="arithmatex">\(\tilde{J} / \tilde{\Omega}\)</span> matters, which is why QoolQit expresses both in the same unit.</p>
 <h2 id="what-this-means-for-a-program">What this means for a program</h2>
 <p>The blockade is the resource that QoolQit programs are built on: it is what makes atoms interact and behave as a single system, and it is set entirely by geometry and drive.</p>
 <p>The positions of the atoms in a register decide which pairs are blockaded for a given <span class="arithmatex">\(\tilde{\Omega}\)</span>, and that is how a problem is mapped onto the hardware.</p>
