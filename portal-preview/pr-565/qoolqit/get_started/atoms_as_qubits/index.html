@@ -146,7 +146,8 @@ Each atom glows with its excitation probability as time runs.</p><div class="blo
 </div>
 <div class="status"><span class="dot"></span><span id="bk-text"></span></div>
 
-<script>
+
+<script data-astro-rerun>
 (function(){
 const root=document.querySelector(".blockade"), $=id=>root.querySelector("#bk-"+id);
 // Styles are injected from the script: some site builds (the docs portal) strip <style> blocks but keep scripts.
@@ -230,7 +231,7 @@ scene.addEventListener("pointerdown",ev=>{ev.preventDefault();dragging=true;scen
 scene.addEventListener("pointermove",ev=>{if(dragging)move(ev);});
 scene.addEventListener("pointerup",()=>{dragging=false;});scene.addEventListener("pointercancel",()=>{dragging=false;});
 const btn=$("play"), setBtn=()=>btn.textContent=playing?"Pause":"Play";
-function loop(ts){raf=0;if(!playing)return;if(last!==null)tau=(tau+(ts-last)/1000*(T/8))%T;last=ts;drawTime();raf=requestAnimationFrame(loop);}
+function loop(ts){raf=0;if(!playing||!root.isConnected)return; /* stop once the widget has been swapped out of the page */if(last!==null)tau=(tau+(ts-last)/1000*(T/8))%T;last=ts;drawTime();raf=requestAnimationFrame(loop);}
 btn.addEventListener("click",()=>{playing=!playing;last=null;setBtn();if(playing&&!raf)raf=requestAnimationFrame(loop);});
 
 refresh();setBtn();
