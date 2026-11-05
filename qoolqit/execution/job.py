@@ -100,9 +100,15 @@ class Job(ABC, Generic[ResultType]):
     def results(self, timeout: float = math.inf) -> ResultType:
         """Return the results of the run.
 
-        For local runs, the results are returned immediately, since
-        local execution is synchronous. For remote runs, the call
-        blocks until the job ends.
+        Waits until the job reaches a terminal state, then returns the
+        results.
+
+        Note:
+            Local runs are synchronous, so their results are returned
+            immediately. For remote runs, the wait lasts as long as the
+            job is queued and running on the provider. A
+            ``TimeoutError`` doesn't cancel the job: call this method
+            again to keep waiting.
 
         Args:
             timeout (float): Maximum seconds to wait for a remote run,
