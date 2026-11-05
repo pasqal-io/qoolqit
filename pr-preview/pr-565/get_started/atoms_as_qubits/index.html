@@ -2115,27 +2115,27 @@ Each atom is a qubit. Its electronic ground state <span class="arithmatex">\(|g\
 <div class="arithmatex">\[
 |0\rangle \equiv |g\rangle, \qquad |1\rangle \equiv |r\rangle.
 \]</div>
-<p>A laser couples the two levels. Its <strong>amplitude</strong> <span class="arithmatex">\(\tilde{\Omega}\)</span> sets how fast an atom is transferred between <span class="arithmatex">\(|0\rangle\)</span> and <span class="arithmatex">\(|1\rangle\)</span>, and its <strong>detuning</strong> <span class="arithmatex">\(\tilde{\delta}\)</span> sets the energy of <span class="arithmatex">\(|1\rangle\)</span> relative to the laser.
-An isolated atom under a resonant laser (<span class="arithmatex">\(\tilde{\delta} = 0\)</span>) oscillates between the two states, a <strong>Rabi oscillation</strong>, with probability of being excited</p>
+<p>A laser couples the two levels. Its <strong>amplitude</strong> <span class="arithmatex">\(\tilde{\Omega}\)</span> sets how fast an atom is transferred between <span class="arithmatex">\(|0\rangle\)</span> and <span class="arithmatex">\(|1\rangle\)</span>, and its <strong>detuning</strong> <span class="arithmatex">\(\tilde{\delta}\)</span> is the mismatch between the laser frequency and the transition frequency; it acts as an energy shift of <span class="arithmatex">\(|1\rangle\)</span>, favouring excitation when positive.
+An isolated atom under a resonant laser (<span class="arithmatex">\(\tilde{\delta} = 0\)</span>) oscillates between the two states, a <strong>Rabi oscillation</strong>, with probability of being in the Rydberg state at time <span class="arithmatex">\(\tilde{t}\)</span> given by</p>
 <div class="arithmatex">\[
 P_1(\tilde{t}) = \sin^2\!\left(\frac{\tilde{\Omega}\,\tilde{t}}{2}\right).
 \]</div>
-<p>Throughout this page, quantities are written in QoolQit's dimensionless units: distances in units of the minimum spacing a device allows, and energies in units of the strongest interaction it can produce.
+<p>Throughout this page, quantities are written in QoolQit's dimensionless units.
 The next page, <a href="../qoolqit_model/">Programming a neutral-atom QPU</a>, explains where these units come from.</p>
 <h2 id="why-two-atoms-are-not-two-independent-qubits">Why two atoms are not two independent qubits</h2>
-<p>Two atoms that are both in the Rydberg state repel each other.
+<p>Two atoms that are <strong>both</strong> in the Rydberg state repel each other.
 The interaction energy decays quickly with their distance <span class="arithmatex">\(\tilde{r}\)</span>:</p>
 <div class="arithmatex">\[
 \tilde{J} = \frac{1}{\tilde{r}^{\,6}}.
 \]</div>
-<p>The laser can only drive transitions whose energy lies within about <span class="arithmatex">\(\tilde{\Omega}\)</span> of resonance.
-The first excitation of the pair is always resonant.
-The second one is not: once one atom is in <span class="arithmatex">\(|1\rangle\)</span>, exciting the other costs the extra energy <span class="arithmatex">\(\tilde{J}\)</span>.</p>
+<p>The laser is tuned to the transition of an isolated atom, and it still drives it if the transition is off by up to about <span class="arithmatex">\(\tilde{\Omega}\)</span>.
+Exciting one of the two atoms works exactly as for an isolated atom.
+Once that atom is in the Rydberg state, however, its interaction shifts the transition of the other atom by <span class="arithmatex">\(\tilde{J}\)</span>: the laser is now out of tune by <span class="arithmatex">\(\tilde{J}\)</span>.</p>
 <ul>
-<li>If <span class="arithmatex">\(\tilde{J} \gg \tilde{\Omega}\)</span>, the doubly excited state <span class="arithmatex">\(|11\rangle\)</span> is shifted out of reach. The pair can hold <strong>at most one excitation</strong>. The laser then drives the pair between <span class="arithmatex">\(|00\rangle\)</span> and the shared state <span class="arithmatex">\((|01\rangle + |10\rangle)/\sqrt{2}\)</span>, at the enhanced frequency <span class="arithmatex">\(\sqrt{2}\,\tilde{\Omega}\)</span>. This is the <strong>Rydberg blockade</strong>.</li>
-<li>If <span class="arithmatex">\(\tilde{J} \ll \tilde{\Omega}\)</span>, the interaction is too weak to matter. Each atom oscillates on its own and <span class="arithmatex">\(|11\rangle\)</span> is reached.</li>
+<li>If <span class="arithmatex">\(\tilde{J} \gg \tilde{\Omega}\)</span>, the laser is too far out of tune to excite also the second atom in the Rydberg state, and the pair holds <strong>at most one excitation</strong>. Therefore, the laser drives it between <span class="arithmatex">\(|00\rangle\)</span> and the Bell state <span class="arithmatex">\(|\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}\)</span>, at the enhanced frequency <span class="arithmatex">\(\sqrt{2}\,\tilde{\Omega}\)</span>. This is the <strong>Rydberg blockade</strong>.</li>
+<li>If <span class="arithmatex">\(\tilde{J} \ll \tilde{\Omega}\)</span>, the shift is too small to matter: each atom oscillates on its own and <span class="arithmatex">\(|11\rangle\)</span> is reached.</li>
 </ul>
-<p>The crossover <span class="arithmatex">\(\tilde{J} = \tilde{\Omega}\)</span> sets a distance below which the pair is blockaded.</p>
+<p>Setting <span class="arithmatex">\(\tilde{J} = \tilde{\Omega}\)</span> defines the distance that separates the two regimes.</p>
 <div class="admonition info">
 <p class="admonition-title">Blockade radius</p>
 <div class="arithmatex">\[
@@ -2150,13 +2150,13 @@ Drag an atom, or use the sliders, to change the distance <span class="arithmatex
 The dashed circle around each atom has radius <span class="arithmatex">\(\tilde{r}_b / 2\)</span>, so the two circles overlap exactly when the atoms are closer than the blockade radius.
 The plot shows, as a function of time and starting from <span class="arithmatex">\(|00\rangle\)</span>, the probability that exactly one atom is excited and the probability that both are.
 Each atom glows with its excitation probability as time runs.</p>
-<div class="blockade">
+<div class="blockade not-content">
 
 <div class="controls">
   <div><label for="bk-r"><span>Distance <span class="arithmatex">\(\tilde r\)</span></span><span id="bk-rv"></span></label>
     <input id="bk-r" type="range" min="1" max="3" step="0.01" value="1"></div>
   <div><label for="bk-o"><span>Drive amplitude <span class="arithmatex">\(\tilde\Omega\)</span></span><span id="bk-ov"></span></label>
-    <input id="bk-o" type="range" min="0.02" max="0.15" step="0.01" value="0.1"></div>
+    <input id="bk-o" type="range" min="0.02" max="0.2" step="0.01" value="0.1"></div>
 </div>
 
 <div class="readouts">
@@ -2169,7 +2169,7 @@ Each atom glows with its excitation probability as time runs.</p>
   <div class="panel">
     <div class="head"><span>Atoms and blockade disks</span></div>
     <svg id="bk-scene" viewBox="0 0 300 170" role="img" aria-label="Two atoms with their blockade disks; drag an atom to change the distance"><g id="bk-disks"></g><g id="bk-atoms"></g>
-      <line x1="14" x2="74" y1="160" y2="160" stroke="currentColor" stroke-opacity=".5" stroke-width="2"/><text x="44" y="154" text-anchor="middle" font-size="10" fill="currentColor" fill-opacity=".6">unit distance</text></svg>
+      <line x1="226" x2="286" y1="20" y2="20" stroke="currentColor" stroke-opacity=".5" stroke-width="2"/><text x="256" y="14" text-anchor="middle" font-size="10" fill="currentColor" fill-opacity=".6" style="pointer-events:none">unit distance</text></svg>
   </div>
   <div class="panel">
     <div class="head"><span>Populations, <span class="arithmatex">\(\tilde t\)</span> = <span id="bk-tlabel"></span></span><button id="bk-play" type="button">Pause</button></div>
@@ -2187,10 +2187,11 @@ Each atom glows with its excitation probability as time runs.</p>
 const root=document.querySelector(".blockade"), $=id=>root.querySelector("#bk-"+id);
 // Styles are injected from the script: some site builds (the docs portal) strip <style> blocks but keep scripts.
 // Colours: qoolqit.visualization.COLORS mintgreen (--one) and neonpurple (--both); the rest falls back to the page text colour when Material's variables are absent.
-const style=document.createElement("style");style.textContent=".blockade{--one:#00C887;--both:#867BFA;--atom:var(--one);--ink:var(--md-default-fg-color,currentColor);--muted:var(--md-default-fg-color--light,color-mix(in srgb,currentColor 65%,transparent));\n  --line:var(--md-default-fg-color--lightest,color-mix(in srgb,currentColor 18%,transparent));--panel:var(--md-code-bg-color,color-mix(in srgb,currentColor 6%,transparent));max-width:640px;margin:16px auto}\n.blockade .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}\n.blockade svg{display:block;width:100%;height:auto;color:var(--ink)}\n.blockade #bk-scene{touch-action:none;cursor:grab}\n.blockade .panels{display:grid;grid-template-columns:1fr 1fr;gap:10px}\n@media (max-width:560px){.blockade .panels{grid-template-columns:1fr}}\n.blockade .head{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;font-weight:600;min-height:28px}\n.blockade .status{display:flex;align-items:center;gap:.6rem;margin:10px 2px 0;font-size:.85rem;font-weight:500}\n.blockade .dot{width:10px;height:10px;border-radius:50%;flex:none;background:var(--atom)}\n.blockade .controls{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:12px 0}\n.blockade .controls label{display:flex;justify-content:space-between;font-size:.85rem}\n.blockade .controls label span:last-child{font-variant-numeric:tabular-nums;color:var(--muted)}\n.blockade input[type=range]{width:100%;accent-color:var(--atom)}\n.blockade .readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;font-size:.85rem}\n.blockade .readouts div{border-top:2px solid var(--line);padding-top:4px}\n.blockade .readouts b{display:block;font-size:1rem;font-variant-numeric:tabular-nums}\n.blockade button{font:inherit;font-size:.8rem;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:3px 12px;cursor:pointer}\n.blockade .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.8rem;color:var(--muted);margin-top:4px}\n.blockade .legend i{display:inline-block;width:18px;border-top:2.5px solid;vertical-align:middle;margin-right:6px}";
+const style=document.createElement("style");style.textContent=".blockade{--one:#00C887;--both:#867BFA;--atom:var(--one);--ink:var(--md-default-fg-color,currentColor);--muted:var(--md-default-fg-color--light,color-mix(in srgb,currentColor 65%,transparent));\n  --line:var(--md-default-fg-color--lightest,color-mix(in srgb,currentColor 18%,transparent));--panel:var(--md-code-bg-color,color-mix(in srgb,currentColor 6%,transparent));max-width:640px;margin:16px auto}\n.blockade .controls>div,.blockade .readouts>div,.blockade .panels>div,.blockade .legend>span{margin:0} /* grids stay aligned whatever the host page adds */\n.blockade .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}\n.blockade svg{display:block;width:100%;height:auto;color:var(--ink)}\n.blockade #bk-scene{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}\n.blockade .panels{display:grid;grid-template-columns:1fr 1fr;gap:10px}\n@media (max-width:560px){.blockade .panels{grid-template-columns:1fr}}\n.blockade .head{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;font-weight:600;min-height:28px}\n.blockade .status{display:flex;align-items:center;gap:.6rem;margin:10px 2px 0;font-size:.85rem;font-weight:500}\n.blockade .dot{width:10px;height:10px;border-radius:50%;flex:none;background:var(--atom)}\n.blockade .controls{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:12px 0}\n.blockade .controls label{display:flex;justify-content:space-between;font-size:.85rem}\n.blockade .controls label>span:last-child{font-variant-numeric:tabular-nums;color:var(--muted)}\n.blockade input[type=range]{width:100%;accent-color:var(--atom)}\n.blockade .readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;font-size:.85rem}\n.blockade .readouts div{border-top:2px solid var(--line);padding-top:4px}\n.blockade .readouts b{display:block;font-size:1rem;font-variant-numeric:tabular-nums}\n.blockade button{font:inherit;font-size:.8rem;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:3px 12px;cursor:pointer}\n.blockade .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.8rem;color:var(--muted);margin-top:4px}\n.blockade .legend i{display:inline-block;width:18px;border-top:2.5px solid;vertical-align:middle;margin-right:6px}";
 root.prepend(style);
 const el=(tag,attrs,parent)=>{const e=document.createElementNS("http://www.w3.org/2000/svg",tag);for(const k in attrs)e.setAttribute(k,attrs[k]);parent.appendChild(e);return e;};
-const N=1200, T=200; // samples per curve, time window
+const PERIODS=2, SAMPLES=300; // time window in single-atom Rabi periods, samples per period
+let N=0, T=0, step=0; // samples per curve, time window, tick spacing: all set from om in compute()
 let r=1, om=0.1, data=null, tau=0, playing=!matchMedia("(prefers-reduced-motion: reduce)").matches, last=null, raf=0;
 
 // Eigendecomposition of a real symmetric 3x3 matrix by Jacobi rotations.
@@ -2205,6 +2206,9 @@ function eigSym(A){const a=A.map(x=>x.slice()), v=[[1,0,0],[0,1,0],[0,0,1]];
 
 // Populations of (|01>+|10>)/sqrt2 and |11> under H in the basis {|00>, (|01>+|10>)/sqrt2, |11>}, from |00>.
 function compute(){
+  // Window of PERIODS Rabi periods, rounded to a clean tick value; the sample count follows so curves stay smooth at any om
+  const raw=PERIODS*2*Math.PI/om, mag=Math.pow(10,Math.floor(Math.log10(raw/4))), nm=raw/4/mag;
+  step=(nm<1.5?1:nm<3?2:nm<7?5:10)*mag;T=Math.max(step,Math.round(raw/step)*step);N=Math.round(SAMPLES*T*om/(2*Math.PI));tau=Math.min(tau,T);
   const J=Math.pow(r,-6), a=om/Math.SQRT2, {vals,vecs}=eigSym([[0,a,0],[a,0,a],[0,a,J]]);
   const one=new Float64Array(N+1), two=new Float64Array(N+1);
   for(let i=0;i<=N;i++){const t=T*i/N;
@@ -2230,7 +2234,8 @@ const grid=el("g",{},plot), curves=el("g",{fill:"none","stroke-width":2,"stroke-
 const path=(arr,n)=>{let d="";for(let i=0;i<=n;i++)d+=(i?"L":"M")+px(T*i/N).toFixed(1)+" "+py(arr[i]).toFixed(1);return d;};
 for(const p of [0,.5,1]){el("line",{x1:P.l,x2:P.w-P.r,y1:py(p),y2:py(p),stroke:"currentColor","stroke-opacity":.15},grid);
   el("text",{x:P.l-6,y:py(p)+4,"text-anchor":"end","font-size":11,fill:"currentColor","fill-opacity":.7},grid).textContent=p;}
-for(let k=0;k<=T;k+=50)el("text",{x:px(k),y:P.h-P.b+13,"text-anchor":"middle","font-size":11,fill:"currentColor","fill-opacity":.7},grid).textContent=k;
+const ticks=el("g",{},grid);
+function drawTicks(){ticks.innerHTML="";for(let k=0;k<=T+1e-9;k+=step)el("text",{x:px(k),y:P.h-P.b+13,"text-anchor":"middle","font-size":11,fill:"currentColor","fill-opacity":.7},ticks).textContent=+k.toFixed(6);}
 el("text",{x:(P.l+P.w-P.r)/2,y:P.h-3,"text-anchor":"middle","font-size":11,fill:"currentColor","fill-opacity":.7},grid).textContent="time";
 const one=el("path",{stroke:"var(--one)"},curves), two=el("path",{stroke:"var(--both)"},curves);
 
@@ -2250,14 +2255,14 @@ function drawText(){
   if(q<0.85)text.textContent="Blockaded: the atoms share a single excitation";
   else if(q<1.2)text.textContent="Near the blockade radius: partial blockade";
   else text.textContent="Independent: each atom oscillates on its own";}
-function refresh(){compute();drawText();drawScene();drawTime();}
+function refresh(){compute();drawText();drawScene();drawTicks();drawTime();}
 
 $("r").addEventListener("input",e=>{r=+e.target.value;refresh();});
 $("o").addEventListener("input",e=>{om=+e.target.value;refresh();});
 let dragging=false;
 const move=ev=>{const pt=scene.createSVGPoint();pt.x=ev.clientX;pt.y=ev.clientY;const u=pt.matrixTransform(scene.getScreenCTM().inverse());
   r=Math.min(3,Math.max(1,Math.round(200*Math.abs(u.x-CX)/S)/100));$("r").value=r;refresh();};
-scene.addEventListener("pointerdown",ev=>{dragging=true;scene.setPointerCapture(ev.pointerId);move(ev);});
+scene.addEventListener("pointerdown",ev=>{ev.preventDefault();dragging=true;scene.setPointerCapture(ev.pointerId);move(ev);});
 scene.addEventListener("pointermove",ev=>{if(dragging)move(ev);});
 scene.addEventListener("pointerup",()=>{dragging=false;});scene.addEventListener("pointercancel",()=>{dragging=false;});
 const btn=$("play"), setBtn=()=>btn.textContent=playing?"Pause":"Play";
@@ -2270,18 +2275,17 @@ if(playing)raf=requestAnimationFrame(loop);else{tau=T/8;drawTime();}
 </script>
 </div>
 
-<p><strong>Inside the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \gg \tilde{\Omega}\)</span>, for instance <span class="arithmatex">\(\tilde{r} = 1\)</span> with <span class="arithmatex">\(\tilde{\Omega} = 0.1\)</span>), the probability of exciting both atoms stays at zero.
-The pair behaves as a single two-level system: the probability of exactly one excitation reaches one and oscillates faster than a single atom would, by the factor <span class="arithmatex">\(\sqrt{2}\)</span>.</p>
+<p><strong>Inside the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \gg \tilde{\Omega}\)</span>, for instance <span class="arithmatex">\(\tilde{r} = 1\)</span> with <span class="arithmatex">\(\tilde{\Omega} = 0.1\)</span>), the probability of exciting both atoms stays close to zero.
+The pair behaves as a single two-level system, <span class="arithmatex">\(|00\rangle \leftrightarrow |\Psi^+\rangle\)</span>: the probability of exactly one excitation reaches one and oscillates faster than a single atom would, by the factor <span class="arithmatex">\(\sqrt{2}\)</span>.</p>
 <p><strong>Outside the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \ll \tilde{\Omega}\)</span>, for instance <span class="arithmatex">\(\tilde{r} = 2.5\)</span> with <span class="arithmatex">\(\tilde{\Omega} = 0.1\)</span>), the probability of exciting both atoms reaches one.
-The two atoms are independent qubits, each oscillating on its own.</p>
-<p><strong>At the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \approx \tilde{\Omega}\)</span>) neither picture holds: the double excitation is partially suppressed and the dynamics is irregular.
-Programs are designed to stay away from this crossover.</p>
-<p>Note that the blockade radius can be crossed in two ways: moving the atoms or changing the laser.
-Only the ratio <span class="arithmatex">\(\tilde{J} / \tilde{\Omega}\)</span> matters, which is why QoolQit expresses both in the same unit.</p>
+The two atoms are independent qubits, their interaction is negligible, and each oscillating on its own.</p>
+<p><strong>At the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \approx \tilde{\Omega}\)</span>) the pair moves continuously from one regime to the other.
+The double excitation is only partially suppressed, and the populations no longer follow a clean oscillation: the peaks change height from one cycle to the next.</p>
+<p>Note that the blockade radius can be crossed in two ways: moving the atoms or changing the laser amplitude.
+Nonetheless, only the ratio <span class="arithmatex">\(\tilde{J} / \tilde{\Omega}\)</span> matters, which is why QoolQit expresses both in the same unit.</p>
 <h2 id="what-this-means-for-a-program">What this means for a program</h2>
-<p>The blockade is the resource that QoolQit programs are built on: it is what makes atoms interact, and it is set entirely by geometry and drive.
-The positions of the atoms in a register decide which pairs are blockaded for a given <span class="arithmatex">\(\tilde{\Omega}\)</span>, and that is how a problem is mapped onto the hardware.
-The drive regimes table in <a href="../qoolqit_model/#drive-regimes">Programming a neutral-atom QPU</a> summarizes the trade-off, and the <a href="../programming_with_qoolqit/#example-rydberg-blockade-demonstration">Rydberg blockade example</a> in Programming with QoolQit runs this two-atom experiment through the library.</p>
+<p>The blockade is the resource that QoolQit programs are built on: it is what makes atoms interact and behave as a single system, and it is set entirely by geometry and drive.</p>
+<p>The positions of the atoms in a register decide which pairs are blockaded for a given <span class="arithmatex">\(\tilde{\Omega}\)</span>, and that is how a problem is mapped onto the hardware.</p>
 
 
 
