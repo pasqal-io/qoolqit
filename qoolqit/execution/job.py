@@ -104,9 +104,10 @@ class Job(ABC, Generic[ResultType]):
         local execution is synchronous. For remote runs, the call
         blocks until the job ends, polling its status with exponential
         backoff (from every 2 s up to every 30 s), so the results may
-        arrive up to 30 s after the job ends. Each wait, and the job's
-        successful end, are logged at INFO level on the
-        ``qoolqit.execution.job`` logger.
+        arrive up to 30 s after the job ends. Each change of status, and
+        the job's successful end, are logged at INFO level on the
+        ``qoolqit.execution.job`` logger, and the other waits at DEBUG
+        level.
 
         Args:
             timeout (float): Maximum seconds to wait for a remote run,
@@ -308,8 +309,8 @@ class _RemoteJob(Job[Results]):
         reaches a terminal state or *timeout* expires, waiting between
         calls with exponential backoff: 2 s, doubling up to 30 s, each
         wait shortened at random by up to 20% so that concurrent jobs
-        don't poll in sync. Each wait and a successful end are logged
-        at INFO level.
+        don't poll in sync. Each change of status and a successful end
+        are logged at INFO level, and the other waits at DEBUG level.
 
         Note:
             Stand-in for ``RemoteConnection._wait_for_job``, proposed for
@@ -333,6 +334,7 @@ class _RemoteJob(Job[Results]):
         """
         deadline = time.monotonic() + timeout
         delay = _POLL_INITIAL_SECONDS
+        last_status: JobStatus | None = None
         while True:
             status, results = self._query_job_progress()
             if status in {JobStatus.DONE, JobStatus.ERROR, JobStatus.CANCELED}:
@@ -345,7 +347,11 @@ class _RemoteJob(Job[Results]):
                     f"Job {self.job_id()} did not complete within {timeout} seconds."
                 )
             wait = min(delay * _JITTER_RNG.uniform(0.8, 1), remaining)
-            logger.info("Job %s is %s, checking again in %.1f s.", self.job_id(), status.name, wait)
+            level = logging.INFO if status != last_status else logging.DEBUG
+            logger.log(
+                level, "Job %s is %s, checking again in %.1f s.", self.job_id(), status.name, wait
+            )
+            last_status = status
             time.sleep(wait)
             delay = min(2 * delay, _POLL_MAX_SECONDS)
 

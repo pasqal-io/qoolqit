@@ -238,18 +238,25 @@ class TestRemoteJob:
         )
         assert job._wait_for_job(timeout=10) == (remote.JobStatus.DONE, result)
 
-    def test_wait_for_job_logs_each_wait_and_completion(
+    def test_wait_for_job_logs_status_changes_at_info_and_other_waits_at_debug(
         self, fake_time: FakeTime, caplog: pytest.LogCaptureFixture
     ) -> None:
         job = make_remote_job(
-            [(remote.JobStatus.PENDING, None), (remote.JobStatus.DONE, MagicMock())]
+            [
+                (remote.JobStatus.PENDING, None),
+                (remote.JobStatus.PENDING, None),
+                (remote.JobStatus.RUNNING, None),
+                (remote.JobStatus.DONE, MagicMock()),
+            ]
         )
-        with caplog.at_level(logging.INFO, logger="qoolqit.execution.job"):
+        with caplog.at_level(logging.DEBUG, logger="qoolqit.execution.job"):
             job._wait_for_job(timeout=math.inf)
-        wait = fake_time.sleeps[0]
-        assert caplog.messages == [
-            f"Job job-123 is PENDING, checking again in {wait:.1f} s.",
-            "Job job-123 is DONE.",
+        waits = fake_time.sleeps
+        assert [(r.levelname, r.getMessage()) for r in caplog.records] == [
+            ("INFO", f"Job job-123 is PENDING, checking again in {waits[0]:.1f} s."),
+            ("DEBUG", f"Job job-123 is PENDING, checking again in {waits[1]:.1f} s."),
+            ("INFO", f"Job job-123 is RUNNING, checking again in {waits[2]:.1f} s."),
+            ("INFO", "Job job-123 is DONE."),
         ]
 
     @pytest.mark.parametrize("status", [remote.JobStatus.ERROR, remote.JobStatus.CANCELED])
