@@ -310,8 +310,8 @@ class _RemoteJob(Job[Results]):
         reaches a terminal state or *timeout* expires, waiting between
         calls with exponential backoff: 2 s, doubling up to 30 s, each
         wait shortened at random by up to 20% so that concurrent jobs
-        don't poll in sync. Each change of status and a successful end
-        are logged at INFO level, and the other waits at DEBUG level.
+        don't poll in sync. Each change of status is logged at INFO
+        level, and each wait at DEBUG level.
 
         Note:
             Stand-in for ``RemoteConnection._wait_for_job``, proposed for
@@ -338,9 +338,10 @@ class _RemoteJob(Job[Results]):
         last_status: JobStatus | None = None
         while True:
             status, results = self._query_job_progress()
+            if status != last_status:
+                logger.info("Job %s is %s.", self.job_id(), status.name)
+                last_status = status
             if status in {JobStatus.DONE, JobStatus.ERROR, JobStatus.CANCELED}:
-                if status == JobStatus.DONE:
-                    logger.info("Job %s is DONE.", self.job_id())
                 return status, results
             remaining = deadline - time.monotonic()
             if remaining <= 0:
@@ -348,11 +349,9 @@ class _RemoteJob(Job[Results]):
                     f"Job {self.job_id()} did not complete within {timeout} seconds."
                 )
             wait = min(delay * _JITTER_RNG.uniform(0.8, 1), remaining)
-            level = logging.INFO if status != last_status else logging.DEBUG
-            logger.log(
-                level, "Job %s is %s, checking again in %.1f s.", self.job_id(), status.name, wait
+            logger.debug(
+                "Job %s is %s, checking again in %.1f s.", self.job_id(), status.name, wait
             )
-            last_status = status
             time.sleep(wait)
             delay = min(2 * delay, _POLL_MAX_SECONDS)
 

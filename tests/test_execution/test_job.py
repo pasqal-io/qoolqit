@@ -240,7 +240,7 @@ class TestRemoteJob:
         )
         assert job._wait_for_job(timeout=10) == (remote.JobStatus.DONE, result)
 
-    def test_wait_for_job_logs_status_changes_at_info_and_other_waits_at_debug(
+    def test_wait_for_job_logs_status_changes_at_info_and_waits_at_debug(
         self, fake_time: FakeTime, caplog: pytest.LogCaptureFixture
     ) -> None:
         job = make_remote_job(
@@ -255,9 +255,11 @@ class TestRemoteJob:
             job._wait_for_job(timeout=math.inf)
         waits = fake_time.sleeps
         assert [(r.levelname, r.getMessage()) for r in caplog.records] == [
-            ("INFO", f"Job job-123 is PENDING, checking again in {waits[0]:.1f} s."),
+            ("INFO", "Job job-123 is PENDING."),
+            ("DEBUG", f"Job job-123 is PENDING, checking again in {waits[0]:.1f} s."),
             ("DEBUG", f"Job job-123 is PENDING, checking again in {waits[1]:.1f} s."),
-            ("INFO", f"Job job-123 is RUNNING, checking again in {waits[2]:.1f} s."),
+            ("INFO", "Job job-123 is RUNNING."),
+            ("DEBUG", f"Job job-123 is RUNNING, checking again in {waits[2]:.1f} s."),
             ("INFO", "Job job-123 is DONE."),
         ]
 
