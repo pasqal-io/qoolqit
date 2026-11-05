@@ -205,9 +205,7 @@ class TestRemoteJob:
             job.results()
 
     def test_results_raises_timeout(self) -> None:
-        connection = MagicMock(spec=remote.RemoteConnection)
-        connection._query_job_progress.return_value = {"job-123": (remote.JobStatus.RUNNING, None)}
-        job = _RemoteJob(connection, "job-123", batch_id="batch-abc")
+        job = make_remote_job([(remote.JobStatus.RUNNING, None)])
         with pytest.raises(TimeoutError, match="job-123"):
             job.results(timeout=0)
 
