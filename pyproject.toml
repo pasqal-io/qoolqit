@@ -6,8 +6,8 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "1.5.0"
-requires-python = ">=3.10"
+version = "1.6.0"
+requires-python = ">=3.11"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
 authors = [
@@ -25,18 +25,17 @@ authors = [
   { name = "Vytautas Abramavicius"},
 ]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
 dependencies = [
-  "networkx>=3.4",
+  "networkx>=3.5",
   "numpy>=2",
   "pulser[torch]>=1.9.0",
   "typing-extensions>=4.4",

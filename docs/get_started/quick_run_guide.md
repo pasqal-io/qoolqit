@@ -6,7 +6,7 @@
 
 ## Installation
 
-QoolQit requires Python 3.10 or later. Install it from [PyPI](https://pypi.org/project/qoolqit/) in a virtual environment:
+QoolQit requires Python 3.11 or later. Install it from [PyPI](https://pypi.org/project/qoolqit/) in a virtual environment:
 
 ``` sh
 python -m venv .venv
