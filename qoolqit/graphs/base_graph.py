@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Any
+from typing import Any, Self
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -47,7 +47,7 @@ class BaseGraph(nx.Graph):
     """
 
     @classmethod
-    def from_nodes(cls, nodes: Iterable) -> BaseGraph:
+    def from_nodes(cls, nodes: Iterable) -> Self:
         """Construct a base graph from a set of nodes.
 
         Arguments:
@@ -58,7 +58,7 @@ class BaseGraph(nx.Graph):
         return graph
 
     @classmethod
-    def from_coordinates(cls, coords: list | dict) -> BaseGraph:
+    def from_coordinates(cls, coords: list | dict) -> Self:
         """Construct a base graph from a set of coordinates.
 
         Arguments:
@@ -72,7 +72,7 @@ class BaseGraph(nx.Graph):
         return cls.from_nodes(coords_tuple)
 
     @classmethod
-    def from_nx(cls, g: nx.Graph) -> BaseGraph:
+    def from_nx(cls, g: nx.Graph) -> Self:
         """Convert a NetworkX Graph object into a QoolQit graph instance.
 
         The input `networkx.Graph` graph must be defined only with the following allowed
@@ -144,7 +144,7 @@ class BaseGraph(nx.Graph):
         return cls(g)
 
     @classmethod
-    def from_matrix(cls, data: npt.NDArray[np.float64]) -> BaseGraph:
+    def from_matrix(cls, data: npt.NDArray[np.float64]) -> Self:
         """Constructs a graph from a symmetric square matrix.
 
         The diagonal values are set as the node weights. For each entry (i, j)
