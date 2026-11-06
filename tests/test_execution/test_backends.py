@@ -28,7 +28,7 @@ class TestBackends:
 
     class MockEmulatorBackend(EmulatorBackend):
         run_calls = 0
-        default_config = MagicMock(spec=EmulationConfig, _backend_options={})
+        default_config = EmulationConfig(observables=(BitStrings(),))
 
         @staticmethod
         def validate_sequence(sequence: PulserSequence, mimic_qpu: bool = False) -> None:
@@ -40,7 +40,7 @@ class TestBackends:
 
     class MockRemoteEmulatorBackend(RemoteEmulatorBackend):
         run_calls = 0
-        default_config = MagicMock(spec=EmulationConfig, _backend_options={})
+        default_config = EmulationConfig(observables=(BitStrings(),))
 
         @staticmethod
         def validate_sequence(sequence: PulserSequence, mimic_qpu: bool = False) -> None:
@@ -68,7 +68,7 @@ class TestBackends:
         assert backend._num_shots is None
 
     def test_emulator_backend_with_config(self) -> None:
-        config = EmulationConfig(observables=(BitStrings(num_shots=1117),))
+        config = EmulationConfig(observables=(BitStrings(num_shots=1117),))  # type: ignore[var-annotated]
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend, emulation_config=config)
 
         # convert configs to str

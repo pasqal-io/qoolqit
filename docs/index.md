@@ -10,7 +10,7 @@ hide:
 
 **QoolQit** is a Python library for designing and compiling analog quantum programs for neutral-atom devices in the Rydberg Analog Model.
 
-QoolQit works in a **dimensionless framework**. This solves a key challenge in programming neutral-atom quantum computers, that is specifying physical parameters such as atom positions in micrometers, laser amplitudes in MHz, and pulse durations in nanoseconds. Since these values depend strongly on the particular hardware platform and differ of different devices.
+QoolQit works in a **dimensionless framework**. This solves a key challenge in programming neutral-atom quantum computers: specifying physical parameters such as atom positions in micrometers, laser amplitudes in MHz, and pulse durations in nanoseconds, since these values depend on the hardware and vary across devices.
 
 QoolQit separates the **program you want to implement** from the **hardware scale used to realize it**. This makes it possible to develop analog quantum algorithms in a device-agnostic way, while still compiling them consistently to realistic hardware constraints.
 
@@ -31,6 +31,12 @@ QoolQit is designed for both **algorithm exploration** and **hardware-aware prog
 
 ## Where to start
 
-- [The QoolQit Model](get_started/qoolqit_model.md) — the dimensionless Hamiltonian and compilation logic.
-- [Fundamentals](fundamentals/introduction.md) — registers, waveforms, programs, and execution.
-- [Programming with QoolQit](./get_started/programming_with_qoolqit.ipynb) — writing a quantum program.
+- [Quick Run Guide](./get_started/quick_run_guide.md) — install QoolQit and run your first job, locally or remotely.
+- [The QoolQit Model](./get_started/qoolqit_model.md) — the dimensionless Hamiltonian and compilation logic.
+- [Programming with QoolQit](./get_started/programming_with_qoolqit.md) — writing a quantum program.
+
+## Explore further
+
+- [Fundamentals](./fundamentals/introduction.md) — registers, waveforms, programs, compilation, and execution in depth.
+- [Applications](./tutorials/index.md) — end-to-end examples: QUBO, MWIS, and TFIM critical state preparation.
+- [API reference](./reference/qoolqit.md) — the full API of every module.

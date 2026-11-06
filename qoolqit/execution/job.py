@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import logging
 import math
+import random
 import time
 from abc import ABC, abstractmethod
 from typing import Generic, TypeAlias, TypeVar
 
 from pulser.backend import Results, remote
+
+logger = logging.getLogger(__name__)
 
 ResultType = TypeVar("ResultType")
 
@@ -20,6 +24,12 @@ Terminal states (where :meth:`Job.has_ended` returns ``True``):
 - :attr:`~remote.JobStatus.ERROR`
 - :attr:`~remote.JobStatus.CANCELED`
 """
+
+_POLL_INITIAL_SECONDS = 2.0
+_POLL_MAX_SECONDS = 30.0
+# Not the global RNG: polling would consume a user's seeded random state, and
+# workers seeded alike would jitter alike.
+_JITTER_RNG = random.SystemRandom()
 
 
 class JobFailedError(Exception):
@@ -64,6 +74,10 @@ class Job(ABC, Generic[ResultType]):
     def get_status(self) -> JobStatus:
         """Return the current lifecycle state of the job.
 
+        For remote jobs, each call queries the provider. To wait for a
+        job to end, use :meth:`results` instead of calling this method
+        in a loop.
+
         Returns:
             JobStatus: The current state of the job.
         """
@@ -84,15 +98,22 @@ class Job(ABC, Generic[ResultType]):
 
     @abstractmethod
     def results(self, timeout: float = math.inf) -> ResultType:
-        """Block until the job completes and return its result.
+        """Return the results of the run.
 
-        Waits until the job reaches a terminal state, then returns
-        the result. Polling strategy (interval, backoff) is delegated
-        to the underlying connection.
+        Waits until the job reaches a terminal state, then returns the
+        results.
+
+        Note:
+            Local runs are synchronous, so their results are returned
+            immediately. For remote runs, the wait lasts as long as the
+            job is queued and running on the provider. A
+            ``TimeoutError`` doesn't cancel the job: call this method
+            again to keep waiting.
 
         Args:
-            timeout (float): Maximum seconds to wait.
-                Defaults to ``math.inf`` (wait indefinitely).
+            timeout (float): Maximum seconds to wait for a remote run,
+                ignored for local runs. Defaults to ``math.inf``
+                (wait indefinitely).
 
         Returns:
             ResultType: The result produced by the job.
@@ -127,6 +148,9 @@ class Job(ABC, Generic[ResultType]):
         A job has ended when its status is one of
         :attr:`~remote.JobStatus.DONE`, :attr:`~remote.JobStatus.ERROR`, or
         :attr:`~remote.JobStatus.CANCELED`.
+
+        Like :meth:`get_status`, each call queries the provider for
+        remote jobs, so use :meth:`results` to wait.
 
         Returns:
             bool: ``True`` if the job is in a terminal state,
@@ -200,7 +224,7 @@ class _LocalJob(Job[Results]):
         if status == JobStatus.ERROR:
             raise JobFailedError("Job failed.")
         assert status == JobStatus.DONE
-        return self._result
+        return self._result  # type: ignore[return-value]
 
 
 class _RemoteJob(Job[Results]):
@@ -279,12 +303,63 @@ class _RemoteJob(Job[Results]):
         """
         return
 
+    def _wait_for_job(self, timeout: float) -> tuple[JobStatus, Results | None]:
+        """Block until the job ends and return its final status and results.
+
+        Repeatedly calls :meth:`_query_job_progress` until the job
+        reaches a terminal state or *timeout* expires, waiting between
+        calls with exponential backoff: 2 s, doubling up to 30 s, each
+        wait shortened at random by up to 20% so that concurrent jobs
+        don't poll in sync. Each change of status is logged at INFO
+        level, and each wait at DEBUG level.
+
+        Note:
+            Stand-in for ``RemoteConnection._wait_for_job``, proposed for
+            Pulser core: Pulser's ``RemoteConnection`` has no waiting
+            strategy of its own, and we can't rely on every connection
+            throttling its status queries. Once Pulser provides it, call
+            it from :meth:`results` instead, and keep this method as the
+            fallback for connections that don't support it. Delete it
+            once every connection does.
+
+        Args:
+            timeout (float): Maximum seconds to wait; ``math.inf`` waits
+                indefinitely.
+
+        Returns:
+            tuple[JobStatus, Results | None]: The final status, and the
+            results if the job is DONE.
+
+        Raises:
+            TimeoutError: If the job does not end within *timeout* seconds.
+        """
+        deadline = time.monotonic() + timeout
+        delay = _POLL_INITIAL_SECONDS
+        last_status: JobStatus | None = None
+        while True:
+            status, results = self._query_job_progress()
+            if status != last_status:
+                logger.info("Job %s is %s.", self.job_id(), status.name)
+                last_status = status
+            if status in {JobStatus.DONE, JobStatus.ERROR, JobStatus.CANCELED}:
+                return status, results
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError(
+                    f"Job {self.job_id()} did not complete within {timeout} seconds."
+                )
+            wait = min(delay * _JITTER_RNG.uniform(0.8, 1), remaining)
+            logger.debug(
+                "Job %s is %s, checking again in %.1f s.", self.job_id(), status.name, wait
+            )
+            time.sleep(wait)
+            delay = min(2 * delay, _POLL_MAX_SECONDS)
+
     def results(self, timeout: float = math.inf) -> Results:
         """Block until the remote job completes and return its result.
 
-        Repeatedly calls :meth:`_query_job_progress` until the job
-        reaches a terminal state or *timeout* expires. Polling
-        interval and backoff are delegated to the connection.
+        Waits for the job to end with :meth:`_wait_for_job`, then
+        returns its results, or raises if it failed or was cancelled.
 
         Args:
             timeout (float): Maximum seconds to wait.
@@ -299,20 +374,13 @@ class _RemoteJob(Job[Results]):
             JobFailedError: If the job reached ERROR status.
             JobCancelledError: If the job was CANCELED.
         """
-        deadline = time.monotonic() + timeout
-        while True:
-            status, results = self._query_job_progress()
-            if status == JobStatus.DONE:
-                assert results is not None
-                return results
-            if status == JobStatus.ERROR:
-                raise JobFailedError(f"Job {self.job_id()} failed.")
-            if status == JobStatus.CANCELED:
-                raise JobCancelledError(f"Job {self.job_id()} was cancelled.")
-            if time.monotonic() >= deadline:
-                raise TimeoutError(
-                    f"Job {self.job_id()} did not complete within {timeout} seconds."
-                )
+        status, results = self._wait_for_job(timeout)
+        if status == JobStatus.ERROR:
+            raise JobFailedError(f"Job {self.job_id()} failed.")
+        if status == JobStatus.CANCELED:
+            raise JobCancelledError(f"Job {self.job_id()} was cancelled.")
+        assert results is not None
+        return results
 
     @classmethod
     def _from_remote_results(

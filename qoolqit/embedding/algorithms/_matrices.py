@@ -15,6 +15,6 @@ def nearly_equal(matrix: np.ndarray, other: np.ndarray) -> bool:
     """
     if matrix.shape != other.shape:
         return False
-    off_diagonal = ~np.eye(*matrix.shape, dtype=bool)
+    off_diagonal = np.eye(*matrix.shape) == 0
     scale = np.max(np.abs(matrix[off_diagonal]), initial=0.0)
     return bool(np.allclose(matrix, other, rtol=0.0, atol=RELATIVE_TOLERANCE * scale))

@@ -45,17 +45,15 @@ def normalized_interaction(dist: Value, *, format: FormatType = "sym") -> Value:
         where=(dist != 0),
     )
 
-    # following type ignore is required probably due to a bug of mypy
-    # (it works if the function's content is copied-pasted here)
-    return _format_return(input=dist, ret=interactions, format=format)  # type: ignore
+    return _format_return(input=dist, ret=interactions, format=format)
 
 
 def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
     """Convert pairwise interactions into distances.
 
     Args:
-        dist: Pairwise distances between nodes.
-        format: Format of the output if `dist` is a numpy array. Can be "full"
+        weight: Pairwise interactions between nodes.
+        format: Format of the output if `weight` is a numpy array. Can be "full"
         (all values), "triu" (upper triangle without diagonal), or "sym"
         (upper and lower triangles without diagonal).
     """
@@ -66,9 +64,7 @@ def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
         where=(weight != 0),
     )
 
-    # following type ignore is required probably due to a bug of mypy
-    # (it works if the function's content is copied-pasted here)
-    return _format_return(input=weight, ret=dists, format=format)  # type: ignore
+    return _format_return(input=weight, ret=dists, format=format)
 
 
 def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
@@ -98,4 +94,4 @@ def interaction_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
 
 
 def normalized_distance(target: np.ndarray, actual: np.ndarray) -> np.floating[Any]:
-    return np.linalg.norm(target - actual) / np.linalg.norm(target)
+    return np.linalg.norm(target - actual) / np.linalg.norm(target)  # type: ignore[no-any-return]

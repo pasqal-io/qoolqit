@@ -37,7 +37,7 @@ def modulate_cursor(
         weak_cursor, middle_value=1 / (1 / center_value - 1), stiffness=stiffness
     )
 
-    return (
+    return (  # type: ignore[no-any-return]
         strong_cursor
         * weak_coeff_multiplier
         / np.where(
@@ -61,7 +61,7 @@ def clip_modulate_cursor(
         center_value=center_value,
         stiffness=stiffness,
     )
-    return np.clip(value, 0, 1)
+    return np.clip(value, 0, 1)  # type: ignore[no-any-return]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -129,7 +129,7 @@ class Force:
         maximum_temperatures[vector_weights == 0] = np.inf
 
         assert np.all(maximum_temperatures > 0)
-        return maximum_temperatures
+        return maximum_temperatures  # type: ignore[no-any-return]
 
     def get_temperature(self) -> Any | int:
         maximum_temperatures = self.maximum_temperatures
@@ -155,9 +155,9 @@ class Force:
                 coefficients, self.pairs, len(self.positions)
             )
             # sum over j of coefficients[i, j] * (positions[j] - positions[i])
-            return (
+            return (  # type: ignore[no-any-return]
                 coefficients @ self.positions
                 - np.sum(coefficients, axis=1)[:, np.newaxis] * self.positions
             )
         else:
-            return coefficients[:, np.newaxis] * self.positions
+            return coefficients[:, np.newaxis] * self.positions  # type: ignore[no-any-return]

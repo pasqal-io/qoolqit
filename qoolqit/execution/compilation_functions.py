@@ -1,3 +1,5 @@
+"""Compilation of QoolQit programs into Pulser sequences, per compiler profile."""
+
 from __future__ import annotations
 
 from enum import Enum
@@ -35,7 +37,7 @@ def _build_register(register: Register, device: Device, distance: float) -> Puls
     return pulser_register
 
 
-class WaveformConverter:
+class _WaveformConverter:
     """Convert a QoolQit waveform into a equivalent Pulser waveform.
 
     Requires the new time and energy scales set by the compilation.
@@ -43,6 +45,7 @@ class WaveformConverter:
     """
 
     def __init__(self, device: Device, time: float, energy: float) -> None:
+        """Initialize the converter with the device and the compilation scales."""
         self._time = time
         self._energy = energy
         self._clock_period = device._clock_period
@@ -65,7 +68,7 @@ def basic_compilation(
     register: Register,
     drive: Drive,
     device: Device,
-    profile: CompilerProfile = CompilerProfile.MAX_ENERGY,
+    profile: CompilerProfile,
     device_max_duration_ratio: float | None = None,
 ) -> PulserSequence:
     """Compiles a QoolQit program to a PulserSequence.
@@ -84,6 +87,7 @@ def basic_compilation(
         register: QoolQit Register.
         drive: QoolQit Drive.
         device: QoolQit Device.
+        profile: the `CompilerProfile` that sets how the program is rescaled to the device.
         device_max_duration_ratio: optionally set the program duration to a fraction
             of the device's maximum allowed duration.
 
@@ -125,7 +129,7 @@ def basic_compilation(
         TIME = device_max_duration_ratio * device._max_duration / drive.duration
 
     # Build pulser pulse and register
-    wf_converter = WaveformConverter(device=device, time=TIME, energy=ENERGY)
+    wf_converter = _WaveformConverter(device=device, time=TIME, energy=ENERGY)
     pulser_amp_wf = wf_converter.convert(drive._amplitude)
     pulser_det_wf = wf_converter.convert(drive._detuning)
     pulser_pulse = PulserPulse(pulser_amp_wf, pulser_det_wf, drive.phase.value)
@@ -153,7 +157,7 @@ class _DMMAdder:
 
     def __init__(
         self,
-        wf_converter: WaveformConverter,
+        wf_converter: _WaveformConverter,
         pulser_register: PulserRegister,
         pulser_sequence: PulserSequence,
     ):
@@ -189,6 +193,8 @@ def _validate_program_default_profile(
         register: the register containing the qubits positions.
         drive: the drive acting on qubits, defining amplitude, detuning and phase.
         device: the selected device to compile to.
+        device_max_duration_ratio: if set, the duration is fixed to this fraction of the
+            device's maximum duration, so the drive duration is not checked.
 
     Raises:
         CompilationError: if the compiled program does not respect the device specifications.
@@ -256,6 +262,8 @@ def _validate_program_max_energy_profile(
         register: the register containing the qubits positions.
         drive: the drive acting on qubits, defining amplitude, detuning and phase.
         device: the selected device to compile to.
+        device_max_duration_ratio: if set, the duration is fixed to this fraction of the
+            device's maximum duration, so the drive duration is not checked.
 
     Raises:
         CompilationError: if the compiled program does not respect the device specifications.

@@ -43,6 +43,8 @@ dist/
 *.eggs
 *.env
 Pipfile
+# Created by `uv sync`; not committed until we decide to lock dependencies
+uv.lock
 runs/
 *venv
 *~

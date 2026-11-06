@@ -1,6 +1,9 @@
+"""Embedders mapping a matrix to a graph with coordinates."""
+
 from __future__ import annotations
 
 import numpy as np
+from typing_extensions import override
 
 from qoolqit.graphs import DataGraph
 
@@ -21,7 +24,14 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
     A custom algorithm and configuration can be set at initialization.
     """
 
+    @override
     def validate_input(self, data: np.ndarray) -> None:
+        """Checks that the data is a symmetric 2D numpy array.
+
+        Raises:
+            TypeError: if `data` is not a numpy array.
+            ValueError: if `data` is not 2D or not symmetric.
+        """
         if not isinstance(data, np.ndarray):
             raise TypeError(
                 f"Data of type {type(data)} not supported. {self.__class__.__name__} "
@@ -32,6 +42,7 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
         if not nearly_equal(data, data.T):
             raise ValueError("Data must be a symmetric matrix.")
 
+    @override
     def validate_output(self, result: DataGraph) -> None:
         if not isinstance(result, DataGraph):
             raise TypeError(
@@ -41,10 +52,28 @@ class MatrixToGraphEmbedder(BaseEmbedder[np.ndarray, DataGraph, ConfigType]):
 
 
 class InteractionEmbedder(MatrixToGraphEmbedder[InteractionEmbedderConfig]):
-    """A matrix to graph embedder using the interaction embedding algorithm."""
+    """A matrix to graph embedder using the interaction embedding algorithm.
 
-    def __init__(self) -> None:
-        super().__init__(interaction_embedding, InteractionEmbedderConfig())
+    Starting positions are random unless `x0` is set in the config. For reproducible
+    results, set `seed` to an integer:
+
+    ```python
+    import numpy as np
+    from qoolqit.embedding import InteractionEmbedder, InteractionEmbedderConfig
+
+    matrix = np.array([[0.0, 1.0, 0.5], [1.0, 0.0, 0.2], [0.5, 0.2, 0.0]])
+    embedder = InteractionEmbedder(InteractionEmbedderConfig(seed=3083257284))
+    graph = embedder.embed(matrix)
+    ```
+    """
+
+    def __init__(self, config: InteractionEmbedderConfig | None = None) -> None:
+        """Inits InteractionEmbedder.
+
+        Args:
+            config: configuration for the interaction embedding. Defaults are used if None.
+        """
+        super().__init__(interaction_embedding, config=config or InteractionEmbedderConfig())
 
 
 class Blade(MatrixToGraphEmbedder[BladeConfig]):
@@ -58,7 +87,14 @@ class Blade(MatrixToGraphEmbedder[BladeConfig]):
         """
         super().__init__(_blade, config=config or BladeConfig())
 
+    @override
     def validate_input(self, data: np.ndarray) -> None:
+        """Checks that the data is a square 2D numpy array, symmetric or triangular.
+
+        Raises:
+            TypeError: if `data` is not a numpy array.
+            ValueError: if `data` is not square 2D, or neither symmetric nor triangular.
+        """
         if not isinstance(data, np.ndarray):
             raise TypeError(
                 f"Data of type {type(data)} not supported. {self.__class__.__name__} "

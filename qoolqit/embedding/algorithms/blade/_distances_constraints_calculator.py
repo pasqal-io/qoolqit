@@ -5,8 +5,8 @@ from typing import Any
 
 import numpy as np
 
+from ._drawing import plot_differences
 from ._helpers import distance_matrix_from_positions, normalized_interaction
-from .drawing import plot_differences
 
 
 def compute_best_scaling_for_qubo(

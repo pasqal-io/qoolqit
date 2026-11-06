@@ -6,8 +6,8 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "1.4.0"
-requires-python = ">=3.10"
+version = "1.6.0"
+requires-python = ">=3.11"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
 authors = [
@@ -25,20 +25,20 @@ authors = [
   { name = "Vytautas Abramavicius"},
 ]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
 dependencies = [
-  "networkx>=3.4",
+  "networkx>=3.5",
   "numpy>=2",
   "pulser[torch]>=1.9.0",
+  "typing-extensions>=4.4",
 ]
 
 [project.optional-dependencies]
@@ -49,20 +49,34 @@ extras = [
   "pandas",
   "seaborn",
 ]
-dev = [
+
+# Install together with the local project, e.g. `pip install -e . --group dev`:
+# without `-e .`, the `qoolqit[extras]` entries would install qoolqit from PyPI.
+[dependency-groups]
+test = [
   "qoolqit[extras]",
-  "jupyter",
   "pytest",
   "pytest-cov",
   "pytest-markdown-docs",
-  "pre-commit",
+]
+docs = [
+  "qoolqit[extras]",
   "ipykernel",
-  "mkdocs==1.6.1",
-  "mkdocs-material",
+  "nbclient",
+  "nbconvert",
+  "zensical",
   "mkdocstrings-python",
-  "mkdocs-section-index",
-  "mkdocs-jupyter",
-  "mike",
+  "griffe-inherited-docstrings",
+  "markdown-exec",
+  # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
+  # See https://zensical.org/docs/compatibility/mkdocs/mike/
+  "mike @ git+https://github.com/squidfunk/mike.git@0f62791256ebeba60d20d2f1d8fe6ec3b7d1e2b3", # 2.2.0+zensical-0.1.0
+]
+dev = [
+  { include-group = "test" },
+  { include-group = "docs" },
+  "mypy==2.4.1",
+  "pre-commit",
   "ruff>=0.15.21",
 ]
 
@@ -71,8 +85,8 @@ Documentation = "https://pasqal-io.github.io/qoolqit/latest"
 Issues = "https://github.com/pasqal-io/qoolqit/issues"
 Source = "https://github.com/pasqal-io/qoolqit"
 
-[tool.hatch.envs.default]
-features = ["dev"]
+[tool.uv]
+default-groups = ["dev"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -116,27 +130,12 @@ select = [
     "D", # pydocstyle
     "G004", # logging-f-string (formats arguments even when the log level is disabled)
 ]
-ignore = [
-    # TODO: fix existing pydocstyle violations, then remove these
-    "D100", # undocumented-public-module
-    "D101", # undocumented-public-class
-    "D102", # undocumented-public-method
-    "D103", # undocumented-public-function
-    "D104", # undocumented-public-package
-    "D105", # undocumented-magic-method
-    "D107", # undocumented-public-init
-    "D200", # unnecessary-multiline-docstring
-    "D205", # missing-blank-line-after-summary
-    "D415", # missing-terminal-punctuation
-    "D417", # undocumented-param
-]
 isort.required-imports = ["from __future__ import annotations"]
 pydocstyle.convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
 "*.ipynb" = ["E402", "I002"]
-"setup.py" = ["I002"]
 "tests/**" = ["B018", "D"]
 
 [tool.black]
@@ -157,9 +156,9 @@ exclude = '''
 '''
 
 [tool.mypy]
-python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
+warn_unused_ignores = true
 disallow_untyped_defs = true
 no_implicit_optional = false
 ignore_missing_imports = true

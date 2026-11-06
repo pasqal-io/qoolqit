@@ -3,7 +3,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./docs/extras/assets/logo/qoolqit_logo_white.svg" width="60%">
     <source media="(prefers-color-scheme: light)" srcset="./docs/extras/assets/logo/qoolqit_logo_darkgreen.svg" width="60%">
-    <img alt="Qoolqit logo" src="./docs/assets/logo/qoolqit_logo_darkgreen.svg" width="60%">
+    <img alt="Qoolqit logo" src="./docs/extras/assets/logo/qoolqit_logo_darkgreen.svg" width="60%">
   </picture>
 </p>
 
@@ -47,7 +47,14 @@ If you wish to install directly from the source, for example, if you are develop
   ```sh
   python -m venv .venv
   source .venv/bin/activate
-  pip install -e .[dev]
+  pip install -e . --group dev  # requires pip 25.1+
+  ```
+
+  With [uv](https://docs.astral.sh/uv/), which installs the `dev` group by default:
+
+  ```sh
+  uv sync -U
+  source .venv/bin/activate
   ```
 
 

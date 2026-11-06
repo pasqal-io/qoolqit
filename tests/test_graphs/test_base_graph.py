@@ -254,7 +254,7 @@ def test_basegraph_constructors(n_nodes: int) -> None:
         assert np.isclose(graph2.distances()[edge], graph2.min_distance())
 
     # Reset our changes, and rescale again
-    graph1.rescale_coords(spacing=graph2.min_distance())  # type: ignore [arg-type]
+    graph1.rescale_coords(spacing=graph2.min_distance())
     graph1.rescale_coords(scaling=0.5)
 
     # Reset edges in both graphs to be equal to their UD sets

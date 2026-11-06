@@ -60,14 +60,14 @@ $$\tilde{J}_{ij}\leq 1$$
 !!! info "QoolQit Model"
     QoolQit introduces a **dimensionless model** where all quantities are expressed relative to an **interaction reference**, such that $\tilde{r}_{ij}\geq 1$ and $\tilde{J}_{ij}\leq 1$.
 
-Such reference makes the program definition hardware independent and provides several advantages:
+Such a reference makes the program definition hardware independent and provides several advantages:
 
 * **Removal of hardware-specific constants:** By defining a new unit of energy, all device-dependent constants are factored out.
 * **Dimensionless parameters:** Expressing drive and interaction strengths as dimensionless quantities makes it easier to explore different physical regimes.
 * **Portability:** Programs can be transferred across different devices and hardware generations with minimal modifications, improving reproducibility and reducing platform-specific code.
 * **Hardware-agnostic algorithm development:** Developers can design algorithms that focus on the underlying physics and computational logic rather than hardware-specific implementation details.
 
-To help users understand how to define a program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength is what matters. Thus QoolQit's choice of dimensionless units is natural: interactions are always of order unity, providing an intuitive reference scale for all other quantities.
+To help users understand how to define a program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength are what matter. Thus QoolQit's choice of dimensionless units is natural: interactions are always of order unity, providing an intuitive reference scale for all other quantities.
 
 ### Drive regimes
 
@@ -94,7 +94,7 @@ Next we will discuss the compilation, the crucial step to translate a QoolQit di
 ## Compilation
 
 A QoolQit program is expressed in dimensionless units, allowing users to define problems independently of any specific hardware platform.
-In contrast, hardware specifications are given in physical units and and can only realize a limited range of parameter values.
+In contrast, hardware specifications are given in physical units and can only realize a limited range of parameter values.
 Thus, before executing it on real hardware, a program must be compiled. This happens in two steps:
 
 - **Dimensionalization**: Converts dimensionless parameters into physical units of energy, distance, and time so that they are compatible with the capabilities of the target device, when possible.
@@ -127,7 +127,7 @@ $$
 | Symbol | Description | units |
 |--------|-------------|-------|
 | $C_6(n)$ | Interaction coefficient for Rydberg level $n$. Also depends on the atomic species. | $\mathrm{rad/\mu s}\times\mu\mathrm{m}^6$ |
-| $r_{ij}$ | Physical distance between atoms site $i$ and $j$. | $\mu\mathrm{m}$ |
+| $r_{ij}$ | Physical distance between atom sites $i$ and $j$. | $\mu\mathrm{m}$ |
 | $\Omega(t)$, $\delta(t)$, $\Delta(t)$ | Physical drive parameters. | $\mathrm{rad/\mu s}$ |
 | $t$ | Physical time. | $\mathrm{ns}$ |
 
@@ -162,4 +162,4 @@ $$
 
 Most programs are built starting from the definition of a set of coordinates for the atoms (register), or equivalently an interaction matrix.
 For this reason renormalization provides a natural constraint for program feasibility.
-Since, $J_{\text{max}}^{d}$ is the largest interaction the device can produce, every physically realizable register satisfies $\tilde r_{ij} \geq 1$ or equivalently $\tilde J_{ij} \leq 1$.
+Since $J_{\text{max}}^{d}$ is the largest interaction the device can produce, every physically realizable register satisfies $\tilde r_{ij} \geq 1$ or equivalently $\tilde J_{ij} \leq 1$.

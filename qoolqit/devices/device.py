@@ -1,3 +1,5 @@
+"""QoolQit devices: hardware specs with adimensional unit conversion, plus built-in devices."""
+
 from __future__ import annotations
 
 import math
@@ -63,7 +65,7 @@ class Device:
         pulser_device: BaseDevice,
         default_converter: UnitConverter | None = None,
     ) -> None:
-
+        """Initialize the device by wrapping a Pulser device."""
         if not isinstance(pulser_device, BaseDevice):
             raise TypeError("`pulser_device` must be an instance of Pulser BaseDevice class.")
 
@@ -74,6 +76,7 @@ class Device:
         # Physical constants / channel & limit lookups (assumes 'rydberg_global' channel)
         self._C6 = self._pulser_device.interaction_coeff
         self._clock_period = self._pulser_device.channels["rydberg_global"].clock_period
+        self._phase_jump_time: int = self._pulser_device.channels["rydberg_global"].phase_jump_time
         # Relevant limits from the underlying device (float or None)
         self._max_duration = self._pulser_device.max_sequence_duration
         self._max_amp = self._pulser_device.channels["rydberg_global"].max_amp
@@ -114,6 +117,7 @@ class Device:
 
     @property
     def converter(self) -> UnitConverter:
+        """The unit converter currently used by the device."""
         return self._converter
 
     def reset_converter(self) -> None:
@@ -149,6 +153,15 @@ class Device:
         }
 
     @property
+    def phase_jump_time(self) -> float:
+        """Time to change the phase between two consecutive pulses, in adimensional units.
+
+        Read from the global Rydberg channel.
+        """
+        TIME, _, _ = self.converter.factors
+        return self._phase_jump_time / TIME
+
+    @property
     def _target_amp(self) -> float:
         """Return the target maximum amplitude in Pulser units."""
         # avoid round-off errors
@@ -174,12 +187,15 @@ class Device:
 
     @property
     def name(self) -> str:
+        """The device name."""
         return self._name
 
     def __repr__(self) -> str:
+        """Return the device name."""
         return self._name
 
     def __str__(self) -> str:
+        """Return the device name, description and specs."""
         output = f"{self.name}: {self._device.short_description}\n"
         for k, v in self.specs.items():
             output += f" └── {k}: {v}\n"
@@ -223,6 +239,7 @@ class MockDevice(Device):
     """A virtual device for unconstrained prototyping."""
 
     def __init__(self) -> None:
+        """Initialize the device from the Pulser MockDevice."""
         super().__init__(pulser_device=pulser.MockDevice)
 
 
@@ -230,6 +247,7 @@ class AnalogDevice(Device):
     """A realistic device for analog sequence execution."""
 
     def __init__(self) -> None:
+        """Initialize the device from the Pulser AnalogDevice."""
         super().__init__(pulser_device=pulser.AnalogDevice)
 
 
@@ -237,6 +255,7 @@ class AnalogDeviceWithDMM(Device):
     """A realistic device with DMM for analog sequence execution."""
 
     def __init__(self) -> None:
+        """Initialize the device from the Pulser AnalogDevice with an added DMM channel."""
         dmm_channel = pulser.channels.dmm.DMM(
             clock_period=4,
             min_duration=16,
@@ -257,6 +276,7 @@ class DigitalAnalogDevice(Device):
     """A device with digital and analog capabilities."""
 
     def __init__(self) -> None:
+        """Initialize the device from the Pulser DigitalAnalogDevice."""
         super().__init__(pulser_device=pulser.DigitalAnalogDevice)
 
 

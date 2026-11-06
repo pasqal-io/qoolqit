@@ -457,7 +457,7 @@ class BaseGraph(nx.Graph):
 
     def rescale_coords(
         self,
-        *args: Any,
+        *,
         scaling: float | None = None,
         spacing: float | None = None,
     ) -> None:
@@ -465,13 +465,13 @@ class BaseGraph(nx.Graph):
 
         Accepts either a scaling or a spacing factor.
 
-        Arguments:
+        Args:
             scaling: value to scale by.
             spacing: value to set as the minimum distance in the graph.
         """
         if self.has_coords:
             msg = "Please pass either a `scaling` or a `spacing` value as a keyword argument."
-            if (len(args) > 0) or (scaling is None and spacing is None):
+            if scaling is None and spacing is None:
                 raise TypeError(msg)
             if scaling is None and spacing is not None:
                 self.coords = space_coords(self.coords, spacing)

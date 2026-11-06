@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import io
 from collections import Counter
 from collections.abc import Mapping
 
@@ -91,3 +92,19 @@ def plot_bitstrings(
     # Default labels; the caller can override via ax.set_xlabel/ax.set_ylabel
     ax.set_ylabel("Probability" if normalize else "Counts")
     ax.set_xlabel("Bitstrings")
+
+
+def fig_to_html() -> str:
+    """Return the current figure as inline SVG and close it.
+
+    Meant to be called right after a `draw()` in executable docs (markdown-exec),
+    mimicking Jupyter's inline backend. Only the current figure is rendered: if
+    several are open, the others are left untouched.
+    """
+    fig = plt.gcf()
+    buf = io.StringIO()
+    fig.savefig(buf, format="svg", bbox_inches="tight")
+    plt.close(fig)
+    svg = buf.getvalue()
+    # drop the XML prolog and DOCTYPE, which are invalid inside an HTML body
+    return svg[svg.index("<svg") :]

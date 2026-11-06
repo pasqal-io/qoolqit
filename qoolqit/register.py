@@ -1,3 +1,5 @@
+"""Register mapping qubit IDs to 2D coordinates."""
+
 from __future__ import annotations
 
 import math
@@ -126,6 +128,7 @@ class Register:
         self._coords = self._stack_coords(validated_coords)
 
     def __len__(self) -> int:
+        """Return the number of qubits."""
         return len(self._qubits_ids)
 
     @staticmethod
@@ -340,6 +343,7 @@ class Register:
         return _fill_diagonal(interactions, 0.0)
 
     def __repr__(self) -> str:
+        """Return the class name and number of qubits."""
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
 
     def draw(

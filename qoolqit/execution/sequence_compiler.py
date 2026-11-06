@@ -1,3 +1,5 @@
+"""SequenceCompiler: turn a register and drive into a Pulser sequence for a device."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -43,27 +45,37 @@ class SequenceCompiler:
 
     @property
     def register(self) -> Register:
+        """The QoolQit register to compile."""
         return self._register
 
     @property
     def drive(self) -> Drive:
+        """The QoolQit drive to compile."""
         return self._drive
 
     @property
     def device(self) -> Device:
+        """The target QoolQit device."""
         return self._device
 
     @property
     def profile(self) -> CompilerProfile:
+        """The compiler profile used for compilation."""
         return self._profile
 
     @property
     def device_max_duration_ratio(self) -> float | None:
+        """Fraction of the device's maximum duration to use, if set."""
         return self._device_max_duration_ratio
 
     def compile_sequence(self) -> PulserSequence:
+        """Compiles the register and drive into a Pulser sequence.
+
+        Raises:
+            CompilationError: if compilation fails.
+        """
         try:
-            return self._compilation_function(
+            return self._compilation_function(  # type: ignore[no-any-return]
                 self.register,
                 self.drive,
                 self.device,

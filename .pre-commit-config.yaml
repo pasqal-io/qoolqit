@@ -9,26 +9,25 @@ repos:
 
 # Reformat source code.
 -   repo: https://github.com/ambv/black
-    rev: 26.5.1
+    rev: "26.10.1"
     hooks:
       - id: black
 
--   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.16.3"
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: "v0.17.4"
     hooks:
-      - id: ruff
+      - id: ruff-check
         args: [--fix]
 
--   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.3.1
+# Run mypy in the project environment, so it sees the types of qoolqit's dependencies.
+-   repo: local
     hooks:
       - id: mypy
-        exclude: examples|docs
-
--   repo: https://github.com/DanielNoord/pydocstringformatter
-    rev: v1.0.0
-    hooks:
-      - id: pydocstringformatter
+        name: mypy
+        entry: mypy
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
 
 - repo: https://github.com/kynan/nbstripout
   rev: 0.9.1

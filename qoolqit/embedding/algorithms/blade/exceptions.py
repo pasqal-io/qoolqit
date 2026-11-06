@@ -1,10 +1,12 @@
+"""Exceptions raised by the BLaDE embedding algorithm."""
+
 from __future__ import annotations
 
 import numpy as np
 
 
 class BladeException(Exception):
-    pass
+    """Base class for exceptions raised by the BLaDE algorithm."""
 
 
 class DistanceRatioException(BladeException):
@@ -20,6 +22,7 @@ class DistanceRatioException(BladeException):
     def __init__(
         self, *, required_ratio: float, output_ratio: float, positions: np.ndarray
     ) -> None:
+        """Initialize the exception with the distance ratios and the computed positions."""
         super().__init__(
             f"The output distance ratio {output_ratio} of BLaDE is higher than the "
             f"required {required_ratio}. "
@@ -44,6 +47,7 @@ class DuplicatePositionsError(BladeException):
     """
 
     def __init__(self, *, step: int, min_distance: float) -> None:
+        """Initialize the exception with the step and the minimum pairwise distance."""
         super().__init__(
             f"BLaDE produced duplicate positions: minimum pairwise distance {min_distance!r} "
             f"in the input positions of step {step}."

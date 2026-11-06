@@ -1,7 +1,11 @@
 :root > * {
     --soft-green: #173035;
-    --indigo: #4051b5;
 
     --md-primary-fg-color: var(--soft-green);
-    --md-typeset-a-color:var(--indigo);
+    --md-typeset-a-color: var(--md-accent-fg-color);
+}
+
+/* The header is white in light mode, so match the logo to the header text */
+[data-md-color-scheme="default"] .md-logo img {
+    content: url("../assets/logo/qoolqit_symbol_black.svg");
 }

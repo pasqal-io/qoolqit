@@ -172,7 +172,7 @@ def test_mod_2pi_tiny_negative_wraps_to_zero(x: float) -> None:
 @pytest.mark.parametrize("x", [np.float32(-1e-9), np.float16(-1e-4)])
 def test_mod_2pi_low_precision_input(x: np.floating) -> None:
     # reduced in float64, not in the precision of the input
-    assert _mod_2pi(x) == float(x) % math.tau
+    assert _mod_2pi(x) == float(x) % math.tau  # type: ignore[arg-type]
 
 
 def test_drive_repr_without_phase() -> None:
@@ -189,6 +189,25 @@ def test_drive_repr_with_phase() -> None:
         "amplitude: \n0.00 ≤ t ≤ 10.00: ConstantWaveform(t, 1.00)\n"
         "detuning: \n0.00 ≤ t ≤ 10.00: DelayWaveform(t)\n"
         "phase: \n0.00 ≤ t ≤ 10.00: ConstantWaveform(t, 1.00)"
+    )
+
+
+def test_drive_repr_with_composite_waveforms_and_dmm() -> None:
+    drive = Drive(
+        amplitude=PiecewiseLinearWaveform([1.0, 1.0], [0.0, 1.0, 0.0]),
+        detuning=ConstantWaveform(1.0, -1.0) >> ConstantWaveform(1.0, 1.0),
+        dmm=DetuningMapModulator(ConstantWaveform(2.0, -1.0), {0: 0.5}),
+    )
+    assert repr(drive) == (
+        "amplitude: \n"
+        "| 0.00 ≤ t < 1.00: RampWaveform(t, 0.00, 1.00)\n"
+        "| 1.00 ≤ t ≤ 2.00: RampWaveform(t, 1.00, 0.00)\n"
+        "detuning: \n"
+        "| 0.00 ≤ t < 1.00: ConstantWaveform(t, -1.00)\n"
+        "| 1.00 ≤ t ≤ 2.00: ConstantWaveform(t, 1.00)\n"
+        "dmm: \n"
+        "DetuningMapModulator(waveform=0.00 ≤ t ≤ 2.00: ConstantWaveform(t, -1.00), "
+        "weights={0: 0.5})"
     )
 
 
