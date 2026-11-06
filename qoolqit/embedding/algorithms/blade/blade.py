@@ -14,9 +14,13 @@ import torch
 
 from qoolqit.devices.device import Device
 from qoolqit.embedding.algorithms.blade._force import Force
-from qoolqit.embedding.algorithms.blade.exceptions import DistanceRatioException
+from qoolqit.embedding.algorithms.blade.exceptions import (
+    DistanceRatioException,
+    DuplicatePositionsError,
+)
 from qoolqit.embedding.base_embedder import EmbedderConfig
 
+from .._matrices import nearly_equal
 from ._dimension_shrinker import DimensionShrinker
 from ._dist_constraints_forces import (
     compute_max_dist_constraint_forces,
@@ -24,9 +28,14 @@ from ._dist_constraints_forces import (
 )
 from ._distances_constraints_calculator import DistancesConstraintsCalculator
 from ._drawing import draw_graph_including_actual_weights, draw_update_positions_step
-from ._helpers import distance_matrix_from_positions, normalized_interaction
+from ._helpers import (
+    distance_matrix_from_positions,
+    normalized_best_dist,
+    normalized_interaction,
+    symmetric_matrix_from_pairs,
+    upper_triangle_indices,
+)
 from ._interactions_forces import compute_interaction_forces
-from ._qubo_mapper import Qubo
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +53,26 @@ def _compute_limited_constraint_forces(*, force: Force, max_distance_to_walk: fl
     return limited_resulting_forces  # type: ignore[no-any-return]
 
 
+def check_no_duplicate_positions(distance_matrix: np.ndarray, step: int) -> None:
+    """Raise `DuplicatePositionsError` if two positions coincide.
+
+    Equivalent to `np.unique(positions, axis=0).shape == positions.shape`, but
+    computed from the pairwise distances: two positions coincide if and only if
+    an off-diagonal distance is zero.
+    """
+    n = len(distance_matrix)
+    if n < 2:
+        return
+
+    # strided view of the off-diagonal terms (no copy): after the first diagonal term,
+    # the flattened matrix is made of n - 1 blocks of n off-diagonal terms each followed
+    # by a diagonal term
+    off_diagonal = distance_matrix.reshape(-1)[1:].reshape(n - 1, n + 1)[:, :n]
+    min_distance = np.min(off_diagonal)
+    if not min_distance > 0:
+        raise DuplicatePositionsError(step=step, min_distance=float(min_distance))
+
+
 def update_positions(
     *,
     positions: np.ndarray,
@@ -56,6 +85,8 @@ def update_positions(
     draw_step: bool = False,
     step: int | None = None,
     draw_weighted_graph: bool = False,
+    distance_matrix: np.ndarray | None = None,
+    target_distances: np.ndarray | None = None,
 ) -> np.ndarray:
     """Compute vector moves to adjust node positions toward target interactions.
 
@@ -79,6 +110,10 @@ def update_positions(
         interaction targets.
     draw_step: Whether to draw the nodes and the forces.
     step: Step number.
+    distance_matrix: If set, the pairwise distances of `positions` (as computed by
+        `distance_matrix_from_positions`), to avoid computing them again.
+    target_distances: If set, the distances matching `target_interactions` (as
+        computed by `normalized_best_dist`), to avoid computing them again.
     """
     if draw_step:
         print(f"{weight_relative_threshold=}")
@@ -100,19 +135,16 @@ def update_positions(
 
     assert nb_positions == n
 
-    position_differences = positions[np.newaxis, :] - positions[:, np.newaxis]
-    distance_matrix = np.linalg.norm(position_differences, axis=2)
-    with np.errstate(divide="ignore", invalid="ignore"):
-        unitary_vectors = position_differences / distance_matrix[:, :, np.newaxis]
-    unitary_vectors[range(n), range(n)] = np.zeros(space_dimension)
-    logger.debug(f"{unitary_vectors=}")
+    if distance_matrix is None:
+        distance_matrix = distance_matrix_from_positions(positions)
 
     modulated_target_interactions, interaction_force = compute_interaction_forces(
         distance_matrix=distance_matrix,
-        unitary_vectors=unitary_vectors,
+        positions=positions,
         target_weights=target_interactions,
         weight_relative_threshold=weight_relative_threshold,
         max_distance_to_walk=max_distance_to_walk,
+        target_distances=target_distances,
     )
 
     regulated_interaction_force = interaction_force.regulated(regulation_cursor=regulation_cursor)
@@ -122,45 +154,49 @@ def update_positions(
         temp_ratio_before = (
             None
             if min_temperature == np.inf
-            else np.max(np.triu(interaction_force.maximum_temperatures, k=1)) / min_temperature
+            else np.max(interaction_force.maximum_temperatures) / min_temperature
         )
         print(f"temperature ratio before regulation: {temp_ratio_before}")
         regulated_min_temperature = np.min(regulated_interaction_force.maximum_temperatures)
         temp_ratio_after = (
             None
             if regulated_min_temperature == np.inf
-            else np.max(np.triu(regulated_interaction_force.maximum_temperatures, k=1))
+            else np.max(regulated_interaction_force.maximum_temperatures)
             / regulated_min_temperature
         )
         print(f"temperature ratio after regulation: {temp_ratio_after}")
-
-    min_constr_force = compute_min_dist_constraint_forces(
-        min_dist=min_dist,
-        distance_matrix=distance_matrix,
-        unitary_vectors=unitary_vectors,
-    )
-    max_constr_force = compute_max_dist_constraint_forces(
-        positions=positions,
-        max_radius=max_radius,
-    )
 
     interaction_resulting_forces = regulated_interaction_force.get_resulting_forces(
         regulated_interaction_force.get_temperature()
     )
 
-    limited_min_constr_resulting_forces = _compute_limited_constraint_forces(
-        force=min_constr_force, max_distance_to_walk=min_constr_max_distance_to_walk
-    )
-    limited_max_constr_resulting_forces = _compute_limited_constraint_forces(
-        force=max_constr_force, max_distance_to_walk=max_constr_max_distance_to_walk
-    )
+    limited_min_constr_resulting_forces = np.zeros_like(positions)
+    if min_dist is not None:
+        min_constr_force = compute_min_dist_constraint_forces(
+            min_dist=min_dist,
+            positions=positions,
+            distance_matrix=distance_matrix,
+        )
+        limited_min_constr_resulting_forces = _compute_limited_constraint_forces(
+            force=min_constr_force, max_distance_to_walk=min_constr_max_distance_to_walk
+        )
+
+    limited_max_constr_resulting_forces = np.zeros_like(positions)
+    if max_radius is not None:
+        max_constr_force = compute_max_dist_constraint_forces(
+            positions=positions,
+            max_radius=max_radius,
+        )
+        limited_max_constr_resulting_forces = _compute_limited_constraint_forces(
+            force=max_constr_force, max_distance_to_walk=max_constr_max_distance_to_walk
+        )
 
     resulting_forces_vectors = (
         interaction_resulting_forces
         + limited_min_constr_resulting_forces
         + limited_max_constr_resulting_forces
     )
-    logger.debug(f"{resulting_forces_vectors=}")
+    logger.debug("resulting_forces_vectors=%r", resulting_forces_vectors)
 
     assert np.all(np.isfinite(interaction_resulting_forces))
 
@@ -178,7 +214,11 @@ def update_positions(
             max_dist_to_walk=max_distance_to_walk,
             step=step,
             modulated_target_interactions=(
-                modulated_target_interactions if max_distance_to_walk != np.inf else None
+                symmetric_matrix_from_pairs(
+                    modulated_target_interactions, upper_triangle_indices(n), n
+                )
+                if max_distance_to_walk != np.inf
+                else None
             ),
         )
 
@@ -187,7 +227,7 @@ def update_positions(
     assert np.all(np.isfinite(positions))
 
     if draw_step:
-        logger.debug(f"Resulting positions = {dict(enumerate(positions))}")
+        logger.debug("Resulting positions = %s", dict(enumerate(positions)))
         print(f"Current number of dimensions is {positions.shape[-1]}")
         distances = distance_matrix[np.triu_indices_from(distance_matrix, k=1)]
         print(
@@ -195,7 +235,7 @@ def update_positions(
             f"current min dist = {np.min(distances)}, "
             f"current max dist = {np.max(distances)}"
         )
-        target_interactions_graph = Qubo.from_matrix(target_interactions).as_graph()
+        target_interactions_graph = nx.from_numpy_array(target_interactions)
         draw_graph_including_actual_weights(
             target_interactions_graph=target_interactions_graph,
             positions=positions,
@@ -208,6 +248,7 @@ def update_positions(
 def evolve_with_forces_through_dim_change(
     *,
     target_interactions: np.ndarray,
+    target_distances: np.ndarray,
     draw_steps: bool | list[int] = False,
     starting_dimensions: int,
     final_dimensions: int,
@@ -245,7 +286,6 @@ def evolve_with_forces_through_dim_change(
         starting_ratio=start_ratio,
         final_ratio=final_ratio,
     )
-    assert np.unique(positions, axis=0).shape == positions.shape
 
     for step in range(start_step, stop_step):
         draw_step = draw_steps is True or (isinstance(draw_steps, list) and step in draw_steps)
@@ -253,15 +293,20 @@ def evolve_with_forces_through_dim_change(
         if draw_step:
             print(f"{step=}")
 
+        distance_matrix = distance_matrix_from_positions(positions)
+        check_no_duplicate_positions(distance_matrix, step)
+
         scaling, min_dist, max_radius = dist_constr_calc.compute_scaling_min_max(
             positions=positions,
             step_cursor=(step - start_step) / (nb_steps - 1),
             draw_differences=draw_step and draw_differences,
+            distance_matrix=distance_matrix,
         )
-        assert np.unique(positions, axis=0).shape == positions.shape
         positions = scaling * positions
-        assert np.unique(positions, axis=0).shape == positions.shape
         assert np.all(np.isfinite(positions))
+        if max_radius is not None:
+            distance_matrix = distance_matrix_from_positions(positions)
+            check_no_duplicate_positions(distance_matrix, step)
 
         if draw_step:
             distances = scipy.spatial.distance.pdist(positions)
@@ -277,24 +322,21 @@ def evolve_with_forces_through_dim_change(
             min_dist=min_dist,
             max_radius=max_radius,
             max_distance_to_walk=compute_max_distance_to_walk_by_step(
-                step,
-                (
-                    max_radius
-                    if max_radius is not None
-                    else np.max(scipy.spatial.distance.pdist(positions))
-                ),
+                step, max_radius if max_radius is not None else np.max(distance_matrix)
             ),
             regulation_cursor=compute_regulation_cursor_by_step(step),
             draw_step=draw_step,
             step=step,
             draw_weighted_graph=draw_step and draw_weighted_graph,
+            distance_matrix=distance_matrix,
+            target_distances=target_distances,
         )
-        assert np.unique(positions, axis=0).shape == positions.shape
         assert np.all(np.isfinite(positions))
 
         positions = dim_shrinker.applied_step(positions)
-        assert np.unique(positions, axis=0).shape == positions.shape
         assert np.all(np.isfinite(positions))
+
+    check_no_duplicate_positions(distance_matrix_from_positions(positions), stop_step)
 
     removed_position_dims = positions[:, final_dimensions:]
     assert np.all(
@@ -327,6 +369,24 @@ def augment_dimensions_with_random_values(
     return np.concatenate((positions, positions_noise), axis=1)
 
 
+def principal_components(positions: np.ndarray) -> np.ndarray:
+    """Express the centered positions in the basis of their principal axes.
+
+    The axes are sorted by decreasing variance and oriented so that their largest
+    coordinate in absolute value is positive.
+    """
+    if min(*positions.shape) < 1:
+        raise ValueError(f"PCA impossible: positions.shape={positions.shape}")
+
+    centered_positions = positions - np.mean(positions, axis=0)
+    _, _, axes = np.linalg.svd(centered_positions, full_matrices=False)
+    # choose deterministic sign convention
+    largest_coordinates = axes[range(len(axes)), np.argmax(np.abs(axes), axis=1)]
+    axes *= np.sign(largest_coordinates)[:, np.newaxis]
+
+    return centered_positions @ axes.T
+
+
 def evolve_with_dimension_transition(
     *,
     dimensions: tuple[int, ...],
@@ -340,6 +400,7 @@ def evolve_with_dimension_transition(
     ],
     compute_regulation_cursor_by_step: Callable[[int], float],
     target_interactions: np.ndarray,
+    target_distances: np.ndarray,
     positions: np.ndarray,
     final_ratio: float | None,
     dim_idx: int,
@@ -362,20 +423,7 @@ def evolve_with_dimension_transition(
     final_dimensions = dimensions[dim_idx + 1]
 
     if final_dimensions < starting_dimensions and pca:
-        try:
-            from sklearn.decomposition import PCA
-        except ImportError as e:
-            raise ModuleNotFoundError(
-                "To use `pca=True` in the BLaDE algorithm, please install `scikit-learn`."
-            ) from e
-
-        n_components = min(*positions.shape)
-
-        if n_components < 1:
-            raise ValueError(f"PCA impossible: positions.shape={positions.shape}")
-
-        pca_inst = PCA(n_components=n_components)
-        positions = pca_inst.fit_transform(positions)
+        positions = principal_components(positions)
 
         if positions.shape[1] < starting_dimensions:
             pad = starting_dimensions - positions.shape[1]
@@ -389,6 +437,7 @@ def evolve_with_dimension_transition(
 
     positions, starting_min = evolve_with_forces_through_dim_change(
         target_interactions=target_interactions,
+        target_distances=target_distances,
         draw_steps=draw_steps,
         starting_dimensions=starting_dimensions,
         final_dimensions=final_dimensions,
@@ -406,6 +455,37 @@ def evolve_with_dimension_transition(
     )
 
     return positions, starting_min
+
+
+def _symmetric_interaction_matrix(
+    matrix: np.ndarray, count_symmetric_terms_twice: bool = False
+) -> np.ndarray:
+    """Return the symmetric interaction matrix with a null diagonal.
+
+    The input must be symmetric or triangular, up to `nearly_equal`. Only one triangle
+    is used, mirrored: the upper one for a symmetric or upper triangular input, the
+    lower one for a lower triangular input. The diagonal (linear QUBO terms) is dropped.
+    If `count_symmetric_terms_twice` is set, the off-diagonal terms of a symmetric input
+    are doubled (QUBO convention x^T Q x).
+    """
+    matrix = np.array(matrix, dtype=float)
+    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+        raise ValueError(
+            "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
+        )
+
+    if nearly_equal(matrix, matrix.T):
+        upper = np.triu(matrix, k=1) * (2 if count_symmetric_terms_twice else 1)
+    elif nearly_equal(matrix, np.triu(matrix)):
+        upper = np.triu(matrix, k=1)
+    elif nearly_equal(matrix, np.tril(matrix)):
+        upper = np.triu(matrix.T, k=1)
+    else:
+        raise ValueError(
+            "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
+        )
+
+    return upper + upper.T  # type: ignore[no-any-return]
 
 
 def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
@@ -459,6 +539,7 @@ def _blade(
     compute_regulation_cursor: Callable[[float], float] = default_compute_regulation_cursor,
     compute_ratio_step_factors: Callable[[float], float] = default_compute_ratio_step_factors,
     ratio_rerun: int = default_ratio_rerun,
+    count_symmetric_terms_twice: bool = False,
     draw_steps: bool | list[int] = False,
     draw_weighted_graph: bool = False,
     draw_differences: bool = False,
@@ -522,6 +603,11 @@ def _blade(
         compute_ratio_step_factors: Function that is called at the boundaries of
             the rounds. It defines the target ratio the enforce during the
             evolution. It acts as a multiplying factor on the target ratio.
+        count_symmetric_terms_twice: Whether the off-diagonal terms of a symmetric
+            `matrix` are counted twice, i.e. the target interaction of the pair (i, j)
+            is `matrix[i, j] + matrix[j, i]` as in the QUBO convention x^T Q x. By
+            default, they are counted once: a symmetric `matrix` is the interaction
+            matrix itself. It has no effect on a triangular `matrix`.
         draw_steps: If it is a boolean, it defines whether to globally enable
             drawing and traces for nodes and forces (for all steps). If it is a
             list of integers, it defines a subset of steps to enable such drawing.
@@ -547,11 +633,10 @@ def _blade(
     else:
         assert not torch.all(matrix == 0)
 
-    graph = Qubo.from_matrix(matrix).as_graph()
-    graph.add_nodes_from(range(matrix.shape[0]))
-    matrix = np.array(
-        nx.adjacency_matrix(graph, nodelist=list(range(len(matrix))), weight="weight").toarray()
+    matrix = _symmetric_interaction_matrix(
+        matrix, count_symmetric_terms_twice=count_symmetric_terms_twice
     )
+    target_distances = normalized_best_dist(matrix)
 
     if starting_positions is None:
         positions = generate_random_positions(target_interactions=matrix, dimension=dimensions[0])
@@ -607,6 +692,7 @@ def _blade(
     ):
         positions, starting_min = evolve_with_dimension_transition(
             target_interactions=matrix,
+            target_distances=target_distances,
             dimensions=dimensions,
             starting_min=starting_min,
             pca=pca,
@@ -642,6 +728,8 @@ def _blade(
                         progress, xp=[0, 1 / 2, 1], fp=[0.8, 0.9, 0.98]
                     ),
                     ratio_rerun=ratio_rerun - 1,
+                    # `matrix` is already the symmetric interaction matrix
+                    count_symmetric_terms_twice=False,
                 )
 
             raise DistanceRatioException(
@@ -738,6 +826,15 @@ class BladeConfig(EmbedderConfig):
 
     Defines how many additional computation steps the algorithm performs,
     putting priority on satisfying the constraint.
+    """
+
+    count_symmetric_terms_twice: bool = False
+    """Whether the off-diagonal terms of a symmetric input matrix are counted twice.
+
+    If set, the target interaction of the pair (i, j) is `matrix[i, j] + matrix[j, i]`,
+    as in the QUBO convention x^T Q x. By default, they are counted once: a symmetric
+    input matrix is the interaction matrix itself. It has no effect on a triangular
+    input matrix.
     """
 
     device: InitVar[Device | None] = None

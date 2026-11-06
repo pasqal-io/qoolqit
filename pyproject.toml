@@ -48,7 +48,6 @@ extras = [
   "torch_geometric",
   "pandas",
   "seaborn",
-  "scikit-learn",
 ]
 
 # Install together with the local project, e.g. `pip install -e . --group dev`:
@@ -129,6 +128,7 @@ select = [
     "SIM", # flake8-simplify
     "I", # isort
     "D", # pydocstyle
+    "G004", # logging-f-string (formats arguments even when the log level is disabled)
 ]
 isort.required-imports = ["from __future__ import annotations"]
 pydocstyle.convention = "google"

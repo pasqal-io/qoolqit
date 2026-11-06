@@ -34,3 +34,23 @@ class DistanceRatioException(BladeException):
     def positions(self) -> np.ndarray:
         """The positions computed by the algorithm despite the unmet constraint."""
         return self._positions
+
+
+class DuplicatePositionsError(BladeException):
+    """Raised when two nodes have identical positions (zero pairwise distance).
+
+    Attributes:
+        step: Index of the step whose input positions contain a duplicate, i.e. the
+            duplicate was produced by the previous step (or by the initialization or
+            the PCA for the first step of a round).
+        min_distance: The minimum pairwise distance found.
+    """
+
+    def __init__(self, *, step: int, min_distance: float) -> None:
+        """Initialize the exception with the step and the minimum pairwise distance."""
+        super().__init__(
+            f"BLaDE produced duplicate positions: minimum pairwise distance {min_distance!r} "
+            f"in the input positions of step {step}."
+        )
+        self.step = step
+        self.min_distance = min_distance
