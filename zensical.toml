@@ -9,6 +9,7 @@ nav = [
   { "Overview" = "index.md" },
   { "Get started" = [
     { "Quick Run Guide" = "get_started/quick_run_guide.md" },
+    { "Atoms as qubits" = "get_started/atoms_as_qubits.md" },
     { "Programming a neutral-atom QPU" = "get_started/qoolqit_model.md" },
     { "Programming with QoolQit" = "get_started/programming_with_qoolqit.md" },
   ] },
