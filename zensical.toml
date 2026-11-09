@@ -56,14 +56,16 @@ nav = [
   ] },
 ]
 
-# For mathjax
+# Math: KaTeX, the renderer the doc portal uses, pinned to an exact version
 extra_javascript = [
-  "extras/javascripts/mathjax.js",
-  "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js",
+  "extras/javascripts/katex.js",
+  "https://unpkg.com/katex@0.19.1/dist/katex.min.js",
+  "https://unpkg.com/katex@0.19.1/dist/contrib/auto-render.min.js",
 ]
 
 # To get nice tabs
 extra_css = [
+  "https://unpkg.com/katex@0.19.1/dist/katex.min.css",
   "extras/css/mkdocstrings.css",
   "extras/css/home.css",
   "extras/css/colors.css",
