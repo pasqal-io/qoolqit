@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import dataclasses
-import logging
 from functools import cached_property
 from typing import Any
 
@@ -9,8 +8,6 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from ._helpers import symmetric_matrix_from_pairs
-
-logger = logging.getLogger(__name__)
 
 
 def configured_increasing_func(
@@ -133,7 +130,6 @@ class Force:
 
     def get_temperature(self) -> Any | int:
         maximum_temperatures = self.maximum_temperatures
-        logger.debug("maximum_temperatures=%r", maximum_temperatures)
 
         min_temperature = np.min(maximum_temperatures)
 

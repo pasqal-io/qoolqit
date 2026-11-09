@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from dataclasses import dataclass
 from typing import Any
 
@@ -18,8 +17,6 @@ from matplotlib.patches import Circle
 from numpy import format_float_scientific
 
 from ._helpers import normalized_interaction
-
-logger = logging.getLogger(__name__)
 
 
 def eformat(f: Any) -> str:
@@ -486,9 +483,6 @@ def draw_update_positions_step(
         target_interactions=target_interactions,
         current_interactions=current_interactions,
     )
-
-    keep_only_2d = positions.shape[1] > 2
-    logger.debug("Step that will be applied%s", " keeping only 2 dims" if keep_only_2d else "")
 
     pos2d = as_2d(positions)
     inter_f2d = as_2d(interaction_resulting_forces)

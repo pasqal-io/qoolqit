@@ -1,14 +1,11 @@
 from __future__ import annotations
 
-import logging
 from typing import Any
 
 import numpy as np
 
 from ._force import Force
 from ._helpers import normalized_best_dist, normalized_interaction, upper_triangle_indices
-
-logger = logging.getLogger(__name__)
 
 
 def compute_target_weights_by_dist_limit(
@@ -55,8 +52,6 @@ def compute_target_weights_distances_by_weight_diff_limit(
         weight_differences, -max_non_overflowing_value, max_non_overflowing_value
     )
 
-    logger.debug("weight_differences=%r", weight_differences)
-
     reduced_weight_differences = weight_differences * (1 - weight_relative_threshold)
     step_target_weights = current_weights + reduced_weight_differences
 
@@ -66,14 +61,12 @@ def compute_target_weights_distances_by_weight_diff_limit(
     distances_to_walk = (
         distances - step_target_distances
     ) / 2  # division by 2 because both forces will be applied on both atoms of each pair
-    logger.debug("distances_to_walk=%r", distances_to_walk)
     assert np.all(np.isfinite(distances_to_walk))
 
     chosen_weights_l1 = reduced_weight_differences
     chosen_weights_l2 = chosen_weights_l1**2 * np.sign(chosen_weights_l1)
     chosen_weights_l2[distances_to_walk == 0] = 0.0
 
-    logger.debug("chosen_weights_l2=%r", chosen_weights_l2)
     assert np.all(np.isfinite(chosen_weights_l2))
 
     return chosen_weights_l2, distances_to_walk
@@ -96,9 +89,6 @@ def compute_interaction_forces(
     target_distances = np.take(target_distances, pairs)
 
     current_weights = normalized_interaction(distances)
-
-    logger.debug("current_weights=%r", current_weights)
-    logger.debug("target_weights=%r", target_weights)
 
     modulated_target_weights = compute_target_weights_by_dist_limit(
         distances=distances,
