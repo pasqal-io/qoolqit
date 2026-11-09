@@ -57,6 +57,8 @@
       
     
     
+      <link rel="stylesheet" href="https://unpkg.com/katex@0.19.1/dist/katex.min.css">
+    
       <link rel="stylesheet" href="../../../extras/css/mkdocstrings.css">
     
       <link rel="stylesheet" href="../../../extras/css/home.css">
@@ -2288,14 +2290,13 @@ All execution methods (<code>LocalEmulator.run()</code>, <code>RemoteEmulator.ru
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">final_bitstrings</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">final_bitstrings</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">final_bitstrings</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">Counter</span><span class="p">({</span><span class="s1">'111'</span><span class="p">:</span> <span class="mi">809</span><span class="p">,</span>
-         <span class="s1">'110'</span><span class="p">:</span> <span class="mi">66</span><span class="p">,</span>
-         <span class="s1">'011'</span><span class="p">:</span> <span class="mi">56</span><span class="p">,</span>
-         <span class="s1">'101'</span><span class="p">:</span> <span class="mi">53</span><span class="p">,</span>
-         <span class="s1">'010'</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="n">Counter</span><span class="p">({</span><span class="s1">'111'</span><span class="p">:</span> <span class="mi">831</span><span class="p">,</span>
+         <span class="s1">'110'</span><span class="p">:</span> <span class="mi">54</span><span class="p">,</span>
+         <span class="s1">'101'</span><span class="p">:</span> <span class="mi">51</span><span class="p">,</span>
+         <span class="s1">'011'</span><span class="p">:</span> <span class="mi">47</span><span class="p">,</span>
+         <span class="s1">'010'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
          <span class="s1">'001'</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-         <span class="s1">'100'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-         <span class="s1">'000'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+         <span class="s1">'100'</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
 </code></pre></div>
 <h3 id="emulation-configuration">Emulation configuration</h3>
 <p>Here we discuss how to fully configure emulator backends to exploit all their possibilities.
@@ -2607,9 +2608,11 @@ It is good practice to always check the status of the job before retrieving resu
     
       <script src="../../../assets/javascripts/bundle.d31f0ffa.min.js"></script>
       
-        <script src="../../../extras/javascripts/mathjax.js"></script>
+        <script src="../../../extras/javascripts/katex.js"></script>
       
-        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="https://unpkg.com/katex@0.19.1/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0.19.1/dist/contrib/auto-render.min.js"></script>
       
     
   </body>
