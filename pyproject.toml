@@ -136,7 +136,7 @@ pydocstyle.convention = "google"
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
 "*.ipynb" = ["E402", "I002"]
-"tests/**" = ["B018", "D"]
+"tests/**" = ["D"]
 
 [tool.black]
 line-length = 100
