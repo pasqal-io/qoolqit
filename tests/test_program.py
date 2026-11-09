@@ -25,7 +25,7 @@ def test_program_init() -> None:
     assert not program.is_compiled
 
     with pytest.raises(ValueError, match="Program has not been compiled"):
-        program.compiled_sequence
+        _ = program.compiled_sequence
 
 
 def test_program_init_wrong_type() -> None:
