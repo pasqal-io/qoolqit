@@ -62,7 +62,7 @@ class TestMaxEnergyCompilerProfile:
         assert not program.is_compiled
 
         with pytest.raises(ValueError):
-            program.compiled_sequence
+            _ = program.compiled_sequence
 
         program.compile_to(device, profile=self.profile)
         assert program.is_compiled
