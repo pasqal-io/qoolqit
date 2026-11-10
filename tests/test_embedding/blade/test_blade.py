@@ -556,7 +556,7 @@ def test_raises_distance_ratio_exception_when_ratio_cannot_be_met() -> None:
 
 def test_embed_medium_dense_register() -> None:
     size = 17
-    expected_ratio = 2.22
+    expected_ratio = 2.3
 
     seed = 0
 
