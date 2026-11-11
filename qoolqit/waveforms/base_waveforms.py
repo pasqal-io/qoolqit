@@ -109,10 +109,10 @@ class Waveform(ABC):
     def __call__(self, t: list[float]) -> list[float]: ...
 
     @overload
-    def __call__(self, t: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]: ...
+    def __call__(self, t: np.ndarray) -> npt.NDArray[np.float64]: ...
 
     def __call__(
-        self, t: float | list[float] | npt.NDArray[np.float64]
+        self, t: float | list[float] | np.ndarray
     ) -> float | list[float] | npt.NDArray[np.float64]:
         """Evaluate the waveform at `t`, a float, a list or an array.
 
