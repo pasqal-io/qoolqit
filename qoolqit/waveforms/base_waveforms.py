@@ -7,6 +7,7 @@ from typing import overload
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import pulser
 from matplotlib.axes import Axes
 from matplotlib.typing import ColorType
@@ -105,9 +106,14 @@ class Waveform(ABC):
     def __call__(self, t: float) -> float: ...
 
     @overload
-    def __call__(self, t: list[float] | np.ndarray) -> list | np.ndarray: ...
+    def __call__(self, t: list[float]) -> list[float]: ...
 
-    def __call__(self, t: float | list[float] | np.ndarray) -> float | list[float] | np.ndarray:
+    @overload
+    def __call__(self, t: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]: ...
+
+    def __call__(
+        self, t: float | list[float] | npt.NDArray[np.float64]
+    ) -> float | list[float] | npt.NDArray[np.float64]:
         """Evaluate the waveform at `t`, a float, a list or an array.
 
         Returns a value of the same kind; times outside [0, duration] give 0.

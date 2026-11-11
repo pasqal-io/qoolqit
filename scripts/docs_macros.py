@@ -12,6 +12,7 @@ import hashlib
 import mimetypes
 import time
 from pathlib import Path
+from typing import Any
 
 import matplotlib
 import nbformat
@@ -24,7 +25,7 @@ from traitlets.config import Config
 matplotlib.use("agg")
 
 
-def define_env(env):  # type: ignore[no-untyped-def]
+def define_env(env: Any) -> None:
     """Register the macros; called by Zensical."""
     root = Path(env.conf.get("root_dir", "."))
     docs_dir = root / env.conf.get("docs_dir", "docs")
@@ -42,7 +43,7 @@ def define_env(env):  # type: ignore[no-untyped-def]
             start = time.perf_counter()
             cached.write_text(_render(nb_path))
             print(f"✓ {path} ({time.perf_counter() - start:.1f}s)", flush=True)
-        return cached.read_text()  # type: ignore[no-any-return]
+        return cached.read_text()
 
 
 def _render(nb_path: Path) -> str:

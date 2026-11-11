@@ -15,6 +15,7 @@ import scipy
 import scipy.spatial
 from matplotlib.axes import Axes
 from matplotlib.patches import Circle
+from matplotlib.typing import LineStyleType
 from numpy import format_float_scientific
 
 from ._helpers import normalized_interaction
@@ -344,13 +345,13 @@ def linspace_ticks(vmin: float, vmax: float, *, n: int) -> np.ndarray:
 
 
 def legend_line(
-    *, color: str, label: str, linestyle: str = "-", marker: str = ">"
+    *, color: str, label: str, linestyle: LineStyleType = "-", marker: str = ">"
 ) -> plt.matplotlib.lines.Line2D:
     return plt.matplotlib.lines.Line2D(
         [0],
         [0],
         color=color,
-        linestyle=linestyle,  # type: ignore[arg-type]
+        linestyle=linestyle,
         marker=marker,
         markersize=6,
         label=label,

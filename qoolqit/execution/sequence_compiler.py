@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-
 from pulser.sequence.sequence import Sequence as PulserSequence
 
 from qoolqit.devices import Device
@@ -41,7 +39,7 @@ class SequenceCompiler:
         self._target_device = device._device
         self._profile = profile
         self._device_max_duration_ratio = device_max_duration_ratio
-        self._compilation_function: Callable = basic_compilation
+        self._compilation_function = basic_compilation
 
     @property
     def register(self) -> Register:
@@ -75,7 +73,7 @@ class SequenceCompiler:
             CompilationError: if compilation fails.
         """
         try:
-            return self._compilation_function(  # type: ignore[no-any-return]
+            return self._compilation_function(
                 self.register,
                 self.drive,
                 self.device,

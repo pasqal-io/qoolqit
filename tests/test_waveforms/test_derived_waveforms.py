@@ -303,7 +303,7 @@ def test_interpolated_mul(times: np.ndarray | None) -> None:
     times = np.linspace(0, wf.duration, 17)
     wf_samples = wf(times)
     scaled_samples = scaled(times)
-    np.testing.assert_allclose(scaled_samples, wf_samples * scaling, atol=1e-8)  # type: ignore[operator]
+    np.testing.assert_allclose(scaled_samples, wf_samples * scaling, atol=1e-8)
 
 
 def test_interpolated_to_pulser() -> None:
