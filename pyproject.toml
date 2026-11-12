@@ -49,7 +49,6 @@ extras = [
   "torch_geometric",
   "pandas",
   "seaborn",
-  "scikit-learn",
 ]
 
 # Install together with the local project, e.g. `pip install -e . --group dev`:

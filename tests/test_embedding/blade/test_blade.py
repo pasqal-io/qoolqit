@@ -12,18 +12,22 @@ from pulser.register.special_layouts import TriangularLatticeLayout
 from qoolqit import AnalogDevice, DigitalAnalogDevice, MockDevice
 from qoolqit.devices import Device
 from qoolqit.embedding import Blade, BladeConfig
+from qoolqit.embedding.algorithms.blade import blade as blade_module
 from qoolqit.embedding.algorithms.blade._helpers import (
     distance_matrix_from_positions,
     interaction_matrix_from_positions,
     normalized_best_dist,
     normalized_interaction,
 )
-from qoolqit.embedding.algorithms.blade._qubo_mapper import Qubo
 from qoolqit.embedding.algorithms.blade.blade import (
     _blade,
+    _symmetric_interaction_matrix,
     update_positions,
 )
-from qoolqit.embedding.algorithms.blade.exceptions import DistanceRatioException
+from qoolqit.embedding.algorithms.blade.exceptions import (
+    DistanceRatioException,
+    DuplicatePositionsError,
+)
 
 
 @pytest.mark.parametrize(
@@ -512,18 +516,6 @@ def test_config_from_device(device: Device, expected_max_min_ratio: float | None
     assert config.max_min_dist_ratio == expected_max_min_ratio
 
 
-def test_qubo_nodes() -> None:
-    terms: list = [("n1", 2), (4, "I am a node label"), (0, 8)]
-    coeffs = [0.1, 1.2, 2.3]
-    qubo = Qubo(terms=terms, coeffs=coeffs)
-
-    # expected sorted by value or alphabetically
-    expected_nodes = [0, 2, 4, 8, "I am a node label", "n1"]
-    qubo_nodes = qubo.nodes()
-
-    assert qubo_nodes == expected_nodes
-
-
 @pytest.mark.parametrize(
     "dimensions, steps_per_round",
     [
@@ -564,7 +556,7 @@ def test_raises_distance_ratio_exception_when_ratio_cannot_be_met() -> None:
 
 def test_embed_medium_dense_register() -> None:
     size = 17
-    expected_ratio = 2.22
+    expected_ratio = 2.3
 
     seed = 0
 
@@ -640,3 +632,145 @@ def test_disconnected_nodes(max_min_dist_ratio: int | None, atol: float) -> None
     positions = _blade(matrix, max_min_dist_ratio=max_min_dist_ratio)
     interactions = interaction_matrix_from_positions(positions)
     assert np.allclose(interactions, matrix, atol=atol)
+
+
+def test_duplicate_starting_positions_are_detected_at_first_step() -> None:
+    starting_positions = np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 0.0]])
+    matrix = np.ones((3, 3)) - np.eye(3)
+
+    with pytest.raises(DuplicatePositionsError) as exc_info:
+        _blade(matrix, dimensions=(2,), starting_positions=starting_positions, pca=False)
+
+    assert exc_info.value.step == 0
+
+
+@pytest.mark.parametrize("max_min_dist_ratio", [None, 10])
+@pytest.mark.parametrize("faulty_step", [57, 199, 450])
+def test_duplicate_positions_are_detected_at_next_step(
+    monkeypatch: pytest.MonkeyPatch, max_min_dist_ratio: float | None, faulty_step: int
+) -> None:
+    original_update_positions = blade_module.update_positions
+
+    def faulty_update_positions(**kwargs: Any) -> np.ndarray:
+        positions = original_update_positions(**kwargs)
+        if kwargs["step"] == faulty_step:
+            positions[1] = positions[0]
+        return positions
+
+    monkeypatch.setattr(blade_module, "update_positions", faulty_update_positions)
+    matrix = np.random.default_rng(0).uniform(size=(6, 6))
+
+    with pytest.raises(DuplicatePositionsError) as exc_info:
+        _blade(matrix + matrix.T, max_min_dist_ratio=max_min_dist_ratio)
+
+    assert exc_info.value.step == faulty_step + 1
+
+
+UPPER_TRIANGLE = np.array([[1.0, 2.0, 0.0], [0.0, -1.0, 3.0], [0.0, 0.0, 5.0]])
+SYMMETRIC_TARGET = np.array([[0.0, 2.0, 0.0], [2.0, 0.0, 3.0], [0.0, 3.0, 0.0]])
+# below the tolerance relative to the largest off-diagonal term (3)
+TINY_LOWER = np.array([[0.0, 0.0, 0.0], [1e-7, 0.0, 0.0], [-1e-7, 2e-7, 0.0]])
+NOT_SYMMETRIC = np.array([[0.0, 1.0], [2.0, 0.0]])
+
+
+@pytest.mark.parametrize(
+    "matrix",
+    [
+        UPPER_TRIANGLE,
+        UPPER_TRIANGLE.T,
+        UPPER_TRIANGLE + np.triu(UPPER_TRIANGLE, k=1).T,
+        UPPER_TRIANGLE + TINY_LOWER,
+        UPPER_TRIANGLE.T + TINY_LOWER.T,
+        UPPER_TRIANGLE + np.triu(UPPER_TRIANGLE, k=1).T + TINY_LOWER,
+    ],
+    ids=["upper", "lower", "symmetric", "nearly-upper", "nearly-lower", "nearly-symmetric"],
+)
+def test_symmetric_interaction_matrix(matrix: np.ndarray) -> None:
+    Blade().validate_input(matrix)
+    np.testing.assert_array_equal(_symmetric_interaction_matrix(matrix), SYMMETRIC_TARGET)
+
+
+@pytest.mark.parametrize(
+    "matrix, factor",
+    [
+        (UPPER_TRIANGLE, 1),
+        (UPPER_TRIANGLE.T, 1),
+        (SYMMETRIC_TARGET, 2),
+        (UPPER_TRIANGLE + TINY_LOWER, 1),
+        (SYMMETRIC_TARGET + TINY_LOWER, 2),
+    ],
+    ids=["upper", "lower", "symmetric", "nearly-upper", "nearly-symmetric"],
+)
+def test_symmetric_interaction_matrix_counting_symmetric_terms_twice(
+    matrix: np.ndarray, factor: int
+) -> None:
+    Blade(BladeConfig(count_symmetric_terms_twice=True)).validate_input(matrix)
+    np.testing.assert_array_equal(
+        _symmetric_interaction_matrix(matrix, count_symmetric_terms_twice=True),
+        factor * SYMMETRIC_TARGET,
+    )
+
+
+def _blade_positions(matrix: np.ndarray, **kwargs: Any) -> np.ndarray:
+    np.random.seed(0)
+    try:
+        return _blade(matrix, steps_per_round=50, **kwargs)
+    except DistanceRatioException as exception:
+        return exception.positions
+
+
+@pytest.mark.parametrize("max_min_dist_ratio", [None, 1.0])
+def test_symmetric_terms_counted_twice_as_the_equivalent_triangular_matrix(
+    max_min_dist_ratio: float | None,
+) -> None:
+    matrix = np.random.default_rng(0).uniform(size=(6, 6))
+    symmetric = matrix + matrix.T
+
+    np.testing.assert_array_equal(
+        _blade_positions(
+            symmetric, max_min_dist_ratio=max_min_dist_ratio, count_symmetric_terms_twice=True
+        ),
+        _blade_positions(2 * np.triu(symmetric), max_min_dist_ratio=max_min_dist_ratio),
+    )
+    np.testing.assert_array_equal(
+        _blade_positions(symmetric, max_min_dist_ratio=max_min_dist_ratio),
+        _blade_positions(np.triu(symmetric), max_min_dist_ratio=max_min_dist_ratio),
+    )
+
+
+def test_ratio_reruns_keep_the_target_counting_symmetric_terms_twice(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    targets = []
+
+    def recording_symmetric_interaction_matrix(*args: Any, **kwargs: Any) -> np.ndarray:
+        targets.append(_symmetric_interaction_matrix(*args, **kwargs))
+        return targets[-1]
+
+    monkeypatch.setattr(
+        blade_module, "_symmetric_interaction_matrix", recording_symmetric_interaction_matrix
+    )
+    matrix = np.random.default_rng(0).uniform(size=(6, 6))
+    _blade_positions(matrix + matrix.T, max_min_dist_ratio=1.0, count_symmetric_terms_twice=True)
+
+    assert len(targets) == 1 + blade_module.default_ratio_rerun
+    for target in targets:
+        np.testing.assert_array_equal(target, targets[0])
+
+
+@pytest.mark.parametrize(
+    "matrix",
+    [
+        NOT_SYMMETRIC,
+        1e-12 * NOT_SYMMETRIC,
+        NOT_SYMMETRIC + np.diag([1e9, 0.0]),
+        np.ones(3),
+        np.ones((2, 3)),
+    ],
+    ids=["not-symmetric-nor-triangular", "small-scale", "large-diagonal", "1d", "not-square"],
+)
+def test_symmetric_interaction_matrix_rejects_invalid_matrices(matrix: np.ndarray) -> None:
+    with pytest.raises(ValueError, match="either symmetric or triangular"):
+        Blade().validate_input(matrix)
+    with pytest.raises(ValueError, match="either symmetric or triangular"):
+        _symmetric_interaction_matrix(matrix)

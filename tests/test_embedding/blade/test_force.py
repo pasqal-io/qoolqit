@@ -9,10 +9,26 @@ from qoolqit.embedding.algorithms.blade._force import (
     configured_increasing_func,
     modulate_cursor,
 )
+from qoolqit.embedding.algorithms.blade._helpers import (
+    symmetric_matrix_from_pairs,
+    upper_triangle_indices,
+)
 
 
 def low_discrepancy_distrib(n: int, *, d: int = 1) -> np.ndarray:
     return qmc.Sobol(d=d, scramble=True).random(n).reshape(n, d)  # type: ignore[no-any-return]
+
+
+def x_axis_node_force(weights: np.ndarray, distances_to_walk: np.ndarray) -> Force:
+    """Node forces along the x axis, with the given weights."""
+    positions = np.zeros((len(weights), 2))
+    positions[:, 0] = 1.0
+    return Force(
+        weights=weights,
+        distances_to_walk=distances_to_walk,
+        positions=positions,
+        distances=np.ones(len(weights)),
+    )
 
 
 @pytest.fixture(params=list(map(tuple, low_discrepancy_distrib(2**5, d=2))))
@@ -114,15 +130,15 @@ def test_modulate_cursor_increasing(
 
 
 def test_regulated_with_zero_cursor_returns_clone() -> None:
-    weighted_vectors = np.array([[1.0, 0.0], [0.5, 0.0]])
+    weights = np.array([1.0, 0.5])
     distances_to_walk = np.array([2.0, 1.0])
-    force = Force(weighted_vectors=weighted_vectors, distances_to_walk=distances_to_walk)
+    force = x_axis_node_force(weights, distances_to_walk)
 
     regulated_force = force.regulated(regulation_cursor=0)
 
     np.testing.assert_allclose(
-        regulated_force.weighted_vectors,
-        force.weighted_vectors,
+        regulated_force.weights,
+        force.weights,
     )
     np.testing.assert_allclose(
         regulated_force.distances_to_walk,
@@ -131,9 +147,9 @@ def test_regulated_with_zero_cursor_returns_clone() -> None:
 
 
 def test_regulated_with_one_cursor_fully_equalizes_temperatures() -> None:
-    weighted_vectors = np.array([[1.0, 0.0], [0.5, 0.0]])
+    weights = np.array([1.0, 0.5])
     distances_to_walk = np.array([2.0, 1.0])
-    force = Force(weighted_vectors=weighted_vectors, distances_to_walk=distances_to_walk)
+    force = x_axis_node_force(weights, distances_to_walk)
 
     regulated_force = force.regulated(regulation_cursor=1)
 
@@ -150,15 +166,15 @@ def test_regulated_with_one_cursor_fully_equalizes_temperatures() -> None:
 
 @pytest.mark.parametrize("regulation_cursor", [0, 0.5, 1])
 def test_regulated_with_uniform_temperatures_returns_clone(regulation_cursor: float) -> None:
-    weighted_vectors = np.array([[1.0, 0.0], [1.0, 0.0]])
+    weights = np.array([1.0, 1.0])
     distances_to_walk = np.array([2.0, 2.0])
-    force = Force(weighted_vectors=weighted_vectors, distances_to_walk=distances_to_walk)
+    force = x_axis_node_force(weights, distances_to_walk)
 
     regulated_force = force.regulated(regulation_cursor=regulation_cursor)
 
     np.testing.assert_allclose(
-        regulated_force.weighted_vectors,
-        force.weighted_vectors,
+        regulated_force.weights,
+        force.weights,
     )
     np.testing.assert_allclose(
         regulated_force.distances_to_walk,
@@ -167,39 +183,38 @@ def test_regulated_with_uniform_temperatures_returns_clone(regulation_cursor: fl
 
 
 @pytest.mark.parametrize(
-    "weighted_vectors, distances_to_walk, expected_temps, regulation_cursor,"
-    " expected_regulated_temps",
+    "weights, distances_to_walk, expected_temps, regulation_cursor, expected_regulated_temps",
     [
         (
-            np.array([[2.0, 0.0], [3.0, 0.0]]),
+            np.array([2.0, 3.0]),
             np.array([1.0, 6.0]),
             np.array([1, 4]),
             0,
             np.array([1, 4]),
         ),
         (
-            np.array([[2.0, 0.0], [3.0, 0.0]]),
+            np.array([2.0, 3.0]),
             np.array([1.0, 6.0]),
             np.array([1, 4]),
             0.5,
             np.array([1, 2]),
         ),
         (
-            np.array([[2.0, 0.0], [3.0, 0.0]]),
+            np.array([2.0, 3.0]),
             np.array([1.0, 6.0]),
             np.array([1, 4]),
             1,
             np.array([1, 1]),
         ),
         (
-            np.array([[2.0, 0.0], [3.0, 0.0], [6.0, 0.0]]),
+            np.array([2.0, 3.0, 6.0]),
             np.array([1.0, 6.0, 12.0]),
             np.array([1, 4, 4]),
             0.5,
             np.array([1, 2.828, 2]),
         ),
         (
-            np.array([[2.0, 0.0], [3.0, 0.0], [3.0, 0.0]]),
+            np.array([2.0, 3.0, 3.0]),
             np.array([1.0, 6.0, 12.0]),
             np.array([1, 4, 8]),
             0.5,
@@ -208,13 +223,13 @@ def test_regulated_with_uniform_temperatures_returns_clone(regulation_cursor: fl
     ],
 )
 def test_regulated_reduces_temperature_spread(
-    weighted_vectors: np.ndarray,
+    weights: np.ndarray,
     distances_to_walk: np.ndarray,
     expected_temps: np.ndarray,
     regulation_cursor: float,
     expected_regulated_temps: np.ndarray,
 ) -> None:
-    force = Force(weighted_vectors=weighted_vectors, distances_to_walk=distances_to_walk)
+    force = x_axis_node_force(weights, distances_to_walk)
     temps = force.maximum_temperatures
     np.testing.assert_allclose(
         temps / np.min(temps),
@@ -231,3 +246,25 @@ def test_regulated_reduces_temperature_spread(
     )
 
     np.testing.assert_allclose(regulated_force.distances_to_walk, force.distances_to_walk)
+
+
+def test_pairwise_resulting_forces_sum_weighted_unit_vectors() -> None:
+    rng = np.random.default_rng(0)
+    positions = rng.uniform(-1, 1, size=(6, 3))
+    differences = positions[np.newaxis, :] - positions[:, np.newaxis]
+    distances = np.linalg.norm(differences, axis=-1)
+    pairs = upper_triangle_indices(6)
+    weights = rng.uniform(-1, 1, size=len(pairs))
+    force = Force(
+        weights=weights,
+        distances_to_walk=np.abs(weights),
+        positions=positions,
+        distances=np.take(distances, pairs),
+        pairs=pairs,
+    )
+
+    unit_vectors = differences / np.where(distances == 0, 1, distances)[:, :, np.newaxis]
+    weight_matrix = symmetric_matrix_from_pairs(weights, pairs, 6)
+    expected = 0.5 * np.sum(weight_matrix[:, :, np.newaxis] * unit_vectors, axis=1)
+
+    np.testing.assert_allclose(force.get_resulting_forces(0.5), expected, atol=1e-14)
