@@ -9,6 +9,7 @@ from typing import Final
 
 import networkx as nx
 import numpy as np
+import numpy.typing as npt
 import scipy
 import torch
 
@@ -50,7 +51,7 @@ def _compute_limited_constraint_forces(*, force: Force, max_distance_to_walk: fl
 
     assert np.all(np.isfinite(limited_resulting_forces))
 
-    return limited_resulting_forces  # type: ignore[no-any-return]
+    return limited_resulting_forces
 
 
 def check_no_duplicate_positions(distance_matrix: np.ndarray, step: int) -> None:
@@ -456,8 +457,8 @@ def evolve_with_dimension_transition(
 
 
 def _symmetric_interaction_matrix(
-    matrix: np.ndarray, count_symmetric_terms_twice: bool = False
-) -> np.ndarray:
+    input_matrix: np.ndarray, count_symmetric_terms_twice: bool = False
+) -> npt.NDArray[np.float64]:
     """Return the symmetric interaction matrix with a null diagonal.
 
     The input must be symmetric or triangular, up to `nearly_equal`. Only one triangle
@@ -466,7 +467,7 @@ def _symmetric_interaction_matrix(
     If `count_symmetric_terms_twice` is set, the off-diagonal terms of a symmetric input
     are doubled (QUBO convention x^T Q x).
     """
-    matrix = np.array(matrix, dtype=float)
+    matrix = np.array(input_matrix, dtype=np.float64)
     if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
         raise ValueError(
             "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
@@ -483,13 +484,13 @@ def _symmetric_interaction_matrix(
             "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
         )
 
-    return upper + upper.T  # type: ignore[no-any-return]
+    return upper + upper.T
 
 
 def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
     distance_matrix = distance_matrix_from_positions(positions)
-    upper_diagonal_mask = np.triu(np.ones(distance_matrix.shape), k=1).astype(bool)
-    return np.min(distance_matrix[upper_diagonal_mask])  # type: ignore
+    upper_diagonal_mask = np.triu(np.ones(distance_matrix.shape), k=1).astype(np.bool_)
+    return np.min(distance_matrix[upper_diagonal_mask])
 
 
 def default_compute_max_distance_to_walk(progress: float, max_radial_dist: float) -> float:

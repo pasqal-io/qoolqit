@@ -5,14 +5,14 @@ from functools import cached_property
 from typing import Any
 
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import ArrayLike, NDArray
 
 from ._helpers import symmetric_matrix_from_pairs
 
 
 def configured_increasing_func(
     x: ArrayLike, *, middle_value: float = 0.5, stiffness: float = 1.0
-) -> np.ndarray:
+) -> NDArray[np.float64]:
     """Increasing function from [0, 1] to [0, 1]."""
     c = 1 / middle_value - 1
     x = np.asarray(x, dtype=float)
@@ -26,7 +26,7 @@ def modulate_cursor(
     weak_cursor: ArrayLike,
     center_value: float = 0.25,
     stiffness: float = 1.0,
-) -> np.ndarray:
+) -> NDArray[np.float64]:
     strong_cursor = np.asarray(strong_cursor, dtype=float)
     weak_cursor = np.asarray(weak_cursor, dtype=float)
 
@@ -34,7 +34,7 @@ def modulate_cursor(
         weak_cursor, middle_value=1 / (1 / center_value - 1), stiffness=stiffness
     )
 
-    return (  # type: ignore[no-any-return]
+    return (
         strong_cursor
         * weak_coeff_multiplier
         / np.where(
@@ -51,14 +51,14 @@ def clip_modulate_cursor(
     weak_cursor: ArrayLike,
     center_value: float = 0.25,
     stiffness: float = 1.0,
-) -> np.ndarray:
+) -> NDArray[np.float64]:
     value = modulate_cursor(
         strong_cursor=strong_cursor,
         weak_cursor=weak_cursor,
         center_value=center_value,
         stiffness=stiffness,
     )
-    return np.clip(value, 0, 1)  # type: ignore[no-any-return]
+    return np.clip(value, 0, 1)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -74,10 +74,10 @@ class Force:
     Forces whose distance is zero have no direction and are set to zero.
     """
 
-    weights: np.ndarray
-    distances_to_walk: np.ndarray
-    positions: np.ndarray
-    distances: np.ndarray
+    weights: NDArray[np.float64]
+    distances_to_walk: NDArray[np.float64]
+    positions: NDArray[np.float64]
+    distances: NDArray[np.float64]
     pairs: np.ndarray | None = None
 
     def __post_init__(self) -> None:
@@ -115,18 +115,18 @@ class Force:
         return dataclasses.replace(self, weights=regulated_weights)
 
     @cached_property
-    def vector_weights(self) -> np.ndarray:
+    def vector_weights(self) -> NDArray[np.float64]:
         return np.abs(self.weights)
 
     @cached_property
-    def maximum_temperatures(self) -> np.ndarray:
+    def maximum_temperatures(self) -> NDArray[np.float64]:
         vector_weights = self.vector_weights
         with np.errstate(divide="ignore", invalid="ignore"):
             maximum_temperatures = self.distances_to_walk / vector_weights
         maximum_temperatures[vector_weights == 0] = np.inf
 
         assert np.all(maximum_temperatures > 0)
-        return maximum_temperatures  # type: ignore[no-any-return]
+        return maximum_temperatures
 
     def get_temperature(self) -> Any | int:
         maximum_temperatures = self.maximum_temperatures
@@ -137,7 +137,7 @@ class Force:
         # (no force to apply, the temperature is not limited)
         return min_temperature if min_temperature != np.inf else 0
 
-    def get_resulting_forces(self, temperature: float) -> np.ndarray:
+    def get_resulting_forces(self, temperature: float) -> NDArray[np.float64]:
         """Return the (N, d) resulting force vectors applied on the nodes."""
         coefficients = np.divide(
             temperature * self.weights,
@@ -151,9 +151,9 @@ class Force:
                 coefficients, self.pairs, len(self.positions)
             )
             # sum over j of coefficients[i, j] * (positions[j] - positions[i])
-            return (  # type: ignore[no-any-return]
+            return (
                 coefficients @ self.positions
                 - np.sum(coefficients, axis=1)[:, np.newaxis] * self.positions
             )
         else:
-            return coefficients[:, np.newaxis] * self.positions  # type: ignore[no-any-return]
+            return coefficients[:, np.newaxis] * self.positions
