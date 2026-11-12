@@ -39,14 +39,7 @@ The interaction energy decays quickly with their distance $\tilde{r}$.
     \tilde{J} = \frac{1}{\tilde{r}^{\,6}}
     $$
 
-    Since $\tilde{r} \geq 1$, the interaction never exceeds $\tilde{J} = 1$.
-
-The laser is tuned to excite an isolated atom. Once one atom is excited, its interaction shifts the transition of its neighbour, and the laser can only excite that one too if the shift is small compared with the drive amplitude.
-
-- If $\tilde{J} \gg \tilde{\Omega}$, the laser is too far out of tune to excite the second atom to the Rydberg state as well, and the pair holds **at most one excitation**. Because the laser drives both atoms equally, that excitation is shared: the pair oscillates between $|00\rangle$ and the Bell state $|\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}$ at the enhanced frequency $\sqrt{2}\,\tilde{\Omega}$. This is the **Rydberg blockade**.
-- If $\tilde{J} \ll \tilde{\Omega}$, the shift is too small to matter: each atom oscillates on its own and $|11\rangle$ is reached.
-
-Setting $\tilde{J} = \tilde{\Omega}$ defines the distance that separates the two regimes.
+The laser is tuned to excite the atoms to the Rydberg state. Once one atom is excited, its interaction shifts the transition of its neighbour, and the laser can excite the neighbour as well only if their interaction energy is small compared with the drive amplitude. Setting $\tilde{J} = \tilde{\Omega}$ defines the distance that separates the two regimes. This distance is called the **blockade radius** $\tilde{r}_b$:
 
 !!! info "Blockade radius"
 
@@ -57,17 +50,8 @@ Setting $\tilde{J} = \tilde{\Omega}$ defines the distance that separates the two
     Two atoms closer than $\tilde{r}_b$ are blockaded: their double excitation is suppressed.
     A larger drive amplitude shrinks the blockade radius, a smaller one extends it.
 
-The widget below lets you run the two-atom experiment yourself.
-Drag an atom, or use the sliders, to change the distance $\tilde{r}$ between the atoms and the drive amplitude $\tilde{\Omega}$.
-The dashed circle around each atom has radius $\tilde{r}_b / 2$, so the two circles overlap exactly when the atoms are closer than the blockade radius.
-The plot shows, as a function of time and starting from $|00\rangle$, the probability that exactly one atom is excited and the probability that both are.
-Each atom glows with its excitation probability as time runs, and its colour goes from green when the pair is blockaded to purple when the atoms are independent, matching the plot's curves.
-The buttons under the widget jump to the end of the time window for each of the three cases below.
-
---8<-- "docs/extras/widgets/blockade.html"
-
 **Inside the blockade radius** ($\tilde{J} \gg \tilde{\Omega}$, for instance $\tilde{r} = 1$ with $\tilde{\Omega} = 0.1$), the probability of exciting both atoms stays close to zero.
-The pair behaves as a single two-level system, $|00\rangle \leftrightarrow |\Psi^+\rangle$: the probability of exactly one excitation reaches one and oscillates faster than a single atom would, by the factor $\sqrt{2}$.
+The pair behaves as a single two-level system between $|00\rangle$ and the Bell state $\ |\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}$: the probability of exactly one excitation reaches one and oscillates faster than a single atom would, by the factor $\sqrt{2}$.
 
 **Outside the blockade radius** ($\tilde{J} \ll \tilde{\Omega}$, for instance $\tilde{r} = 2.5$ with $\tilde{\Omega} = 0.1$), the probability of exciting both atoms reaches one.
 The two atoms are independent qubits: their interaction is negligible and each oscillates on its own.
@@ -77,6 +61,16 @@ The double excitation is only partially suppressed, and the populations no longe
 
 Note that the blockade radius can be crossed in two ways: moving the atoms or changing the drive amplitude.
 Either way, only the ratio $\tilde{J} / \tilde{\Omega}$ matters.
+
+
+The widget below lets you run the two-atom experiment yourself.
+Drag an atom, or use the sliders, to change the distance $\tilde{r}$ between the atoms and the drive amplitude $\tilde{\Omega}$.
+The dashed circle around each atom has radius $\tilde{r}_b / 2$, so the two circles overlap exactly when the atoms are closer than the blockade radius.
+The plot shows, as a function of time and starting from $|00\rangle$, the probability that exactly one atom is excited and the probability that both are.
+Each atom glows with its excitation probability as time runs, and its colour goes from green when the pair is blockaded to purple when the atoms are independent, matching the plot's curves.
+The buttons under the widget jump to the end of the time window for each of the three cases below.
+
+--8<-- "docs/extras/widgets/blockade.html"
 
 ## What this means for a program
 
