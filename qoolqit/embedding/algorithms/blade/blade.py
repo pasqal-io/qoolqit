@@ -457,7 +457,7 @@ def evolve_with_dimension_transition(
 
 
 def _symmetric_interaction_matrix(
-    input_matrix: np.ndarray, count_symmetric_terms_twice: bool = False
+    matrix: np.ndarray, count_symmetric_terms_twice: bool = False
 ) -> npt.NDArray[np.float64]:
     """Return the symmetric interaction matrix with a null diagonal.
 
@@ -467,18 +467,18 @@ def _symmetric_interaction_matrix(
     If `count_symmetric_terms_twice` is set, the off-diagonal terms of a symmetric input
     are doubled (QUBO convention x^T Q x).
     """
-    matrix = np.array(input_matrix, dtype=np.float64)
-    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+    float_matrix = np.array(matrix, dtype=np.float64)
+    if float_matrix.ndim != 2 or float_matrix.shape[0] != float_matrix.shape[1]:
         raise ValueError(
             "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
         )
 
-    if nearly_equal(matrix, matrix.T):
-        upper = np.triu(matrix, k=1) * (2 if count_symmetric_terms_twice else 1)
-    elif nearly_equal(matrix, np.triu(matrix)):
-        upper = np.triu(matrix, k=1)
-    elif nearly_equal(matrix, np.tril(matrix)):
-        upper = np.triu(matrix.T, k=1)
+    if nearly_equal(float_matrix, float_matrix.T):
+        upper = np.triu(float_matrix, k=1) * (2 if count_symmetric_terms_twice else 1)
+    elif nearly_equal(float_matrix, np.triu(float_matrix)):
+        upper = np.triu(float_matrix, k=1)
+    elif nearly_equal(float_matrix, np.tril(float_matrix)):
+        upper = np.triu(float_matrix.T, k=1)
     else:
         raise ValueError(
             "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
