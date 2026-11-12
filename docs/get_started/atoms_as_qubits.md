@@ -52,7 +52,7 @@ The laser is tuned to excite the atoms to the Rydberg state. Once one atom is ex
     Two atoms closer than $\tilde{r}_b$ are blockaded: their double excitation is suppressed.
     A larger drive amplitude shrinks the blockade radius, a smaller one extends it.
 
-**Blockaded:** ($\tilde{J} \gg \tilde{\Omega}$, for instance $\tilde{r} = 1$ with $\tilde{\Omega} = 0.1$), the probability of exciting both atoms stays close to zero.
+**Blockaded:** ($\tilde{J} \gg \tilde{\Omega}$), the probability of exciting both atoms stays close to zero.
 The pair behaves as a single two-level system between $|00\rangle$ and the Bell state $\ |\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}$: the probability of exactly one excitation reaches one and oscillates faster than a single atom would, by the factor $\sqrt{2}$.
 
 **Independent:** ($\tilde{J} \ll \tilde{\Omega}$), the probability of exciting both atoms reaches one.
