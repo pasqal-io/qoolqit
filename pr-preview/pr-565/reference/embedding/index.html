@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../../extras/assets/logo/qoolqit_favicon.svg">
-      <meta name="generator" content="zensical-0.0.74">
+      <meta name="generator" content="zensical-0.1.1">
     
     
       
@@ -33,7 +33,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.4ab2de0c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.ebb7f775.min.css">
       
         
           
@@ -56,6 +56,8 @@
         <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
       
     
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0.19.1/dist/katex.min.css">
     
       <link rel="stylesheet" href="../../extras/css/mkdocstrings.css">
     
@@ -1826,6 +1828,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#qoolqit.embedding.BladeConfig.count_symmetric_terms_twice" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;count_symmetric_terms_twice
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#qoolqit.embedding.BladeConfig.dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -3050,6 +3063,17 @@
     <span class="md-ellipsis">
       <span class="md-typeset">
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;compute_weight_relative_threshold
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qoolqit.embedding.BladeConfig.count_symmetric_terms_twice" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;count_symmetric_terms_twice
       </span>
     </span>
   </a>
@@ -4479,7 +4503,7 @@ for that embedder, an error should be raised.</p>
             <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-method&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-function-name&quot;&gt;validate_input&lt;/span&gt; (&lt;code&gt;qoolqit.embedding.Blade.validate_input&lt;/code&gt;)" href="./#qoolqit.embedding.Blade.validate_input">validate_input</a></code></b>
             –
             <div class="doc-md-description">
-              <p>Checks that the data is a symmetric 2D numpy array.</p>
+              <p>Checks that the data is a square 2D numpy array, symmetric or triangular.</p>
             </div>
           </li>
           <li class="doc-section-item field-body">
@@ -4539,19 +4563,19 @@ for that embedder, an error should be raised.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-80">80</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-81">81</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-82">82</a></span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-82">82</a></span>
 <span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-83">83</a></span>
 <span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-84">84</a></span>
 <span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-85">85</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-86">86</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.Blade--source--__codelineno-0-80" name="qoolqit.embedding.Blade--source--__codelineno-0-80"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">BladeConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.embedding.Blade--source--__codelineno-0-81" name="qoolqit.embedding.Blade--source--__codelineno-0-81"></a><span class="w">    </span><span class="sd">"""Inits Blade.</span>
-<a id="qoolqit.embedding.Blade--source--__codelineno-0-82" name="qoolqit.embedding.Blade--source--__codelineno-0-82"></a>
-<a id="qoolqit.embedding.Blade--source--__codelineno-0-83" name="qoolqit.embedding.Blade--source--__codelineno-0-83"></a><span class="sd">    Args:</span>
-<a id="qoolqit.embedding.Blade--source--__codelineno-0-84" name="qoolqit.embedding.Blade--source--__codelineno-0-84"></a><span class="sd">        config (BladeConfig): configuration object for the BLaDE algorithm.</span>
-<a id="qoolqit.embedding.Blade--source--__codelineno-0-85" name="qoolqit.embedding.Blade--source--__codelineno-0-85"></a><span class="sd">    """</span>
-<a id="qoolqit.embedding.Blade--source--__codelineno-0-86" name="qoolqit.embedding.Blade--source--__codelineno-0-86"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_blade</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span> <span class="ow">or</span> <span class="n">BladeConfig</span><span class="p">())</span>
+<span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-86">86</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-87">87</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade--source--__codelineno-0-88">88</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.Blade--source--__codelineno-0-82" name="qoolqit.embedding.Blade--source--__codelineno-0-82"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">BladeConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.embedding.Blade--source--__codelineno-0-83" name="qoolqit.embedding.Blade--source--__codelineno-0-83"></a><span class="w">    </span><span class="sd">"""Inits Blade.</span>
+<a id="qoolqit.embedding.Blade--source--__codelineno-0-84" name="qoolqit.embedding.Blade--source--__codelineno-0-84"></a>
+<a id="qoolqit.embedding.Blade--source--__codelineno-0-85" name="qoolqit.embedding.Blade--source--__codelineno-0-85"></a><span class="sd">    Args:</span>
+<a id="qoolqit.embedding.Blade--source--__codelineno-0-86" name="qoolqit.embedding.Blade--source--__codelineno-0-86"></a><span class="sd">        config (BladeConfig): configuration object for the BLaDE algorithm.</span>
+<a id="qoolqit.embedding.Blade--source--__codelineno-0-87" name="qoolqit.embedding.Blade--source--__codelineno-0-87"></a><span class="sd">    """</span>
+<a id="qoolqit.embedding.Blade--source--__codelineno-0-88" name="qoolqit.embedding.Blade--source--__codelineno-0-88"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_blade</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span> <span class="ow">or</span> <span class="n">BladeConfig</span><span class="p">())</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -4716,29 +4740,29 @@ for that embedder, an error should be raised.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-88">88</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-89">89</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-90">90</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-91">91</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-92">92</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-93">93</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-94">94</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-95">95</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-96">96</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-97">97</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-98">98</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-99">99</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-88" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-88"></a><span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataGraph</span><span class="p">:</span>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-89" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-89"></a><span class="w">    </span><span class="sd">"""Return a DataGraph with coordinates that embeds the input matrix.</span>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-90" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-90"></a>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-91" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-91"></a><span class="sd">    Validates the input, runs the embedding algorithm, and validates the output.</span>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-92" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-92"></a>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-93" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-93"></a><span class="sd">    Args:</span>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-94" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-94"></a><span class="sd">        data (np.ndarray): the matrix to embed into a DataGraph with coordinates.</span>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-95" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-95"></a><span class="sd">    """</span>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-96" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-96"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-97" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-97"></a>    <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-98" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-98"></a>    <span class="n">graph</span> <span class="o">=</span> <span class="n">DataGraph</span><span class="o">.</span><span class="n">from_coordinates</span><span class="p">(</span><span class="n">positions</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-99" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-99"></a>    <span class="k">return</span> <span class="n">graph</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-105">105</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-106">106</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-107">107</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-108">108</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-109">109</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-110">110</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-111">111</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-112">112</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-113">113</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-114">114</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-115">115</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.embed--source--__codelineno-0-116">116</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-105" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-105"></a><span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataGraph</span><span class="p">:</span>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-106" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-106"></a><span class="w">    </span><span class="sd">"""Return a DataGraph with coordinates that embeds the input matrix.</span>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-107" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-107"></a>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-108" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-108"></a><span class="sd">    Validates the input, runs the embedding algorithm, and validates the output.</span>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-109" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-109"></a>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-110" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-110"></a><span class="sd">    Args:</span>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-111" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-111"></a><span class="sd">        data (np.ndarray): the matrix to embed into a DataGraph with coordinates.</span>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-112" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-112"></a><span class="sd">    """</span>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-113" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-113"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">validate_input</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-114" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-114"></a>    <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dict</span><span class="p">())</span>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-115" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-115"></a>    <span class="n">graph</span> <span class="o">=</span> <span class="n">DataGraph</span><span class="o">.</span><span class="n">from_coordinates</span><span class="p">(</span><span class="n">positions</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<a id="qoolqit.embedding.Blade.embed--source--__codelineno-0-116" name="qoolqit.embedding.Blade.embed--source--__codelineno-0-116"></a>    <span class="k">return</span> <span class="n">graph</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4758,7 +4782,7 @@ for that embedder, an error should be raised.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Checks that the data is a symmetric 2D numpy array.</p>
+        <p>Checks that the data is a square 2D numpy array, symmetric or triangular.</p>
 
 
 <p><span class="doc-section-title">Raises:</span></p>
@@ -4774,7 +4798,7 @@ for that embedder, an error should be raised.</p>
               <code><span title="ValueError">ValueError</span></code>
             –
           <div class="doc-md-description">
-            <p>if <code>data</code> is not 2D or not symmetric.</p>
+            <p>if <code>data</code> is not square 2D, or neither symmetric nor triangular.</p>
           </div>
         </li>
     </ul>
@@ -4783,39 +4807,33 @@ for that embedder, an error should be raised.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-27">27</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-28">28</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-29">29</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-30">30</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-31">31</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-32">32</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-33">33</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-35">35</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-36">36</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-37">37</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-38">38</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-39">39</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-41">41</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-25" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-25"></a><span class="nd">@override</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-26" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-26"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-27" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-27"></a><span class="w">    </span><span class="sd">"""Checks that the data is a symmetric 2D numpy array.</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-28" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-28"></a>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-29" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-29"></a><span class="sd">    Raises:</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-30" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-30"></a><span class="sd">        TypeError: if `data` is not a numpy array.</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-31" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-31"></a><span class="sd">        ValueError: if `data` is not 2D or not symmetric.</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-32" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-32"></a><span class="sd">    """</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-33" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-33"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-34" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-34"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-35" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-35"></a>            <span class="sa">f</span><span class="s2">"Data of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported. </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> "</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-36" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-36"></a>            <span class="o">+</span> <span class="s2">"requires data to be a symmetric matrix of type np.ndarray."</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-37" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-37"></a>        <span class="p">)</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-38" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-38"></a>    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-39" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-39"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Data must be a 2D matrix."</span><span class="p">)</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-40" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-40"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
-<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-41" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-41"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Data must be a symmetric matrix."</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-90"> 90</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-91"> 91</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-92"> 92</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-93"> 93</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-94"> 94</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-95"> 95</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-96"> 96</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-97"> 97</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-98"> 98</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-99"> 99</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-100">100</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-101">101</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-102">102</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_input--source--__codelineno-0-103">103</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-90" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-90"></a><span class="nd">@override</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-91" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-91"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-92" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-92"></a><span class="w">    </span><span class="sd">"""Checks that the data is a square 2D numpy array, symmetric or triangular.</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-93" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-93"></a>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-94" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-94"></a><span class="sd">    Raises:</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-95" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-95"></a><span class="sd">        TypeError: if `data` is not a numpy array.</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-96" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-96"></a><span class="sd">        ValueError: if `data` is not square 2D, or neither symmetric nor triangular.</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-97" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-97"></a><span class="sd">    """</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-98" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-98"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-99" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-99"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-100" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-100"></a>            <span class="sa">f</span><span class="s2">"Data of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported. </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> "</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-101" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-101"></a>            <span class="o">+</span> <span class="s2">"requires data to be a symmetric or triangular matrix of type np.ndarray."</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-102" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-102"></a>        <span class="p">)</span>
+<a id="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-103" name="qoolqit.embedding.Blade.validate_input--source--__codelineno-0-103"></a>    <span class="n">_symmetric_interaction_matrix</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4876,19 +4894,19 @@ for that embedder, an error should be raised.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-43">43</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-45">45</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-45">45</a></span>
 <span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-46">46</a></span>
 <span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-47">47</a></span>
 <span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-49">49</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-43" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-43"></a><span class="nd">@override</span>
-<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-44" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-44"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">DataGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-45" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-45"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">DataGraph</span><span class="p">):</span>
-<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-46" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-46"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-47" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-47"></a>            <span class="s2">"Expected embedding result to be of type DataGraph, "</span>
-<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-48" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-48"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"algorithm returned </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead."</span>
-<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-49" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-49"></a>        <span class="p">)</span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#qoolqit.embedding.Blade.validate_output--source--__codelineno-0-51">51</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-45" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-45"></a><span class="nd">@override</span>
+<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-46" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-46"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">DataGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-47" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-47"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">DataGraph</span><span class="p">):</span>
+<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-48" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-48"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-49" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-49"></a>            <span class="s2">"Expected embedding result to be of type DataGraph, "</span>
+<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-50" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-50"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"algorithm returned </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead."</span>
+<a id="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-51" name="qoolqit.embedding.Blade.validate_output--source--__codelineno-0-51"></a>        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4916,7 +4934,7 @@ for that embedder, an error should be raised.</p>
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">BladeConfig</span><span class="p">(</span><span class="n">max_min_dist_ratio</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="int">int</span></span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_dimensions">default_dimensions</span></span><span class="p">,</span> <span class="n">starting_positions</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pca</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_pca">default_pca</span></span><span class="p">,</span> <span class="n">steps_per_round</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_steps_per_round">default_steps_per_round</span></span><span class="p">,</span> <span class="n">compute_weight_relative_threshold</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[[</span><span class="n"><span title="float">float</span></span><span class="p">],</span> <span class="n"><span title="float">float</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_compute_weight_relative_threshold">default_compute_weight_relative_threshold</span></span><span class="p">,</span> <span class="n">compute_max_distance_to_walk</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[[</span><span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">],</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">]]</span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_compute_max_distance_to_walk">default_compute_max_distance_to_walk</span></span><span class="p">,</span> <span class="n">compute_regulation_cursor</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[[</span><span class="n"><span title="float">float</span></span><span class="p">],</span> <span class="n"><span title="float">float</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_compute_regulation_cursor">default_compute_regulation_cursor</span></span><span class="p">,</span> <span class="n">compute_ratio_step_factors</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[[</span><span class="n"><span title="float">float</span></span><span class="p">],</span> <span class="n"><span title="float">float</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_compute_ratio_step_factors">default_compute_ratio_step_factors</span></span><span class="p">,</span> <span class="n">ratio_rerun</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_ratio_rerun">default_ratio_rerun</span></span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n"><span title="dataclasses.InitVar">InitVar</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Device&lt;/span&gt; (&lt;code&gt;qoolqit.devices.device.Device&lt;/code&gt;)" href="../devices/#qoolqit.devices.Device">Device</a></span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">BladeConfig</span><span class="p">(</span><span class="n">max_min_dist_ratio</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="int">int</span></span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_dimensions">default_dimensions</span></span><span class="p">,</span> <span class="n">starting_positions</span><span class="p">:</span> <span class="n"><span title="numpy.ndarray">ndarray</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pca</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_pca">default_pca</span></span><span class="p">,</span> <span class="n">steps_per_round</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_steps_per_round">default_steps_per_round</span></span><span class="p">,</span> <span class="n">compute_weight_relative_threshold</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[[</span><span class="n"><span title="float">float</span></span><span class="p">],</span> <span class="n"><span title="float">float</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_compute_weight_relative_threshold">default_compute_weight_relative_threshold</span></span><span class="p">,</span> <span class="n">compute_max_distance_to_walk</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[[</span><span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">],</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">]]</span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_compute_max_distance_to_walk">default_compute_max_distance_to_walk</span></span><span class="p">,</span> <span class="n">compute_regulation_cursor</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[[</span><span class="n"><span title="float">float</span></span><span class="p">],</span> <span class="n"><span title="float">float</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_compute_regulation_cursor">default_compute_regulation_cursor</span></span><span class="p">,</span> <span class="n">compute_ratio_step_factors</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[[</span><span class="n"><span title="float">float</span></span><span class="p">],</span> <span class="n"><span title="float">float</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_compute_ratio_step_factors">default_compute_ratio_step_factors</span></span><span class="p">,</span> <span class="n">ratio_rerun</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="n"><span title="qoolqit.embedding.algorithms.blade.blade.default_ratio_rerun">default_ratio_rerun</span></span><span class="p">,</span> <span class="n">count_symmetric_terms_twice</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n"><span title="dataclasses.InitVar">InitVar</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Device&lt;/span&gt; (&lt;code&gt;qoolqit.devices.device.Device&lt;/code&gt;)" href="../devices/#qoolqit.devices.Device">Device</a></span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -5041,6 +5059,20 @@ for that embedder, an error should be raised.</p>
           –
           <div class="doc-md-description">
             <p>Function that is called at each step.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+          <b><code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-attribute&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-attribute-name&quot;&gt;count_symmetric_terms_twice&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-class-attribute&quot;&gt;&lt;code&gt;class-attribute&lt;/code&gt;&lt;/small&gt;
+      &lt;small class=&quot;doc doc-label doc-label-instance-attribute&quot;&gt;&lt;code&gt;instance-attribute&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;qoolqit.embedding.BladeConfig.count_symmetric_terms_twice&lt;/code&gt;)" href="./#qoolqit.embedding.BladeConfig.count_symmetric_terms_twice">count_symmetric_terms_twice</a></code></b>
+              (<code><span title="bool">bool</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>Whether the off-diagonal terms of a symmetric input matrix are counted twice.</p>
           </div>
         </li>
         <li class="doc-section-item field-body">
@@ -5264,6 +5296,36 @@ a threshold determining which weights are significant (see
 
 
 
+<h4 id="qoolqit.embedding.BladeConfig.count_symmetric_terms_twice" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">count_symmetric_terms_twice</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">count_symmetric_terms_twice</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Whether the off-diagonal terms of a symmetric input matrix are counted twice.</p>
+<p>If set, the target interaction of the pair (i, j) is <code>matrix[i, j] + matrix[j, i]</code>,
+as in the QUBO convention x^T Q x. By default, they are counted once: a symmetric
+input matrix is the interaction matrix itself. It has no effect on a triangular
+input matrix.</p>
+
+          
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
 <h4 id="qoolqit.embedding.BladeConfig.dimensions" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">dimensions</span>
 
@@ -5469,43 +5531,43 @@ radial distance and the minimum pairwise distance between atoms.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/algorithms/blade/blade.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-750">750</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-751">751</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-752">752</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-753">753</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-754">754</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-755">755</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-756">756</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-757">757</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-758">758</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-759">759</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-760">760</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-761">761</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-762">762</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-763">763</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-764">764</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-765">765</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-766">766</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-767">767</a></span>
-<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-768">768</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-750" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-750"></a><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-751" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-751"></a><span class="w">    </span><span class="sd">"""Post initialization of the `BladeConfig` dataclass.</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-752" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-752"></a>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-753" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-753"></a><span class="sd">    Set the `max_min_dist_ratio` argument of the `blade_embedding` algorithm</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-754" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-754"></a><span class="sd">    based on the specification of the selected device.</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-755" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-755"></a>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-756" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-756"></a><span class="sd">    Args:</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-757" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-757"></a><span class="sd">        device (Device): the QoolQit device to use to set the maximum ratio between the maximum</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-758" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-758"></a><span class="sd">            radial distance and the minimum pairwise distance between atoms.</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-759" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-759"></a><span class="sd">    """</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-760" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-760"></a>    <span class="k">if</span> <span class="n">device</span><span class="p">:</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-761" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-761"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span><span class="p">:</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-762" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-762"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-763" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-763"></a>                <span class="s2">"`max_min_dist_ratio` and `device` attributes should not be set simultaneously."</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-764" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-764"></a>            <span class="p">)</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-765" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-765"></a>        <span class="n">min_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_min_distance</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-766" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-766"></a>        <span class="n">max_radial_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_max_radial_distance</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-767" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-767"></a>        <span class="k">if</span> <span class="n">max_radial_distance</span> <span class="ow">and</span> <span class="n">min_distance</span><span class="p">:</span>
-<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-768" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-768"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span> <span class="o">=</span> <span class="n">max_radial_distance</span> <span class="o">/</span> <span class="n">min_distance</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-845">845</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-846">846</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-847">847</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-848">848</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-849">849</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-850">850</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-851">851</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-852">852</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-853">853</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-854">854</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-855">855</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-856">856</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-857">857</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-858">858</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-859">859</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-860">860</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-861">861</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-862">862</a></span>
+<span class="normal"><a href="#qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-863">863</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-845" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-845"></a><span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Device</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-846" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-846"></a><span class="w">    </span><span class="sd">"""Post initialization of the `BladeConfig` dataclass.</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-847" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-847"></a>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-848" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-848"></a><span class="sd">    Set the `max_min_dist_ratio` argument of the `blade_embedding` algorithm</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-849" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-849"></a><span class="sd">    based on the specification of the selected device.</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-850" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-850"></a>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-851" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-851"></a><span class="sd">    Args:</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-852" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-852"></a><span class="sd">        device (Device): the QoolQit device to use to set the maximum ratio between the maximum</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-853" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-853"></a><span class="sd">            radial distance and the minimum pairwise distance between atoms.</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-854" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-854"></a><span class="sd">    """</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-855" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-855"></a>    <span class="k">if</span> <span class="n">device</span><span class="p">:</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-856" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-856"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span><span class="p">:</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-857" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-857"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-858" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-858"></a>                <span class="s2">"`max_min_dist_ratio` and `device` attributes should not be set simultaneously."</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-859" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-859"></a>            <span class="p">)</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-860" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-860"></a>        <span class="n">min_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_min_distance</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-861" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-861"></a>        <span class="n">max_radial_distance</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">_max_radial_distance</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-862" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-862"></a>        <span class="k">if</span> <span class="n">max_radial_distance</span> <span class="ow">and</span> <span class="n">min_distance</span><span class="p">:</span>
+<a id="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-863" name="qoolqit.embedding.BladeConfig.__post_init__--source--__codelineno-0-863"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">max_min_dist_ratio</span> <span class="o">=</span> <span class="n">max_radial_distance</span> <span class="o">/</span> <span class="n">min_distance</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6476,19 +6538,19 @@ results, set <code>seed</code> to an integer:</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-69">69</a></span>
-<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-70">70</a></span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-70">70</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-71">71</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-72">72</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-74">74</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-68" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-68"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">InteractionEmbedderConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-69" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-69"></a><span class="w">    </span><span class="sd">"""Inits InteractionEmbedder.</span>
-<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-70" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-70"></a>
-<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-71" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-71"></a><span class="sd">    Args:</span>
-<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-72" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-72"></a><span class="sd">        config: configuration for the interaction embedding. Defaults are used if None.</span>
-<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-73" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-73"></a><span class="sd">    """</span>
-<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-74" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-74"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">interaction_embedding</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span> <span class="ow">or</span> <span class="n">InteractionEmbedderConfig</span><span class="p">())</span>
+<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-76">76</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-70" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-70"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">InteractionEmbedderConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-71" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-71"></a><span class="w">    </span><span class="sd">"""Inits InteractionEmbedder.</span>
+<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-72" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-72"></a>
+<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-73" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-73"></a><span class="sd">    Args:</span>
+<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-74" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-74"></a><span class="sd">        config: configuration for the interaction embedding. Defaults are used if None.</span>
+<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-75" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-75"></a><span class="sd">    """</span>
+<a id="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-76" name="qoolqit.embedding.InteractionEmbedder--source--__codelineno-0-76"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">interaction_embedding</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span> <span class="ow">or</span> <span class="n">InteractionEmbedderConfig</span><span class="p">())</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -6715,9 +6777,7 @@ results, set <code>seed</code> to an integer:</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-27">27</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-27">27</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-28">28</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-29">29</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-30">30</a></span>
@@ -6731,23 +6791,25 @@ results, set <code>seed</code> to an integer:</p>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-38">38</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-39">39</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-41">41</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-25" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-25"></a><span class="nd">@override</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-26" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-26"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-27" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-27"></a><span class="w">    </span><span class="sd">"""Checks that the data is a symmetric 2D numpy array.</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-28" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-28"></a>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-29" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-29"></a><span class="sd">    Raises:</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-30" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-30"></a><span class="sd">        TypeError: if `data` is not a numpy array.</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-31" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-31"></a><span class="sd">        ValueError: if `data` is not 2D or not symmetric.</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-32" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-32"></a><span class="sd">    """</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-33" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-33"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-34" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-34"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-35" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-35"></a>            <span class="sa">f</span><span class="s2">"Data of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported. </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> "</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-36" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-36"></a>            <span class="o">+</span> <span class="s2">"requires data to be a symmetric matrix of type np.ndarray."</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-37" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-37"></a>        <span class="p">)</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-38" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-38"></a>    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-39" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-39"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Data must be a 2D matrix."</span><span class="p">)</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-40" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-40"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-41" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-41"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Data must be a symmetric matrix."</span><span class="p">)</span>
+<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-43">43</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-27" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-27"></a><span class="nd">@override</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-28" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-28"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-29" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-29"></a><span class="w">    </span><span class="sd">"""Checks that the data is a symmetric 2D numpy array.</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-30" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-30"></a>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-31" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-31"></a><span class="sd">    Raises:</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-32" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-32"></a><span class="sd">        TypeError: if `data` is not a numpy array.</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-33" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-33"></a><span class="sd">        ValueError: if `data` is not 2D or not symmetric.</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-34" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-34"></a><span class="sd">    """</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-35" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-35"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-36" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-36"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-37" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-37"></a>            <span class="sa">f</span><span class="s2">"Data of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported. </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> "</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-38" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-38"></a>            <span class="o">+</span> <span class="s2">"requires data to be a symmetric matrix of type np.ndarray."</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-39" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-39"></a>        <span class="p">)</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-40" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-40"></a>    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-41" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-41"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Data must be a 2D matrix."</span><span class="p">)</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-42" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-42"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">nearly_equal</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-43" name="qoolqit.embedding.InteractionEmbedder.validate_input--source--__codelineno-0-43"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Data must be a symmetric matrix."</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -6808,19 +6870,19 @@ for that embedder, an error should be raised.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-43">43</a></span>
-<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-45">45</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-45">45</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-46">46</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-47">47</a></span>
 <span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-49">49</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-43" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-43"></a><span class="nd">@override</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-44" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-44"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">DataGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-45" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-45"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">DataGraph</span><span class="p">):</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-46" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-46"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-47" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-47"></a>            <span class="s2">"Expected embedding result to be of type DataGraph, "</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-48" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-48"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"algorithm returned </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead."</span>
-<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-49" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-49"></a>        <span class="p">)</span>
+<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-51">51</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-45" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-45"></a><span class="nd">@override</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-46" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-46"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">DataGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-47" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-47"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">DataGraph</span><span class="p">):</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-48" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-48"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-49" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-49"></a>            <span class="s2">"Expected embedding result to be of type DataGraph, "</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-50" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-50"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"algorithm returned </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead."</span>
+<a id="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-51" name="qoolqit.embedding.InteractionEmbedder.validate_output--source--__codelineno-0-51"></a>        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7521,9 +7583,7 @@ inheriting from EmbedderConfig.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-27">27</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-27">27</a></span>
 <span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-28">28</a></span>
 <span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-29">29</a></span>
 <span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-30">30</a></span>
@@ -7537,23 +7597,25 @@ inheriting from EmbedderConfig.</p>
 <span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-38">38</a></span>
 <span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-39">39</a></span>
 <span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-41">41</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-25" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-25"></a><span class="nd">@override</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-26" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-26"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-27" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-27"></a><span class="w">    </span><span class="sd">"""Checks that the data is a symmetric 2D numpy array.</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-28" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-28"></a>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-29" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-29"></a><span class="sd">    Raises:</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-30" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-30"></a><span class="sd">        TypeError: if `data` is not a numpy array.</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-31" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-31"></a><span class="sd">        ValueError: if `data` is not 2D or not symmetric.</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-32" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-32"></a><span class="sd">    """</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-33" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-33"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-34" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-34"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-35" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-35"></a>            <span class="sa">f</span><span class="s2">"Data of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported. </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> "</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-36" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-36"></a>            <span class="o">+</span> <span class="s2">"requires data to be a symmetric matrix of type np.ndarray."</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-37" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-37"></a>        <span class="p">)</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-38" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-38"></a>    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-39" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-39"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Data must be a 2D matrix."</span><span class="p">)</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-40" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-40"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-41" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-41"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Data must be a symmetric matrix."</span><span class="p">)</span>
+<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-43">43</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-27" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-27"></a><span class="nd">@override</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-28" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-28"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-29" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-29"></a><span class="w">    </span><span class="sd">"""Checks that the data is a symmetric 2D numpy array.</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-30" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-30"></a>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-31" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-31"></a><span class="sd">    Raises:</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-32" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-32"></a><span class="sd">        TypeError: if `data` is not a numpy array.</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-33" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-33"></a><span class="sd">        ValueError: if `data` is not 2D or not symmetric.</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-34" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-34"></a><span class="sd">    """</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-35" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-35"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-36" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-36"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-37" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-37"></a>            <span class="sa">f</span><span class="s2">"Data of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> not supported. </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> "</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-38" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-38"></a>            <span class="o">+</span> <span class="s2">"requires data to be a symmetric matrix of type np.ndarray."</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-39" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-39"></a>        <span class="p">)</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-40" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-40"></a>    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-41" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-41"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Data must be a 2D matrix."</span><span class="p">)</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-42" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-42"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">nearly_equal</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-43" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_input--source--__codelineno-0-43"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Data must be a symmetric matrix."</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7614,19 +7676,19 @@ for that embedder, an error should be raised.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>qoolqit/embedding/matrix_embedder.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-43">43</a></span>
-<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-45">45</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-45">45</a></span>
 <span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-46">46</a></span>
 <span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-47">47</a></span>
 <span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-49">49</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-43" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-43"></a><span class="nd">@override</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-44" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-44"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">DataGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-45" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-45"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">DataGraph</span><span class="p">):</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-46" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-46"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-47" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-47"></a>            <span class="s2">"Expected embedding result to be of type DataGraph, "</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-48" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-48"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"algorithm returned </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead."</span>
-<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-49" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-49"></a>        <span class="p">)</span>
+<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-51">51</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-45" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-45"></a><span class="nd">@override</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-46" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-46"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">DataGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-47" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-47"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">DataGraph</span><span class="p">):</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-48" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-48"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-49" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-49"></a>            <span class="s2">"Expected embedding result to be of type DataGraph, "</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-50" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-50"></a>            <span class="o">+</span> <span class="sa">f</span><span class="s2">"algorithm returned </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead."</span>
+<a id="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-51" name="qoolqit.embedding.MatrixToGraphEmbedder.validate_output--source--__codelineno-0-51"></a>        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -8411,11 +8473,13 @@ for that embedder, an error should be raised.</p>
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["content.code.copy","content.tooltips","navigation.indexes","navigation.sections","navigation.tabs","navigation.top","navigation.tracking","navigation.footer","search.highlight"],"redirect":null,"search":"../../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d31f0ffa.min.js"></script>
+      <script src="../../assets/javascripts/bundle.3cb411a8.min.js"></script>
       
-        <script src="../../extras/javascripts/mathjax.js"></script>
+        <script src="../../extras/javascripts/katex.js"></script>
       
-        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="https://unpkg.com/katex@0.19.1/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0.19.1/dist/contrib/auto-render.min.js"></script>
       
     
   </body>
