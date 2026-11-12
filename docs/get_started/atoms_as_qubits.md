@@ -4,7 +4,7 @@ On this page, you will learn about:
 
 - How a neutral atom encodes a qubit and how a laser manipulates it
 - The Rydberg blockade: why two atoms close together cannot both be excited
-- How the distance between atoms and the strength of the laser decide whether a pair is blockaded
+- How the distance between atoms and the drive amplitude decide whether a pair is blockaded
 
 ## Computing with atoms
 
@@ -15,30 +15,35 @@ $$
 |0\rangle \equiv |g\rangle, \qquad |1\rangle \equiv |r\rangle.
 $$
 
-A laser couples the two levels. Its **amplitude** $\tilde{\Omega}$ sets how fast an atom is transferred between $|0\rangle$ and $|1\rangle$, and its **detuning** $\tilde{\delta}$ is the mismatch between the laser frequency and the transition frequency; it acts as an energy shift of $|1\rangle$, favoring excitation when positive.
-An isolated atom under a resonant laser ($\tilde{\delta} = 0$) oscillates between the two states, a **Rabi oscillation**, with probability of being in the Rydberg state at time $\tilde{t}$ given by
+What makes neutral atoms useful for computing is how they interact: through the Rydberg blockade, an excited atom stops its close neighbours from being excited.
+This is the building block of quantum computing with neutral atoms, and the one Pasqal's processors are built on.
+
+Throughout this page, quantities are written in QoolQit's dimensionless units, in which no two atoms are closer than $\tilde{r} = 1$.
+The next page, [Programming a neutral-atom QPU](qoolqit_model.md), explains where these units come from.
+
+A laser couples the two levels. Its **drive amplitude** $\tilde{\Omega}$ sets how fast an atom is transferred between $|0\rangle$ and $|1\rangle$.
+An isolated atom under a laser tuned to its transition oscillates between the two states, a **Rabi oscillation**: starting in $|0\rangle$, its probability of being in the Rydberg state at time $\tilde{t}$ is
 
 $$
 P_1(\tilde{t}) = \sin^2\!\left(\frac{\tilde{\Omega}\,\tilde{t}}{2}\right).
 $$
 
-Throughout this page, quantities are written in QoolQit's dimensionless units.
-The next page, [Programming a neutral-atom QPU](qoolqit_model.md), explains where these units come from.
-
-## Why two atoms are not two independent qubits
+## Blockaded or not: distance against drive
 
 Two atoms that are **both** in the Rydberg state repel each other.
-The interaction energy decays quickly with their distance $\tilde{r}$:
+The interaction energy decays quickly with their distance $\tilde{r}$.
 
-$$
-\tilde{J} = \frac{1}{\tilde{r}^{\,6}}.
-$$
+!!! info "Interaction energy"
 
-The laser is tuned to the transition of an isolated atom, and it still drives that transition if it is off resonance by up to about $\tilde{\Omega}$.
-Exciting one of the two atoms works exactly as for an isolated atom.
-Once that atom is in the Rydberg state, however, its interaction shifts the transition of the other atom by $\tilde{J}$: the laser is now out of tune by $\tilde{J}$.
+    $$
+    \tilde{J} = \frac{1}{\tilde{r}^{\,6}}
+    $$
 
-- If $\tilde{J} \gg \tilde{\Omega}$, the laser is too far out of tune to excite the second atom to the Rydberg state as well, and the pair holds **at most one excitation**. Therefore, the laser drives it between $|00\rangle$ and the Bell state $|\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}$, at the enhanced frequency $\sqrt{2}\,\tilde{\Omega}$. This is the **Rydberg blockade**.
+    Since $\tilde{r} \geq 1$, the interaction never exceeds $\tilde{J} = 1$.
+
+The laser is tuned to excite an isolated atom. Once one atom is excited, its interaction shifts the transition of its neighbour, and the laser can only excite that one too if the shift is small compared with the drive amplitude.
+
+- If $\tilde{J} \gg \tilde{\Omega}$, the laser is too far out of tune to excite the second atom to the Rydberg state as well, and the pair holds **at most one excitation**. Because the laser drives both atoms equally, that excitation is shared: the pair oscillates between $|00\rangle$ and the Bell state $|\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}$ at the enhanced frequency $\sqrt{2}\,\tilde{\Omega}$. This is the **Rydberg blockade**.
 - If $\tilde{J} \ll \tilde{\Omega}$, the shift is too small to matter: each atom oscillates on its own and $|11\rangle$ is reached.
 
 Setting $\tilde{J} = \tilde{\Omega}$ defines the distance that separates the two regimes.
@@ -49,16 +54,15 @@ Setting $\tilde{J} = \tilde{\Omega}$ defines the distance that separates the two
     \tilde{r}_b = \tilde{\Omega}^{-1/6}
     $$
 
-    Two atoms closer than $\tilde{r}_b$ are blockaded: they cannot both be excited.
-    A stronger laser shrinks the blockade radius, a weaker one extends it.
-
-## Blockaded or not: distance against drive
+    Two atoms closer than $\tilde{r}_b$ are blockaded: their double excitation is suppressed.
+    A larger drive amplitude shrinks the blockade radius, a smaller one extends it.
 
 The widget below lets you run the two-atom experiment yourself.
-Drag an atom, or use the sliders, to change the distance $\tilde{r}$ between the atoms and the laser amplitude $\tilde{\Omega}$.
+Drag an atom, or use the sliders, to change the distance $\tilde{r}$ between the atoms and the drive amplitude $\tilde{\Omega}$.
 The dashed circle around each atom has radius $\tilde{r}_b / 2$, so the two circles overlap exactly when the atoms are closer than the blockade radius.
 The plot shows, as a function of time and starting from $|00\rangle$, the probability that exactly one atom is excited and the probability that both are.
-Each atom glows with its excitation probability as time runs.
+Each atom glows with its excitation probability as time runs, and its colour goes from green when the pair is blockaded to purple when the atoms are independent, matching the plot's curves.
+The buttons under the widget jump to the end of the time window for each of the three cases below.
 
 --8<-- "docs/extras/widgets/blockade.html"
 
@@ -71,11 +75,13 @@ The two atoms are independent qubits: their interaction is negligible and each o
 **At the blockade radius** ($\tilde{J} \approx \tilde{\Omega}$) the pair moves continuously from one regime to the other.
 The double excitation is only partially suppressed, and the populations no longer follow a clean oscillation: the peaks change height from one cycle to the next.
 
-Note that the blockade radius can be crossed in two ways: moving the atoms or changing the laser amplitude.
-Either way, only the ratio $\tilde{J} / \tilde{\Omega}$ matters, which is why QoolQit expresses both in the same unit.
+Note that the blockade radius can be crossed in two ways: moving the atoms or changing the drive amplitude.
+Either way, only the ratio $\tilde{J} / \tilde{\Omega}$ matters.
 
 ## What this means for a program
 
-The blockade is the resource that QoolQit programs are built on: it is what makes atoms interact and behave as a single system, and it is set entirely by geometry and drive.
+The blockade is the building block QoolQit programs rely on: it is how the interaction between atoms shows up, tying their excitations together, and it is set by geometry and drive.
 
 The positions of the atoms in a register decide which pairs are blockaded for a given $\tilde{\Omega}$, and that is how a problem is mapped onto the hardware.
+
+Continue with [Programming a neutral-atom QPU](qoolqit_model.md) for the units and the full Hamiltonian, see how atom positions are chosen in [Embedding](../fundamentals/embedding.md), or watch the blockade at work in [Solving a MWIS](../tutorials/Solving_a_MWIS.md), where blockaded pairs become the edges of a graph.
