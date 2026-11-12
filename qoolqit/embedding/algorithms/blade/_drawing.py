@@ -14,6 +14,7 @@ import scipy
 import scipy.spatial
 from matplotlib.axes import Axes
 from matplotlib.patches import Circle
+from matplotlib.typing import LineStyleType
 from numpy import format_float_scientific
 
 from ._helpers import normalized_interaction
@@ -341,13 +342,13 @@ def linspace_ticks(vmin: float, vmax: float, *, n: int) -> np.ndarray:
 
 
 def legend_line(
-    *, color: str, label: str, linestyle: str = "-", marker: str = ">"
+    *, color: str, label: str, linestyle: LineStyleType = "-", marker: str = ">"
 ) -> plt.matplotlib.lines.Line2D:
     return plt.matplotlib.lines.Line2D(
         [0],
         [0],
         color=color,
-        linestyle=linestyle,  # type: ignore[arg-type]
+        linestyle=linestyle,
         marker=marker,
         markersize=6,
         label=label,
@@ -455,7 +456,7 @@ def draw_discrepancy_lines_and_colorbar(
     )
     tick_vals = np.unique(np.concatenate([neg_ticks, pos_ticks]))
 
-    cbar.set_ticks(tick_vals)  # type: ignore[arg-type]
+    cbar.set_ticks(tick_vals.tolist())
     cbar.set_ticklabels([f"{v:.2g}" for v in tick_vals])
 
 
@@ -505,13 +506,13 @@ def draw_update_positions_step(
         panels = [(ax_single, target_interactions, "Target interactions")]
 
     def _draw_panel(ax: plt.Axes, panel_target_interactions: np.ndarray | None) -> None:
-        if panel_target_interactions is not None:
+        if panel_target_interactions is not None and current_interactions is not None:
             draw_discrepancy_lines_and_colorbar(
                 fig=fig,
                 ax=ax,
                 pos2d=pos2d,
                 target_interactions=panel_target_interactions,
-                current_interactions=current_interactions,  # type: ignore[arg-type]
+                current_interactions=current_interactions,
             )
 
         ax.scatter(pos2d[:, 0], pos2d[:, 1], zorder=2)
