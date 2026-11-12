@@ -2112,14 +2112,8 @@ The interaction energy decays quickly with their distance <span class="arithmate
 <div class="arithmatex">\[
 \tilde{J} = \frac{1}{\tilde{r}^{\,6}}
 \]</div>
-<p>Since <span class="arithmatex">\(\tilde{r} \geq 1\)</span>, the interaction never exceeds <span class="arithmatex">\(\tilde{J} = 1\)</span>.</p>
 </div>
-<p>The laser is tuned to excite an isolated atom. Once one atom is excited, its interaction shifts the transition of its neighbour, and the laser can only excite that one too if the shift is small compared with the drive amplitude.</p>
-<ul>
-<li>If <span class="arithmatex">\(\tilde{J} \gg \tilde{\Omega}\)</span>, the laser is too far out of tune to excite the second atom to the Rydberg state as well, and the pair holds <strong>at most one excitation</strong>. Because the laser drives both atoms equally, that excitation is shared: the pair oscillates between <span class="arithmatex">\(|00\rangle\)</span> and the Bell state <span class="arithmatex">\(|\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}\)</span> at the enhanced frequency <span class="arithmatex">\(\sqrt{2}\,\tilde{\Omega}\)</span>. This is the <strong>Rydberg blockade</strong>.</li>
-<li>If <span class="arithmatex">\(\tilde{J} \ll \tilde{\Omega}\)</span>, the shift is too small to matter: each atom oscillates on its own and <span class="arithmatex">\(|11\rangle\)</span> is reached.</li>
-</ul>
-<p>Setting <span class="arithmatex">\(\tilde{J} = \tilde{\Omega}\)</span> defines the distance that separates the two regimes.</p>
+<p>The laser is tuned to excite the atoms to the Rydberg state. Once one atom is excited, its interaction shifts the transition of its neighbour, and the laser can excite the neighbour as well only if their interaction energy is small compared with the drive amplitude. Setting <span class="arithmatex">\(\tilde{J} = \tilde{\Omega}\)</span> defines the distance that separates the two regimes. This distance is called the <strong>blockade radius</strong> <span class="arithmatex">\(\tilde{r}_b\)</span>:</p>
 <div class="admonition info">
 <p class="admonition-title">Blockade radius</p>
 <div class="arithmatex">\[
@@ -2128,6 +2122,14 @@ The interaction energy decays quickly with their distance <span class="arithmate
 <p>Two atoms closer than <span class="arithmatex">\(\tilde{r}_b\)</span> are blockaded: their double excitation is suppressed.
 A larger drive amplitude shrinks the blockade radius, a smaller one extends it.</p>
 </div>
+<p><strong>Inside the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \gg \tilde{\Omega}\)</span>, for instance <span class="arithmatex">\(\tilde{r} = 1\)</span> with <span class="arithmatex">\(\tilde{\Omega} = 0.1\)</span>), the probability of exciting both atoms stays close to zero.
+The pair behaves as a single two-level system between <span class="arithmatex">\(|00\rangle\)</span> and the Bell state <span class="arithmatex">\(\ |\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}\)</span>: the probability of exactly one excitation reaches one and oscillates faster than a single atom would, by the factor <span class="arithmatex">\(\sqrt{2}\)</span>.</p>
+<p><strong>Outside the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \ll \tilde{\Omega}\)</span>, for instance <span class="arithmatex">\(\tilde{r} = 2.5\)</span> with <span class="arithmatex">\(\tilde{\Omega} = 0.1\)</span>), the probability of exciting both atoms reaches one.
+The two atoms are independent qubits: their interaction is negligible and each oscillates on its own.</p>
+<p><strong>At the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \approx \tilde{\Omega}\)</span>) the pair moves continuously from one regime to the other.
+The double excitation is only partially suppressed, and the populations no longer follow a clean oscillation: the peaks change height from one cycle to the next.</p>
+<p>Note that the blockade radius can be crossed in two ways: moving the atoms or changing the drive amplitude.
+Either way, only the ratio <span class="arithmatex">\(\tilde{J} / \tilde{\Omega}\)</span> matters.</p>
 <p>The widget below lets you run the two-atom experiment yourself.
 Drag an atom, or use the sliders, to change the distance <span class="arithmatex">\(\tilde{r}\)</span> between the atoms and the drive amplitude <span class="arithmatex">\(\tilde{\Omega}\)</span>.
 The dashed circle around each atom has radius <span class="arithmatex">\(\tilde{r}_b / 2\)</span>, so the two circles overlap exactly when the atoms are closer than the blockade radius.
@@ -2265,14 +2267,6 @@ if(playing)raf=requestAnimationFrame(loop);else{tau=T/8;drawTime();}
 </script>
 </div>
 
-<p><strong>Inside the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \gg \tilde{\Omega}\)</span>, for instance <span class="arithmatex">\(\tilde{r} = 1\)</span> with <span class="arithmatex">\(\tilde{\Omega} = 0.1\)</span>), the probability of exciting both atoms stays close to zero.
-The pair behaves as a single two-level system, <span class="arithmatex">\(|00\rangle \leftrightarrow |\Psi^+\rangle\)</span>: the probability of exactly one excitation reaches one and oscillates faster than a single atom would, by the factor <span class="arithmatex">\(\sqrt{2}\)</span>.</p>
-<p><strong>Outside the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \ll \tilde{\Omega}\)</span>, for instance <span class="arithmatex">\(\tilde{r} = 2.5\)</span> with <span class="arithmatex">\(\tilde{\Omega} = 0.1\)</span>), the probability of exciting both atoms reaches one.
-The two atoms are independent qubits: their interaction is negligible and each oscillates on its own.</p>
-<p><strong>At the blockade radius</strong> (<span class="arithmatex">\(\tilde{J} \approx \tilde{\Omega}\)</span>) the pair moves continuously from one regime to the other.
-The double excitation is only partially suppressed, and the populations no longer follow a clean oscillation: the peaks change height from one cycle to the next.</p>
-<p>Note that the blockade radius can be crossed in two ways: moving the atoms or changing the drive amplitude.
-Either way, only the ratio <span class="arithmatex">\(\tilde{J} / \tilde{\Omega}\)</span> matters.</p>
 <h2 id="what-this-means-for-a-program">What this means for a program</h2>
 <p>The blockade is the building block QoolQit programs rely on: it is how the interaction between atoms shows up, tying their excitations together, and it is set by geometry and drive.</p>
 <p>The positions of the atoms in a register decide which pairs are blockaded for a given <span class="arithmatex">\(\tilde{\Omega}\)</span>, and that is how a problem is mapped onto the hardware.</p>
