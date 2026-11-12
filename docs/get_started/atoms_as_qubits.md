@@ -39,6 +39,8 @@ The interaction energy decays quickly with their distance $\tilde{r}$.
     \tilde{J} = \frac{1}{\tilde{r}^{\,6}}
     $$
 
+    The interaction energy is large when the atoms are close together, and small when they are far apart.
+
 The laser is tuned to excite the atoms to the Rydberg state. Once one atom is excited, its interaction shifts the transition of its neighbour, and the laser can excite the neighbour as well only if their interaction energy is small compared with the drive amplitude. Setting $\tilde{J} = \tilde{\Omega}$ defines the distance that separates the two regimes. This distance is called the **blockade radius** $\tilde{r}_b$:
 
 !!! info "Blockade radius"
