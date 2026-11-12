@@ -52,13 +52,13 @@ The laser is tuned to excite the atoms to the Rydberg state. Once one atom is ex
     Two atoms closer than $\tilde{r}_b$ are blockaded: their double excitation is suppressed.
     A larger drive amplitude shrinks the blockade radius, a smaller one extends it.
 
-**Blockaded:** ($\tilde{J} \gg \tilde{\Omega}$), the probability of exciting both atoms stays close to zero.
+**Blockaded ($\tilde{J} \gg \tilde{\Omega}$):**, the probability of exciting both atoms stays close to zero.
 The pair behaves as a single two-level system between $|00\rangle$ and the Bell state $\ |\Psi^+\rangle = (|01\rangle + |10\rangle)/\sqrt{2}$: the probability of exactly one excitation reaches one and oscillates faster than a single atom would, by the factor $\sqrt{2}$.
 
-**Independent:** ($\tilde{J} \ll \tilde{\Omega}$), the probability of exciting both atoms reaches one.
+**Independent ($\tilde{J} \ll \tilde{\Omega}$):**, the probability of exciting both atoms reaches one.
 The two atoms are independent qubits: their interaction is negligible and each oscillates on its own.
 
-**At the blockade radius:** ($\tilde{J} \approx \tilde{\Omega}$) the pair moves continuously from one regime to the other.
+**At the blockade radius ($\tilde{J} \approx \tilde{\Omega}$):** the pair moves continuously from one regime to the other.
 The double excitation is only partially suppressed, and the populations no longer follow a clean oscillation: the peaks change height from one cycle to the next.
 
 Note that the blockade radius can be crossed in two ways: moving the atoms or changing the drive amplitude.
