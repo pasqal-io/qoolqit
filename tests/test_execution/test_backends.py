@@ -106,10 +106,10 @@ class TestBackends:
 
     def test_check_backend_type(self) -> None:
         with pytest.raises(match="`backend_type` must be a EmulatorBackend type."):
-            LocalEmulator(backend_type=int)  # type: ignore
+            LocalEmulator(backend_type=int)  # type: ignore[arg-type]
 
         with pytest.raises(match="`backend_type` must be a RemoteEmulatorBackend type."):
-            RemoteEmulator(backend_type=str, connection=self.mock_connection)  # type: ignore
+            RemoteEmulator(backend_type=str, connection=self.mock_connection)  # type: ignore[arg-type]
 
     def test_validate_connection(self) -> None:
         backend = RemoteEmulator(
@@ -120,7 +120,7 @@ class TestBackends:
 
         with pytest.raises(match=f"""Error in `PulserRemoteBackend`:
                 `connection` must be of type {RemoteConnection}."""):
-            backend.validate_connection(4.0)  # type: ignore
+            backend.validate_connection(4.0)  # type: ignore[arg-type]
 
     def test_local_emulator_run(self) -> None:
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend)

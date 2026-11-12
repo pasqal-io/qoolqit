@@ -623,7 +623,7 @@ def test_blade_init() -> None:
 
 def test_invalid_blade_config() -> None:
     with pytest.raises(TypeError, match="got an unexpected keyword argument 'wrong_config_key'"):
-        BladeConfig(wrong_config_key="value")  # type: ignore
+        BladeConfig(wrong_config_key="value")  # type: ignore[call-arg]
 
 
 @pytest.mark.parametrize("max_min_dist_ratio, atol", [(None, 1e-3), (10, 1e-1)])

@@ -22,7 +22,7 @@ def test_custom_embedders() -> None:
         param1: float = 1.0
 
     with pytest.raises(TypeError):
-        GraphToGraphEmbedder(some_embedding_algo, WrongTypeConfig())  # type: ignore
+        GraphToGraphEmbedder(some_embedding_algo, WrongTypeConfig())  # type: ignore[type-var]
 
     # Config params don't match algo params
     @dataclass
