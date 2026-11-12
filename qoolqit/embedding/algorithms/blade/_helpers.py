@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 from typing import Any, Literal, TypeVar
 
 import numpy as np
@@ -21,7 +22,8 @@ def _format_return(input: Value, ret: np.ndarray, *, format: FormatType) -> Valu
         case "triu":
             return np.triu(ret, k=1)
         case "sym":
-            return np.triu(ret, k=1) + np.tril(ret, k=-1)
+            np.fill_diagonal(ret, 0)
+            return ret
         case _:
             raise ValueError(f"Invalid format: {format}")
 
@@ -35,8 +37,12 @@ def normalized_interaction(dist: Value, *, format: FormatType = "sym") -> Value:
         (all values), "triu" (upper triangle without diagonal), or "sym"
         (upper and lower triangles without diagonal).
     """
+    squared_dist = dist * dist
     interactions = np.divide(
-        1, dist**6, out=np.full_like(dist, np.inf, dtype=float), where=(dist != 0)
+        1,
+        squared_dist * squared_dist * squared_dist,
+        out=np.full_like(dist, np.inf, dtype=float),
+        where=(dist != 0),
     )
 
     return _format_return(input=dist, ret=interactions, format=format)
@@ -52,15 +58,35 @@ def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
         (upper and lower triangles without diagonal).
     """
     dists = np.divide(
-        1, weight ** (1 / 6), out=np.full_like(weight, np.inf, dtype=float), where=(weight != 0)
+        1,
+        np.cbrt(np.sqrt(weight)),
+        out=np.full_like(weight, np.inf, dtype=float),
+        where=(weight != 0),
     )
 
     return _format_return(input=weight, ret=dists, format=format)
 
 
 def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
-    position_differences = positions[np.newaxis, :] - positions[:, np.newaxis]
-    return np.linalg.norm(position_differences, axis=2)  # type: ignore[no-any-return]
+    # loop over the few dimensions to avoid allocating a (N, N, d) array
+    squared_distances = np.zeros((len(positions), len(positions)))
+    for coordinates in np.transpose(positions):
+        differences = coordinates[np.newaxis, :] - coordinates[:, np.newaxis]
+        squared_distances += differences * differences
+    return np.sqrt(squared_distances)
+
+
+@functools.cache
+def upper_triangle_indices(n: int) -> np.ndarray:
+    """Flat indices of the pairs (i, j), i < j, in a (n, n) matrix."""
+    return np.flatnonzero(np.triu(np.ones((n, n), dtype=bool), k=1))
+
+
+def symmetric_matrix_from_pairs(values: np.ndarray, pairs: np.ndarray, n: int) -> np.ndarray:
+    """(n, n) symmetric matrix with `values` at the flat indices `pairs` of the upper triangle."""
+    matrix = np.zeros((n, n))
+    np.put(matrix, pairs, values)
+    return matrix + matrix.T
 
 
 def interaction_matrix_from_positions(positions: np.ndarray) -> np.ndarray:

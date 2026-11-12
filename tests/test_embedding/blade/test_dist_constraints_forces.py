@@ -14,7 +14,7 @@ def test_compute_max_dist_constraint_forces_no_violation(max_dist: float | None)
 
     force = compute_max_dist_constraint_forces(positions=positions, max_radius=max_dist)
 
-    np.testing.assert_allclose(force.weighted_vectors, np.zeros_like(positions))
+    np.testing.assert_allclose(force.get_resulting_forces(1.0), np.zeros_like(positions))
     np.testing.assert_allclose(force.distances_to_walk, np.zeros(len(positions)))
 
 
@@ -35,4 +35,4 @@ def test_compute_max_dist_constraint_forces_multiple_violations() -> None:
             [1.0, 0.0],
         ]
     )
-    np.testing.assert_allclose(force.weighted_vectors, expected_weighted_vectors)
+    np.testing.assert_allclose(force.get_resulting_forces(1.0), expected_weighted_vectors)
