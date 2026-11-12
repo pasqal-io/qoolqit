@@ -277,7 +277,7 @@ def test_waveform_draw_with_color() -> None:
 def test_waveform_draw_n_points() -> None:
     ax = Figure().subplots()
     RampWaveform(10.0, 0.0, 1.0).draw(ax=ax, n_points=42)
-    assert len(ax.lines[0].get_xdata()) == 42  # type: ignore[arg-type]
+    assert np.size(ax.lines[0].get_xdata()) == 42
 
 
 def test_to_pulser_sub_ns_delay_single_wf() -> None:
