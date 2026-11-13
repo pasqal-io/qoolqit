@@ -8,7 +8,7 @@ from unittest.mock import MagicMock
 import numpy as np
 import pytest
 from pulser import AnalogDevice as PulserAnalogDevice
-from pulser.sampler import sample
+from pulser.sampler import DMMSamples, sample
 from scipy.integrate import quad
 
 from qoolqit import AnalogDevice, Device, Drive, MockDevice, QuantumProgram, Register
@@ -100,7 +100,9 @@ def test_compilation_with_dmm(profile: CompilerProfile) -> None:
     # check detunings are scaled correctly by compilation
     np.testing.assert_allclose(rydberg_sample.det, dmm_sample.det, atol=1e-8)
 
-    dmm_weights = dmm_sample.detuning_map.weights  # type: ignore[attr-defined]
+    assert isinstance(dmm_sample, DMMSamples)
+    assert dmm_sample.detuning_map is not None
+    dmm_weights = dmm_sample.detuning_map.weights
     assert dmm_weights == (0.1, 0.2, 0.9)
 
 

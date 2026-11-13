@@ -28,7 +28,7 @@ def test_spring_layout_embedding(n_qubits: int) -> None:
 
     with pytest.raises(TypeError):
         matrix = np.random.rand(n_qubits, n_qubits)
-        embedder.embed(matrix)  # type: ignore
+        embedder.embed(matrix)  # type: ignore[arg-type]
 
 
 @pytest.mark.parametrize(
