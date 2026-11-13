@@ -251,7 +251,7 @@ class Drive:
 
         # draw phase if present
         if has_phase:
-            phase = self.phase(times) / (2 * np.pi)
+            phase = self.phase(times) / (2 * np.pi)  # type: ignore[operator]
             axs[2].set_ylabel(r"Phase $/ \ 2\pi$")
             axs[2].plot(times, phase, color="darkorange")
             axs[2].fill_between(times, phase, color="darkorange", alpha=0.4)
