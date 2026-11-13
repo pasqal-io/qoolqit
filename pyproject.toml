@@ -163,3 +163,4 @@ warn_unused_ignores = true
 disallow_untyped_defs = true
 ignore_missing_imports = true
 enable_error_code = ["ignore-without-code"]
+exclude_gitignore = true
