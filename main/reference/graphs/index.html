@@ -4108,7 +4108,7 @@ Plotting: <code>draw</code>.</p>
 
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">distances</span><span class="p">(</span><span class="n">edge_list</span><span class="p">:</span> <span class="n"><span title="collections.abc.Iterable">Iterable</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">distances</span><span class="p">(</span><span class="n">edge_list</span><span class="p">:</span> <span class="n"><span title="collections.abc.Collection">Collection</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4122,7 +4122,7 @@ if there are no coordinates on the graph.</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>edge_list</code></b>
-              (<code><span title="collections.abc.Iterable">Iterable</span> | None</code>, default:
+              (<code><span title="collections.abc.Collection">Collection</span> | None</code>, default:
                   <code>None</code>
 )
           –
@@ -4152,7 +4152,7 @@ if there are no coordinates on the graph.</p>
 <span class="normal"><a href="#qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-351">351</a></span>
 <span class="normal"><a href="#qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-352">352</a></span>
 <span class="normal"><a href="#qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-353">353</a></span>
-<span class="normal"><a href="#qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-354">354</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-338" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-338"></a><span class="k">def</span><span class="w"> </span><span class="nf">distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_list</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal"><a href="#qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-354">354</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-338" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-338"></a><span class="k">def</span><span class="w"> </span><span class="nf">distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_list</span><span class="p">:</span> <span class="n">Collection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-339" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-339"></a><span class="w">    </span><span class="sd">"""Returns a dictionary of distances for a given set of edges.</span>
 <a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-340" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-340"></a>
 <a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-341" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-341"></a><span class="sd">    Distances are calculated directly from the coordinates. Raises an error</span>
@@ -4164,7 +4164,7 @@ if there are no coordinates on the graph.</p>
 <a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-347" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-347"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_coords</span><span class="p">:</span>
 <a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-348" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-348"></a>        <span class="k">if</span> <span class="n">edge_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-349" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-349"></a>            <span class="n">edge_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_node_pairs</span>
-<a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-350" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-350"></a>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># type: ignore [arg-type]</span>
+<a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-350" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-350"></a>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 <a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-351" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-351"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Trying to compute distances for an empty edge list."</span><span class="p">)</span>
 <a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-352" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-352"></a>        <span class="k">return</span> <span class="n">distances</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="n">edge_list</span><span class="p">)</span>
 <a id="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-353" name="qoolqit.graphs.BaseGraph.distances--source--__codelineno-0-353"></a>    <span class="k">else</span><span class="p">:</span>
@@ -6330,7 +6330,7 @@ PyTorch Geometric conversion: <code>from_pyg</code>, <code>to_pyg</code>.</p>
 
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">distances</span><span class="p">(</span><span class="n">edge_list</span><span class="p">:</span> <span class="n"><span title="collections.abc.Iterable">Iterable</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">distances</span><span class="p">(</span><span class="n">edge_list</span><span class="p">:</span> <span class="n"><span title="collections.abc.Collection">Collection</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -6344,7 +6344,7 @@ if there are no coordinates on the graph.</p>
     <ul>
         <li class="doc-section-item field-body">
             <b><code>edge_list</code></b>
-              (<code><span title="collections.abc.Iterable">Iterable</span> | None</code>, default:
+              (<code><span title="collections.abc.Collection">Collection</span> | None</code>, default:
                   <code>None</code>
 )
           –
@@ -6374,7 +6374,7 @@ if there are no coordinates on the graph.</p>
 <span class="normal"><a href="#qoolqit.graphs.DataGraph.distances--source--__codelineno-0-351">351</a></span>
 <span class="normal"><a href="#qoolqit.graphs.DataGraph.distances--source--__codelineno-0-352">352</a></span>
 <span class="normal"><a href="#qoolqit.graphs.DataGraph.distances--source--__codelineno-0-353">353</a></span>
-<span class="normal"><a href="#qoolqit.graphs.DataGraph.distances--source--__codelineno-0-354">354</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-338" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-338"></a><span class="k">def</span><span class="w"> </span><span class="nf">distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_list</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal"><a href="#qoolqit.graphs.DataGraph.distances--source--__codelineno-0-354">354</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-338" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-338"></a><span class="k">def</span><span class="w"> </span><span class="nf">distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_list</span><span class="p">:</span> <span class="n">Collection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-339" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-339"></a><span class="w">    </span><span class="sd">"""Returns a dictionary of distances for a given set of edges.</span>
 <a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-340" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-340"></a>
 <a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-341" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-341"></a><span class="sd">    Distances are calculated directly from the coordinates. Raises an error</span>
@@ -6386,7 +6386,7 @@ if there are no coordinates on the graph.</p>
 <a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-347" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-347"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_coords</span><span class="p">:</span>
 <a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-348" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-348"></a>        <span class="k">if</span> <span class="n">edge_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-349" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-349"></a>            <span class="n">edge_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_node_pairs</span>
-<a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-350" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-350"></a>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># type: ignore [arg-type]</span>
+<a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-350" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-350"></a>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 <a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-351" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-351"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Trying to compute distances for an empty edge list."</span><span class="p">)</span>
 <a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-352" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-352"></a>        <span class="k">return</span> <span class="n">distances</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="n">edge_list</span><span class="p">)</span>
 <a id="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-353" name="qoolqit.graphs.DataGraph.distances--source--__codelineno-0-353"></a>    <span class="k">else</span><span class="p">:</span>
