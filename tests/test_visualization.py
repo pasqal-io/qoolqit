@@ -3,6 +3,7 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 import pytest
 from matplotlib.colors import to_rgba
+from matplotlib.patches import Patch
 
 from qoolqit.visualization import DEFAULT_BAR_COLOR, fig_to_html, plot_bitstrings
 
@@ -30,7 +31,9 @@ def test_plot_bitstrings_label_shows_up_in_legend() -> None:
 
     assert ax.get_legend() is None
     legend = ax.legend()
-    assert legend.legend_handles[0].get_facecolor() == to_rgba(DEFAULT_BAR_COLOR)  # type: ignore[union-attr]
+    handle = legend.legend_handles[0]
+    assert isinstance(handle, Patch)
+    assert handle.get_facecolor() == to_rgba(DEFAULT_BAR_COLOR)
     assert legend.get_texts()[0].get_text() == "run 1"
 
 
@@ -49,7 +52,9 @@ def test_plot_bitstrings_legend_uses_base_color_even_if_first_bar_highlighted() 
     plot_bitstrings(counts={"000": 1, "001": 2}, highlight={"001": "tab:red"}, label="run 1", ax=ax)
 
     legend = ax.legend()
-    assert legend.legend_handles[0].get_facecolor() == to_rgba(DEFAULT_BAR_COLOR)  # type: ignore[union-attr]
+    handle = legend.legend_handles[0]
+    assert isinstance(handle, Patch)
+    assert handle.get_facecolor() == to_rgba(DEFAULT_BAR_COLOR)
 
 
 def test_plot_bitstrings_two_calls_on_same_axes_keep_their_own_highlights() -> None:

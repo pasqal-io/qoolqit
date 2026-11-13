@@ -129,6 +129,7 @@ select = [
     "SIM", # flake8-simplify
     "I", # isort
     "D", # pydocstyle
+    "PGH", # pygrep-hooks
 ]
 isort.required-imports = ["from __future__ import annotations"]
 pydocstyle.convention = "google"
@@ -161,3 +162,4 @@ warn_unused_configs = true
 warn_unused_ignores = true
 disallow_untyped_defs = true
 ignore_missing_imports = true
+enable_error_code = ["ignore-without-code"]
