@@ -7,7 +7,6 @@ import math
 import numpy as np
 import pulser
 from numpy.typing import ArrayLike
-from pulser.parametrized import ParamObj
 from scipy.interpolate import PchipInterpolator
 from typing_extensions import override
 
@@ -33,7 +32,7 @@ class DelayWaveform(Waveform):
     def __mul__(self, other: float) -> Waveform:
         return DelayWaveform(self.duration)
 
-    def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
+    def _to_pulser(self, duration: int) -> pulser.ConstantWaveform:
         return pulser.ConstantWaveform(duration, 0.0)
 
 
@@ -81,7 +80,7 @@ class RampWaveform(Waveform):
             final_value=self.final_value * other,
         )
 
-    def _to_pulser(self, duration: int) -> ParamObj | pulser.RampWaveform:
+    def _to_pulser(self, duration: int) -> pulser.RampWaveform:
         return pulser.RampWaveform(duration, self.initial_value, self.final_value)
 
 
@@ -119,7 +118,7 @@ class ConstantWaveform(Waveform):
     def __mul__(self, other: float) -> Waveform:
         return ConstantWaveform(self.duration, value=self.value * other)
 
-    def _to_pulser(self, duration: int) -> ParamObj | pulser.ConstantWaveform:
+    def _to_pulser(self, duration: int) -> pulser.ConstantWaveform:
         return pulser.ConstantWaveform(duration, self.value)
 
 
@@ -169,7 +168,7 @@ class BlackmanWaveform(Waveform):
     def __mul__(self, other: float) -> Waveform:
         return BlackmanWaveform(self.duration, area=self.area * other)
 
-    def _to_pulser(self, duration: int) -> ParamObj | pulser.BlackmanWaveform:
+    def _to_pulser(self, duration: int) -> pulser.BlackmanWaveform:
         # The compiler multiplies every converted waveform by the energy unit, which turns an
         # amplitude into rad/µs. Pulser takes an area instead, so give it the one that keeps
         # the natural peak self.max() over `duration` ns.
@@ -308,7 +307,7 @@ class InterpolatedWaveform(Waveform):
     def _to_pulser(
         self,
         duration: int,
-    ) -> ParamObj | pulser.InterpolatedWaveform:
+    ) -> pulser.InterpolatedWaveform:
         return pulser.InterpolatedWaveform(
             duration,
             values=self._values,
