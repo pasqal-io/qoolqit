@@ -142,11 +142,15 @@ def test_drive_phase_waveform(amp_duration: float, det_duration: float) -> None:
         (2 * math.pi, 0.0),
         (7 * math.pi / 2, 3 * math.pi / 2),
         (-1e-17, 0.0),
+        # numpy inputs are reduced in float64, not in their own precision
+        (np.float32(-1e-9), math.tau - 1e-9),  # in float32: rounds to 2π, wraps to 0
+        (np.float16(-0.5), math.tau - 0.5),  # in float16: 5.78125
     ],
 )
 def test_drive_with_phase(phase: float, expected: float) -> None:
     drive = Drive(amplitude=RampWaveform(10.0, 0.0, 1.0), phase=phase)
     assert math.isclose(drive.phase.value, expected, abs_tol=1e-12)
+    assert 0.0 <= drive.phase.value < math.tau
 
 
 @pytest.mark.parametrize("phase", [math.inf, -math.inf, math.nan])
@@ -156,23 +160,25 @@ def test_drive_error_phase_not_finite(phase: float) -> None:
 
 
 @pytest.mark.parametrize(
-    "x",
-    [0.0, 0.7, math.pi, -math.pi / 2, 2 * math.pi, -2 * math.pi, 7 * math.pi / 2],
+    "x, expected",
+    [
+        (0.0, 0.0),
+        (0.7, 0.7),
+        (math.pi, math.pi),
+        (-math.pi / 2, 3 * math.pi / 2),
+        (2 * math.pi, 0.0),
+        (4 * math.pi, 0.0),
+        (-math.pi, math.pi),
+        (5 * math.pi / 2, math.pi / 2),
+    ],
 )
-def test_mod_2pi(x: float) -> None:
-    assert _mod_2pi(x) == x % math.tau
-    assert 0.0 <= _mod_2pi(x) < math.tau
+def test_mod_2pi(x: float, expected: float) -> None:
+    assert _mod_2pi(x) == expected
 
 
 @pytest.mark.parametrize("x", [-1e-17, -(0.1 + 0.2 - 0.3)])
 def test_mod_2pi_tiny_negative_wraps_to_zero(x: float) -> None:
     assert _mod_2pi(x) == 0.0
-
-
-@pytest.mark.parametrize("x", [np.float32(-1e-9), np.float16(-1e-4)])
-def test_mod_2pi_low_precision_input(x: np.floating) -> None:
-    # reduced in float64, not in the precision of the input
-    assert _mod_2pi(x) == float(x) % math.tau  # type: ignore[arg-type]
 
 
 def test_drive_repr_without_phase() -> None:

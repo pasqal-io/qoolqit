@@ -68,7 +68,7 @@ class TestBackends:
         assert backend._num_shots is None
 
     def test_emulator_backend_with_config(self) -> None:
-        config = EmulationConfig(observables=(BitStrings(num_shots=1117),))  # type: ignore[var-annotated]
+        config: EmulationConfig = EmulationConfig(observables=(BitStrings(num_shots=1117),))
         backend = LocalEmulator(backend_type=self.MockEmulatorBackend, emulation_config=config)
 
         # convert configs to str
