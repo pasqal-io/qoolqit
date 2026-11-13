@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import functools
-from typing import Any, Literal, TypeVar
+from typing import Literal, TypeVar
 
 import numpy as np
+import numpy.typing as npt
 
 Value = TypeVar("Value", float, np.ndarray)
 FormatType = Literal["full", "triu", "sym"]
@@ -67,7 +68,7 @@ def normalized_best_dist(weight: Value, *, format: FormatType = "sym") -> Value:
     return _format_return(input=weight, ret=dists, format=format)
 
 
-def distance_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
+def distance_matrix_from_positions(positions: np.ndarray) -> npt.NDArray[np.float64]:
     # loop over the few dimensions to avoid allocating a (N, N, d) array
     squared_distances = np.zeros((len(positions), len(positions)))
     for coordinates in np.transpose(positions):
@@ -91,7 +92,3 @@ def symmetric_matrix_from_pairs(values: np.ndarray, pairs: np.ndarray, n: int) -
 
 def interaction_matrix_from_positions(positions: np.ndarray) -> np.ndarray:
     return normalized_interaction(distance_matrix_from_positions(positions), format="triu")
-
-
-def normalized_distance(target: np.ndarray, actual: np.ndarray) -> np.floating[Any]:
-    return np.linalg.norm(target - actual) / np.linalg.norm(target)  # type: ignore[no-any-return]

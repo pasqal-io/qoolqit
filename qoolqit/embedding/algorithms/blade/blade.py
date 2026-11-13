@@ -9,6 +9,7 @@ from typing import Final
 
 import networkx as nx
 import numpy as np
+import numpy.typing as npt
 import scipy
 import torch
 
@@ -50,7 +51,7 @@ def _compute_limited_constraint_forces(*, force: Force, max_distance_to_walk: fl
 
     assert np.all(np.isfinite(limited_resulting_forces))
 
-    return limited_resulting_forces  # type: ignore[no-any-return]
+    return limited_resulting_forces
 
 
 def check_no_duplicate_positions(distance_matrix: np.ndarray, step: int) -> None:
@@ -457,7 +458,7 @@ def evolve_with_dimension_transition(
 
 def _symmetric_interaction_matrix(
     matrix: np.ndarray, count_symmetric_terms_twice: bool = False
-) -> np.ndarray:
+) -> npt.NDArray[np.float64]:
     """Return the symmetric interaction matrix with a null diagonal.
 
     The input must be symmetric or triangular, up to `nearly_equal`. Only one triangle
@@ -466,30 +467,30 @@ def _symmetric_interaction_matrix(
     If `count_symmetric_terms_twice` is set, the off-diagonal terms of a symmetric input
     are doubled (QUBO convention x^T Q x).
     """
-    matrix = np.array(matrix, dtype=float)
-    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+    float_matrix = np.array(matrix, dtype=np.float64)
+    if float_matrix.ndim != 2 or float_matrix.shape[0] != float_matrix.shape[1]:
         raise ValueError(
             "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
         )
 
-    if nearly_equal(matrix, matrix.T):
-        upper = np.triu(matrix, k=1) * (2 if count_symmetric_terms_twice else 1)
-    elif nearly_equal(matrix, np.triu(matrix)):
-        upper = np.triu(matrix, k=1)
-    elif nearly_equal(matrix, np.tril(matrix)):
-        upper = np.triu(matrix.T, k=1)
+    if nearly_equal(float_matrix, float_matrix.T):
+        upper = np.triu(float_matrix, k=1) * (2 if count_symmetric_terms_twice else 1)
+    elif nearly_equal(float_matrix, np.triu(float_matrix)):
+        upper = np.triu(float_matrix, k=1)
+    elif nearly_equal(float_matrix, np.tril(float_matrix)):
+        upper = np.triu(float_matrix.T, k=1)
     else:
         raise ValueError(
             "The input matrix shall be a 2-dimension square matrix either symmetric or triangular"
         )
 
-    return upper + upper.T  # type: ignore[no-any-return]
+    return upper + upper.T
 
 
 def _compute_min_pairwise_distance(positions: np.ndarray) -> float:
     distance_matrix = distance_matrix_from_positions(positions)
-    upper_diagonal_mask = np.triu(np.ones(distance_matrix.shape), k=1).astype(bool)
-    return np.min(distance_matrix[upper_diagonal_mask])  # type: ignore
+    upper_diagonal_mask = np.triu(np.ones(distance_matrix.shape), k=1).astype(np.bool_)
+    return np.min(distance_matrix[upper_diagonal_mask])
 
 
 def default_compute_max_distance_to_walk(progress: float, max_radial_dist: float) -> float:
