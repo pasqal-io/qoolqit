@@ -185,7 +185,7 @@ def test_converter_keeps_area(
     """Every waveform type keeps its area through `_WaveformConverter.convert`."""
     converter = _WaveformConverter(device, time=1000 / energy, energy=energy)
     # pulser's Waveform.integral sums the 1 ns samples (rad/µs) times 1e-3: the area in rad
-    converted_area = converter.convert(waveform).integral  # type: ignore[union-attr]
+    converted_area = converter.convert(waveform).integral
     expected_area, _ = quad(waveform, 0, waveform.duration)
     assert converted_area == pytest.approx(expected_area, rel=rel, abs=0)
 
@@ -196,7 +196,7 @@ def test_converter_keeps_interpolated_area(device: Device, energy: float) -> Non
     """Same contract as `test_converter_keeps_area`, with a looser budget of its own."""
     waveform = InterpolatedWaveform(50.0, [0.0, 0.008, 0.004, 0.0])
     converter = _WaveformConverter(device, time=1000 / energy, energy=energy)
-    converted_area = converter.convert(waveform).integral  # type: ignore[union-attr]
+    converted_area = converter.convert(waveform).integral
     expected_area, _ = quad(waveform, 0, waveform.duration)
     # Budget: pulser spreads the interpolated curve over N - 1 ns for an N ns waveform, so its
     # area is short by 1/N: 6.9e-3 for the shortest pulse here (144 ns at energy 347), plus the

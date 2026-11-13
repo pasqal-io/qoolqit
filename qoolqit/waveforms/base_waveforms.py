@@ -10,7 +10,6 @@ import numpy as np
 import pulser
 from matplotlib.axes import Axes
 from matplotlib.typing import ColorType
-from pulser.parametrized import ParamObj
 from pulser.waveforms import Waveform as PulserWaveform
 from typing_extensions import override
 
@@ -79,7 +78,7 @@ class Waveform(ABC):
         return self.__mul__(other)
 
     @abstractmethod
-    def _to_pulser(self, duration: int) -> ParamObj | PulserWaveform:
+    def _to_pulser(self, duration: int) -> PulserWaveform:
         """Converts QoolQit waveform to a Pulser Waveform."""
         pass
 
@@ -252,9 +251,7 @@ class CompositeWaveform(Waveform):
         """Return each sub-waveform with its time interval, one per line."""
         return self._repr_header() + self._repr_content()
 
-    def _to_pulser(
-        self, duration: int
-    ) -> ParamObj | pulser.waveforms.Waveform | pulser.CompositeWaveform:
+    def _to_pulser(self, duration: int) -> PulserWaveform:
         """Converts a CompositeWaveform from QoolQit to Pulser.
 
         Pulser only supports integer duration, so the sum of rounded
