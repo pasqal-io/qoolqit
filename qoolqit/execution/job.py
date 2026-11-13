@@ -220,11 +220,9 @@ class _LocalJob(Job[Results]):
             JobFailedError: If the job failed (i.e. *result* was
                 ``None`` at construction time).
         """
-        status = self.get_status()
-        if status == JobStatus.ERROR:
+        if self._result is None:
             raise JobFailedError("Job failed.")
-        assert status == JobStatus.DONE
-        return self._result  # type: ignore[return-value]
+        return self._result
 
 
 class _RemoteJob(Job[Results]):

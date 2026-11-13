@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Collection, Iterable
 from typing import Any, Self
 
 import matplotlib.pyplot as plt
@@ -335,7 +335,7 @@ class BaseGraph(nx.Graph):
             coords_dict = coords
         nx.set_node_attributes(self, coords_dict, "pos")
 
-    def distances(self, edge_list: Iterable | None = None) -> dict:
+    def distances(self, edge_list: Collection | None = None) -> dict:
         """Returns a dictionary of distances for a given set of edges.
 
         Distances are calculated directly from the coordinates. Raises an error
@@ -347,7 +347,7 @@ class BaseGraph(nx.Graph):
         if self.has_coords:
             if edge_list is None:
                 edge_list = self.all_node_pairs
-            elif len(edge_list) == 0:  # type: ignore [arg-type]
+            elif len(edge_list) == 0:
                 raise ValueError("Trying to compute distances for an empty edge list.")
             return distances(self.coords, edge_list)
         else:
