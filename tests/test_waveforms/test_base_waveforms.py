@@ -111,10 +111,10 @@ class TestWaveform:
         # scalar call
         assert wf(3.0) == wf.function(3.0)  # 2 * 3.0 + 1.0 = 7.0
 
-        # list call returns a list with element-wise values
+        # list call returns an ndarray with element-wise values
         result_list = wf([1.0, 2.0, 3.0])
-        assert isinstance(result_list, list)
-        assert result_list == [wf.function(t) for t in [1.0, 2.0, 3.0]]
+        assert isinstance(result_list, np.ndarray)
+        np.testing.assert_array_equal(result_list, [wf.function(t) for t in [1.0, 2.0, 3.0]])
 
         # ndarray call returns an ndarray with element-wise values
         t_array = np.array([1.0, 2.0, 3.0])
@@ -122,28 +122,15 @@ class TestWaveform:
         assert isinstance(result_array, np.ndarray)
         np.testing.assert_array_equal(result_array, np.array([wf.function(t) for t in t_array]))
 
-    def test_call_ndarray_matches_list_when_function_returns_int(self) -> None:
-        """Regression test for https://github.com/pasqal-io/qoolqit/issues/439.
+    def test_call_returns_float64_when_function_returns_int(self) -> None:
+        class IntWaveform(TestWaveform.MockWaveform):
+            def function(self, t: float) -> float:
+                return 1
 
-        `np.vectorize` infers the output dtype from the first call, so a waveform whose
-        first sampled value happens to be a Python int (e.g. `ConstantWaveform(1, 0)`)
-        must not cause later float samples to be truncated to int.
-        """
-        wf1 = ConstantWaveform(1, 0)
-        wf2 = RampWaveform(1, 0, -2)
-        wf_composed = wf1 >> wf2
-
-        n = 20
-        T = 2
-        t_array = np.linspace(0, T, n)
-        t_list = [i * T / (n - 1) for i in range(n)]
-
-        result_array = wf_composed(t_array)
-        result_list = wf_composed(t_list)
-
-        assert isinstance(result_array, np.ndarray)
-        assert result_array.dtype == np.float64
-        np.testing.assert_allclose(result_array, result_list, atol=1e-8)
+        wf = IntWaveform(1.0) >> self.MockWaveform(1.0)
+        result = wf(np.array([0.5, 1.25]))
+        assert result.dtype == np.float64
+        np.testing.assert_array_equal(result, [1.0, 1.5])
 
     def test_composition(self) -> None:
         wf1 = self.MockWaveform(11.1)
