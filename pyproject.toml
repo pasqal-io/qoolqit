@@ -20,7 +20,7 @@ authors = [
   { name = "Manu Lahariya"},
   { name = "Mathieu Garrigues", email = "mathieu.garrigues@pasqal.com" },
   { name = "Roland Guichard"},
-  { name = "Stefano Grava", email = "s.grava-ext@pasqal.com" },
+  { name = "Stefano Grava", email = "stefano.grava@pasqal.com" },
   { name = "Vittorio Vitale", email = "vittorio.vitale@pasqal.com" },
   { name = "Vytautas Abramavicius"},
 ]
