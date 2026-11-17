@@ -5,7 +5,6 @@ from __future__ import annotations
 from enum import Enum
 
 from pulser.devices import Device as PulserDevice
-from pulser.parametrized import ParamObj
 from pulser.pulse import Pulse as PulserPulse
 from pulser.register.register import Register as PulserRegister
 from pulser.sequence.sequence import Sequence as PulserSequence
@@ -58,7 +57,7 @@ class _WaveformConverter:
         pulser_duration = converted_duration + (cp - rm) if rm != 0 else converted_duration
         return pulser_duration
 
-    def convert(self, waveform: Waveform) -> ParamObj | PulserWaveform:
+    def convert(self, waveform: Waveform) -> PulserWaveform:
         """Convert a QoolQit waveform into a equivalent Pulser waveform."""
         pulser_duration = self._pulser_duration(waveform)
         return waveform._to_pulser(duration=pulser_duration) * self._energy
