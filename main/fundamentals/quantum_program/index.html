@@ -2323,7 +2323,7 @@ It can be instantiated from a dictionary of coordinates, or from a list of coord
 <span class="n">wf2</span><span class="p">(</span><span class="n">t</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">=</span> <span class="mf">2.0</span>
 <span class="n">wf3</span><span class="p">(</span><span class="n">t</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">=</span> <span class="mf">1.0</span>
 </code></pre></div>
-<p>Each waveform also supports evaluation at multiple time steps by calling it on an array of times.</p>
+<p>Each waveform also supports evaluation at multiple time steps by calling it on a 1D list or array of times.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">t_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
