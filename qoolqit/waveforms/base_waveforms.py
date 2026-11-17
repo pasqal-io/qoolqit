@@ -7,6 +7,7 @@ from typing import overload
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import pulser
 from matplotlib.axes import Axes
 from matplotlib.typing import ColorType
@@ -105,17 +106,16 @@ class Waveform(ABC):
     def __call__(self, t: float) -> float: ...
 
     @overload
-    def __call__(self, t: list[float] | np.ndarray) -> list | np.ndarray: ...
+    def __call__(self, t: list[float] | np.ndarray) -> npt.NDArray[np.float64]: ...
 
-    def __call__(self, t: float | list[float] | np.ndarray) -> float | list[float] | np.ndarray:
-        """Evaluate the waveform at `t`, a float, a list or an array.
+    def __call__(self, t: float | list[float] | np.ndarray) -> float | npt.NDArray[np.float64]:
+        """Evaluate the waveform at `t`: a single time, or a 1D list or array of times.
 
-        Returns a value of the same kind; times outside [0, duration] give 0.
+        Returns a float for a single time, otherwise a 1D float64 array.
+        Times outside [0, duration] give 0.
         """
-        if isinstance(t, np.ndarray):
-            return np.vectorize(self._single_call, otypes=[float])(t)  # type: ignore[no-any-return]
-        if isinstance(t, list):
-            return [self._single_call(ti) for ti in t]
+        if isinstance(t, (list, np.ndarray)):
+            return np.array([self._single_call(ti) for ti in t], dtype=np.float64)
         return self._single_call(t)
 
     def __rshift__(self, other: Waveform) -> CompositeWaveform:

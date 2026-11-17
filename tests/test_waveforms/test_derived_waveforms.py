@@ -84,7 +84,7 @@ def test_constant_samples(duration: float, times: list[float] | np.ndarray) -> N
     wf = ConstantWaveform(duration, value=value)
 
     wf_samples = wf(times)
-    assert isinstance(wf_samples, type(times))
+    assert isinstance(wf_samples, np.ndarray)
     assert len(wf_samples) == len(times)
 
     np.testing.assert_allclose(wf_samples, value)
@@ -303,7 +303,7 @@ def test_interpolated_mul(times: np.ndarray | None) -> None:
     times = np.linspace(0, wf.duration, 17)
     wf_samples = wf(times)
     scaled_samples = scaled(times)
-    np.testing.assert_allclose(scaled_samples, wf_samples * scaling, atol=1e-8)  # type: ignore[operator]
+    np.testing.assert_allclose(scaled_samples, wf_samples * scaling, atol=1e-8)
 
 
 def test_interpolated_to_pulser() -> None:
