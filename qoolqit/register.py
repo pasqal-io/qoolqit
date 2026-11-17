@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import math
 from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING, Any, TypeGuard, cast
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 from matplotlib.axes import Axes
 from scipy.spatial.distance import cdist
+from typing_extensions import TypeIs
 
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
 
@@ -26,7 +27,7 @@ except ImportError:
     _has_torch = False
 
 
-def _is_torch(val: Any) -> TypeGuard[torch.Tensor]:
+def _is_torch(val: Any) -> TypeIs[torch.Tensor]:
     return _has_torch and isinstance(val, torch.Tensor)
 
 
@@ -70,7 +71,6 @@ def _fill_diagonal(
         diag = torch.full_like(x.diag(), value)
         return torch.diagonal_scatter(x, diag)
 
-    x = cast(npt.NDArray[np.float64], x)  # TypeGuard narrows only the torch branch above.
     np.fill_diagonal(x, value)
     return x
 
