@@ -87,7 +87,7 @@ Issues = "https://github.com/pasqal-io/qoolqit/issues"
 Source = "https://github.com/pasqal-io/qoolqit"
 
 [tool.hatch.build.targets.sdist]
-include = ["/qoolqit", "/tests"]
+only-include = ["qoolqit"]
 
 [tool.uv]
 default-groups = ["dev"]
