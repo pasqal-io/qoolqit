@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
 
 import numpy as np
+import numpy.typing as npt
 from scipy.optimize import minimize
-from scipy.spatial.distance import pdist, squareform
+from scipy.spatial.distance import cdist
 
 from qoolqit.embedding.base_embedder import EmbedderConfig
 from qoolqit.graphs import DataGraph
@@ -76,7 +76,7 @@ def interaction_embedding(
     off-diagonal entries of `matrix`, using `scipy.optimize.minimize`.
 
     Args:
-        matrix: symmetric N x N matrix to embed.
+        matrix: symmetric N x N target matrix to embed.
         method: optimization method passed to `scipy.optimize.minimize`.
         x0: initial node positions, of shape (N, 2).
             If None, positions are drawn uniformly in [0, 1), seeded by `seed`.
@@ -88,14 +88,15 @@ def interaction_embedding(
     Returns:
         DataGraph: graph with node coordinates centered on their median.
     """
-    matrix = np.asarray(matrix, dtype=float)
+    matrix = np.asarray(matrix, dtype=np.float64)
 
-    def cost_function(new_coords: np.ndarray, matrix: np.ndarray) -> np.floating[Any]:
-        """Cost function."""
+    def cost_function(new_coords: np.ndarray) -> float:
+        """Distance between the matrix and the interaction 1/r⁶."""
         new_coords = np.reshape(new_coords, (len(matrix), 2))
-        # Cost based on minimizing the distance between the matrix and the interaction 1/r⁶
-        new_matrix = squareform(1.0 / (pdist(new_coords) ** 6))
-        return np.linalg.norm(new_matrix - matrix)  # type: ignore[no-any-return]
+        squared_dist: npt.NDArray[np.float64] = cdist(new_coords, new_coords, metric="sqeuclidean")
+        np.fill_diagonal(squared_dist, np.inf)  # 1/inf = 0: no self-interaction
+        interactions = 1.0 / (squared_dist * squared_dist * squared_dist)
+        return np.linalg.norm(matrix - interactions)
 
     if x0 is None:
         rng = np.random.default_rng(seed)
@@ -106,7 +107,6 @@ def interaction_embedding(
     res = minimize(
         cost_function,
         x0,
-        args=(matrix,),
         method=method,
         tol=tol,
         options={"maxiter": maxiter},
