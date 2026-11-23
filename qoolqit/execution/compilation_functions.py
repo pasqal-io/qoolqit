@@ -15,7 +15,7 @@ from qoolqit.drive import DetuningMapModulator, Drive, Waveform
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
 
-# Tolerate float round-off in computed distances, see #599. Pulser validates the
+# Tolerate float round-off in computed distances. Pulser validates the
 # rescaled register against an absolute tolerance, so these checks must stay stricter.
 _DIST_RTOL = 1e-9
 
@@ -233,22 +233,26 @@ def _validate_program_default_profile(
 
     if register.n_qubits > 1:
         min_distance = register.min_distance()
-        if specs["min_distance"] and (min_distance < specs["min_distance"] * (1 - _DIST_RTOL)):
-            msg = (
-                f"The register minimum distance between two qubits {min_distance} "
-                "goes below the minimum allowed for the chosen device:\n"
-            )
-            raise CompilationError(msg + f"{device}")
+        if specs["min_distance"]:
+            # device minimum, lowered by the float round-off tolerance
+            min_distance_allowed = specs["min_distance"] * (1 - _DIST_RTOL)
+            if min_distance < min_distance_allowed:
+                msg = (
+                    f"The register minimum distance between two qubits {min_distance} "
+                    "goes below the minimum allowed for the chosen device:\n"
+                )
+                raise CompilationError(msg + f"{device}")
 
     max_radial_distance = register.max_radial_distance()
-    if specs["max_radial_distance"] and (
-        max_radial_distance > specs["max_radial_distance"] * (1 + _DIST_RTOL)
-    ):
-        msg = (
-            f"The register maximum radial distance {max_radial_distance} "
-            "goes over the maximum allowed for the chosen device:\n"
-        )
-        raise CompilationError(msg + f"{device}")
+    if specs["max_radial_distance"]:
+        # device maximum, raised by the float round-off tolerance
+        max_radial_distance_allowed = specs["max_radial_distance"] * (1 + _DIST_RTOL)
+        if max_radial_distance > max_radial_distance_allowed:
+            msg = (
+                f"The register maximum radial distance {max_radial_distance} "
+                "goes over the maximum allowed for the chosen device:\n"
+            )
+            raise CompilationError(msg + f"{device}")
 
 
 def _validate_program_max_energy_profile(
