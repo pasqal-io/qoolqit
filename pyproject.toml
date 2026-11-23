@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "qoolqit"
 description = "A Python library for developing algorithms in the Rydberg Analog Model."
 readme = "README.md"
-version = "1.6.0"
+version = "1.7.0"
 requires-python = ">=3.11"
 license = { text = "MIT-derived" }
 keywords = ["quantum"]
@@ -69,6 +69,8 @@ docs = [
   "mkdocstrings-python",
   "griffe-inherited-docstrings",
   "markdown-exec>=1.12.6",
+  # Formats API signatures (separate_signature). Keep in sync with the ruff-pre-commit rev.
+  "ruff==0.17.5",
   # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
   # See https://zensical.org/docs/compatibility/mkdocs/mike/
   "mike @ git+https://github.com/squidfunk/mike.git@0f62791256ebeba60d20d2f1d8fe6ec3b7d1e2b3", # 2.2.0+zensical-0.1.0
@@ -78,7 +80,6 @@ dev = [
   { include-group = "docs" },
   "mypy==2.4.1",
   "pre-commit",
-  "ruff>=0.15.21",
 ]
 
 [project.urls]
