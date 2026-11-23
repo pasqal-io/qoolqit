@@ -86,11 +86,36 @@ class TestWorkingPointCompilerProfile:
         with pytest.raises(
             CompilationError,
             match=(
-                f"The register minimum distance between two qubits {0.78:.4f} goes below the "
+                f"The register minimum distance between two qubits {0.78} goes below the "
                 "minimum allowed for the chosen device"
             ),
         ):
             program.compile_to(device=AnalogDevice(), profile=self.profile)
+
+    def test_catch_compilation_error_min_dist_round_off(self) -> None:
+        # just outside the round-off tolerance: rejected by QoolQit, value printed in full
+        register = Register({"q0": (0.0, 0.0), "q1": (1 - 2e-9, 0.0)})
+        drive = Drive(amplitude=ConstantWaveform(50, value=0.2))
+        program = QuantumProgram(register, drive)
+
+        with pytest.raises(CompilationError, match="between two qubits 0.999999998 goes below"):
+            program.compile_to(device=AnalogDevice(), profile=self.profile)
+
+    @pytest.mark.parametrize(
+        "register",
+        [Register.circle(8), Register.circle(32), Register.triangular(rows=8, atoms_per_row=8)],
+    )
+    def test_compile_min_distance_round_off(self, register: Register) -> None:
+        drive = Drive(amplitude=ConstantWaveform(5.0, 0.2))
+        QuantumProgram(register, drive).compile_to(device=AnalogDevice(), profile=self.profile)
+
+    def test_compile_max_radial_distance_round_off(self) -> None:
+        # radial distance at the device limit 7.6, computed as 7.6000000000000005
+        register = Register(
+            {"a": (0.0, 0.0), "b": (1.0, 0.0), "c": (7.6 * np.cos(0.1), 7.6 * np.sin(0.1))}
+        )
+        drive = Drive(amplitude=ConstantWaveform(5.0, 0.2))
+        QuantumProgram(register, drive).compile_to(device=AnalogDevice(), profile=self.profile)
 
     def test_catch_compilation_error_max_det(self) -> None:
         register = Register({"q0": (0.0, 0.0), "q1": (1.0, 1.0)})
@@ -130,7 +155,7 @@ class TestWorkingPointCompilerProfile:
         with pytest.raises(
             CompilationError,
             match=(
-                f"The register maximum radial distance {9.0:.4f} goes over "
+                f"The register maximum radial distance {9.0} goes over "
                 "the maximum allowed for the chosen device"
             ),
         ):

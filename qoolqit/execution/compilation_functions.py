@@ -15,6 +15,10 @@ from qoolqit.drive import DetuningMapModulator, Drive, Waveform
 from qoolqit.exceptions import CompilationError
 from qoolqit.register import Register
 
+# Tolerate float round-off in computed distances, see #599. Pulser validates the
+# rescaled register against an absolute tolerance, so these checks must stay stricter.
+_DIST_RTOL = 1e-9
+
 
 class CompilerProfile(Enum):
     """Enum for the different compilation profiles."""
@@ -229,17 +233,19 @@ def _validate_program_default_profile(
 
     if register.n_qubits > 1:
         min_distance = register.min_distance()
-        if specs["min_distance"] and (min_distance < specs["min_distance"]):
+        if specs["min_distance"] and (min_distance < specs["min_distance"] * (1 - _DIST_RTOL)):
             msg = (
-                f"The register minimum distance between two qubits {min_distance:.4f} "
+                f"The register minimum distance between two qubits {min_distance} "
                 "goes below the minimum allowed for the chosen device:\n"
             )
             raise CompilationError(msg + f"{device}")
 
     max_radial_distance = register.max_radial_distance()
-    if specs["max_radial_distance"] and (max_radial_distance > specs["max_radial_distance"]):
+    if specs["max_radial_distance"] and (
+        max_radial_distance > specs["max_radial_distance"] * (1 + _DIST_RTOL)
+    ):
         msg = (
-            f"The register maximum radial distance {max_radial_distance:.4f} "
+            f"The register maximum radial distance {max_radial_distance} "
             "goes over the maximum allowed for the chosen device:\n"
         )
         raise CompilationError(msg + f"{device}")
@@ -295,7 +301,7 @@ def _validate_program_max_energy_profile(
     max_radial_distance = register.max_radial_distance()
     if specs["max_radial_distance"]:
         max_radial_distance_to_compile = specs["max_radial_distance"] / DISTANCE
-        if max_radial_distance > max_radial_distance_to_compile:
+        if max_radial_distance > max_radial_distance_to_compile * (1 + _DIST_RTOL):
             msg = (
                 "The register's maximum radial distance went over the maximum value allowed.\n"
                 f"To compile this program on the selected device `{device.name}`, "
