@@ -38,7 +38,7 @@ classifiers = [
 dependencies = [
   "networkx>=3.5",
   "numpy>=2",
-  "pulser[torch]>=1.9.0",
+  "pulser>=1.9.0",
   "typing-extensions>=4.10",
 ]
 
@@ -46,6 +46,7 @@ dependencies = [
 extras = [
   "emu_sv",
   "emu_mps",
+  "pasqal-cloud<1",
   "torch_geometric",
   "pandas",
   "seaborn",

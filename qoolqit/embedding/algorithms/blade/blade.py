@@ -11,7 +11,6 @@ import networkx as nx
 import numpy as np
 import numpy.typing as npt
 import scipy
-import torch
 
 from qoolqit.devices.device import Device
 from qoolqit.embedding.algorithms.blade._force import Force
@@ -626,11 +625,7 @@ def _blade(
         dimensions = (dimensions[0], dimensions[0])
 
     assert len(dimensions) >= 2
-
-    if isinstance(matrix, np.ndarray):
-        assert not np.all(matrix == 0)
-    else:
-        assert not torch.all(matrix == 0)
+    assert not np.all(matrix == 0)
 
     matrix = _symmetric_interaction_matrix(
         matrix, count_symmetric_terms_twice=count_symmetric_terms_twice
