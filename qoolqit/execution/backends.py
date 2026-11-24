@@ -288,18 +288,18 @@ class Emulator:
     def __init__(
         self,
         *,
-        backend_type: EmulatorName = "qutip",
+        emulator_name: EmulatorName = "qutip",
         connection: RemoteConnection | None = None,
         emulation_config: EmulationConfig | None = None,
         num_shots: int | None = None,
     ) -> None:
         backends = _LOCAL_BACKENDS if connection is None else _REMOTE_BACKENDS
-        if backend_type not in backends:
+        if emulator_name not in backends:
             raise ValueError(
-                f"Error in `Emulator`: `backend_type` must be one of {list(backends)}, "
-                f"got {backend_type!r}."
+                f"Error in `Emulator`: `emulator_name` must be one of {list(backends)}, "
+                f"got {emulator_name!r}."
             )
-        pulser_backend_type: Any = getattr(BackendType, backends[backend_type])
+        pulser_backend_type: Any = getattr(BackendType, backends[emulator_name])
 
         self._emulator: LocalEmulator | RemoteEmulator
         if connection is None:
