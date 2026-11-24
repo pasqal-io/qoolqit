@@ -1,0 +1,31 @@
+# QoolQit
+
+**QoolQit** is a Python library for designing and compiling analog quantum programs for neutral-atom devices in the Rydberg Analog Model.
+
+QoolQit works in a **dimensionless framework**. This solves a key challenge in programming neutral-atom quantum computers: specifying physical parameters such as atom positions in micrometers, laser amplitudes in MHz, and pulse durations in nanoseconds, since these values depend on the hardware and vary across devices.
+
+QoolQit separates the **program you want to implement** from the **hardware scale used to realize it**. This makes it possible to develop analog quantum algorithms in a device-agnostic way, while still compiling them consistently to realistic hardware constraints.
+
+ Your browser does not support the video tag.
+
+With QoolQit you can:
+
+- define neutral-atom registers and interaction graphs,
+- build analog Hamiltonians with drives, detunings, and local controls,
+- reason about programs in dimensionless units,
+- compile them to hardware-compatible physical parameters,
+- simulate and analyze the resulting dynamics.
+
+QoolQit is designed for both **algorithm exploration** and **hardware-aware program design**: you can start from an abstract many-body problem, express it in a clean dimensionless form, and then map it to a concrete device realization.
+
+## Where to start
+
+- [Quick Run Guide](<https://pasqal-io.github.io/qoolqit/v1.7.0/get_started/quick_run_guide/index.md>) — install QoolQit and run your first job, locally or remotely.
+- [The QoolQit Model](<https://pasqal-io.github.io/qoolqit/v1.7.0/get_started/qoolqit_model/index.md>) — the dimensionless Hamiltonian and compilation logic.
+- [Programming with QoolQit](<https://pasqal-io.github.io/qoolqit/v1.7.0/get_started/programming_with_qoolqit/index.md>) — writing a quantum program.
+
+## Explore further
+
+- [Fundamentals](<https://pasqal-io.github.io/qoolqit/v1.7.0/fundamentals/introduction/index.md>) — registers, waveforms, programs, compilation, and execution in depth.
+- [Applications](<https://pasqal-io.github.io/qoolqit/v1.7.0/tutorials/index.md>) — end-to-end examples: QUBO, MWIS, and TFIM critical state preparation.
+- [API reference](<https://pasqal-io.github.io/qoolqit/v1.7.0/reference/qoolqit/index.md>) — the full API of every module.
