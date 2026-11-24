@@ -54,3 +54,35 @@ def test_custom_embedders() -> None:
         matrix = np.random.rand(5, 5)
         matrix = matrix + matrix.T
         embedder_m2g.embed(matrix)
+
+
+@pytest.mark.parametrize(
+    ("data", "error", "match"),
+    [
+        (np.ones(3), ValueError, "Data must be a 2D matrix"),
+        (np.array([[0.0, 1.0], [2.0, 0.0]]), ValueError, "Data must be a symmetric matrix"),
+        ([[0.0, 1.0], [1.0, 0.0]], TypeError, "requires data to be a symmetric matrix"),
+    ],
+)
+def test_matrix_to_graph_embedder_invalid_input(
+    data: object, error: type[Exception], match: str
+) -> None:
+    embedder = MatrixToGraphEmbedder(lambda data: data, EmbedderConfig())
+    with pytest.raises(error, match=match):
+        embedder.embed(data)  # type: ignore[arg-type]
+
+
+def test_embed_passes_config_to_algorithm() -> None:
+    @dataclass
+    class SomeConfig(EmbedderConfig):
+        param1: float = 1.0
+
+    received = []
+
+    def some_embedding_algo(data: DataGraph, param1: float) -> DataGraph:
+        received.append(param1)
+        return data
+
+    embedder = GraphToGraphEmbedder(some_embedding_algo, SomeConfig(param1=2.0))
+    embedder.embed(DataGraph())
+    assert received == [2.0]
