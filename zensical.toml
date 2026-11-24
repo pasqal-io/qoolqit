@@ -1,5 +1,6 @@
 [project]
 site_name = "QoolQit Documentation"
+site_url = "https://pasqal-io.github.io/qoolqit/"
 site_author = "Pasqal"
 repo_name = "pasqal-io/qoolqit"
 repo_url = "https://github.com/pasqal-io/qoolqit"
@@ -124,6 +125,19 @@ module_name = "scripts/docs_macros"
 on_error_fail = true
 
 [project.plugins.markdown-exec]
+
+# llms.txt, a Markdown copy of each listed page, and llms-full.txt with all of them
+[project.plugins.llmstxt]
+full_output = "llms-full.txt"
+markdown_description = "QoolQit is a Python library for programming neutral-atom quantum computers."
+
+[project.plugins.llmstxt.sections]
+"Overview" = ["index.md"]
+"Get started" = ["get_started/*.md"]
+"Fundamentals" = ["fundamentals/*.md"]
+"Extended usage" = ["extended_usage/*.md"]
+"Applications" = ["tutorials/*.md"]
+"API reference" = ["reference/*.md"]
 
 [project.plugins.mkdocstrings.handlers.python]
 paths = ["qoolqit"]
