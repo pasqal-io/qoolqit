@@ -127,6 +127,30 @@ class TestMaxEnergyCompilerProfile:
             with pytest.raises(CompilationError, match=msg):
                 program.compile_to(AnalogDevice(), profile=self.profile)
 
+    @pytest.mark.parametrize(
+        "register",
+        [
+            Register.circle(8, spacing=1.1),
+            Register.circle(32, spacing=1.3),
+            Register.triangular(rows=8, atoms_per_row=8, spacing=1.5),
+        ],
+    )
+    def test_compile_min_distance_round_off(self, register: Register) -> None:
+        device = AnalogDevice()
+        max_amplitude = device.specs["max_amplitude"]
+        assert max_amplitude is not None
+        # below max_amplitude / min_distance**6 the register is scaled to the minimum distance
+        amplitude = 0.9 * max_amplitude / register.min_distance() ** 6
+        program = QuantumProgram(register, Drive(amplitude=ConstantWaveform(25.0, amplitude)))
+        program.compile_to(device=device, profile=self.profile)
+
+    def test_compile_max_radial_distance_round_off(self) -> None:
+        # rescaled radial limit 7.6 * 1.25 = 9.5 is computed as 9.499999999999998
+        register = Register({"a": (0.0, 0.0), "b": (1.25, 0.0), "c": (9.5, 0.0)})
+        # 0.05 < max_amplitude / 1.25**6: the register is scaled to the minimum distance
+        program = QuantumProgram(register, Drive(amplitude=ConstantWaveform(25.0, 0.05)))
+        program.compile_to(device=AnalogDevice(), profile=self.profile)
+
     @pytest.mark.parametrize("device", [AnalogDevice(), DigitalAnalogDevice(), MockDevice()])
     @pytest.mark.parametrize(
         "values",
