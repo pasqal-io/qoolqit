@@ -342,7 +342,7 @@ plot_bitstrings(counts, highlight={SOLUTION: COLORS["mintgreen"]})
 
 ```
 Most frequent bitstring: 0110
-P(0110) = 78.30%
+P(0110) = 78.60%
 ```
 
 png
