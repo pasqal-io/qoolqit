@@ -7,12 +7,14 @@ from the `QuantumProgram` being executed, so the same backend can run many progr
 
 from __future__ import annotations
 
-from pasqal_cloud.backends import RemoteEmuFreeBackend, RemoteEmulatorBackend
+from typing import Any, Literal
+
+import pulser.backends as BackendType
 from pulser.backend import BackendConfig, BitStrings, Results
 from pulser.backend.abc import EmulatorBackend
 from pulser.backend.config import EmulationConfig
 from pulser.backend.qpu import QPUBackend
-from pulser.backend.remote import RemoteConnection
+from pulser.backend.remote import RemoteBackend, RemoteConnection
 from pulser_simulation import QutipBackendV2
 
 from qoolqit.execution import job
@@ -166,8 +168,9 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
     [third-party cloud providers](https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection).
 
     Args:
-        backend_type: backend type. Must be a subtype of
-            `pasqal_cloud.backends.RemoteEmulatorBackend`.
+        backend_type: backend type. Must be a subtype of both
+            `pulser.backend.remote.RemoteBackend` and `pulser.backend.EmulatorBackend`.
+            If None, `BackendType.RemoteEmuFreeBackend` is used (requires `pasqal-cloud`).
         connection: connection to execute the program on remote backends.
         emulation_config: optional emulation config. If None,
             [`default_emulation_config`][qoolqit.execution.RemoteEmulator.default_emulation_config]
@@ -192,18 +195,26 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
     def __init__(
         self,
         *,
-        backend_type: type[RemoteEmulatorBackend] = RemoteEmuFreeBackend,
+        backend_type: type[EmulatorBackend] | None = None,
         connection: RemoteConnection,
         emulation_config: EmulationConfig | None = None,
         num_shots: int | None = None,
     ) -> None:
         """Instantiate a RemoteEmulator."""
         super().__init__(num_shots=num_shots)
-        if not issubclass(backend_type, RemoteEmulatorBackend):
+        # Resolved lazily: only this default requires `pasqal-cloud`.
+        # Typed `Any`: "subtype of both RemoteBackend and EmulatorBackend" is checked at runtime.
+        resolved_type: Any = backend_type or BackendType.RemoteEmuFreeBackend
+        if not (
+            isinstance(resolved_type, type)
+            and issubclass(resolved_type, RemoteBackend)
+            and issubclass(resolved_type, EmulatorBackend)
+        ):
             raise TypeError(
-                "Error in `RemoteEmulator`: `backend_type` must be a RemoteEmulatorBackend type."
+                "Error in `RemoteEmulator`: `backend_type` must be a subtype of both "
+                "`RemoteBackend` and `EmulatorBackend`."
             )
-        self._backend_type = backend_type
+        self._backend_type = resolved_type
         self._connection = self.validate_connection(connection)
         self._emulation_config = self.validate_emulation_config(emulation_config)
 
@@ -255,6 +266,58 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
         remote_results = self._backend.run(wait=False)
         # Each run submits a single job, in a new batch.
         return job._RemoteJob._from_remote_results(remote_results)
+
+
+EmulatorName = Literal["qutip", "emu_sv", "emu_mps"]
+
+# Names of the Pulser backends in `pulser.backends`, resolved lazily so that optional
+# packages (`emu_sv`, `emu_mps`, `pasqal_cloud`) are only imported when used.
+_LOCAL_BACKENDS: dict[EmulatorName, str] = {
+    "qutip": "QutipBackendV2",
+    "emu_sv": "SVBackend",
+    "emu_mps": "MPSBackend",
+}
+_REMOTE_BACKENDS: dict[EmulatorName, str] = {
+    "qutip": "RemoteEmuFreeBackend",
+    "emu_sv": "RemoteSVBackend",
+    "emu_mps": "RemoteMPSBackend",
+}
+
+
+class Emulator:
+    def __init__(
+        self,
+        *,
+        backend_type: EmulatorName = "qutip",
+        connection: RemoteConnection | None = None,
+        emulation_config: EmulationConfig | None = None,
+        num_shots: int | None = None,
+    ) -> None:
+        backends = _LOCAL_BACKENDS if connection is None else _REMOTE_BACKENDS
+        if backend_type not in backends:
+            raise ValueError(
+                f"Error in `Emulator`: `backend_type` must be one of {list(backends)}, "
+                f"got {backend_type!r}."
+            )
+        pulser_backend_type: Any = getattr(BackendType, backends[backend_type])
+
+        self._emulator: LocalEmulator | RemoteEmulator
+        if connection is None:
+            self._emulator = LocalEmulator(
+                backend_type=pulser_backend_type,
+                emulation_config=emulation_config,
+                num_shots=num_shots,
+            )
+        else:
+            self._emulator = RemoteEmulator(
+                backend_type=pulser_backend_type,
+                connection=connection,
+                emulation_config=emulation_config,
+                num_shots=num_shots,
+            )
+
+    def run(self, program: QuantumProgram) -> job.Job[Results]:
+        return self._emulator.run(program)
 
 
 class QPU(PulserRemoteBackend):

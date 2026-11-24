@@ -108,7 +108,9 @@ class TestBackends:
         with pytest.raises(match="`backend_type` must be a EmulatorBackend type."):
             LocalEmulator(backend_type=int)  # type: ignore[arg-type]
 
-        with pytest.raises(match="`backend_type` must be a RemoteEmulatorBackend type."):
+        with pytest.raises(
+            match="`backend_type` must be a subtype of both `RemoteBackend` and `EmulatorBackend`."
+        ):
             RemoteEmulator(backend_type=str, connection=self.mock_connection)  # type: ignore[arg-type]
 
     def test_validate_connection(self) -> None:

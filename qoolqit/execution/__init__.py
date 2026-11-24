@@ -17,10 +17,18 @@ from pulser.backend import (
     StateResult,
 )
 
-from qoolqit.execution.backends import QPU, LocalEmulator, RemoteEmulator
+from qoolqit.execution.backends import (
+    QPU,
+    Emulator,
+    EmulatorName,
+    LocalEmulator,
+    RemoteEmulator,
+)
 from qoolqit.execution.job import Job, JobStatus, get_batch_id, retrieve_remote_job
 
 __all__ = [
+    "Emulator",
+    "EmulatorName",
     "LocalEmulator",
     "RemoteEmulator",
     "QPU",
