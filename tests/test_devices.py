@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import random
 import re
+from unittest.mock import MagicMock
 
 import numpy as np
+import pulser
 import pytest
-from pasqal_cloud import PasqalCloudConnection
+from pulser.backend.remote import RemoteConnection
 
 from qoolqit import (
     AnalogDevice,
@@ -163,25 +165,21 @@ def test_device_properties() -> None:
     np.testing.assert_allclose(digital_analog_device._target_dist_adim, 1.0)
 
 
-def test_device_from_connection() -> None:
-    fresnel_device = Device.from_connection(PasqalCloudConnection(), "FRESNEL")
-    assert fresnel_device.name == "FRESNEL"
-
-    expected_fresnel_specs = {
-        "max_duration": 332.43763968,
-        "max_amplitude": 0.20412370086269147,
-        "max_abs_detuning": 1.134020560348286,
-        "min_distance": 1.0,
-        "max_radial_distance": 9.2,
-    }
-
-    assert fresnel_device.specs == expected_fresnel_specs
-    assert fresnel_device._energy_ratio == 0.20412370086269147
+@pytest.fixture
+def connection() -> MagicMock:
+    connection = MagicMock(spec=RemoteConnection)
+    connection.fetch_available_devices.return_value = {"AnalogDevice": pulser.AnalogDevice}
+    return connection
 
 
-def test_device_from_connection_not_available() -> None:
+def test_device_from_connection(connection: MagicMock) -> None:
+    device = Device.from_connection(connection, "AnalogDevice")
+    assert device._device is pulser.AnalogDevice
+
+
+def test_device_from_connection_not_available(connection: MagicMock) -> None:
     with pytest.raises(
         ValueError,
         match=re.escape("Device HELLO_WORLD is not available through the provided connection."),
     ):
-        Device.from_connection(connection=PasqalCloudConnection(), name="HELLO_WORLD")
+        Device.from_connection(connection=connection, name="HELLO_WORLD")
