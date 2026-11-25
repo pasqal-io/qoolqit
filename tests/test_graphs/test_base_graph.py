@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import re
 from typing import Any
 
 import networkx as nx
@@ -405,7 +404,7 @@ def test_to_matrix_custom_node_labels_and_none_weights() -> None:
 
 @pytest.mark.parametrize("input", ["hello", Data()])
 def test_from_nx_wrong_input(input: Any) -> None:
-    with pytest.raises(TypeError, match=re.escape("Input must be a networkx.Graph instance.")):
+    with pytest.raises(TypeError, match="Input must be a networkx Graph"):
         BaseGraph.from_nx(input)
 
 

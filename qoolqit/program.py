@@ -136,7 +136,10 @@ class QuantumProgram:
             CompilationError: If the compilation fails due to device constraints.
         """
         if not isinstance(device, Device):
-            raise TypeError("`device` must be of type `qoolqit.devices.Device`.")
+            raise TypeError(
+                f"'device' must be a QoolQit Device, not {type(device).__name__!r}. "
+                "To use a Pulser device, wrap it with Device(pulser_device=...)."
+            )
 
         if device_max_duration_ratio is not None:
             if device._max_duration is None:

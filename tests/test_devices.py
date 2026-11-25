@@ -24,9 +24,7 @@ def _validate_invariants(c6: float, t: float, e: float, d: float) -> np.bool:
 
 
 def test_device_pulser_device_type() -> None:
-    with pytest.raises(
-        TypeError, match="`pulser_device` must be an instance of Pulser BaseDevice class"
-    ):
+    with pytest.raises(TypeError, match="'pulser_device' must be a Pulser BaseDevice, not 'str'"):
         Device(pulser_device="device")  # type: ignore[arg-type]
 
 
