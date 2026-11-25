@@ -134,7 +134,9 @@ select = [
     "I", # isort
     "D", # pydocstyle
     "PGH", # pygrep-hooks
+    "RUF", # Ruff-specific rules
 ]
+allowed-confusables = ["α", "σ", "×"] # math notation in docstrings and comments
 isort.required-imports = ["from __future__ import annotations"]
 pydocstyle.convention = "google"
 

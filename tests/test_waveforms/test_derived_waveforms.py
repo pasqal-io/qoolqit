@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+import re
 
 import numpy as np
 import pulser
@@ -275,7 +276,7 @@ def test_interpolated_fractional_times() -> None:
 
 
 def test_interpolated_wrong_times_len() -> None:
-    with pytest.raises(ValueError, match="must be arrays of the same length."):
+    with pytest.raises(ValueError, match=re.escape("must be arrays of the same length.")):
         InterpolatedWaveform(10, values=[0, 1], times=[0, 0.5, 0.8])
 
 
@@ -378,7 +379,7 @@ def test_waveform_composition(n_waveforms: int) -> None:
         approx_min, random_samples_min, atol=1e-05
     )
 
-    with pytest.raises(TypeError, match="All arguments must be instances of Waveform."):
+    with pytest.raises(TypeError, match=re.escape("All arguments must be instances of Waveform.")):
         CompositeWaveform(wf, 1.0)  # type: ignore [arg-type]
-    with pytest.raises(ValueError, match="At least one Waveform must be provided."):
+    with pytest.raises(ValueError, match=re.escape("At least one Waveform must be provided.")):
         CompositeWaveform()

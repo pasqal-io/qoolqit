@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 import networkx as nx
 import numpy as np
 import pytest
@@ -284,7 +286,9 @@ def test_heavy_hexagonal() -> None:
 
 
 def test_from_pyg_wrong_input() -> None:
-    with pytest.raises(TypeError, match="Input must be a torch_geometric.data.Data object."):
+    with pytest.raises(
+        TypeError, match=re.escape("Input must be a torch_geometric.data.Data object.")
+    ):
         DataGraph.from_pyg("hello")
 
 

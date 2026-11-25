@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from typing import Any
 
 import networkx as nx
@@ -87,7 +88,8 @@ def test_empty_graph() -> None:
 def test_coords_update_missing_node() -> None:
     graph = BaseGraph.from_nodes([0, 1, 2])
     with pytest.raises(
-        ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
+        ValueError,
+        match=re.escape("Set of nodes in the given dictionary does not match the graph nodes."),
     ):
         graph.coords = {0: (0.3, 0.4), 1: (0.5, 0.6)}
 
@@ -95,7 +97,8 @@ def test_coords_update_missing_node() -> None:
 def test_coords_update_extra_node() -> None:
     graph = BaseGraph.from_nodes(["a", "b", "c"])
     with pytest.raises(
-        ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
+        ValueError,
+        match=re.escape("Set of nodes in the given dictionary does not match the graph nodes."),
     ):
         graph.coords = {"a": (0.3, 0.4), "b": (0.5, 0.6), "c": (0.7, 0.8), "d": (0.9, 1.0)}
 
@@ -117,7 +120,8 @@ def test_node_coords_update() -> None:
 def test_node_weights_update_missing_node() -> None:
     graph = BaseGraph.from_nodes([0, 1, 2])
     with pytest.raises(
-        ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
+        ValueError,
+        match=re.escape("Set of nodes in the given dictionary does not match the graph nodes."),
     ):
         graph.node_weights = {0: 0.3, 1: 0.4}
 
@@ -125,7 +129,8 @@ def test_node_weights_update_missing_node() -> None:
 def test_node_weights_update_extra_node() -> None:
     graph = BaseGraph.from_nodes(["a", "b", "c"])
     with pytest.raises(
-        ValueError, match="Set of nodes in the given dictionary does not match the graph nodes."
+        ValueError,
+        match=re.escape("Set of nodes in the given dictionary does not match the graph nodes."),
     ):
         graph.node_weights = {"a": 0.3, "b": 0.4, "c": 0.5, "d": 0.6}
 
@@ -148,7 +153,7 @@ def test_edge_weights_update_missing_edge() -> None:
     graph = BaseGraph([(0, 1), (1, 2), (2, 0)])
     with pytest.raises(
         ValueError,
-        match="Set of edges in the given dictionary does not match the graph's edges.",
+        match=re.escape("Set of edges in the given dictionary does not match the graph's edges."),
     ):
         graph.edge_weights = {(0, 1): 0.3, (1, 2): 0.4}
 
@@ -157,7 +162,7 @@ def test_edge_weights_update_extra_edge() -> None:
     graph = BaseGraph([("a", "b"), ("b", "c"), ("c", "a")])
     with pytest.raises(
         ValueError,
-        match="Set of edges in the given dictionary does not match the graph's edges.",
+        match=re.escape("Set of edges in the given dictionary does not match the graph's edges."),
     ):
         graph.edge_weights = {
             ("a", "b"): 0.3,
@@ -406,7 +411,7 @@ def test_to_matrix_custom_node_labels_and_none_weights() -> None:
 
 @pytest.mark.parametrize("input", ["hello", Data()])
 def test_from_nx_wrong_input(input: Any) -> None:
-    with pytest.raises(TypeError, match="Input must be a networkx.Graph instance."):
+    with pytest.raises(TypeError, match=re.escape("Input must be a networkx.Graph instance.")):
         BaseGraph.from_nx(input)
 
 
@@ -415,7 +420,7 @@ def test_from_wrong_node_attrs_name(wrong_node_attr: Any) -> None:
     G = nx.Graph()
     G.add_node(0, **wrong_node_attr)
     G.add_node(1, **wrong_node_attr)
-    with pytest.raises(ValueError, match="not allowed in node attributes."):
+    with pytest.raises(ValueError, match=re.escape("not allowed in node attributes.")):
         BaseGraph.from_nx(G)
 
 
@@ -424,7 +429,7 @@ def test_from_wrong_edge_attrs_name(wrong_edge_attr: Any) -> None:
     G = nx.Graph()
     G.add_edge(0, 1, **wrong_edge_attr)
     G.add_edge(1, 2, **wrong_edge_attr)
-    with pytest.raises(ValueError, match="not allowed in edge attributes."):
+    with pytest.raises(ValueError, match=re.escape("not allowed in edge attributes.")):
         BaseGraph.from_nx(G)
 
 

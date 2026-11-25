@@ -9,7 +9,7 @@ from collections.abc import Mapping
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 
-__all__ = ["plot_bitstrings", "COLORS"]
+__all__ = ["COLORS", "plot_bitstrings"]
 
 COLORS: Mapping[str, str] = {
     "metalblue": "#397378",

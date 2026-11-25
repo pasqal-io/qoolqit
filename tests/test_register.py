@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib
 import math
 import random
+import re
 from unittest import mock
 
 import matplotlib.pyplot as plt
@@ -203,12 +204,14 @@ def test_triangular() -> None:
 
 @pytest.mark.parametrize("rows, atoms_per_row", [(0, 1), (1, 0), (0, 0), (-1, 2)])
 def test_triangular_invalid_rows_atoms(rows: int, atoms_per_row: int) -> None:
-    with pytest.raises(ValueError, match="Number of rows and atoms per row must be at least 1."):
+    with pytest.raises(
+        ValueError, match=re.escape("Number of rows and atoms per row must be at least 1.")
+    ):
         Register.triangular(rows, atoms_per_row, spacing=1.0)
 
 
 def test_triangular_invalid_spacing() -> None:
-    with pytest.raises(ValueError, match="Spacing must be positive."):
+    with pytest.raises(ValueError, match=re.escape("Spacing must be positive.")):
         Register.triangular(2, 2, spacing=-1)
 
 
@@ -240,7 +243,9 @@ def test_rectangular() -> None:
 
 @pytest.mark.parametrize("rows, cols", [(0, 2), (2, 0), (0, 0), (-1, 2)])
 def test_invalid_rows_cols(rows: int, cols: int) -> None:
-    with pytest.raises(ValueError, match="Number of rows and columns must be at least 1."):
+    with pytest.raises(
+        ValueError, match=re.escape("Number of rows and columns must be at least 1.")
+    ):
         Register.rectangular(rows, cols, row_spacing=1.0, col_spacing=1.0)
 
 
@@ -273,12 +278,12 @@ def test_circle() -> None:
 
 
 def test_circle_invalid_spacing() -> None:
-    with pytest.raises(ValueError, match="Spacing must be positive."):
+    with pytest.raises(ValueError, match=re.escape("Spacing must be positive.")):
         Register.circle(2, spacing=-1)
 
 
 def test_circle_invalid_n() -> None:
-    with pytest.raises(ValueError, match="Number of qubits must be at least 1."):
+    with pytest.raises(ValueError, match=re.escape("Number of qubits must be at least 1.")):
         Register.circle(0, spacing=1.0)
 
 
