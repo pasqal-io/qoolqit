@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+from unittest.mock import patch
+
 import numpy as np
 import pytest
+from scipy.optimize import minimize
 
 from qoolqit.embedding import InteractionEmbedder, InteractionEmbedderConfig
 from qoolqit.graphs import DataGraph
@@ -74,13 +77,13 @@ def test_interaction_embedding_same_seed_same_coords() -> None:
     assert graph_1.coords == graph_2.coords
 
 
-def test_interaction_embedding_maxiter_is_honored() -> None:
+def test_interaction_embedding_passes_maxiter_to_minimize() -> None:
     matrix = np.array([[0.0, 1.0, 0.5], [1.0, 0.0, 0.2], [0.5, 0.2, 0.0]])
-    config = InteractionEmbedderConfig(seed=3083257284)
-    converged = InteractionEmbedder(config).embed(matrix)
-    config = InteractionEmbedderConfig(seed=3083257284, maxiter=1)
-    stopped = InteractionEmbedder(config).embed(matrix)
-    assert stopped.coords != converged.coords
+    target = "qoolqit.embedding.algorithms.interaction_embedding.minimize"
+    with patch(target, wraps=minimize) as mock_minimize:
+        InteractionEmbedder(InteractionEmbedderConfig(maxiter=13)).embed(matrix)
+    mock_minimize.assert_called_once()
+    assert mock_minimize.call_args.kwargs["options"] == {"maxiter": 13}
 
 
 def test_interaction_embedding_coords_centered_on_median() -> None:
