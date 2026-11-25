@@ -349,7 +349,7 @@ def test_from_pyg_no_auto_weight_detection() -> None:
     """Without node_weights_attr, weight attribute is NOT auto-mapped to node weights."""
     edge_index = torch.tensor([[0, 1], [1, 0]], dtype=torch.int64)
     weight = torch.tensor([1.0, 2.0], dtype=torch.float64)
-    data = Data(edge_index=edge_index, weight=weight)
+    data = Data(edge_index=edge_index, weight=weight, num_nodes=2)
 
     g = DataGraph.from_pyg(data)
 
