@@ -133,7 +133,7 @@ def test_amplitude_area_is_kept_by_compilation(
     """The pulse area Ω·t is unit-free: compiling keeps it, whatever the waveform type.
 
     This also checks that each profile pairs its time and energy units so that
-    time × energy = 1000.
+    time * energy = 1000.
     """
     # At a minimum distance of 1, MAX_ENERGY would pick the same units as DEFAULT; at 1.1 it
     # maps the register to the device's minimum distance with units of its own.
