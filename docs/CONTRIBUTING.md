@@ -2,13 +2,14 @@ We're grateful for your interest in contributing to QoolQit! Please follow our g
 
 ## Reporting an Issue or Proposing a Feature
 
-Your course of action will depend on your objective, but generally, you should start by creating an issue. If you've discovered a bug or have a feature you'd like to see added, feel free to create an issue on [the issue tracker](https://github.com/pasqal-io/qoolqit/issues). Here are some steps to take:
+Your course of action will depend on your objective, but generally, you should start by creating an issue. If you've discovered a bug or have a feature you'd like to see added, feel free to create an issue on [the issue tracker](https://github.com/pasqal-io/qoolqit/issues).
+Here are some steps to take:
 
 1. Quickly search the existing issues using relevant keywords to ensure your issue hasn't been addressed already.
 2. If your issue is not listed, create a new one. Try to be as detailed and clear as possible in your description.
 
-- If you're merely suggesting an improvement or reporting a bug, that's already excellent! We thank you for it. Your issue will be listed and, hopefully, addressed at some point.
-- However, if you're willing to be the one solving the issue, that would be even better! In such instances, you would proceed by preparing a [Pull Request](#submitting-a-pull-request).
+If you're suggesting an improvement or reporting a bug, that's already excellent! We thank you for it. Your issue will be listed and, hopefully, addressed at some point.
+However, if you're willing to be the one solving the issue, that would be even better! In such instances, you would proceed by preparing a [Pull Request](#submitting-a-pull-request).
 
 ## Submitting a Pull Request
 
@@ -18,13 +19,13 @@ Here's the process for making a contribution:
 
 Make a new branch via
 
-```shell
+``` shell
 git branch <your initials>/<branch name>
 ```
 
 Next, check out your new branch, and associate a branch to it on the GitHub server:
 
-```shell
+``` shell
 git checkout <your initials>/<branch name>
 git push --set-upstream origin <your initials>/<branch name>
 ```
@@ -43,9 +44,10 @@ git push --set-upstream origin <your initials>/<branch name>
   python -m venv .venv
   source .venv/bin/activate
   pip install -e . --group dev  # requires pip 25.1+
+
   ```
 
-  With [uv](https://docs.astral.sh/uv/), which installs the `dev` group by default:
+With [uv](https://docs.astral.sh/uv/), which installs the `dev` group by default:
 
   ```sh
   uv sync -U
@@ -57,7 +59,7 @@ git push --set-upstream origin <your initials>/<branch name>
 Use `pre-commit` hooks to make sure that the code is properly linted before pushing a new commit. Make sure that the unit tests and type checks are passing since the merge request will not be accepted if the automatic CI/CD pipeline does not pass.
 The `mypy` hook runs in the active environment, so run `pre-commit` with the development environment activated.
 
-```shell
+``` shell
 pre-commit install
 pre-commit run --all-files
 pytest

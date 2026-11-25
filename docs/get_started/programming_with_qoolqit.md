@@ -6,7 +6,7 @@ Programming with QoolQit is based on five core steps:
 
 1. Defining a **Register**: where qubits live (their geometry).
 2. Defining a **Drive**: how you control the system over time (waveforms).
-3. Building a **QuantumProgram**: the pairing of *Register + Drive*.
+3. Building a **QuantumProgram**: the pairing of _Register + Drive_.
 4. **Compiling** the **QuantumProgram**: mapping the abstract program onto a specific device model.
 5. **Executing** the compiled program: running the compiled sequence and collecting results.
 
@@ -18,7 +18,7 @@ A **register** defines the **positions** of qubits in your program. In neutral-a
 
     The closest pair of qubits should be at distance **1**. This convention normalizes interaction strengths and keeps drive parameters interpretable across different layouts.
 
-```python exec="on" source="above" html="true" session="programming"
+``` python exec="on" source="above" html="true" session="programming"
 from qoolqit import Register
 
 # Create a register from coordinates (dimensionless units)
@@ -35,7 +35,7 @@ from qoolqit.visualization import fig_to_html; print(fig_to_html())  # markdown-
 
 For problem embedding, QoolQit also provides layout embedders that map graph structure onto qubit positions:
 
-```python exec="on" source="above" html="true" session="programming"
+``` python exec="on" source="above" html="true" session="programming"
 from qoolqit import Register
 from qoolqit.embedding import SpringLayoutEmbedder
 from qoolqit.graphs import DataGraph
@@ -59,12 +59,12 @@ A **drive** is the time-dependent control applied to the system, built from one 
 
 Waveform durations are dimensionless: $\tilde{t}$ measures duration relative to an interaction timescale. In an interacting many-body system, this gives $\tilde t$ a natural physical interpretation in terms of the buildup and propagation of correlations.
 
-| Regime | Condition | Physical meaning |
-|--------|-----------|------------------|
-| Short time | $\tilde{t} \ll 1$ | Too short for interactions to strongly reshape the state |
-| Long time | $\tilde{t} \sim n$ | Correlations may have propagated across a distance of order $n$ lattice spacings |
+| Regime     | Condition          | Physical meaning                                                                 |
+| ---------- | ------------------ | -------------------------------------------------------------------------------- |
+| Short time | $\tilde{t} \ll 1$  | Too short for interactions to strongly reshape the state                         |
+| Long time  | $\tilde{t} \sim n$ | Correlations may have propagated across a distance of order $n$ lattice spacings |
 
-```python exec="on" source="above" html="true" session="programming"
+``` python exec="on" source="above" html="true" session="programming"
 from qoolqit import Drive
 from qoolqit.waveforms import ConstantWaveform, InterpolatedWaveform, RampWaveform
 
@@ -94,7 +94,7 @@ from qoolqit.visualization import fig_to_html; print(fig_to_html())  # markdown-
 
 A `QuantumProgram` pairs a **register** (layout and interactions) with a **drive** (time-dependent controls). The initial state is always $|0\rangle^{\otimes N}$, so every program describes how the drive and interactions evolve this fixed initial state.
 
-```python exec="on" source="above" html="true" session="programming"
+``` python exec="on" source="above" html="true" session="programming"
 from qoolqit import QuantumProgram
 
 program = QuantumProgram(register=register, drive=drive)
@@ -108,7 +108,7 @@ program = QuantumProgram(register=register, drive=drive)
 
 Compilation translates your abstract program into something a given device (or emulator) can actually run, applying device-specific constraints such as maximum duration, amplitude and detuning bounds, discretization rules, and other hardware limits.
 
-```python exec="on" source="above" html="true" session="programming"
+``` python exec="on" source="above" html="true" session="programming"
 from qoolqit import AnalogDevice
 
 device = AnalogDevice()
@@ -125,11 +125,11 @@ program.compile_to(device, profile="max_energy")
 
 Once compiled, run the sequence and retrieve results. The three stages map cleanly onto three concepts:
 
-- **Program**: what you *want* to run (abstract physics).
-- **Sequence**: what you *will* run (device-compatible instructions).
-- **Result**: what you *observed* (samples, probabilities, observables, etc.).
+- **Program**: what you _want_ to run (abstract physics).
+- **Sequence**: what you _will_ run (device-compatible instructions).
+- **Result**: what you _observed_ (samples, probabilities, observables, etc.).
 
-```python exec="on" source="above" html="true" session="programming"
+``` python exec="on" source="above" html="true" session="programming"
 from qoolqit.execution import LocalEmulator
 
 emulator = LocalEmulator()
@@ -154,12 +154,12 @@ The **blockade regime** occurs when interactions prevent nearby atoms from being
 
 We will compare two programs:
 
-| Case | $\tilde{\Omega}$ | Regime | Expected behavior |
-|------|-----------------|--------|--------------------|
-| Blockade | $0.3$ | $\tilde{\Omega} \ll \tilde{J}$ | Double excitation $\vert 11\rangle$ suppressed |
-| Non-blockade | $2.0$ | $\tilde{\Omega} \gg \tilde{J}$ | Qubits behave more independently; $\vert 11\rangle$ accessible |
+| Case         | $\tilde{\Omega}$ | Regime                         | Expected behavior                                              |
+| ------------ | ---------------- | ------------------------------ | -------------------------------------------------------------- |
+| Blockade     | $0.3$            | $\tilde{\Omega} \ll \tilde{J}$ | Double excitation $\vert 11\rangle$ suppressed                 |
+| Non-blockade | $2.0$            | $\tilde{\Omega} \gg \tilde{J}$ | Qubits behave more independently; $\vert 11\rangle$ accessible |
 
-```python exec="on" source="above" html="true" session="programming"
+``` python exec="on" source="above" html="true" session="programming"
 import numpy as np
 
 from qoolqit import AnalogDevice, Drive, QuantumProgram, Register
@@ -182,7 +182,7 @@ drive_no_blockade = Drive(
 )
 ```
 
-```python exec="on" source="above" html="true" session="programming"
+``` python exec="on" source="above" html="true" session="programming"
 # Build and compile programs
 program_blockade = QuantumProgram(register, drive_blockade)
 program_no_blockade = QuantumProgram(register, drive_no_blockade)
@@ -192,7 +192,7 @@ program_blockade.compile_to(device, profile="max_energy")
 program_no_blockade.compile_to(device, profile="max_energy")
 ```
 
-```python exec="on" source="above" html="true" session="programming"
+``` python exec="on" source="above" html="true" session="programming"
 # Configure emulation: sample bitstrings at 81 evaluation times
 eval_times = np.linspace(0.0, 1.0, 81)
 bitstrings = BitStrings(evaluation_times=list(eval_times), num_shots=1000)
@@ -207,7 +207,7 @@ job_no_blockade = emulator.run(program_no_blockade)
 result_no_blockade = job_no_blockade.results()
 ```
 
-```python exec="on" source="above" html="true" session="programming"
+``` python exec="on" source="above" html="true" session="programming"
 import matplotlib.pyplot as plt
 
 for result, label, color in [
