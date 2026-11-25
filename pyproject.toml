@@ -109,12 +109,10 @@ parallel = true
 omit = ["*__init__.py"]
 
 [tool.coverage.report]
-exclude_lines = ["if TYPE_CHECKING:"]
+fail_under = 94
 exclude_also = [
   "def __str__",
   "def __repr__",
-  "def __repr_content__",
-  "def __repr_header__",
   "def draw",
   "@abstractmethod",
   "@overload",
