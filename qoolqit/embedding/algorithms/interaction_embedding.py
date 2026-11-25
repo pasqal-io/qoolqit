@@ -49,7 +49,7 @@ class InteractionEmbedderConfig(EmbedderConfig):
         method: optimization method passed to `scipy.optimize.minimize`.
         maxiter: maximum number of optimizer iterations.
         tol: tolerance for termination.
-        x0: initial node positions, of shape (N, 2) for an N x N matrix.
+        x0: initial node positions, of shape (N, 2) for an N x N matrix, or flattened to (2N,).
             If None, positions are drawn uniformly in [0, 1), seeded by `seed`.
         seed: seed for the random initial positions, ignored if `x0` is set.
             If None, results differ between runs.
@@ -78,7 +78,7 @@ def interaction_embedding(
     Args:
         matrix: symmetric N x N target matrix to embed.
         method: optimization method passed to `scipy.optimize.minimize`.
-        x0: initial node positions, of shape (N, 2).
+        x0: initial node positions, of shape (N, 2) or flattened to (2N,).
             If None, positions are drawn uniformly in [0, 1), seeded by `seed`.
         maxiter: maximum number of optimizer iterations.
         tol: tolerance for termination.
