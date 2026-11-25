@@ -12,7 +12,14 @@ from pulser.backend.qpu import QPUBackend
 from pulser.backend.remote import JobParams, RemoteConnection, RemoteResults
 from pulser.sequence import Sequence as PulserSequence
 
-from qoolqit.execution import QPU, LocalEmulator, RemoteEmulator
+from qoolqit.execution import (
+    QPU,
+    BackendType,
+    Emulator,
+    EmulatorName,
+    LocalEmulator,
+    RemoteEmulator,
+)
 from qoolqit.program import QuantumProgram
 
 
@@ -153,3 +160,65 @@ class TestBackends:
             ValueError, match="Number of shots must be provided to use the QPU backend."
         ):
             QPU(connection=self.mock_connection)
+
+    def test_remote_emulator_default_backend_type(self) -> None:
+        backend = RemoteEmulator(connection=self.mock_connection)
+        assert backend._backend_type is BackendType.RemoteEmuFreeBackend
+
+
+class TestEmulator:
+
+    mock_connection = MagicMock(spec=RemoteConnection)
+    mock_sequence = MagicMock(spec=PulserSequence)
+    mock_program_compiled = MagicMock(spec=QuantumProgram, _compiled_sequence=mock_sequence)
+
+    @pytest.mark.parametrize(
+        "emulator_name, backend_name",
+        [("qutip", "QutipBackendV2"), ("emu_sv", "SVBackend"), ("emu_mps", "MPSBackend")],
+    )
+    def test_local(self, emulator_name: EmulatorName, backend_name: str) -> None:
+        emulator = Emulator(emulator_name=emulator_name)
+        assert isinstance(emulator._emulator, LocalEmulator)
+        assert emulator._emulator._backend_type is getattr(BackendType, backend_name)
+
+    @pytest.mark.parametrize(
+        "emulator_name, backend_name",
+        [
+            ("qutip", "RemoteEmuFreeBackend"),
+            ("emu_sv", "RemoteSVBackend"),
+            ("emu_mps", "RemoteMPSBackend"),
+        ],
+    )
+    def test_remote(self, emulator_name: EmulatorName, backend_name: str) -> None:
+        emulator = Emulator(emulator_name=emulator_name, connection=self.mock_connection)
+        assert isinstance(emulator._emulator, RemoteEmulator)
+        assert emulator._emulator._backend_type is getattr(BackendType, backend_name)
+        assert emulator._emulator._connection is self.mock_connection
+
+    def test_default(self) -> None:
+        emulator = Emulator()
+        assert isinstance(emulator._emulator, LocalEmulator)
+        assert emulator._emulator._backend_type is BackendType.QutipBackendV2
+
+    @pytest.mark.parametrize("connection", [None, mock_connection])
+    def test_invalid_emulator_name(self, connection: RemoteConnection | None) -> None:
+        with pytest.raises(ValueError, match="`emulator_name` must be one of"):
+            Emulator(emulator_name="foo", connection=connection)  # type: ignore[arg-type]
+
+    @pytest.mark.parametrize("connection", [None, mock_connection])
+    def test_forwards_config_and_num_shots(self, connection: RemoteConnection | None) -> None:
+        config = EmulationConfig(observables=(BitStrings(),))
+        emulator = Emulator(connection=connection, emulation_config=config, num_shots=123)
+        assert emulator._emulator._num_shots == 123
+        emulation_config = emulator._emulator._emulation_config
+        assert emulation_config.default_num_shots == 123
+        assert any(isinstance(obs, BitStrings) for obs in emulation_config.observables)
+
+    def test_run_delegates(self) -> None:
+        emulator = Emulator()
+        mock_job = MagicMock()
+        mock_emulator = MagicMock(spec=LocalEmulator)
+        mock_emulator.run.return_value = mock_job
+        emulator._emulator = mock_emulator
+        assert emulator.run(self.mock_program_compiled) is mock_job
+        mock_emulator.run.assert_called_once_with(self.mock_program_compiled)

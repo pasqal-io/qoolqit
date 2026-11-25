@@ -269,6 +269,7 @@ class RemoteEmulator(PulserEmulatorBackend, PulserRemoteBackend):
 
 
 EmulatorName = Literal["qutip", "emu_sv", "emu_mps"]
+"""Names of the emulators available through [`Emulator`][qoolqit.execution.Emulator]."""
 
 # Names of the Pulser backends in `pulser.backends`, resolved lazily so that optional
 # packages (`emu_sv`, `emu_mps`, `pasqal_cloud`) are only imported when used.
@@ -285,6 +286,58 @@ _REMOTE_BACKENDS: dict[EmulatorName, str] = {
 
 
 class Emulator:
+    """Run QoolQit `QuantumProgram`s on Pasqal emulators, locally or remotely.
+
+    Picks the emulator by name, and runs it locally if no `connection` is given, remotely
+    otherwise. It wraps a [`LocalEmulator`][qoolqit.execution.LocalEmulator] or a
+    [`RemoteEmulator`][qoolqit.execution.RemoteEmulator], which give full control over
+    the Pulser backend used.
+
+    | `emulator_name` | Local backend    | Remote backend         |
+    |-----------------|------------------|------------------------|
+    | `"qutip"`       | `QutipBackendV2` | `RemoteEmuFreeBackend` |
+    | `"emu_sv"`      | `SVBackend`      | `RemoteSVBackend`      |
+    | `"emu_mps"`     | `MPSBackend`     | `RemoteMPSBackend`     |
+
+    Args:
+        emulator_name: name of the emulator, see the table above.
+        connection: optional connection to submit jobs to remote emulators, through
+            [Pasqal Cloud](https://docs.pasqal.com/cloud/set-up/) or one of the
+            [third-party cloud providers](https://docs.pasqal.com/third-party-cloud-providers/#create-a-connection).
+            If None, the emulator runs locally.
+        emulation_config: optional emulation config. If None, the default config of the
+            underlying [`LocalEmulator`][qoolqit.execution.LocalEmulator] or
+            [`RemoteEmulator`][qoolqit.execution.RemoteEmulator] is used.
+        num_shots: number of bitstrings sampled from the final quantum state.
+            If None, `default_num_shots` of the
+            [`EmulationConfig`][qoolqit.execution.EmulationConfig] is used.
+
+    Raises:
+        ValueError: if `emulator_name` is not a valid emulator name.
+        AttributeError: if the package providing the selected backend is not installed
+            (e.g. `emu-mps` for `"emu_mps"`, `pasqal-cloud` for remote emulators).
+
+    Examples:
+        Run locally:
+        ```python
+        from qoolqit.execution import Emulator
+        emulator = Emulator(emulator_name="emu_mps")
+        job = emulator.run(program)
+        results = job.results()
+        ```
+
+        Run remotely:
+        ```python
+        from pasqal_cloud import PasqalCloudConnection
+        from qoolqit.execution import Emulator
+        connection = PasqalCloudConnection(username=..., password=..., project_id=...)
+        emulator = Emulator(emulator_name="emu_mps", connection=connection)
+        job = emulator.run(program)
+        ```
+        See [`RemoteEmulator.run`][qoolqit.execution.RemoteEmulator.run] to retrieve the
+        results of remote jobs.
+    """
+
     def __init__(
         self,
         *,
@@ -293,6 +346,7 @@ class Emulator:
         emulation_config: EmulationConfig | None = None,
         num_shots: int | None = None,
     ) -> None:
+        """Instantiate an Emulator."""
         backends = _LOCAL_BACKENDS if connection is None else _REMOTE_BACKENDS
         if emulator_name not in backends:
             raise ValueError(
@@ -317,6 +371,19 @@ class Emulator:
             )
 
     def run(self, program: QuantumProgram) -> job.Job[Results]:
+        """Run a compiled QuantumProgram and return a job handler.
+
+        Local emulators run synchronously, see
+        [`LocalEmulator.run`][qoolqit.execution.LocalEmulator.run]. Remote emulators return
+        as soon as the job is submitted, see
+        [`RemoteEmulator.run`][qoolqit.execution.RemoteEmulator.run].
+
+        Args:
+            program: the compiled quantum program to run.
+
+        Returns:
+            A `Job` handler, to check the status and retrieve the results.
+        """
         return self._emulator.run(program)
 
 
