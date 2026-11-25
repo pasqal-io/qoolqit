@@ -1,0 +1,51 @@
+# QoolQit Documentation
+
+QoolQit is a Python library for programming neutral-atom quantum computers.
+
+## Overview
+
+- [Overview](<https://pasqal-io.github.io/qoolqit/index.md>)
+
+## Get started
+
+- [Atoms as qubits](<https://pasqal-io.github.io/qoolqit/get_started/atoms_as_qubits/index.md>)
+- [Programming with QoolQit](<https://pasqal-io.github.io/qoolqit/get_started/programming_with_qoolqit/index.md>)
+- [Programming a neutral-atom QPU](<https://pasqal-io.github.io/qoolqit/get_started/qoolqit_model/index.md>)
+- [Quick Run Guide](<https://pasqal-io.github.io/qoolqit/get_started/quick_run_guide/index.md>)
+
+## Fundamentals
+
+- [Devices and Compilation](<https://pasqal-io.github.io/qoolqit/fundamentals/compilation/device_and_compilation/index.md>)
+- [Error handling](<https://pasqal-io.github.io/qoolqit/fundamentals/compilation/error_handling/index.md>)
+- [Compiling a Quantum Program](<https://pasqal-io.github.io/qoolqit/fundamentals/compilation/rationale/index.md>)
+- [Embedding](<https://pasqal-io.github.io/qoolqit/fundamentals/embedding/index.md>)
+- [Execution](<https://pasqal-io.github.io/qoolqit/fundamentals/execution/execution/index.md>)
+- [Graphs](<https://pasqal-io.github.io/qoolqit/fundamentals/graphs/index.md>)
+- [Introduction](<https://pasqal-io.github.io/qoolqit/fundamentals/introduction/index.md>)
+- [Writing a Quantum Program](<https://pasqal-io.github.io/qoolqit/fundamentals/quantum_program/index.md>)
+
+## Extended usage
+
+- [Adimensionalization](<https://pasqal-io.github.io/qoolqit/extended_usage/adimensionalization/index.md>)
+- [Custom embedders](<https://pasqal-io.github.io/qoolqit/extended_usage/custom_embedders/index.md>)
+- [Emulating device noise](<https://pasqal-io.github.io/qoolqit/extended_usage/device_noise/index.md>)
+
+## Applications
+
+- [Preparing the TFIM critical state](<https://pasqal-io.github.io/qoolqit/tutorials/Critical_state_TFIM/index.md>)
+- [Solving a MWIS](<https://pasqal-io.github.io/qoolqit/tutorials/Solving_a_MWIS/index.md>)
+- [Index](<https://pasqal-io.github.io/qoolqit/tutorials/index.md>)
+- [Solving a QUBO](<https://pasqal-io.github.io/qoolqit/tutorials/solving_a_qubo/index.md>)
+
+## API reference
+
+- [qoolqit.devices](<https://pasqal-io.github.io/qoolqit/reference/devices/index.md>)
+- [qoolqit.drive](<https://pasqal-io.github.io/qoolqit/reference/drive/index.md>)
+- [qoolqit.embedding](<https://pasqal-io.github.io/qoolqit/reference/embedding/index.md>)
+- [qoolqit.exceptions](<https://pasqal-io.github.io/qoolqit/reference/exceptions/index.md>)
+- [qoolqit.execution](<https://pasqal-io.github.io/qoolqit/reference/execution/index.md>)
+- [qoolqit.graphs](<https://pasqal-io.github.io/qoolqit/reference/graphs/index.md>)
+- [qoolqit.program](<https://pasqal-io.github.io/qoolqit/reference/program/index.md>)
+- [qoolqit](<https://pasqal-io.github.io/qoolqit/reference/qoolqit/index.md>)
+- [qoolqit.register](<https://pasqal-io.github.io/qoolqit/reference/register/index.md>)
+- [qoolqit.waveforms](<https://pasqal-io.github.io/qoolqit/reference/waveforms/index.md>)
