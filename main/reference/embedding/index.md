@@ -910,7 +910,7 @@ Attributes:
   tolerance for termination.
 - **`x0`** (`ndarray | None`) –
 
-  initial node positions, of shape (N, 2) for an N x N matrix. If None, positions are drawn uniformly in \[0, 1), seeded by `seed`.
+  initial node positions, of shape (N, 2) for an N x N matrix, or flattened to (2N,). If None, positions are drawn uniformly in \[0, 1), seeded by `seed`.
 - **`seed`** (`int | None`) –
 
   seed for the random initial positions, ignored if `x0` is set. If None, results differ between runs.
