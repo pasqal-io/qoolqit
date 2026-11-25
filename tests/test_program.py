@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import re
 from collections.abc import Callable
 
 import pytest
@@ -33,10 +32,10 @@ def test_program_init_wrong_type() -> None:
     register = Register(qubits={"q0": (-0.5, 0.0), "q1": (0.5, 0.0)})
     drive = Drive(amplitude=ConstantWaveform(10.0, 1.0), detuning=ConstantWaveform(10.0, -1.0))
 
-    with pytest.raises(TypeError, match=re.escape("`register` must be of type Register.")):
+    with pytest.raises(TypeError, match="`register` must be of type Register"):
         QuantumProgram(register=123, drive=drive)  # type: ignore [arg-type]
 
-    with pytest.raises(TypeError, match=re.escape("`drive` must be of type Drive.")):
+    with pytest.raises(TypeError, match="`drive` must be of type Drive"):
         QuantumProgram(register=register, drive=123)  # type: ignore [arg-type]
 
 
@@ -149,8 +148,6 @@ def test_program_with_dmm_invalid_qubit_id() -> None:
     )
     with pytest.raises(
         ValueError,
-        match=re.escape(
-            "qubit wrong_qubit_id appears in the DMM but is not defined in the register."
-        ),
+        match="qubit wrong_qubit_id appears in the DMM but is not defined in the register",
     ):
         QuantumProgram(register=register, drive=drive)

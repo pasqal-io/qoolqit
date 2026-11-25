@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import random
-import re
 from unittest.mock import MagicMock
 
 import numpy as np
@@ -26,8 +25,7 @@ def _validate_invariants(c6: float, t: float, e: float, d: float) -> np.bool:
 
 def test_device_pulser_device_type() -> None:
     with pytest.raises(
-        TypeError,
-        match=re.escape("`pulser_device` must be an instance of Pulser BaseDevice class."),
+        TypeError, match="`pulser_device` must be an instance of Pulser BaseDevice class"
     ):
         Device(pulser_device="device")  # type: ignore[arg-type]
 
@@ -179,7 +177,6 @@ def test_device_from_connection(connection: MagicMock) -> None:
 
 def test_device_from_connection_not_available(connection: MagicMock) -> None:
     with pytest.raises(
-        ValueError,
-        match=re.escape("Device HELLO_WORLD is not available through the provided connection."),
+        ValueError, match="Device HELLO_WORLD is not available through the provided connection"
     ):
         Device.from_connection(connection=connection, name="HELLO_WORLD")
