@@ -32,10 +32,10 @@ def test_program_init_wrong_type() -> None:
     register = Register(qubits={"q0": (-0.5, 0.0), "q1": (0.5, 0.0)})
     drive = Drive(amplitude=ConstantWaveform(10.0, 1.0), detuning=ConstantWaveform(10.0, -1.0))
 
-    with pytest.raises(TypeError, match="`register` must be of type Register"):
+    with pytest.raises(TypeError, match="'register' must be a Register, not 'int'"):
         QuantumProgram(register=123, drive=drive)  # type: ignore [arg-type]
 
-    with pytest.raises(TypeError, match="`drive` must be of type Drive"):
+    with pytest.raises(TypeError, match="'drive' must be a Drive, not 'int'"):
         QuantumProgram(register=register, drive=123)  # type: ignore [arg-type]
 
 

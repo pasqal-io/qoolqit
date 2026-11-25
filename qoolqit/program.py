@@ -32,11 +32,11 @@ class QuantumProgram:
     ) -> None:
         """Initialize the program from a register and a drive."""
         if not isinstance(register, Register):
-            raise TypeError("`register` must be of type Register.")
+            raise TypeError(f"'register' must be a Register, not {type(register).__name__!r}.")
         self._register = register
 
         if not isinstance(drive, Drive):
-            raise TypeError("`drive` must be of type Drive.")
+            raise TypeError(f"'drive' must be a Drive, not {type(drive).__name__!r}.")
         if drive.dmm is not None:
             dmm_weights = drive.dmm.weights
             for qid in dmm_weights:
