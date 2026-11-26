@@ -14,7 +14,7 @@ In Rydberg neutral-atom systems, atoms interact through a combination of **dista
 
 Here, \\(\\hat{n}\_i = \\frac{1}{2}(1 + \\hat{\\sigma}^z\_i)\\) is the Rydberg occupation operator of atom \\(i\\) (measuring how much of the Rydberg state is excited), and the \\(\\hat{\\sigma}^{x,y,z}\_i\\) are the Pauli operators:
 
-\\\[ \\sigma^x=\\begin{pmatrix} 0 & 1 \\\\ 1 & 0\\end{pmatrix}, \\qquad \\sigma^y=\\begin{pmatrix} 0 & -i \\\\ i & 0\\end{pmatrix}, \\qquad \\sigma^z=\\begin{pmatrix} 1 & 0 \\\\ 0 & -1\\end{pmatrix}. \\\]
+\\\[ \\sigma^x=\\begin{pmatrix} 0 &amp; 1 \\\\ 1 &amp; 0\\end{pmatrix}, \\qquad \\sigma^y=\\begin{pmatrix} 0 &amp; -i \\\\ i &amp; 0\\end{pmatrix}, \\qquad \\sigma^z=\\begin{pmatrix} 1 &amp; 0 \\\\ 0 &amp; -1\\end{pmatrix}. \\\]
 
 The following table summarizes the dimensionless parameters defining the Hamiltonian and their allowed ranges. Collectively, these parameters define a **quantum program**, which fully specifies the time-dependent Hamiltonian introduced above.
 

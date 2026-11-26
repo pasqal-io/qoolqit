@@ -68,7 +68,12 @@ print(fresnel_device)
 ```
 
 ```
+<string>:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
+
+
 {'FRESNEL_CAN1': FRESNEL_CAN1, 'FRESNEL': FRESNEL}
+
+
 FRESNEL: 
  └── max_duration: 332.43763968
  └── max_amplitude: 0.20412370086269147
@@ -78,7 +83,6 @@ FRESNEL:
 
 
 
-<string>:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
 <string>:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
 ```
 
