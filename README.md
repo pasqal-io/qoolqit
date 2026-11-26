@@ -41,7 +41,7 @@ If you wish to install directly from the source, for example, if you are develop
    With [uv](https://docs.astral.sh/uv/), which installs the `dev` group by default:
 
    ```sh
-   uv sync -U
+   uv sync
    source .venv/bin/activate
    ```
 

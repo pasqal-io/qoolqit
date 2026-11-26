@@ -5,7 +5,16 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
+      - id: check-toml
       - id: check-added-large-files
+        exclude: ^uv\.lock$
+
+# Regenerate uv.lock when pyproject.toml changes; in CI, fail if the committed lock is stale.
+# Keep the rev in sync with the uv version in .github/workflows.
+-   repo: https://github.com/astral-sh/uv-pre-commit
+    rev: "0.13.7"
+    hooks:
+      - id: uv-lock
 
 # Reformat source code.
 -   repo: https://github.com/ambv/black
@@ -14,7 +23,7 @@ repos:
       - id: black
 
 -   repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.17.6"
+    rev: "v0.17.4"
     hooks:
       - id: ruff-check
         args: [--fix]

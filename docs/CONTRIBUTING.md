@@ -48,9 +48,11 @@ git push --set-upstream origin <your initials>/<branch name>
   With [uv](https://docs.astral.sh/uv/), which installs the `dev` group by default:
 
   ```sh
-  uv sync -U
+  uv sync
   source .venv/bin/activate
   ```
+
+  `uv sync` installs the versions pinned in `uv.lock`. Without a GPU, add `--group cpu` to skip the CUDA libraries, and pass it to every later `uv sync` and `uv run`.
 
 ### Useful things for your workflow: Linting and Testing
 

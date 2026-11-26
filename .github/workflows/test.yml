@@ -38,7 +38,7 @@ jobs:
         activate-environment: true
     - name: Install QoolQit with test dependencies
       run: |
-        uv pip install -e . --group test --torch-backend=cpu
+        uv sync --locked --no-default-groups --group test --group cpu
     - name: Run tests
       run: |
         pytest -vvv --cov-report=term-missing --cov-config=pyproject.toml --cov=qoolqit --markdown-docs

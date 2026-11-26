@@ -70,7 +70,7 @@ docs = [
   "griffe-inherited-docstrings",
   "markdown-exec>=1.12.6",
   # Formats API signatures (separate_signature). Keep in sync with the ruff-pre-commit rev.
-  "ruff==0.17.6",
+  "ruff==0.17.4",
   # Temporary: Zensical-compatible mike fork until Zensical ships native versioning.
   # See https://zensical.org/docs/compatibility/mkdocs/mike/
   "mike @ git+https://github.com/squidfunk/mike.git@0f62791256ebeba60d20d2f1d8fe6ec3b7d1e2b3", # 2.2.0+zensical-0.1.0
@@ -80,6 +80,15 @@ dev = [
   { include-group = "docs" },
   "mypy==2.4.1",
   "pre-commit",
+]
+# PyTorch build, uv only (see [tool.uv.sources]): `uv sync` installs the default PyPI wheels,
+# with CUDA on Linux; `--group cpu` installs the CPU-only wheels, which CI uses (no GPU).
+cpu = [
+  "torch",
+]
+# Same as plain `uv sync`; declared so uv can mark it as conflicting with `cpu`.
+cuda = [
+  "torch",
 ]
 
 [project.urls]
@@ -92,6 +101,30 @@ only-include = ["qoolqit"]
 
 [tool.uv]
 default-groups = ["dev"]
+conflicts = [[{ group = "cpu" }, { group = "cuda" }]]
+# Supply-chain cooldown: resolve only releases at least 15 days old, like Renovate's
+# minimumReleaseAge for PyPI. This also holds back Renovate's weekly lock refresh. A
+# security fix younger than 15 days needs an entry in [tool.uv.exclude-newer-package].
+exclude-newer = "15 days"
+
+# Exempt from the cooldown. Pasqal's packages are adopted on release.
+[tool.uv.exclude-newer-package]
+emu-base = false
+emu-mps = false
+emu-sv = false
+pasqal-cloud = false
+pulser = false
+pulser-core = false
+pulser-simulation = false
+
+# CPU-only PyTorch for the `cpu` group: on Linux, the PyPI wheels pull in the CUDA libraries.
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", group = "cpu" }]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
