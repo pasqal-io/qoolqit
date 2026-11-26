@@ -48,9 +48,11 @@ git push --set-upstream origin <your initials>/<branch name>
   With [uv](https://docs.astral.sh/uv/), which installs the `dev` group by default:
 
   ```sh
-  uv sync -U
+  uv sync
   source .venv/bin/activate
   ```
+
+  `uv sync` installs the versions pinned in `uv.lock`, with the CPU-only build of PyTorch on Linux and Windows.
 
 ### Useful things for your workflow: Linting and Testing
 

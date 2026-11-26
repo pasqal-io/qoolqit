@@ -25,7 +25,7 @@ jobs:
         activate-environment: true
     - name: Install QoolQit with dev dependencies
       run: |
-        uv pip install -e . --group dev --torch-backend=cpu
+        uv sync --locked --no-default-groups --group dev
     - name: Check files
       run: |
         pre-commit run --all-files

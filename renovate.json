@@ -4,7 +4,11 @@
     "config:recommended",
     "helpers:pinGitHubActionDigestsToSemver"
   ],
+  "timezone": "Europe/Paris",
   "osvVulnerabilityAlerts": true,
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "vulnerabilityAlerts": {
     "minimumReleaseAge": null,
     "schedule": [
@@ -14,6 +18,10 @@
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
+      "minimumReleaseAge": "15 days"
+    },
+    {
+      "matchDatasources": ["pypi"],
       "minimumReleaseAge": "15 days"
     }
   ]

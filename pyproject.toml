@@ -59,6 +59,8 @@ test = [
   "pytest",
   "pytest-cov",
   "pytest-markdown-docs",
+  # Already required by pulser[torch]. Listed here so [tool.uv.sources] can pin it to the CPU index.
+  "torch",
 ]
 docs = [
   "qoolqit[extras]",
@@ -92,6 +94,16 @@ only-include = ["qoolqit"]
 
 [tool.uv]
 default-groups = ["dev"]
+
+# CPU-only PyTorch on Linux and Windows: the PyPI wheels pull in the CUDA libraries.
+# The macOS wheels on PyPI are already CPU-only.
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform != 'darwin'" }]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
