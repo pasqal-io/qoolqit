@@ -81,9 +81,6 @@ pulser = false
 pulser-core = false
 pulser-simulation = false
 
-[manifest]
-constraints = [{ name = "soupsieve", marker = "python_full_version >= '3.11.5'", specifier = ">=4" }]
-
 [[package]]
 name = "aiohappyeyeballs"
 version = "2.7.1"
@@ -1177,40 +1174,40 @@ wheels = [
 
 [package.optional-dependencies]
 cublas = [
-    { name = "nvidia-cublas", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
-    { name = "nvidia-cuda-nvrtc", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
+    { name = "nvidia-cublas", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
+    { name = "nvidia-cuda-nvrtc", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
 ]
 cudart = [
-    { name = "nvidia-cuda-runtime", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
+    { name = "nvidia-cuda-runtime", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
 ]
 cufft = [
-    { name = "nvidia-cufft", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
-    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
+    { name = "nvidia-cufft", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
+    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
 ]
 cufile = [
-    { name = "nvidia-cufile", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
+    { name = "nvidia-cufile", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
 ]
 cupti = [
-    { name = "nvidia-cuda-cupti", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
+    { name = "nvidia-cuda-cupti", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
 ]
 cusolver = [
-    { name = "nvidia-cublas", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
-    { name = "nvidia-cusolver", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
-    { name = "nvidia-cusparse", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
-    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
+    { name = "nvidia-cublas", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
+    { name = "nvidia-cusolver", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
+    { name = "nvidia-cusparse", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
+    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
 ]
 cusparse = [
-    { name = "nvidia-cusparse", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
-    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
+    { name = "nvidia-cusparse", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
+    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
 ]
 nvjitlink = [
-    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
+    { name = "nvidia-nvjitlink", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
 ]
 nvrtc = [
-    { name = "nvidia-cuda-nvrtc", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
+    { name = "nvidia-cuda-nvrtc", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
 ]
 nvtx = [
-    { name = "nvidia-nvtx", marker = "(platform_machine == 'aarch64' or platform_machine == 'x86_64') and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu' or extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda'" },
+    { name = "nvidia-nvtx", marker = "(platform_machine == 'aarch64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra != 'group-7-qoolqit-cpu') or (extra == 'group-7-qoolqit-cpu' and extra == 'group-7-qoolqit-cuda')" },
 ]
 
 [[package]]

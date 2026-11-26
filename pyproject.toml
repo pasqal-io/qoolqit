@@ -106,8 +106,6 @@ conflicts = [[{ group = "cpu" }, { group = "cuda" }]]
 # minimumReleaseAge for PyPI. This also holds back Renovate's weekly lock refresh. A
 # security fix younger than 15 days needs an entry in [tool.uv.exclude-newer-package].
 exclude-newer = "15 days"
-# soupsieve 4 fixes CVE-2026-126190 but needs Python >= 3.11.5; older 3.11 patches keep 2.10.
-constraint-dependencies = ["soupsieve>=4 ; python_full_version >= '3.11.5'"]
 
 # Exempt from the cooldown. Pasqal's packages are adopted on release.
 [tool.uv.exclude-newer-package]
