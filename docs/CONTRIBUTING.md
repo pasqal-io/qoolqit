@@ -52,7 +52,7 @@ git push --set-upstream origin <your initials>/<branch name>
   source .venv/bin/activate
   ```
 
-  `uv sync` installs the versions pinned in `uv.lock`, with the CPU-only build of PyTorch on Linux and Windows.
+  `uv sync` installs the versions pinned in `uv.lock`. Without a GPU, add `--group cpu` to skip the CUDA libraries.
 
 ### Useful things for your workflow: Linting and Testing
 

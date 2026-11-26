@@ -59,8 +59,6 @@ test = [
   "pytest",
   "pytest-cov",
   "pytest-markdown-docs",
-  # Already required by pulser[torch]. Listed here so [tool.uv.sources] can pin it to the CPU index.
-  "torch",
 ]
 docs = [
   "qoolqit[extras]",
@@ -83,6 +81,15 @@ dev = [
   "mypy==2.4.1",
   "pre-commit",
 ]
+# PyTorch build, uv only (see [tool.uv.sources]): `uv sync` installs the default PyPI wheels,
+# with CUDA on Linux; `--group cpu` installs the CPU-only wheels, which CI uses (no GPU).
+cpu = [
+  "torch",
+]
+# Same as plain `uv sync`; declared so uv can mark it as conflicting with `cpu`.
+cuda = [
+  "torch",
+]
 
 [project.urls]
 Documentation = "https://pasqal-io.github.io/qoolqit/latest"
@@ -94,16 +101,16 @@ only-include = ["qoolqit"]
 
 [tool.uv]
 default-groups = ["dev"]
+conflicts = [[{ group = "cpu" }, { group = "cuda" }]]
 
-# CPU-only PyTorch on Linux and Windows: the PyPI wheels pull in the CUDA libraries.
-# The macOS wheels on PyPI are already CPU-only.
+# CPU-only PyTorch for the `cpu` group: on Linux, the PyPI wheels pull in the CUDA libraries.
 [[tool.uv.index]]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
 [tool.uv.sources]
-torch = [{ index = "pytorch-cpu", marker = "sys_platform != 'darwin'" }]
+torch = [{ index = "pytorch-cpu", group = "cpu" }]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

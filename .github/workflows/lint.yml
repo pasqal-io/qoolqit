@@ -25,7 +25,7 @@ jobs:
         activate-environment: true
     - name: Install QoolQit with dev dependencies
       run: |
-        uv sync --locked --no-default-groups --group dev
+        uv sync --locked --no-default-groups --group dev --group cpu
     - name: Check files
       run: |
         pre-commit run --all-files

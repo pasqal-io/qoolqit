@@ -48,7 +48,7 @@ jobs:
 
             - name: Install QoolQit & build documentation
               run: |
-                uv sync --locked --no-default-groups --group docs
+                uv sync --locked --no-default-groups --group docs --group cpu
                 zensical build --clean --strict
 
             - name: Upload site artifact
@@ -209,7 +209,7 @@ jobs:
 
             - name: Install QoolQit with docs dependencies
               run: |
-                uv sync --locked --no-default-groups --group docs
+                uv sync --locked --no-default-groups --group docs --group cpu
 
             - name: Deploy docs
               run: |
