@@ -107,6 +107,4 @@ As before, to include noise sources in the emulation of a program, emulators mus
 
 Finally, for more detailed information on [hardware modulation](https://docs.pasqal.com/pulser/tutorials/output_mod_eom/) and [noise sources](https://docs.pasqal.com/pulser/noise_model/), consult the comprehensive discussions available in the Pulser documentation.
 
-
-[^1]: Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays.
-For more details about Pulser's scope and capabilities, visit [Pulser documentation](https://docs.pasqal.com/pulser/).
+[^1]: Pulser is an open-source library that provides tools for designing and running pulse sequences on programmable neutral atom arrays. For more details about Pulser's scope and capabilities, visit [Pulser documentation](https://docs.pasqal.com/pulser/).

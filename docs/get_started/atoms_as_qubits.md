@@ -64,7 +64,6 @@ The double excitation is only partially suppressed, and the populations no longe
 Note that the blockade radius can be crossed in two ways: moving the atoms or changing the drive amplitude.
 Either way, only the ratio $\tilde{J} / \tilde{\Omega}$ matters.
 
-
 The widget below lets you run the two-atom experiment yourself.
 Drag an atom, or use the sliders, to change the distance $\tilde{r}$ between the atoms and the drive amplitude $\tilde{\Omega}$.
 The dashed circle around each atom has radius $\tilde{r}_b / 2$, so the two circles overlap exactly when the atoms are closer than the blockade radius.

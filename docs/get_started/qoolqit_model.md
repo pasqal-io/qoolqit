@@ -58,14 +58,15 @@ $$\tilde{r}_{ij}\geq 1$$
 $$\tilde{J}_{ij}\leq 1$$
 
 !!! info "QoolQit Model"
+
     QoolQit introduces a **dimensionless model** where all quantities are expressed relative to an **interaction reference**, such that $\tilde{r}_{ij}\geq 1$ and $\tilde{J}_{ij}\leq 1$.
 
 Such a reference makes the program definition hardware independent and provides several advantages:
 
-* **Removal of hardware-specific constants:** By defining a new unit of energy, all device-dependent constants are factored out.
-* **Dimensionless parameters:** Expressing drive and interaction strengths as dimensionless quantities makes it easier to explore different physical regimes.
-* **Portability:** Programs can be transferred across different devices and hardware generations with minimal modifications, improving reproducibility and reducing platform-specific code.
-* **Hardware-agnostic algorithm development:** Developers can design algorithms that focus on the underlying physics and computational logic rather than hardware-specific implementation details.
+- **Removal of hardware-specific constants:** By defining a new unit of energy, all device-dependent constants are factored out.
+- **Dimensionless parameters:** Expressing drive and interaction strengths as dimensionless quantities makes it easier to explore different physical regimes.
+- **Portability:** Programs can be transferred across different devices and hardware generations with minimal modifications, improving reproducibility and reducing platform-specific code.
+- **Hardware-agnostic algorithm development:** Developers can design algorithms that focus on the underlying physics and computational logic rather than hardware-specific implementation details.
 
 To help users understand how to define a program, we briefly describe below the expected physical regimes for particular choices of driving strength (amplitude) and program duration. We will see that their values relative to the program's maximum interaction strength are what matter. Thus QoolQit's choice of dimensionless units is natural: interactions are always of order unity, providing an intuitive reference scale for all other quantities.
 
@@ -73,21 +74,21 @@ To help users understand how to define a program, we briefly describe below the 
 
 Since the drive's amplitude $\tilde{\Omega}$ is expressed relative to the maximum interaction strength, strong and weak drive regimes are defined independently of the specific geometry:
 
-| Regime | Condition | Intuition |
-|--------|-----------|-----------|
-| Strong drive | $\tilde{\Omega} \gg \tilde J_{\text{max}}$ | Controls dominate; interactions are a perturbation |
-| Balanced | $\tilde{\Omega} \sim \tilde J_{\text{max}}$ | Controls and interactions compete |
-| Weak drive | $\tilde{\Omega} \ll \tilde J_{\text{max}}$ | Interactions dominate; blockade and correlation effects are strong |
+| Regime       | Condition                                   | Intuition                                                          |
+| ------------ | ------------------------------------------- | ------------------------------------------------------------------ |
+| Strong drive | $\tilde{\Omega} \gg \tilde J_{\text{max}}$  | Controls dominate; interactions are a perturbation                 |
+| Balanced     | $\tilde{\Omega} \sim \tilde J_{\text{max}}$ | Controls and interactions compete                                  |
+| Weak drive   | $\tilde{\Omega} \ll \tilde J_{\text{max}}$  | Interactions dominate; blockade and correlation effects are strong |
 
 ### Time regimes
 
 In an interacting many-body system, time can be naturally measured relative to the timescale on which interactions generate correlations. Roughly speaking, a time $\tilde{t} \sim 1/\tilde J_{\text{max}}$ is enough for nearest-neighbor sites to begin developing correlations. More generally, $\tilde{t} \sim n/\tilde J_{\text{max}}$ can be interpreted as the timescale on which correlations may have propagated over a distance of order $n$ lattice spacings.
 
-| Regime | Condition | Intuition |
-|--------|-----------|-----------|
-| Short time | $\tilde{t} \ll 1/\tilde J_{\text{max}}$ | Evolution is too brief for interactions to significantly build up correlations |
+| Regime            | Condition                                | Intuition                                                                                   |
+| ----------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Short time        | $\tilde{t} \ll 1/\tilde J_{\text{max}}$  | Evolution is too brief for interactions to significantly build up correlations              |
 | Intermediate time | $\tilde{t} \sim 1/\tilde J_{\text{max}}$ | Interactions begin to visibly affect the dynamics; nearest-neighbor correlations can emerge |
-| Long time | $\tilde{t} \gg 1/\tilde J_{\text{max}}$ | Correlations and many-body interaction effects have had time to spread across the system |
+| Long time         | $\tilde{t} \gg 1/\tilde J_{\text{max}}$  | Correlations and many-body interaction effects have had time to spread across the system    |
 
 Next we will discuss the compilation, the crucial step to translate a QoolQit dimensionless program to a sequence of operations that can be realized on a real neutral-atom-based QPU.
 
@@ -124,12 +125,12 @@ H(t) =
 \underbrace{\sum_i \left(\delta(t) + \epsilon_i\Delta(t)\right)\hat{n}_{i}}_{\text{detuning}}.
 $$
 
-| Symbol | Description | units |
-|--------|-------------|-------|
-| $C_6(n)$ | Interaction coefficient for Rydberg level $n$. Also depends on the atomic species. | $\mathrm{rad/\mu s}\times\mu\mathrm{m}^6$ |
-| $r_{ij}$ | Physical distance between atom sites $i$ and $j$. | $\mu\mathrm{m}$ |
-| $\Omega(t)$, $\delta(t)$, $\Delta(t)$ | Physical drive parameters. | $\mathrm{rad/\mu s}$ |
-| $t$ | Physical time. | $\mathrm{ns}$ |
+| Symbol                                | Description                                                                        | units                                     |
+| ------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------- |
+| $C_6(n)$                              | Interaction coefficient for Rydberg level $n$. Also depends on the atomic species. | $\mathrm{rad/\mu s}\times\mu\mathrm{m}^6$ |
+| $r_{ij}$                              | Physical distance between atom sites $i$ and $j$.                                  | $\mu\mathrm{m}$                           |
+| $\Omega(t)$, $\delta(t)$, $\Delta(t)$ | Physical drive parameters.                                                         | $\mathrm{rad/\mu s}$                      |
+| $t$                                   | Physical time.                                                                     | $\mathrm{ns}$                             |
 
 Every neutral-atom device is characterized by a minimum allowed atom separation $r_{\text{min}}^{d}$, determined by hardware constraints. This minimum spacing corresponds to the largest pairwise interaction the device can produce:
 
@@ -142,7 +143,6 @@ Every neutral-atom device is characterized by a minimum allowed atom separation 
     Both $r_{\text{min}}^{d}$ and $J_{\text{max}}^{d}$ are **device constants**. They are determined by the particular hardware on which the program is executed.
 
 QoolQit takes this $J_{\text{max}}^{d}$ as the **reference energy scale** for adimensionalization, and the corresponding minimum spacing as the reference distance.
-
 
 All Hamiltonian parameters are expressed relative to this fixed scale:
 
