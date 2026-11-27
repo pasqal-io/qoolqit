@@ -790,7 +790,12 @@ print(fresnel_device)
 ```
 
 ```
+<string>:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
+
+
 {'FRESNEL_CAN1': FRESNEL_CAN1, 'FRESNEL': FRESNEL}
+
+
 FRESNEL: 
  └── max_duration: 332.43763968
  └── max_amplitude: 0.20412370086269147
@@ -800,7 +805,6 @@ FRESNEL:
 
 
 
-<string>:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
 <string>:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
 ```
 
@@ -1244,12 +1248,12 @@ print(A)
 ```
 
 ```
-[[1.41814264 1.35704773 0.50892038 1.44037262 1.62346016 0.2912396 ]
- [1.35704773 0.30310185 1.07212499 0.10667036 0.59319258 0.21010479]
- [0.50892038 1.07212499 1.35079913 1.60854449 0.55671474 1.16855091]
- [1.44037262 0.10667036 1.60854449 0.19480451 1.12299113 0.39281342]
- [1.62346016 0.59319258 0.55671474 1.12299113 1.05440586 1.70096688]
- [0.2912396  0.21010479 1.16855091 0.39281342 1.70096688 0.82655864]]
+[[1.73495496 0.57465529 1.5504668  0.92724229 0.8600704  1.6385707 ]
+ [0.57465529 0.34616224 1.65266981 1.00120602 1.3288114  1.40101778]
+ [1.5504668  1.65266981 0.84846992 0.82052622 0.71991504 0.78703341]
+ [0.92724229 1.00120602 0.82052622 1.95327435 0.14215288 1.85896916]
+ [0.8600704  1.3288114  0.71991504 0.14215288 1.97722693 1.01687556]
+ [1.6385707  1.40101778 0.78703341 1.85896916 1.01687556 0.27406502]]
 ```
 
 Finally, running the embedding we obtain a `DataGraph` with coordinates that can be easily converted to a `Register` of qubits.
@@ -1286,8 +1290,8 @@ print([f"{f:.4f}" for f in sorted(off_diagonal)])
 ```
 
 ```
-['0.0016', '0.0017', '0.0125', '0.0178', '0.0196', '0.0238', '0.0380', '0.3381', '0.5192', '0.5966', '1.0701', '1.1450', '1.1601', '1.3587', '1.7093']
-['0.1067', '0.2101', '0.2912', '0.3928', '0.5089', '0.5567', '0.5932', '1.0721', '1.1230', '1.1686', '1.3570', '1.4404', '1.6085', '1.6235', '1.7010']
+['0.0196', '0.0208', '0.0352', '0.0379', '0.0493', '0.0898', '0.6142', '0.7471', '0.7961', '0.9331', '1.0501', '1.4184', '1.6498', '1.6711', '1.8721']
+['0.1422', '0.5747', '0.7199', '0.7870', '0.8205', '0.8601', '0.9272', '1.0012', '1.0169', '1.3288', '1.4010', '1.5505', '1.6386', '1.6527', '1.8590']
 ```
 
 ### Spring-layout embedder
@@ -1552,11 +1556,11 @@ final_bitstrings
 ```
 
 ```
-Counter({'111': 818,
-         '110': 57,
-         '101': 55,
-         '011': 54,
-         '010': 7,
+Counter({'111': 814,
+         '011': 58,
+         '101': 57,
+         '110': 56,
+         '010': 6,
          '100': 5,
          '001': 4})
 ```
@@ -1601,7 +1605,7 @@ results.get_result("occupation", time=1.0)
 
 
 
-[0.9475510886445652, 0.9475510886445652, 0.9473207271173]
+[0.9475510886446437, 0.9475510886446437, 0.9473207271173786]
 ```
 
 The key parameters of `EmulationConfig` are:
@@ -2811,8 +2815,8 @@ Config MyWrongConfig keys:
     - some_other_param
 
 Algorithm signature parameters:
-    - param1
     - graph
+    - param1
 ```
 
 Furthermore, because we are defining an embedder in the `GraphToGraphEmbedder`, the input must be an instance of a `DataGraph`:
@@ -2986,8 +2990,8 @@ print(
 ```
 
 ```
-Ideal: Counter({'00': 996, '10': 3, '11': 1})
-Noisy: Counter({'00': 51287, '01': 7287, '10': 5226, '11': 200})
+Ideal: Counter({'00': 998, '01': 1, '10': 1})
+Noisy: Counter({'00': 52483, '10': 5973, '01': 5358, '11': 186})
 Number of ideal results (n_shots): 1000
 Number of noisy results (n_trajectories x n_shots): 64000
 ```
@@ -3940,7 +3944,7 @@ plot_bitstrings(counts, highlight={SOLUTION: COLORS["mintgreen"]})
 
 ```
 Most frequent bitstring: 0110
-P(0110) = 81.10%
+P(0110) = 79.20%
 ```
 
 png
@@ -4174,7 +4178,7 @@ print(counter)
 ```
 
 ```
-Counter({'00111': 159, '01011': 151, '00110': 98, '10000': 96, '01001': 95, '00101': 86, '01010': 80, '10001': 53, '10010': 41, '00100': 38, '01000': 37, '00011': 37, '10011': 17, '00010': 5, '00001': 4, '01110': 1, '01111': 1, '10110': 1})
+Counter({'00111': 175, '01011': 157, '00110': 104, '10000': 90, '01001': 80, '01010': 80, '00101': 78, '10001': 55, '10010': 47, '01000': 37, '00011': 35, '00100': 32, '10011': 19, '00010': 6, '00001': 4, '10110': 1})
 ```
 
 And finally we plot a histogram of the sampled bitstrings.
