@@ -2690,25 +2690,35 @@ Distance between each qubit pair.
 
 ```
 draw(
+    blockade_radius: float | None = None,
     ax: Axes | None = None,
     marker_size: int = 100,
-    node_color: str = "tab:green",
+    node_color: str = COLORS["metalblue"],
 ) -> None
 ```
 
 Draw the register.
 
+The register is drawn to scale (equal aspect ratio).
+
 Parameters:
 
+- **`blockade_radius`** (`float | None`, default: `None` ) –
+
+  an optional blockade radius, in the same dimensionless units as the coordinates. If given, a disk of radius blockade\_radius / 2 is drawn around each qubit. For a drive amplitude Ω, the blockade radius is Ω^(-1/6).
 - **`ax`** (`Axes | None`, default: `None` ) –
 
   an optional matplotlib Axes instance to draw on. If None, a new Axes will be created.
 - **`marker_size`** (`int`, default: `100` ) –
 
   size of the qubit markers in points squared. Defaults to 100.
-- **`node_color`** (`str`, default: `'tab:green'` ) –
+- **`node_color`** (`str`, default: `COLORS['metalblue']` ) –
 
-  color of the qubit markers. Defaults to "tab:green".
+  color of the qubit markers. Defaults to COLORS\["metalblue"\].
+
+> [!NOTE]
+>
+> The disks drawn for `blockade_radius` have half the blockade radius, not the full radius: two qubits are blockaded exactly when their disks overlap. With full-radius circles one would instead check whether a qubit lies inside a neighbor's circle, and in a dense register the circles would overlap heavily.
 
 #### from\_coordinates
 

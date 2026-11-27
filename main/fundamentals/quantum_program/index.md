@@ -98,6 +98,53 @@ register.interactions()
  (1, 3): 1.0}
 ```
 
+### Register constructors
+
+Besides a dictionary or a list of coordinates, a `Register` can be created from common layouts. The layouts use unit spacing by default, set with `spacing` (`row_spacing` and `col_spacing` for `rectangular`).
+
+```
+import matplotlib.pyplot as plt
+
+from qoolqit import Register
+
+registers = {
+    "Register.line(4, spacing=1.0)": Register.line(4, spacing=1.0),
+    "Register.square(3, spacing=1.1)": Register.square(3, spacing=1.1),
+    "Register.rectangular(2, 4,\nrow_spacing=1.5, col_spacing=1.0)": Register.rectangular(
+        2, 4, row_spacing=1.5, col_spacing=1.0
+    ),
+    "Register.triangular(3, 4, spacing=2.0)": Register.triangular(3, 4, spacing=2.0),
+    "Register.circle(8, spacing=2.5)": Register.circle(8, spacing=2.5),
+}
+
+fig, axs = plt.subplots(2, 3, figsize=(12, 7))
+for ax, (title, reg) in zip(axs.flat, registers.items(), strict=False):
+    reg.draw(ax=ax)
+    ax.set_title(title)
+axs[-1, -1].axis("off")
+fig.tight_layout()
+```
+
+png
+
+### Drawing the blockade radius
+
+Passing `blockade_radius` to `draw()` draws a disk of radius \\(\\tilde{r}\_b / 2\\) around each qubit, so two qubits are blockaded exactly when their disks overlap. For a drive amplitude \\(\\tilde{\\Omega}\\), the blockade radius is \\(\\tilde{r}\_b = \\tilde{\\Omega}^{-1/6}\\) (see [Atoms as qubits](<https://pasqal-io.github.io/qoolqit/main/get_started/atoms_as_qubits/index.md>)). On the 2x2 register defined at the start of this section, \\(\\tilde{\\Omega} = 2\\) blockades no pair, \\(\\tilde{\\Omega} = 0.3\\) blockades nearest neighbors, and \\(\\tilde{\\Omega} = 0.05\\) also blockades the diagonals.
+
+```
+import matplotlib.pyplot as plt
+
+from qoolqit import Register
+
+fig, axs = plt.subplots(1, 3, figsize=(12, 4))
+for ax, omega in zip(axs, [2.0, 0.3, 0.05], strict=True):
+    register.draw(blockade_radius=omega ** (-1 / 6), ax=ax)
+    ax.set_title(rf"$\tilde\Omega = {omega}$")
+fig.tight_layout()
+```
+
+png
+
 ## Waveforms
 
 An essential part of writing programs in the Rydberg analog model is to write the time-dependent functions representing the amplitude and detuning terms in the drive Hamiltonian. For that, QoolQit implements a set of waveforms that can be used directly and/or composed together.

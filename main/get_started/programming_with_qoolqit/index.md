@@ -191,6 +191,20 @@ drive_no_blockade = Drive(
 )
 ```
 
+Drawing the register with `blockade_radius` shows a disk of radius \\(\\tilde{r}\_b / 2\\) around each atom, with \\(\\tilde{r}\_b = \\tilde{\\Omega}^{-1/6}\\): the two disks overlap exactly when the atoms are blockaded.
+
+```
+import matplotlib.pyplot as plt
+
+from qoolqit import Register
+
+fig, axs = plt.subplots(1, 2, figsize=(8, 3))
+for ax, omega in zip(axs, [0.3, 2.0], strict=True):
+    register.draw(ax=ax, blockade_radius=omega ** (-1 / 6))
+    ax.set_title(rf"$\tilde\Omega = {omega}$")
+fig.tight_layout()
+```
+
 ```
 # Build and compile programs
 program_blockade = QuantumProgram(register, drive_blockade)
