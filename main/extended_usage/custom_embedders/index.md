@@ -127,8 +127,8 @@ Config MyWrongConfig keys:
     - some_other_param
 
 Algorithm signature parameters:
-    - param1
     - graph
+    - param1
 ```
 
 Furthermore, because we are defining an embedder in the `GraphToGraphEmbedder`, the input must be an instance of a `DataGraph`:
