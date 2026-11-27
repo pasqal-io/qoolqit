@@ -284,7 +284,7 @@ def test_heavy_hexagonal() -> None:
 
 
 def test_from_pyg_wrong_input() -> None:
-    with pytest.raises(TypeError, match="Input must be a torch_geometric.data.Data object."):
+    with pytest.raises(TypeError, match="Input must be a torch_geometric Data object, not 'str'"):
         DataGraph.from_pyg("hello")
 
 

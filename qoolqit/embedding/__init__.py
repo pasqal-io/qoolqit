@@ -9,13 +9,13 @@ from .matrix_embedder import Blade, InteractionEmbedder, MatrixToGraphEmbedder
 
 __all__ = [
     "BaseEmbedder",
+    "Blade",
+    "BladeConfig",
     "EmbedderConfig",
     "GraphToGraphEmbedder",
-    "MatrixToGraphEmbedder",
-    "InteractionEmbedderConfig",
     "InteractionEmbedder",
+    "InteractionEmbedderConfig",
+    "MatrixToGraphEmbedder",
     "SpringLayoutConfig",
     "SpringLayoutEmbedder",
-    "BladeConfig",
-    "Blade",
 ]

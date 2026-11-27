@@ -12,10 +12,10 @@ from .device import (
 )
 
 __all__ = [
-    "MockDevice",
     "AnalogDevice",
     "AnalogDeviceWithDMM",
-    "DigitalAnalogDevice",
     "Device",
+    "DigitalAnalogDevice",
+    "MockDevice",
     "available_default_devices",
 ]

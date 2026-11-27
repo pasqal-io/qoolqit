@@ -111,9 +111,9 @@ def test_compile_to_wrong_device_type() -> None:
     register = Register(qubits={"q0": (0.0, 0.0)})
     drive = Drive(amplitude=ConstantWaveform(2.0, 0.2))
     program = QuantumProgram(register=register, drive=drive)
-    with pytest.raises(TypeError, match="`device` must be of type `qoolqit.devices.Device`."):
+    with pytest.raises(TypeError, match="'device' must be a QoolQit Device, not 'str'"):
         program.compile_to(device="I'm not a device")  # type: ignore [arg-type]
-    with pytest.raises(TypeError, match="`device` must be of type `qoolqit.devices.Device`."):
+    with pytest.raises(TypeError, match="'device' must be a QoolQit Device, not 'Device'"):
         program.compile_to(device=PulserAnalogDevice)  # type: ignore [arg-type]
 
 
@@ -128,7 +128,7 @@ def test_amplitude_area_is_kept_by_compilation(
     """The pulse area Ω·t is unit-free: compiling keeps it, whatever the waveform type.
 
     This also checks that each profile pairs its time and energy units so that
-    time × energy = 1000.
+    time * energy = 1000.
     """
     # At a minimum distance of 1, MAX_ENERGY would pick the same units as DEFAULT; at 1.1 it
     # maps the register to the device's minimum distance with units of its own.

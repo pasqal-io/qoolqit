@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import re
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,13 +34,13 @@ def test_drive_init_and_composition(amp_wf: Waveform, det_wf: Waveform) -> None:
     with pytest.raises(TypeError, match="missing 1 required keyword-only argument: 'amplitude'"):
         Drive(detuning=ConstantWaveform(duration=10, value=1.0))  # type: ignore [call-arg]
 
-    with pytest.raises(TypeError, match="'amplitude' and 'detuning' must be of type Waveform."):
+    with pytest.raises(TypeError, match="'amplitude' and 'detuning' must be of type Waveform"):
         drive = Drive(amplitude=1.0, detuning=det_wf)  # type: ignore [arg-type]
 
-    with pytest.raises(TypeError, match="'amplitude' and 'detuning' must be of type Waveform."):
+    with pytest.raises(TypeError, match="'amplitude' and 'detuning' must be of type Waveform"):
         drive = Drive(amplitude=amp_wf, detuning=1.0)  # type: ignore [arg-type]
 
-    with pytest.raises(ValueError, match="'amplitude' must be positive."):
+    with pytest.raises(ValueError, match="'amplitude' must be positive"):
         drive = Drive(amplitude=det_wf)
 
     drive = Drive(amplitude=amp_wf, detuning=det_wf)
@@ -86,7 +87,7 @@ def test_drive_different_phase_composition_not_supported() -> None:
     drive_2 = Drive(amplitude=amp, phase=0.0)
 
     with pytest.raises(
-        NotImplementedError, match="Composing drives with different phase not supported."
+        NotImplementedError, match="Composing drives with different phase not supported"
     ):
         drive_1 >> drive_2
 
@@ -99,16 +100,16 @@ def test_drive_composition_with_dmm_not_supported() -> None:
     drive = Drive(amplitude=amp, detuning=det)
     drive_with_dmm = Drive(amplitude=amp, detuning=det, dmm=dmm)
 
-    with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
+    with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported"):
         drive >> drive_with_dmm
 
-    with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported."):
+    with pytest.raises(NotImplementedError, match="Composing drives with a dmm is not supported"):
         drive_with_dmm >> drive
 
 
 def test_error_amplitude_negative() -> None:
     neg_ramp = RampWaveform(10.0, -1.0, 2.0)
-    with pytest.raises(ValueError, match="'amplitude' must be positive."):
+    with pytest.raises(ValueError, match="'amplitude' must be positive"):
         Drive(amplitude=neg_ramp, detuning=neg_ramp)
 
 
@@ -155,7 +156,7 @@ def test_drive_with_phase(phase: float, expected: float) -> None:
 
 @pytest.mark.parametrize("phase", [math.inf, -math.inf, math.nan])
 def test_drive_error_phase_not_finite(phase: float) -> None:
-    with pytest.raises(ValueError, match="'phase' must be finite."):
+    with pytest.raises(ValueError, match="'phase' must be finite"):
         Drive(amplitude=RampWaveform(10.0, 0.0, 1.0), phase=phase)
 
 
@@ -224,10 +225,12 @@ def test_dmm_init() -> None:
     valid_weights = {0: 0.1, 1: 0.2, 2: 0.3}
     invalid_weights = {0: 1.1, 1: 0.3}
 
-    with pytest.raises(ValueError, match="`weights` must be a dictionary of values in \\[0, 1\\]."):
+    with pytest.raises(
+        ValueError, match=re.escape("`weights` must be a dictionary of values in [0, 1].")
+    ):
         DetuningMapModulator(negative_wf, weights=invalid_weights)
 
-    with pytest.raises(ValueError, match="`waveform` must be negative for all times."):
+    with pytest.raises(ValueError, match="`waveform` must be negative for all times"):
         DetuningMapModulator(positive_wf, weights=valid_weights)
 
     dmm = DetuningMapModulator(negative_wf, weights=valid_weights)

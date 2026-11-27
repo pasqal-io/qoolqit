@@ -105,10 +105,10 @@ class TestBackends:
             assert obs == expected_obs
 
     def test_check_backend_type(self) -> None:
-        with pytest.raises(match="`backend_type` must be a EmulatorBackend type."):
+        with pytest.raises(match="`backend_type` must be a EmulatorBackend type"):
             LocalEmulator(backend_type=int)  # type: ignore[arg-type]
 
-        with pytest.raises(match="`backend_type` must be a RemoteEmulatorBackend type."):
+        with pytest.raises(match="`backend_type` must be a RemoteEmulatorBackend type"):
             RemoteEmulator(backend_type=str, connection=self.mock_connection)  # type: ignore[arg-type]
 
     def test_validate_connection(self) -> None:
@@ -148,6 +148,6 @@ class TestBackends:
 
     def test_qpu_init_no_num_shots(self) -> None:
         with pytest.raises(
-            ValueError, match="Number of shots must be provided to use the QPU backend."
+            ValueError, match="Number of shots must be provided to use the QPU backend"
         ):
             QPU(connection=self.mock_connection)

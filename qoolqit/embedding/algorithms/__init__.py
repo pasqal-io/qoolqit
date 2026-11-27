@@ -8,9 +8,9 @@ from .spring_layout_embedding import SpringLayoutConfig, spring_layout_embedding
 
 __all__ = [
     "BladeConfig",
-    "_blade",
     "InteractionEmbedderConfig",
-    "interaction_embedding",
     "SpringLayoutConfig",
+    "_blade",
+    "interaction_embedding",
     "spring_layout_embedding",
 ]

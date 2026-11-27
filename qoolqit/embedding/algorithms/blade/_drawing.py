@@ -180,7 +180,7 @@ def plot_differences(differences: np.ndarray) -> None:
 class ColorbarSpec:
     """Styling and layout parameters for the interaction-difference colorbar."""
 
-    label: str = "target − current interaction"
+    label: str = "target - current interaction"
     label_fontsize: int = 7
     tick_fontsize: int = 6
     n_ticks_each_side: int = 4
@@ -401,8 +401,9 @@ def draw_discrepancy_lines_and_colorbar(
     pos2d: np.ndarray,
     target_interactions: np.ndarray,
     current_interactions: np.ndarray,
-    spec: ColorbarSpec = ColorbarSpec(),  # noqa: B008 (frozen dataclass, safe to share)
+    spec: ColorbarSpec | None = None,
 ) -> None:
+    spec = spec or ColorbarSpec()
     discrepancies = np.triu(target_interactions - current_interactions, k=1)
 
     max_pos = float(np.max(discrepancies))

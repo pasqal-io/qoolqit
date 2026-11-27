@@ -83,9 +83,9 @@ class TestWaveform:
             self.MockWaveform(200.0, 2.0, 3.1)  # type: ignore [call-arg]
 
     def test_positive_duration(self) -> None:
-        with pytest.raises(ValueError, match="Duration needs to be a positive non-zero value."):
+        with pytest.raises(ValueError, match="Duration needs to be a positive non-zero value"):
             self.MockWaveform(0.0)
-        with pytest.raises(ValueError, match="Duration needs to be a positive non-zero value."):
+        with pytest.raises(ValueError, match="Duration needs to be a positive non-zero value"):
             self.MockWaveform(-10.0)
 
     @pytest.mark.parametrize("duration", [1, 3])

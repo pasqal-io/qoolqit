@@ -124,7 +124,7 @@ def update_positions(
     n = len(target_interactions)
 
     positions = np.array(positions, dtype=float)
-    nb_positions, space_dimension = positions.shape
+    nb_positions, _space_dimension = positions.shape
 
     if isinstance(max_distance_to_walk, tuple):
         max_distance_to_walk, min_constr_max_distance_to_walk, max_constr_max_distance_to_walk = (

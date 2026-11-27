@@ -14,11 +14,11 @@ from qoolqit.waveforms.waveforms import (
 
 __all__ = [
     "BlackmanWaveform",
+    "CompositeWaveform",
     "ConstantWaveform",
     "DelayWaveform",
     "InterpolatedWaveform",
     "PiecewiseLinearWaveform",
     "RampWaveform",
-    "CompositeWaveform",
     "Waveform",
 ]

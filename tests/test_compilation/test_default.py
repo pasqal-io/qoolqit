@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 
 import numpy as np
@@ -98,7 +99,9 @@ class TestWorkingPointCompilerProfile:
         drive = Drive(amplitude=ConstantWaveform(50, value=0.2))
         program = QuantumProgram(register, drive)
 
-        with pytest.raises(CompilationError, match="between two qubits 0.999999998 goes below"):
+        with pytest.raises(
+            CompilationError, match=re.escape("between two qubits 0.999999998 goes below")
+        ):
             program.compile_to(device=AnalogDevice(), profile=self.profile)
 
     @pytest.mark.parametrize(
