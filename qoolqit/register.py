@@ -399,7 +399,7 @@ class Register:
             (rb,) = ax.plot(
                 [], [], color=edgecolor, linestyle=linestyle, label=r"$\tilde{r}_b / 2$"
             )
-            ax.legend(handles=[rb])
+            ax.legend(handles=[rb], loc="upper right")
 
         for xi, yi, qid in zip(coords[:, 0], coords[:, 1], self.qubits_ids, strict=True):
             ax.scatter(xi, yi, s=marker_size, color=node_color)
