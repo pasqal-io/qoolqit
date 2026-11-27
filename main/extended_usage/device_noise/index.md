@@ -133,8 +133,8 @@ print(
 ```
 
 ```
-Ideal: Counter({'00': 1000})
-Noisy: Counter({'00': 52362, '10': 6548, '01': 4921, '11': 169})
+Ideal: Counter({'00': 996, '10': 2, '11': 1, '01': 1})
+Noisy: Counter({'00': 52677, '10': 6348, '01': 4811, '11': 164})
 Number of ideal results (n_shots): 1000
 Number of noisy results (n_trajectories x n_shots): 64000
 ```
