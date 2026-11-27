@@ -149,7 +149,7 @@ def basic_compilation(
     if drive.dmm is not None:
         dmm_adder = _DMMAdder(wf_converter, pulser_register, pulser_sequence)
         # support only for a single DMM channel
-        dmm_id = list(device._device.dmm_channels.keys())[0]
+        dmm_id = next(iter(device._device.dmm_channels))
         dmm_adder.add_dmm(dmm_id, drive.dmm)
 
     return pulser_sequence

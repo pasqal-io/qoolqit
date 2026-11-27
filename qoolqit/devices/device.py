@@ -67,7 +67,10 @@ class Device:
     ) -> None:
         """Initialize the device by wrapping a Pulser device."""
         if not isinstance(pulser_device, BaseDevice):
-            raise TypeError("`pulser_device` must be an instance of Pulser BaseDevice class.")
+            raise TypeError(
+                "'pulser_device' must be a Pulser BaseDevice, "
+                f"not {type(pulser_device).__name__!r}."
+            )
 
         # Store it for all subsequent lookups
         self._pulser_device: BaseDevice = pulser_device

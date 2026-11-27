@@ -199,7 +199,7 @@ class CompositeWaveform(Waveform):
     @property
     def times(self) -> list[float]:
         """Returns the list of times when each individual waveform starts."""
-        time_array: list[float] = np.cumsum([0.0] + self.durations).tolist()
+        time_array: list[float] = np.cumsum([0.0, *self.durations]).tolist()
         return time_array
 
     @property

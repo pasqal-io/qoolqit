@@ -305,7 +305,9 @@ class DataGraph(BaseGraph):
             raise ImportError("Please, install the `torch_geometric` package.") from e
 
         if not isinstance(data, Data):
-            raise TypeError("Input must be a torch_geometric.data.Data object.")
+            raise TypeError(
+                f"Input must be a torch_geometric Data object, not {type(data).__name__!r}."
+            )
 
         # Validate weight attrs early and keep the squeezed tensors
         node_tensor = (

@@ -89,7 +89,7 @@ class BaseGraph(nx.Graph):
             - coords       : dict[node, (float,float) or None]
         """
         if not isinstance(g, nx.Graph):
-            raise TypeError("Input must be a networkx.Graph instance.")
+            raise TypeError(f"Input must be a networkx Graph, not {type(g).__name__!r}.")
 
         g = nx.convert_node_labels_to_integers(g)
         num_nodes = len(g.nodes)
