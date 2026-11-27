@@ -10,10 +10,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 from matplotlib.axes import Axes
+from matplotlib.colors import to_rgba
+from matplotlib.patches import Circle
 from scipy.spatial.distance import cdist
 from typing_extensions import TypeIs
 
 from qoolqit.graphs import DataGraph, all_node_pairs, distances
+from qoolqit.visualization import COLORS
 
 if TYPE_CHECKING:
     import torch
@@ -347,15 +350,32 @@ class Register:
         return self.__class__.__name__ + f"(n_qubits = {self.n_qubits})"
 
     def draw(
-        self, ax: Axes | None = None, marker_size: int = 100, node_color: str = "tab:green"
+        self,
+        ax: Axes | None = None,
+        marker_size: int = 100,
+        node_color: str = COLORS["mintgreen"],
+        blockade_radius: float | None = None,
     ) -> None:
         """Draw the register.
+
+        The register is drawn to scale (equal aspect ratio).
 
         Args:
             ax: an optional matplotlib Axes instance to draw on.
                 If None, a new Axes will be created.
             marker_size: size of the qubit markers in points squared. Defaults to 100.
-            node_color: color of the qubit markers. Defaults to "tab:green".
+            node_color: color of the qubit markers. Defaults to mint green.
+            blockade_radius: an optional blockade radius, in the same dimensionless units as
+                the coordinates. If given, a disk of radius blockade_radius / 2 is drawn
+                around each qubit (see the note below), and a legend labels its dashed
+                outline. For a drive amplitude Ω, the blockade radius is Ω^(-1/6)
+                (see https://docs.pasqal.com/qoolqit/get_started/atoms_as_qubits/).
+
+        Note:
+            The disks drawn for `blockade_radius` have half the blockade radius, not the full
+            radius: two qubits are blockaded exactly when their disks overlap. With full-radius
+            circles one would instead check whether a qubit lies inside a neighbor's circle,
+            and in a dense register the circles would overlap heavily.
         """
         if ax is None:
             _, ax = plt.subplots()
@@ -364,6 +384,24 @@ class Register:
         annotation_offset = 1.5 * marker_radius  # place label just outside the marker
 
         coords = self._coords.detach().cpu().numpy() if _is_torch(self._coords) else self._coords
+        if blockade_radius is not None:
+            edgecolor = to_rgba(COLORS["neonpurple"], 0.8)
+            linestyle = (0, (2, 4))
+            # Added before the markers, so the qubits are drawn on top of the disks
+            for xi, yi in coords:
+                ax.add_patch(
+                    Circle(
+                        (xi, yi),
+                        radius=blockade_radius / 2,
+                        facecolor=to_rgba(COLORS["neonpurple"], 0.14),
+                        edgecolor=edgecolor,
+                        linestyle=linestyle,
+                    )
+                )
+            # Legend entry for the dashed outline, drawn as an empty line so the limits don't change
+            ax.plot([], [], color=edgecolor, linestyle=linestyle, label=r"$\tilde{r}_b / 2$")
+            ax.legend()
+
         for xi, yi, qid in zip(coords[:, 0], coords[:, 1], self.qubits_ids, strict=True):
             ax.scatter(xi, yi, s=marker_size, color=node_color)
             ax.annotate(
@@ -379,4 +417,13 @@ class Register:
         ax.set_axisbelow(True)
         ax.set_xlabel("x")
         ax.set_ylabel("y")
-        ax.margins(0.1)
+        # Pad by 10% of the register's extent on each side. The padding goes into the data
+        # limits, not ax.margins: with adjustable="datalim", matplotlib may shrink an axis
+        # back towards the data, which would put qubits on the frame.
+        lo, hi = coords.min(axis=0), coords.max(axis=0)
+        if blockade_radius is not None:
+            lo, hi = lo - blockade_radius / 2, hi + blockade_radius / 2
+        pad = 0.1 * (hi - lo)
+        ax.update_datalim([lo - pad, hi + pad])
+        ax.margins(0)
+        ax.set_aspect("equal", adjustable="datalim")
