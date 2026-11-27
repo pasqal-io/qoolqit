@@ -403,8 +403,7 @@ def draw_discrepancy_lines_and_colorbar(
     current_interactions: np.ndarray,
     spec: ColorbarSpec | None = None,
 ) -> None:
-    if spec is None:
-        spec = ColorbarSpec()
+    spec = spec or ColorbarSpec()
     discrepancies = np.triu(target_interactions - current_interactions, k=1)
 
     max_pos = float(np.max(discrepancies))
