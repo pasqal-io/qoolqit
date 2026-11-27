@@ -790,12 +790,7 @@ print(fresnel_device)
 ```
 
 ```
-<string>:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
-
-
 {'FRESNEL_CAN1': FRESNEL_CAN1, 'FRESNEL': FRESNEL}
-
-
 FRESNEL: 
  └── max_duration: 332.43763968
  └── max_amplitude: 0.20412370086269147
@@ -805,6 +800,7 @@ FRESNEL:
 
 
 
+<string>:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
 <string>:26: DeprecationWarning: Defining the number of emulation trajectories via 'NoiseModel.runs' is deprecated since pulser v1.7. Please favour using 'EmulationConfig.n_trajectories' instead.
 ```
 
@@ -1248,12 +1244,12 @@ print(A)
 ```
 
 ```
-[[0.01738253 1.05818321 1.0776144  1.2659733  1.26609505 1.37299445]
- [1.05818321 0.27146039 1.15905191 0.73196096 1.4082622  1.05154224]
- [1.0776144  1.15905191 1.00611553 0.68099615 1.12878562 0.7958002 ]
- [1.2659733  0.73196096 0.68099615 1.62720306 0.47115927 1.29457556]
- [1.26609505 1.4082622  1.12878562 0.47115927 0.65370427 1.75638962]
- [1.37299445 1.05154224 0.7958002  1.29457556 1.75638962 0.53391493]]
+[[0.89829718 0.49923025 1.40933471 1.07106315 0.75497703 1.04021859]
+ [0.49923025 0.30427972 1.18833239 1.03029701 0.62404342 1.82942297]
+ [1.40933471 1.18833239 1.97119781 0.59437489 0.98192462 0.61457822]
+ [1.07106315 1.03029701 0.59437489 0.33241988 0.61019697 1.66194346]
+ [0.75497703 0.62404342 0.98192462 0.61019697 0.83685372 1.32767951]
+ [1.04021859 1.82942297 0.61457822 1.66194346 1.32767951 1.91493701]]
 ```
 
 Finally, running the embedding we obtain a `DataGraph` with coordinates that can be easily converted to a `Register` of qubits.
@@ -1290,8 +1286,8 @@ print([f"{f:.4f}" for f in sorted(off_diagonal)])
 ```
 
 ```
-['0.0159', '0.0246', '0.0401', '0.0414', '0.0554', '0.0560', '0.7926', '1.0736', '1.0807', '1.1459', '1.1859', '1.2673', '1.3174', '1.3922', '1.7869']
-['0.4712', '0.6810', '0.7320', '0.7958', '1.0515', '1.0582', '1.0776', '1.1288', '1.1591', '1.2660', '1.2661', '1.2946', '1.3730', '1.4083', '1.7564']
+['0.0168', '0.0193', '0.0229', '0.0442', '0.0638', '0.0866', '0.4943', '0.6547', '0.9744', '1.0616', '1.0678', '1.1886', '1.3654', '1.6931', '1.8509']
+['0.4992', '0.5944', '0.6102', '0.6146', '0.6240', '0.7550', '0.9819', '1.0303', '1.0402', '1.0711', '1.1883', '1.3277', '1.4093', '1.6619', '1.8294']
 ```
 
 ### Spring-layout embedder
@@ -1556,13 +1552,13 @@ final_bitstrings
 ```
 
 ```
-Counter({'111': 822,
-         '101': 67,
-         '110': 49,
-         '011': 47,
-         '100': 8,
-         '001': 4,
-         '010': 3})
+Counter({'111': 809,
+         '011': 62,
+         '101': 57,
+         '110': 55,
+         '100': 6,
+         '001': 6,
+         '010': 5})
 ```
 
 ### Emulation configuration
@@ -2262,11 +2258,13 @@ import matplotlib.pyplot as plt
 from qoolqit import Register
 
 registers = {
-    "Register.line(4)": Register.line(4),
-    "Register.square(3)": Register.square(3),
-    "Register.rectangular(2, 4)": Register.rectangular(2, 4),
-    "Register.triangular(3, 4)": Register.triangular(3, 4),
-    "Register.circle(8)": Register.circle(8),
+    "Register.line(4, spacing=1.0)": Register.line(4, spacing=1.0),
+    "Register.square(3, spacing=1.1)": Register.square(3, spacing=1.1),
+    "Register.rectangular(2, 4,\nrow_spacing=1.5, col_spacing=1.0)": Register.rectangular(
+        2, 4, row_spacing=1.5, col_spacing=1.0
+    ),
+    "Register.triangular(3, 4, spacing=2.0)": Register.triangular(3, 4, spacing=2.0),
+    "Register.circle(8, spacing=2.5)": Register.circle(8, spacing=2.5),
 }
 
 fig, axs = plt.subplots(2, 3, figsize=(12, 7))
@@ -2988,8 +2986,8 @@ print(
 ```
 
 ```
-Ideal: Counter({'00': 998, '10': 1, '01': 1})
-Noisy: Counter({'00': 51135, '01': 7458, '10': 5321, '11': 86})
+Ideal: Counter({'00': 997, '10': 2, '01': 1})
+Noisy: Counter({'00': 51750, '01': 6757, '10': 5279, '11': 214})
 Number of ideal results (n_shots): 1000
 Number of noisy results (n_trajectories x n_shots): 64000
 ```
@@ -3942,7 +3940,7 @@ plot_bitstrings(counts, highlight={SOLUTION: COLORS["mintgreen"]})
 
 ```
 Most frequent bitstring: 0110
-P(0110) = 79.80%
+P(0110) = 80.30%
 ```
 
 png
@@ -4176,7 +4174,7 @@ print(counter)
 ```
 
 ```
-Counter({'00111': 182, '01011': 178, '00110': 85, '01010': 78, '01001': 78, '10000': 77, '00101': 74, '00100': 52, '10001': 45, '00011': 44, '10010': 35, '01000': 35, '10011': 21, '00010': 9, '00001': 6, '11010': 1})
+Counter({'00111': 189, '01011': 147, '00110': 99, '10000': 87, '00101': 83, '01001': 83, '10001': 70, '01010': 65, '10010': 41, '01000': 38, '00100': 31, '00011': 28, '10011': 17, '00001': 14, '00010': 8})
 ```
 
 And finally we plot a histogram of the sampled bitstrings.

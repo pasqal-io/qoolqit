@@ -108,11 +108,13 @@ import matplotlib.pyplot as plt
 from qoolqit import Register
 
 registers = {
-    "Register.line(4)": Register.line(4),
-    "Register.square(3)": Register.square(3),
-    "Register.rectangular(2, 4)": Register.rectangular(2, 4),
-    "Register.triangular(3, 4)": Register.triangular(3, 4),
-    "Register.circle(8)": Register.circle(8),
+    "Register.line(4, spacing=1.0)": Register.line(4, spacing=1.0),
+    "Register.square(3, spacing=1.1)": Register.square(3, spacing=1.1),
+    "Register.rectangular(2, 4,\nrow_spacing=1.5, col_spacing=1.0)": Register.rectangular(
+        2, 4, row_spacing=1.5, col_spacing=1.0
+    ),
+    "Register.triangular(3, 4, spacing=2.0)": Register.triangular(3, 4, spacing=2.0),
+    "Register.circle(8, spacing=2.5)": Register.circle(8, spacing=2.5),
 }
 
 fig, axs = plt.subplots(2, 3, figsize=(12, 7))
