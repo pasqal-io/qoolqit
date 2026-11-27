@@ -351,25 +351,23 @@ class Register:
 
     def draw(
         self,
+        blockade_radius: float | None = None,
         ax: Axes | None = None,
         marker_size: int = 100,
         node_color: str = COLORS["mintgreen"],
-        blockade_radius: float | None = None,
     ) -> None:
         """Draw the register.
 
         The register is drawn to scale (equal aspect ratio).
 
         Args:
+            blockade_radius: an optional blockade radius, in the same dimensionless units as
+                the coordinates. If given, a disk of radius blockade_radius / 2 is drawn
+                around each qubit. For a drive amplitude Ω, the blockade radius is Ω^(-1/6).
             ax: an optional matplotlib Axes instance to draw on.
                 If None, a new Axes will be created.
             marker_size: size of the qubit markers in points squared. Defaults to 100.
             node_color: color of the qubit markers. Defaults to mint green.
-            blockade_radius: an optional blockade radius, in the same dimensionless units as
-                the coordinates. If given, a disk of radius blockade_radius / 2 is drawn
-                around each qubit (see the note below), and a legend labels its dashed
-                outline. For a drive amplitude Ω, the blockade radius is Ω^(-1/6)
-                (see https://docs.pasqal.com/qoolqit/get_started/atoms_as_qubits/).
 
         Note:
             The disks drawn for `blockade_radius` have half the blockade radius, not the full
@@ -389,18 +387,19 @@ class Register:
             linestyle = (0, (2, 4))
             # Added before the markers, so the qubits are drawn on top of the disks
             for xi, yi in coords:
-                ax.add_patch(
-                    Circle(
-                        (xi, yi),
-                        radius=blockade_radius / 2,
-                        facecolor=to_rgba(COLORS["neonpurple"], 0.14),
-                        edgecolor=edgecolor,
-                        linestyle=linestyle,
-                    )
+                circle_i = Circle(
+                    (xi, yi),
+                    radius=blockade_radius / 2,
+                    facecolor=to_rgba(COLORS["neonpurple"], 0.14),
+                    edgecolor=edgecolor,
+                    linestyle=linestyle,
                 )
+                ax.add_patch(circle_i)
             # Legend entry for the dashed outline, drawn as an empty line so the limits don't change
-            ax.plot([], [], color=edgecolor, linestyle=linestyle, label=r"$\tilde{r}_b / 2$")
-            ax.legend()
+            (rb,) = ax.plot(
+                [], [], color=edgecolor, linestyle=linestyle, label=r"$\tilde{r}_b / 2$"
+            )
+            ax.legend(handles=[rb])
 
         for xi, yi, qid in zip(coords[:, 0], coords[:, 1], self.qubits_ids, strict=True):
             ax.scatter(xi, yi, s=marker_size, color=node_color)
@@ -417,13 +416,13 @@ class Register:
         ax.set_axisbelow(True)
         ax.set_xlabel("x")
         ax.set_ylabel("y")
-        # Pad by 10% of the register's extent on each side. The padding goes into the data
-        # limits, not ax.margins: with adjustable="datalim", matplotlib may shrink an axis
-        # back towards the data, which would put qubits on the frame.
+
+        # Pad by 10% of the register's extent on each side.
         lo, hi = coords.min(axis=0), coords.max(axis=0)
         if blockade_radius is not None:
             lo, hi = lo - blockade_radius / 2, hi + blockade_radius / 2
         pad = 0.1 * (hi - lo)
         ax.update_datalim([lo - pad, hi + pad])
         ax.margins(0)
+
         ax.set_aspect("equal", adjustable="datalim")
