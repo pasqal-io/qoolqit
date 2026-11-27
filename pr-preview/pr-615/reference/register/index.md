@@ -205,7 +205,7 @@ draw(
     blockade_radius: float | None = None,
     ax: Axes | None = None,
     marker_size: int = 100,
-    node_color: str = "tab:green",
+    node_color: str = COLORS["metalblue"],
 ) -> None
 ```
 
@@ -224,9 +224,9 @@ Parameters:
 - **`marker_size`** (`int`, default: `100` ) –
 
   size of the qubit markers in points squared. Defaults to 100.
-- **`node_color`** (`str`, default: `'tab:green'` ) –
+- **`node_color`** (`str`, default: `COLORS['metalblue']` ) –
 
-  color of the qubit markers. Defaults to "tab:green".
+  color of the qubit markers. Defaults to COLORS\["metalblue"\].
 
 > [!NOTE]
 >

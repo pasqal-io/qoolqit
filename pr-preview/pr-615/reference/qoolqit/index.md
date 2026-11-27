@@ -435,7 +435,7 @@ BlackmanWaveform(duration: float, area: float)
 
 A Blackman window of a specified duration and area under the curve.
 
-Implements the positive Blackman window shaped waveform blackman(t) = A*(0.42 - 0.5*cos(αt) + 0.08*cos(2αt)) A = area/(0.42*duration) α = 2π/duration
+Implements the positive Blackman window shaped waveform blackman(t) = A*(0.42 - 0.5*cos(alpha*t) + 0.08*cos(2*alpha*t)) A = area/(0.42\*duration) alpha = 2π/duration
 
 See: [https://en.wikipedia.org/wiki/Window\_function\#:\~:text=Blackman%20window](<https://en.wikipedia.org/wiki/Window_function#:~:text=Blackman window>)
 
@@ -2693,7 +2693,7 @@ draw(
     blockade_radius: float | None = None,
     ax: Axes | None = None,
     marker_size: int = 100,
-    node_color: str = "tab:green",
+    node_color: str = COLORS["metalblue"],
 ) -> None
 ```
 
@@ -2712,9 +2712,9 @@ Parameters:
 - **`marker_size`** (`int`, default: `100` ) –
 
   size of the qubit markers in points squared. Defaults to 100.
-- **`node_color`** (`str`, default: `'tab:green'` ) –
+- **`node_color`** (`str`, default: `COLORS['metalblue']` ) –
 
-  color of the qubit markers. Defaults to "tab:green".
+  color of the qubit markers. Defaults to COLORS\["metalblue"\].
 
 > [!NOTE]
 >
