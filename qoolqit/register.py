@@ -354,7 +354,7 @@ class Register:
         blockade_radius: float | None = None,
         ax: Axes | None = None,
         marker_size: int = 100,
-        node_color: str = "tab:green",
+        node_color: str = COLORS["metalblue"],
     ) -> None:
         """Draw the register.
 
@@ -367,7 +367,7 @@ class Register:
             ax: an optional matplotlib Axes instance to draw on.
                 If None, a new Axes will be created.
             marker_size: size of the qubit markers in points squared. Defaults to 100.
-            node_color: color of the qubit markers. Defaults to "tab:green".
+            node_color: color of the qubit markers. Defaults to COLORS["metalblue"].
 
         Note:
             The disks drawn for `blockade_radius` have half the blockade radius, not the full
@@ -383,14 +383,14 @@ class Register:
 
         coords = self._coords.detach().cpu().numpy() if _is_torch(self._coords) else self._coords
         if blockade_radius is not None:
-            edgecolor = to_rgba(COLORS["neonpurple"], 0.8)
+            edgecolor = to_rgba(COLORS["mintgreen"], 0.8)
             linestyle = (0, (2, 4))
             # Added before the markers, so the qubits are drawn on top of the disks
             for xi, yi in coords:
                 circle_i = Circle(
                     (xi, yi),
                     radius=blockade_radius / 2,
-                    facecolor=to_rgba(COLORS["neonpurple"], 0.14),
+                    facecolor=to_rgba(COLORS["mintgreen"], 0.14),
                     edgecolor=edgecolor,
                     linestyle=linestyle,
                 )

@@ -68,7 +68,7 @@ The widget below lets you run the two-atom experiment yourself.
 Drag an atom, or use the sliders, to change the distance $\tilde{r}$ between the atoms and the drive amplitude $\tilde{\Omega}$.
 The dashed circle around each atom has radius $\tilde{r}_b / 2$, so the two circles overlap exactly when the atoms are closer than the blockade radius.
 The plot shows, as a function of time and starting from $|00\rangle$, the probability that exactly one atom is excited and the probability that both are.
-Each atom glows with its excitation probability as time runs, and its colour goes from green when the pair is blockaded to purple when the atoms are independent, matching the plot's curves.
+Each atom glows with its excitation probability as time runs, and the glow goes from green when the pair is blockaded to purple when the atoms are independent, matching the plot's curves.
 The buttons under the widget jump to the end of the time window for each of the three cases below.
 
 --8<-- "docs/extras/widgets/blockade.html"
