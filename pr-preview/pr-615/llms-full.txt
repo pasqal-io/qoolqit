@@ -316,6 +316,8 @@ Drawing the register with `blockade_radius` shows a disk of radius \\(\\tilde{r}
 ```
 import matplotlib.pyplot as plt
 
+from qoolqit import Register
+
 fig, axs = plt.subplots(1, 2, figsize=(8, 3))
 for ax, omega in zip(axs, [0.3, 2.0], strict=True):
     register.draw(ax=ax, blockade_radius=omega ** (-1 / 6))
@@ -1246,12 +1248,12 @@ print(A)
 ```
 
 ```
-[[0.15862757 1.0571929  1.28744979 0.46403542 1.13484534 0.82981662]
- [1.0571929  0.4902543  1.02309121 1.19336943 0.38977685 1.00305515]
- [1.28744979 1.02309121 0.63850926 1.15042934 1.5868169  1.41864019]
- [0.46403542 1.19336943 1.15042934 0.32488359 0.42841026 0.77914358]
- [1.13484534 0.38977685 1.5868169  0.42841026 1.39565654 1.66661784]
- [0.82981662 1.00305515 1.41864019 0.77914358 1.66661784 1.63192064]]
+[[0.01738253 1.05818321 1.0776144  1.2659733  1.26609505 1.37299445]
+ [1.05818321 0.27146039 1.15905191 0.73196096 1.4082622  1.05154224]
+ [1.0776144  1.15905191 1.00611553 0.68099615 1.12878562 0.7958002 ]
+ [1.2659733  0.73196096 0.68099615 1.62720306 0.47115927 1.29457556]
+ [1.26609505 1.4082622  1.12878562 0.47115927 0.65370427 1.75638962]
+ [1.37299445 1.05154224 0.7958002  1.29457556 1.75638962 0.53391493]]
 ```
 
 Finally, running the embedding we obtain a `DataGraph` with coordinates that can be easily converted to a `Register` of qubits.
@@ -1288,8 +1290,8 @@ print([f"{f:.4f}" for f in sorted(off_diagonal)])
 ```
 
 ```
-['0.0148', '0.0188', '0.0291', '0.0411', '0.0460', '0.0478', '0.4248', '0.8241', '0.8794', '1.0088', '1.0356', '1.0650', '1.4407', '1.5893', '1.6763']
-['0.3898', '0.4284', '0.4640', '0.7791', '0.8298', '1.0031', '1.0231', '1.0572', '1.1348', '1.1504', '1.1934', '1.2874', '1.4186', '1.5868', '1.6666']
+['0.0159', '0.0246', '0.0401', '0.0414', '0.0554', '0.0560', '0.7926', '1.0736', '1.0807', '1.1459', '1.1859', '1.2673', '1.3174', '1.3922', '1.7869']
+['0.4712', '0.6810', '0.7320', '0.7958', '1.0515', '1.0582', '1.0776', '1.1288', '1.1591', '1.2660', '1.2661', '1.2946', '1.3730', '1.4083', '1.7564']
 ```
 
 ### Spring-layout embedder
@@ -1554,13 +1556,13 @@ final_bitstrings
 ```
 
 ```
-Counter({'111': 827,
-         '011': 60,
-         '110': 52,
-         '101': 50,
-         '010': 4,
+Counter({'111': 822,
+         '101': 67,
+         '110': 49,
+         '011': 47,
+         '100': 8,
          '001': 4,
-         '100': 3})
+         '010': 3})
 ```
 
 ### Emulation configuration
@@ -2257,6 +2259,8 @@ Besides a dictionary or a list of coordinates, a `Register` can be created from 
 ```
 import matplotlib.pyplot as plt
 
+from qoolqit import Register
+
 registers = {
     "Register.line(4)": Register.line(4),
     "Register.square(3)": Register.square(3),
@@ -2280,6 +2284,10 @@ png
 Passing `blockade_radius` to `draw()` draws a disk of radius \\(\\tilde{r}\_b / 2\\) around each qubit, so two qubits are blockaded exactly when their disks overlap. For a drive amplitude \\(\\tilde{\\Omega}\\), the blockade radius is \\(\\tilde{r}\_b = \\tilde{\\Omega}^{-1/6}\\) (see [Atoms as qubits](<https://pasqal-io.github.io/qoolqit/get_started/atoms_as_qubits/index.md>)). On the 2x2 register defined at the start of this section, \\(\\tilde{\\Omega} = 2\\) blockades no pair, \\(\\tilde{\\Omega} = 0.3\\) blockades nearest neighbors, and \\(\\tilde{\\Omega} = 0.05\\) also blockades the diagonals.
 
 ```
+import matplotlib.pyplot as plt
+
+from qoolqit import Register
+
 fig, axs = plt.subplots(1, 3, figsize=(12, 4))
 for ax, omega in zip(axs, [2.0, 0.3, 0.05], strict=True):
     register.draw(blockade_radius=omega ** (-1 / 6), ax=ax)
@@ -2980,8 +2988,8 @@ print(
 ```
 
 ```
-Ideal: Counter({'00': 999, '10': 1})
-Noisy: Counter({'00': 48923, '01': 7846, '10': 6981, '11': 250})
+Ideal: Counter({'00': 998, '10': 1, '01': 1})
+Noisy: Counter({'00': 51135, '01': 7458, '10': 5321, '11': 86})
 Number of ideal results (n_shots): 1000
 Number of noisy results (n_trajectories x n_shots): 64000
 ```
@@ -3934,7 +3942,7 @@ plot_bitstrings(counts, highlight={SOLUTION: COLORS["mintgreen"]})
 
 ```
 Most frequent bitstring: 0110
-P(0110) = 79.30%
+P(0110) = 79.80%
 ```
 
 png
@@ -4168,7 +4176,7 @@ print(counter)
 ```
 
 ```
-Counter({'00111': 172, '01011': 164, '01010': 96, '00110': 86, '10000': 84, '01001': 79, '00101': 73, '10010': 64, '10001': 43, '00100': 39, '01000': 37, '00011': 36, '10011': 15, '00010': 8, '00001': 2, '10110': 2})
+Counter({'00111': 182, '01011': 178, '00110': 85, '01010': 78, '01001': 78, '10000': 77, '00101': 74, '00100': 52, '10001': 45, '00011': 44, '10010': 35, '01000': 35, '10011': 21, '00010': 9, '00001': 6, '11010': 1})
 ```
 
 And finally we plot a histogram of the sampled bitstrings.
