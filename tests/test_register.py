@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 import torch
+from matplotlib.patches import Circle
 
 from qoolqit.graphs import DataGraph
 from qoolqit.register import Register
@@ -184,6 +185,20 @@ def test_draw() -> None:
     # to ax
     fig, ax = plt.subplots()
     reg.draw(ax=ax, marker_size=50)
+    assert ax.get_legend() is None
+    plt.close(fig)
+
+
+def test_draw_blockade_radius() -> None:
+    reg = Register({"a": (0.0, 0.0), "b": (1.0, 0.0), "c": (0.0, 1.0)})
+    fig, ax = plt.subplots()
+    reg.draw(ax=ax, blockade_radius=1.2)
+    assert len(ax.patches) == 3
+    assert all(isinstance(p, Circle) and p.radius == pytest.approx(0.6) for p in ax.patches)
+    assert ax.get_aspect() == 1.0
+    legend = ax.get_legend()
+    assert legend is not None
+    assert [t.get_text() for t in legend.get_texts()] == [r"$\tilde{r}_b / 2$"]
     plt.close(fig)
 
 
