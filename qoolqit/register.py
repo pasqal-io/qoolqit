@@ -417,11 +417,12 @@ class Register:
         ax.set_xlabel("x")
         ax.set_ylabel("y")
 
-        # Pad by 10% of the register's extent on each side.
+        # Pad by 10% of the register's extent on each side, beyond the blockade disks.
         lo, hi = coords.min(axis=0), coords.max(axis=0)
-        if blockade_radius is not None:
-            lo, hi = lo - blockade_radius / 2, hi + blockade_radius / 2
         pad = 0.1 * (hi - lo)
+        if blockade_radius is not None:
+            # At least 10% of the radius, so the disks never touch the frame.
+            pad = 0.1 * np.maximum(hi - lo, blockade_radius) + blockade_radius / 2
         ax.update_datalim([lo - pad, hi + pad])
         ax.margins(0)
 
